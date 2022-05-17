@@ -10,14 +10,15 @@ import {
   Delete,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { Json } from './product.model';
+import { Json } from './interfaces/json.interface';
 import { CreateProductDto } from './dto/create_product.dto';
 import { GetProductDto } from './dto/get_product.dto';
 import { ModifyProductDto } from './dto/modify_product.dto';
 import { AllRouterIdDto } from './dto/all_query_id.dto';
 
-@Controller('products')
+@Controller('products') // 컨트롤러 기능을 해주는 데코레이터
 export class ProductController {
+  // 의존성 주입이 가능한 ProductService를 삽입해서 ProductService의 기능을 사용가능하게끔 함
   constructor(private productService: ProductService) {}
 
   // 전체 상품을 불러오는 컨트롤러

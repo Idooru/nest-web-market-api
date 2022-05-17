@@ -1,10 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Product, Json } from './product.model';
+import { Product } from './interfaces/product.interface';
+import { Json } from './interfaces/json.interface';
 import { AllRouterIdDto } from './dto/all_query_id.dto';
 import { CreateProductDto } from './dto/create_product.dto';
 import { GetProductDto } from './dto/get_product.dto';
 import { ModifyProductDto } from './dto/modify_product.dto';
-@Injectable()
+
+@Injectable() // 의존성 주입이 가능함, 즉 제공자로써 사용 가능
 export class ProductService {
   private products: Product[] = []; // 상품을 의미하는 메모리 형태의 데이터
 

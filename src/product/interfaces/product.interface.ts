@@ -6,9 +6,3 @@ export interface Product {
   type: string;
   description?: string;
 }
-
-export interface Json {
-  statusCode: number;
-  message: string;
-  result?: [] | object;
-}
