@@ -12,12 +12,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMConfig } from './z.config/typeorm.config';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot(typeORMConfig),
-    AuthModule,
-    UserModule,
-    ProductModule,
-  ],
+  imports: [AuthModule, UserModule, ProductModule],
   controllers: [AuthController, UserController, ProductController],
   providers: [AuthService, UserService, ProductService],
 })
