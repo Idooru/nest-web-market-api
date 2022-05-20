@@ -1,3 +1,4 @@
+import { ProductMiddleware } from "./../../middlewares/product.middleware";
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { ProductController } from "./product.controller";
 import { ProductService } from "./product.service";
@@ -8,4 +9,8 @@ import { TypeOrmModule } from "@nestjs/typeorm";
   controllers: [ProductController],
   providers: [ProductService],
 })
-export class ProductModule {}
+export class ProductModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(ProductMiddleware).forRoutes("product");
+  }
+}

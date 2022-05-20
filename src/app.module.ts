@@ -12,6 +12,11 @@ import { LoggerMiddleware } from "./middlewares/logger.middleware";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { typeORMConfig } from "./config/typeorm.config";
 
+import * as morgan from "morgan";
+import * as dotenv from "dotenv";
+dotenv.config();
+import helmet from "helmet";
+
 @Module({
   imports: [AuthModule, UserModule, ProductModule],
   controllers: [AuthController, UserController, ProductController],
@@ -19,6 +24,6 @@ import { typeORMConfig } from "./config/typeorm.config";
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes("*");
+    consumer.apply(morgan("dev"), helmet()).forRoutes("*");
   }
 }
