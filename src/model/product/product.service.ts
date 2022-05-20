@@ -1,10 +1,5 @@
 import { HttpExceptionFilter } from "./../../filter/http-exception.filter";
-import {
-  Injectable,
-  HttpException,
-  HttpStatus,
-  UsePipes,
-} from "@nestjs/common";
+import { Injectable, HttpException, UsePipes } from "@nestjs/common";
 import { Product } from "./interfaces/product.interface";
 import { Json } from "./interfaces/json.interface";
 import { AllRouterIdDto } from "./dto/all_query_id.dto";
@@ -82,6 +77,8 @@ export class ProductService {
     };
 
     this.products.push(product);
+
+    console.log("create");
 
     return {
       statusCode: 201,
