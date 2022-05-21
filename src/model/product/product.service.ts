@@ -10,7 +10,7 @@ import { ModifyProductDto } from "./dto/modify_product.dto";
 export class ProductService {
   private products: Product[] = []; // 상품을 의미하는 메모리 형태의 데이터
 
-  private findProductByIdOrName(data: number | string) {
+  private findProductByIdOrName(data: number | string): Product {
     return typeof data === "number"
       ? this.products.find((product) => product.id === data)
       : this.products.find((product) => product.name === data);
@@ -51,7 +51,7 @@ export class ProductService {
 
   // 쿼리(상품 아이디)를 통해 상품을 불러오는 서비스
   getProductById(id: number): Json {
-    const found = this.findProductByIdOrName(id);
+    const found: Product = this.findProductByIdOrName(id);
 
     if (!found) {
       throw new HttpException(`Fail to get product, ${id} is not exist`, 404);
@@ -93,7 +93,7 @@ export class ProductService {
   // 쿼리(상품 아이디)를 통해 상품을 부분 수정하는 서비스
   modifyProduct(id: number, modifyProductDto: ModifyProductDto): Json {
     const { name, price, origin, type, description } = modifyProductDto;
-    const found = this.findProductByIdOrName(id);
+    const found: Product = this.findProductByIdOrName(id);
 
     if (!found) {
       throw new HttpException(
@@ -119,7 +119,7 @@ export class ProductService {
 
   // 쿼리(상품 아이디)를 통해 상품을 삭제하는 서비스
   removeProduct(id: number): Json {
-    const found = this.findProductByIdOrName(id);
+    const found: Product = this.findProductByIdOrName(id);
 
     if (!found) {
       throw new HttpException(

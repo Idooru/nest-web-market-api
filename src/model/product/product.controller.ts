@@ -36,7 +36,7 @@ export class ProductController {
   // 쿼리(상품 아이디)를 통해 상품을 불러오는 컨트롤러
   @Get("/qi")
   @UsePipes(ValidationPipe)
-  getProductById(@Query("id", ParseIntPipe) id): Json {
+  getProductById(@Query("id", ParseIntPipe) id: number): Json {
     return this.productService.getProductById(id);
   }
 
@@ -51,7 +51,7 @@ export class ProductController {
   @Patch("/qi")
   @UsePipes(ValidationPipe)
   modifyProduct(
-    @Query("id", ParseIntPipe) id,
+    @Query("id", ParseIntPipe) id: number,
     @Body() modifyProductDto: ModifyProductDto,
   ): Json {
     return this.productService.modifyProduct(id, modifyProductDto);
