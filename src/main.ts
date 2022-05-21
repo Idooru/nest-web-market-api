@@ -11,7 +11,7 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
 
   await app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}!!!`);
+    console.log(`### Server is running at http://localhost:${port} ###`);
   });
 }
 bootstrap();

@@ -1,4 +1,3 @@
-import { HttpExceptionFilter } from "./../../filter/http-exception.filter";
 import {
   Controller,
   Get,
@@ -9,13 +8,12 @@ import {
   Query,
   Patch,
   Delete,
+  ParseIntPipe,
 } from "@nestjs/common";
 import { ProductService } from "./product.service";
 import { Json } from "./interfaces/json.interface";
 import { CreateProductDto } from "./dto/create_product.dto";
-import { GetProductDto } from "./dto/get_product.dto";
 import { ModifyProductDto } from "./dto/modify_product.dto";
-import { AllRouterIdDto } from "./dto/all_query_id.dto";
 
 @Controller("product") // 컨트롤러 기능을 해주는 데코레이터1
 export class ProductController {
@@ -31,15 +29,15 @@ export class ProductController {
   // 쿼리(상품 이름)를 통해 상품을 불러오는 컨트롤러
   @Get("/qn")
   @UsePipes(ValidationPipe)
-  getProductByName(@Query() getProductDto: GetProductDto): Json {
-    return this.productService.getProductByName(getProductDto);
+  getProductByName(@Query("name") name: string): Json {
+    return this.productService.getProductByName(name);
   }
 
   // 쿼리(상품 아이디)를 통해 상품을 불러오는 컨트롤러
   @Get("/qi")
   @UsePipes(ValidationPipe)
-  getProductById(@Query() allRouterIdDto: AllRouterIdDto): Json {
-    return this.productService.getProductById(allRouterIdDto);
+  getProductById(@Query("id", ParseIntPipe) id): Json {
+    return this.productService.getProductById(id);
   }
 
   // 상품을 생성하는 컨트롤러
@@ -53,16 +51,16 @@ export class ProductController {
   @Patch("/qi")
   @UsePipes(ValidationPipe)
   modifyProduct(
-    @Query() allRouterIdDto: AllRouterIdDto,
+    @Query("id", ParseIntPipe) id,
     @Body() modifyProductDto: ModifyProductDto,
   ): Json {
-    return this.productService.modifyProduct(allRouterIdDto, modifyProductDto);
+    return this.productService.modifyProduct(id, modifyProductDto);
   }
 
   // 쿼리(상품 아이디)를 통해 상품을 삭제하는 컨트롤러
   @Delete("/qi")
   @UsePipes(ValidationPipe)
-  removeProduct(@Query() allRouterIdDto: AllRouterIdDto): Json {
-    return this.productService.removeProduct(allRouterIdDto);
+  removeProduct(@Query("id") id): Json {
+    return this.productService.removeProduct(id);
   }
 }

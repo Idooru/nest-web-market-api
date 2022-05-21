@@ -11,19 +11,17 @@ import { ProductController } from "./model/product/product.controller";
 import { LoggerMiddleware } from "./middlewares/logger.middleware";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { typeORMConfig } from "./config/typeorm.config";
+import { ConfigModule } from "@nestjs/config";
 
-import * as morgan from "morgan";
-import * as dotenv from "dotenv";
-dotenv.config();
 import helmet from "helmet";
 
 @Module({
-  imports: [AuthModule, UserModule, ProductModule],
+  imports: [ConfigModule.forRoot(), AuthModule, UserModule, ProductModule],
   controllers: [AuthController, UserController, ProductController],
   providers: [AuthService, UserService, ProductService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(morgan("dev"), helmet()).forRoutes("*");
+    consumer.apply(LoggerMiddleware, helmet()).forRoutes("*");
   }
 }

@@ -1,16 +1,20 @@
-import { HttpExceptionFilter } from "./../../filter/http-exception.filter";
+import { HttpExceptionFilter } from "./../../exceptions/http-exception.filter";
 import { Injectable, HttpException, UsePipes } from "@nestjs/common";
 import { Product } from "./interfaces/product.interface";
 import { Json } from "./interfaces/json.interface";
-import { AllRouterIdDto } from "./dto/all_query_id.dto";
 import { CreateProductDto } from "./dto/create_product.dto";
-import { GetProductDto } from "./dto/get_product.dto";
 import { ModifyProductDto } from "./dto/modify_product.dto";
 
 @UsePipes(HttpExceptionFilter)
 @Injectable() // 의존성 주입이 가능함, 즉 제공자로써 사용 가능
 export class ProductService {
   private products: Product[] = []; // 상품을 의미하는 메모리 형태의 데이터
+
+  private findProductByIdOrName(data: number | string) {
+    return typeof data === "number"
+      ? this.products.find((product) => product.id === data)
+      : this.products.find((product) => product.name === data);
+  }
 
   // 전체 상품을 불러오는 서비스
   getProductAll(): Json {
@@ -30,9 +34,8 @@ export class ProductService {
   }
 
   // 쿼리(상품 이름)를 통해 상품을 불러오는 서비스
-  getProductByName(getProductDtoName: GetProductDto): Json {
-    const { name } = getProductDtoName;
-    const found = this.products.find((product) => product.name === name);
+  getProductByName(name: string): Json {
+    const found = this.findProductByIdOrName(name);
 
     if (!found) {
       throw new HttpException(`Fail to get product, ${name} is not exist`, 404);
@@ -47,9 +50,8 @@ export class ProductService {
   }
 
   // 쿼리(상품 아이디)를 통해 상품을 불러오는 서비스
-  getProductById(allRouterIdDto: AllRouterIdDto): Json {
-    const { id } = allRouterIdDto;
-    const found = this.products.find((product) => product.id === id);
+  getProductById(id: number): Json {
+    const found = this.findProductByIdOrName(id);
 
     if (!found) {
       throw new HttpException(`Fail to get product, ${id} is not exist`, 404);
@@ -68,7 +70,7 @@ export class ProductService {
     const { name, price, origin, type, description } = createProductDto;
 
     const product: Product = {
-      id: Date.now().toString(),
+      id: Date.now(),
       name,
       price,
       origin,
@@ -89,14 +91,9 @@ export class ProductService {
   }
 
   // 쿼리(상품 아이디)를 통해 상품을 부분 수정하는 서비스
-  modifyProduct(
-    allRouterIdDto: AllRouterIdDto,
-    modifyProductDto: ModifyProductDto,
-  ): Json {
+  modifyProduct(id: number, modifyProductDto: ModifyProductDto): Json {
     const { name, price, origin, type, description } = modifyProductDto;
-    const { id } = allRouterIdDto;
-
-    const found = this.products.find((product) => product.id === id);
+    const found = this.findProductByIdOrName(id);
 
     if (!found) {
       throw new HttpException(
@@ -121,9 +118,8 @@ export class ProductService {
   }
 
   // 쿼리(상품 아이디)를 통해 상품을 삭제하는 서비스
-  removeProduct(allRouterIdDto: AllRouterIdDto): Json {
-    const { id } = allRouterIdDto;
-    const found = this.products.find((product) => product.id === id);
+  removeProduct(id: number): Json {
+    const found = this.findProductByIdOrName(id);
 
     if (!found) {
       throw new HttpException(
