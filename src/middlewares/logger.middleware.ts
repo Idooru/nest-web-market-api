@@ -6,12 +6,12 @@ export class LoggerMiddleware implements NestMiddleware {
 
   use(req: Request, res: Response, next: NextFunction): void {
     const { ip, method, originalUrl } = req;
-    const { statusCode } = res;
+    const { statusCode, statusMessage } = res;
     const userAgent = req.get("user-agent") || "";
     const contentLength = res.get("content-length");
     res.on("finish", () => {
       this.logger.log(
-        `${method} ${originalUrl} ${statusCode} ${contentLength} - ${userAgent} ${ip}`,
+        `${method} ${originalUrl} ${statusCode} ${statusMessage} ${contentLength} - ${userAgent} ${ip}`,
       );
     });
     next();
