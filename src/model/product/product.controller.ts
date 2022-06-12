@@ -60,7 +60,7 @@ export class ProductController {
   // 쿼리(상품 아이디)를 통해 상품을 삭제하는 컨트롤러
   @Delete("/qi")
   @UsePipes(ValidationPipe)
-  removeProduct(@Query("id") id): Json {
+  removeProduct(@Query("id") id: number): Json {
     return this.productService.removeProduct(id);
   }
 }

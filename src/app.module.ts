@@ -16,7 +16,15 @@ import { ConfigModule } from "@nestjs/config";
 import helmet from "helmet";
 
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, UserModule, ProductModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRoot(typeORMConfig),
+    AuthModule,
+    UserModule,
+    ProductModule,
+  ],
   controllers: [AuthController, UserController, ProductController],
   providers: [AuthService, UserService, ProductService],
 })
