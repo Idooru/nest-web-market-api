@@ -8,6 +8,6 @@ export class UserController {
 
   @Post("/register")
   async register(@Body() body: RegisterUserDto): Promise<any> {
-    return this.userService.register(body);
+    return await this.userService.register(body);
   }
 }

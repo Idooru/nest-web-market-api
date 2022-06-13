@@ -11,6 +11,6 @@ export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
   async register(body: RegisterUserDto) {
-    // return this.userRepository.createUser(body);
+    return await this.userRepository.createUser(body);
   }
 }
