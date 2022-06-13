@@ -1,4 +1,4 @@
-import { HttpExceptionFilter } from "./../../exceptions/http-exception.filter";
+import { HttpExceptionFilter } from "../../lib/exceptions/http-exception.filter";
 import { Injectable, HttpException, UsePipes } from "@nestjs/common";
 import { Product } from "./interfaces/product.interface";
 import { Json } from "./interfaces/json.interface";

@@ -1,4 +1,6 @@
+import { UserEntity } from "../../model/user/entities/user.entity";
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
+
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -9,6 +11,6 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   username: "admin",
   password: process.env.MYSQL_PASSWORD,
   database: "nestWebMarket_API",
-  entities: [],
+  entities: [UserEntity],
   synchronize: true,
 };

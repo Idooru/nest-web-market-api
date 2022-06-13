@@ -1,4 +1,4 @@
-import { ProductMiddleware } from "./../../middlewares/product.middleware";
+import { ProductMiddleware } from "../../lib/middlewares/product.middleware";
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { ProductController } from "./product.controller";
 import { ProductService } from "./product.service";
