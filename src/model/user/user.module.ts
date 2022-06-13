@@ -1,3 +1,4 @@
+import { UserRepository } from "./user.repository";
 import { UserEntity } from "./entities/user.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserMiddleware } from "../../lib/middlewares/user.middleware";
@@ -8,7 +9,7 @@ import { UserService } from "./user.service";
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService, UserRepository],
 })
 export class UserModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
