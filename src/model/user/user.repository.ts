@@ -11,21 +11,25 @@ export class UserRepository {
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  async existEmail(email: string): Promise<UserEntity> {
+  async findUserWithEmail(email: string): Promise<UserEntity> {
     return await this.userRepository.findOne({ email });
   }
 
-  async existNickName(nickName: string): Promise<UserEntity> {
+  async findUserWithNickName(nickName: string): Promise<UserEntity> {
     return await this.userRepository.findOne({ nickName });
   }
 
   async createUser(
     registerUserDto: RegisterUserDto,
     hashed: string,
-  ): Promise<UserEntity> {
-    return await this.userRepository.save({
+  ): Promise<void> {
+    await this.userRepository.save({
       ...registerUserDto,
       password: hashed,
     });
+  }
+
+  async findUserWithId(id: string) {
+    return await this.userRepository.findByIds([id]);
   }
 }

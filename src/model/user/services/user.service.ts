@@ -12,24 +12,30 @@ import * as bcrypt from "bcrypt";
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async register(registerUserDto: RegisterUserDto): Promise<UserEntity> {
+  async register(registerUserDto: RegisterUserDto): Promise<void> {
     const { nickName, email, password } = registerUserDto;
 
-    const isExistEmail = await this.userRepository.existEmail(email);
+    const isfindUserWithEmail = await this.userRepository.findUserWithEmail(
+      email,
+    );
 
-    if (isExistEmail) {
+    if (isfindUserWithEmail) {
       throw new UnauthorizedException("해당 이메일은 사용중입니다.");
     }
 
-    const isExistNickName = await this.userRepository.existNickName(nickName);
+    const isfindUserWithNickName =
+      await this.userRepository.findUserWithNickName(nickName);
 
-    if (isExistNickName) {
+    if (isfindUserWithNickName) {
       throw new UnauthorizedException("해당 닉네임은 사용중입니다.");
     }
 
     const hashed = await bcrypt.hash(password, 10);
-    const user = await this.userRepository.createUser(registerUserDto, hashed);
+    await this.userRepository.createUser(registerUserDto, hashed);
+  }
 
-    return user;
+  async findSelfInfoWithId(id: string) {
+    const a = await this.userRepository.findUserWithId(id);
+    return a;
   }
 }

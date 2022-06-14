@@ -1,12 +1,10 @@
 import { Exclude } from "class-transformer";
 import {
-  IsDateString,
   IsEnum,
   IsNotEmpty,
   IsString,
   IsEmail,
   IsBoolean,
-  IsPositive,
   IsNumberString,
 } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
@@ -58,7 +56,7 @@ export class UserEntity extends CommonEntity {
 
   @IsNumberString({ message: "phoneNumber : 문자열 형식으로 작성해주세요." })
   @IsNotEmpty({ message: "phoneNumber : 공백을 남기지 말아주세요." })
-  @Column({ type: "varchar", nullable: false })
+  @Column({ type: "varchar", unique: true, nullable: false })
   phoneNumber: string;
 
   @IsEnum({
