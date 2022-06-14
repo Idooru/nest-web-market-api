@@ -1,10 +1,10 @@
 import { Module, NestModule, MiddlewareConsumer } from "@nestjs/common";
 import { AuthModule } from "./model/auth/auth.module";
 import { UserModule } from "./model/user/user.module";
-import { ProductModule } from "./model/product/product.module";
-import { LoggerMiddleware } from "./lib/middlewares/logger.middleware";
+// import { ProductModule } from "./model/product/product.module";
+import { LoggerMiddleware } from "./common/middlewares/logger.middleware";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { typeORMConfig } from "./lib/config/typeorm.config";
+import { typeORMConfig } from "./common/config/typeorm.config";
 import { ConfigModule } from "@nestjs/config";
 
 import helmet from "helmet";
@@ -17,7 +17,6 @@ import helmet from "helmet";
     TypeOrmModule.forRoot(typeORMConfig),
     AuthModule,
     UserModule,
-    ProductModule,
   ],
   controllers: [],
   providers: [],

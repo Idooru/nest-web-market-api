@@ -11,7 +11,21 @@ export class UserRepository {
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  async createUser(body: RegisterUserDto) {
-    return await this.userRepository.save({ ...body });
+  async existEmail(email: string): Promise<UserEntity> {
+    return await this.userRepository.findOne({ email });
+  }
+
+  async existNickName(nickName: string): Promise<UserEntity> {
+    return await this.userRepository.findOne({ nickName });
+  }
+
+  async createUser(
+    registerUserDto: RegisterUserDto,
+    hashed: string,
+  ): Promise<UserEntity> {
+    return await this.userRepository.save({
+      ...registerUserDto,
+      password: hashed,
+    });
   }
 }
