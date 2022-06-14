@@ -1,8 +1,8 @@
 import { RegisterUserDto } from "./../dtos/register-user.dto";
 import { UnauthorizedException, Injectable } from "@nestjs/common";
-import { UserEntity } from "../entities/user.entity";
 import { UserRepository } from "../user.repository";
 import { ResponseUserDto } from "../dtos/response-user.dto";
+import { UserReturnFilter } from "src/common/config/etc";
 
 import * as bcrypt from "bcrypt";
 
@@ -10,16 +10,7 @@ import * as bcrypt from "bcrypt";
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  private readonly userReturnFilter = (user: UserEntity): ResponseUserDto => ({
-    id: user.id,
-    name: user.name,
-    nickName: user.nickName,
-    birth: user.birth,
-    gender: user.gender,
-    email: user.email,
-    phoneNumber: user.phoneNumber,
-    userType: user.userType,
-  });
+  private readonly userReturnFilter = UserReturnFilter;
 
   async register(registerUserDto: RegisterUserDto): Promise<void> {
     const { nickName, email, password } = registerUserDto;

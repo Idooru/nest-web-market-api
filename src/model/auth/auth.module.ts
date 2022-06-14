@@ -14,7 +14,7 @@ import { forwardRef } from "@nestjs/common";
     PassportModule.register({ defaultStrategy: "jwt", session: false }),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: "3h" },
+      signOptions: { expiresIn: "1m" },
     }),
     forwardRef(() => UserModule),
   ],
