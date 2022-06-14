@@ -42,4 +42,20 @@ export class AuthService {
       );
     }
   }
+
+  async refreshToken(user: JwtPayload): Promise<string> {
+    const jwtPayload: JwtPayload = {
+      id: user.id,
+      email: user.email,
+      nickName: user.nickName,
+    };
+
+    try {
+      return await this.jwtService.signAsync(jwtPayload);
+    } catch (err) {
+      throw new InternalServerErrorException(
+        "JWT 토큰을 발행하는데 실패하였습니다.",
+      );
+    }
+  }
 }

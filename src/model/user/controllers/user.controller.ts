@@ -10,6 +10,7 @@ import { cookieOptions } from "src/common/config/etc";
 import { JSON } from "../../../common/interfaces/json.interface";
 import { UserEntity } from "../entities/user.entity";
 import { getDecodedJwt } from "src/common/decorators/get-decoded-jwt.decorator";
+import { ResponseUserDto } from "../dtos/response-user.dto";
 
 @Controller("user")
 export class UserController {
@@ -46,12 +47,31 @@ export class UserController {
   }
 
   @UseGuards(IsLoginGuard)
-  @Get("/WhoAmI")
-  async WhoAmI(@getDecodedJwt() user: JwtPayload) {
+  @Get("/whoami")
+  async whoAmI(
+    @getDecodedJwt() user: JwtPayload,
+  ): Promise<JSON<ResponseUserDto[]>> {
     return {
       statusCode: 200,
       message: "본인 정보를 가져옵니다.",
       result: await this.userService.findSelfInfoWithId(user.id),
+    };
+  }
+
+  @UseGuards(IsLoginGuard)
+  @Get("/refresh-token")
+  async refreshToken(
+    @getDecodedJwt() user: JwtPayload,
+    @Res() res: Response,
+  ): Promise<JSON<void>> {
+    const jwtToken = await this.authService.refreshToken(user);
+
+    res.cookie("JWT_COOKIE", jwtToken, cookieOptions);
+    console.log({ JWT_COOKIE: jwtToken });
+
+    return {
+      statusCode: 200,
+      message: "토큰을 재발급 받았습니다. 쿠키를 확인하세요.",
     };
   }
 }

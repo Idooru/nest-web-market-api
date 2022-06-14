@@ -1,16 +1,25 @@
 import { RegisterUserDto } from "./../dtos/register-user.dto";
-import { UserAuthEntity } from "../entities/user.auth.entity";
 import { UnauthorizedException, Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
 import { UserEntity } from "../entities/user.entity";
 import { UserRepository } from "../user.repository";
+import { ResponseUserDto } from "../dtos/response-user.dto";
 
 import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
+
+  private readonly userReturnFilter = (user: UserEntity): ResponseUserDto => ({
+    id: user.id,
+    name: user.name,
+    nickName: user.nickName,
+    birth: user.birth,
+    gender: user.gender,
+    email: user.email,
+    phoneNumber: user.phoneNumber,
+    userType: user.userType,
+  });
 
   async register(registerUserDto: RegisterUserDto): Promise<void> {
     const { nickName, email, password } = registerUserDto;
@@ -34,8 +43,10 @@ export class UserService {
     await this.userRepository.createUser(registerUserDto, hashed);
   }
 
-  async findSelfInfoWithId(id: string) {
-    const a = await this.userRepository.findUserWithId(id);
-    return a;
+  async findSelfInfoWithId(id: string): Promise<ResponseUserDto[]> {
+    const user = await this.userRepository.findUserWithId(id);
+    const readOnlyUser = user.map((user) => this.userReturnFilter(user));
+
+    return readOnlyUser;
   }
 }
