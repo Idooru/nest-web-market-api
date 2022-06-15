@@ -18,16 +18,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async login(loginUserDto: LoginUserDto): Promise<string> {
-    const { email, password } = loginUserDto;
-    const user: UserEntity = await this.userRepositry.findUserWithEmail(email);
-
-    if (!user)
-      throw new UnauthorizedException("아이디 혹은 비밀번호가 틀렸습니다.");
-    if (!(await bcrypt.compare(password, user.password))) {
-      throw new UnauthorizedException("아이디 혹은 비밀번호가 틀렸습니다.");
-    }
-
+  async refreshToken(user: JwtPayload): Promise<string> {
     const jwtPayload: JwtPayload = {
       id: user.id,
       email: user.email,
@@ -43,19 +34,16 @@ export class AuthService {
     }
   }
 
-  async refreshToken(user: JwtPayload): Promise<string> {
-    const jwtPayload: JwtPayload = {
-      id: user.id,
-      email: user.email,
-      nickName: user.nickName,
-    };
+  async login(loginUserDto: LoginUserDto): Promise<string> {
+    const { email, password } = loginUserDto;
+    const user: UserEntity = await this.userRepositry.findUserWithEmail(email);
 
-    try {
-      return await this.jwtService.signAsync(jwtPayload);
-    } catch (err) {
-      throw new InternalServerErrorException(
-        "JWT 토큰을 발행하는데 실패하였습니다.",
-      );
+    if (!user)
+      throw new UnauthorizedException("아이디 혹은 비밀번호가 틀렸습니다.");
+    if (!(await bcrypt.compare(password, user.password))) {
+      throw new UnauthorizedException("아이디 혹은 비밀번호가 틀렸습니다.");
     }
+
+    return await this.refreshToken(user);
   }
 }

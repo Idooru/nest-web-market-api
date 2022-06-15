@@ -1,5 +1,5 @@
 import { Exclude } from "class-transformer";
-import { IsNotEmpty, IsString, IsEmail, IsNumberString } from "class-validator";
+import { IsNotEmpty, IsString, IsEmail } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { Column, Entity } from "typeorm";
 
@@ -23,9 +23,9 @@ export class UserEntity extends CommonEntity {
   @Column({ type: "varchar", unique: true, nullable: false })
   nickName: string;
 
-  @IsString({ message: "birth : Date 형식으로 작성해주세요." })
+  @IsString({ message: "birth : 문자열 형식으로 작성해주세요." })
   @IsNotEmpty({ message: "birth : 공백을 남기지 말아주세요." })
-  @Column({ type: "datetime", nullable: false })
+  @Column({ type: "varchar", unique: true, nullable: false })
   birth: string;
 
   @IsString({ message: "gender : 남성,여성 이외에 성별은 존재하지 않습니다." })
@@ -42,7 +42,7 @@ export class UserEntity extends CommonEntity {
   @Column({ type: "varchar", nullable: false })
   password: string;
 
-  @IsNumberString({ message: "phoneNumber : 문자열 형식으로 작성해주세요." })
+  @IsString({ message: "phoneNumber : 문자열 형식으로 작성해주세요." })
   @IsNotEmpty({ message: "phoneNumber : 공백을 남기지 말아주세요." })
   @Column({ type: "varchar", unique: true, nullable: false })
   phoneNumber: string;

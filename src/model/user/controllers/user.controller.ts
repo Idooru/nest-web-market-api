@@ -1,15 +1,16 @@
-import { JwtPayload } from "./../../../common/interfaces/jwt-payload.interface";
-import { IsLoginGuard } from "./../../../common/guards/isLogin.guard";
-import { AuthService } from "./../../auth/services/auth.service";
 import {
   Body,
   Controller,
   Delete,
   Get,
+  Patch,
   Post,
   Res,
   UseGuards,
 } from "@nestjs/common";
+import { JwtPayload } from "./../../../common/interfaces/jwt-payload.interface";
+import { IsLoginGuard } from "./../../../common/guards/isLogin.guard";
+import { AuthService } from "./../../auth/services/auth.service";
 import { UserService } from "../services/user.service";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { LoginUserDto } from "../dtos/login-user.dto";
@@ -19,6 +20,7 @@ import { JSON } from "../../../common/interfaces/json.interface";
 import { UserEntity } from "../entities/user.entity";
 import { getDecodedJwt } from "src/common/decorators/get-decoded-jwt.decorator";
 import { ResponseUserDto } from "../dtos/response-user.dto";
+import { PatchUserDto } from "../dtos/patch-user.dto";
 
 @Controller("user")
 export class UserController {
@@ -91,6 +93,27 @@ export class UserController {
     return {
       statusCode: 200,
       message: "로그아웃을 완료하였습니다.",
+    };
+  }
+
+  @UseGuards(IsLoginGuard)
+  @Patch("/set-user")
+  async setUser(
+    @Body() patchUserDto: PatchUserDto,
+    @getDecodedJwt() jwtPayload: JwtPayload,
+    @Res() res: Response,
+  ): Promise<any> {
+    const jwtToken = await this.userService.patchUser(
+      patchUserDto,
+      jwtPayload.id,
+    );
+
+    res.cookie("JWT_COOKIE", jwtToken, CookieOption);
+    console.log({ JWT_COOKIE: jwtToken });
+
+    return {
+      statusCode: 200,
+      message: "사용자 정보를 수정하고 토큰을 재발급합니다.",
     };
   }
 }

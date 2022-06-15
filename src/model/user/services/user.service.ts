@@ -1,8 +1,11 @@
+import { JwtPayload } from "./../../../common/interfaces/jwt-payload.interface";
+import { PatchUserDto } from "./../dtos/patch-user.dto";
 import { RegisterUserDto } from "./../dtos/register-user.dto";
 import { UnauthorizedException, Injectable } from "@nestjs/common";
 import { UserRepository } from "../user.repository";
 import { ResponseUserDto } from "../dtos/response-user.dto";
 import { UserReturnFilter } from "src/common/config/etc";
+import { AuthService } from "src/model/auth/services/auth.service";
 
 import * as bcrypt from "bcrypt";
 
@@ -15,18 +18,17 @@ export class UserService {
   async register(registerUserDto: RegisterUserDto): Promise<void> {
     const { nickName, email, password } = registerUserDto;
 
-    const isfindUserWithEmail = await this.userRepository.findUserWithEmail(
-      email,
-    );
+    const isExistUserEmail = await this.userRepository.findUserWithEmail(email);
 
-    if (isfindUserWithEmail) {
+    if (isExistUserEmail) {
       throw new UnauthorizedException("해당 이메일은 사용중입니다.");
     }
 
-    const isfindUserWithNickName =
-      await this.userRepository.findUserWithNickName(nickName);
+    const isExistUserNickName = await this.userRepository.findUserWithNickName(
+      nickName,
+    );
 
-    if (isfindUserWithNickName) {
+    if (isExistUserNickName) {
       throw new UnauthorizedException("해당 닉네임은 사용중입니다.");
     }
 
@@ -39,5 +41,12 @@ export class UserService {
     const readOnlyUser = user.map((user) => this.userReturnFilter(user));
 
     return readOnlyUser;
+  }
+
+  async patchUser(patchUserDto: PatchUserDto, id: string): Promise<void> {
+    const { password } = patchUserDto;
+    const user = await this.userRepository.patchUser(patchUserDto, id);
+
+    const jwtToken = await this.authService.refreshToken(jwtPayload);
   }
 }
