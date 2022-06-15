@@ -3,20 +3,12 @@ import { IsNotEmpty, IsString, IsEmail } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { Column, Entity } from "typeorm";
 
-// export class Name {
-//   @Column()
-//   first: string;
-
-//   @Column()
-//   last: string;
-// }
-
 @Entity("users")
 export class UserEntity extends CommonEntity {
-  @IsString({ message: "name : 문자열 형식으로 작성해주세요." })
-  @IsNotEmpty({ message: "name : 공백을 남기지 말아주세요." })
+  @IsString({ message: "realName : 문자열 형식으로 작성해주세요." })
+  @IsNotEmpty({ message: "realName : 공백을 남기지 말아주세요." })
   @Column({ type: "varchar", nullable: false })
-  name: string;
+  realName: string;
 
   @IsString({ message: "nickName : 문자열 형식으로 작성해주세요." })
   @IsNotEmpty({ message: "nickName : 공백을 남기지 말아주세요." })
@@ -25,7 +17,7 @@ export class UserEntity extends CommonEntity {
 
   @IsString({ message: "birth : 문자열 형식으로 작성해주세요." })
   @IsNotEmpty({ message: "birth : 공백을 남기지 말아주세요." })
-  @Column({ type: "varchar", unique: true, nullable: false })
+  @Column({ type: "varchar", nullable: false })
   birth: string;
 
   @IsString({ message: "gender : 남성,여성 이외에 성별은 존재하지 않습니다." })
@@ -35,7 +27,7 @@ export class UserEntity extends CommonEntity {
 
   @IsEmail({ message: "email : email 형식으로 작성해주세요." })
   @IsNotEmpty({ message: "email : 공백을 남기지 말아주세요." })
-  @Column({ type: "varchar", unique: true, nullable: false })
+  @Column({ type: "varchar", length: 60, unique: true, nullable: false })
   email: string;
 
   @Exclude()

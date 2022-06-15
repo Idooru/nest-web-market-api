@@ -10,7 +10,7 @@ export const CookieOption: CookieOptions = {
 
 export const UserReturnFilter = (user: UserEntity): ResponseUserDto => ({
   id: user.id,
-  name: user.name,
+  realName: user.realName,
   nickName: user.nickName,
   birth: user.birth,
   gender: user.gender,

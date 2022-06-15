@@ -12,12 +12,66 @@ export class UserRepository {
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  async findUserWithEmail(email: string): Promise<UserEntity> {
-    return await this.userRepository.findOne({ email });
+  async checkUserEmail(email: string) {
+    try {
+      const userEmail = await this.userRepository.findOne({ email });
+
+      if (userEmail) {
+        throw new Error();
+      }
+    } catch (err) {
+      throw new UnauthorizedException("해당 이메일은 사용중입니다.");
+    }
   }
 
-  async findUserWithNickName(nickName: string): Promise<UserEntity> {
-    return await this.userRepository.findOne({ nickName });
+  async checkUserNickName(nickName: string) {
+    try {
+      const userNickName = await this.userRepository.findOne({ nickName });
+
+      if (userNickName) {
+        throw new Error();
+      }
+    } catch (err) {
+      throw new UnauthorizedException("해당 닉네임은 사용중입니다.");
+    }
+  }
+
+  async checkUserPhoneNumber(phoneNumber: string) {
+    try {
+      const userPhoneNumber = await this.userRepository.findOne({
+        phoneNumber,
+      });
+
+      if (userPhoneNumber) {
+        throw new Error();
+      }
+    } catch (err) {
+      throw new UnauthorizedException("해당 전화번호는 사용중입니다.");
+    }
+  }
+
+  async isExistUserWithId(id: string): Promise<UserEntity> {
+    try {
+      return await this.userRepository.findOneOrFail({ id });
+    } catch (err) {
+      throw new UnauthorizedException("해당 아이디는 존재하지 않습니다.");
+    }
+  }
+
+  async isExistUserWithEmail(email: string): Promise<UserEntity> {
+    try {
+      return await this.userRepository.findOneOrFail({ email });
+    } catch (err) {
+      throw new UnauthorizedException("해당 이메일은 존재하지 않습니다.");
+    }
+  }
+
+  async isExistUserWithNickName(nickName: string): Promise<UserEntity> {
+    try {
+      return await this.userRepository.findOneOrFail({ nickName });
+    } catch (err) {
+      throw new UnauthorizedException("해당 닉네임은 존재하지 않습니다.");
+    }
   }
 
   async createUser(
@@ -30,16 +84,6 @@ export class UserRepository {
     });
   }
 
-  async findUserWithId(id: string): Promise<UserEntity[]> {
-    try {
-      const user = await this.userRepository.findByIds([id]);
-      if (!user) throw new Error();
-      return user;
-    } catch (err) {
-      throw new UnauthorizedException("해당 아이디는 존재하지 않습니다.");
-    }
-  }
-
   async patchUser(
     patchUserDto: PatchUserDto,
     hashed: string,
@@ -50,20 +94,7 @@ export class UserRepository {
     await this.userRepository.update(id, payload);
   }
 
-  async resetPassword(email: string, hashed: string) {
-    const password = { password: hashed };
-    await this.userRepository.update(email, password);
-  }
-
   async deleteUser(id: string): Promise<void> {
     await this.userRepository.delete(id);
-  }
-
-  async findEmailWithBirth(birth: string): Promise<UserEntity> {
-    return await this.userRepository.findOneOrFail({ birth });
-  }
-
-  async findEmailWithPhoneNumber(phoneNumber: string): Promise<UserEntity> {
-    return await this.userRepository.findOneOrFail({ phoneNumber });
   }
 }

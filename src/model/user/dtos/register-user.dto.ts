@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString, Matches } from "class-validator";
 import { UserEntity } from "../entities/user.entity";
 
 export class RegisterUserDto extends PickType(UserEntity, [
-  "name",
+  "realName",
   "nickName",
   "birth",
   "gender",

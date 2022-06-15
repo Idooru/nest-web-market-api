@@ -1,3 +1,4 @@
+import { IsNotLoginGuard } from "./../../../common/guards/isNotLogin.guard";
 import {
   Body,
   Controller,
@@ -30,6 +31,7 @@ export class UserController {
     private readonly authService: AuthService,
   ) {}
 
+  @UseGuards(IsNotLoginGuard)
   @Post("/register")
   async register(
     @Body() registerUserDto: RegisterUserDto,
@@ -41,6 +43,7 @@ export class UserController {
     };
   }
 
+  @UseGuards(IsNotLoginGuard)
   @Post("/login")
   async login(
     @Body() loginUserDto: LoginUserDto,
@@ -61,7 +64,7 @@ export class UserController {
   @Get("/whoami")
   async whoAmI(
     @getDecodedJwt() user: JwtPayload,
-  ): Promise<JSON<ResponseUserDto[]>> {
+  ): Promise<JSON<ResponseUserDto>> {
     return {
       statusCode: 200,
       message: "본인 정보를 가져옵니다.",
@@ -128,8 +131,11 @@ export class UserController {
   @Delete("/secession")
   async secession(
     @getDecodedJwt() jwtPayload: JwtPayload,
+    @Res() res: Response,
   ): Promise<JSON<string>> {
     await this.userService.deleteUserWithId(jwtPayload.id);
+
+    res.clearCookie("JWT_COOKIE");
 
     return {
       statusCode: 203,
@@ -138,6 +144,7 @@ export class UserController {
     };
   }
 
+  @UseGuards(IsNotLoginGuard)
   @Get("/find-email")
   async findEmail(@Body() findEmailDto: FindEmailDto): Promise<JSON<string>> {
     return {
@@ -147,6 +154,7 @@ export class UserController {
     };
   }
 
+  @UseGuards(IsNotLoginGuard)
   @Patch("/reset-password")
   async resetPassword(
     @Body() resetPasswordDto: ResetPasswordDto,

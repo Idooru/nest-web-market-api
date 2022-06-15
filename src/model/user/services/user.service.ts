@@ -1,7 +1,7 @@
 import { JwtPayload } from "./../../../common/interfaces/jwt-payload.interface";
 import { PatchUserDto } from "./../dtos/patch-user.dto";
 import { RegisterUserDto } from "./../dtos/register-user.dto";
-import { UnauthorizedException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { UserRepository } from "../user.repository";
 import { ResponseUserDto } from "../dtos/response-user.dto";
 import { UserReturnFilter } from "src/common/config/etc";
@@ -19,31 +19,19 @@ export class UserService {
   private readonly userReturnFilter = UserReturnFilter;
 
   async register(registerUserDto: RegisterUserDto): Promise<void> {
-    const { nickName, email, password } = registerUserDto;
+    const { nickName, email, password, phoneNumber } = registerUserDto;
 
-    const isExistUserEmail = await this.userRepository.findUserWithEmail(email);
-
-    if (isExistUserEmail) {
-      throw new UnauthorizedException("해당 이메일은 사용중입니다.");
-    }
-
-    const isExistUserNickName = await this.userRepository.findUserWithNickName(
-      nickName,
-    );
-
-    if (isExistUserNickName) {
-      throw new UnauthorizedException("해당 닉네임은 사용중입니다.");
-    }
+    await this.userRepository.checkUserEmail(email);
+    await this.userRepository.checkUserNickName(nickName);
+    await this.userRepository.checkUserPhoneNumber(phoneNumber);
 
     const hashed = await bcrypt.hash(password, 10);
     await this.userRepository.createUser(registerUserDto, hashed);
   }
 
-  async findSelfInfoWithId(id: string): Promise<ResponseUserDto[]> {
-    const user = await this.userRepository.findUserWithId(id);
-    const readOnlyUser = user.map((user) => this.userReturnFilter(user));
-
-    return readOnlyUser;
+  async findSelfInfoWithId(id: string): Promise<ResponseUserDto> {
+    const user = await this.userRepository.isExistUserWithId(id);
+    return this.userReturnFilter(user);
   }
 
   async patchUserAndVerifyToken(

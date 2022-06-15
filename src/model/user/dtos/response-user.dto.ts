@@ -3,7 +3,7 @@ import { UserEntity } from "../entities/user.entity";
 
 export class ResponseUserDto extends PickType(UserEntity, [
   "id",
-  "name",
+  "realName",
   "nickName",
   "birth",
   "gender",

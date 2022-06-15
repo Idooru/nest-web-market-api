@@ -2,7 +2,7 @@ import { ResetPasswordDto } from "./../../user/dtos/reset-password.dto";
 import { FindEmailDto } from "./../../user/dtos/find-email.dto";
 import { JwtService } from "@nestjs/jwt";
 import { LoginUserDto } from "./../../user/dtos/login-user.dto";
-import { UserRepository } from "./../../user/user.repository";
+import { AuthRepository } from "../auth.repository";
 import {
   Injectable,
   InternalServerErrorException,
@@ -15,7 +15,7 @@ import * as bcrypt from "bcrypt";
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userRepositry: UserRepository,
+    private readonly authRepositry: AuthRepository,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -37,11 +37,9 @@ export class AuthService {
 
   async login(loginUserDto: LoginUserDto): Promise<string> {
     const { email, password } = loginUserDto;
-    const user = await this.userRepositry.findUserWithEmail(email);
+    const user = await this.authRepositry.findUserWithEmail(email);
 
-    if (!user)
-      throw new UnauthorizedException("아이디 혹은 비밀번호가 틀렸습니다.");
-    else if (!(await bcrypt.compare(password, user.password))) {
+    if (!(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException("아이디 혹은 비밀번호가 틀렸습니다.");
     }
 
@@ -49,30 +47,36 @@ export class AuthService {
   }
 
   async findEmail(findEmailDto: FindEmailDto): Promise<string> {
-    const { birth, phoneNumber } = findEmailDto;
+    const { realName, phoneNumber } = findEmailDto;
 
-    const foundWithBirth = await this.userRepositry.findEmailWithBirth(birth);
+    const foundWithRealName = await this.authRepositry.isExistUserWithRealName(
+      realName,
+    );
     const foundWithPhoneNumber =
-      await this.userRepositry.findEmailWithPhoneNumber(phoneNumber);
+      await this.authRepositry.isExistUserWithPhoneNumber(phoneNumber);
 
-    if (!(foundWithBirth.id === foundWithPhoneNumber.id)) {
+    if (!foundWithRealName || !foundWithPhoneNumber) {
+      throw new UnauthorizedException("올바르지 않은 정보입니다.");
+    }
+
+    if (!(foundWithRealName.id === foundWithPhoneNumber.id)) {
       throw new UnauthorizedException(
         "입력된 두 정보가 서로 일치하는 정보가 아닙니다.",
       );
     }
 
-    return foundWithBirth.email;
+    return foundWithRealName.email;
   }
 
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
     const { email, password } = resetPasswordDto;
-    const user = await this.userRepositry.findUserWithEmail(email);
+    const user = await this.authRepositry.findUserWithEmail(email);
 
     if (!user) {
       throw new UnauthorizedException("이메일에 해당하는 아이디가 없습니다.");
     }
 
     const hashed = await bcrypt.hash(password, 10);
-    await this.userRepositry.resetPassword(email, hashed);
+    await this.authRepositry.resetPassword(user.id, hashed);
   }
 }
