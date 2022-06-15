@@ -40,7 +40,30 @@ export class UserRepository {
     }
   }
 
-  async patchUser(patchUserDto: PatchUserDto, id: string): Promise<void> {
-    await this.userRepository.update(id, patchUserDto);
+  async patchUser(
+    patchUserDto: PatchUserDto,
+    hashed: string,
+    id: string,
+  ): Promise<void> {
+    const password = { password: hashed };
+    const payload = { ...patchUserDto, ...password };
+    await this.userRepository.update(id, payload);
+  }
+
+  async resetPassword(email: string, hashed: string) {
+    const password = { password: hashed };
+    await this.userRepository.update(email, password);
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    await this.userRepository.delete(id);
+  }
+
+  async findEmailWithBirth(birth: string): Promise<UserEntity> {
+    return await this.userRepository.findOneOrFail({ birth });
+  }
+
+  async findEmailWithPhoneNumber(phoneNumber: string): Promise<UserEntity> {
+    return await this.userRepository.findOneOrFail({ phoneNumber });
   }
 }

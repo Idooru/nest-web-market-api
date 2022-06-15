@@ -1,4 +1,5 @@
-import { UserEntity } from "./../../user/entities/user.entity";
+import { ResetPasswordDto } from "./../../user/dtos/reset-password.dto";
+import { FindEmailDto } from "./../../user/dtos/find-email.dto";
 import { JwtService } from "@nestjs/jwt";
 import { LoginUserDto } from "./../../user/dtos/login-user.dto";
 import { UserRepository } from "./../../user/user.repository";
@@ -19,7 +20,7 @@ export class AuthService {
   ) {}
 
   async refreshToken(user: JwtPayload): Promise<string> {
-    const jwtPayload: JwtPayload = {
+    const jwtPayload = {
       id: user.id,
       email: user.email,
       nickName: user.nickName,
@@ -36,14 +37,42 @@ export class AuthService {
 
   async login(loginUserDto: LoginUserDto): Promise<string> {
     const { email, password } = loginUserDto;
-    const user: UserEntity = await this.userRepositry.findUserWithEmail(email);
+    const user = await this.userRepositry.findUserWithEmail(email);
 
     if (!user)
       throw new UnauthorizedException("아이디 혹은 비밀번호가 틀렸습니다.");
-    if (!(await bcrypt.compare(password, user.password))) {
+    else if (!(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException("아이디 혹은 비밀번호가 틀렸습니다.");
     }
 
     return await this.refreshToken(user);
+  }
+
+  async findEmail(findEmailDto: FindEmailDto): Promise<string> {
+    const { birth, phoneNumber } = findEmailDto;
+
+    const foundWithBirth = await this.userRepositry.findEmailWithBirth(birth);
+    const foundWithPhoneNumber =
+      await this.userRepositry.findEmailWithPhoneNumber(phoneNumber);
+
+    if (!(foundWithBirth.id === foundWithPhoneNumber.id)) {
+      throw new UnauthorizedException(
+        "입력된 두 정보가 서로 일치하는 정보가 아닙니다.",
+      );
+    }
+
+    return foundWithBirth.email;
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
+    const { email, password } = resetPasswordDto;
+    const user = await this.userRepositry.findUserWithEmail(email);
+
+    if (!user) {
+      throw new UnauthorizedException("이메일에 해당하는 아이디가 없습니다.");
+    }
+
+    const hashed = await bcrypt.hash(password, 10);
+    await this.userRepositry.resetPassword(email, hashed);
   }
 }

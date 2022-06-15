@@ -17,10 +17,11 @@ import { LoginUserDto } from "../dtos/login-user.dto";
 import { Response } from "express";
 import { CookieOption } from "src/common/config/etc";
 import { JSON } from "../../../common/interfaces/json.interface";
-import { UserEntity } from "../entities/user.entity";
 import { getDecodedJwt } from "src/common/decorators/get-decoded-jwt.decorator";
 import { ResponseUserDto } from "../dtos/response-user.dto";
 import { PatchUserDto } from "../dtos/patch-user.dto";
+import { FindEmailDto } from "../dtos/find-email.dto";
+import { ResetPasswordDto } from "../dtos/reset-password.dto";
 
 @Controller("user")
 export class UserController {
@@ -32,7 +33,7 @@ export class UserController {
   @Post("/register")
   async register(
     @Body() registerUserDto: RegisterUserDto,
-  ): Promise<JSON<UserEntity>> {
+  ): Promise<JSON<void>> {
     await this.userService.register(registerUserDto);
     return {
       statusCode: 201,
@@ -42,9 +43,9 @@ export class UserController {
 
   @Post("/login")
   async login(
-    @Res() res: Response,
     @Body() loginUserDto: LoginUserDto,
-  ): Promise<JSON<void>> {
+    @Res() res: Response,
+  ): Promise<JSON<string>> {
     const jwtToken = await this.authService.login(loginUserDto);
 
     res.cookie("JWT_COOKIE", jwtToken, CookieOption);
@@ -71,10 +72,10 @@ export class UserController {
   @UseGuards(IsLoginGuard)
   @Get("/refresh-token")
   async refreshToken(
-    @getDecodedJwt() user: JwtPayload,
+    @getDecodedJwt() jwtPayload: JwtPayload,
     @Res() res: Response,
-  ): Promise<JSON<void>> {
-    const jwtToken = await this.authService.refreshToken(user);
+  ): Promise<JSON<string>> {
+    const jwtToken = await this.authService.refreshToken(jwtPayload);
 
     res.cookie("JWT_COOKIE", jwtToken, CookieOption);
     console.log({ JWT_COOKIE: jwtToken });
@@ -82,17 +83,22 @@ export class UserController {
     return {
       statusCode: 200,
       message: "토큰을 재발급 받았습니다. 쿠키를 확인하세요.",
+      result: jwtPayload.id,
     };
   }
 
   @UseGuards(IsLoginGuard)
   @Delete("/logout")
-  logout(@Res() res: Response): JSON<void> {
+  logout(
+    @getDecodedJwt() jwtPayload: JwtPayload,
+    @Res() res: Response,
+  ): JSON<string> {
     res.clearCookie("JWT_COOKIE");
 
     return {
       statusCode: 200,
       message: "로그아웃을 완료하였습니다.",
+      result: jwtPayload.id,
     };
   }
 
@@ -102,8 +108,8 @@ export class UserController {
     @Body() patchUserDto: PatchUserDto,
     @getDecodedJwt() jwtPayload: JwtPayload,
     @Res() res: Response,
-  ): Promise<any> {
-    const jwtToken = await this.userService.patchUser(
+  ): Promise<JSON<string>> {
+    const jwtToken = await this.userService.patchUserAndVerifyToken(
       patchUserDto,
       jwtPayload.id,
     );
@@ -114,6 +120,42 @@ export class UserController {
     return {
       statusCode: 200,
       message: "사용자 정보를 수정하고 토큰을 재발급합니다.",
+      result: jwtPayload.id,
+    };
+  }
+
+  @UseGuards(IsLoginGuard)
+  @Delete("/secession")
+  async secession(
+    @getDecodedJwt() jwtPayload: JwtPayload,
+  ): Promise<JSON<string>> {
+    await this.userService.deleteUserWithId(jwtPayload.id);
+
+    return {
+      statusCode: 203,
+      message: "사용자 정보를 삭제하였습니다.",
+      result: jwtPayload.id,
+    };
+  }
+
+  @Get("/find-email")
+  async findEmail(@Body() findEmailDto: FindEmailDto): Promise<JSON<string>> {
+    return {
+      statusCode: 200,
+      message: "이메일 정보를 가져옵니다.",
+      result: await this.authService.findEmail(findEmailDto),
+    };
+  }
+
+  @Patch("/reset-password")
+  async resetPassword(
+    @Body() resetPasswordDto: ResetPasswordDto,
+  ): Promise<JSON<void>> {
+    await this.authService.resetPassword(resetPasswordDto);
+
+    return {
+      statusCode: 200,
+      message: "사용자 비밀번호를 재설정 하였습니다.",
     };
   }
 }

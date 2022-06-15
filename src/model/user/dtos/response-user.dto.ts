@@ -1,4 +1,4 @@
-import { PickType } from "@nestjs/swagger";
+import { PickType } from "@nestjs/mapped-types";
 import { UserEntity } from "../entities/user.entity";
 
 export class ResponseUserDto extends PickType(UserEntity, [

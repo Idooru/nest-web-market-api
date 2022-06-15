@@ -11,7 +11,10 @@ import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly authService: AuthService,
+  ) {}
 
   private readonly userReturnFilter = UserReturnFilter;
 
@@ -43,10 +46,24 @@ export class UserService {
     return readOnlyUser;
   }
 
-  async patchUser(patchUserDto: PatchUserDto, id: string): Promise<void> {
+  async patchUserAndVerifyToken(
+    patchUserDto: PatchUserDto,
+    id: string,
+  ): Promise<string> {
     const { password } = patchUserDto;
-    const user = await this.userRepository.patchUser(patchUserDto, id);
+    const hashed = await bcrypt.hash(password, 10);
+    await this.userRepository.patchUser(patchUserDto, hashed, id);
 
-    const jwtToken = await this.authService.refreshToken(jwtPayload);
+    const jwtPaylaod: JwtPayload = {
+      id,
+      email: patchUserDto.email,
+      nickName: patchUserDto.nickName,
+    };
+
+    return await this.authService.refreshToken(jwtPaylaod);
+  }
+
+  async deleteUserWithId(id: string): Promise<void> {
+    await this.userRepository.deleteUser(id);
   }
 }
