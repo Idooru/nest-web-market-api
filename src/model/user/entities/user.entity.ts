@@ -17,7 +17,7 @@ export class UserEntity extends CommonEntity {
 
   @IsString({ message: "birth: 문자열 형식으로 작성해주세요." })
   @IsNotEmpty({ message: "birth: 공백을 남기지 말아주세요." })
-  @Column({ type: "varchar", length: 10, nullable: false })
+  @Column({ type: "date", nullable: false })
   birth: string;
 
   @IsString({ message: "gender: 남성,여성 이외에 성별은 존재하지 않습니다." })

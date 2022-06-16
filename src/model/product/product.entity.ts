@@ -1,5 +1,6 @@
+import { int } from "aws-sdk/clients/datapipeline";
 import { float } from "aws-sdk/clients/lightsail";
-import { IsNotEmpty, IsNumber, IsString, IsUrl } from "class-validator";
+import { IsInt, IsNotEmpty, IsNumber, IsString, IsUrl } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { Column, Entity } from "typeorm";
 
@@ -10,10 +11,10 @@ export class ProductEntity extends CommonEntity {
   @Column({ type: "varchar", length: 40, unique: true, nullable: false })
   productName: string;
 
-  @IsNumber()
+  @IsInt()
   @IsNotEmpty({ message: "price: 공백을 남기지 말아주세요." })
-  @Column({ type: "number", unsigned: true, nullable: false })
-  price: number;
+  @Column({ type: "int", unsigned: true, nullable: false })
+  price: int;
 
   @IsString({ message: "origin: 문자열 형식으로 작성해주세요." })
   @IsNotEmpty({ message: "origin: 공백을 남기지 말아주세요." })
