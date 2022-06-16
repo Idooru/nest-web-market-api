@@ -1,3 +1,4 @@
+import { FindEmailDto } from "./../dtos/find-email.dto";
 import { IsNotLoginGuard } from "./../../../common/guards/isNotLogin.guard";
 import {
   Body,
@@ -6,6 +7,7 @@ import {
   Get,
   Patch,
   Post,
+  Query,
   Res,
   UseGuards,
 } from "@nestjs/common";
@@ -21,7 +23,6 @@ import { JSON } from "../../../common/interfaces/json.interface";
 import { getDecodedJwt } from "src/common/decorators/get-decoded-jwt.decorator";
 import { ResponseUserDto } from "../dtos/response-user.dto";
 import { PatchUserDto } from "../dtos/patch-user.dto";
-import { FindEmailDto } from "../dtos/find-email.dto";
 import { ResetPasswordDto } from "../dtos/reset-password.dto";
 
 @Controller("user")
@@ -146,7 +147,7 @@ export class UserController {
 
   @UseGuards(IsNotLoginGuard)
   @Get("/find-email")
-  async findEmail(@Body() findEmailDto: FindEmailDto): Promise<JSON<string>> {
+  async findEmail(@Query() findEmailDto: FindEmailDto): Promise<JSON<string>> {
     return {
       statusCode: 200,
       message: "이메일 정보를 가져옵니다.",
