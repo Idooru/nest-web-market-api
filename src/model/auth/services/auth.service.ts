@@ -24,6 +24,7 @@ export class AuthService {
       id: user.id,
       email: user.email,
       nickName: user.nickName,
+      userType: user.userType,
     };
 
     try {

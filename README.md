@@ -71,3 +71,11 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## 작성시 유의 사항
+
+1. 이유는 알 수 없지만 커스텀 데코레이터를 사용해서 user type이 admin인 계정만 수행 할 수 있게끔 데코레이터를
+   설정 한 후에 상품 업데이트나 삭제를 할 시 "TypeORMError: Empty criteria(s) are not allowed for the update method." 에러가 난다.
+
+2. 위와 같은 이유 때문에 커스텀 데코레이터 대신 가드를 IsLoginGuard와 IsAdminGuard 순서대로 Guard를 설정하게 되면 IsAdminGuard가 먼저 실행되고
+   나서 IsLoginGuard가 실행되게 된다. 그 이유 때문에 배치를 IsAdminGuard -> IsLoginGuard로 배치를 수정했다.

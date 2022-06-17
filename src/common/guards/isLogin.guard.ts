@@ -4,24 +4,18 @@ import {
   Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
-import { JwtModuleOptions } from "@nestjs/jwt";
 import { JwtService } from "@nestjs/jwt";
 import { JwtPayload } from "./../interfaces/jwt-payload.interface";
-import { UserRepository } from "./../../model/user/user.repository";
 import { Request } from "express";
+import { JwtOptions } from "../config/etc";
 
 @Injectable()
 export class IsLoginGuard implements CanActivate {
-  constructor(private readonly userRepository: UserRepository) {}
-
-  private JwtOptions: JwtModuleOptions = {
-    secret: process.env.JWT_SECRET,
-  };
-
-  private jwtService = new JwtService(this.JwtOptions);
+  private readonly jwtOptions = JwtOptions;
+  private readonly jwtService = new JwtService(this.jwtOptions);
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const req = context.switchToHttp().getRequest<Request>();
+    const req = context.switchToHttp().getRequest() as Request;
     const { JWT_COOKIE } = req.signedCookies;
 
     if (!JWT_COOKIE) {

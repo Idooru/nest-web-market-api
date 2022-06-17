@@ -13,39 +13,27 @@ export class UserRepository {
   ) {}
 
   async checkUserEmail(email: string) {
-    try {
-      const userEmail = await this.userRepository.findOne({ email });
+    const found = await this.userRepository.findOne({ email });
 
-      if (userEmail) {
-        throw new Error();
-      }
-    } catch (err) {
+    if (found) {
       throw new UnauthorizedException("해당 이메일은 사용중입니다.");
     }
   }
 
   async checkUserNickName(nickName: string) {
-    try {
-      const userNickName = await this.userRepository.findOne({ nickName });
+    const found = await this.userRepository.findOne({ nickName });
 
-      if (userNickName) {
-        throw new Error();
-      }
-    } catch (err) {
+    if (found) {
       throw new UnauthorizedException("해당 닉네임은 사용중입니다.");
     }
   }
 
   async checkUserPhoneNumber(phoneNumber: string) {
-    try {
-      const userPhoneNumber = await this.userRepository.findOne({
-        phoneNumber,
-      });
+    const userPhoneNumber = await this.userRepository.findOne({
+      phoneNumber,
+    });
 
-      if (userPhoneNumber) {
-        throw new Error();
-      }
-    } catch (err) {
+    if (userPhoneNumber) {
       throw new UnauthorizedException("해당 전화번호는 사용중입니다.");
     }
   }
@@ -54,7 +42,7 @@ export class UserRepository {
     try {
       return await this.userRepository.findOneOrFail({ id });
     } catch (err) {
-      throw new UnauthorizedException("해당 아이디는 존재하지 않습니다.");
+      throw new UnauthorizedException("해당 사용자아이디는 존재하지 않습니다.");
     }
   }
 
