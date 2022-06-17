@@ -6,6 +6,7 @@ import { LoggerMiddleware } from "./common/middlewares/logger.middleware";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { typeORMConfig } from "./common/config/typeorm.config";
 import { ConfigModule } from "@nestjs/config";
+import { ImageModule } from './image/image.module';
 
 import helmet from "helmet";
 
@@ -18,6 +19,7 @@ import helmet from "helmet";
     AuthModule,
     UserModule,
     ProductModule,
+    ImageModule,
   ],
   controllers: [],
   providers: [],

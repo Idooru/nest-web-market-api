@@ -1,5 +1,3 @@
-import { IsAdminGuard } from "./../../../common/guards/isAdmin.guard";
-import { IsLoginGuard } from "./../../../common/guards/isLogin.guard";
 import {
   Controller,
   Get,
@@ -9,16 +7,21 @@ import {
   Patch,
   Delete,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
 } from "@nestjs/common";
-import { ProductService } from "../services/product.service";
-import { JSON } from "../../../common/interfaces/json.interface";
-import { CreateProductDto } from "../dto/create_product.dto";
-import { ModifyProductDto } from "../dto/modify_product.dto";
 import {
   ResponseProductDto,
   ResponseProductsDto,
 } from "../dto/response_product.dto";
-import { IsAdmin } from "src/common/decorators/isAdmin.decorator";
+import { JSON } from "../../../common/interfaces/json.interface";
+import { CreateProductDto } from "../dto/create_product.dto";
+import { ModifyProductDto } from "../dto/modify_product.dto";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { ProductService } from "./../services/product.service";
+import { MulterProvider } from "./../../../common/multer/multer.provider";
+import { IsAdminGuard } from "./../../../common/guards/isAdmin.guard";
+import { IsLoginGuard } from "./../../../common/guards/isLogin.guard";
 
 @Controller("/product")
 export class ProductController {
@@ -68,7 +71,6 @@ export class ProductController {
   @UseGuards(IsLoginGuard)
   @Post("/")
   async createProduct(
-    @IsAdmin()
     @Body()
     createProductDto: CreateProductDto,
   ): Promise<JSON<void>> {
@@ -79,6 +81,16 @@ export class ProductController {
       message: "상품을 생성하였습니다.",
     };
   }
+
+  @UseGuards(IsAdminGuard)
+  @UseGuards(IsLoginGuard)
+  @UseInterceptors(
+    FileInterceptor("image", new MulterProvider().apply("image")),
+  )
+  @Post("/upload-img")
+  async uploadImg(
+    @UploadedFile() productImg: Express.Multer.File,
+  ): Promise<any> {}
 
   @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)

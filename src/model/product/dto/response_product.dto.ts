@@ -15,10 +15,8 @@ export class ResponseProductDto extends PickType(ProductEntity, [
 ] as const) {}
 
 export class ResponseProductsDto extends PickType(ProductEntity, [
-  "id",
   "name",
   "price",
-  "origin",
   "type",
   "imgUrl",
   "rating",
@@ -43,10 +41,8 @@ export const ProductsReturnFilter = (
   products: ProductEntity[],
 ): ResponseProductsDto[] =>
   products.map((idx) => ({
-    id: idx.id,
     name: idx.name,
     price: idx.price,
-    origin: idx.origin,
     type: idx.type,
     imgUrl: idx.imgUrl,
     rating: idx.rating,
