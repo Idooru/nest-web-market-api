@@ -4,7 +4,7 @@ import { RegisterUserDto } from "./../dtos/register-user.dto";
 import { Injectable } from "@nestjs/common";
 import { UserRepository } from "../user.repository";
 import { ResponseUserDto } from "../dtos/response-user.dto";
-import { UserReturnFilter } from "src/common/config/etc";
+import { UserReturnFilter } from "../dtos/response-user.dto";
 import { AuthService } from "src/model/auth/services/auth.service";
 
 import * as bcrypt from "bcrypt";

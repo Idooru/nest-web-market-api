@@ -5,28 +5,28 @@ import { Column, Entity } from "typeorm";
 
 @Entity("users")
 export class UserEntity extends CommonEntity {
-  @IsString({ message: "realName: 문자열 형식으로 작성해주세요." })
-  @IsNotEmpty({ message: "realName: 공백을 남기지 말아주세요." })
+  @IsString()
+  @IsNotEmpty()
   @Column({ type: "varchar", length: 20, nullable: false })
   realName: string;
 
-  @IsString({ message: "nickName: 문자열 형식으로 작성해주세요." })
-  @IsNotEmpty({ message: "nickName: 공백을 남기지 말아주세요." })
+  @IsString()
+  @IsNotEmpty()
   @Column({ type: "varchar", length: 20, unique: true, nullable: false })
   nickName: string;
 
-  @IsString({ message: "birth: 문자열 형식으로 작성해주세요." })
-  @IsNotEmpty({ message: "birth: 공백을 남기지 말아주세요." })
+  @IsString()
+  @IsNotEmpty()
   @Column({ type: "date", nullable: false })
   birth: string;
 
-  @IsString({ message: "gender: 남성,여성 이외에 성별은 존재하지 않습니다." })
-  @IsNotEmpty({ message: "gender: 공백을 남기지 말아주세요." })
+  @IsString()
+  @IsNotEmpty()
   @Column({ type: "enum", enum: ["male", "female"] })
   gender: string;
 
-  @IsEmail({ message: "email: email 형식으로 작성해주세요." })
-  @IsNotEmpty({ message: "email: 공백을 남기지 말아주세요." })
+  @IsEmail()
+  @IsNotEmpty()
   @Column({ type: "varchar", length: 60, unique: true, nullable: false })
   email: string;
 
@@ -34,8 +34,8 @@ export class UserEntity extends CommonEntity {
   @Column({ type: "varchar", nullable: false })
   password: string;
 
-  @IsString({ message: "phoneNumber: 문자열 형식으로 작성해주세요." })
-  @IsNotEmpty({ message: "phoneNumber: 공백을 남기지 말아주세요." })
+  @IsString()
+  @IsNotEmpty()
   @Column({ type: "varchar", length: 15, unique: true, nullable: false })
   phoneNumber: string;
 

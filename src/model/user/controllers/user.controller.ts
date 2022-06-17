@@ -25,7 +25,7 @@ import { ResponseUserDto } from "../dtos/response-user.dto";
 import { PatchUserDto } from "../dtos/patch-user.dto";
 import { ResetPasswordDto } from "../dtos/reset-password.dto";
 
-@Controller("user")
+@Controller("/user")
 export class UserController {
   constructor(
     private readonly userService: UserService,

@@ -12,6 +12,6 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   username: "admin",
   password: process.env.MYSQL_PASSWORD,
   database: "nestWebMarket_API",
-  entities: [UserEntity],
+  entities: [UserEntity, ProductEntity],
   synchronize: true,
 };

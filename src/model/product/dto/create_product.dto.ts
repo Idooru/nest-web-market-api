@@ -1,22 +1,10 @@
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { ProductEntity } from "./../product.entity";
+import { PickType } from "@nestjs/mapped-types";
 
-export class CreateProductDto {
-  @IsNotEmpty()
-  @IsString()
-  name: string;
-
-  @IsNotEmpty()
-  @IsNumber()
-  price: number;
-
-  @IsNotEmpty()
-  @IsString()
-  origin: string;
-
-  @IsNotEmpty()
-  @IsString()
-  type: string;
-
-  @IsString()
-  description?: string;
-}
+export class CreateProductDto extends PickType(ProductEntity, [
+  "name",
+  "price",
+  "origin",
+  "type",
+  "description",
+] as const) {}
