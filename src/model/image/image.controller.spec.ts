@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { ImageController } from './image.controller';
-import { ImageService } from './image.service';
+import { Test, TestingModule } from "@nestjs/testing";
+import { ImageController } from "./image.controller";
+import { ImageService } from "./image.service";
 
-describe('ImageController', () => {
+describe("ImageController", () => {
   let controller: ImageController;
 
   beforeEach(async () => {
@@ -14,7 +14,7 @@ describe('ImageController', () => {
     controller = module.get<ImageController>(ImageController);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(controller).toBeDefined();
   });
 });

@@ -82,15 +82,15 @@ export class ProductController {
     };
   }
 
-  @UseGuards(IsAdminGuard)
-  @UseGuards(IsLoginGuard)
-  @UseInterceptors(
-    FileInterceptor("image", new MulterProvider().apply("image")),
-  )
-  @Post("/upload-img")
-  async uploadImg(
-    @UploadedFile() productImg: Express.Multer.File,
-  ): Promise<any> {}
+  // @UseGuards(IsAdminGuard)
+  // @UseGuards(IsLoginGuard)
+  // @UseInterceptors(
+  //   FileInterceptor("image", new MulterProvider().apply("image")),
+  // )
+  // @Post("/upload-img")
+  // async uploadImg(
+  //   @UploadedFile() productImg: Express.Multer.File,
+  // ): Promise<any> {}
 
   @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)

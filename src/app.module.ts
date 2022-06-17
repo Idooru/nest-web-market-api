@@ -6,7 +6,7 @@ import { LoggerMiddleware } from "./common/middlewares/logger.middleware";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { typeORMConfig } from "./common/config/typeorm.config";
 import { ConfigModule } from "@nestjs/config";
-import { ImageModule } from './image/image.module';
+import { ImageModule } from "./model/image/image.module";
 
 import helmet from "helmet";
 
