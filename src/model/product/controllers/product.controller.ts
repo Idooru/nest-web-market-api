@@ -14,7 +14,10 @@ import { ProductService } from "../services/product.service";
 import { JSON } from "../../../common/interfaces/json.interface";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
-import { ResponseProductDto } from "../dto/response_product.dto";
+import {
+  ResponseProductDto,
+  ResponseProductsDto,
+} from "../dto/response_product.dto";
 import { IsAdmin } from "src/common/decorators/isAdmin.decorator";
 
 @Controller("/product")
@@ -22,11 +25,20 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get("/")
-  async getProductAll(): Promise<JSON<ResponseProductDto[]>> {
+  async getProductsAllFromLatest(): Promise<JSON<ResponseProductsDto[]>> {
     return {
       statusCode: 200,
-      message: "전체 상품 정보를 가져옵니다.",
-      result: await this.productService.getProductsAll(),
+      message: "전체 상품 정보를 최신 순서로 가져옵니다.",
+      result: await this.productService.getProductsAllFromLatest(),
+    };
+  }
+
+  @Get("/oldest")
+  async getProductsAllFromOldest(): Promise<JSON<ResponseProductsDto[]>> {
+    return {
+      statusCode: 200,
+      message: "전체 상품 정보를 오래된 순서로 가져옵니다.",
+      result: await this.productService.getProductsAllFromOldest(),
     };
   }
 

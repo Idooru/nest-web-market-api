@@ -32,8 +32,12 @@ export class ProductRepository {
     }
   }
 
-  async findProductsAll(): Promise<ProductEntity[]> {
-    return await this.productRepository.find();
+  async findProductsAllFromLatest(): Promise<ProductEntity[]> {
+    return await this.productRepository.find({ order: { createdAt: "DESC" } });
+  }
+
+  async findProductsAllFromOldest(): Promise<ProductEntity[]> {
+    return await this.productRepository.find({ order: { createdAt: "ASC" } });
   }
 
   async findProductOneByName(name: string): Promise<ProductEntity> {

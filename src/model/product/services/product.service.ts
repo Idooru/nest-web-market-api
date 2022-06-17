@@ -1,6 +1,7 @@
 import {
   ProductReturnFilter,
   ProductsReturnFilter,
+  ResponseProductsDto,
   ResponseProductDto,
 } from "./../dto/response_product.dto";
 import { ProductRepository } from "./../product.repository";
@@ -15,8 +16,18 @@ export class ProductService {
   private readonly productReturnFilter = ProductReturnFilter;
   private readonly productsReturnFilter = ProductsReturnFilter;
 
-  async getProductsAll(): Promise<ResponseProductDto[]> {
-    const products = await this.productRepository.findProductsAll();
+  async getProductsAllFromLatest(): Promise<ResponseProductsDto[]> {
+    const products = await this.productRepository.findProductsAllFromLatest();
+
+    if (!products.length) {
+      throw new NotFoundException("데이터베이스에 상품이 존재하지 않습니다.");
+    }
+
+    return this.productsReturnFilter(products);
+  }
+
+  async getProductsAllFromOldest(): Promise<ResponseProductsDto[]> {
+    const products = await this.productRepository.findProductsAllFromOldest();
 
     if (!products.length) {
       throw new NotFoundException("데이터베이스에 상품이 존재하지 않습니다.");
