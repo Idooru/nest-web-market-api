@@ -3,10 +3,12 @@ import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { HttpExceptionFilter } from "./common/exceptions/http-exception.filter";
-import * as cookieParser from "cookie-parser";
+import { NestExpressApplication } from "@nestjs/platform-express";
+import { join } from "path";
 
+import * as cookieParser from "cookie-parser";
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const port = process.env.PORT;
   const cookieSecret = process.env.COOKIE_SECRET;
 
@@ -16,6 +18,13 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new JsonResponseInterceptor());
   app.use(cookieParser(cookieSecret));
+
+  app.useStaticAssets(join(__dirname, "../uploads/image"), {
+    prefix: "/media",
+  });
+  app.useStaticAssets(join(__dirname, "../uploads/video"), {
+    prefix: "/media",
+  });
 
   await app.listen(port, () => {
     console.log(`### Server is running at http://localhost:${port} ###`);

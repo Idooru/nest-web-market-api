@@ -4,5 +4,4 @@ import { VideosEntity } from "../entities/upload.entity";
 export class ImageUploadDto extends PickType(VideosEntity, [
   "videoFileName",
   "uploader",
-  "videoOriginalFileName",
 ] as const) {}

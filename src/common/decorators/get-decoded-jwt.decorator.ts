@@ -1,7 +1,7 @@
 import { createParamDecorator } from "@nestjs/common";
 import { ArgumentsHost } from "@nestjs/common";
 
-export const getDecodedJwt = createParamDecorator(
+export const GetDecodedJwt = createParamDecorator(
   (data, context: ArgumentsHost) => {
     const req = context.switchToHttp().getRequest();
 

@@ -7,17 +7,21 @@ import {
   Patch,
   Delete,
   UseGuards,
+  Res,
 } from "@nestjs/common";
 import {
   ResponseProductDto,
   ResponseProductsDto,
 } from "../dto/response_product.dto";
 import { JSON } from "../../../common/interfaces/json.interface";
-import { CreateProductDto } from "../dto/create_product.dto";
+import { CreateProductDto, CreateProductBody } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
 import { ProductService } from "./../services/product.service";
 import { IsAdminGuard } from "./../../../common/guards/isAdmin.guard";
 import { IsLoginGuard } from "./../../../common/guards/isLogin.guard";
+import { GetImageCookie } from "src/common/decorators/get-image-cookie.decorator";
+import { ImageGetDto } from "src/model/upload/dto/image-get.dto";
+import { Response } from "express";
 
 @Controller("/product")
 export class ProductController {
@@ -68,9 +72,17 @@ export class ProductController {
   @Post("/")
   async createProduct(
     @Body()
-    createProductDto: CreateProductDto,
+    createProductBody: CreateProductBody,
+    @GetImageCookie() productImg: ImageGetDto,
+    @Res() res: Response,
   ): Promise<JSON<void>> {
+    const createProductDto: CreateProductDto = {
+      ...createProductBody,
+      imgUrl: productImg.url,
+    };
     await this.productService.createProduct(createProductDto);
+
+    res.clearCookie("imageUrl");
 
     return {
       statusCode: 201,

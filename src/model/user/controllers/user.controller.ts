@@ -20,10 +20,10 @@ import { LoginUserDto } from "../dtos/login-user.dto";
 import { Response } from "express";
 import { CookieOption } from "src/common/config/etc";
 import { JSON } from "../../../common/interfaces/json.interface";
-import { getDecodedJwt } from "src/common/decorators/get-decoded-jwt.decorator";
 import { ResponseUserDto } from "../dtos/response-user.dto";
 import { PatchUserDto } from "../dtos/patch-user.dto";
 import { ResetPasswordDto } from "../dtos/reset-password.dto";
+import { GetDecodedJwt } from "src/common/decorators/get-decoded-jwt.decorator";
 
 @Controller("/user")
 export class UserController {
@@ -64,7 +64,7 @@ export class UserController {
   @UseGuards(IsLoginGuard)
   @Get("/whoami")
   async whoAmI(
-    @getDecodedJwt() user: JwtPayload,
+    @GetDecodedJwt() user: JwtPayload,
   ): Promise<JSON<ResponseUserDto>> {
     return {
       statusCode: 200,
@@ -76,7 +76,7 @@ export class UserController {
   @UseGuards(IsLoginGuard)
   @Get("/refresh-token")
   async refreshToken(
-    @getDecodedJwt() jwtPayload: JwtPayload,
+    @GetDecodedJwt() jwtPayload: JwtPayload,
     @Res() res: Response,
   ): Promise<JSON<string>> {
     const jwtToken = await this.authService.refreshToken(jwtPayload);
@@ -94,7 +94,7 @@ export class UserController {
   @UseGuards(IsLoginGuard)
   @Delete("/logout")
   logout(
-    @getDecodedJwt() jwtPayload: JwtPayload,
+    @GetDecodedJwt() jwtPayload: JwtPayload,
     @Res() res: Response,
   ): JSON<string> {
     res.clearCookie("JWT_COOKIE");
@@ -110,7 +110,7 @@ export class UserController {
   @Patch("/set-user")
   async setUser(
     @Body() patchUserDto: PatchUserDto,
-    @getDecodedJwt() jwtPayload: JwtPayload,
+    @GetDecodedJwt() jwtPayload: JwtPayload,
     @Res() res: Response,
   ): Promise<JSON<string>> {
     const jwtToken = await this.userService.patchUserAndVerifyToken(
@@ -131,7 +131,7 @@ export class UserController {
   @UseGuards(IsLoginGuard)
   @Delete("/secession")
   async secession(
-    @getDecodedJwt() jwtPayload: JwtPayload,
+    @GetDecodedJwt() jwtPayload: JwtPayload,
     @Res() res: Response,
   ): Promise<JSON<string>> {
     await this.userService.deleteUserWithId(jwtPayload.id);

@@ -13,11 +13,6 @@ export class ImagesEntity extends CommonEntity {
   @IsNotEmpty()
   @Column({ type: "varchar", nullable: false })
   uploader: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @Column({ type: "varchar", nullable: false, unique: true })
-  imageOriginalFileName: string;
 }
 
 @Entity("videos")
@@ -31,9 +26,4 @@ export class VideosEntity extends CommonEntity {
   @IsNotEmpty()
   @Column({ type: "varchar", nullable: false })
   uploader: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @Column({ type: "varchar", nullable: false, unique: true })
-  videoOriginalFileName: string;
 }
