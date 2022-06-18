@@ -1,3 +1,7 @@
+import {
+  ImagesEntity,
+  VideosEntity,
+} from "./../../model/upload/entities/upload.entity";
 import { ProductEntity } from "./../../model/product/product.entity";
 import { UserEntity } from "../../model/user/entities/user.entity";
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
@@ -12,6 +16,6 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   username: "admin",
   password: process.env.MYSQL_PASSWORD,
   database: "nestWebMarket_API",
-  entities: [UserEntity, ProductEntity],
+  entities: [UserEntity, ProductEntity, ImagesEntity, VideosEntity],
   synchronize: true,
 };
