@@ -15,15 +15,17 @@ export class UploadRepository {
 
   async uploadImg(imageUploadDto: ImageUploadDto) {
     const { uploader, imageFileName } = imageUploadDto;
-    const fileNameOnUrl = `http://localhost:8001/media/${imageFileName}`;
+    const fileNameOnUrl = `http://localhost:${process.env.PORT}/media/${imageFileName}`;
 
-    await this.imagesRepository.save({
+    const image = await this.imagesRepository.save({
       imageFileName: fileNameOnUrl,
       uploader,
     });
 
+    console.log(image);
+
     const originalName = fileNameOnUrl.replace(
-      "http://localhost:8001/media/",
+      `http://localhost:${process.env.PORT}/media/`,
       "",
     );
 

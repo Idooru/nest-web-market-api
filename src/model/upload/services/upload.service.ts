@@ -1,7 +1,7 @@
-import { UploadRepository } from "./upload.repository";
+import { UploadRepository } from "../../upload/upload.repository";
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { ImageUploadDto } from "./dto/image-upload.dto";
-import { ImageReturnDto } from "./dto/image-return.dto";
+import { ImageUploadDto } from "../../upload/dto/image-upload.dto";
+import { ImageReturnDto } from "../../upload/dto/image-return.dto";
 import { JwtPayload } from "src/common/interfaces/jwt-payload.interface";
 
 @Injectable()
