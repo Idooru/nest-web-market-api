@@ -31,7 +31,7 @@ export class ProductEntity extends CommonEntity {
   description: string;
 
   @Column({ type: "varchar", default: "no image yet" })
-  imgUrl: string;
+  imgUrl?: string;
 
   @Column({ type: "int", default: 50 })
   quantity: number;

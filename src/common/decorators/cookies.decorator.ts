@@ -1,9 +1,16 @@
-import { createParamDecorator, ArgumentsHost } from "@nestjs/common";
+import {
+  createParamDecorator,
+  ArgumentsHost,
+  NotFoundException,
+} from "@nestjs/common";
 
 export const Cookies = createParamDecorator(
-  (data: string, context: ArgumentsHost) => {
+  (data: string, context: ArgumentsHost): string | null => {
     const req = context.switchToHttp().getRequest();
-
-    return data ? req.signedCookies[data] : req.signedCookies;
+    try {
+      return req.signedCookies[data] ? req.signedCookies[data] : null;
+    } catch (err) {
+      throw new NotFoundException("쿠키가 변조 되었습니다.");
+    }
   },
 );

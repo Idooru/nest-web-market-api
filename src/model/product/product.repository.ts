@@ -16,13 +16,15 @@ export class ProductRepository {
     private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
-  async checkProductNameToCreate(name: string) {
+  async checkProductNameToCreate(name: string): Promise<void> {
     const found = await this.productRepository.findOne({
       select: ["name"],
       where: { name },
     });
 
-    if (found.name) {
+    if (!found) {
+      return;
+    } else if (found.name) {
       throw new BadRequestException("해당 상품명은 사용중입니다.");
     }
   }
@@ -33,10 +35,11 @@ export class ProductRepository {
       where: { name: replaceName },
     });
 
-    if (found.name === originalName) {
+    /* 바꿀 이름으로 찾은게 없거나 바꿔야 할 상품의 이름과 바꿀 이름이 동일 하다면 리턴함
+      그 이외의 경우는 DB에 저장된 상품의 이름으로 바꾸게 되는 경우 이므로 에러를 던짐*/
+    if (!found || found.name === originalName) {
       return;
-    }
-    throw new BadRequestException("해당 상품명은 사용중입니다.");
+    } else throw new BadRequestException("해당 상품명은 사용중입니다.");
   }
 
   async checkProductIdToExist(id: string) {

@@ -22,7 +22,9 @@ import { IsAdminGuard } from "./../../../common/guards/isAdmin.guard";
 import { IsLoginGuard } from "./../../../common/guards/isLogin.guard";
 import { GetImageCookie } from "src/common/decorators/get-image-cookie.decorator";
 import { ImageGetDto } from "src/model/upload/dto/image-get.dto";
+import { ProductImageCookieKey } from "./../../../common/config/etc";
 import { Response } from "express";
+import { Cookies } from "src/common/decorators/cookies.decorator";
 
 @Controller("/product")
 export class ProductController {
@@ -74,17 +76,20 @@ export class ProductController {
   async createProduct(
     @Body()
     createProductBody: CreateProductBody,
-    @GetImageCookie() productImg: ImageGetDto,
+    @Cookies(ProductImageCookieKey) productImg: string | null,
     @Res() res: Response,
   ): Promise<JSON<void>> {
+    if (!productImg) productImg = "no image yet";
+
     const createProductDto = {
       ...createProductBody,
-      imgUrl: productImg.imageUrl,
+      imgUrl: productImg,
     };
+
     await this.productService.createProduct(createProductDto);
 
     try {
-      res.clearCookie("imageUrl");
+      res.clearCookie(ProductImageCookieKey);
     } catch (err) {
       throw new NotFoundException("쿠키가 변조 되었습니다.");
     }
@@ -102,17 +107,22 @@ export class ProductController {
     @Query("id")
     id: string,
     @Body() modifyProductBody: ModifyProductBody,
-    @GetImageCookie() productImg: ImageGetDto,
+    @Cookies(ProductImageCookieKey) productImg: string | null,
     @Res() res: Response,
   ): Promise<JSON<string>> {
-    const modifyProductDto = {
-      ...modifyProductBody,
-      imgUrl: productImg.imageUrl,
-    };
+    if (productImg) {
+      const modifyProductDto = {
+        ...modifyProductBody,
+        imgUrl: productImg,
+      };
+      await this.productService.modifyProduct(id, modifyProductDto);
+    }
+
+    const modifyProductDto = { ...modifyProductBody };
     await this.productService.modifyProduct(id, modifyProductDto);
 
     try {
-      res.clearCookie("imageUrl");
+      res.clearCookie(ProductImageCookieKey);
     } catch (err) {
       throw new NotFoundException("쿠키가 변조 되었습니다.");
     }

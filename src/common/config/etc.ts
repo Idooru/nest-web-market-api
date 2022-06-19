@@ -10,3 +10,5 @@ export const CookieOption: CookieOptions = {
 export const JwtOptions: JwtModuleOptions = {
   secret: process.env.JWT_SECRET,
 };
+
+export const ProductImageCookieKey = "imageUrl";
