@@ -6,7 +6,9 @@ import { HttpExceptionFilter } from "./common/exceptions/http-exception.filter";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { join } from "path";
 
-import * as cookieParser from "cookie-parser";
+import cookieParser from "cookie-parser";
+import helmet from "helmet";
+
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const port = process.env.PORT;
@@ -18,6 +20,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new JsonResponseInterceptor());
   app.use(cookieParser(cookieSecret));
+  app.use(helmet());
 
   app.useStaticAssets(join(__dirname, "../uploads/image"), {
     prefix: "/media",

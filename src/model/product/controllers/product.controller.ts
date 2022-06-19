@@ -20,8 +20,6 @@ import { ModifyProductBody, ModifyProductDto } from "../dto/modify_product.dto";
 import { ProductService } from "./../services/product.service";
 import { IsAdminGuard } from "./../../../common/guards/isAdmin.guard";
 import { IsLoginGuard } from "./../../../common/guards/isLogin.guard";
-import { GetImageCookie } from "src/common/decorators/get-image-cookie.decorator";
-import { ImageGetDto } from "src/model/upload/dto/image-get.dto";
 import { ProductImageCookieKey } from "./../../../common/config/etc";
 import { Response } from "express";
 import { Cookies } from "src/common/decorators/cookies.decorator";

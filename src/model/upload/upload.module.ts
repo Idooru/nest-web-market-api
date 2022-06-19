@@ -1,3 +1,4 @@
+import { MulterProvider } from "src/model/upload/multer.provider";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Module } from "@nestjs/common";
 import { UploadService } from "../upload/services/upload.service";
@@ -8,6 +9,6 @@ import { UploadRepository } from "./upload.repository";
 @Module({
   imports: [TypeOrmModule.forFeature([ImagesEntity, VideosEntity])],
   controllers: [UploadController],
-  providers: [UploadService, UploadRepository],
+  providers: [UploadService, UploadRepository, MulterProvider],
 })
 export class UploadModule {}

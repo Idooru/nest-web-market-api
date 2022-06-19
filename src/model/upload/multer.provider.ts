@@ -31,6 +31,7 @@ export class MulterProvider {
       this.logger.log(`${folder2} is already exist`);
     }
   }
+
   storage(folder1: string, folder2: string): multer.StorageEngine {
     this.createFolder(folder1, folder2);
 

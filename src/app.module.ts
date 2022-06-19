@@ -8,8 +8,6 @@ import { typeORMConfig } from "./common/config/typeorm.config";
 import { ConfigModule } from "@nestjs/config";
 import { UploadModule } from "./model/upload/upload.module";
 
-import helmet from "helmet";
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -26,6 +24,6 @@ import helmet from "helmet";
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware, helmet()).forRoutes("*");
+    consumer.apply(LoggerMiddleware).forRoutes("*");
   }
 }

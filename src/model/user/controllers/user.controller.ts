@@ -1,5 +1,3 @@
-import { FindEmailDto } from "./../dtos/find-email.dto";
-import { IsNotLoginGuard } from "./../../../common/guards/isNotLogin.guard";
 import {
   Body,
   Controller,
@@ -24,6 +22,8 @@ import { ResponseUserDto } from "../dtos/response-user.dto";
 import { PatchUserDto } from "../dtos/patch-user.dto";
 import { ResetPasswordDto } from "../dtos/reset-password.dto";
 import { GetDecodedJwt } from "src/common/decorators/get-decoded-jwt.decorator";
+import { FindEmailDto } from "./../dtos/find-email.dto";
+import { IsNotLoginGuard } from "./../../../common/guards/isNotLogin.guard";
 
 @Controller("/user")
 export class UserController {

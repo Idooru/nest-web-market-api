@@ -10,8 +10,8 @@ export class RegisterUserDto extends PickType(UserEntity, [
   "email",
   "phoneNumber",
 ] as const) {
-  @IsString({ message: "password : 문자열 형식으로 작성해주세요." })
+  @IsString()
+  @IsNotEmpty()
   @Matches(/^[A-Za-z\d!@#$%^&*()]{8,30}$/)
-  @IsNotEmpty({ message: "password : 공백을 남기지 말아주세요." })
   password: string;
 }
