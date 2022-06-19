@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Res,
+  NotFoundException,
 } from "@nestjs/common";
 import {
   ResponseProductDto,
@@ -15,7 +16,7 @@ import {
 } from "../dto/response_product.dto";
 import { JSON } from "../../../common/interfaces/json.interface";
 import { CreateProductDto, CreateProductBody } from "../dto/create_product.dto";
-import { ModifyProductDto } from "../dto/modify_product.dto";
+import { ModifyProductBody, ModifyProductDto } from "../dto/modify_product.dto";
 import { ProductService } from "./../services/product.service";
 import { IsAdminGuard } from "./../../../common/guards/isAdmin.guard";
 import { IsLoginGuard } from "./../../../common/guards/isLogin.guard";
@@ -26,7 +27,7 @@ import { Response } from "express";
 @Controller("/product")
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
-  private ab = 5;
+
   @Get("/")
   async getProductsAllFromLatest(): Promise<JSON<ResponseProductsDto[]>> {
     return {
@@ -76,13 +77,17 @@ export class ProductController {
     @GetImageCookie() productImg: ImageGetDto,
     @Res() res: Response,
   ): Promise<JSON<void>> {
-    const createProductDto: CreateProductDto = {
+    const createProductDto = {
       ...createProductBody,
-      imgUrl: productImg.url,
+      imgUrl: productImg.imageUrl,
     };
     await this.productService.createProduct(createProductDto);
 
-    res.clearCookie("imageUrl");
+    try {
+      res.clearCookie("imageUrl");
+    } catch (err) {
+      throw new NotFoundException("쿠키가 변조 되었습니다.");
+    }
 
     return {
       statusCode: 201,
@@ -96,13 +101,26 @@ export class ProductController {
   async modifyProduct(
     @Query("id")
     id: string,
-    @Body() modifyProductDto: ModifyProductDto,
-  ): Promise<JSON<void>> {
+    @Body() modifyProductBody: ModifyProductBody,
+    @GetImageCookie() productImg: ImageGetDto,
+    @Res() res: Response,
+  ): Promise<JSON<string>> {
+    const modifyProductDto = {
+      ...modifyProductBody,
+      imgUrl: productImg.imageUrl,
+    };
     await this.productService.modifyProduct(id, modifyProductDto);
+
+    try {
+      res.clearCookie("imageUrl");
+    } catch (err) {
+      throw new NotFoundException("쿠키가 변조 되었습니다.");
+    }
 
     return {
       statusCode: 201,
-      message: `${id}에 해당하는 상품을 수정하였습니다.`,
+      message: "상품을 수정하였습니다.",
+      result: id,
     };
   }
 

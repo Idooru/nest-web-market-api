@@ -16,12 +16,27 @@ export class ProductRepository {
     private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
-  async checkProductNameToExist(name: string) {
-    const found = await this.productRepository.findOne({ name });
+  async checkProductNameToCreate(name: string) {
+    const found = await this.productRepository.findOne({
+      select: ["name"],
+      where: { name },
+    });
 
-    if (found) {
+    if (found.name) {
       throw new BadRequestException("해당 상품명은 사용중입니다.");
     }
+  }
+
+  async checkProductNameToModify(replaceName: string, originalName: string) {
+    const found = await this.productRepository.findOne({
+      select: ["name"],
+      where: { name: replaceName },
+    });
+
+    if (found.name === originalName) {
+      return;
+    }
+    throw new BadRequestException("해당 상품명은 사용중입니다.");
   }
 
   async checkProductIdToExist(id: string) {

@@ -48,7 +48,7 @@ export class ProductService {
 
   async createProduct(createProductDto: CreateProductDto): Promise<void> {
     const { name } = createProductDto;
-    await this.productRepository.checkProductNameToExist(name);
+    await this.productRepository.checkProductNameToCreate(name);
     await this.productRepository.createProduct(createProductDto);
   }
 
@@ -57,8 +57,8 @@ export class ProductService {
     modifyProductDto: ModifyProductDto,
   ): Promise<void> {
     const { name } = modifyProductDto;
-    await this.productRepository.checkProductIdToExist(id);
-    await this.productRepository.checkProductNameToExist(name);
+    const product = await this.productRepository.findProductOneById(id);
+    await this.productRepository.checkProductNameToModify(name, product.name);
     await this.productRepository.modifyProduct(id, modifyProductDto);
   }
 
