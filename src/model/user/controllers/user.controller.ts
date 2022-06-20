@@ -17,7 +17,7 @@ import { RegisterUserDto } from "../dtos/register-user.dto";
 import { LoginUserDto } from "../dtos/login-user.dto";
 import { Response } from "express";
 import { CookieOption } from "src/common/config/etc";
-import { JSON } from "../../../common/interfaces/json.interface";
+import { JSON } from "../../../common/interfaces/json-success.interface";
 import { ResponseUserDto } from "../dtos/response-user.dto";
 import { PatchUserDto } from "../dtos/patch-user.dto";
 import { ResetPasswordDto } from "../dtos/reset-password.dto";

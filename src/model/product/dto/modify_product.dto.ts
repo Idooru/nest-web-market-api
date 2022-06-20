@@ -1,5 +1,5 @@
 import { ProductEntity } from "./../product.entity";
-import { PickType } from "@nestjs/mapped-types";
+import { PickType } from "@nestjs/swagger";
 
 export class ModifyProductBody extends PickType(ProductEntity, [
   "name",

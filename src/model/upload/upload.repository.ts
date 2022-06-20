@@ -3,6 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ImagesEntity, VideosEntity } from "./entities/upload.entity";
 import { Repository } from "typeorm";
+import { ImageReturnDto } from "./dto/image-return.dto";
 
 @Injectable()
 export class UploadRepository {
@@ -13,7 +14,7 @@ export class UploadRepository {
     private readonly videosRepository: Repository<VideosEntity>,
   ) {}
 
-  async uploadImg(imageUploadDto: ImageUploadDto) {
+  async uploadImg(imageUploadDto: ImageUploadDto): Promise<ImageReturnDto> {
     const { uploader, imageFileName } = imageUploadDto;
     const fileNameOnUrl = `http://localhost:${process.env.PORT}/media/${imageFileName}`;
 

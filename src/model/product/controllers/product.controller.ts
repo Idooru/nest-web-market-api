@@ -14,7 +14,7 @@ import {
   ResponseProductDto,
   ResponseProductsDto,
 } from "../dto/response_product.dto";
-import { JSON } from "../../../common/interfaces/json.interface";
+import { JSON } from "../../../common/interfaces/json-success.interface";
 import { CreateProductDto, CreateProductBody } from "../dto/create_product.dto";
 import { ModifyProductBody, ModifyProductDto } from "../dto/modify_product.dto";
 import { ProductService } from "./../services/product.service";

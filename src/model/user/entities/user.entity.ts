@@ -1,5 +1,15 @@
+import { CountryCode } from "./../../../common/config/phone-number.config";
 import { Exclude } from "class-transformer";
-import { IsNotEmpty, IsString, IsEmail } from "class-validator";
+import {
+  IsNotEmpty,
+  IsString,
+  IsEmail,
+  IsEnum,
+  IsPhoneNumber,
+  IsDateString,
+  IsDate,
+  IsMobilePhone,
+} from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { Column, Entity } from "typeorm";
 
@@ -15,17 +25,17 @@ export class UserEntity extends CommonEntity {
   @Column({ type: "varchar", length: 20, unique: true, nullable: false })
   nickName: string;
 
-  @IsString()
+  @IsDateString()
   @IsNotEmpty()
   @Column({ type: "date", nullable: false })
-  birth: string;
+  birth: Date;
 
-  @IsString()
+  @IsEnum(["male", "female"])
   @IsNotEmpty()
   @Column({ type: "enum", enum: ["male", "female"] })
-  gender: string;
+  gender: "male" | "female";
 
-  @IsEmail()
+  @IsString()
   @IsNotEmpty()
   @Column({ type: "varchar", length: 60, unique: true, nullable: false })
   email: string;
@@ -34,7 +44,7 @@ export class UserEntity extends CommonEntity {
   @Column({ type: "varchar", nullable: false })
   password: string;
 
-  @IsString()
+  @IsMobilePhone()
   @IsNotEmpty()
   @Column({ type: "varchar", length: 15, unique: true, nullable: false })
   phoneNumber: string;
@@ -47,5 +57,5 @@ export class UserEntity extends CommonEntity {
     enum: ["general", "special", "admin"],
     default: "general",
   })
-  userType: string;
+  userType: "general" | "special" | "admin";
 }

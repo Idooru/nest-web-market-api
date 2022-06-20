@@ -2,7 +2,7 @@ import { JsonResponseInterceptor } from "./common/interceptors/json.response.int
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
-import { HttpExceptionFilter } from "./common/exceptions/http-exception.filter";
+import { AllExceptionFilter } from "./common/exceptions/all-exception.filter";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { join } from "path";
 
@@ -16,7 +16,7 @@ async function bootstrap() {
 
   /* 각각의 서비스에서 발생하는 custom exception을 제외한 서버에서 발생하는 에러
   혹은 404 에러 등을 글로벌적으로 처리할수 있음*/
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new AllExceptionFilter());
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new JsonResponseInterceptor());
   app.use(cookieParser(cookieSecret));

@@ -19,7 +19,7 @@ import { MulterProvider } from "src/model/upload/multer.provider";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { GetDecodedJwt } from "src/common/decorators/get-decoded-jwt.decorator";
 import { JwtPayload } from "src/common/interfaces/jwt-payload.interface";
-import { JSON } from "../../../common/interfaces/json.interface";
+import { JSON } from "../../../common/interfaces/json-success.interface";
 import { Response } from "express";
 import { CookieOption } from "src/common/config/etc";
 import { ProductImageCookieKey } from "./../../../common/config/etc";
