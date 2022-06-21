@@ -51,16 +51,25 @@ export class ProductRepository {
   }
 
   async findProductsAllFromLatest(): Promise<ProductEntity[]> {
-    return await this.productRepository.find({ order: { createdAt: "DESC" } });
+    return await this.productRepository.find({
+      order: { createdAt: "DESC" },
+      relations: ["image"],
+    });
   }
 
   async findProductsAllFromOldest(): Promise<ProductEntity[]> {
-    return await this.productRepository.find({ order: { createdAt: "ASC" } });
+    return await this.productRepository.find({
+      order: { createdAt: "ASC" },
+      relations: ["image"],
+    });
   }
 
   async findProductOneByName(name: string): Promise<ProductEntity> {
     try {
-      return await this.productRepository.findOneOrFail({ name });
+      return await this.productRepository.findOneOrFail({
+        where: { name },
+        relations: ["image"],
+      });
     } catch (err) {
       throw new NotFoundException("해당 상품이름은 존재하지 않습니다.");
     }
@@ -68,7 +77,10 @@ export class ProductRepository {
 
   async findProductOneById(id: string): Promise<ProductEntity> {
     try {
-      return await this.productRepository.findOneOrFail({ id });
+      return await this.productRepository.findOneOrFail({
+        where: { id },
+        relations: ["image"],
+      });
     } catch (err) {
       throw new NotFoundException("해당 상품 아이디는 존재하지 않습니다.");
     }

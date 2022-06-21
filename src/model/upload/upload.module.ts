@@ -10,5 +10,6 @@ import { UploadRepository } from "./upload.repository";
   imports: [TypeOrmModule.forFeature([ImagesEntity, VideosEntity])],
   controllers: [UploadController],
   providers: [UploadService, UploadRepository, MulterProvider],
+  exports: [UploadRepository],
 })
 export class UploadModule {}

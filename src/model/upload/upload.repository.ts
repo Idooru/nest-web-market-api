@@ -32,4 +32,11 @@ export class UploadRepository {
 
     return { name: originalName, url: fileNameOnUrl };
   }
+
+  async findImageIdWithImageFileName(imageId: ImagesEntity) {
+    return await this.imagesRepository.findOne({
+      select: ["id"],
+      where: { imageFileName: imageId },
+    });
+  }
 }

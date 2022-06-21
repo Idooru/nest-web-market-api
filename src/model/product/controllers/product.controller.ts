@@ -1,3 +1,4 @@
+import { ImagesEntity } from "./../../upload/entities/upload.entity";
 import {
   Controller,
   Get,
@@ -74,14 +75,14 @@ export class ProductController {
   async createProduct(
     @Body()
     createProductBody: CreateProductBody,
-    @Cookies(ProductImageCookieKey) productImg: string | null,
+    @Cookies(ProductImageCookieKey) productImg: ImagesEntity,
     @Res() res: Response,
   ): Promise<JSON<void>> {
-    if (!productImg) productImg = "no image yet";
+    // if (!productImg) productImg = "no image yet";
 
     const createProductDto = {
       ...createProductBody,
-      imgUrl: productImg,
+      image: productImg,
     };
 
     await this.productService.createProduct(createProductDto);
@@ -105,7 +106,7 @@ export class ProductController {
     @Query("id")
     id: string,
     @Body() modifyProductBody: ModifyProductBody,
-    @Cookies(ProductImageCookieKey) productImg: string | null,
+    @Cookies(ProductImageCookieKey) productImg: ImagesEntity,
     @Res() res: Response,
   ): Promise<JSON<string>> {
     if (productImg) {

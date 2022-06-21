@@ -1,3 +1,4 @@
+import { ImagesEntity } from "./../../upload/entities/upload.entity";
 import { CountryCode } from "./../../../common/config/phone-number.config";
 import { Exclude } from "class-transformer";
 import {
@@ -11,7 +12,7 @@ import {
   IsMobilePhone,
 } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
-import { Column, Entity } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany } from "typeorm";
 
 @Entity("users")
 export class UserEntity extends CommonEntity {
@@ -52,10 +53,16 @@ export class UserEntity extends CommonEntity {
   @Column({ type: "smallint", default: 0 })
   point: number;
 
+  @Column({ type: "smallint", default: 0 })
+  howMuchBuy: number;
+
   @Column({
     type: "enum",
     enum: ["general", "special", "admin"],
     default: "general",
   })
   userType: "general" | "special" | "admin";
+
+  @OneToMany(() => ImagesEntity, (join) => join.imageForigenKeyForUser)
+  image?: ImagesEntity[];
 }

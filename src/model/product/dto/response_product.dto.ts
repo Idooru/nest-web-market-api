@@ -8,7 +8,7 @@ export class ResponseProductDto extends PickType(ProductEntity, [
   "origin",
   "type",
   "description",
-  "imgUrl",
+  "image",
   "rating",
   "createdAt",
   "updatedAt",
@@ -18,7 +18,7 @@ export class ResponseProductsDto extends PickType(ProductEntity, [
   "name",
   "price",
   "type",
-  "imgUrl",
+  "image",
   "rating",
 ] as const) {}
 
@@ -31,7 +31,7 @@ export const ProductReturnFilter = (
   origin: product.origin,
   type: product.type,
   description: product.description,
-  imgUrl: product.imgUrl,
+  image: product.image,
   rating: product.rating,
   createdAt: product.createdAt,
   updatedAt: product.updatedAt,
@@ -44,6 +44,6 @@ export const ProductsReturnFilter = (
     name: idx.name,
     price: idx.price,
     type: idx.type,
-    imgUrl: idx.imgUrl,
+    image: idx.image,
     rating: idx.rating,
   }));

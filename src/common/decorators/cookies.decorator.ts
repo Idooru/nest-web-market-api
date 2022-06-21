@@ -5,7 +5,7 @@ import {
 } from "@nestjs/common";
 
 export const Cookies = createParamDecorator(
-  (data: string, context: ArgumentsHost): string | null => {
+  (data: string, context: ArgumentsHost): any => {
     const req = context.switchToHttp().getRequest();
     try {
       return req.signedCookies[data] ? req.signedCookies[data] : null;

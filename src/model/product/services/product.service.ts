@@ -1,3 +1,4 @@
+import { UploadRepository } from "./../../upload/upload.repository";
 import {
   ProductReturnFilter,
   ProductsReturnFilter,
@@ -11,7 +12,10 @@ import { ModifyProductDto } from "../dto/modify_product.dto";
 
 @Injectable()
 export class ProductService {
-  constructor(private readonly productRepository: ProductRepository) {}
+  constructor(
+    private readonly productRepository: ProductRepository,
+    private readonly uploadRepository: UploadRepository,
+  ) {}
 
   private readonly productReturnFilter = ProductReturnFilter;
   private readonly productsReturnFilter = ProductsReturnFilter;
@@ -48,6 +52,12 @@ export class ProductService {
 
   async createProduct(createProductDto: CreateProductDto): Promise<void> {
     const { name } = createProductDto;
+    const imageId = await this.uploadRepository.findImageIdWithImageFileName(
+      createProductDto.image,
+    );
+
+    createProductDto.image = imageId;
+
     await this.productRepository.checkProductNameToCreate(name);
     await this.productRepository.createProduct(createProductDto);
   }

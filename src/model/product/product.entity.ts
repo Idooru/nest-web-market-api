@@ -1,7 +1,8 @@
+import { ImagesEntity } from "./../upload/entities/upload.entity";
 import { float } from "aws-sdk/clients/lightsail";
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
-import { Column, Entity } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
 
 @Entity("products")
 export class ProductEntity extends CommonEntity {
@@ -30,12 +31,13 @@ export class ProductEntity extends CommonEntity {
   @Column({ type: "text", nullable: true })
   description: string;
 
-  @Column({ type: "varchar", default: "no image yet" })
-  imgUrl?: string;
-
   @Column({ type: "int", default: 50 })
   quantity: number;
 
   @Column({ type: "float", default: 0.0 })
   rating: float;
+
+  @OneToOne(() => ImagesEntity, (join) => join.imageForigenKeyForProduct)
+  @JoinColumn()
+  image?: ImagesEntity;
 }
