@@ -104,7 +104,7 @@ export class ProductRepository {
     id: string,
     modifyProductDto: ModifyProductDto,
   ): Promise<void> {
-    await this.productRepository.update(id, modifyProductDto);
+    await this.productRepository.update(id, { ...modifyProductDto });
   }
 
   async removeProduct(id: string): Promise<void> {

@@ -107,15 +107,10 @@ export class ProductController {
     @Cookies(ProductImageCookieKey) productImg: ImagesEntity,
     @Res() res: Response,
   ): Promise<JSON<string>> {
-    if (productImg) {
-      const modifyProductDto = {
-        ...modifyProductBody,
-        imgUrl: productImg,
-      };
-      await this.productService.modifyProduct(id, modifyProductDto);
-    }
-
-    const modifyProductDto = { ...modifyProductBody };
+    const modifyProductDto = {
+      ...modifyProductBody,
+      image: productImg,
+    };
     await this.productService.modifyProduct(id, modifyProductDto);
 
     try {
