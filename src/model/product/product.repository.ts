@@ -51,17 +51,27 @@ export class ProductRepository {
   }
 
   async findProductsAllFromLatest(): Promise<ProductEntity[]> {
-    return await this.productRepository.find({
+    const found = await this.productRepository.find({
       order: { createdAt: "DESC" },
       relations: ["image"],
     });
+
+    if (!found) {
+      throw new NotFoundException("데이터베이스에 상품이 존재하지 않습니다.");
+    }
+    return found;
   }
 
   async findProductsAllFromOldest(): Promise<ProductEntity[]> {
-    return await this.productRepository.find({
+    const found = await this.productRepository.find({
       order: { createdAt: "ASC" },
       relations: ["image"],
     });
+
+    if (!found) {
+      throw new NotFoundException("데이터베이스에 상품이 존재하지 않습니다.");
+    }
+    return found;
   }
 
   async findProductOneByName(name: string): Promise<ProductEntity> {

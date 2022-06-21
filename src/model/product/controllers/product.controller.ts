@@ -78,8 +78,6 @@ export class ProductController {
     @Cookies(ProductImageCookieKey) productImg: ImagesEntity,
     @Res() res: Response,
   ): Promise<JSON<void>> {
-    // if (!productImg) productImg = "no image yet";
-
     const createProductDto = {
       ...createProductBody,
       image: productImg,

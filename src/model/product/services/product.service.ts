@@ -22,21 +22,11 @@ export class ProductService {
 
   async getProductsAllFromLatest(): Promise<ResponseProductsDto[]> {
     const products = await this.productRepository.findProductsAllFromLatest();
-
-    if (!products.length) {
-      throw new NotFoundException("데이터베이스에 상품이 존재하지 않습니다.");
-    }
-
     return this.productsReturnFilter(products);
   }
 
   async getProductsAllFromOldest(): Promise<ResponseProductsDto[]> {
     const products = await this.productRepository.findProductsAllFromOldest();
-
-    if (!products.length) {
-      throw new NotFoundException("데이터베이스에 상품이 존재하지 않습니다.");
-    }
-
     return this.productsReturnFilter(products);
   }
 
