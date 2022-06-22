@@ -1,13 +1,14 @@
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+  BadRequestException,
+} from "@nestjs/common";
 import { ResetPasswordDto } from "./../../user/dtos/reset-password.dto";
 import { FindEmailDto } from "./../../user/dtos/find-email.dto";
 import { JwtService } from "@nestjs/jwt";
 import { LoginUserDto } from "./../../user/dtos/login-user.dto";
 import { AuthRepository } from "../auth.repository";
-import {
-  Injectable,
-  InternalServerErrorException,
-  UnauthorizedException,
-} from "@nestjs/common";
 import { JwtPayload } from "../../../common/interfaces/jwt-payload.interface";
 
 import * as bcrypt from "bcrypt";
@@ -63,22 +64,39 @@ export class AuthService {
   async findEmail(findEmailDto: FindEmailDto): Promise<string> {
     const { realName, phoneNumber } = findEmailDto;
 
-    const foundWithRealName = await this.authRepositry.isExistUserWithRealName(
-      realName,
-    );
+    await Promise.allSettled([
+      this.authRepositry.isExistUserWithRealName(realName),
+      this.authRepositry.isExistUserWithPhoneNumber(phoneNumber),
+    ]).then((data) => {
+      const errors = data.map((idx) =>
+        idx.status === "rejected" ? idx.reason : false,
+      );
 
-    const foundWithPhoneNumber =
-      await this.authRepositry.isExistUserWithPhoneNumber(phoneNumber);
+      if (errors.includes(false)) return;
+      throw new BadRequestException(errors, "Find Email Error");
+    });
 
-    if (!foundWithRealName || !foundWithPhoneNumber) {
-      throw new UnauthorizedException("올바르지 않은 정보입니다.");
-    }
+    // const foundWithRealName = await this.authRepositry.isExistUserWithRealName(
+    //   realName,
+    // );
 
-    if (!(foundWithRealName.id === foundWithPhoneNumber.id)) {
-      throw new UnauthorizedException("올바르지 않은 정보입니다.");
-    }
+    // const foundWithPhoneNumber =
+    //   await this.authRepositry.isExistUserWithPhoneNumber(phoneNumber);
 
-    return foundWithRealName.email;
+    // if (!foundWithRealName || !foundWithPhoneNumber) {
+    //   throw new UnauthorizedException(
+    //     "입력한 정보로는 사용자 정보를 불러올 수 없습니다.",
+    //   );
+    // }
+
+    // if (!(foundWithRealName.id === foundWithPhoneNumber.id)) {
+    //   throw new UnauthorizedException(
+    //     "사용자 실명과 전화번호가 서로 일치하지 않습니다.",
+    //   );
+    // }
+
+    // return foundWithRealName.email;
+    return "hello";
   }
 
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {

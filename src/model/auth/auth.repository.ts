@@ -13,7 +13,7 @@ export class AuthRepository {
 
   async findUserWithEmail(email: string): Promise<UserEntity> {
     try {
-      return await this.authRepository.findOneOrFail({ email });
+      return await this.authRepository.findOneOrFail({ where: { email } });
     } catch (err) {
       throw new UnauthorizedException("아이디 혹은 비밀번호가 틀렸습니다.");
     }
@@ -21,7 +21,10 @@ export class AuthRepository {
 
   async isExistUserWithRealName(realName: string): Promise<UserEntity> {
     try {
-      return await this.authRepository.findOneOrFail({ realName });
+      return await this.authRepository.findOneOrFail({
+        select: ["id", "email"],
+        where: { realName },
+      });
     } catch (err) {
       throw new UnauthorizedException("해당 이름(실명)은 존재하지 않습니다.");
     }
@@ -29,7 +32,10 @@ export class AuthRepository {
 
   async isExistUserWithPhoneNumber(phoneNumber: string): Promise<UserEntity> {
     try {
-      return await this.authRepository.findOneOrFail({ phoneNumber });
+      return await this.authRepository.findOneOrFail({
+        select: ["id"],
+        where: { phoneNumber },
+      });
     } catch (err) {
       throw new UnauthorizedException("해당 전화번호는 존재하지 않습니다.");
     }
