@@ -25,6 +25,18 @@ export class AllExceptionFilter implements ExceptionFilter {
       });
     }
 
+    if (err.message.length >= 2 && err.error === "Register Error") {
+      return res
+        .status(err.statusCode)
+        .setHeader("X-Powered-By", "")
+        .json({
+          success: false,
+          message: `${err.error}이 발생하였습니다.`,
+          timestamp: new Date().toString(),
+          reason: err.message.map((idx) => idx.response),
+        });
+    }
+
     res.status(err.statusCode).setHeader("X-Powered-By", "").json({
       success: false,
       statusCode: err.statusCode,

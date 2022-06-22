@@ -6,10 +6,10 @@ import { Column, Entity, ManyToOne, OneToOne, JoinColumn } from "typeorm";
 
 @Entity("images")
 export class ImagesEntity extends CommonEntity {
-  @OneToOne(() => ProductEntity, (join) => join.image)
+  @OneToOne(() => ProductEntity)
   imageForigenKeyForProduct: string;
 
-  @ManyToOne(() => UserEntity, (join) => join.image)
+  @ManyToOne(() => UserEntity)
   @JoinColumn()
   imageForigenKeyForUser: string;
 

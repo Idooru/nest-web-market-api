@@ -1,6 +1,5 @@
 export interface HttpError {
   statusCode: number;
-  message: string;
-  id?: string;
+  message: string[] | PromiseRejectedResult[];
   error: string;
 }

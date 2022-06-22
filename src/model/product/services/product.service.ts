@@ -6,7 +6,7 @@ import {
   ResponseProductDto,
 } from "./../dto/response_product.dto";
 import { ProductRepository } from "./../product.repository";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
 

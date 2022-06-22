@@ -53,6 +53,7 @@ export class AuthService {
     const foundWithRealName = await this.authRepositry.isExistUserWithRealName(
       realName,
     );
+
     const foundWithPhoneNumber =
       await this.authRepositry.isExistUserWithPhoneNumber(phoneNumber);
 
@@ -61,9 +62,7 @@ export class AuthService {
     }
 
     if (!(foundWithRealName.id === foundWithPhoneNumber.id)) {
-      throw new UnauthorizedException(
-        "입력된 두 정보가 서로 일치하는 정보가 아닙니다.",
-      );
+      throw new UnauthorizedException("올바르지 않은 정보입니다.");
     }
 
     return foundWithRealName.email;

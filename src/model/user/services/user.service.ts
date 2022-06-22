@@ -1,11 +1,11 @@
 import { JwtPayload } from "./../../../common/interfaces/jwt-payload.interface";
 import { PatchUserDto } from "./../dtos/patch-user.dto";
 import { RegisterUserDto } from "./../dtos/register-user.dto";
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { UserRepository } from "../user.repository";
 import { ResponseUserDto } from "../dtos/response-user.dto";
 import { UserReturnFilter } from "../dtos/response-user.dto";
-import { AuthService } from "src/model/auth/services/auth.service";
+import { AuthService } from "../../auth/services/auth.service";
 
 import * as bcrypt from "bcrypt";
 
@@ -21,9 +21,20 @@ export class UserService {
   async register(registerUserDto: RegisterUserDto): Promise<void> {
     const { nickName, email, password, phoneNumber } = registerUserDto;
 
-    await this.userRepository.checkUserEmail(email);
-    await this.userRepository.checkUserNickName(nickName);
-    await this.userRepository.checkUserPhoneNumber(phoneNumber);
+    await Promise.allSettled([
+      this.userRepository.checkUserEmail(email),
+      this.userRepository.checkUserNickName(nickName),
+      this.userRepository.checkUserPhoneNumber(phoneNumber),
+    ]).then((data) => {
+      const errors: Array<PromiseRejectedResult> = [];
+      const resolves: Array<PromiseFulfilledResult<void>> = [];
+      data.forEach((idx) => {
+        if (idx.status === "rejected") errors.push(idx.reason);
+        else resolves.push(idx);
+      });
+      if (resolves.length) return;
+      throw new UnauthorizedException(errors, "Register Error");
+    });
 
     const hashed = await bcrypt.hash(password, 10);
     await this.userRepository.createUser(registerUserDto, hashed);
