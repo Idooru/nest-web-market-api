@@ -9,7 +9,7 @@ export class LoggerMiddleware implements NestMiddleware {
       const logger = new Logger(originalUrl);
 
       if (400 <= statusCode || statusCode >= 599) {
-        const logger = new Logger(`${res.statusCode}:${res.statusMessage}`);
+        const logger = new Logger(`${res.statusMessage}`);
         return logger.error(`${method} ${originalUrl}`);
       }
 

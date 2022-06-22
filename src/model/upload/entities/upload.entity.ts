@@ -1,7 +1,7 @@
 import { UserEntity } from "./../../user/entities/user.entity";
 import { ProductEntity } from "./../../product/product.entity";
 import { IsNotEmpty, IsString } from "class-validator";
-import { CommonEntity } from "src/common/entities/common.entity";
+import { CommonEntity } from "../../../common/entities/common.entity";
 import { Column, Entity, ManyToOne, OneToOne, JoinColumn } from "typeorm";
 
 @Entity("images")

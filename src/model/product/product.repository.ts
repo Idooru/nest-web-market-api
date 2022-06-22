@@ -43,7 +43,7 @@ export class ProductRepository {
   }
 
   async checkProductIdToExist(id: string) {
-    const found = await this.productRepository.findOne({ id });
+    const found = await this.productRepository.findOne({ where: id });
 
     if (!found) {
       throw new BadRequestException("해당 상품 아이디는 존재하지 않습니다.");
@@ -55,7 +55,6 @@ export class ProductRepository {
       order: { createdAt: "DESC" },
       relations: ["image"],
     });
-
     if (!found) {
       throw new NotFoundException("데이터베이스에 상품이 존재하지 않습니다.");
     }

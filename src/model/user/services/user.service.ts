@@ -1,7 +1,7 @@
 import { JwtPayload } from "./../../../common/interfaces/jwt-payload.interface";
 import { PatchUserDto } from "./../dtos/patch-user.dto";
 import { RegisterUserDto } from "./../dtos/register-user.dto";
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable, BadRequestException } from "@nestjs/common";
 import { UserRepository } from "../user.repository";
 import { ResponseUserDto } from "../dtos/response-user.dto";
 import { UserReturnFilter } from "../dtos/response-user.dto";
@@ -26,14 +26,12 @@ export class UserService {
       this.userRepository.checkUserNickName(nickName),
       this.userRepository.checkUserPhoneNumber(phoneNumber),
     ]).then((data) => {
-      const errors: Array<PromiseRejectedResult> = [];
-      const resolves: Array<PromiseFulfilledResult<void>> = [];
-      data.forEach((idx) => {
-        if (idx.status === "rejected") errors.push(idx.reason);
-        else resolves.push(idx);
-      });
-      if (resolves.length) return;
-      throw new UnauthorizedException(errors, "Register Error");
+      const errors = data.map((idx) =>
+        idx.status === "rejected" ? idx.reason : false,
+      );
+
+      if (errors.includes(false)) return;
+      throw new BadRequestException(errors, "Register Error");
     });
 
     const hashed = await bcrypt.hash(password, 10);

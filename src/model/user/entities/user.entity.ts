@@ -1,18 +1,14 @@
 import { ImagesEntity } from "./../../upload/entities/upload.entity";
-import { CountryCode } from "./../../../common/config/phone-number.config";
 import { Exclude } from "class-transformer";
 import {
   IsNotEmpty,
   IsString,
-  IsEmail,
   IsEnum,
-  IsPhoneNumber,
   IsDateString,
-  IsDate,
   IsMobilePhone,
 } from "class-validator";
-import { CommonEntity } from "src/common/entities/common.entity";
-import { Column, Entity, JoinColumn, OneToMany } from "typeorm";
+import { CommonEntity } from "../../../common/entities/common.entity";
+import { Column, Entity, OneToMany } from "typeorm";
 
 @Entity("users")
 export class UserEntity extends CommonEntity {

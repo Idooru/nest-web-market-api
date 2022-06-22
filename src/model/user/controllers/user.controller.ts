@@ -16,12 +16,12 @@ import { UserService } from "../services/user.service";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { LoginUserDto } from "../dtos/login-user.dto";
 import { Response } from "express";
-import { CookieOption } from "src/common/config/etc";
+import { CookieOption } from "../../../common/config/etc";
 import { JSON } from "../../../common/interfaces/json-success.interface";
 import { ResponseUserDto } from "../dtos/response-user.dto";
 import { PatchUserDto } from "../dtos/patch-user.dto";
 import { ResetPasswordDto } from "../dtos/reset-password.dto";
-import { GetDecodedJwt } from "src/common/decorators/get-decoded-jwt.decorator";
+import { GetDecodedJwt } from "../../../common/decorators/get-decoded-jwt.decorator";
 import { FindEmailDto } from "./../dtos/find-email.dto";
 import { IsNotLoginGuard } from "./../../../common/guards/isNotLogin.guard";
 

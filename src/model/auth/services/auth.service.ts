@@ -8,7 +8,7 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { JwtPayload } from "src/common/interfaces/jwt-payload.interface";
+import { JwtPayload } from "../../../common/interfaces/jwt-payload.interface";
 
 import * as bcrypt from "bcrypt";
 
@@ -44,7 +44,20 @@ export class AuthService {
       throw new UnauthorizedException("아이디 혹은 비밀번호가 틀렸습니다.");
     }
 
-    return await this.refreshToken(user);
+    const jwtPayload = {
+      id: user.id,
+      email: user.email,
+      nickName: user.nickName,
+      userType: user.userType,
+    };
+
+    try {
+      return await this.jwtService.signAsync(jwtPayload);
+    } catch (err) {
+      throw new InternalServerErrorException(
+        "JWT 토큰을 발행하는데 실패하였습니다.",
+      );
+    }
   }
 
   async findEmail(findEmailDto: FindEmailDto): Promise<string> {

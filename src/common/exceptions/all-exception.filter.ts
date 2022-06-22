@@ -31,7 +31,7 @@ export class AllExceptionFilter implements ExceptionFilter {
         .setHeader("X-Powered-By", "")
         .json({
           success: false,
-          message: `${err.error}이 발생하였습니다.`,
+          message: `${err.error}가 발생하였습니다.`,
           timestamp: new Date().toString(),
           reason: err.message.map((idx) => idx.response),
         });
