@@ -25,7 +25,7 @@ export class AllExceptionFilter implements ExceptionFilter {
       });
     }
 
-    if (err.message.length >= 2 && err.error === "Register Error") {
+    if (err.error === "Register Error") {
       return res
         .status(err.statusCode)
         .setHeader("X-Powered-By", "")
@@ -33,7 +33,7 @@ export class AllExceptionFilter implements ExceptionFilter {
           success: false,
           message: `${err.error}가 발생하였습니다.`,
           timestamp: new Date().toString(),
-          reason: err.message.map((idx) => idx.response),
+          reason: err.message.map((idx) => idx.reason.response),
         });
     }
 

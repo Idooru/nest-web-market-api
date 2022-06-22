@@ -64,18 +64,38 @@ export class AuthService {
   async findEmail(findEmailDto: FindEmailDto): Promise<string> {
     const { realName, phoneNumber } = findEmailDto;
 
-    await Promise.allSettled([
+    const promises = await Promise.allSettled([
       this.authRepositry.isExistUserWithRealName(realName),
       this.authRepositry.isExistUserWithPhoneNumber(phoneNumber),
-    ]).then((data) => {
-      const errors = data.map((idx) =>
-        idx.status === "rejected" ? idx.reason : false,
-      );
+    ]);
 
-      if (errors.includes(false)) return;
+    const errors = promises.filter(
+      (idx: PromiseSettledResult<unknown>): idx is PromiseRejectedResult =>
+        idx.status === "rejected",
+    );
+
+    if (errors.length)
       throw new BadRequestException(errors, "Find Email Error");
-    });
 
+    const success = promises.filter(
+      <T>(idx: PromiseSettledResult<T>): idx is PromiseFulfilledResult<T> =>
+        idx.status === "fulfilled",
+    );
+
+    const [realNameResult, phoneNumberResult] = success;
+
+    if (!(realNameResult.value.id === phoneNumberResult.value.id)) {
+      throw new UnauthorizedException(
+        "사용자 실명과 전화번호가 서로 일치하지 않습니다.",
+      );
+    }
+
+    return realNameResult.value.email;
+
+    // const [realNameResult, phoneNumberResult] = (await promises).map(
+    //   (idx) => idx,
+    // );
+    // console.log(realNameResult, phoneNumberResult);
     // const foundWithRealName = await this.authRepositry.isExistUserWithRealName(
     //   realName,
     // );
@@ -90,13 +110,10 @@ export class AuthService {
     // }
 
     // if (!(foundWithRealName.id === foundWithPhoneNumber.id)) {
-    //   throw new UnauthorizedException(
-    //     "사용자 실명과 전화번호가 서로 일치하지 않습니다.",
-    //   );
+
     // }
 
     // return foundWithRealName.email;
-    return "hello";
   }
 
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {

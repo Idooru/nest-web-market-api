@@ -38,6 +38,7 @@ export class UserController {
     @Body() registerUserDto: RegisterUserDto,
   ): Promise<JSON<void>> {
     await this.userService.register(registerUserDto);
+
     return {
       statusCode: 201,
       message: "회원가입을 완료하였습니다.",

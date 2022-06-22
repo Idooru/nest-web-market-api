@@ -18,6 +18,6 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   database: "nestWebMarket_API",
   entities: [UserEntity, ProductEntity, ImagesEntity, VideosEntity],
   synchronize: true,
-  logging: true,
+  logging: false,
   keepConnectionAlive: true,
 };

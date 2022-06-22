@@ -21,18 +21,15 @@ export class UserService {
   async register(registerUserDto: RegisterUserDto): Promise<void> {
     const { nickName, email, password, phoneNumber } = registerUserDto;
 
-    await Promise.allSettled([
+    const promises = await Promise.allSettled([
       this.userRepository.checkUserEmail(email),
       this.userRepository.checkUserNickName(nickName),
       this.userRepository.checkUserPhoneNumber(phoneNumber),
-    ]).then((data) => {
-      const errors = data.map((idx) =>
-        idx.status === "rejected" ? idx.reason : false,
-      );
+    ]);
 
-      if (errors.includes(false)) return;
-      throw new BadRequestException(errors, "Register Error");
-    });
+    const errors = promises.filter((idx) => idx.status === "rejected");
+
+    if (errors.length) throw new BadRequestException(errors, "Register Error");
 
     const hashed = await bcrypt.hash(password, 10);
     await this.userRepository.createUser(registerUserDto, hashed);
