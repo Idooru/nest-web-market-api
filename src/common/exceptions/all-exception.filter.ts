@@ -25,7 +25,7 @@ export class AllExceptionFilter implements ExceptionFilter {
       });
     }
 
-    if (err.error === "Register Error") {
+    if (err.error === "Register Error" || "Find Email Error") {
       return res
         .status(err.statusCode)
         .setHeader("X-Powered-By", "")
