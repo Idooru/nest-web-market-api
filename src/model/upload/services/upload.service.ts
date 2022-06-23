@@ -16,14 +16,13 @@ export class UploadService {
       throw new BadRequestException(
         "사진을 업로드 할 수 없습니다. 사진을 제시해 주세요.",
       );
-    } else {
-      const imageFileName = file.filename;
-
-      return await this.uploadRepository.uploadImg({
-        imageFileName,
-        uploader,
-      });
     }
+    const imageFileName = file.filename;
+
+    return await this.uploadRepository.uploadImg({
+      imageFileName,
+      uploader,
+    });
   }
 
   // create(createUploadDto: ImageUploadDto) {

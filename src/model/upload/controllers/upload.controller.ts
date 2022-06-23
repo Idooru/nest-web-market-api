@@ -13,7 +13,6 @@ import {
 } from "@nestjs/common";
 import { UploadService } from "../../upload/services/upload.service";
 import { ImageReturnDto } from "../../upload/dto/image-return.dto";
-import { IsAdminGuard } from "src/common/guards/isAdmin.guard";
 import { IsLoginGuard } from "src/common/guards/isLogin.guard";
 import { MulterConfig } from "src/common/config/multer.config";
 import { FileInterceptor } from "@nestjs/platform-express";
@@ -23,19 +22,21 @@ import { JSON } from "../../../common/interfaces/json-success.interface";
 import { Response } from "express";
 import { CookieOption } from "src/common/config/etc";
 import { ProductImageCookieKey } from "./../../../common/config/etc";
+import { IsAdmin } from "src/common/decorators/isAdmin.decorator";
 
 @Controller("upload")
 export class UploadController {
-  constructor(private readonly uploadService: UploadService) {}
+  constructor(private readonly uploadService: UploadService) {
+    MulterConfig.createFolder("video", "image");
+  }
 
-  @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)
-  @UseInterceptors(
-    FileInterceptor("image", new MulterConfig().apply("image", "video")),
-  )
+  @UseInterceptors(FileInterceptor("image", MulterConfig.upload("image")))
   @Post("/image-for-product")
   async uploadImgForProduct(
-    @UploadedFile() file: Express.Multer.File,
+    @IsAdmin()
+    @UploadedFile()
+    file: Express.Multer.File,
     @GetDecodedJwt() jwtPayload: JwtPayload,
     @Res() res: Response,
   ): Promise<JSON<ImageReturnDto>> {

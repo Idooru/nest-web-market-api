@@ -25,7 +25,7 @@ export class IsLoginGuard implements CanActivate {
     }
 
     req.user = await this.validateToken(JWT_COOKIE);
-    req.data = "Hello";
+
     return true;
   }
 

@@ -15,35 +15,35 @@ export class AllExceptionFilter implements ExceptionFilter {
 
     const err = exception.getResponse() as HttpError | ValidationError;
 
-    if (typeof err !== "string" && err.error === "Bad Request") {
-      return res.status(err.statusCode).setHeader("X-Powered-By", "").json({
-        success: false,
-        statusCode: err.statusCode,
-        messsage: "Validation Exception이 발생하였습니다.",
-        timestamp: new Date().toString(),
-        reason: err.message,
-      });
-    }
-
-    if (err.error === "Register Error" || "Find Email Error") {
-      return res
-        .status(err.statusCode)
-        .setHeader("X-Powered-By", "")
-        .json({
+    switch (err.error) {
+      case "Unsupported Media Type":
+        return res.status(err.statusCode).setHeader("X-Powered-By", "").json({
           success: false,
-          message: `${err.error}가 발생하였습니다.`,
+          statusCode: err.statusCode,
+          messsage: "Validation Exception이 발생하였습니다.",
           timestamp: new Date().toString(),
-          reason: err.message.map((idx) => idx.reason.response),
+          reason: err.message,
+        });
+      case "Register Error":
+      case "Find Email Error":
+        return res
+          .status(err.statusCode)
+          .setHeader("X-Powered-By", "")
+          .json({
+            success: false,
+            message: `${err.error}가 발생하였습니다.`,
+            timestamp: new Date().toString(),
+            reason: err.message.map((idx) => idx.reason.response),
+          });
+      default:
+        return res.status(err.statusCode).setHeader("X-Powered-By", "").json({
+          success: false,
+          statusCode: err.statusCode,
+          message: "Http Exception이 발생하였습니다.",
+          timestamp: new Date().toString(),
+          reason: err.message,
+          error: err.error,
         });
     }
-
-    res.status(err.statusCode).setHeader("X-Powered-By", "").json({
-      success: false,
-      statusCode: err.statusCode,
-      message: "Http Exception이 발생하였습니다.",
-      timestamp: new Date().toString(),
-      reason: err.message,
-      error: err.error,
-    });
   }
 }
