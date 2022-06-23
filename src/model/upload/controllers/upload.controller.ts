@@ -15,8 +15,8 @@ import { UploadService } from "../../upload/services/upload.service";
 import { ImageReturnDto } from "../../upload/dto/image-return.dto";
 import { IsAdminGuard } from "src/common/guards/isAdmin.guard";
 import { IsLoginGuard } from "src/common/guards/isLogin.guard";
-import { MulterProvider } from "src/model/upload/multer.provider";
-import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
+import { MulterConfig } from "src/common/config/multer.config";
+import { FileInterceptor } from "@nestjs/platform-express";
 import { GetDecodedJwt } from "src/common/decorators/get-decoded-jwt.decorator";
 import { JwtPayload } from "src/common/interfaces/jwt-payload.interface";
 import { JSON } from "../../../common/interfaces/json-success.interface";
@@ -31,7 +31,7 @@ export class UploadController {
   @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)
   @UseInterceptors(
-    FileInterceptor("image", new MulterProvider().apply("image", "video")),
+    FileInterceptor("image", new MulterConfig().apply("image", "video")),
   )
   @Post("/image-for-product")
   async uploadImgForProduct(
@@ -55,25 +55,25 @@ export class UploadController {
     };
   }
 
-  @UseGuards(IsLoginGuard)
-  // @UseInterceptors(FilesInterceptor("video", new MulterProvider().apply()))
-  @Get()
-  findAll() {
-    return this.uploadService.findAll();
-  }
+  // @UseGuards(IsLoginGuard)
+  // // @UseInterceptors(FilesInterceptor("video", new MulterProvider().apply()))
+  // @Get()
+  // findAll() {
+  //   return this.uploadService.findAll();
+  // }
 
-  @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.uploadService.findOne(+id);
-  }
+  // @Get(":id")
+  // findOne(@Param("id") id: string) {
+  //   return this.uploadService.findOne(+id);
+  // }
 
-  @Patch(":id")
-  update(@Param("id") id: string, @Body() updateUploadDto: ImageReturnDto) {
-    return this.uploadService.update(+id, updateUploadDto);
-  }
+  // @Patch(":id")
+  // update(@Param("id") id: string, @Body() updateUploadDto: ImageReturnDto) {
+  //   return this.uploadService.update(+id, updateUploadDto);
+  // }
 
-  @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.uploadService.remove(+id);
-  }
+  // @Delete(":id")
+  // remove(@Param("id") id: string) {
+  //   return this.uploadService.remove(+id);
+  // }
 }

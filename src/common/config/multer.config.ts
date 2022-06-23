@@ -1,17 +1,14 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Logger } from "@nestjs/common";
 import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 
 import * as fs from "fs";
 import * as path from "path";
 import * as multer from "multer";
 
-@Injectable()
-export class MulterOperation {
-  constructor(private readonly folder: string) {}
-
+export class MulterConfig {
   private readonly logger = new Logger("Multer");
 
-  createFolder(folder: string) {
+  createFolder(folder1: string, folder2: string) {
     try {
       this.logger.log("create uploads folder");
       fs.mkdirSync(path.join(__dirname, "../../../uploads"));
@@ -20,21 +17,40 @@ export class MulterOperation {
     }
 
     try {
-      this.logger.log(`create ${folder} folder into uploads foler`);
-      fs.mkdirSync(path.join(__dirname, `../../../uploads/${folder}`));
+      this.logger.log(`create ${folder1}folder into uploads foler`);
+      fs.mkdirSync(path.join(__dirname, `../../../uploads/${folder1}`));
     } catch (err) {
-      this.logger.log(`${folder} is already exist`);
+      this.logger.log(`${folder1} is already exist`);
+    }
+
+    try {
+      this.logger.log(`create ${folder2}folder into uploads folder`);
+      fs.mkdirSync(path.join(__dirname, `../../../uploads/${folder2}`));
+    } catch (err) {
+      this.logger.log(`${folder2} is already exist`);
     }
   }
 
-  storage(folder: string): multer.StorageEngine {
-    this.createFolder(folder);
+  storage(folder1: string, folder2: string): multer.StorageEngine {
+    this.createFolder(folder1, folder2);
 
     return multer.diskStorage({
       destination(req, file, cb) {
-        const folderName = path.join(__dirname, `../../../uploads/${folder}`);
+        if (file.mimetype.includes("image")) {
+          const folderName = path.join(
+            __dirname,
+            `../../../uploads/${folder1}`,
+          );
 
-        cb(null, folderName);
+          cb(null, folderName);
+        } else {
+          const folderName = path.join(
+            __dirname,
+            `../../../uploads/${folder2}`,
+          );
+
+          cb(null, folderName);
+        }
       },
       filename(req, file, cb) {
         const ext: string = path.extname(file.originalname);
@@ -49,9 +65,9 @@ export class MulterOperation {
     });
   }
 
-  apply() {
+  apply(folder1: string, folder2: string) {
     const result: MulterOptions = {
-      storage: this.storage(this.folder),
+      storage: this.storage(folder1, folder2),
     };
     return result;
   }
