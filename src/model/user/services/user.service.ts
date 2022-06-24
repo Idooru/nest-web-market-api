@@ -1,3 +1,4 @@
+import { UploadRepository } from "./../../upload/upload.repository";
 import { JwtPayload } from "./../../../common/interfaces/jwt-payload.interface";
 import { PatchUserDto } from "./../dtos/patch-user.dto";
 import { RegisterUserDto } from "./../dtos/register-user.dto";
@@ -8,12 +9,14 @@ import { UserReturnFilter } from "../dtos/response-user.dto";
 import { AuthService } from "../../auth/services/auth.service";
 
 import * as bcrypt from "bcrypt";
+import { UploadService } from "src/model/upload/services/upload.service";
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly authService: AuthService,
+    private readonly uploadService: UploadService,
   ) {}
 
   private readonly userReturnFilter = UserReturnFilter;
@@ -35,8 +38,15 @@ export class UserService {
     await this.userRepository.createUser(registerUserDto, hashed);
   }
 
-  async findSelfInfoWithId(id: string): Promise<ResponseUserDto> {
-    const user = await this.userRepository.isExistUserWithId(id);
+  async findSelfInfoWithId(userId: string): Promise<ResponseUserDto> {
+    const user = await this.userRepository.isExistUserWithId(userId);
+
+    const uploadedImage = await this.uploadService.getImageFileNameWithUserId(
+      userId,
+    );
+
+    await this.userRepository.insertImageForUser(userId, uploadedImage);
+
     return this.userReturnFilter(user);
   }
 

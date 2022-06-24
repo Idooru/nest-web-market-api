@@ -29,7 +29,7 @@ export class UserRepository {
     }
   }
 
-  async checkUserPhoneNumber(phoneNumber: string) {
+  async checkUserPhoneNumber(phoneNumber: string): Promise<void> {
     const userPhoneNumber = await this.userRepository.findOne({
       where: { phoneNumber },
     });
@@ -76,22 +76,25 @@ export class UserRepository {
   async patchUser(
     patchUserDto: PatchUserDto,
     hashed: string,
-    id: string,
+    userId: string,
   ): Promise<void> {
     const password = { password: hashed };
     const payload = { ...patchUserDto, ...password };
-    await this.userRepository.update(id, payload);
+    await this.userRepository.update(userId, payload);
   }
 
-  async deleteUser(id: string): Promise<void> {
-    await this.userRepository.delete(id);
+  async deleteUser(userId: string): Promise<void> {
+    await this.userRepository.delete(userId);
   }
 
-  async findUserAndInsertImageForUser(uploader: string, imageId: ImagesEntity) {
-    const user = await this.userRepository.findOne({
-      where: { nickName: uploader },
-    });
+  async insertImageForUser(userId: string, uploadedImage: ImagesEntity[]) {
+    uploadedImage.forEach(
+      async (idx) =>
+        await this.userRepository.update(userId, {
+          uploadedImage: idx.imageFileName,
+        }),
+    );
 
-    await this.userRepository.update(user, { imageId });
+    // await this.userRepository.update(userId, { uploadedImage });
   }
 }

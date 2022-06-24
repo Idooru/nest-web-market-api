@@ -37,7 +37,7 @@ export class ProductEntity extends CommonEntity {
   @Column({ type: "float", default: 0.0 })
   rating: float;
 
-  @OneToOne(() => ImagesEntity, (join) => join.imageForigenKeyForProduct)
-  @JoinColumn()
+  @OneToOne(() => ImagesEntity, (join) => join.product)
+  @JoinColumn({ name: "imageId" })
   image: ImagesEntity;
 }

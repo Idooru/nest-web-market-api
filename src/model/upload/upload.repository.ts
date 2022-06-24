@@ -5,6 +5,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { ImagesEntity, VideosEntity } from "./entities/upload.entity";
 import { Repository } from "typeorm";
 import { ImageReturnDto } from "./dto/image-return.dto";
+import { UserEntity } from "../user/entities/user.entity";
 
 @Injectable()
 export class UploadRepository {
@@ -16,22 +17,20 @@ export class UploadRepository {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async uploadImg(imageUploadDto: ImageUploadDto): Promise<ImageReturnDto> {
+  async uploadImgForProduct(
+    imageUploadDto: ImageUploadDto,
+  ): Promise<ImageReturnDto> {
     const { uploader, imageFileName } = imageUploadDto;
     const fileNameOnUrl = `http://localhost:${process.env.PORT}/media/${imageFileName}`;
+    const strUploader = uploader.nickName;
+
+    const userId: UserEntity =
+      await this.userRepository.isExistUserWithNickName(strUploader);
 
     const image = await this.imagesRepository.save({
       imageFileName: fileNameOnUrl,
-      uploader,
+      uploader: userId,
     });
-
-    const imageId: ImagesEntity = await this.imagesRepository.findOne({
-      where: { uploader },
-      select: ["id"],
-      order: { createdAt: "DESC" },
-    });
-
-    await this.userRepository.findUserAndInsertImageForUser(uploader, imageId);
 
     console.log(image);
 
@@ -43,10 +42,16 @@ export class UploadRepository {
     return { name: originalName, url: fileNameOnUrl };
   }
 
-  async findImageIdWithImageFileName(imageId: ImagesEntity | string) {
+  async findImageIdWithImageFileName(
+    imageId: ImagesEntity | string,
+  ): Promise<ImagesEntity> {
     return await this.imagesRepository.findOne({
       select: ["id"],
       where: { imageFileName: imageId },
     });
+  }
+
+  async getImageFileNameWithUserId(userId: string): Promise<ImagesEntity[]> {
+    return await this.imagesRepository.find({ where: { uploader: userId } });
   }
 }

@@ -1,22 +1,23 @@
 import { UserEntity } from "./../../user/entities/user.entity";
 import { ProductEntity } from "./../../product/product.entity";
-import { IsNotEmpty, IsString } from "class-validator";
 import { CommonEntity } from "../../../common/entities/common.entity";
-import { Column, Entity, ManyToOne, OneToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from "typeorm";
 
 @Entity("images")
 export class ImagesEntity extends CommonEntity {
   @OneToOne(() => ProductEntity)
-  imageForigenKeyForProduct: string;
+  product: ProductEntity;
 
-  @ManyToOne(() => UserEntity)
-  imageForigenKeyForUser: string;
+  // @ManyToOne(() => UserEntity, (join) => join.image)
+  // @JoinColumn({ name: "userId", referencedColumnName: "id" })
+  // user: UserEntity;
 
   @Column({ type: "varchar", nullable: false, unique: true })
   imageFileName: string;
 
-  @Column({ type: "varchar", nullable: false })
-  uploader: string;
+  @ManyToOne(() => UserEntity, (Join) => Join.image)
+  @JoinColumn({ name: "uploaderId", referencedColumnName: "id" })
+  uploader: UserEntity;
 }
 
 @Entity("videos")

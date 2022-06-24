@@ -1,5 +1,5 @@
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { UploadService } from "../upload/services/upload.service";
 import { UploadController } from "../upload/controllers/upload.controller";
 import { ImagesEntity, VideosEntity } from "./entities/upload.entity";
@@ -11,11 +11,17 @@ import { UserModule } from "../user/user.module";
 @Module({
   imports: [
     TypeOrmModule.forFeature([ImagesEntity, VideosEntity]),
+    forwardRef(() => UserModule),
     NestjsFormDataModule,
-    UserModule,
   ],
   controllers: [UploadController],
-  providers: [UploadService, UploadRepository, MulterConfig],
-  exports: [UploadRepository],
+  providers: [
+    UploadService,
+    UploadRepository,
+    MulterConfig,
+    ImagesEntity,
+    VideosEntity,
+  ],
+  exports: [UploadRepository, ImagesEntity, VideosEntity, MulterConfig],
 })
 export class UploadModule {}

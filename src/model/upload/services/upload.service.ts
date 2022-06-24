@@ -1,17 +1,24 @@
+import { UserRepository } from "./../../user/user.repository";
 import { UploadRepository } from "../../upload/upload.repository";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { ImageReturnDto } from "../../upload/dto/image-return.dto";
 import { JwtPayload } from "src/common/interfaces/jwt-payload.interface";
+import { ImagesEntity } from "../entities/upload.entity";
 
 @Injectable()
 export class UploadService {
-  constructor(private readonly uploadRepository: UploadRepository) {}
+  constructor(
+    private readonly uploadRepository: UploadRepository,
+    private readonly userRepository: UserRepository,
+  ) {}
 
   async uploadImgForProduct(
     file: Express.Multer.File,
     jwtPayload: JwtPayload,
   ): Promise<ImageReturnDto> {
-    const uploader = jwtPayload.nickName;
+    const uploader = await this.userRepository.isExistUserWithNickName(
+      jwtPayload.nickName,
+    );
 
     if (!file) {
       throw new BadRequestException(
@@ -20,10 +27,14 @@ export class UploadService {
     }
     const imageFileName = file.filename;
 
-    return await this.uploadRepository.uploadImg({
+    return await this.uploadRepository.uploadImgForProduct({
       imageFileName,
       uploader,
     });
+  }
+
+  async getImageFileNameWithUserId(userId: string): Promise<ImagesEntity[]> {
+    return await this.uploadRepository.getImageFileNameWithUserId(userId);
   }
 
   // create(createUploadDto: ImageUploadDto) {

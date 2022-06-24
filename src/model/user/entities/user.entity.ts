@@ -1,4 +1,7 @@
-import { ImagesEntity } from "./../../upload/entities/upload.entity";
+import {
+  ImagesEntity,
+  VideosEntity,
+} from "./../../upload/entities/upload.entity";
 import { Exclude } from "class-transformer";
 import {
   IsNotEmpty,
@@ -8,7 +11,7 @@ import {
   IsMobilePhone,
 } from "class-validator";
 import { CommonEntity } from "../../../common/entities/common.entity";
-import { Column, Entity, OneToMany, JoinColumn } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
 
 @Entity("users")
 export class UserEntity extends CommonEntity {
@@ -59,7 +62,15 @@ export class UserEntity extends CommonEntity {
   })
   userType: "general" | "special" | "admin";
 
-  @OneToMany(() => ImagesEntity, (join) => join.imageForigenKeyForUser)
-  @JoinColumn()
+  @OneToMany(() => ImagesEntity, (join) => join.uploader)
   image?: ImagesEntity;
+
+  @Column({ type: "varchar" })
+  uploadedImage: string;
+
+  @Column({ type: "varchar" })
+  uploadedVedio: VideosEntity;
+
+  // @Column()
+  // writtenReview: string;
 }
