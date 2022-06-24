@@ -1,3 +1,4 @@
+import { IsAdminGuard } from "./../../../common/guards/isAdmin.guard";
 import {
   Controller,
   Get,
@@ -22,7 +23,6 @@ import { JSON } from "../../../common/interfaces/json-success.interface";
 import { Response } from "express";
 import { CookieOption } from "src/common/config/etc";
 import { ProductImageCookieKey } from "./../../../common/config/etc";
-import { IsAdmin } from "src/common/decorators/isAdmin.decorator";
 
 @Controller("upload")
 export class UploadController {
@@ -30,13 +30,12 @@ export class UploadController {
     MulterConfig.createFolder("video", "image");
   }
 
+  @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)
   @UseInterceptors(FileInterceptor("image", MulterConfig.upload("image")))
   @Post("/image-for-product")
   async uploadImgForProduct(
-    @IsAdmin()
-    @UploadedFile()
-    file: Express.Multer.File,
+    @UploadedFile() file: Express.Multer.File,
     @GetDecodedJwt() jwtPayload: JwtPayload,
     @Res() res: Response,
   ): Promise<JSON<ImageReturnDto>> {

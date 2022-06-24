@@ -65,12 +65,12 @@ export class UserController {
   @UseGuards(IsLoginGuard)
   @Get("/whoami")
   async whoAmI(
-    @GetDecodedJwt() user: JwtPayload,
+    @GetDecodedJwt() jwtPayload: JwtPayload,
   ): Promise<JSON<ResponseUserDto>> {
     return {
       statusCode: 200,
       message: "본인 정보를 가져옵니다.",
-      result: await this.userService.findSelfInfoWithId(user.id),
+      result: await this.userService.findSelfInfoWithId(jwtPayload.id),
     };
   }
 

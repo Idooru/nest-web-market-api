@@ -17,7 +17,11 @@ async function bootstrap() {
   /* 각각의 서비스에서 발생하는 custom exception을 제외한 서버에서 발생하는 에러
   혹은 404 에러 등을 글로벌적으로 처리할수 있음*/
   app.useGlobalFilters(new AllExceptionFilter());
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      errorHttpStatusCode: 415,
+    }),
+  );
   app.useGlobalInterceptors(new JsonResponseInterceptor());
   app.use(cookieParser(cookieSecret));
   app.use(helmet());

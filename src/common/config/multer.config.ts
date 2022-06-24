@@ -1,8 +1,4 @@
-import {
-  Logger,
-  Injectable,
-  UnsupportedMediaTypeException,
-} from "@nestjs/common";
+import { Logger, UnsupportedMediaTypeException } from "@nestjs/common";
 import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 
 import * as fs from "fs";

@@ -6,6 +6,7 @@ import { JwtPayload } from "src/common/interfaces/jwt-payload.interface";
 @Injectable()
 export class UploadService {
   constructor(private readonly uploadRepository: UploadRepository) {}
+
   async uploadImgForProduct(
     file: Express.Multer.File,
     jwtPayload: JwtPayload,

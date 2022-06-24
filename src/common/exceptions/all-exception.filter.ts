@@ -12,10 +12,10 @@ import { Response } from "express";
 export class AllExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const res = host.switchToHttp().getResponse<Response>();
-
     const err = exception.getResponse() as HttpError | ValidationError;
 
     switch (err.error) {
+      // Validation Exception 혹은 업로드 할 때 파일 확장자가 올바르지 않을 때 발생
       case "Unsupported Media Type":
         return res.status(err.statusCode).setHeader("X-Powered-By", "").json({
           success: false,
@@ -24,6 +24,7 @@ export class AllExceptionFilter implements ExceptionFilter {
           timestamp: new Date().toString(),
           reason: err.message,
         });
+      // 회원가입 혹은 이메일 찾기 할 때 요청값이 올바르지 않을 때 발생 주로 에러 메세지가 2-3개 씩 올 수 있음
       case "Register Error":
       case "Find Email Error":
         return res
@@ -33,8 +34,9 @@ export class AllExceptionFilter implements ExceptionFilter {
             success: false,
             message: `${err.error}가 발생하였습니다.`,
             timestamp: new Date().toString(),
-            reason: err.message.map((idx) => idx.reason.response),
+            reason: err.message.map((idx: any) => idx.reason.response),
           });
+      // 그 외 상황
       default:
         return res.status(err.statusCode).setHeader("X-Powered-By", "").json({
           success: false,
