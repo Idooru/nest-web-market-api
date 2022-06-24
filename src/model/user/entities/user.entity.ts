@@ -8,7 +8,7 @@ import {
   IsMobilePhone,
 } from "class-validator";
 import { CommonEntity } from "../../../common/entities/common.entity";
-import { Column, Entity, OneToMany } from "typeorm";
+import { Column, Entity, OneToMany, JoinColumn } from "typeorm";
 
 @Entity("users")
 export class UserEntity extends CommonEntity {
@@ -60,5 +60,6 @@ export class UserEntity extends CommonEntity {
   userType: "general" | "special" | "admin";
 
   @OneToMany(() => ImagesEntity, (join) => join.imageForigenKeyForUser)
-  image?: ImagesEntity[];
+  @JoinColumn()
+  image?: ImagesEntity;
 }

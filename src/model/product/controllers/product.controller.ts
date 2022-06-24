@@ -24,7 +24,6 @@ import { IsLoginGuard } from "./../../../common/guards/isLogin.guard";
 import { ProductImageCookieKey } from "./../../../common/config/etc";
 import { Response } from "express";
 import { Cookies } from "src/common/decorators/cookies.decorator";
-import { IsAdmin } from "src/common/decorators/isAdmin.decorator";
 
 @Controller("/product")
 export class ProductController {
@@ -70,11 +69,10 @@ export class ProductController {
     };
   }
 
-  // @UseGuards(IsAdminGuard)
+  @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)
   @Post("/")
   async createProduct(
-    @IsAdmin()
     @Body()
     createProductBody: CreateProductBody,
     @Cookies(ProductImageCookieKey) productImg: ImagesEntity,
@@ -99,10 +97,10 @@ export class ProductController {
     };
   }
 
+  @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)
   @Patch("/qi")
   async modifyProduct(
-    @IsAdmin()
     @Query("id")
     id: string,
     @Body() modifyProductBody: ModifyProductBody,

@@ -83,6 +83,7 @@ Nest is [MIT licensed](LICENSE).
 2. 위와 같은 이유 때문에 커스텀 데코레이터 대신 가드를 IsLoginGuard와
    IsAdminGuard 순서대로 Guard를 설정하게 되면 IsAdminGuard가 먼저 실행되고
    나서 IsLoginGuard가 실행되게 된다. 그 이유 때문에 배치를 IsAdminGuard -> IsLoginGuard로 배치를 수정했다.
+   해결함 데코레이터들은 위에서 아래로가 아닌 아래에서 위로 실행되는듯함
 
 3. multer.config.ts에 있는 MulterOperation 클래스를 좀 더 다양한 곳에서  
    사용하기 위해 upload라는 모델을 만든 후 그 모델에서 multer.provider.ts라는  

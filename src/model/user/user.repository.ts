@@ -4,6 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "./entities/user.entity";
 import { Repository } from "typeorm";
 import { RegisterUserDto } from "./dtos/register-user.dto";
+import { ImagesEntity } from "../upload/entities/upload.entity";
 
 @Injectable()
 export class UserRepository {
@@ -13,7 +14,7 @@ export class UserRepository {
   ) {}
 
   async checkUserEmail(email: string) {
-    const found = await this.userRepository.findOne({ email });
+    const found = await this.userRepository.findOne({ where: { email } });
 
     if (found) {
       throw new UnauthorizedException("해당 이메일은 사용중입니다.");
@@ -21,7 +22,7 @@ export class UserRepository {
   }
 
   async checkUserNickName(nickName: string) {
-    const found = await this.userRepository.findOne({ nickName });
+    const found = await this.userRepository.findOne({ where: { nickName } });
 
     if (found) {
       throw new UnauthorizedException("해당 닉네임은 사용중입니다.");
@@ -30,7 +31,7 @@ export class UserRepository {
 
   async checkUserPhoneNumber(phoneNumber: string) {
     const userPhoneNumber = await this.userRepository.findOne({
-      phoneNumber,
+      where: { phoneNumber },
     });
 
     if (userPhoneNumber) {
@@ -40,7 +41,7 @@ export class UserRepository {
 
   async isExistUserWithId(id: string): Promise<UserEntity> {
     try {
-      return await this.userRepository.findOneOrFail({ id });
+      return await this.userRepository.findOneOrFail({ where: { id } });
     } catch (err) {
       throw new UnauthorizedException("해당 사용자아이디는 존재하지 않습니다.");
     }
@@ -48,7 +49,7 @@ export class UserRepository {
 
   async isExistUserWithEmail(email: string): Promise<UserEntity> {
     try {
-      return await this.userRepository.findOneOrFail({ email });
+      return await this.userRepository.findOneOrFail({ where: { email } });
     } catch (err) {
       throw new UnauthorizedException("해당 이메일은 존재하지 않습니다.");
     }
@@ -56,7 +57,7 @@ export class UserRepository {
 
   async isExistUserWithNickName(nickName: string): Promise<UserEntity> {
     try {
-      return await this.userRepository.findOneOrFail({ nickName });
+      return await this.userRepository.findOneOrFail({ where: { nickName } });
     } catch (err) {
       throw new UnauthorizedException("해당 닉네임은 존재하지 않습니다.");
     }
@@ -84,5 +85,13 @@ export class UserRepository {
 
   async deleteUser(id: string): Promise<void> {
     await this.userRepository.delete(id);
+  }
+
+  async findUserAndInsertImageForUser(uploader: string, imageId: ImagesEntity) {
+    const user = await this.userRepository.findOne({
+      where: { nickName: uploader },
+    });
+
+    await this.userRepository.update(user, { imageId });
   }
 }

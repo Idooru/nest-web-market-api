@@ -1,3 +1,4 @@
+import { UserRepository } from "./../user/user.repository";
 import { ImageUploadDto } from "./dto/image-upload.dto";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -12,6 +13,7 @@ export class UploadRepository {
     private readonly imagesRepository: Repository<ImagesEntity>,
     @InjectRepository(VideosEntity)
     private readonly videosRepository: Repository<VideosEntity>,
+    private readonly userRepository: UserRepository,
   ) {}
 
   async uploadImg(imageUploadDto: ImageUploadDto): Promise<ImageReturnDto> {
@@ -22,6 +24,14 @@ export class UploadRepository {
       imageFileName: fileNameOnUrl,
       uploader,
     });
+
+    const imageId: ImagesEntity = await this.imagesRepository.findOne({
+      where: { uploader },
+      select: ["id"],
+      order: { createdAt: "DESC" },
+    });
+
+    await this.userRepository.findUserAndInsertImageForUser(uploader, imageId);
 
     console.log(image);
 

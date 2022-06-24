@@ -74,8 +74,9 @@ export class AuthService {
         idx.status === "rejected",
     );
 
-    if (errors.length)
+    if (errors.length) {
       throw new BadRequestException(errors, "Find Email Error");
+    }
 
     const success = promises.filter(
       <T>(idx: PromiseSettledResult<T>): idx is PromiseFulfilledResult<T> =>
