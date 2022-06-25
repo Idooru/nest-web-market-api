@@ -2,7 +2,6 @@ import { ModifyProductDto } from "./dto/modify_product.dto";
 import { CreateProductDto } from "./dto/create_product.dto";
 import {
   BadRequestException,
-  HttpException,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";

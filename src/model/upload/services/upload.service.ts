@@ -1,9 +1,9 @@
+import { UserActivityEntity } from "src/model/user/entities/user.activity.entity";
 import { UserRepository } from "./../../user/user.repository";
 import { UploadRepository } from "../../upload/upload.repository";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { ImageReturnDto } from "../../upload/dto/image-return.dto";
 import { JwtPayload } from "src/common/interfaces/jwt-payload.interface";
-import { ImagesEntity } from "../entities/upload.entity";
 
 @Injectable()
 export class UploadService {
@@ -39,7 +39,7 @@ export class UploadService {
     );
     const imageId = imageFound.id;
 
-    await this.uploadRepository.insertImageForUser(uploaderId, imageId);
+    // await this.uploadRepository.insertImageForUser(uploaderId, imageId);
 
     return upload;
   }

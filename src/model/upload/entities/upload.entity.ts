@@ -1,4 +1,5 @@
-import { UserEntity } from "./../../user/entities/user.entity";
+import { UserActivityEntity } from "src/model/user/entities/user.activity.entity";
+import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
 import { ProductEntity } from "./../../product/product.entity";
 import { CommonEntity } from "../../../common/entities/common.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from "typeorm";
@@ -8,19 +9,15 @@ export class ImagesEntity extends CommonEntity {
   @OneToOne(() => ProductEntity)
   product: ProductEntity;
 
-  // @ManyToOne(() => UserEntity, (join) => join.image)
-  // @JoinColumn({ name: "userId", referencedColumnName: "id" })
-  // user: UserEntity;
-
   @Column({ type: "varchar", nullable: false, unique: true })
   uploadedImage: string;
 
-  @ManyToOne(() => UserEntity, (Join) => Join.image)
+  @ManyToOne(() => UserActivityEntity, (Join) => Join.image)
   @JoinColumn({ name: "uploaderId", referencedColumnName: "id" })
-  uploader: UserEntity;
+  uploader: UserAuthEntity;
 
-  @Column({ type: "varchar", enum: ["product upload", "review"] })
-  uploadPurpose: "product upload" | " review";
+  @Column({ type: "enum", enum: ["product upload", "review"] })
+  uploadPurpose: "product upload" | "review";
 }
 
 @Entity("videos")
@@ -31,6 +28,6 @@ export class VideosEntity extends CommonEntity {
   @Column({ type: "varchar", nullable: false })
   uploader: string;
 
-  @Column({ type: "varchar", default: "review", enum: ["review"] })
+  @Column({ type: "enum", default: "review", enum: ["review"] })
   uploadPurpose: "review";
 }

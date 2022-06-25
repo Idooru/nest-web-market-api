@@ -1,5 +1,5 @@
 import { UnauthorizedException } from "@nestjs/common";
-import { UserEntity } from "./../user/entities/user.entity";
+import { UserAuthEntity } from "../user/entities/user.auth.entity";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -7,11 +7,11 @@ import { Repository } from "typeorm";
 @Injectable()
 export class AuthRepository {
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly authRepository: Repository<UserEntity>,
+    @InjectRepository(UserAuthEntity)
+    private readonly authRepository: Repository<UserAuthEntity>, // @InjectRepository(UserAuthEntity) // private readonly userAuthRepository: Repository<>,
   ) {}
 
-  async findUserWithEmail(email: string): Promise<UserEntity> {
+  async findUserWithEmail(email: string): Promise<UserAuthEntity> {
     try {
       return await this.authRepository.findOneOrFail({ where: { email } });
     } catch (err) {
@@ -19,7 +19,7 @@ export class AuthRepository {
     }
   }
 
-  async isExistUserWithRealName(realName: string): Promise<UserEntity> {
+  async isExistUserWithRealName(realName: string): Promise<UserAuthEntity> {
     try {
       return await this.authRepository.findOneOrFail({
         select: ["id", "email"],
@@ -30,7 +30,9 @@ export class AuthRepository {
     }
   }
 
-  async isExistUserWithPhoneNumber(phoneNumber: string): Promise<UserEntity> {
+  async isExistUserWithPhoneNumber(
+    phoneNumber: string,
+  ): Promise<UserAuthEntity> {
     try {
       return await this.authRepository.findOneOrFail({
         select: ["id"],

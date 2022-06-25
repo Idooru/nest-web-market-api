@@ -24,5 +24,5 @@ export abstract class CommonEntity {
   @DeleteDateColumn({
     type: "timestamp",
   })
-  deletedAt: Date;
+  deletedAt: Date | null;
 }

@@ -1,19 +1,32 @@
+import { UserActivityEntity } from "./entities/user.activity.entity";
+import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
 import { PatchUserDto } from "./dtos/patch-user.dto";
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { UserEntity } from "./entities/user.entity";
+import { UserCommonEntity } from "./entities/user.common.entity";
 import { Repository } from "typeorm";
 import { RegisterUserDto } from "./dtos/register-user.dto";
+import { UserCoreEntity } from "./entities/user.core.entity";
 
 @Injectable()
 export class UserRepository {
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(UserCommonEntity)
+    private readonly userCoreRepository: Repository<UserCoreEntity>,
+    @InjectRepository(UserCommonEntity)
+    private readonly userCommonRepository: Repository<UserCommonEntity>,
+    @InjectRepository(UserAuthEntity)
+    private readonly userAuthRepository: Repository<UserAuthEntity>,
+    @InjectRepository(UserActivityEntity)
+    private readonly userActivityRepository: Repository<UserActivityEntity>,
   ) {}
 
   async checkUserEmail(email: string) {
-    const found = await this.userRepository.findOne({ where: { email } });
+    const found = await this.userAuthRepository.findOne({ where: { email } });
 
     if (found) {
       throw new UnauthorizedException("해당 이메일은 사용중입니다.");
@@ -21,7 +34,9 @@ export class UserRepository {
   }
 
   async checkUserNickName(nickName: string) {
-    const found = await this.userRepository.findOne({ where: { nickName } });
+    const found = await this.userAuthRepository.findOne({
+      where: { nickName },
+    });
 
     if (found) {
       throw new UnauthorizedException("해당 닉네임은 사용중입니다.");
@@ -29,7 +44,7 @@ export class UserRepository {
   }
 
   async checkUserPhoneNumber(phoneNumber: string): Promise<void> {
-    const userPhoneNumber = await this.userRepository.findOne({
+    const userPhoneNumber = await this.userCommonRepository.findOne({
       where: { phoneNumber },
     });
 
@@ -38,25 +53,29 @@ export class UserRepository {
     }
   }
 
-  async isExistUserWithId(id: string): Promise<UserEntity> {
+  async isExistUserWithId(id: string): Promise<UserCoreEntity> {
     try {
-      return await this.userRepository.findOneOrFail({ where: { id } });
+      return await this.userCoreRepository.findOneOrFail({ where: { id } });
     } catch (err) {
       throw new UnauthorizedException("해당 사용자아이디는 존재하지 않습니다.");
     }
   }
 
-  async isExistUserWithEmail(email: string): Promise<UserEntity> {
+  async isExistUserWithEmail(email: string): Promise<UserCommonEntity> {
     try {
-      return await this.userRepository.findOneOrFail({ where: { email } });
+      return await this.userCommonRepository.findOneOrFail({
+        where: { email },
+      });
     } catch (err) {
       throw new UnauthorizedException("해당 이메일은 존재하지 않습니다.");
     }
   }
 
-  async isExistUserWithNickName(nickName: string): Promise<UserEntity> {
+  async isExistUserWithNickName(nickName: string): Promise<UserAuthEntity> {
     try {
-      return await this.userRepository.findOneOrFail({ where: { nickName } });
+      return await this.userAuthRepository.findOneOrFail({
+        where: { nickName },
+      });
     } catch (err) {
       throw new UnauthorizedException("해당 닉네임은 존재하지 않습니다.");
     }
@@ -66,10 +85,43 @@ export class UserRepository {
     registerUserDto: RegisterUserDto,
     hashed: string,
   ): Promise<void> {
-    await this.userRepository.save({
-      ...registerUserDto,
-      password: hashed,
-    });
+    const password = hashed;
+    const { realName, nickName, birth, gender, email, phoneNumber } =
+      registerUserDto;
+
+    const userCommonData = { realName, birth, gender, phoneNumber };
+    const userAuthData = { nickName, email, password };
+    const userActivityData = { point: 0, howMuchBuy: 0 };
+
+    const promiseForSaveUserData = await Promise.allSettled([
+      await this.userCommonRepository.save({ ...userCommonData }),
+      await this.userAuthRepository.save({ ...userAuthData }),
+      await this.userActivityRepository.save({ ...userActivityData }),
+    ]);
+
+    const errors = promiseForSaveUserData.filter(
+      (idx: PromiseSettledResult<unknown>): idx is PromiseRejectedResult =>
+        idx.status === "rejected",
+    );
+
+    if (errors.length) {
+      throw new InternalServerErrorException(errors, "Create User Error");
+    }
+
+    const success = promiseForSaveUserData.filter(
+      <T>(idx: PromiseSettledResult<T>): idx is PromiseFulfilledResult<T> =>
+        idx.status === "fulfilled",
+    );
+
+    // const [userCommonResult, userAuthResult, UserActivityEntity] = success;
+
+    const [userCommonId, userAuthId, userActivityId] = success.map(
+      (idx) => idx.value.id,
+    );
+
+    const promiseForInsertIdOnCore = await Promise.allSettled([
+      await this.userCoreRepository.save({}),
+    ]);
   }
 
   async patchUser(
@@ -79,18 +131,19 @@ export class UserRepository {
   ): Promise<void> {
     const password = { password: hashed };
     const payload = { ...patchUserDto, ...password };
-    await this.userRepository.update(userId, payload);
+    await this.userCommonRepository.update(userId, payload);
   }
 
   async deleteUser(userId: string): Promise<void> {
-    await this.userRepository.delete(userId);
+    await this.userCommonRepository.delete(userId);
   }
 
-  async insertImageForUser(userId: string, imageId: string) {
-    const user = await this.userRepository.findOne({
-      where: { id: userId },
-    });
-    user.imageId = [imageId];
-    await this.userRepository.save(user);
-  }
+  // async insertImageForUser(userId: string, imageId: string) {
+  //   const user = await this.userCommonRepository.findOne({
+  //     where: { id: userId },
+  //     relations: ["activity"],
+  //   });
+  //   user.imageId = [imageId];
+  //   await this.userCommonRepository.save(user);
+  // }
 }

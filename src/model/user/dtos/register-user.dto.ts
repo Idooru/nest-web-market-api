@@ -1,17 +1,27 @@
+import { UserCommonEntity } from "./../entities/user.common.entity";
 import { PickType } from "@nestjs/mapped-types";
+import { IntersectionType } from "@nestjs/swagger";
 import { IsNotEmpty, IsString, Matches } from "class-validator";
-import { UserEntity } from "../entities/user.entity";
+import { UserAuthEntity } from "../entities/user.auth.entity";
 
-export class RegisterUserDto extends PickType(UserEntity, [
+export class RegisterUserCommonDto extends PickType(UserCommonEntity, [
   "realName",
-  "nickName",
   "birth",
   "gender",
-  "email",
   "phoneNumber",
+] as const) {}
+
+export class RegisterUserAuthDto extends PickType(UserAuthEntity, [
+  "email",
+  "nickName",
 ] as const) {
   @IsString()
   @IsNotEmpty()
   @Matches(/^[A-Za-z\d!@#$%^&*()]{8,30}$/)
   password: string;
 }
+
+export class RegisterUserDto extends IntersectionType(
+  RegisterUserCommonDto,
+  RegisterUserAuthDto,
+) {}
