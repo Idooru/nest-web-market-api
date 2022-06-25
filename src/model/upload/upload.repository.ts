@@ -20,16 +20,17 @@ export class UploadRepository {
   async uploadImgForProduct(
     imageUploadDto: ImageUploadDto,
   ): Promise<ImageReturnDto> {
-    const { uploader, imageFileName } = imageUploadDto;
-    const fileNameOnUrl = `http://localhost:${process.env.PORT}/media/${imageFileName}`;
-    const strUploader = uploader.nickName;
+    const { uploader, uploadedImage } = imageUploadDto;
+    const fileNameOnUrl = `http://localhost:${process.env.PORT}/media/${uploadedImage}`;
+    const strUploader: string = uploader.nickName;
 
     const userId: UserEntity =
       await this.userRepository.isExistUserWithNickName(strUploader);
 
     const image = await this.imagesRepository.save({
-      imageFileName: fileNameOnUrl,
+      uploadedImage: fileNameOnUrl,
       uploader: userId,
+      uploadPurpose: "product upload",
     });
 
     console.log(image);
@@ -42,16 +43,25 @@ export class UploadRepository {
     return { name: originalName, url: fileNameOnUrl };
   }
 
-  async findImageIdWithImageFileName(
+  async findImageIdWithUploadedImage(
     imageId: ImagesEntity | string,
   ): Promise<ImagesEntity> {
     return await this.imagesRepository.findOne({
       select: ["id"],
-      where: { imageFileName: imageId },
+      where: { uploadedImage: imageId },
     });
   }
 
-  async getImageFileNameWithUserId(userId: string): Promise<ImagesEntity[]> {
-    return await this.imagesRepository.find({ where: { uploader: userId } });
+  async getImageIdWithUploadedImage(uploadedImage: string) {
+    const plusUrl =
+      `http://localhost:${process.env.PORT}/media/` + uploadedImage;
+    return await this.imagesRepository.findOne({
+      where: { uploadedImage: plusUrl },
+      select: ["id"],
+    });
+  }
+
+  async insertImageForUser(userId: string, imageId: string) {
+    return await this.userRepository.insertImageForUser(userId, imageId);
   }
 }

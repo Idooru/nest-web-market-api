@@ -66,10 +66,10 @@ export class UserEntity extends CommonEntity {
   image?: ImagesEntity;
 
   @Column({ type: "varchar" })
-  uploadedImage: string;
+  imageId: string[];
 
   @Column({ type: "varchar" })
-  uploadedVedio: VideosEntity;
+  vedioId: string[];
 
   // @Column()
   // writtenReview: string;

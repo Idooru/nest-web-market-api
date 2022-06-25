@@ -16,25 +16,32 @@ export class UploadService {
     file: Express.Multer.File,
     jwtPayload: JwtPayload,
   ): Promise<ImageReturnDto> {
-    const uploader = await this.userRepository.isExistUserWithNickName(
-      jwtPayload.nickName,
-    );
-
     if (!file) {
       throw new BadRequestException(
         "사진을 업로드 할 수 없습니다. 사진을 제시해 주세요.",
       );
     }
-    const imageFileName = file.filename;
 
-    return await this.uploadRepository.uploadImgForProduct({
-      imageFileName,
-      uploader,
+    const userFound = await this.userRepository.isExistUserWithNickName(
+      jwtPayload.nickName,
+    );
+
+    const uploaderId = userFound.id;
+    const uploadedImage = file.filename;
+
+    const upload = await this.uploadRepository.uploadImgForProduct({
+      uploadedImage,
+      uploader: userFound,
     });
-  }
 
-  async getImageFileNameWithUserId(userId: string): Promise<ImagesEntity[]> {
-    return await this.uploadRepository.getImageFileNameWithUserId(userId);
+    const imageFound = await this.uploadRepository.getImageIdWithUploadedImage(
+      uploadedImage,
+    );
+    const imageId = imageFound.id;
+
+    await this.uploadRepository.insertImageForUser(uploaderId, imageId);
+
+    return upload;
   }
 
   // create(createUploadDto: ImageUploadDto) {

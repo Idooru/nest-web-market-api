@@ -13,11 +13,14 @@ export class ImagesEntity extends CommonEntity {
   // user: UserEntity;
 
   @Column({ type: "varchar", nullable: false, unique: true })
-  imageFileName: string;
+  uploadedImage: string;
 
   @ManyToOne(() => UserEntity, (Join) => Join.image)
   @JoinColumn({ name: "uploaderId", referencedColumnName: "id" })
   uploader: UserEntity;
+
+  @Column({ type: "varchar", enum: ["product upload", "review"] })
+  uploadPurpose: "product upload" | " review";
 }
 
 @Entity("videos")
@@ -27,4 +30,7 @@ export class VideosEntity extends CommonEntity {
 
   @Column({ type: "varchar", nullable: false })
   uploader: string;
+
+  @Column({ type: "varchar", default: "review", enum: ["review"] })
+  uploadPurpose: "review";
 }

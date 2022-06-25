@@ -4,7 +4,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "./entities/user.entity";
 import { Repository } from "typeorm";
 import { RegisterUserDto } from "./dtos/register-user.dto";
-import { ImagesEntity } from "../upload/entities/upload.entity";
 
 @Injectable()
 export class UserRepository {
@@ -87,14 +86,11 @@ export class UserRepository {
     await this.userRepository.delete(userId);
   }
 
-  async insertImageForUser(userId: string, uploadedImage: ImagesEntity[]) {
-    uploadedImage.forEach(
-      async (idx) =>
-        await this.userRepository.update(userId, {
-          uploadedImage: idx.imageFileName,
-        }),
-    );
-
-    // await this.userRepository.update(userId, { uploadedImage });
+  async insertImageForUser(userId: string, imageId: string) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+    user.imageId = [imageId];
+    await this.userRepository.save(user);
   }
 }

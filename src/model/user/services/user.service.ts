@@ -1,4 +1,3 @@
-import { UploadRepository } from "./../../upload/upload.repository";
 import { JwtPayload } from "./../../../common/interfaces/jwt-payload.interface";
 import { PatchUserDto } from "./../dtos/patch-user.dto";
 import { RegisterUserDto } from "./../dtos/register-user.dto";
@@ -41,11 +40,11 @@ export class UserService {
   async findSelfInfoWithId(userId: string): Promise<ResponseUserDto> {
     const user = await this.userRepository.isExistUserWithId(userId);
 
-    const uploadedImage = await this.uploadService.getImageFileNameWithUserId(
-      userId,
-    );
+    // const uploadedImage = await this.uploadService.getImageFileNameWithUserId(
+    //   userId,
+    // );
 
-    await this.userRepository.insertImageForUser(userId, uploadedImage);
+    // await this.userRepository.insertImageForUser(userId, uploadedImage);
 
     return this.userReturnFilter(user);
   }

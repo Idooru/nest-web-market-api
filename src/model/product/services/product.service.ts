@@ -42,7 +42,7 @@ export class ProductService {
 
   async createProduct(createProductDto: CreateProductDto): Promise<void> {
     const { name, image } = createProductDto;
-    const imageId = await this.uploadRepository.findImageIdWithImageFileName(
+    const imageId = await this.uploadRepository.findImageIdWithUploadedImage(
       image,
     );
 
@@ -58,7 +58,7 @@ export class ProductService {
   ): Promise<void> {
     const { name, image } = modifyProductDto;
     const product = await this.productRepository.findProductOneById(id);
-    const imageId = await this.uploadRepository.findImageIdWithImageFileName(
+    const imageId = await this.uploadRepository.findImageIdWithUploadedImage(
       image,
     );
 
