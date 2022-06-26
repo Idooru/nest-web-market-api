@@ -41,15 +41,15 @@ export class AuthService {
     const { email, password } = loginUserDto;
     const user = await this.authRepositry.findUserWithEmail(email);
 
-    if (!(await bcrypt.compare(password, user.password))) {
+    if (!(await bcrypt.compare(password, user.auth.password))) {
       throw new UnauthorizedException("아이디 혹은 비밀번호가 틀렸습니다.");
     }
 
     const jwtPayload = {
       id: user.id,
-      email: user.email,
-      nickName: user.nickName,
-      userType: user.userType,
+      email: user.auth.email,
+      nickName: user.auth.nickName,
+      userType: user.auth.userType,
     };
 
     try {

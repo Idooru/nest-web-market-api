@@ -34,6 +34,7 @@ export class UserService {
     if (errors.length) throw new BadRequestException(errors, "Register Error");
 
     const hashed = await bcrypt.hash(password, 10);
+
     await this.userRepository.createUser(registerUserDto, hashed);
   }
 

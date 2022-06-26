@@ -1,3 +1,4 @@
+import { UserCoreEntity } from "src/model/user/entities/user.core.entity";
 import { UnauthorizedException } from "@nestjs/common";
 import { UserAuthEntity } from "../user/entities/user.auth.entity";
 import { Injectable } from "@nestjs/common";
@@ -8,12 +9,17 @@ import { Repository } from "typeorm";
 export class AuthRepository {
   constructor(
     @InjectRepository(UserAuthEntity)
-    private readonly authRepository: Repository<UserAuthEntity>, // @InjectRepository(UserAuthEntity) // private readonly userAuthRepository: Repository<>,
+    private readonly authRepository: Repository<UserAuthEntity>,
+    @InjectRepository(UserCoreEntity)
+    private readonly userRepository: Repository<UserCoreEntity>,
   ) {}
 
-  async findUserWithEmail(email: string): Promise<UserAuthEntity> {
+  async findUserWithEmail(email: string): Promise<UserCoreEntity> {
     try {
-      return await this.authRepository.findOneOrFail({ where: { email } });
+      return await this.userRepository.findOneOrFail({
+        where: { auth: { email } },
+        relations: ["auth"],
+      });
     } catch (err) {
       throw new UnauthorizedException("아이디 혹은 비밀번호가 틀렸습니다.");
     }

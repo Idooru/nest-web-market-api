@@ -8,13 +8,13 @@ import { UserCommonEntity } from "./user.common.entity";
 export class UserCoreEntity extends CommonEntity {
   @OneToOne(() => UserCommonEntity, (join) => join.core)
   @JoinColumn({ name: "commonId" })
-  commonId: UserCommonEntity;
+  common: UserCommonEntity;
 
   @OneToOne(() => UserAuthEntity, (join) => join.core)
   @JoinColumn({ name: "authId" })
-  authId: UserAuthEntity;
+  auth: UserAuthEntity;
 
   @OneToOne(() => UserActivityEntity, (join) => join.core)
   @JoinColumn({ name: "activityId" })
-  activityId: UserActivityEntity;
+  activity: UserActivityEntity;
 }

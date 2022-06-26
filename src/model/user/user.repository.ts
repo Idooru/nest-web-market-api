@@ -26,7 +26,7 @@ export class UserRepository {
     private readonly userActivityRepository: Repository<UserActivityEntity>,
   ) {}
 
-  async checkUserEmail(email: string) {
+  async checkUserEmail(email: string): Promise<void> {
     const found = await this.userAuthRepository.findOne({ where: { email } });
 
     if (found) {
@@ -34,7 +34,7 @@ export class UserRepository {
     }
   }
 
-  async checkUserNickName(nickName: string) {
+  async checkUserNickName(nickName: string): Promise<void> {
     const found = await this.userAuthRepository.findOne({
       where: { nickName },
     });
@@ -120,61 +120,45 @@ export class UserRepository {
     const [userCommonId, userAuthId, userActivityId] =
       successForSaveUserColumn.map((idx) => idx.value.id);
 
-    const userCommonObject = await this.userCommonRepository.findOne({
-      where: { id: userCommonId },
-    });
+    const promiseForFindUserObject = await Promise.allSettled([
+      this.userCommonRepository.findOne({ where: { id: userCommonId } }),
+      this.userAuthRepository.findOne({ where: { id: userAuthId } }),
+      this.userActivityRepository.findOne({ where: { id: userActivityId } }),
+    ]);
 
-    const userAuthObject = await this.userAuthRepository.findOne({
-      where: { id: userAuthId },
-    });
+    const errorForFindUserObject = promiseForFindUserObject.filter(
+      (idx: PromiseSettledResult<unknown>): idx is PromiseRejectedResult =>
+        idx.status === "rejected",
+    );
 
-    const userActivityObject = await this.userActivityRepository.findOne({
-      where: { id: userActivityId },
-    });
+    if (errorForFindUserObject.length) {
+      throw new InternalServerErrorException(
+        errorForFindUserObject,
+        "Find User Object Error",
+      );
+    }
+
+    const successForFindUserObject = promiseForFindUserObject.filter(
+      <T>(idx: PromiseSettledResult<T>): idx is PromiseFulfilledResult<T> =>
+        idx.status === "fulfilled",
+    );
+
+    const UserObject = [];
+    for await (const idx of successForFindUserObject) {
+      UserObject.push(idx.value);
+    }
+
+    const userCommonObject: UserCommonEntity = UserObject[0];
+    const userAuthObject: UserAuthEntity = UserObject[1];
+    const userActivityObject: UserActivityEntity = UserObject[2];
 
     const createUserDto: CreateUserDto = {
-      commonId: userCommonObject,
-      authId: userAuthObject,
-      activityId: userActivityObject,
+      common: userCommonObject,
+      auth: userAuthObject,
+      activity: userActivityObject,
     };
 
     await this.userCoreRepository.save({ ...createUserDto });
-    // const promiseForFindUserObject = await Promise.allSettled([
-    //   this.userCommonRepository.findOne({ where: { id: userCommonId } }),
-    //   this.userAuthRepository.findOne({ where: { id: userAuthId } }),
-    //   this.userActivityRepository.findOne({
-    //     where: { id: userActivityId },
-    //   }),
-    // ]);
-
-    // const errorForFindUserObject = promiseForFindUserObject.filter(
-    //   (idx: PromiseSettledResult<unknown>): idx is PromiseRejectedResult =>
-    //     idx.status === "rejected",
-    // );
-
-    // if (errorForFindUserObject.length) {
-    //   throw new InternalServerErrorException(
-    //     errorForFindUserObject,
-    //     "Find User Object Error",
-    //   );
-    // }
-
-    // const successForFindUserObject = promiseForFindUserObject.filter(
-    //   <T>(idx: PromiseSettledResult<T>): idx is PromiseFulfilledResult<T> =>
-    //     idx.status === "fulfilled",
-    // );
-
-    // const [commonId, authId, activityId] = successForFindUserObject.map(
-    //   (idx) => idx.value,
-    // );
-
-    // const createUserDto = {
-    //   common: commonId,
-    //   auth: authId,
-    //   activity: activityId,
-    // };
-
-    // await this.userCoreRepository.save({ ...createUserDto });
   }
 
   async patchUser(
