@@ -114,7 +114,7 @@ export class UserController {
     @GetDecodedJwt() jwtPayload: JwtPayload,
     @Res() res: Response,
   ): Promise<JSON<string>> {
-    const jwtToken = await this.userService.patchUserAndVerifyToken(
+    const jwtToken = await this.userService.patchUserInfoMyself(
       patchUserDto,
       jwtPayload.id,
     );

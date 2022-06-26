@@ -24,7 +24,7 @@ export class AuthService {
     const jwtPayload = {
       id: user.id,
       email: user.email,
-      nickName: user.nickName,
+      nickname: user.nickname,
       userType: user.userType,
     };
 
@@ -48,7 +48,7 @@ export class AuthService {
     const jwtPayload = {
       id: user.id,
       email: user.auth.email,
-      nickName: user.auth.nickName,
+      nickname: user.auth.nickname,
       userType: user.auth.userType,
     };
 
@@ -62,11 +62,11 @@ export class AuthService {
   }
 
   async findEmail(findEmailDto: FindEmailDto): Promise<string> {
-    const { realName, phoneNumber } = findEmailDto;
+    const { realname, phonenumber } = findEmailDto;
 
     const promises = await Promise.allSettled([
-      this.authRepositry.isExistUserWithRealName(realName),
-      this.authRepositry.isExistUserWithPhoneNumber(phoneNumber),
+      this.authRepositry.isExistUserWithRealName(realname),
+      this.authRepositry.isExistUserWithPhoneNumber(phonenumber),
     ]);
 
     const errors = promises.filter(
@@ -83,26 +83,25 @@ export class AuthService {
         idx.status === "fulfilled",
     );
 
-    const [realNameResult, phoneNumberResult] = success;
+    const [realnameResult, phonenumberResult] = success;
 
-    if (!(realNameResult.value.id === phoneNumberResult.value.id)) {
+    if (!(realnameResult.value.id === phonenumberResult.value.id)) {
       throw new UnauthorizedException(
         "사용자 실명과 전화번호가 서로 일치하지 않습니다.",
       );
     }
+    return realnameResult.value.auth.email;
 
-    return realNameResult.value.email;
-
-    // const [realNameResult, phoneNumberResult] = (await promises).map(
+    // const [realnameResult, phonenumberResult] = (await promises).map(
     //   (idx) => idx,
     // );
-    // console.log(realNameResult, phoneNumberResult);
+    // console.log(realnameResult, phonenumberResult);
     // const foundWithRealName = await this.authRepositry.isExistUserWithRealName(
-    //   realName,
+    //   realname,
     // );
 
     // const foundWithPhoneNumber =
-    //   await this.authRepositry.isExistUserWithPhoneNumber(phoneNumber);
+    //   await this.authRepositry.isExistUserWithPhoneNumber(phonenumber);
 
     // if (!foundWithRealName || !foundWithPhoneNumber) {
     //   throw new UnauthorizedException(
@@ -126,6 +125,6 @@ export class AuthService {
     }
 
     const hashed = await bcrypt.hash(password, 10);
-    await this.authRepositry.resetPassword(user.id, hashed);
+    await this.authRepositry.resetPassword(user.auth.id, hashed);
   }
 }

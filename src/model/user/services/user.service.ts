@@ -21,20 +21,21 @@ export class UserService {
   private readonly userReturnFilter = UserReturnFilter;
 
   async register(registerUserDto: RegisterUserDto): Promise<void> {
-    const { nickName, email, password, phoneNumber } = registerUserDto;
+    const { nickname, email, password, phonenumber } = registerUserDto;
 
     const promises = await Promise.allSettled([
       this.userRepository.checkUserEmail(email),
-      this.userRepository.checkUserNickName(nickName),
-      this.userRepository.checkUserPhoneNumber(phoneNumber),
+      this.userRepository.checkUserNickName(nickname),
+      this.userRepository.checkUserPhoneNumber(phonenumber),
     ]);
 
     const errors = promises.filter((idx) => idx.status === "rejected");
 
-    if (errors.length) throw new BadRequestException(errors, "Register Error");
+    if (errors.length) {
+      throw new BadRequestException(errors, "Register Error");
+    }
 
     const hashed = await bcrypt.hash(password, 10);
-
     await this.userRepository.createUser(registerUserDto, hashed);
   }
 
@@ -50,24 +51,46 @@ export class UserService {
     return this.userReturnFilter(user);
   }
 
-  async patchUserAndVerifyToken(
+  async patchUserInfoMyself(
     patchUserDto: PatchUserDto,
-    id: string,
+    userId: string,
   ): Promise<string> {
+    const { nickname, phonenumber } = patchUserDto;
+    const myInfo = await this.findSelfInfoWithId(userId);
+    const myNickName = myInfo.nickname;
+    const myPhoneNumber = myInfo.phonenumber;
+
+    const promisesForCheckUserValue = await Promise.allSettled([
+      this.userRepository.checkUserNickNameWhenUpdate(myNickName, nickname),
+      this.userRepository.checkUserPhoneNumberWhenUpdate(
+        myPhoneNumber,
+        phonenumber,
+      ),
+    ]);
+
+    const errorsForCheckUserValue = promisesForCheckUserValue.filter(
+      (idx: PromiseSettledResult<unknown>): idx is PromiseRejectedResult =>
+        idx.status === "rejected",
+    );
+
+    if (errorsForCheckUserValue.length) {
+      throw new BadRequestException(errorsForCheckUserValue, "Register Error");
+    }
+
     const { password } = patchUserDto;
     const hashed = await bcrypt.hash(password, 10);
-    await this.userRepository.patchUser(patchUserDto, hashed, id);
+    await this.userRepository.patchUser(patchUserDto, hashed, userId);
 
     const jwtPaylaod: JwtPayload = {
-      id,
-      email: patchUserDto.email,
-      nickName: patchUserDto.nickName,
+      id: userId,
+      nickname: patchUserDto.nickname,
     };
 
     return await this.authService.refreshToken(jwtPaylaod);
   }
 
-  async deleteUserWithId(id: string): Promise<void> {
-    await this.userRepository.deleteUser(id);
+  async deleteUserWithId(userId: string): Promise<void> {
+    await this.userRepository.deleteUser(userId);
+    // await this.userRepository.deleteUser(id);
   }
 }

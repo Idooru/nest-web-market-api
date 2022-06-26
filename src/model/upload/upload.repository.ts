@@ -22,7 +22,7 @@ export class UploadRepository {
   ): Promise<ImageReturnDto> {
     const { uploader, uploadedImage } = imageUploadDto;
     const fileNameOnUrl = `http://localhost:${process.env.PORT}/media/${uploadedImage}`;
-    const strUploader: string = uploader.nickName;
+    const strUploader: string = uploader.nickname;
 
     const userId = await this.userRepository.isExistUserWithNickName(
       strUploader,

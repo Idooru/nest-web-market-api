@@ -12,7 +12,7 @@ export class UserAuthEntity extends InheritUserCoreEntity {
   @IsString()
   @IsNotEmpty()
   @Column({ type: "varchar", length: 20, unique: true, nullable: false })
-  nickName: string;
+  nickname: string;
 
   @IsString()
   @IsNotEmpty()

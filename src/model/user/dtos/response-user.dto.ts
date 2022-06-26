@@ -9,14 +9,14 @@ export class ResponseUserCoreDto extends PickType(UserCoreEntity, [
 ] as const) {}
 
 export class ResponseUserCommonDto extends PickType(UserCommonEntity, [
-  "realName",
+  "realname",
   "birth",
   "gender",
-  "phoneNumber",
+  "phonenumber",
 ]) {}
 
 export class ResponseUserAuthDto extends PickType(UserAuthEntity, [
-  "nickName",
+  "nickname",
   "email",
   "userType",
 ] as const) {}
@@ -33,11 +33,11 @@ export class ResponseUserDto extends IntersectionType(
 
 export const UserReturnFilter = (user: UserCoreEntity): ResponseUserDto => ({
   id: user.id,
-  realName: user.common.realName,
-  nickName: user.auth.nickName,
+  realname: user.common.realname,
+  nickname: user.auth.nickname,
   birth: user.common.birth,
   gender: user.common.gender,
   email: user.auth.email,
-  phoneNumber: user.common.phoneNumber,
+  phonenumber: user.common.phonenumber,
   userType: user.auth.userType,
 });

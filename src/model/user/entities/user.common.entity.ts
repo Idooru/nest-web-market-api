@@ -13,7 +13,7 @@ export class UserCommonEntity extends InheritUserCoreEntity {
   @IsString()
   @IsNotEmpty()
   @Column({ type: "varchar", length: 20, nullable: false })
-  realName: string;
+  realname: string;
 
   @IsDateString()
   @IsNotEmpty()
@@ -28,5 +28,5 @@ export class UserCommonEntity extends InheritUserCoreEntity {
   @IsMobilePhone()
   @IsNotEmpty()
   @Column({ type: "varchar", length: 15, unique: true, nullable: false })
-  phoneNumber: string;
+  phonenumber: string;
 }

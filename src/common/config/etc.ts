@@ -12,3 +12,5 @@ export const JwtOptions: JwtModuleOptions = {
 };
 
 export const ProductImageCookieKey = "imageUrl";
+
+export const UserObjects: string[] = ["common", "auth", "activity"];

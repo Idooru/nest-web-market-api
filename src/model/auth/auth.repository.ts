@@ -4,6 +4,7 @@ import { UserAuthEntity } from "../user/entities/user.auth.entity";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { UserObjects } from "src/common/config/etc";
 
 @Injectable()
 export class AuthRepository {
@@ -18,18 +19,18 @@ export class AuthRepository {
     try {
       return await this.userRepository.findOneOrFail({
         where: { auth: { email } },
-        relations: ["auth"],
+        relations: UserObjects,
       });
     } catch (err) {
       throw new UnauthorizedException("아이디 혹은 비밀번호가 틀렸습니다.");
     }
   }
 
-  async isExistUserWithRealName(realName: string): Promise<UserAuthEntity> {
+  async isExistUserWithRealName(realname: string): Promise<UserCoreEntity> {
     try {
-      return await this.authRepository.findOneOrFail({
-        select: ["id", "email"],
-        where: { realName },
+      return await this.userRepository.findOneOrFail({
+        where: { common: { realname } },
+        relations: UserObjects,
       });
     } catch (err) {
       throw new UnauthorizedException("해당 이름(실명)은 존재하지 않습니다.");
@@ -37,12 +38,12 @@ export class AuthRepository {
   }
 
   async isExistUserWithPhoneNumber(
-    phoneNumber: string,
-  ): Promise<UserAuthEntity> {
+    phonenumber: string,
+  ): Promise<UserCoreEntity> {
     try {
-      return await this.authRepository.findOneOrFail({
-        select: ["id"],
-        where: { phoneNumber },
+      return await this.userRepository.findOneOrFail({
+        where: { common: { phonenumber } },
+        relations: UserObjects,
       });
     } catch (err) {
       throw new UnauthorizedException("해당 전화번호는 존재하지 않습니다.");
