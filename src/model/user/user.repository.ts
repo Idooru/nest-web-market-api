@@ -89,14 +89,14 @@ export class UserRepository {
     const { realName, nickName, birth, gender, email, phoneNumber } =
       registerUserDto;
 
-    const userCommonData = { realName, birth, gender, phoneNumber };
-    const userAuthData = { nickName, email, password };
-    const userActivityData = { point: 0, howMuchBuy: 0 };
+    const userCommonColumn = { realName, birth, gender, phoneNumber };
+    const userAuthColumn = { nickName, email, password };
+    const userActivityColumn = { point: 0, howMuchBuy: 0 };
 
     const promiseForSaveUserData = await Promise.allSettled([
-      await this.userCommonRepository.save({ ...userCommonData }),
-      await this.userAuthRepository.save({ ...userAuthData }),
-      await this.userActivityRepository.save({ ...userActivityData }),
+      await this.userCommonRepository.save({ ...userCommonColumn }),
+      await this.userAuthRepository.save({ ...userAuthColumn }),
+      await this.userActivityRepository.save({ ...userActivityColumn }),
     ]);
 
     const errors = promiseForSaveUserData.filter(
@@ -113,15 +113,31 @@ export class UserRepository {
         idx.status === "fulfilled",
     );
 
-    // const [userCommonResult, userAuthResult, UserActivityEntity] = success;
-
     const [userCommonId, userAuthId, userActivityId] = success.map(
       (idx) => idx.value.id,
     );
 
-    const promiseForInsertIdOnCore = await Promise.allSettled([
-      await this.userCoreRepository.save({}),
-    ]);
+    const userCommonObject = await this.userCommonRepository.findOne({
+      where: { id: userCommonId },
+    });
+    const userAuthObject = await this.userAuthRepository.findOne({
+      where: { id: userAuthId },
+    });
+    const userActivityObject = await this.userActivityRepository.findOne({
+      where: { id: userActivityId },
+    });
+
+    // const promiseFor
+
+    const user = this.userCoreRepository.create();
+    user.common = userCommonObject;
+    user.auth = userAuthObject;
+    user.activity = userActivityObject;
+    // user.common = 1;
+
+    // const promiseForInsertIdOnCore = await Promise.allSettled([
+    //   await this.userCoreRepository.save({}),
+    // ]);
   }
 
   async patchUser(
