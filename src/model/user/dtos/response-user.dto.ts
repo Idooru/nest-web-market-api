@@ -33,11 +33,11 @@ export class ResponseUserDto extends IntersectionType(
 
 export const UserReturnFilter = (user: UserCoreEntity): ResponseUserDto => ({
   id: user.id,
-  realName: user.common.realName,
-  nickName: user.auth.nickName,
-  birth: user.common.birth,
-  gender: user.common.gender,
-  email: user.auth.email,
-  phoneNumber: user.common.phoneNumber,
-  userType: user.auth.userType,
+  realName: user.commonId.realName,
+  nickName: user.authId.nickName,
+  birth: user.commonId.birth,
+  gender: user.commonId.gender,
+  email: user.authId.email,
+  phoneNumber: user.commonId.phoneNumber,
+  userType: user.authId.userType,
 });

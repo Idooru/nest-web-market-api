@@ -11,11 +11,12 @@ import { UserCommonEntity } from "./entities/user.common.entity";
 import { Repository } from "typeorm";
 import { RegisterUserDto } from "./dtos/register-user.dto";
 import { UserCoreEntity } from "./entities/user.core.entity";
+import { CreateUserDto } from "./dtos/create-user.dto";
 
 @Injectable()
 export class UserRepository {
   constructor(
-    @InjectRepository(UserCommonEntity)
+    @InjectRepository(UserCoreEntity)
     private readonly userCoreRepository: Repository<UserCoreEntity>,
     @InjectRepository(UserCommonEntity)
     private readonly userCommonRepository: Repository<UserCommonEntity>,
@@ -93,51 +94,87 @@ export class UserRepository {
     const userAuthColumn = { nickName, email, password };
     const userActivityColumn = { point: 0, howMuchBuy: 0 };
 
-    const promiseForSaveUserData = await Promise.allSettled([
-      await this.userCommonRepository.save({ ...userCommonColumn }),
-      await this.userAuthRepository.save({ ...userAuthColumn }),
-      await this.userActivityRepository.save({ ...userActivityColumn }),
+    const promiseForSaveUserColumn = await Promise.allSettled([
+      this.userCommonRepository.save({ ...userCommonColumn }),
+      this.userAuthRepository.save({ ...userAuthColumn }),
+      this.userActivityRepository.save({ ...userActivityColumn }),
     ]);
 
-    const errors = promiseForSaveUserData.filter(
+    const errorForSaveUserColumn = promiseForSaveUserColumn.filter(
       (idx: PromiseSettledResult<unknown>): idx is PromiseRejectedResult =>
         idx.status === "rejected",
     );
 
-    if (errors.length) {
-      throw new InternalServerErrorException(errors, "Create User Error");
+    if (errorForSaveUserColumn.length) {
+      throw new InternalServerErrorException(
+        errorForSaveUserColumn,
+        "Save User Column Error",
+      );
     }
 
-    const success = promiseForSaveUserData.filter(
+    const successForSaveUserColumn = promiseForSaveUserColumn.filter(
       <T>(idx: PromiseSettledResult<T>): idx is PromiseFulfilledResult<T> =>
         idx.status === "fulfilled",
     );
 
-    const [userCommonId, userAuthId, userActivityId] = success.map(
-      (idx) => idx.value.id,
-    );
+    const [userCommonId, userAuthId, userActivityId] =
+      successForSaveUserColumn.map((idx) => idx.value.id);
 
     const userCommonObject = await this.userCommonRepository.findOne({
       where: { id: userCommonId },
     });
+
     const userAuthObject = await this.userAuthRepository.findOne({
       where: { id: userAuthId },
     });
+
     const userActivityObject = await this.userActivityRepository.findOne({
       where: { id: userActivityId },
     });
 
-    // const promiseFor
+    const createUserDto: CreateUserDto = {
+      commonId: userCommonObject,
+      authId: userAuthObject,
+      activityId: userActivityObject,
+    };
 
-    const user = this.userCoreRepository.create();
-    user.common = userCommonObject;
-    user.auth = userAuthObject;
-    user.activity = userActivityObject;
-    // user.common = 1;
-
-    // const promiseForInsertIdOnCore = await Promise.allSettled([
-    //   await this.userCoreRepository.save({}),
+    await this.userCoreRepository.save({ ...createUserDto });
+    // const promiseForFindUserObject = await Promise.allSettled([
+    //   this.userCommonRepository.findOne({ where: { id: userCommonId } }),
+    //   this.userAuthRepository.findOne({ where: { id: userAuthId } }),
+    //   this.userActivityRepository.findOne({
+    //     where: { id: userActivityId },
+    //   }),
     // ]);
+
+    // const errorForFindUserObject = promiseForFindUserObject.filter(
+    //   (idx: PromiseSettledResult<unknown>): idx is PromiseRejectedResult =>
+    //     idx.status === "rejected",
+    // );
+
+    // if (errorForFindUserObject.length) {
+    //   throw new InternalServerErrorException(
+    //     errorForFindUserObject,
+    //     "Find User Object Error",
+    //   );
+    // }
+
+    // const successForFindUserObject = promiseForFindUserObject.filter(
+    //   <T>(idx: PromiseSettledResult<T>): idx is PromiseFulfilledResult<T> =>
+    //     idx.status === "fulfilled",
+    // );
+
+    // const [commonId, authId, activityId] = successForFindUserObject.map(
+    //   (idx) => idx.value,
+    // );
+
+    // const createUserDto = {
+    //   common: commonId,
+    //   auth: authId,
+    //   activity: activityId,
+    // };
+
+    // await this.userCoreRepository.save({ ...createUserDto });
   }
 
   async patchUser(
