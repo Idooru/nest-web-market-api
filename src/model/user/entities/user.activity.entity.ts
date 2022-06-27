@@ -1,19 +1,26 @@
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  OneToMany,
+} from "typeorm";
 import { ImagesEntity } from "../../upload/entities/upload.entity";
-import { UserEntity } from "./user.core.entity";
-import { InheritUserEntity } from "src/common/entities/inherit-core-entity";
-
-import { Column, Entity, OneToMany, OneToOne } from "typeorm";
+import { UserEntity } from "./user.entity";
 
 @Entity("users activity")
-export class UserActivityEntity extends InheritUserEntity {
-  @OneToOne(() => UserEntity)
-  core: UserEntity;
+export class UserActivityEntity {
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column({ type: "smallint", default: 0 })
   point: number;
 
   @Column({ type: "smallint", default: 0 })
   howMuchBuy: number;
+
+  @OneToOne(() => UserEntity)
+  user: UserEntity;
 
   @OneToMany(() => ImagesEntity, (join) => join.uploader)
   image?: ImagesEntity;

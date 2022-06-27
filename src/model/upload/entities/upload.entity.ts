@@ -1,18 +1,24 @@
-import { UserActivityEntity } from "src/model/user/entities/user.activity.entity";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
 import { ProductEntity } from "./../../product/product.entity";
 import { CommonEntity } from "../../../common/entities/common.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from "typeorm";
+import { UserActivityEntity } from "src/model/user/entities/user.activity.entity";
 
 @Entity("images")
 export class ImagesEntity extends CommonEntity {
-  @OneToOne(() => ProductEntity, (product) => product.image)
+  @OneToOne(() => ProductEntity, (product: ProductEntity) => product.image)
   product: ProductEntity;
+
+  @ManyToOne(
+    () => UserActivityEntity,
+    (activity: UserActivityEntity) => activity.image,
+  )
+  activity: UserActivityEntity;
 
   @Column({ type: "varchar", nullable: false, unique: true })
   uploadedImage: string;
 
-  @ManyToOne(() => UserActivityEntity, (Join) => Join.image)
+  @ManyToOne(() => UserAuthEntity, (Join) => Join.image)
   @JoinColumn({ name: "uploaderId", referencedColumnName: "id" })
   uploader: UserAuthEntity;
 

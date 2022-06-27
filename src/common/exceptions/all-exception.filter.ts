@@ -25,8 +25,13 @@ export class AllExceptionFilter implements ExceptionFilter {
           reason: err.message,
         });
       // 회원가입 혹은 이메일 찾기 할 때 요청값이 올바르지 않을 때 발생 주로 에러 메세지가 2-3개 씩 올 수 있음
-      case "Register Error":
-      case "Find Email Error":
+      case "Check User Column For Find Email Error":
+      case "Save User Column For Register Error":
+      case "Find User Object For Register Error":
+      case "Check User Column For Register Error":
+      case "Save Object For Patch User Info Error":
+      case "Check User Column For Patch User Info Error":
+      case "Delete Object For Secession User Error":
         return res
           .status(err.statusCode)
           .setHeader("X-Powered-By", "")

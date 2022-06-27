@@ -9,7 +9,8 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { forwardRef, Module } from "@nestjs/common";
 import { UserController } from "./controllers/user.controller";
 import { UserService } from "./services/user.service";
-import { UserEntity } from "./entities/user.core.entity";
+import { UserEntity } from "./entities/user.entity";
+import { EtcModule } from "../etc/etc.module";
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { UserEntity } from "./entities/user.core.entity";
     ]),
     forwardRef(() => AuthModule),
     forwardRef(() => UploadModule),
+    EtcModule,
   ],
   controllers: [UserController],
   providers: [UserService, UserRepository, UploadService],

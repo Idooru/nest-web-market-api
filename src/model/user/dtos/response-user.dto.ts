@@ -1,7 +1,7 @@
 import { UserActivityEntity } from "./../entities/user.activity.entity";
 import { PickType } from "@nestjs/mapped-types";
 import { UserCommonEntity } from "../entities/user.common.entity";
-import { UserEntity } from "../entities/user.core.entity";
+import { UserEntity } from "../entities/user.entity";
 import { UserAuthEntity } from "../entities/user.auth.entity";
 import { IntersectionType } from "@nestjs/swagger";
 

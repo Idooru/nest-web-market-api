@@ -1,3 +1,4 @@
+import { Functions } from "src/model/etc/providers/functions";
 import {
   Injectable,
   InternalServerErrorException,
@@ -16,6 +17,7 @@ import * as bcrypt from "bcrypt";
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly functions: Functions,
     private readonly authRepositry: AuthRepository,
     private readonly jwtService: JwtService,
   ) {}
@@ -64,26 +66,17 @@ export class AuthService {
   async findEmail(findEmailDto: FindEmailDto): Promise<string> {
     const { realname, phonenumber } = findEmailDto;
 
-    const promises = await Promise.allSettled([
+    const promiseForCheckUserColumn = await Promise.allSettled([
       this.authRepositry.isExistUserWithRealName(realname),
       this.authRepositry.isExistUserWithPhoneNumber(phonenumber),
     ]);
 
-    const errors = promises.filter(
-      (idx: PromiseSettledResult<unknown>): idx is PromiseRejectedResult =>
-        idx.status === "rejected",
+    const resultForCheckUserColumn = this.functions.promiseSettledProcess(
+      promiseForCheckUserColumn,
+      "Check User Column For Find Email",
     );
 
-    if (errors.length) {
-      throw new BadRequestException(errors, "Find Email Error");
-    }
-
-    const success = promises.filter(
-      <T>(idx: PromiseSettledResult<T>): idx is PromiseFulfilledResult<T> =>
-        idx.status === "fulfilled",
-    );
-
-    const [realnameResult, phonenumberResult] = success;
+    const [realnameResult, phonenumberResult] = resultForCheckUserColumn;
 
     if (!(realnameResult.value.id === phonenumberResult.value.id)) {
       throw new UnauthorizedException(
@@ -91,29 +84,6 @@ export class AuthService {
       );
     }
     return realnameResult.value.auth.email;
-
-    // const [realnameResult, phonenumberResult] = (await promises).map(
-    //   (idx) => idx,
-    // );
-    // console.log(realnameResult, phonenumberResult);
-    // const foundWithRealName = await this.authRepositry.isExistUserWithRealName(
-    //   realname,
-    // );
-
-    // const foundWithPhoneNumber =
-    //   await this.authRepositry.isExistUserWithPhoneNumber(phonenumber);
-
-    // if (!foundWithRealName || !foundWithPhoneNumber) {
-    //   throw new UnauthorizedException(
-    //     "입력한 정보로는 사용자 정보를 불러올 수 없습니다.",
-    //   );
-    // }
-
-    // if (!(foundWithRealName.id === foundWithPhoneNumber.id)) {
-
-    // }
-
-    // return foundWithRealName.email;
   }
 
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {

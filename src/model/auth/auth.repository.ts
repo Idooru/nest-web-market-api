@@ -1,18 +1,19 @@
-import { UserEntity } from "src/model/user/entities/user.core.entity";
+import { UserEntity } from "../user/entities/user.entity";
 import { UnauthorizedException } from "@nestjs/common";
 import { UserAuthEntity } from "../user/entities/user.auth.entity";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { UserObjectArray } from "src/common/config/etc";
+import { Functions } from "../etc/providers/functions";
 
 @Injectable()
 export class AuthRepository {
   constructor(
-    @InjectRepository(UserAuthEntity)
-    private readonly authRepository: Repository<UserAuthEntity>,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(UserAuthEntity)
+    private readonly authRepository: Repository<UserAuthEntity>,
   ) {}
 
   async findUserWithEmail(email: string): Promise<UserEntity> {

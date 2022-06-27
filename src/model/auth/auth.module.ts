@@ -11,7 +11,8 @@ import { AuthService } from "./services/auth.service";
 import { JwtModule } from "@nestjs/jwt";
 import { forwardRef } from "@nestjs/common";
 import { UserAuthEntity } from "../user/entities/user.auth.entity";
-import { UserEntity } from "../user/entities/user.core.entity";
+import { UserEntity } from "../user/entities/user.entity";
+import { EtcModule } from "../etc/etc.module";
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { UserEntity } from "../user/entities/user.core.entity";
       signOptions: { expiresIn: "1m" },
     }),
     forwardRef(() => UserModule),
+    EtcModule,
   ],
   providers: [AuthService, JwtStrategy, AuthRepository],
   exports: [AuthService],

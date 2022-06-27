@@ -1,4 +1,3 @@
-import { UserActivityEntity } from "./../../model/user/entities/user.activity.entity";
 import {
   ImagesEntity,
   VideosEntity,
@@ -6,10 +5,11 @@ import {
 import { ProductEntity } from "./../../model/product/product.entity";
 import { UserCommonEntity } from "../../model/user/entities/user.common.entity";
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
+import { UserActivityEntity } from "src/model/user/entities/user.activity.entity";
+import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
+import { UserEntity } from "src/model/user/entities/user.entity";
 
 import * as dotenv from "dotenv";
-import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
-import { UserEntity } from "src/model/user/entities/user.core.entity";
 dotenv.config();
 
 export const typeORMConfig: TypeOrmModuleOptions = {

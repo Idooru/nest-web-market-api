@@ -52,9 +52,7 @@ export class UserController {
     @Res() res: Response,
   ): Promise<JSON<string>> {
     const jwtToken = await this.authService.login(loginUserDto);
-
     res.cookie("JWT_COOKIE", jwtToken, CookieOption);
-    console.log({ JWT_COOKIE: jwtToken });
 
     return {
       statusCode: 201,
@@ -81,9 +79,7 @@ export class UserController {
     @Res() res: Response,
   ): Promise<JSON<string>> {
     const jwtToken = await this.authService.refreshToken(jwtPayload);
-
     res.cookie("JWT_COOKIE", jwtToken, CookieOption);
-    console.log({ JWT_COOKIE: jwtToken });
 
     return {
       statusCode: 200,
@@ -118,9 +114,7 @@ export class UserController {
       patchUserDto,
       jwtPayload.id,
     );
-
     res.cookie("JWT_COOKIE", jwtToken, CookieOption);
-    console.log({ JWT_COOKIE: jwtToken });
 
     return {
       statusCode: 200,

@@ -6,14 +6,14 @@ export class Functions {
   promiseSettledProcess(
     promiseArray: Array<PromiseSettledResult<any>>,
     msg: string,
-  ) {
+  ): PromiseFulfilledResult<any>[] | null {
     const errors = promiseArray.filter(
       (idx: PromiseSettledResult<unknown>): idx is PromiseRejectedResult =>
         idx.status === "rejected",
     );
 
     if (errors.length) {
-      throw new InternalServerErrorException(errors, msg + " Error");
+      throw new InternalServerErrorException(errors, msg + " Errors");
     }
 
     const successes = promiseArray.filter(

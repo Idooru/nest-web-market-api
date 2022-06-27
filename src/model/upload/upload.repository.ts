@@ -5,7 +5,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { ImagesEntity, VideosEntity } from "./entities/upload.entity";
 import { Repository } from "typeorm";
 import { ImageReturnDto } from "./dto/image-return.dto";
-import { UserCommonEntity } from "../user/entities/user.common.entity";
 
 @Injectable()
 export class UploadRepository {
@@ -22,13 +21,10 @@ export class UploadRepository {
   ): Promise<ImageReturnDto> {
     const { uploader, uploadedImage } = imageUploadDto;
     const fileNameOnUrl = `http://localhost:${process.env.PORT}/media/${uploadedImage}`;
-    const strUploader: string = uploader.nickname;
-
-    const userId = await this.userRepository.findUserWithNickName(strUploader);
 
     const image = await this.imagesRepository.save({
       uploadedImage: fileNameOnUrl,
-      uploader: userId,
+      uploader,
       uploadPurpose: "product upload",
     });
 

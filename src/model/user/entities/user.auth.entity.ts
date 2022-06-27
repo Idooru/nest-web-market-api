@@ -1,13 +1,19 @@
-import { UserEntity } from "./user.core.entity";
+import {
+  Column,
+  Entity,
+  OneToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { ImagesEntity } from "./../../upload/entities/upload.entity";
 import { Exclude } from "class-transformer";
 import { IsNotEmpty, IsString } from "class-validator";
-import { InheritUserEntity } from "src/common/entities/inherit-core-entity";
-import { Column, Entity, OneToOne } from "typeorm";
+import { UserEntity } from "./user.entity";
 
 @Entity("users auth")
-export class UserAuthEntity extends InheritUserEntity {
-  @OneToOne(() => UserEntity)
-  core: UserEntity;
+export class UserAuthEntity {
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @IsString()
   @IsNotEmpty()
@@ -29,4 +35,10 @@ export class UserAuthEntity extends InheritUserEntity {
     default: "general",
   })
   userType: "general" | "special" | "admin";
+
+  @OneToOne(() => UserEntity)
+  user: UserEntity;
+
+  @OneToMany(() => ImagesEntity, (join) => join.uploader)
+  image: ImagesEntity;
 }

@@ -9,10 +9,12 @@ import { AuthService } from "../../auth/services/auth.service";
 
 import * as bcrypt from "bcrypt";
 import { UploadService } from "src/model/upload/services/upload.service";
+import { Functions } from "src/model/etc/providers/functions";
 
 @Injectable()
 export class UserService {
   constructor(
+    private readonly functions: Functions,
     private readonly userRepository: UserRepository,
     private readonly authService: AuthService,
     private readonly uploadService: UploadService,
@@ -23,17 +25,16 @@ export class UserService {
   async register(registerUserDto: RegisterUserDto): Promise<void> {
     const { nickname, email, password, phonenumber } = registerUserDto;
 
-    const promises = await Promise.allSettled([
+    const promiseForCheckUserColumn = await Promise.allSettled([
       this.userRepository.checkUserEmail(email),
       this.userRepository.checkUserNickName(nickname),
       this.userRepository.checkUserPhoneNumber(phonenumber),
     ]);
 
-    const errors = promises.filter((idx) => idx.status === "rejected");
-
-    if (errors.length) {
-      throw new BadRequestException(errors, "Register Error");
-    }
+    this.functions.promiseSettledProcess(
+      promiseForCheckUserColumn,
+      "Check User Column For Register",
+    );
 
     const hashed = await bcrypt.hash(password, 10);
     await this.userRepository.createUser(registerUserDto, hashed);
@@ -60,7 +61,7 @@ export class UserService {
     const myNickName = myInfo.nickname;
     const myPhoneNumber = myInfo.phonenumber;
 
-    const promisesForCheckUserValue = await Promise.allSettled([
+    const promisesForCheckUserColumn = await Promise.allSettled([
       this.userRepository.checkUserNickNameWhenUpdate(myNickName, nickname),
       this.userRepository.checkUserPhoneNumberWhenUpdate(
         myPhoneNumber,
@@ -68,14 +69,10 @@ export class UserService {
       ),
     ]);
 
-    const errorsForCheckUserValue = promisesForCheckUserValue.filter(
-      (idx: PromiseSettledResult<unknown>): idx is PromiseRejectedResult =>
-        idx.status === "rejected",
+    this.functions.promiseSettledProcess(
+      promisesForCheckUserColumn,
+      "Check User Column For Patch User Info",
     );
-
-    if (errorsForCheckUserValue.length) {
-      throw new BadRequestException(errorsForCheckUserValue, "Register Error");
-    }
 
     const { password } = patchUserDto;
     const hashed = await bcrypt.hash(password, 10);

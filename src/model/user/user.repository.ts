@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { UserActivityEntity } from "./entities/user.activity.entity";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
 import { PatchUserDto } from "./dtos/patch-user.dto";
@@ -10,13 +6,15 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { UserCommonEntity } from "./entities/user.common.entity";
 import { Repository } from "typeorm";
 import { RegisterUserDto } from "./dtos/register-user.dto";
-import { UserEntity } from "./entities/user.core.entity";
+import { UserEntity } from "./entities/user.entity";
 import { CreateUserDto } from "./dtos/create-user.dto";
 import { UserObjectArray } from "src/common/config/etc";
+import { Functions } from "../etc/providers/functions";
 
 @Injectable()
 export class UserRepository {
   constructor(
+    private readonly functions: Functions,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(UserCommonEntity)
@@ -155,25 +153,14 @@ export class UserRepository {
       this.userActivityRepository.save({ ...userActivityColumn }),
     ]);
 
-    const errorForSaveUserColumn = promiseForSaveUserColumn.filter(
-      (idx: PromiseSettledResult<unknown>): idx is PromiseRejectedResult =>
-        idx.status === "rejected",
+    const saveUSerColumnResult = this.functions.promiseSettledProcess(
+      promiseForSaveUserColumn,
+      "Save User Column For Register",
     );
 
-    if (errorForSaveUserColumn.length) {
-      throw new InternalServerErrorException(
-        errorForSaveUserColumn,
-        "Save User Column Error",
-      );
-    }
-
-    const successForSaveUserColumn = promiseForSaveUserColumn.filter(
-      <T>(idx: PromiseSettledResult<T>): idx is PromiseFulfilledResult<T> =>
-        idx.status === "fulfilled",
+    const [userCommonId, userAuthId, userActivityId] = saveUSerColumnResult.map(
+      (idx) => idx.value.id,
     );
-
-    const [userCommonId, userAuthId, userActivityId] =
-      successForSaveUserColumn.map((idx) => idx.value.id);
 
     const promiseForFindUserObject = await Promise.allSettled([
       this.userCommonRepository.findOne({ where: { id: userCommonId } }),
@@ -181,35 +168,13 @@ export class UserRepository {
       this.userActivityRepository.findOne({ where: { id: userActivityId } }),
     ]);
 
-    const errorForFindUserObject = promiseForFindUserObject.filter(
-      (idx: PromiseSettledResult<unknown>): idx is PromiseRejectedResult =>
-        idx.status === "rejected",
+    const findUserObjectResult = this.functions.promiseSettledProcess(
+      promiseForFindUserObject,
+      "Find User Object For Register",
     );
 
-    if (errorForFindUserObject.length) {
-      throw new InternalServerErrorException(
-        errorForFindUserObject,
-        "Find User Object Error",
-      );
-    }
-
-    const successForFindUserObject = promiseForFindUserObject.filter(
-      <T>(idx: PromiseSettledResult<T>): idx is PromiseFulfilledResult<T> =>
-        idx.status === "fulfilled",
-    );
-
-    // 사용 불가능
-    // const [userCommonObject, userAuthObject, userActivityObject] =
-    //   successForFindUserObject.map((idx) => idx.value);
-
-    const UserObject = [];
-    for await (const idx of successForFindUserObject) {
-      UserObject.push(idx.value);
-    }
-
-    const userCommonObject: UserCommonEntity = UserObject[0];
-    const userAuthObject: UserAuthEntity = UserObject[1];
-    const userActivityObject: UserActivityEntity = UserObject[2];
+    const [userCommonObject, userAuthObject, userActivityObject] =
+      findUserObjectResult.map((idx) => idx.value);
 
     const createUserDto: CreateUserDto = {
       common: userCommonObject,
@@ -226,7 +191,7 @@ export class UserRepository {
     userId: string,
   ): Promise<void> {
     const { realname, birth, gender, phonenumber, nickname } = patchUserDto;
-    const user = await this.findUserWithNickName(userId);
+    const user = await this.findUserWithId(userId);
 
     const { common, auth } = user;
 
@@ -237,25 +202,35 @@ export class UserRepository {
     auth.nickname = nickname;
     auth.password = hashed;
 
-    await Promise.allSettled([
+    const promiseForSaveObject = await Promise.allSettled([
       this.userCommonRepository.save(common),
       this.userAuthRepository.save(auth),
     ]);
+
+    this.functions.promiseSettledProcess(
+      promiseForSaveObject,
+      "Save Object For Patch User Info",
+    );
   }
 
   async deleteUser(userId: string): Promise<void> {
-    const userObject = await this.findUserWithNickName(userId);
+    const userObject = await this.findUserWithId(userId);
 
     const userCommonId = userObject.common.id;
     const userAuthId = userObject.auth.id;
     const userActivityId = userObject.activity.id;
 
-    await Promise.allSettled([
+    const promiseForDeleteObject = await Promise.allSettled([
       this.userRepository.delete({ id: userId }),
       this.userCommonRepository.delete(userCommonId),
       this.userAuthRepository.delete(userAuthId),
       this.userActivityRepository.delete(userActivityId),
     ]);
+
+    this.functions.promiseSettledProcess(
+      promiseForDeleteObject,
+      "Delete Object For Secession User",
+    );
   }
 
   // async insertImageForUser(userId: string, imageId: string) {
