@@ -1,12 +1,12 @@
 import { OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { UserCoreEntity } from "src/model/user/entities/user.core.entity";
+import { UserEntity } from "src/model/user/entities/user.core.entity";
 import { IsUUID } from "class-validator";
 
-export abstract class InheritUserCoreEntity {
+export abstract class InheritUserEntity {
   @IsUUID()
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @OneToOne(() => UserCoreEntity, (join) => join.id, { onDelete: "CASCADE" })
-  core: UserCoreEntity;
+  @OneToOne(() => UserEntity, (join) => join.id, { onDelete: "CASCADE" })
+  core: UserEntity;
 }

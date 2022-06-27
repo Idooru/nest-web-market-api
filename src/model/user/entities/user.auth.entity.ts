@@ -1,13 +1,13 @@
-import { UserCoreEntity } from "./user.core.entity";
+import { UserEntity } from "./user.core.entity";
 import { Exclude } from "class-transformer";
 import { IsNotEmpty, IsString } from "class-validator";
-import { InheritUserCoreEntity } from "src/common/entities/inherit-core-entity";
+import { InheritUserEntity } from "src/common/entities/inherit-core-entity";
 import { Column, Entity, OneToOne } from "typeorm";
 
 @Entity("users auth")
-export class UserAuthEntity extends InheritUserCoreEntity {
-  @OneToOne(() => UserCoreEntity)
-  core: UserCoreEntity;
+export class UserAuthEntity extends InheritUserEntity {
+  @OneToOne(() => UserEntity)
+  core: UserEntity;
 
   @IsString()
   @IsNotEmpty()

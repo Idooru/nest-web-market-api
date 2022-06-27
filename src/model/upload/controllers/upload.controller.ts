@@ -26,30 +26,30 @@ export class UploadController {
     MulterConfig.createFolder("video", "image");
   }
 
-  // @UseGuards(IsAdminGuard)
-  // @UseGuards(IsLoginGuard)
-  // @UseInterceptors(FileInterceptor("image", MulterConfig.upload("image")))
-  // @Post("/image-for-product")
-  // async uploadImgForProduct(
-  //   @UploadedFile() file: Express.Multer.File,
-  //   @GetDecodedJwt() jwtPayload: JwtPayload,
-  //   @Res() res: Response,
-  // ): Promise<JSON<ImageReturnDto>> {
-  //   console.log("logging image info ->\n", file);
+  @UseGuards(IsAdminGuard)
+  @UseGuards(IsLoginGuard)
+  @UseInterceptors(FileInterceptor("image", MulterConfig.upload("image")))
+  @Post("/image-for-product")
+  async uploadImgForProduct(
+    @UploadedFile() file: Express.Multer.File,
+    @GetDecodedJwt() jwtPayload: JwtPayload,
+    @Res() res: Response,
+  ): Promise<JSON<ImageReturnDto>> {
+    console.log("logging image info ->\n", file);
 
-  //   const result = await this.uploadService.uploadImgForProduct(
-  //     file,
-  //     jwtPayload,
-  //   );
+    const result = await this.uploadService.uploadImgForProduct(
+      file,
+      jwtPayload,
+    );
 
-  //   res.cookie(ProductImageCookieKey, result.url, CookieOption);
+    res.cookie(ProductImageCookieKey, result.url, CookieOption);
 
-  //   return {
-  //     statusCode: 201,
-  //     message: "사진을 업로드 하였습니다.",
-  //     result,
-  //   };
-  // }
+    return {
+      statusCode: 201,
+      message: "사진을 업로드 하였습니다.",
+      result,
+    };
+  }
 
   // @UseGuards(IsLoginGuard)
   // // @UseInterceptors(FilesInterceptor("video", new MulterProvider().apply()))

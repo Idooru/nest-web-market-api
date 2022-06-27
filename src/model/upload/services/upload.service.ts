@@ -22,16 +22,16 @@ export class UploadService {
       );
     }
 
-    const userFound = await this.userRepository.isExistUserWithNickName(
+    const user = await this.userRepository.findUserAuthWithNickName(
       jwtPayload.nickname,
     );
 
-    const uploaderId = userFound.id;
+    const uploaderId = user.id;
     const uploadedImage = file.filename;
 
     const upload = await this.uploadRepository.uploadImgForProduct({
       uploadedImage,
-      uploader: userFound,
+      uploader: user,
     });
 
     const imageFound = await this.uploadRepository.getImageIdWithUploadedImage(

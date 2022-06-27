@@ -40,7 +40,7 @@ export class UserService {
   }
 
   async findSelfInfoWithId(userId: string): Promise<ResponseUserDto> {
-    const user = await this.userRepository.isExistUserWithId(userId);
+    const user = await this.userRepository.findUserWithId(userId);
 
     // const uploadedImage = await this.uploadService.getImageFileNameWithUserId(
     //   userId,

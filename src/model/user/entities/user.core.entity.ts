@@ -5,7 +5,7 @@ import { UserActivityEntity } from "./user.activity.entity";
 import { UserCommonEntity } from "./user.common.entity";
 
 @Entity("users core")
-export class UserCoreEntity extends CommonEntity {
+export class UserEntity extends CommonEntity {
   @OneToOne(() => UserCommonEntity, (join) => join.core, { cascade: true })
   @JoinColumn({ name: "commonId" })
   common: UserCommonEntity;

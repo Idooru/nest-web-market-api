@@ -24,9 +24,7 @@ export class UploadRepository {
     const fileNameOnUrl = `http://localhost:${process.env.PORT}/media/${uploadedImage}`;
     const strUploader: string = uploader.nickname;
 
-    const userId = await this.userRepository.isExistUserWithNickName(
-      strUploader,
-    );
+    const userId = await this.userRepository.findUserWithNickName(strUploader);
 
     const image = await this.imagesRepository.save({
       uploadedImage: fileNameOnUrl,

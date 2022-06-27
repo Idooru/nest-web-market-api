@@ -6,10 +6,10 @@ import {
   IsMobilePhone,
 } from "class-validator";
 import { Column, Entity } from "typeorm";
-import { InheritUserCoreEntity } from "src/common/entities/inherit-core-entity";
+import { InheritUserEntity } from "src/common/entities/inherit-core-entity";
 
 @Entity("users common")
-export class UserCommonEntity extends InheritUserCoreEntity {
+export class UserCommonEntity extends InheritUserEntity {
   @IsString()
   @IsNotEmpty()
   @Column({ type: "varchar", length: 20, nullable: false })

@@ -10,15 +10,15 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { UserCommonEntity } from "./entities/user.common.entity";
 import { Repository } from "typeorm";
 import { RegisterUserDto } from "./dtos/register-user.dto";
-import { UserCoreEntity } from "./entities/user.core.entity";
+import { UserEntity } from "./entities/user.core.entity";
 import { CreateUserDto } from "./dtos/create-user.dto";
 import { UserObjectArray } from "src/common/config/etc";
 
 @Injectable()
 export class UserRepository {
   constructor(
-    @InjectRepository(UserCoreEntity)
-    private readonly userRepository: Repository<UserCoreEntity>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(UserCommonEntity)
     private readonly userCommonRepository: Repository<UserCommonEntity>,
     @InjectRepository(UserAuthEntity)
@@ -94,7 +94,7 @@ export class UserRepository {
     throw new UnauthorizedException("해당 전화번호는 사용중입니다.");
   }
 
-  async isExistUserWithId(userId: string): Promise<UserCoreEntity> {
+  async findUserWithId(userId: string): Promise<UserEntity> {
     try {
       return await this.userRepository.findOneOrFail({
         where: { id: userId },
@@ -105,7 +105,7 @@ export class UserRepository {
     }
   }
 
-  async isExistUserWithEmail(email: string): Promise<UserCoreEntity> {
+  async findUserWithEmail(email: string): Promise<UserEntity> {
     try {
       return await this.userRepository.findOneOrFail({
         where: { auth: { email } },
@@ -116,11 +116,21 @@ export class UserRepository {
     }
   }
 
-  async isExistUserWithNickName(nickname: string): Promise<UserCoreEntity> {
+  async findUserWithNickName(nickname: string): Promise<UserEntity> {
     try {
       return await this.userRepository.findOneOrFail({
         where: { auth: { nickname } },
         relations: UserObjectArray,
+      });
+    } catch (err) {
+      throw new UnauthorizedException("해당 닉네임은 존재하지 않습니다.");
+    }
+  }
+
+  async findUserAuthWithNickName(nickname: string): Promise<UserAuthEntity> {
+    try {
+      return await this.userAuthRepository.findOneOrFail({
+        where: { nickname },
       });
     } catch (err) {
       throw new UnauthorizedException("해당 닉네임은 존재하지 않습니다.");
@@ -216,7 +226,7 @@ export class UserRepository {
     userId: string,
   ): Promise<void> {
     const { realname, birth, gender, phonenumber, nickname } = patchUserDto;
-    const user = await this.isExistUserWithId(userId);
+    const user = await this.findUserWithNickName(userId);
 
     const { common, auth } = user;
 
@@ -234,17 +244,17 @@ export class UserRepository {
   }
 
   async deleteUser(userId: string): Promise<void> {
-    const userObject = await this.isExistUserWithId(userId);
+    const userObject = await this.findUserWithNickName(userId);
 
-    // const userCommonId = userObject.common.id;
-    // const userAuthId = userObject.auth.id;
-    // const userActivityId = userObject.activity.id;
+    const userCommonId = userObject.common.id;
+    const userAuthId = userObject.auth.id;
+    const userActivityId = userObject.activity.id;
 
     await Promise.allSettled([
       this.userRepository.delete({ id: userId }),
-      // this.userCommonRepository.delete(userCommonId),
-      // this.userAuthRepository.delete(userAuthId),
-      // this.userActivityRepository.delete(userActivityId),
+      this.userCommonRepository.delete(userCommonId),
+      this.userAuthRepository.delete(userAuthId),
+      this.userActivityRepository.delete(userActivityId),
     ]);
   }
 

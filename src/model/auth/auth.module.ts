@@ -11,14 +11,14 @@ import { AuthService } from "./services/auth.service";
 import { JwtModule } from "@nestjs/jwt";
 import { forwardRef } from "@nestjs/common";
 import { UserAuthEntity } from "../user/entities/user.auth.entity";
-import { UserCoreEntity } from "../user/entities/user.core.entity";
+import { UserEntity } from "../user/entities/user.core.entity";
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     PassportModule.register({ defaultStrategy: "jwt", session: false }),
     TypeOrmModule.forFeature([
-      UserCoreEntity,
+      UserEntity,
       UserCommonEntity,
       UserAuthEntity,
       UserActivityEntity,

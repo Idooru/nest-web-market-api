@@ -9,12 +9,12 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { forwardRef, Module } from "@nestjs/common";
 import { UserController } from "./controllers/user.controller";
 import { UserService } from "./services/user.service";
-import { UserCoreEntity } from "./entities/user.core.entity";
+import { UserEntity } from "./entities/user.core.entity";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      UserCoreEntity,
+      UserEntity,
       UserCommonEntity,
       UserAuthEntity,
       UserActivityEntity,

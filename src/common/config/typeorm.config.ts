@@ -9,7 +9,7 @@ import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 
 import * as dotenv from "dotenv";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
-import { UserCoreEntity } from "src/model/user/entities/user.core.entity";
+import { UserEntity } from "src/model/user/entities/user.core.entity";
 dotenv.config();
 
 export const typeORMConfig: TypeOrmModuleOptions = {
@@ -20,7 +20,7 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   password: process.env.MYSQL_PASSWORD,
   database: "nestWebMarket_API",
   entities: [
-    UserCoreEntity,
+    UserEntity,
     UserCommonEntity,
     UserAuthEntity,
     UserActivityEntity,
