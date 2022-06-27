@@ -12,7 +12,7 @@ import { Repository } from "typeorm";
 import { RegisterUserDto } from "./dtos/register-user.dto";
 import { UserCoreEntity } from "./entities/user.core.entity";
 import { CreateUserDto } from "./dtos/create-user.dto";
-import { UserObjects } from "src/common/config/etc";
+import { UserObjectArray } from "src/common/config/etc";
 
 @Injectable()
 export class UserRepository {
@@ -30,7 +30,7 @@ export class UserRepository {
   async checkUserEmail(email: string): Promise<void> {
     const found = await this.userRepository.findOne({
       where: { auth: { email } },
-      relations: UserObjects,
+      relations: UserObjectArray,
     });
 
     if (found) {
@@ -41,7 +41,7 @@ export class UserRepository {
   async checkUserNickName(nickname: string): Promise<void> {
     const found = await this.userRepository.findOne({
       where: { auth: { nickname } },
-      relations: UserObjects,
+      relations: UserObjectArray,
     });
 
     if (found) {
@@ -52,7 +52,7 @@ export class UserRepository {
   async checkUserPhoneNumber(phonenumber: string): Promise<void> {
     const found = await this.userRepository.findOne({
       where: { common: { phonenumber } },
-      relations: UserObjects,
+      relations: UserObjectArray,
     });
 
     if (found) {
@@ -66,7 +66,7 @@ export class UserRepository {
   ): Promise<void> {
     const found = await this.userRepository.findOne({
       where: { auth: { nickname: nickNameToUpdate } },
-      relations: UserObjects,
+      relations: UserObjectArray,
     });
 
     // 찾은 닉네임이 없다는 것은 DB에 중복되는 닉네임이 없다는 뜻
@@ -83,7 +83,7 @@ export class UserRepository {
   ): Promise<void> {
     const found = await this.userRepository.findOne({
       where: { common: { phonenumber: phoneNumberToUpdate } },
-      relations: UserObjects,
+      relations: UserObjectArray,
     });
 
     // 찾은 전화번호가 없다는 것은 DB에 중복되는 전화번호가 없다는 뜻
@@ -98,7 +98,7 @@ export class UserRepository {
     try {
       return await this.userRepository.findOneOrFail({
         where: { id: userId },
-        relations: UserObjects,
+        relations: UserObjectArray,
       });
     } catch (err) {
       throw new UnauthorizedException("해당 사용자아이디는 존재하지 않습니다.");
@@ -109,7 +109,7 @@ export class UserRepository {
     try {
       return await this.userRepository.findOneOrFail({
         where: { auth: { email } },
-        relations: UserObjects,
+        relations: UserObjectArray,
       });
     } catch (err) {
       throw new UnauthorizedException("해당 이메일은 존재하지 않습니다.");
@@ -120,7 +120,7 @@ export class UserRepository {
     try {
       return await this.userRepository.findOneOrFail({
         where: { auth: { nickname } },
-        relations: UserObjects,
+        relations: UserObjectArray,
       });
     } catch (err) {
       throw new UnauthorizedException("해당 닉네임은 존재하지 않습니다.");
@@ -188,14 +188,14 @@ export class UserRepository {
         idx.status === "fulfilled",
     );
 
+    // 사용 불가능
+    // const [userCommonObject, userAuthObject, userActivityObject] =
+    //   successForFindUserObject.map((idx) => idx.value);
+
     const UserObject = [];
     for await (const idx of successForFindUserObject) {
       UserObject.push(idx.value);
     }
-
-    // 사용 불가능
-    // const [userCommonObject, userAuthObject, userActivityObject] =
-    //   successForFindUserObject.map((idx) => idx.value);
 
     const userCommonObject: UserCommonEntity = UserObject[0];
     const userAuthObject: UserAuthEntity = UserObject[1];
@@ -234,10 +234,18 @@ export class UserRepository {
   }
 
   async deleteUser(userId: string): Promise<void> {
-    // const userObject = await this.isExistUserWithId(userId);
+    const userObject = await this.isExistUserWithId(userId);
 
-    // const userCommonId
-    await this.userRepository.delete(userId);
+    // const userCommonId = userObject.common.id;
+    // const userAuthId = userObject.auth.id;
+    // const userActivityId = userObject.activity.id;
+
+    await Promise.allSettled([
+      this.userRepository.delete({ id: userId }),
+      // this.userCommonRepository.delete(userCommonId),
+      // this.userAuthRepository.delete(userAuthId),
+      // this.userActivityRepository.delete(userActivityId),
+    ]);
   }
 
   // async insertImageForUser(userId: string, imageId: string) {

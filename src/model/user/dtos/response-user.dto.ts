@@ -1,3 +1,4 @@
+import { UserActivityEntity } from "./../entities/user.activity.entity";
 import { PickType } from "@nestjs/mapped-types";
 import { UserCommonEntity } from "../entities/user.common.entity";
 import { UserCoreEntity } from "../entities/user.core.entity";
@@ -21,14 +22,24 @@ export class ResponseUserAuthDto extends PickType(UserAuthEntity, [
   "userType",
 ] as const) {}
 
-export class ResponsePartialUserDto extends IntersectionType(
+export class ResponseUserActivityDto extends PickType(UserActivityEntity, [
+  "howMuchBuy",
+  "point",
+] as const) {}
+
+export class ResponsePartialOneUserDto extends IntersectionType(
   ResponseUserCoreDto,
   ResponseUserCommonDto,
 ) {}
 
-export class ResponseUserDto extends IntersectionType(
-  ResponsePartialUserDto,
+export class ResponsePartialTwoUserDto extends IntersectionType(
   ResponseUserAuthDto,
+  ResponseUserActivityDto,
+) {}
+
+export class ResponseUserDto extends IntersectionType(
+  ResponsePartialOneUserDto,
+  ResponsePartialTwoUserDto,
 ) {}
 
 export const UserReturnFilter = (user: UserCoreEntity): ResponseUserDto => ({
@@ -40,4 +51,6 @@ export const UserReturnFilter = (user: UserCoreEntity): ResponseUserDto => ({
   email: user.auth.email,
   phonenumber: user.common.phonenumber,
   userType: user.auth.userType,
+  howMuchBuy: user.activity.howMuchBuy,
+  point: user.activity.point,
 });

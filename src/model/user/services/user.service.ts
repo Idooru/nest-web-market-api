@@ -91,6 +91,5 @@ export class UserService {
 
   async deleteUserWithId(userId: string): Promise<void> {
     await this.userRepository.deleteUser(userId);
-    // await this.userRepository.deleteUser(id);
   }
 }

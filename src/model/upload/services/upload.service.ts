@@ -12,37 +12,37 @@ export class UploadService {
     private readonly userRepository: UserRepository,
   ) {}
 
-  // async uploadImgForProduct(
-  //   file: Express.Multer.File,
-  //   jwtPayload: JwtPayload,
-  // ): Promise<ImageReturnDto> {
-  //   if (!file) {
-  //     throw new BadRequestException(
-  //       "사진을 업로드 할 수 없습니다. 사진을 제시해 주세요.",
-  //     );
-  //   }
+  async uploadImgForProduct(
+    file: Express.Multer.File,
+    jwtPayload: JwtPayload,
+  ): Promise<ImageReturnDto> {
+    if (!file) {
+      throw new BadRequestException(
+        "사진을 업로드 할 수 없습니다. 사진을 제시해 주세요.",
+      );
+    }
 
-  //   const userFound = await this.userRepository.isExistUserWithNickName(
-  //     jwtPayload.nickname,
-  //   );
+    const userFound = await this.userRepository.isExistUserWithNickName(
+      jwtPayload.nickname,
+    );
 
-  //   const uploaderId = userFound.id;
-  //   const uploadedImage = file.filename;
+    const uploaderId = userFound.id;
+    const uploadedImage = file.filename;
 
-  //   const upload = await this.uploadRepository.uploadImgForProduct({
-  //     uploadedImage,
-  //     uploader: userFound,
-  //   });
+    const upload = await this.uploadRepository.uploadImgForProduct({
+      uploadedImage,
+      uploader: userFound,
+    });
 
-  //   const imageFound = await this.uploadRepository.getImageIdWithUploadedImage(
-  //     uploadedImage,
-  //   );
-  //   const imageId = imageFound.id;
+    const imageFound = await this.uploadRepository.getImageIdWithUploadedImage(
+      uploadedImage,
+    );
+    const imageId = imageFound.id;
 
-  //   // await this.uploadRepository.insertImageForUser(uploaderId, imageId);
+    // await this.uploadRepository.insertImageForUser(uploaderId, imageId);
 
-  //   return upload;
-  // }
+    return upload;
+  }
 
   // create(createUploadDto: ImageUploadDto) {
   //   return "This action adds a new upload";

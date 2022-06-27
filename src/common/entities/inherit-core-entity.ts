@@ -7,6 +7,6 @@ export abstract class InheritUserCoreEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @OneToOne(() => UserCoreEntity)
+  @OneToOne(() => UserCoreEntity, (join) => join.id, { onDelete: "CASCADE" })
   core: UserCoreEntity;
 }
