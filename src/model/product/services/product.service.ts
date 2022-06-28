@@ -1,11 +1,6 @@
+import { ProductEntity } from "./../product.entity";
 import { Functions } from "src/model/etc/providers/functions";
 import { UploadRepository } from "./../../upload/upload.repository";
-import {
-  ProductReturnFilter,
-  ProductsReturnFilter,
-  ResponseProductsDto,
-  ResponseProductDto,
-} from "./../dto/response_product.dto";
 import { ProductRepository } from "./../product.repository";
 import { Injectable } from "@nestjs/common";
 import { CreateProductDto } from "../dto/create_product.dto";
@@ -19,27 +14,20 @@ export class ProductService {
     private readonly uploadRepository: UploadRepository,
   ) {}
 
-  private readonly productReturnFilter = ProductReturnFilter;
-  private readonly productsReturnFilter = ProductsReturnFilter;
-
-  async getProductsAllFromLatest(): Promise<ResponseProductsDto[]> {
-    const products = await this.productRepository.findProductsAllFromLatest();
-    return this.productsReturnFilter(products);
+  async getProductsAllFromLatest(): Promise<ProductEntity[]> {
+    return await this.productRepository.findProductsAllFromLatest();
   }
 
-  async getProductsAllFromOldest(): Promise<ResponseProductsDto[]> {
-    const products = await this.productRepository.findProductsAllFromOldest();
-    return this.productsReturnFilter(products);
+  async getProductsAllFromOldest(): Promise<ProductEntity[]> {
+    return await this.productRepository.findProductsAllFromOldest();
   }
 
-  async getProductByName(name: string): Promise<ResponseProductDto> {
-    const product = await this.productRepository.findProductOneByName(name);
-    return this.productReturnFilter(product);
+  async getProductByName(name: string): Promise<ProductEntity> {
+    return await this.productRepository.findProductOneByName(name);
   }
 
-  async getProductById(id: string): Promise<ResponseProductDto> {
-    const product = await this.productRepository.findProductOneById(id);
-    return this.productReturnFilter(product);
+  async getProductById(id: string): Promise<ProductEntity> {
+    return await this.productRepository.findProductOneById(id);
   }
 
   async createProduct(createProductDto: CreateProductDto): Promise<void> {

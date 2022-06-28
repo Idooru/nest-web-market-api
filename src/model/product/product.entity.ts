@@ -37,10 +37,10 @@ export class ProductEntity extends CommonEntity {
   @Column({ type: "float", default: 0.0 })
   rating: float;
 
-  @OneToOne(() => ImagesEntity, (image) => image)
+  @OneToOne(() => ImagesEntity, (image) => image.product)
   @JoinColumn({ name: "imageId" })
   image?: ImagesEntity;
 
-  @Column({ type: "varchar", length: 20 })
-  imgUrl?: string;
+  // @Column({ type: "varchar", length: 20 })
+  // imgUrl?: string;
 }

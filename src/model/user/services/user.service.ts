@@ -43,11 +43,11 @@ export class UserService {
   async findSelfInfoWithId(userId: string): Promise<ResponseUserDto> {
     const user = await this.userRepository.findUserWithId(userId);
 
-    // const uploadedImage = await this.uploadService.getImageFileNameWithUserId(
+    // const image = await this.uploadService.getImageFileNameWithUserId(
     //   userId,
     // );
 
-    // await this.userRepository.insertImageForUserActivity(userId, uploadedImage);
+    // await this.userRepository.insertImageForUserActivity(userId, image);
 
     return this.userReturnFilter(user);
   }

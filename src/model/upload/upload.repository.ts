@@ -19,11 +19,11 @@ export class UploadRepository {
   async uploadImageForProduct(
     imageUploadDto: ImageUploadDto,
   ): Promise<ImageReturnDto> {
-    const { uploader, uploadedImage } = imageUploadDto;
-    const fileNameOnUrl = `http://localhost:${process.env.PORT}/media/${uploadedImage}`;
+    const { uploader, url } = imageUploadDto;
+    const fileNameOnUrl = `http://localhost:${process.env.PORT}/media/${url}`;
 
     const image = await this.imagesRepository.save({
-      uploadedImage: fileNameOnUrl,
+      url: fileNameOnUrl,
       uploader,
       uploadReason: "product upload",
     });
@@ -43,7 +43,7 @@ export class UploadRepository {
   ): Promise<ImagesEntity> {
     return await this.imagesRepository.findOne({
       select: ["id"],
-      where: { uploadedImage: imageId },
+      where: { url: imageId },
     });
   }
 }

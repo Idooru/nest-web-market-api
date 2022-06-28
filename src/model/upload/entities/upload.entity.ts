@@ -5,11 +5,11 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from "typeorm";
 
 @Entity("images")
 export class ImagesEntity extends CommonEntity {
-  @OneToOne(() => ProductEntity, (product: ProductEntity) => product.image)
+  @OneToOne(() => ProductEntity, (product: ProductEntity) => product)
   product: ProductEntity;
 
   @Column({ type: "varchar", nullable: false, unique: true })
-  uploadedImage: string;
+  url: string;
 
   @ManyToOne(() => UserAuthEntity, (Join) => Join.image)
   @JoinColumn({ name: "uploaderId", referencedColumnName: "id" })

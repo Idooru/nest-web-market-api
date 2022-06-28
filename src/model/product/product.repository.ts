@@ -8,6 +8,10 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ProductEntity } from "./product.entity";
+import {
+  ProductReturnProperty,
+  ProductsReturnProperty,
+} from "src/common/config/etc";
 
 @Injectable()
 export class ProductRepository {
@@ -51,10 +55,13 @@ export class ProductRepository {
   }
 
   async findProductsAllFromLatest(): Promise<ProductEntity[]> {
-    const found = await this.productRepository.find({
-      order: { createdAt: "DESC" },
-      relations: ["image"],
-    });
+    const found = await this.productRepository
+      .createQueryBuilder("p")
+      .select(ProductsReturnProperty)
+      .innerJoin("p.image", "i")
+      .orderBy("p.createdAt", "DESC")
+      .getMany();
+
     if (!found) {
       throw new NotFoundException("데이터베이스에 상품이 존재하지 않습니다.");
     }
@@ -62,10 +69,12 @@ export class ProductRepository {
   }
 
   async findProductsAllFromOldest(): Promise<ProductEntity[]> {
-    const found = await this.productRepository.find({
-      order: { createdAt: "ASC" },
-      relations: ["image"],
-    });
+    const found = await this.productRepository
+      .createQueryBuilder("p")
+      .select(ProductsReturnProperty)
+      .innerJoin("p.image", "i")
+      .orderBy("p.createdAt", "DESC")
+      .getMany();
 
     if (!found) {
       throw new NotFoundException("데이터베이스에 상품이 존재하지 않습니다.");
@@ -75,10 +84,12 @@ export class ProductRepository {
 
   async findProductOneByName(name: string): Promise<ProductEntity> {
     try {
-      return await this.productRepository.findOneOrFail({
-        where: { name },
-        relations: ["image"],
-      });
+      return await this.productRepository
+        .createQueryBuilder("p")
+        .innerJoin("p.image", "i")
+        .select(ProductReturnProperty)
+        .where("p.name = :name", { name })
+        .getOneOrFail();
     } catch (err) {
       throw new NotFoundException("해당 상품이름은 존재하지 않습니다.");
     }
@@ -86,10 +97,12 @@ export class ProductRepository {
 
   async findProductOneById(id: string): Promise<ProductEntity> {
     try {
-      return await this.productRepository.findOneOrFail({
-        where: { id },
-        relations: ["image"],
-      });
+      return await this.productRepository
+        .createQueryBuilder("p")
+        .innerJoin("p.image", "i")
+        .select(ProductReturnProperty)
+        .where("p.id = :id", { id })
+        .getOneOrFail();
     } catch (err) {
       throw new NotFoundException("해당 상품 아이디는 존재하지 않습니다.");
     }

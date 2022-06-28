@@ -1,9 +1,5 @@
-import { UserActivityEntity } from "src/model/user/entities/user.activity.entity";
 import { CookieOptions } from "express";
 import { JwtModuleOptions } from "@nestjs/jwt";
-import { UserEntity } from "src/model/user/entities/user.entity";
-import { UserCommonEntity } from "src/model/user/entities/user.common.entity";
-import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
 
 export const CookieOption: CookieOptions = {
   httpOnly: true,
@@ -20,3 +16,24 @@ export const ProductCookieKey = "productUrl";
 export const VideoCookieKey = "videoUrl";
 
 export const UserObjectArray = ["common", "auth", "activity"];
+
+export const ProductsReturnProperty = [
+  "p.name",
+  "p.price",
+  "p.type",
+  "i.url",
+  "p.rating",
+];
+
+export const ProductReturnProperty = [
+  "p.id",
+  "p.name",
+  "p.price",
+  "p.origin",
+  "p.type",
+  "p.description",
+  "i.url",
+  "p.rating",
+  "p.createdAt",
+  "p.updatedAt",
+];
