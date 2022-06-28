@@ -5,7 +5,6 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { UserObjectArray } from "src/common/config/etc";
-import { Functions } from "../etc/providers/functions";
 
 @Injectable()
 export class AuthRepository {
@@ -27,7 +26,7 @@ export class AuthRepository {
     }
   }
 
-  async isExistUserWithRealName(realname: string): Promise<UserEntity> {
+  async findUserWithRealName(realname: string): Promise<UserEntity> {
     try {
       return await this.userRepository.findOneOrFail({
         where: { common: { realname } },
@@ -38,7 +37,7 @@ export class AuthRepository {
     }
   }
 
-  async isExistUserWithPhoneNumber(phonenumber: string): Promise<UserEntity> {
+  async findUserWithPhoneNumber(phonenumber: string): Promise<UserEntity> {
     try {
       return await this.userRepository.findOneOrFail({
         where: { common: { phonenumber } },

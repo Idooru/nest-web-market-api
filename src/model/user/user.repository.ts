@@ -147,14 +147,14 @@ export class UserRepository {
     const userAuthColumn = { nickname, email, password };
     const userActivityColumn = { point: 0, howMuchBuy: 0 };
 
-    const promiseForSaveUserColumn = await Promise.allSettled([
+    const saveUserColumn = await Promise.allSettled([
       this.userCommonRepository.save({ ...userCommonColumn }),
       this.userAuthRepository.save({ ...userAuthColumn }),
       this.userActivityRepository.save({ ...userActivityColumn }),
     ]);
 
     const saveUSerColumnResult = this.functions.promiseSettledProcess(
-      promiseForSaveUserColumn,
+      saveUserColumn,
       "Save User Column For Register",
     );
 
@@ -162,14 +162,14 @@ export class UserRepository {
       (idx) => idx.value.id,
     );
 
-    const promiseForFindUserObject = await Promise.allSettled([
+    const findUserObject = await Promise.allSettled([
       this.userCommonRepository.findOne({ where: { id: userCommonId } }),
       this.userAuthRepository.findOne({ where: { id: userAuthId } }),
       this.userActivityRepository.findOne({ where: { id: userActivityId } }),
     ]);
 
     const findUserObjectResult = this.functions.promiseSettledProcess(
-      promiseForFindUserObject,
+      findUserObject,
       "Find User Object For Register",
     );
 
@@ -202,13 +202,13 @@ export class UserRepository {
     auth.nickname = nickname;
     auth.password = hashed;
 
-    const promiseForSaveObject = await Promise.allSettled([
+    const saveObject = await Promise.allSettled([
       this.userCommonRepository.save(common),
       this.userAuthRepository.save(auth),
     ]);
 
     this.functions.promiseSettledProcess(
-      promiseForSaveObject,
+      saveObject,
       "Save Object For Patch User Info",
     );
   }
@@ -220,7 +220,7 @@ export class UserRepository {
     const userAuthId = userObject.auth.id;
     const userActivityId = userObject.activity.id;
 
-    const promiseForDeleteObject = await Promise.allSettled([
+    const deleteObject = await Promise.allSettled([
       this.userRepository.delete({ id: userId }),
       this.userCommonRepository.delete(userCommonId),
       this.userAuthRepository.delete(userAuthId),
@@ -228,7 +228,7 @@ export class UserRepository {
     ]);
 
     this.functions.promiseSettledProcess(
-      promiseForDeleteObject,
+      deleteObject,
       "Delete Object For Secession User",
     );
   }

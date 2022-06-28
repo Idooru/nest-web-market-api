@@ -25,7 +25,7 @@ export class UploadRepository {
     const image = await this.imagesRepository.save({
       uploadedImage: fileNameOnUrl,
       uploader,
-      uploadPurpose: "product upload",
+      uploadReason: "product upload",
     });
 
     console.log(image);

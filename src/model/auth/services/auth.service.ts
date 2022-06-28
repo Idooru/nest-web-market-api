@@ -66,24 +66,24 @@ export class AuthService {
   async findEmail(findEmailDto: FindEmailDto): Promise<string> {
     const { realname, phonenumber } = findEmailDto;
 
-    const promiseForCheckUserColumn = await Promise.allSettled([
-      this.authRepositry.isExistUserWithRealName(realname),
-      this.authRepositry.isExistUserWithPhoneNumber(phonenumber),
+    const checkUserColumn = await Promise.allSettled([
+      this.authRepositry.findUserWithRealName(realname),
+      this.authRepositry.findUserWithPhoneNumber(phonenumber),
     ]);
 
     const resultForCheckUserColumn = this.functions.promiseSettledProcess(
-      promiseForCheckUserColumn,
+      checkUserColumn,
       "Check User Column For Find Email",
     );
 
-    const [realnameResult, phonenumberResult] = resultForCheckUserColumn;
+    const [realNameResult, phoneNumberResult] = resultForCheckUserColumn;
 
-    if (!(realnameResult.value.id === phonenumberResult.value.id)) {
+    if (!(realNameResult.value.id === phoneNumberResult.value.id)) {
       throw new UnauthorizedException(
         "사용자 실명과 전화번호가 서로 일치하지 않습니다.",
       );
     }
-    return realnameResult.value.auth.email;
+    return realNameResult.value.auth.email;
   }
 
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {

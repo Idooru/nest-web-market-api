@@ -25,14 +25,14 @@ export class UserService {
   async register(registerUserDto: RegisterUserDto): Promise<void> {
     const { nickname, email, password, phonenumber } = registerUserDto;
 
-    const promiseForCheckUserColumn = await Promise.allSettled([
+    const CheckUserColumn = await Promise.allSettled([
       this.userRepository.checkUserEmail(email),
       this.userRepository.checkUserNickName(nickname),
       this.userRepository.checkUserPhoneNumber(phonenumber),
     ]);
 
     this.functions.promiseSettledProcess(
-      promiseForCheckUserColumn,
+      CheckUserColumn,
       "Check User Column For Register",
     );
 
@@ -61,7 +61,7 @@ export class UserService {
     const myNickName = myInfo.nickname;
     const myPhoneNumber = myInfo.phonenumber;
 
-    const promisesForCheckUserColumn = await Promise.allSettled([
+    const checkUserColumn = await Promise.allSettled([
       this.userRepository.checkUserNickNameWhenUpdate(myNickName, nickname),
       this.userRepository.checkUserPhoneNumberWhenUpdate(
         myPhoneNumber,
@@ -70,7 +70,7 @@ export class UserService {
     ]);
 
     this.functions.promiseSettledProcess(
-      promisesForCheckUserColumn,
+      checkUserColumn,
       "Check User Column For Patch User Info",
     );
 

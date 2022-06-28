@@ -1,3 +1,4 @@
+import { Functions } from "src/model/etc/providers/functions";
 import { UploadRepository } from "./../../upload/upload.repository";
 import {
   ProductReturnFilter,
@@ -13,6 +14,7 @@ import { ModifyProductDto } from "../dto/modify_product.dto";
 @Injectable()
 export class ProductService {
   constructor(
+    private readonly functions: Functions,
     private readonly productRepository: ProductRepository,
     private readonly uploadRepository: UploadRepository,
   ) {}
@@ -48,8 +50,15 @@ export class ProductService {
 
     createProductDto.image = imageId;
 
-    await this.productRepository.checkProductNameToCreate(name);
-    await this.productRepository.createProduct(createProductDto);
+    const checkProductNameAndCreate = await Promise.allSettled([
+      this.productRepository.checkProductNameToCreate(name),
+      this.productRepository.createProduct(createProductDto),
+    ]);
+
+    this.functions.promiseSettledProcess(
+      checkProductNameAndCreate,
+      "Check Product Name And Create",
+    );
   }
 
   async modifyProduct(
@@ -57,15 +66,21 @@ export class ProductService {
     modifyProductDto: ModifyProductDto,
   ): Promise<void> {
     const { name, image } = modifyProductDto;
-    const product = await this.productRepository.findProductOneById(id);
-    const imageId = await this.uploadRepository.findImageIdWithUploadedImage(
-      image,
+
+    const findProductAndImageId = await Promise.allSettled([
+      this.productRepository.findProductOneById(id),
+      this.uploadRepository.findImageIdWithUploadedImage(image),
+    ]);
+
+    const result = this.functions.promiseSettledProcess(
+      findProductAndImageId,
+      "Find Product And ImageId",
     );
 
-    modifyProductDto.image = imageId;
+    // modifyProductDto.image = imageId;
 
-    await this.productRepository.checkProductNameToModify(name, product.name);
-    await this.productRepository.modifyProduct(id, modifyProductDto);
+    // await this.productRepository.checkProductNameToModify(name, product.name);
+    // await this.productRepository.modifyProduct(id, modifyProductDto);
   }
 
   async removeProduct(id: string): Promise<void> {

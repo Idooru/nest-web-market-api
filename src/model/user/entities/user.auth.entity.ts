@@ -7,7 +7,7 @@ import {
 } from "typeorm";
 import { ImagesEntity } from "./../../upload/entities/upload.entity";
 import { Exclude } from "class-transformer";
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString } from "class-validator";
 import { UserEntity } from "./user.entity";
 
 @Entity("users auth")
@@ -20,7 +20,7 @@ export class UserAuthEntity {
   @Column({ type: "varchar", length: 20, unique: true, nullable: false })
   nickname: string;
 
-  @IsString()
+  @IsEmail()
   @IsNotEmpty()
   @Column({ type: "varchar", length: 60, unique: true, nullable: false })
   email: string;

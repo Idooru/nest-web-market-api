@@ -23,7 +23,7 @@ export class ImagesEntity extends CommonEntity {
   uploader: UserAuthEntity;
 
   @Column({ type: "enum", enum: ["product upload", "review"] })
-  uploadPurpose: "product upload" | "review";
+  uploadReason: "product upload" | "review";
 }
 
 @Entity("videos")
@@ -35,5 +35,5 @@ export class VideosEntity extends CommonEntity {
   uploader: string;
 
   @Column({ type: "enum", default: "review", enum: ["review"] })
-  uploadPurpose: "review";
+  uploadReason: "review";
 }
