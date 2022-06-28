@@ -23,8 +23,10 @@ export class ResponseUserAuthDto extends PickType(UserAuthEntity, [
 ] as const) {}
 
 export class ResponseUserActivityDto extends PickType(UserActivityEntity, [
-  "howMuchBuy",
-  "point",
+  "purchaseCount",
+  "bonusPoint",
+  "productInquiryCount",
+  "productReviewCount",
 ] as const) {}
 
 export class ResponsePartialOneUserDto extends IntersectionType(
@@ -51,6 +53,8 @@ export const UserReturnFilter = (user: UserEntity): ResponseUserDto => ({
   email: user.auth.email,
   phonenumber: user.common.phonenumber,
   userType: user.auth.userType,
-  howMuchBuy: user.activity.howMuchBuy,
-  point: user.activity.point,
+  purchaseCount: user.activity.purchaseCount,
+  bonusPoint: user.activity.bonusPoint,
+  productInquiryCount: user.activity.productInquiryCount,
+  productReviewCount: user.activity.productReviewCount,
 });

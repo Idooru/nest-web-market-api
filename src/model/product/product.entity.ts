@@ -40,4 +40,7 @@ export class ProductEntity extends CommonEntity {
   @OneToOne(() => ImagesEntity, (image) => image)
   @JoinColumn({ name: "imageId" })
   image?: ImagesEntity;
+
+  @Column({ type: "varchar", length: 20 })
+  imgUrl?: string;
 }

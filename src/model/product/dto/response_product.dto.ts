@@ -44,6 +44,6 @@ export const ProductsReturnFilter = (
     name: idx.name,
     price: idx.price,
     type: idx.type,
-    image: idx.image,
+    imgUrl: idx.image.uploadedImage,
     rating: idx.rating,
   }));

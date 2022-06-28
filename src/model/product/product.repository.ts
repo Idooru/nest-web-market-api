@@ -51,12 +51,10 @@ export class ProductRepository {
   }
 
   async findProductsAllFromLatest(): Promise<ProductEntity[]> {
-    const found = await this.productRepository
-      .createQueryBuilder("p")
-      .select(["p.name", "p.price", "p.type", "p.rating", "i.uploadedImage"])
-      .leftJoinAndSelect("p.image", "i")
-      .getMany();
-
+    const found = await this.productRepository.find({
+      order: { createdAt: "DESC" },
+      relations: ["image"],
+    });
     if (!found) {
       throw new NotFoundException("데이터베이스에 상품이 존재하지 않습니다.");
     }

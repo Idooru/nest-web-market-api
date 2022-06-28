@@ -7,17 +7,17 @@ export class UserActivityEntity {
   id: string;
 
   @Column({ type: "smallint", default: 0 })
-  point: number;
+  bonusPoint: number;
 
   @Column({ type: "smallint", default: 0 })
-  howMuchBuy: number;
+  purchaseCount: number;
 
   @OneToOne(() => UserEntity, { onDelete: "CASCADE" })
   user: UserEntity;
 
-  @Column({ type: "varchar" })
-  productInquiry: string;
+  @Column({ type: "smallint", default: 0 })
+  productInquiryCount: number;
 
-  @Column({ type: "varchar" })
-  productReview: string;
+  @Column({ type: "smallint", default: 0 })
+  productReviewCount: number;
 }

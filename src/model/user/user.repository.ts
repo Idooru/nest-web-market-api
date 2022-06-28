@@ -145,7 +145,7 @@ export class UserRepository {
 
     const userCommonColumn = { realname, birth, gender, phonenumber };
     const userAuthColumn = { nickname, email, password };
-    const userActivityColumn = { point: 0, howMuchBuy: 0 };
+    const userActivityColumn = { bonusPoint: 0, howMuchBuy: 0 };
 
     const saveUserColumn = await Promise.allSettled([
       this.userCommonRepository.save({ ...userCommonColumn }),
