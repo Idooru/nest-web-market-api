@@ -47,9 +47,9 @@ export class ProductController {
     };
   }
 
-  @Get("/search_n")
+  @Get("/search_name")
   async getProductByName(
-    @Query("name") name: string,
+    @Query("n") name: string,
   ): Promise<JSON<ResponseProductDto>> {
     return {
       statusCode: 200,
@@ -58,9 +58,9 @@ export class ProductController {
     };
   }
 
-  @Get("/search_i")
+  @Get("/search_id")
   async getProductById(
-    @Query("id") id: string,
+    @Query("i") id: string,
   ): Promise<JSON<ResponseProductDto>> {
     return {
       statusCode: 200,
@@ -99,7 +99,7 @@ export class ProductController {
 
   @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)
-  @Patch("/qi")
+  @Patch("/")
   async modifyProduct(
     @Query("id")
     id: string,
@@ -128,7 +128,7 @@ export class ProductController {
 
   @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)
-  @Delete("/qi")
+  @Delete("/")
   async removeProduct(@Query("id") id: string): Promise<JSON<void>> {
     await this.productService.removeProduct(id);
 

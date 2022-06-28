@@ -16,7 +16,7 @@ export class UploadRepository {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async uploadImgForProduct(
+  async uploadImageForProduct(
     imageUploadDto: ImageUploadDto,
   ): Promise<ImageReturnDto> {
     const { uploader, uploadedImage } = imageUploadDto;

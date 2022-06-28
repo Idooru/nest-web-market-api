@@ -15,18 +15,18 @@ export class ImagesEntity extends CommonEntity {
   @JoinColumn({ name: "uploaderId", referencedColumnName: "id" })
   uploader: UserAuthEntity;
 
-  @Column({ type: "enum", enum: ["product upload", "review"] })
+  @Column({ type: "enum", enum: ["product upload", "review", "inquiry"] })
   uploadReason: "product upload" | "review";
 }
 
 @Entity("videos")
 export class VideosEntity extends CommonEntity {
   @Column({ type: "varchar", nullable: false, unique: true })
-  videoFileName: string;
+  uploadedVideo: string;
 
   @Column({ type: "varchar", nullable: false })
   uploader: string;
 
-  @Column({ type: "enum", default: "review", enum: ["review"] })
+  @Column({ type: "enum", default: "review", enum: ["review", "Inquiry"] })
   uploadReason: "review";
 }

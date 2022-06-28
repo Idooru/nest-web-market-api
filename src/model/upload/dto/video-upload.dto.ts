@@ -2,6 +2,6 @@ import { PickType } from "@nestjs/mapped-types";
 import { VideosEntity } from "../entities/upload.entity";
 
 export class ImageUploadDto extends PickType(VideosEntity, [
-  "videoFileName",
+  "uploadedVideo",
   "uploader",
 ] as const) {}
