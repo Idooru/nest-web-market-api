@@ -22,24 +22,25 @@ export class UploadService {
       );
     }
 
-    const user = await this.userRepository.findUserAuthWithNickName(
+    const userAuthObject = await this.userRepository.findUserAuthWithNickName(
       jwtPayload.nickname,
     );
-
-    const uploaderId = user.id;
     const uploadedImage = file.filename;
 
     const upload = await this.uploadRepository.uploadImgForProduct({
       uploadedImage,
-      uploader: user,
+      uploader: userAuthObject,
     });
 
     const imageFound = await this.uploadRepository.getImageIdWithUploadedImage(
       uploadedImage,
     );
-    const imageId = imageFound.id;
+    const uploaderId = jwtPayload.id;
 
-    // await this.uploadRepository.insertImageForUser(uploaderId, imageId);
+    await this.userRepository.insertImageForUserActivity(
+      uploaderId,
+      imageFound,
+    );
 
     return upload;
   }

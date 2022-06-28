@@ -1,4 +1,4 @@
-import { IsAdminGuard } from "./../../../common/guards/isAdmin.guard";
+import { IsAdminGuard } from "../../../common/guards/is-admin.guard";
 import {
   Controller,
   Get,
@@ -10,7 +10,7 @@ import {
 } from "@nestjs/common";
 import { UploadService } from "../../upload/services/upload.service";
 import { ImageReturnDto } from "../../upload/dto/image-return.dto";
-import { IsLoginGuard } from "src/common/guards/isLogin.guard";
+import { IsLoginGuard } from "../../../common/guards/is-login.guard";
 import { MulterConfig } from "src/common/config/multer.config";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { GetDecodedJwt } from "src/common/decorators/get-decoded-jwt.decorator";

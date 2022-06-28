@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { JwtPayload } from "./../../../common/interfaces/jwt-payload.interface";
-import { IsLoginGuard } from "./../../../common/guards/isLogin.guard";
+import { IsLoginGuard } from "../../../common/guards/is-login.guard";
 import { AuthService } from "./../../auth/services/auth.service";
 import { UserService } from "../services/user.service";
 import { RegisterUserDto } from "../dtos/register-user.dto";
@@ -23,7 +23,7 @@ import { PatchUserDto } from "../dtos/patch-user.dto";
 import { ResetPasswordDto } from "../dtos/reset-password.dto";
 import { GetDecodedJwt } from "../../../common/decorators/get-decoded-jwt.decorator";
 import { FindEmailDto } from "./../dtos/find-email.dto";
-import { IsNotLoginGuard } from "./../../../common/guards/isNotLogin.guard";
+import { IsNotLoginGuard } from "../../../common/guards/is-not-login.guard";
 
 @Controller("/user")
 export class UserController {

@@ -29,6 +29,6 @@ export const typeORMConfig: TypeOrmModuleOptions = {
     VideosEntity,
   ],
   synchronize: true,
-  logging: false,
+  logging: true,
   keepConnectionAlive: true,
 };

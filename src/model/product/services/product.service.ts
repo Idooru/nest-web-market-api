@@ -72,15 +72,26 @@ export class ProductService {
       this.uploadRepository.findImageIdWithUploadedImage(image),
     ]);
 
-    const result = this.functions.promiseSettledProcess(
+    const findProductAndImageIdResult = this.functions.promiseSettledProcess(
       findProductAndImageId,
       "Find Product And ImageId",
     );
 
-    // modifyProductDto.image = imageId;
+    const [product, imageId] = findProductAndImageIdResult.map(
+      (idx) => idx.value,
+    );
 
-    // await this.productRepository.checkProductNameToModify(name, product.name);
-    // await this.productRepository.modifyProduct(id, modifyProductDto);
+    modifyProductDto.image = imageId;
+
+    const checkAndModify = await Promise.allSettled([
+      this.productRepository.checkProductNameToModify(name, product.name),
+      this.productRepository.modifyProduct(id, modifyProductDto),
+    ]);
+
+    this.functions.promiseSettledProcess(
+      checkAndModify,
+      "Check Product Name And Modify Product",
+    );
   }
 
   async removeProduct(id: string): Promise<void> {

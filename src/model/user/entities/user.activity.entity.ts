@@ -3,9 +3,13 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   OneToOne,
-  OneToMany,
+  ManyToOne,
+  JoinColumn,
 } from "typeorm";
-import { ImagesEntity } from "../../upload/entities/upload.entity";
+import {
+  ImagesEntity,
+  VideosEntity,
+} from "../../upload/entities/upload.entity";
 import { UserEntity } from "./user.entity";
 
 @Entity("users activity")
@@ -22,15 +26,19 @@ export class UserActivityEntity {
   @OneToOne(() => UserEntity)
   user: UserEntity;
 
-  @OneToMany(() => ImagesEntity, (join) => join.uploader)
-  image?: ImagesEntity;
+  @ManyToOne(() => ImagesEntity, (join) => join.activity.id)
+  @JoinColumn({ name: "uploadedImageId" })
+  image?: ImagesEntity[];
 
-  @Column({ type: "varchar" })
-  imageId: string[];
+  @ManyToOne(() => VideosEntity, (join) => join.activity.id)
+  @JoinColumn({ name: "uploadedViedoId" })
+  video?: VideosEntity[];
 
-  @Column({ type: "varchar" })
-  videoId: string[];
+  // @Column({ type: "varchar" })
+  // imageId: string[];
 
+  // @Column({ type: "varchar" })
+  // videoId: string[];
   @Column({ type: "varchar" })
   productInquiry: string;
 

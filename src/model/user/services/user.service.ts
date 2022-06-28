@@ -1,15 +1,15 @@
 import { JwtPayload } from "./../../../common/interfaces/jwt-payload.interface";
 import { PatchUserDto } from "./../dtos/patch-user.dto";
 import { RegisterUserDto } from "./../dtos/register-user.dto";
-import { Injectable, BadRequestException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { UserRepository } from "../user.repository";
 import { ResponseUserDto } from "../dtos/response-user.dto";
 import { UserReturnFilter } from "../dtos/response-user.dto";
 import { AuthService } from "../../auth/services/auth.service";
-
-import * as bcrypt from "bcrypt";
 import { UploadService } from "src/model/upload/services/upload.service";
 import { Functions } from "src/model/etc/providers/functions";
+
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class UserService {
@@ -47,7 +47,7 @@ export class UserService {
     //   userId,
     // );
 
-    // await this.userRepository.insertImageForUser(userId, uploadedImage);
+    // await this.userRepository.insertImageForUserActivity(userId, uploadedImage);
 
     return this.userReturnFilter(user);
   }

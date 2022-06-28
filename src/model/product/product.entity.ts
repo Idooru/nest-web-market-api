@@ -39,5 +39,5 @@ export class ProductEntity extends CommonEntity {
 
   @OneToOne(() => ImagesEntity, (image) => image.product)
   @JoinColumn({ name: "imageId" })
-  image: ImagesEntity;
+  image?: ImagesEntity;
 }
