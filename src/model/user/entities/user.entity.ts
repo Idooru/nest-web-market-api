@@ -6,15 +6,15 @@ import { UserCommonEntity } from "./user.common.entity";
 
 @Entity("users")
 export class UserEntity extends CommonEntity {
-  @OneToOne(() => UserCommonEntity, (join) => join.id)
+  @OneToOne(() => UserCommonEntity, (join) => join.id, { cascade: true })
   @JoinColumn({ name: "commonId" })
   common: UserCommonEntity;
 
-  @OneToOne(() => UserAuthEntity, (join) => join.id)
+  @OneToOne(() => UserAuthEntity, (join) => join.id, { cascade: true })
   @JoinColumn({ name: "authId" })
   auth: UserAuthEntity;
 
-  @OneToOne(() => UserActivityEntity, (join) => join.id)
+  @OneToOne(() => UserActivityEntity, (join) => join.id, { cascade: true })
   @JoinColumn({ name: "activityId" })
   activity: UserActivityEntity;
 }

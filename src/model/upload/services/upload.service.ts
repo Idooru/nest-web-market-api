@@ -1,4 +1,3 @@
-import { UserActivityEntity } from "src/model/user/entities/user.activity.entity";
 import { UserRepository } from "./../../user/user.repository";
 import { UploadRepository } from "../../upload/upload.repository";
 import { BadRequestException, Injectable } from "@nestjs/common";
@@ -31,16 +30,6 @@ export class UploadService {
       uploadedImage,
       uploader: userAuthObject,
     });
-
-    const imageFound = await this.uploadRepository.getImageIdWithUploadedImage(
-      uploadedImage,
-    );
-    const uploaderId = jwtPayload.id;
-
-    await this.userRepository.insertImageForUserActivity(
-      uploaderId,
-      imageFound,
-    );
 
     return upload;
   }

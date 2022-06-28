@@ -1,26 +1,12 @@
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
 import { ProductEntity } from "./../../product/product.entity";
 import { CommonEntity } from "../../../common/entities/common.entity";
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  OneToOne,
-} from "typeorm";
-import { UserActivityEntity } from "src/model/user/entities/user.activity.entity";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from "typeorm";
 
 @Entity("images")
 export class ImagesEntity extends CommonEntity {
   @OneToOne(() => ProductEntity, (product: ProductEntity) => product.image)
   product: ProductEntity;
-
-  @OneToMany(
-    () => UserActivityEntity,
-    (activity: UserActivityEntity) => activity.image,
-  )
-  activity: UserActivityEntity;
 
   @Column({ type: "varchar", nullable: false, unique: true })
   uploadedImage: string;
@@ -35,12 +21,6 @@ export class ImagesEntity extends CommonEntity {
 
 @Entity("videos")
 export class VideosEntity extends CommonEntity {
-  @OneToMany(
-    () => UserActivityEntity,
-    (activity: UserActivityEntity) => activity.video,
-  )
-  activity: UserActivityEntity;
-
   @Column({ type: "varchar", nullable: false, unique: true })
   videoFileName: string;
 

@@ -33,6 +33,6 @@ export class UserCommonEntity {
   @Column({ type: "varchar", length: 15, unique: true, nullable: false })
   phonenumber: string;
 
-  @OneToOne(() => UserEntity)
+  @OneToOne(() => UserEntity, { onDelete: "CASCADE" })
   user: UserEntity;
 }

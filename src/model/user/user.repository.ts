@@ -1,4 +1,3 @@
-import { ImagesEntity } from "./../upload/entities/upload.entity";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { UserActivityEntity } from "./entities/user.activity.entity";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
@@ -232,15 +231,5 @@ export class UserRepository {
       deleteObject,
       "Delete Object For Secession User",
     );
-  }
-
-  async insertImageForUserActivity(userId: string, imageFound: ImagesEntity) {
-    // const user = await this.userRepository.findOne({
-    //   where: { id: userId },
-    //   relations: ["activity"],
-    // });
-    // user.activity.image = [imageFound];
-    // await this.userRepository.save(user);
-    await this.userActivityRepository.update(userId, { image: imageFound });
   }
 }

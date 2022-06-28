@@ -46,15 +46,4 @@ export class UploadRepository {
       where: { uploadedImage: imageId },
     });
   }
-
-  async getImageIdWithUploadedImage(
-    uploadedImage: string,
-  ): Promise<ImagesEntity> {
-    const plusUrl =
-      `http://localhost:${process.env.PORT}/media/` + uploadedImage;
-    return await this.imagesRepository.findOne({
-      where: { uploadedImage: plusUrl },
-      select: ["id"],
-    });
-  }
 }

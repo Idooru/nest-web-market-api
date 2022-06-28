@@ -36,7 +36,7 @@ export class UserAuthEntity {
   })
   userType: "general" | "special" | "admin";
 
-  @OneToOne(() => UserEntity)
+  @OneToOne(() => UserEntity, { onDelete: "CASCADE" })
   user: UserEntity;
 
   @OneToMany(() => ImagesEntity, (join) => join.uploader)
