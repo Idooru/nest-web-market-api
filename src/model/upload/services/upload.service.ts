@@ -42,7 +42,7 @@ export class UploadService {
 
     const src = path.join(
       __dirname,
-      "../../../../uploads/image/productImagePreparation-1656488676902.jpg",
+      "../../../../uploads/image/productImagePreparation-1656501969979.jpg",
     );
 
     const dest = path.join(

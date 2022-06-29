@@ -41,7 +41,7 @@ export class UploadRepository {
   async findImageWithoutImage(url: string): Promise<ImagesEntity> {
     return await this.imagesRepository
       .createQueryBuilder("i")
-      .where("i.id = :id", { id: "a63f7beb-e136-4492-b3a9-673bbcb9c4f6" })
+      .where("i.url = :url", { url })
       .getOne();
   }
 

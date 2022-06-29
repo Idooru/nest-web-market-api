@@ -5,7 +5,10 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from "typeorm";
 
 @Entity("images")
 export class ImagesEntity extends CommonEntity {
-  @OneToOne(() => ProductEntity, (product: ProductEntity) => product)
+  @OneToOne(() => ProductEntity, (product: ProductEntity) => product, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
   product: ProductEntity;
 
   @Column({ type: "varchar", nullable: false, unique: true })
