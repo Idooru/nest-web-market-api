@@ -110,6 +110,7 @@ export class ProductController {
     @Query("id")
     id: string,
     @Body() modifyProductBody: ModifyProductBody,
+    @GetDecodedJwt() JwtPayload: JwtPayload,
     @Cookies(ProductImageCookieKey) productImg: ImagesEntity,
     @Res() res: Response,
   ): Promise<JSON<string>> {
@@ -117,7 +118,11 @@ export class ProductController {
       ...modifyProductBody,
       image: productImg,
     };
-    await this.productService.modifyProduct(id, modifyProductDto);
+    await this.productService.modifyProduct(
+      id,
+      modifyProductDto,
+      JwtPayload.nickname,
+    );
 
     try {
       res.clearCookie(ProductImageCookieKey);

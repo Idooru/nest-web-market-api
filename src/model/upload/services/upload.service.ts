@@ -4,6 +4,9 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { ImageReturnDto } from "../../upload/dto/image-return.dto";
 import { JwtPayload } from "src/common/interfaces/jwt-payload.interface";
 
+import * as fs from "fs";
+import * as path from "path";
+
 @Injectable()
 export class UploadService {
   constructor(
@@ -26,12 +29,38 @@ export class UploadService {
     );
     const image = file.filename;
 
-    const upload = await this.uploadRepository.uploadImageForProduct({
+    return await this.uploadRepository.uploadImageForProduct({
       url: image,
       uploader: userAuthObject,
     });
+  }
 
-    return upload;
+  async copyImageAndUpload(creater: string): Promise<ImageReturnDto> {
+    const uploader = await this.userRepository.findUserAuthWithNickName(
+      creater,
+    );
+
+    const src = path.join(
+      __dirname,
+      "../../../../uploads/image/productImagePreparation-1656488676902.jpg",
+    );
+
+    const dest = path.join(
+      __dirname,
+      `../../../../uploads/image/productImagePreparation-${Date.now()}.jpg`,
+    );
+
+    fs.copyFileSync(src, dest);
+
+    const image = dest.replace(
+      "/root/Coding/nodejs/nest_project/nestWebMarket_API/uploads/image/",
+      "",
+    );
+
+    return await this.uploadRepository.uploadImageForProduct({
+      url: image,
+      uploader,
+    });
   }
 
   // async uploadVideo(

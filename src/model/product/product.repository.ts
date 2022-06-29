@@ -21,23 +21,22 @@ export class ProductRepository {
   ) {}
 
   async checkProductNameToCreate(name: string): Promise<void> {
-    const found = await this.productRepository.findOne({
-      select: ["name"],
-      where: { name },
-    });
+    const found = await this.productRepository
+      .createQueryBuilder("p")
+      .where("p.name = :name", { name })
+      .getOne();
 
     if (!found) {
       return;
-    } else if (found.name) {
-      throw new BadRequestException("해당 상품명은 사용중입니다.");
     }
+    throw new BadRequestException("해당 상품명은 사용중입니다.");
   }
 
   async checkProductNameToModify(replaceName: string, originalName: string) {
-    const found = await this.productRepository.findOne({
-      select: ["name"],
-      where: { name: replaceName },
-    });
+    const found = await this.productRepository
+      .createQueryBuilder("p")
+      .where("p.name = :name", { name: replaceName })
+      .getOne();
 
     /* 바꿀 이름으로 찾은게 없거나 바꿔야 할 상품의 이름과 바꿀 이름이 동일 하다면 리턴함
       그 이외의 경우는 DB에 저장된 상품의 이름으로 바꾸게 되는 경우 이므로 에러를 던짐*/
@@ -71,8 +70,8 @@ export class ProductRepository {
   async findProductsAllFromOldest(): Promise<ProductEntity[]> {
     const found = await this.productRepository
       .createQueryBuilder("p")
-      .select(ProductsReturnProperty)
       .innerJoin("p.image", "i")
+      .select(ProductsReturnProperty)
       .orderBy("p.createdAt", "ASC")
       .getMany();
 
@@ -121,13 +120,13 @@ export class ProductRepository {
     id: string,
     modifyProductDto: ModifyProductDto,
   ): Promise<void> {
-    await this.productRepository
-      .createQueryBuilder("p")
-      .update()
-      .where("p.id = : id", { id })
-      .set({ ...modifyProductDto })
-      .execute();
-    // await this.productRepository.update(id, { ...modifyProductDto });
+    // await this.productRepository
+    //   .createQueryBuilder("p")
+    //   .update()
+    //   .where("p.id = :id", { id })
+    //   .set({ ...modifyProductDto })
+    //   .execute();
+    await this.productRepository.update(id, { ...modifyProductDto });
   }
 
   async removeProduct(id: string): Promise<void> {

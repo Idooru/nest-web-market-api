@@ -22,6 +22,12 @@ import { UserModule } from "../user/user.module";
     ImagesEntity,
     VideosEntity,
   ],
-  exports: [UploadRepository, ImagesEntity, VideosEntity, MulterConfig],
+  exports: [
+    UploadService,
+    UploadRepository,
+    ImagesEntity,
+    VideosEntity,
+    MulterConfig,
+  ],
 })
 export class UploadModule {}

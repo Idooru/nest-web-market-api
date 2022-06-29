@@ -1,4 +1,3 @@
-import { IsAdminGuard } from "../../../common/guards/is-admin.guard";
 import {
   Controller,
   Post,
@@ -8,6 +7,11 @@ import {
   Res,
   UploadedFiles,
 } from "@nestjs/common";
+import {
+  CookieOption,
+  VideoCookieKey,
+  ProductImageCookieKey,
+} from "src/common/config/etc";
 import { UploadService } from "../../upload/services/upload.service";
 import { ImageReturnDto } from "../../upload/dto/image-return.dto";
 import { IsLoginGuard } from "../../../common/guards/is-login.guard";
@@ -16,9 +20,8 @@ import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { GetDecodedJwt } from "src/common/decorators/get-decoded-jwt.decorator";
 import { JwtPayload } from "src/common/interfaces/jwt-payload.interface";
 import { JSON } from "../../../common/interfaces/json-success.interface";
+import { IsAdminGuard } from "../../../common/guards/is-admin.guard";
 import { Response } from "express";
-import { CookieOption, VideoCookieKey } from "src/common/config/etc";
-import { ProductImageCookieKey } from "./../../../common/config/etc";
 
 @Controller("upload")
 export class UploadController {

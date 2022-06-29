@@ -46,11 +46,11 @@ export class UploadRepository {
   }
 
   async findImageWithUploadedImage(
-    imageId: ImagesEntity | string,
+    url: ImagesEntity | string,
   ): Promise<ImagesEntity> {
     return await this.imagesRepository.findOne({
       select: ["id"],
-      where: { url: imageId },
+      where: { url },
     });
   }
 }
