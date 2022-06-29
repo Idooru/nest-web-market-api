@@ -1,5 +1,4 @@
 import { JwtPayload } from "./../../../common/interfaces/jwt-payload.interface";
-import { ImagesEntity } from "./../../upload/entities/upload.entity";
 import {
   Controller,
   Get,
@@ -17,8 +16,8 @@ import {
   ResponseProductsDto,
 } from "../dto/response_product.dto";
 import { JSON } from "../../../common/interfaces/json-success.interface";
-import { CreateProductBody } from "../dto/create_product.dto";
-import { ModifyProductBody } from "../dto/modify_product.dto";
+import { CreateProductDto } from "../dto/create_product.dto";
+import { ModifyProductDto } from "../dto/modify_product.dto";
 import { ProductService } from "./../services/product.service";
 import { IsAdminGuard } from "../../../common/guards/is-admin.guard";
 import { IsLoginGuard } from "../../../common/guards/is-login.guard";
@@ -62,12 +61,12 @@ export class ProductController {
 
   @Get("/search_id")
   async getProductById(
-    @Query("i") id: string,
+    @Query("i") productId: string,
   ): Promise<JSON<ResponseProductDto>> {
     return {
       statusCode: 200,
-      message: `${id}에 해당하는 상품 정보를 가져옵니다.`,
-      result: await this.productService.getProductById(id),
+      message: `${productId}에 해당하는 상품 정보를 가져옵니다.`,
+      result: await this.productService.getProductById(productId),
     };
   }
 
@@ -76,19 +75,15 @@ export class ProductController {
   @Post("/")
   async createProduct(
     @Body()
-    createProductBody: CreateProductBody,
+    createProductDto: CreateProductDto,
     @GetDecodedJwt() jwtPayload: JwtPayload,
-    @Cookies(ProductImageCookieKey) productImg: ImagesEntity,
+    @Cookies(ProductImageCookieKey) productImg: string | null,
     @Res() res: Response,
   ): Promise<JSON<void>> {
-    const createProductDto = {
-      ...createProductBody,
-      image: productImg,
-    };
-
     await this.productService.createProduct(
       createProductDto,
       jwtPayload.nickname,
+      productImg,
     );
 
     try {
@@ -108,20 +103,17 @@ export class ProductController {
   @Patch("/")
   async modifyProduct(
     @Query("id")
-    id: string,
-    @Body() modifyProductBody: ModifyProductBody,
+    productId: string,
+    @Body() modifyProductDto: ModifyProductDto,
     @GetDecodedJwt() JwtPayload: JwtPayload,
-    @Cookies(ProductImageCookieKey) productImg: ImagesEntity,
+    @Cookies(ProductImageCookieKey) productImg: string | null,
     @Res() res: Response,
   ): Promise<JSON<string>> {
-    const modifyProductDto = {
-      ...modifyProductBody,
-      image: productImg,
-    };
     await this.productService.modifyProduct(
-      id,
+      productId,
       modifyProductDto,
       JwtPayload.nickname,
+      productImg,
     );
 
     try {
@@ -133,19 +125,19 @@ export class ProductController {
     return {
       statusCode: 201,
       message: "상품을 수정하였습니다.",
-      result: id,
+      result: productId,
     };
   }
 
   @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)
   @Delete("/")
-  async removeProduct(@Query("id") id: string): Promise<JSON<void>> {
-    await this.productService.removeProduct(id);
+  async removeProduct(@Query("id") productId: string): Promise<JSON<void>> {
+    await this.productService.removeProduct(productId);
 
     return {
       statusCode: 201,
-      message: `${id}에 해당하는 상품을 제거하였습니다.`,
+      message: `${productId}에 해당하는 상품을 제거하였습니다.`,
     };
   }
 }

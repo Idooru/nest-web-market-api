@@ -38,15 +38,16 @@ export class ProductService {
   async createProduct(
     createProductDto: CreateProductDto,
     creater: string,
+    image: string | null,
   ): Promise<void> {
-    const { name, image } = createProductDto;
+    const { name } = createProductDto;
     let getImage: ImagesEntity;
 
     if (!image) {
       const result = await this.uploadService.copyImageAndUpload(creater);
-      getImage = await this.uploadRepository.findImageWithoutImage(result.url);
+      getImage = await this.uploadRepository.findImageWithUrl(result.url);
     } else {
-      getImage = await this.uploadRepository.findImageWithUploadedImage(image);
+      getImage = await this.uploadRepository.findImageWithUrl(image);
     }
 
     createProductDto.image = getImage;
@@ -59,13 +60,14 @@ export class ProductService {
     id: string,
     modifyProductDto: ModifyProductDto,
     modifier: string,
+    image: string | null,
   ): Promise<void> {
-    const { name, image } = modifyProductDto;
+    const { name } = modifyProductDto;
     let getImage: ImagesEntity;
 
     const findProductAndImageId = await Promise.allSettled([
       this.productRepository.findProductOneById(id),
-      this.uploadRepository.findImageWithUploadedImage(image),
+      this.uploadRepository.findImageWithUrl(image),
     ]);
 
     const findProductAndImageIdResult = this.functions.promiseSettledProcess(
@@ -77,13 +79,11 @@ export class ProductService {
       (idx) => idx.value,
     );
 
-    const a: ImagesEntity = haveImage;
-
     if (!haveImage) {
       const result = await this.uploadService.copyImageAndUpload(modifier);
-      getImage = await this.uploadRepository.findImageWithoutImage(result.url);
+      getImage = await this.uploadRepository.findImageWithUrl(result.url);
     } else {
-      getImage = await this.uploadRepository.findImageWithUploadedImage(a);
+      getImage = await this.uploadRepository.findImageWithUrl(haveImage.url);
     }
 
     modifyProductDto.image = getImage;

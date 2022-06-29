@@ -38,17 +38,24 @@ export class UploadRepository {
     return { name: originalName, url: fileNameOnUrl };
   }
 
-  async findImageWithoutImage(url: string): Promise<ImagesEntity> {
+  async findImageWithUrl(url: string): Promise<ImagesEntity> {
     return await this.imagesRepository
       .createQueryBuilder("i")
       .where("i.url = :url", { url })
       .getOne();
   }
 
-  async findImageWithUploadedImage(url: ImagesEntity): Promise<ImagesEntity> {
-    return await this.imagesRepository.findOne({
-      select: ["id"],
-      where: { url },
-    });
-  }
+  // async findImageWithoutImage(url: string): Promise<ImagesEntity> {
+  //   return await this.imagesRepository
+  //     .createQueryBuilder("i")
+  //     .where("i.url = :url", { url })
+  //     .getOne();
+  // }
+
+  // async findImageWithUploadedImage(url: ImagesEntity): Promise<ImagesEntity> {
+  //   return await this.imagesRepository.findOne({
+  //     select: ["id"],
+  //     where: { url },
+  //   });
+  // }
 }
