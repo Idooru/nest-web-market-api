@@ -44,9 +44,7 @@ export class ProductService {
 
     if (!image) {
       const result = await this.uploadService.copyImageAndUpload(creater);
-      getImage = await this.uploadRepository.findImageWithUploadedImage(
-        result.url,
-      );
+      getImage = await this.uploadRepository.findImageWithoutImage(result.url);
     } else {
       getImage = await this.uploadRepository.findImageWithUploadedImage(image);
     }
@@ -79,15 +77,13 @@ export class ProductService {
       (idx) => idx.value,
     );
 
+    const a: ImagesEntity = haveImage;
+
     if (!haveImage) {
       const result = await this.uploadService.copyImageAndUpload(modifier);
-      getImage = await this.uploadRepository.findImageWithUploadedImage(
-        result.url,
-      );
+      getImage = await this.uploadRepository.findImageWithoutImage(result.url);
     } else {
-      getImage = await this.uploadRepository.findImageWithUploadedImage(
-        haveImage,
-      );
+      getImage = await this.uploadRepository.findImageWithUploadedImage(a);
     }
 
     modifyProductDto.image = getImage;
