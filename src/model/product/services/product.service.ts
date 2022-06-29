@@ -5,12 +5,17 @@ import { ProductRepository } from "./../product.repository";
 import { Injectable } from "@nestjs/common";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
+import { UserRepository } from "src/model/user/user.repository";
+
+import * as fs from "fs";
+import * as path from "path";
 
 @Injectable()
 export class ProductService {
   constructor(
     private readonly functions: Functions,
     private readonly productRepository: ProductRepository,
+    private readonly userRepository: UserRepository,
     private readonly uploadRepository: UploadRepository,
   ) {}
 
@@ -30,13 +35,39 @@ export class ProductService {
     return await this.productRepository.findProductOneById(id);
   }
 
-  async createProduct(createProductDto: CreateProductDto): Promise<void> {
+  async createProduct(
+    createProductDto: CreateProductDto,
+    creater: string,
+  ): Promise<void> {
     const { name, image } = createProductDto;
-    const imageId = await this.uploadRepository.findImageIdWithUploadedImage(
+
+    if (!image) {
+      const uploader = await this.userRepository.findUserAuthWithNickName(
+        creater,
+      );
+
+      // const url = fs.readFileSync(
+      //   path.join(
+      //     __dirname,
+      //     "../../../../uploads/image/readyForProductImage-1656458823374.jpg",
+      //   ),
+      // );
+
+      // const stringUrl = url.toString();
+
+      const { name } = await this.uploadRepository.uploadImageForProduct({
+        url: "readyForProductImage-1656458823374.jpg",
+        uploader,
+      });
+
+      console.log(name);
+    }
+
+    const getImage = await this.uploadRepository.findImageWithUploadedImage(
       image,
     );
 
-    createProductDto.image = imageId;
+    createProductDto.image = getImage;
 
     const checkProductNameAndCreate = await Promise.allSettled([
       this.productRepository.checkProductNameToCreate(name),
@@ -57,7 +88,7 @@ export class ProductService {
 
     const findProductAndImageId = await Promise.allSettled([
       this.productRepository.findProductOneById(id),
-      this.uploadRepository.findImageIdWithUploadedImage(image),
+      this.uploadRepository.findImageWithUploadedImage(image),
     ]);
 
     const findProductAndImageIdResult = this.functions.promiseSettledProcess(

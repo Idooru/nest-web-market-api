@@ -73,7 +73,7 @@ export class ProductRepository {
       .createQueryBuilder("p")
       .select(ProductsReturnProperty)
       .innerJoin("p.image", "i")
-      .orderBy("p.createdAt", "DESC")
+      .orderBy("p.createdAt", "ASC")
       .getMany();
 
     if (!found) {
@@ -109,14 +109,25 @@ export class ProductRepository {
   }
 
   async createProduct(createProductDto: CreateProductDto): Promise<void> {
-    await this.productRepository.save({ ...createProductDto });
+    await this.productRepository
+      .createQueryBuilder("p")
+      .insert()
+      .into(ProductEntity)
+      .values({ ...createProductDto })
+      .execute();
   }
 
   async modifyProduct(
     id: string,
     modifyProductDto: ModifyProductDto,
   ): Promise<void> {
-    await this.productRepository.update(id, { ...modifyProductDto });
+    await this.productRepository
+      .createQueryBuilder("p")
+      .update()
+      .where("p.id = : id", { id })
+      .set({ ...modifyProductDto })
+      .execute();
+    // await this.productRepository.update(id, { ...modifyProductDto });
   }
 
   async removeProduct(id: string): Promise<void> {

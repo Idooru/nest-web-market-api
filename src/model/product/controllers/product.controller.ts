@@ -1,3 +1,4 @@
+import { JwtPayload } from "./../../../common/interfaces/jwt-payload.interface";
 import { ImagesEntity } from "./../../upload/entities/upload.entity";
 import {
   Controller,
@@ -24,6 +25,7 @@ import { IsLoginGuard } from "../../../common/guards/is-login.guard";
 import { ProductImageCookieKey } from "./../../../common/config/etc";
 import { Response } from "express";
 import { Cookies } from "src/common/decorators/cookies.decorator";
+import { GetDecodedJwt } from "src/common/decorators/get-decoded-jwt.decorator";
 
 @Controller("/product")
 export class ProductController {
@@ -75,6 +77,7 @@ export class ProductController {
   async createProduct(
     @Body()
     createProductBody: CreateProductBody,
+    @GetDecodedJwt() jwtPayload: JwtPayload,
     @Cookies(ProductImageCookieKey) productImg: ImagesEntity,
     @Res() res: Response,
   ): Promise<JSON<void>> {
@@ -83,7 +86,10 @@ export class ProductController {
       image: productImg,
     };
 
-    await this.productService.createProduct(createProductDto);
+    await this.productService.createProduct(
+      createProductDto,
+      jwtPayload.nickname,
+    );
 
     try {
       res.clearCookie(ProductImageCookieKey);

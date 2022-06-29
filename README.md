@@ -93,3 +93,6 @@ Nest is [MIT licensed](LICENSE).
    3가지 api를 만들었다. 각각 상품 사진 업로드, 리뷰 사진 업로드, 리뷰 동영상 업로드 등이 있다. 각 api들은 FileInterceptor(혹은 FilesInterceptor)라는 인터셉터를 거쳐야 한다. 인터셉터 인수에는 localOption이 필요로 하는데 그곳에 3. 에서 언급한 multer.provider.ts에 있는 MulterProvider 클래스를 넣으려 하였지만
    이유는 알 수 없는데 this 사용이 불가하여 DI된 MulterProvider를 인수로 넣어줄 수가 없다.
    reason: 데코레이터에는 this 사용이 불가능하다.
+
+5. '이미지 준비 중 입니다' 이미지를 이미지가 첨가되지 않은 상품에 사용하기 위해  
+   uploads/image 디렉터리에서 fs 모듈을 이용해 해당 이미지를 읽어들이고 문자열화 하면 문자열이 깨져서 나오게 된다. 이미지 형식(png, jpg, jpeg)이라 그런듯 하다.

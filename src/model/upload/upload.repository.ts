@@ -38,7 +38,14 @@ export class UploadRepository {
     return { name: originalName, url: fileNameOnUrl };
   }
 
-  async findImageIdWithUploadedImage(
+  async findImageForProductWithoutImage(): Promise<ImagesEntity> {
+    return await this.imagesRepository
+      .createQueryBuilder("i")
+      .where("i.id = :id", { id: "a63f7beb-e136-4492-b3a9-673bbcb9c4f6" })
+      .getOne();
+  }
+
+  async findImageWithUploadedImage(
     imageId: ImagesEntity | string,
   ): Promise<ImagesEntity> {
     return await this.imagesRepository.findOne({
