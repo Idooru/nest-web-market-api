@@ -28,7 +28,9 @@ export const typeORMConfig: TypeOrmModuleOptions = {
     ImagesEntity,
     VideosEntity,
   ],
-  synchronize: true,
+  migrations: [__dirname, "/src/migrations/*.ts"],
+  cli: { migrationsDir: "src/migrations" },
+  synchronize: false,
   logging: false,
   keepConnectionAlive: true,
 };
