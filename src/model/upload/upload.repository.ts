@@ -22,7 +22,7 @@ export class UploadRepository {
     const { uploader, url } = imageUploadDto;
     const fileNameOnUrl =
       `http://localhost:${process.env.PORT}/media/${url}`.toLowerCase();
-    const uploadReason = url.includes("productImagePreparation")
+    const uploadReason = url.includes("imagepreparation")
       ? "product no image"
       : "product image";
 
@@ -49,7 +49,7 @@ export class UploadRepository {
       .getOne();
   }
 
-  async findproductImagePreparation(): Promise<ImagesEntity> {
+  async findImagePreparation(): Promise<ImagesEntity> {
     try {
       return await this.imagesRepository
         .createQueryBuilder("i")
@@ -60,7 +60,7 @@ export class UploadRepository {
         .getOneOrFail();
     } catch (err) {
       throw new NotFoundException(
-        "상품 이미지 준비 이미지를 찾을 수가 없습니다. 먼저 상품 이미지 준비 이미지를 업로드 해주세요.",
+        "이미지 준비 이미지를 찾을 수가 없습니다. 먼저 이미지 준비 이미지를 업로드 해주세요.",
       );
     }
   }

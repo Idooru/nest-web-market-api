@@ -4,7 +4,7 @@ import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { Column, Entity, JoinColumn, OneToOne } from "typeorm";
 
-@Entity("products")
+@Entity("products", { synchronize: false })
 export class ProductEntity extends CommonEntity {
   @IsString()
   @IsNotEmpty()

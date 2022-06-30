@@ -3,7 +3,7 @@ import { ProductEntity } from "./../../product/product.entity";
 import { CommonEntity } from "../../../common/entities/common.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from "typeorm";
 
-@Entity("images")
+@Entity("images", { synchronize: false })
 export class ImagesEntity extends CommonEntity {
   @OneToOne(() => ProductEntity, (product: ProductEntity) => product, {
     onDelete: "CASCADE",

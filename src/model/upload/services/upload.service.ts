@@ -27,6 +27,7 @@ export class UploadService {
     const userAuthObject = await this.userRepository.findUserAuthWithNickName(
       jwtPayload.nickname,
     );
+
     const image = file.filename;
 
     return await this.uploadRepository.uploadImageForProduct({
@@ -35,7 +36,7 @@ export class UploadService {
     });
   }
 
-  async copyImageFromProductImagePreparation(
+  async copyImageFromImagePreparation(
     creater: string,
   ): Promise<ImageReturnDto> {
     const uploader = await this.userRepository.findUserAuthWithNickName(
@@ -43,16 +44,12 @@ export class UploadService {
     );
 
     // 상품 준비 이미지를 가져온다.
-    const productImagePreparation =
-      await this.uploadRepository.findproductImagePreparation();
-
-    const parseUrl = productImagePreparation.url.slice(28);
-
+    const imagePreparation = await this.uploadRepository.findImagePreparation();
+    const parseUrl = imagePreparation.url.slice(28);
     const src = path.join(__dirname, `../../../../uploads/image/${parseUrl}`);
-
     const dest = path.join(
       __dirname,
-      `../../../../uploads/image/productImagePreparation-${Date.now()}.jpg`,
+      `../../../../uploads/image/imagepreparation-${Date.now()}.jpg`,
     );
 
     fs.copyFileSync(src, dest);

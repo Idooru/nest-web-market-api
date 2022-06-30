@@ -44,8 +44,9 @@ export class ProductService {
     let getImage: ImagesEntity;
 
     if (!image) {
-      const result =
-        await this.uploadService.copyImageFromProductImagePreparation(creater);
+      const result = await this.uploadService.copyImageFromImagePreparation(
+        creater,
+      );
       getImage = await this.uploadRepository.findImageWithUrl(result.url);
     } else {
       getImage = await this.uploadRepository.findImageWithUrl(image);
@@ -81,8 +82,9 @@ export class ProductService {
     );
 
     if (!haveImage) {
-      const result =
-        await this.uploadService.copyImageFromProductImagePreparation(modifier);
+      const result = await this.uploadService.copyImageFromImagePreparation(
+        modifier,
+      );
       getImage = await this.uploadRepository.findImageWithUrl(result.url);
     } else {
       getImage = await this.uploadRepository.findImageWithUrl(haveImage.url);
