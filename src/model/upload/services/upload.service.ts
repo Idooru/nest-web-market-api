@@ -35,15 +35,20 @@ export class UploadService {
     });
   }
 
-  async copyImageAndUpload(creater: string): Promise<ImageReturnDto> {
+  async copyImageFromProductImagePreparation(
+    creater: string,
+  ): Promise<ImageReturnDto> {
     const uploader = await this.userRepository.findUserAuthWithNickName(
       creater,
     );
 
-    const src = path.join(
-      __dirname,
-      "../../../../uploads/image/productImagePreparation-1656508423234.jpg",
-    );
+    // 상품 준비 이미지를 가져온다.
+    const productImagePreparation =
+      await this.uploadRepository.findproductImagePreparation();
+
+    const parseUrl = productImagePreparation.url.slice(28);
+
+    const src = path.join(__dirname, `../../../../uploads/image/${parseUrl}`);
 
     const dest = path.join(
       __dirname,

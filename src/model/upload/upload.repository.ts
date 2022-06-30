@@ -1,6 +1,6 @@
 import { UserRepository } from "./../user/user.repository";
 import { ImageUploadDto } from "./dto/image-upload.dto";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ImagesEntity, VideosEntity } from "./entities/upload.entity";
 import { Repository } from "typeorm";
@@ -20,12 +20,16 @@ export class UploadRepository {
     imageUploadDto: ImageUploadDto,
   ): Promise<ImageReturnDto> {
     const { uploader, url } = imageUploadDto;
-    const fileNameOnUrl = `http://localhost:${process.env.PORT}/media/${url}`;
+    const fileNameOnUrl =
+      `http://localhost:${process.env.PORT}/media/${url}`.toLowerCase();
+    const uploadReason = url.includes("productImagePreparation")
+      ? "product no image"
+      : "product image";
 
     const image = await this.imagesRepository.save({
       url: fileNameOnUrl,
       uploader,
-      uploadReason: "product upload",
+      uploadReason,
     });
 
     console.log(image);
@@ -35,7 +39,7 @@ export class UploadRepository {
       "",
     );
 
-    return { name: originalName, url: fileNameOnUrl };
+    return { name: originalName, url: fileNameOnUrl, uploadReason };
   }
 
   async findImageWithUrl(url: string): Promise<ImagesEntity> {
@@ -43,6 +47,22 @@ export class UploadRepository {
       .createQueryBuilder("i")
       .where("i.url = :url", { url })
       .getOne();
+  }
+
+  async findproductImagePreparation(): Promise<ImagesEntity> {
+    try {
+      return await this.imagesRepository
+        .createQueryBuilder("i")
+        .where("i.uploadReason = :uploadReason", {
+          uploadReason: "product no image",
+        })
+        .orderBy("i.createdAt", "ASC")
+        .getOneOrFail();
+    } catch (err) {
+      throw new NotFoundException(
+        "상품 이미지 준비 이미지를 찾을 수가 없습니다. 먼저 상품 이미지 준비 이미지를 업로드 해주세요.",
+      );
+    }
   }
 
   // async findImageWithoutImage(url: string): Promise<ImagesEntity> {

@@ -18,8 +18,11 @@ export class ImagesEntity extends CommonEntity {
   @JoinColumn({ name: "uploaderId", referencedColumnName: "id" })
   uploader: UserAuthEntity;
 
-  @Column({ type: "enum", enum: ["product upload", "review", "inquiry"] })
-  uploadReason: "product upload" | "review";
+  @Column({
+    type: "enum",
+    enum: ["product image", "product no image", "review", "inquiry"],
+  })
+  uploadReason: "product image" | "product no image" | "review" | "inquiry";
 }
 
 @Entity("videos")

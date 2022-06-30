@@ -45,7 +45,9 @@ export class UploadController {
       jwtPayload,
     );
 
-    res.cookie(ProductImageCookieKey, result.url, CookieOption);
+    if (result.uploadReason === "product image") {
+      res.cookie(ProductImageCookieKey, result.url, CookieOption);
+    }
 
     return {
       statusCode: 201,

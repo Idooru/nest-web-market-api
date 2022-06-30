@@ -30,7 +30,7 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   ],
   migrations: [__dirname, "/src/migrations/*.ts"],
   cli: { migrationsDir: "src/migrations" },
-  synchronize: false,
+  synchronize: true,
   logging: false,
   keepConnectionAlive: true,
 };
