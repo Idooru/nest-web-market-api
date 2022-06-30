@@ -14,7 +14,9 @@ export class ImagesEntity extends CommonEntity {
   @Column({ type: "varchar", nullable: false, unique: true })
   url: string;
 
-  @ManyToOne(() => UserAuthEntity, (Join) => Join.image)
+  @ManyToOne(() => UserAuthEntity, (Join) => Join.image, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "uploaderId", referencedColumnName: "id" })
   uploader: UserAuthEntity;
 

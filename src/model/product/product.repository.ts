@@ -61,7 +61,7 @@ export class ProductRepository {
       .orderBy("p.createdAt", "DESC")
       .getMany();
 
-    if (!found) {
+    if (!found.length) {
       throw new NotFoundException("데이터베이스에 상품이 존재하지 않습니다.");
     }
     return found;
@@ -75,7 +75,7 @@ export class ProductRepository {
       .orderBy("p.createdAt", "ASC")
       .getMany();
 
-    if (!found) {
+    if (!found.length) {
       throw new NotFoundException("데이터베이스에 상품이 존재하지 않습니다.");
     }
     return found;

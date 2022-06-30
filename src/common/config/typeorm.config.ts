@@ -28,10 +28,10 @@ export const typeORMConfig: TypeOrmModuleOptions = {
     ImagesEntity,
     VideosEntity,
   ],
-  autoLoadEntities: true,
   migrations: [__dirname, "/src/migrations/*.ts"],
   cli: { migrationsDir: "src/migrations" },
   synchronize: false,
   logging: false,
   keepConnectionAlive: true,
 };
+console.log(__dirname);

@@ -4,7 +4,7 @@ import { UserAuthEntity } from "./user.auth.entity";
 import { UserActivityEntity } from "./user.activity.entity";
 import { UserCommonEntity } from "./user.common.entity";
 
-@Entity("users")
+@Entity("users", { synchronize: false })
 export class UserEntity extends CommonEntity {
   @OneToOne(() => UserCommonEntity, (join) => join.id, { cascade: true })
   @JoinColumn({ name: "commonId" })

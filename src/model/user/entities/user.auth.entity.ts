@@ -10,7 +10,7 @@ import { Exclude } from "class-transformer";
 import { IsEmail, IsNotEmpty, IsString } from "class-validator";
 import { UserEntity } from "./user.entity";
 
-@Entity("users auth")
+@Entity("users auth", { synchronize: false })
 export class UserAuthEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
@@ -39,6 +39,6 @@ export class UserAuthEntity {
   @OneToOne(() => UserEntity, { onDelete: "CASCADE" })
   user: UserEntity;
 
-  @OneToMany(() => ImagesEntity, (join) => join.uploader)
+  @OneToMany(() => ImagesEntity, (join) => join.uploader, { cascade: true })
   image: ImagesEntity;
 }
