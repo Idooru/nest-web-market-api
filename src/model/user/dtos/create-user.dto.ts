@@ -1,9 +1,9 @@
 import { UserActivityEntity } from "./../entities/user.activity.entity";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
-import { UserCommonEntity } from "../entities/user.common.entity";
+import { UserProfileEntity } from "../entities/user.profile.entity";
 
 export class CreateUserDto {
-  common: UserCommonEntity;
+  common: UserProfileEntity;
   auth: UserAuthEntity;
   activity: UserActivityEntity;
 }

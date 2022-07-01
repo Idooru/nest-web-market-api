@@ -1,10 +1,10 @@
-import { UserCommonEntity } from "./../entities/user.common.entity";
+import { UserProfileEntity } from "../entities/user.profile.entity";
 import { PickType } from "@nestjs/swagger";
 import { IntersectionType } from "@nestjs/swagger";
 import { IsNotEmpty, IsString, Matches } from "class-validator";
 import { UserAuthEntity } from "../entities/user.auth.entity";
 
-export class RegisterUserCommonDto extends PickType(UserCommonEntity, [
+export class RegisterUserCommonDto extends PickType(UserProfileEntity, [
   "realname",
   "birth",
   "gender",

@@ -2,19 +2,22 @@ import { CommonEntity } from "../../../common/entities/common.entity";
 import { Entity, JoinColumn, OneToOne } from "typeorm";
 import { UserAuthEntity } from "./user.auth.entity";
 import { UserActivityEntity } from "./user.activity.entity";
-import { UserCommonEntity } from "./user.common.entity";
+import { UserProfileEntity } from "./user.profile.entity";
 
-@Entity("users", { synchronize: false })
+@Entity("users")
 export class UserEntity extends CommonEntity {
-  @OneToOne(() => UserCommonEntity, (join) => join.id, { cascade: true })
-  @JoinColumn({ name: "commonId" })
-  common: UserCommonEntity;
+  @OneToOne(() => UserProfileEntity, (common) => common.id)
+  @JoinColumn({ name: "commonId", referencedColumnName: "id" })
+  common: UserProfileEntity;
 
-  @OneToOne(() => UserAuthEntity, (join) => join.id, { cascade: true })
-  @JoinColumn({ name: "authId" })
+  @OneToOne(() => UserAuthEntity, (auth) => auth.id)
+  @JoinColumn({ name: "authId", referencedColumnName: "id" })
   auth: UserAuthEntity;
 
-  @OneToOne(() => UserActivityEntity, (join) => join.id, { cascade: true })
-  @JoinColumn({ name: "activityId" })
+  @OneToOne(() => UserActivityEntity, (activity) => activity.id)
+  @JoinColumn({ name: "activityId", referencedColumnName: "id" })
   activity: UserActivityEntity;
 }
+
+("atoB");
+("AtoB");

@@ -1,6 +1,6 @@
 import { UserActivityEntity } from "./../entities/user.activity.entity";
 import { PickType } from "@nestjs/mapped-types";
-import { UserCommonEntity } from "../entities/user.common.entity";
+import { UserProfileEntity } from "../entities/user.profile.entity";
 import { UserEntity } from "../entities/user.entity";
 import { UserAuthEntity } from "../entities/user.auth.entity";
 import { IntersectionType } from "@nestjs/swagger";
@@ -9,7 +9,7 @@ export class ResponseUserCoreDto extends PickType(UserEntity, [
   "id",
 ] as const) {}
 
-export class ResponseUserCommonDto extends PickType(UserCommonEntity, [
+export class ResponseUserCommonDto extends PickType(UserProfileEntity, [
   "realname",
   "birth",
   "gender",

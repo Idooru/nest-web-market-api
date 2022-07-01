@@ -8,8 +8,8 @@ import {
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "./user.entity";
 
-@Entity("users common")
-export class UserCommonEntity {
+@Entity("users profile")
+export class UserProfileEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
@@ -33,6 +33,6 @@ export class UserCommonEntity {
   @Column({ type: "varchar", length: 15, unique: true, nullable: false })
   phonenumber: string;
 
-  @OneToOne(() => UserEntity, { onDelete: "CASCADE" })
+  @OneToOne(() => UserEntity)
   user: UserEntity;
 }

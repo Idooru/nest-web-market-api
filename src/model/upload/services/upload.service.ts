@@ -24,7 +24,7 @@ export class UploadService {
       );
     }
 
-    const userAuthObject = await this.userRepository.findUserAuthWithNickName(
+    const user = await this.userRepository.findUserWithNickName(
       jwtPayload.nickname,
     );
 
@@ -32,16 +32,14 @@ export class UploadService {
 
     return await this.uploadRepository.uploadImageForProduct({
       url: image,
-      uploader: userAuthObject,
+      uploader: user,
     });
   }
 
   async copyImageFromImagePreparation(
     creater: string,
   ): Promise<ImageReturnDto> {
-    const uploader = await this.userRepository.findUserAuthWithNickName(
-      creater,
-    );
+    const uploader = await this.userRepository.findUserWithNickName(creater);
 
     // 상품 준비 이미지를 가져온다.
     const imagePreparation = await this.uploadRepository.findImagePreparation();

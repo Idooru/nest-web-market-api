@@ -70,8 +70,8 @@ export class ProductRepository {
   async findProductsAllFromOldest(): Promise<ProductEntity[]> {
     const found = await this.productRepository
       .createQueryBuilder("p")
-      .innerJoin("p.image", "i")
       .select(ProductsReturnProperty)
+      .innerJoin("p.image", "i")
       .orderBy("p.createdAt", "ASC")
       .getMany();
 
@@ -85,8 +85,8 @@ export class ProductRepository {
     try {
       return await this.productRepository
         .createQueryBuilder("p")
-        .innerJoin("p.image", "i")
         .select(ProductReturnProperty)
+        .innerJoin("p.image", "i")
         .where("p.name = :name", { name })
         .getOneOrFail();
     } catch (err) {
@@ -98,8 +98,8 @@ export class ProductRepository {
     try {
       return await this.productRepository
         .createQueryBuilder("p")
-        .innerJoin("p.image", "i")
         .select(ProductReturnProperty)
+        .innerJoin("p.image", "i")
         .where("p.id = :id", { id })
         .getOneOrFail();
     } catch (err) {

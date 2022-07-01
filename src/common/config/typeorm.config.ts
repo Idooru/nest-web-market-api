@@ -1,9 +1,10 @@
+import { ReviewEntity } from "./../../model/review/entities/review.entity";
 import {
   ImagesEntity,
   VideosEntity,
 } from "./../../model/upload/entities/upload.entity";
 import { ProductEntity } from "./../../model/product/product.entity";
-import { UserCommonEntity } from "../../model/user/entities/user.common.entity";
+import { UserProfileEntity } from "../../model/user/entities/user.profile.entity";
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { UserActivityEntity } from "src/model/user/entities/user.activity.entity";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
@@ -21,17 +22,17 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   database: "nestWebMarket_API",
   entities: [
     UserEntity,
-    UserCommonEntity,
+    UserProfileEntity,
     UserAuthEntity,
     UserActivityEntity,
     ProductEntity,
     ImagesEntity,
     VideosEntity,
+    ReviewEntity,
   ],
   migrations: [__dirname, "/src/migrations/*.ts"],
   cli: { migrationsDir: "src/migrations" },
-  synchronize: false,
+  synchronize: true,
   logging: false,
   keepConnectionAlive: true,
 };
-console.log(__dirname);

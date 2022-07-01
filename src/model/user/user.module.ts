@@ -4,7 +4,7 @@ import { UploadService } from "./../upload/services/upload.service";
 import { UploadModule } from "./../upload/upload.module";
 import { AuthModule } from "./../auth/auth.module";
 import { UserRepository } from "./user.repository";
-import { UserCommonEntity } from "./entities/user.common.entity";
+import { UserProfileEntity } from "./entities/user.profile.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { forwardRef, Module } from "@nestjs/common";
 import { UserController } from "./controllers/user.controller";
@@ -16,7 +16,7 @@ import { EtcModule } from "../etc/etc.module";
   imports: [
     TypeOrmModule.forFeature([
       UserEntity,
-      UserCommonEntity,
+      UserProfileEntity,
       UserAuthEntity,
       UserActivityEntity,
     ]),

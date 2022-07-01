@@ -3,7 +3,7 @@ import { UserActivityEntity } from "./entities/user.activity.entity";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
 import { PatchUserDto } from "./dtos/patch-user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
-import { UserCommonEntity } from "./entities/user.common.entity";
+import { UserProfileEntity } from "./entities/user.profile.entity";
 import { Repository } from "typeorm";
 import { RegisterUserDto } from "./dtos/register-user.dto";
 import { UserEntity } from "./entities/user.entity";
@@ -17,8 +17,8 @@ export class UserRepository {
     private readonly functions: Functions,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    @InjectRepository(UserCommonEntity)
-    private readonly userCommonRepository: Repository<UserCommonEntity>,
+    @InjectRepository(UserProfileEntity)
+    private readonly userCommonRepository: Repository<UserProfileEntity>,
     @InjectRepository(UserAuthEntity)
     private readonly userAuthRepository: Repository<UserAuthEntity>,
     @InjectRepository(UserActivityEntity)

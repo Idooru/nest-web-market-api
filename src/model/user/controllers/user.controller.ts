@@ -61,7 +61,7 @@ export class UserController {
   }
 
   @UseGuards(IsLoginGuard)
-  @Get("/whoami")
+  @Get("/profile")
   async whoAmI(
     @GetDecodedJwt() jwtPayload: JwtPayload,
   ): Promise<JSON<ResponseUserDto>> {

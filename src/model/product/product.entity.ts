@@ -2,9 +2,10 @@ import { ImagesEntity } from "./../upload/entities/upload.entity";
 import { float } from "aws-sdk/clients/lightsail";
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
-import { Column, Entity, JoinColumn, OneToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToMany, OneToOne } from "typeorm";
+import { ReviewEntity } from "../review/entities/review.entity";
 
-@Entity("products", { synchronize: false })
+@Entity("products")
 export class ProductEntity extends CommonEntity {
   @IsString()
   @IsNotEmpty()
@@ -37,7 +38,10 @@ export class ProductEntity extends CommonEntity {
   @Column({ type: "float", default: 0.0 })
   rating: float;
 
-  @OneToOne(() => ImagesEntity, (image) => image.product, { cascade: true })
-  @JoinColumn({ name: "imageId" })
+  @OneToOne(() => ImagesEntity, (image) => image.product)
+  @JoinColumn({ name: "imageId", referencedColumnName: "id" })
   image: ImagesEntity;
+
+  @ManyToMany(() => ReviewEntity, (review) => review.product)
+  review: ReviewEntity[];
 }

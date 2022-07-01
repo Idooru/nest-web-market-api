@@ -1,5 +1,5 @@
 import { UserActivityEntity } from "src/model/user/entities/user.activity.entity";
-import { UserCommonEntity } from "../user/entities/user.common.entity";
+import { UserProfileEntity } from "../user/entities/user.profile.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthRepository } from "./auth.repository";
 import { JwtStrategy } from "./jwt.strategy";
@@ -20,7 +20,7 @@ import { EtcModule } from "../etc/etc.module";
     PassportModule.register({ defaultStrategy: "jwt", session: false }),
     TypeOrmModule.forFeature([
       UserEntity,
-      UserCommonEntity,
+      UserProfileEntity,
       UserAuthEntity,
       UserActivityEntity,
     ]),
