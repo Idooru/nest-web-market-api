@@ -18,7 +18,7 @@ import { LoginUserDto } from "../dtos/login-user.dto";
 import { Response } from "express";
 import { CookieOption } from "../../../common/config/etc";
 import { JSON } from "../../../common/interfaces/json-success.interface";
-import { ResponseUserDto } from "../dtos/response-user.dto";
+import { UserEntity } from "../entities/user.entity";
 import { PatchUserDto } from "../dtos/patch-user.dto";
 import { ResetPasswordDto } from "../dtos/reset-password.dto";
 import { GetDecodedJwt } from "../../../common/decorators/get-decoded-jwt.decorator";
@@ -64,7 +64,7 @@ export class UserController {
   @Get("/profile")
   async whoAmI(
     @GetDecodedJwt() jwtPayload: JwtPayload,
-  ): Promise<JSON<ResponseUserDto>> {
+  ): Promise<JSON<UserEntity>> {
     return {
       statusCode: 200,
       message: "본인 정보를 가져옵니다.",

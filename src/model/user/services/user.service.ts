@@ -8,6 +8,7 @@ import { UserReturnFilter } from "../dtos/response-user.dto";
 import { AuthService } from "../../auth/services/auth.service";
 import { UploadService } from "src/model/upload/services/upload.service";
 import { Functions } from "src/model/etc/providers/functions";
+import { UserEntity } from "../entities/user.entity";
 
 import * as bcrypt from "bcrypt";
 
@@ -40,16 +41,8 @@ export class UserService {
     await this.userRepository.createUser(registerUserDto, hashed);
   }
 
-  async findSelfInfoWithId(userId: string): Promise<ResponseUserDto> {
-    const user = await this.userRepository.findUserWithId(userId);
-
-    // const image = await this.uploadService.getImageFileNameWithUserId(
-    //   userId,
-    // );
-
-    // await this.userRepository.insertImageForUserActivity(userId, image);
-
-    return this.userReturnFilter(user);
+  async findSelfInfoWithId(userId: string): Promise<UserEntity> {
+    return await this.userRepository.findUserProfileInfoWithId(userId);
   }
 
   async patchUserInfoMyself(
@@ -57,9 +50,9 @@ export class UserService {
     userId: string,
   ): Promise<string> {
     const { nickname, phonenumber } = patchUserDto;
-    const myInfo = await this.findSelfInfoWithId(userId);
-    const myNickName = myInfo.nickname;
-    const myPhoneNumber = myInfo.phonenumber;
+    const user = await this.userRepository.findUserWithId(userId);
+    const myNickName = user.auth.nickname;
+    const myPhoneNumber = user.profile.phonenumber;
 
     const checkUserColumn = await Promise.allSettled([
       this.userRepository.checkUserNickNameWhenUpdate(myNickName, nickname),

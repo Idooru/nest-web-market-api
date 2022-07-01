@@ -9,6 +9,7 @@ import {
   JoinTable,
   ManyToMany,
   OneToOne,
+  RelationId,
 } from "typeorm";
 import { ReviewEntity } from "../review/entities/review.entity";
 

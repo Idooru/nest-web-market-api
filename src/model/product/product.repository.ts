@@ -22,8 +22,8 @@ export class ProductRepository {
 
   async checkProductNameToCreate(name: string): Promise<void> {
     const found = await this.productRepository
-      .createQueryBuilder("p")
-      .where("p.name = :name", { name })
+      .createQueryBuilder("product")
+      .where("product.name = :name", { name })
       .getOne();
 
     if (!found) {
@@ -34,8 +34,8 @@ export class ProductRepository {
 
   async checkProductNameToModify(replaceName: string, originalName: string) {
     const found = await this.productRepository
-      .createQueryBuilder("p")
-      .where("p.name = :name", { name: replaceName })
+      .createQueryBuilder("product")
+      .where("product.name = :name", { name: replaceName })
       .getOne();
 
     /* 바꿀 이름으로 찾은게 없거나 바꿔야 할 상품의 이름과 바꿀 이름이 동일 하다면 리턴함
@@ -46,7 +46,10 @@ export class ProductRepository {
   }
 
   async checkProductIdToExist(id: string) {
-    const found = await this.productRepository.findOne({ where: id });
+    const found = await this.productRepository
+      .createQueryBuilder("product")
+      .where("product.id = :id", { id })
+      .getOne();
 
     if (!found) {
       throw new BadRequestException("해당 상품 아이디는 존재하지 않습니다.");
@@ -55,10 +58,10 @@ export class ProductRepository {
 
   async findProductsAllFromLatest(): Promise<ProductEntity[]> {
     const found = await this.productRepository
-      .createQueryBuilder("p")
+      .createQueryBuilder("product")
       .select(ProductsReturnProperty)
-      .innerJoin("p.image", "i")
-      .orderBy("p.createdAt", "DESC")
+      .innerJoin("product.image", "image")
+      .orderBy("product.createdAt", "DESC")
       .getMany();
 
     if (!found.length) {
@@ -69,11 +72,10 @@ export class ProductRepository {
 
   async findProductsAllFromOldest(): Promise<ProductEntity[]> {
     const found = await this.productRepository
-      .createQueryBuilder("p")
+      .createQueryBuilder("product")
       .select(ProductsReturnProperty)
-      .innerJoin("p.image", "i")
-      .select(ProductReturnProperty)
-      .orderBy("p.createdAt", "ASC")
+      .innerJoin("product.image", "image")
+      .orderBy("product.createdAt", "ASC")
       .getMany();
 
     if (!found.length) {
@@ -85,10 +87,10 @@ export class ProductRepository {
   async findProductOneByName(name: string): Promise<ProductEntity> {
     try {
       return await this.productRepository
-        .createQueryBuilder("p")
+        .createQueryBuilder("product")
         .select(ProductReturnProperty)
-        .innerJoin("p.image", "i")
-        .where("p.name = :name", { name })
+        .innerJoin("product.image", "image")
+        .where("product.name = :name", { name })
         .getOneOrFail();
     } catch (err) {
       throw new NotFoundException("해당 상품이름은 존재하지 않습니다.");
@@ -98,10 +100,10 @@ export class ProductRepository {
   async findProductOneById(id: string): Promise<ProductEntity> {
     try {
       return await this.productRepository
-        .createQueryBuilder("p")
+        .createQueryBuilder("product")
         .select(ProductReturnProperty)
-        .innerJoin("p.image", "i")
-        .where("p.id = :id", { id })
+        .innerJoin("product.image", "image")
+        .where("product.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
       throw new NotFoundException("해당 상품 아이디는 존재하지 않습니다.");
@@ -110,7 +112,7 @@ export class ProductRepository {
 
   async createProduct(createProductDto: CreateProductDto): Promise<void> {
     await this.productRepository
-      .createQueryBuilder("p")
+      .createQueryBuilder("product")
       .insert()
       .into(ProductEntity)
       .values({ ...createProductDto })
@@ -122,9 +124,9 @@ export class ProductRepository {
     modifyProductDto: ModifyProductDto,
   ): Promise<void> {
     // await this.productRepository
-    //   .createQueryBuilder("p")
+    //   .createQueryBuilder("product")
     //   .update()
-    //   .where("p.id = :id", { id })
+    //   .where("product.id = :id", { id })
     //   .set({ ...modifyProductDto })
     //   .execute();
     await this.productRepository.update(id, { ...modifyProductDto });

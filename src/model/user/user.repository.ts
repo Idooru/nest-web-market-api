@@ -8,7 +8,6 @@ import { Repository } from "typeorm";
 import { RegisterUserDto } from "./dtos/register-user.dto";
 import { UserEntity } from "./entities/user.entity";
 import { CreateUserDto } from "./dtos/create-user.dto";
-import { UserObjectArray } from "src/common/config/etc";
 import { Functions } from "../etc/providers/functions";
 
 @Injectable()
@@ -27,9 +26,11 @@ export class UserRepository {
 
   async checkUserEmail(email: string): Promise<void> {
     const found = await this.userRepository
-      .createQueryBuilder("u")
-      .leftJoinAndSelect("u.auth", "a")
-      .where("a.email = :email", { email })
+      .createQueryBuilder("user")
+      .leftJoinAndSelect("user.profile", "profile")
+      .leftJoinAndSelect("user.auth", "auth")
+      .leftJoinAndSelect("user.activity", "activity")
+      .where("auth.email = :email", { email })
       .getOne();
 
     if (found) {
@@ -38,11 +39,13 @@ export class UserRepository {
   }
 
   async checkUserNickName(nickname: string): Promise<void> {
-    const found = await this.userRepository.createQueryBuilder("u");
-    // const found = await this.userRepository.findOne({
-    //   where: { auth: { nickname } },
-    //   relations: UserObjectArray,
-    // });
+    const found = await this.userRepository
+      .createQueryBuilder("user")
+      .leftJoinAndSelect("user.profile", "profile")
+      .leftJoinAndSelect("user.auth", "auth")
+      .leftJoinAndSelect("user.activity", "activity")
+      .where("auth.nickname = :nickname", { nickname })
+      .getOne();
 
     if (found) {
       throw new UnauthorizedException("해당 닉네임은 사용중입니다.");
@@ -50,10 +53,13 @@ export class UserRepository {
   }
 
   async checkUserPhoneNumber(phonenumber: string): Promise<void> {
-    const found = await this.userRepository.findOne({
-      where: { profile: { phonenumber } },
-      relations: UserObjectArray,
-    });
+    const found = await this.userRepository
+      .createQueryBuilder("user")
+      .leftJoinAndSelect("user.profile", "profile")
+      .leftJoinAndSelect("user.auth", "auth")
+      .leftJoinAndSelect("user.activity", "activity")
+      .where("profile.phonenumber = :phonenumber", { phonenumber })
+      .getOne();
 
     if (found) {
       throw new UnauthorizedException("해당 전화번호는 사용중입니다.");
@@ -64,10 +70,13 @@ export class UserRepository {
     myNickName: string,
     nickNameToUpdate: string,
   ): Promise<void> {
-    const found = await this.userRepository.findOne({
-      where: { auth: { nickname: nickNameToUpdate } },
-      relations: UserObjectArray,
-    });
+    const found = await this.userRepository
+      .createQueryBuilder("user")
+      .leftJoinAndSelect("user.profile", "profile")
+      .leftJoinAndSelect("user.auth", "auth")
+      .leftJoinAndSelect("user.activity", "activity")
+      .where("auth.nickname = :nickname", { nickname: nickNameToUpdate })
+      .getOne();
 
     // 찾은 닉네임이 없다는 것은 DB에 중복되는 닉네임이 없다는 뜻
     if (!found) return;
@@ -81,10 +90,15 @@ export class UserRepository {
     myPhoneNumber: string,
     phoneNumberToUpdate: string,
   ): Promise<void> {
-    const found = await this.userRepository.findOne({
-      where: { profile: { phonenumber: phoneNumberToUpdate } },
-      relations: UserObjectArray,
-    });
+    const found = await this.userRepository
+      .createQueryBuilder("user")
+      .leftJoinAndSelect("user.profile", "profile")
+      .leftJoinAndSelect("user.auth", "auth")
+      .leftJoinAndSelect("user.activity", "activity")
+      .where("profile.phonenumber = :phoennumber", {
+        phonenumber: phoneNumberToUpdate,
+      })
+      .getOne();
 
     // 찾은 전화번호가 없다는 것은 DB에 중복되는 전화번호가 없다는 뜻
     if (!found) return;
@@ -96,10 +110,13 @@ export class UserRepository {
 
   async findUserWithId(userId: string): Promise<UserEntity> {
     try {
-      return await this.userRepository.findOneOrFail({
-        where: { id: userId },
-        relations: UserObjectArray,
-      });
+      return await this.userRepository
+        .createQueryBuilder("user")
+        .leftJoinAndSelect("user.profile", "profile")
+        .leftJoinAndSelect("user.auth", "auth")
+        .leftJoinAndSelect("user.activity", "activity")
+        .where("user.id = :id", { id: userId })
+        .getOneOrFail();
     } catch (err) {
       throw new UnauthorizedException("해당 사용자아이디는 존재하지 않습니다.");
     }
@@ -107,10 +124,13 @@ export class UserRepository {
 
   async findUserWithEmail(email: string): Promise<UserEntity> {
     try {
-      return await this.userRepository.findOneOrFail({
-        where: { auth: { email } },
-        relations: UserObjectArray,
-      });
+      return await this.userRepository
+        .createQueryBuilder("user")
+        .leftJoinAndSelect("user.profile", "profile")
+        .leftJoinAndSelect("user.auth", "auth")
+        .leftJoinAndSelect("user.activity", "activity")
+        .where("auth.email = :email", { email })
+        .getOneOrFail();
     } catch (err) {
       throw new UnauthorizedException("해당 이메일은 존재하지 않습니다.");
     }
@@ -118,13 +138,27 @@ export class UserRepository {
 
   async findUserWithNickName(nickname: string): Promise<UserEntity> {
     try {
-      return await this.userRepository.findOneOrFail({
-        where: { auth: { nickname } },
-        relations: UserObjectArray,
-      });
+      return await this.userRepository
+        .createQueryBuilder("user")
+        .leftJoinAndSelect("user.profile", "profile")
+        .leftJoinAndSelect("user.auth", "auth")
+        .leftJoinAndSelect("user.activity", "activity")
+        .where("auth.nickname = :nickname", { nickname })
+        .getOneOrFail();
     } catch (err) {
       throw new UnauthorizedException("해당 닉네임은 존재하지 않습니다.");
     }
+  }
+
+  async findUserProfileInfoWithId(userId: string): Promise<UserEntity> {
+    const a = await this.userRepository
+      .createQueryBuilder("user")
+      .innerJoin("user.profile", "profile")
+      .select(["user.profile.realname"])
+      .where("user.id = :id", { id: userId })
+      .getOne();
+
+    return a;
   }
 
   async createUser(
@@ -137,7 +171,7 @@ export class UserRepository {
 
     const userProfileColumn = { realname, birth, gender, phonenumber };
     const userAuthColumn = { nickname, email, password };
-    const userActivityColumn = { bonusPoint: 0, howMuchBuy: 0 };
+    const userActivityColumn = {};
 
     const saveUserColumn = await Promise.allSettled([
       this.userProfileRepository.save({ ...userProfileColumn }),
@@ -205,11 +239,11 @@ export class UserRepository {
   }
 
   async deleteUser(userId: string): Promise<void> {
-    const userObject = await this.findUserWithId(userId);
+    const user = await this.findUserWithId(userId);
 
-    const userProfileId = userObject.profile.id;
-    const userAuthId = userObject.auth.id;
-    const userActivityId = userObject.activity.id;
+    const userProfileId = user.profile.id;
+    const userAuthId = user.auth.id;
+    const userActivityId = user.activity.id;
 
     const deleteObject = await Promise.allSettled([
       this.userRepository.delete({ id: userId }),

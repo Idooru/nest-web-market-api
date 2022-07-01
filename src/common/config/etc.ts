@@ -11,25 +11,37 @@ export const JwtOptions: JwtModuleOptions = {
   secret: process.env.JWT_SECRET,
 };
 
-export const UserObjectArray = ["profile", "auth", "activity"];
-
 export const ProductsReturnProperty = [
-  "p.name",
-  "p.price",
-  "p.type",
-  "i.url",
-  "p.rating",
+  "product.name",
+  "product.price",
+  "product.type",
+  "image.url",
+  "product.rating",
 ];
 
 export const ProductReturnProperty = [
-  "p.id",
-  "p.name",
-  "p.price",
-  "p.origin",
-  "p.type",
-  "p.description",
-  "i.url",
-  "p.rating",
-  "p.createdAt",
-  "p.updatedAt",
+  "product.id",
+  "product.name",
+  "product.price",
+  "product.origin",
+  "product.type",
+  "product.description",
+  "image.url",
+  "product.rating",
+  "product.createdAt",
+  "product.updatedAt",
+];
+
+export const UserInformationReturnProperty = [
+  "profile.realname",
+  "auth.nickname",
+  "profile.birth",
+  "profile.gender",
+  "auth.email",
+  "profile.phonenumber",
+  "auth.userType",
+  "activity.purchaseCount",
+  "activity.bonusPoint",
+  "activity.productInquiryCount",
+  "activity.productReviewCount",
 ];
