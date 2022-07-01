@@ -1,10 +1,16 @@
 import { Injectable } from "@nestjs/common";
+import { JwtPayload } from "src/common/interfaces/jwt-payload.interface";
 import { CreateReviewDto } from "./dto/create-review.dto";
 import { UpdateReviewDto } from "./dto/update-review.dto";
 
 @Injectable()
 export class ReviewService {
-  create(createReviewDto: CreateReviewDto) {
+  async createReview(
+    createReviewDto: CreateReviewDto,
+    jwtPayload: JwtPayload,
+    image?: string[],
+    video?: string[],
+  ): Promise<any> {
     return "This action adds a new review";
   }
 

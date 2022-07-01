@@ -21,7 +21,6 @@ import { ModifyProductDto } from "../dto/modify_product.dto";
 import { ProductService } from "./../services/product.service";
 import { IsAdminGuard } from "../../../common/guards/is-admin.guard";
 import { IsLoginGuard } from "../../../common/guards/is-login.guard";
-import { ProductImageCookieKey } from "./../../../common/config/etc";
 import { Response } from "express";
 import { Cookies } from "src/common/decorators/cookies.decorator";
 import { GetDecodedJwt } from "src/common/decorators/get-decoded-jwt.decorator";
@@ -77,7 +76,7 @@ export class ProductController {
     @Body()
     createProductDto: CreateProductDto,
     @GetDecodedJwt() jwtPayload: JwtPayload,
-    @Cookies(ProductImageCookieKey) productImg: string | null,
+    @Cookies("productImageUrl") productImg: string | null,
     @Res() res: Response,
   ): Promise<JSON<void>> {
     await this.productService.createProduct(
@@ -87,7 +86,7 @@ export class ProductController {
     );
 
     try {
-      res.clearCookie(ProductImageCookieKey);
+      res.clearCookie("productImageUrl");
     } catch (err) {
       throw new NotFoundException("쿠키가 변조 되었습니다.");
     }
@@ -106,7 +105,7 @@ export class ProductController {
     productId: string,
     @Body() modifyProductDto: ModifyProductDto,
     @GetDecodedJwt() JwtPayload: JwtPayload,
-    @Cookies(ProductImageCookieKey) productImg: string | null,
+    @Cookies("productImageUrl") productImg: string | null,
     @Res() res: Response,
   ): Promise<JSON<string>> {
     await this.productService.modifyProduct(
@@ -117,7 +116,7 @@ export class ProductController {
     );
 
     try {
-      res.clearCookie(ProductImageCookieKey);
+      res.clearCookie("productImageUrl");
     } catch (err) {
       throw new NotFoundException("쿠키가 변조 되었습니다.");
     }

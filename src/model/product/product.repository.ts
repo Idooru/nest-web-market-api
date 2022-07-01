@@ -72,6 +72,7 @@ export class ProductRepository {
       .createQueryBuilder("p")
       .select(ProductsReturnProperty)
       .innerJoin("p.image", "i")
+      .select(ProductReturnProperty)
       .orderBy("p.createdAt", "ASC")
       .getMany();
 

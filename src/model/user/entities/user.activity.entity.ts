@@ -28,6 +28,6 @@ export class UserActivityEntity {
   @OneToOne(() => UserEntity)
   user: UserEntity;
 
-  @OneToMany(() => ReviewEntity, (review) => review.commenter)
+  @OneToMany(() => ReviewEntity, (review) => review.reviewer)
   review: ReviewEntity;
 }

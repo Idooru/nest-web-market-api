@@ -7,11 +7,7 @@ import {
   Res,
   UploadedFiles,
 } from "@nestjs/common";
-import {
-  CookieOption,
-  VideoCookieKey,
-  ProductImageCookieKey,
-} from "src/common/config/etc";
+import { CookieOption } from "src/common/config/etc";
 import { UploadService } from "../../upload/services/upload.service";
 import { ImageReturnDto } from "../../upload/dto/image-return.dto";
 import { IsLoginGuard } from "../../../common/guards/is-login.guard";
@@ -46,7 +42,7 @@ export class UploadController {
     );
 
     if (result.uploadReason === "product image") {
-      res.cookie(ProductImageCookieKey, result.url, CookieOption);
+      res.cookie("productImageUrl", result.url, CookieOption);
     }
 
     return {
@@ -56,26 +52,26 @@ export class UploadController {
     };
   }
 
-  // @UseGuards(IsLoginGuard)
-  // @UseInterceptors(FilesInterceptor("video", 3, MulterConfig.upload("video")))
-  // @Post("/video")
-  // async uploadVideo(
-  //   @UploadedFiles() files: Array<Express.Multer.File>,
-  //   @GetDecodedJwt() jwtPayload: JwtPayload,
-  //   @Res() res: Response,
-  // ) {
-  //   console.log("logging video info ->\n", files);
+  @UseGuards(IsLoginGuard)
+  @UseInterceptors(FilesInterceptor("video", 3, MulterConfig.upload("video")))
+  @Post("/video")
+  async uploadVideo(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @GetDecodedJwt() jwtPayload: JwtPayload,
+    @Res() res: Response,
+  ) {
+    console.log("logging video info ->\n", files);
 
-  //   const result = await this.uploadService.uploadVideo(files, jwtPayload);
+    const result = await this.uploadService.uploadVideo(files, jwtPayload);
 
-  //   // res.cookie(VideoCookieKey, result.url, CookieOption);
+    // res.cookie(VideoCookieKey, result.url, CookieOption);
 
-  //   return {
-  //     statusCode: 201,
-  //     message: "리뷰 동영상을 업로드 하였습니다.",
-  //     result,
-  //   };
-  // }
+    return {
+      statusCode: 201,
+      message: "리뷰 동영상을 업로드 하였습니다.",
+      result,
+    };
+  }
 
   // @UseGuards(IsLoginGuard)
   // // @UseInterceptors(FilesInterceptor("video", new MulterProvider().apply()))

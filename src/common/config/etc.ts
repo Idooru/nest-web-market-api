@@ -11,11 +11,7 @@ export const JwtOptions: JwtModuleOptions = {
   secret: process.env.JWT_SECRET,
 };
 
-export const ProductImageCookieKey = "productImageUrl";
-export const ProductCookieKey = "productUrl";
-export const VideoCookieKey = "videoUrl";
-
-export const UserObjectArray = ["common", "auth", "activity"];
+export const UserObjectArray = ["profile", "auth", "activity"];
 
 export const ProductsReturnProperty = [
   "p.name",

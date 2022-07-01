@@ -38,7 +38,7 @@ export class ProductService {
   async createProduct(
     createProductDto: CreateProductDto,
     creater: string,
-    image: string | null,
+    image?: string,
   ): Promise<void> {
     const { name } = createProductDto;
     let getImage: ImagesEntity;
@@ -62,7 +62,7 @@ export class ProductService {
     id: string,
     modifyProductDto: ModifyProductDto,
     modifier: string,
-    image: string | null,
+    image?: string,
   ): Promise<void> {
     const { name } = modifyProductDto;
     let getImage: ImagesEntity;

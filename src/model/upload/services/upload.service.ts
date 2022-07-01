@@ -3,6 +3,7 @@ import { UploadRepository } from "../../upload/upload.repository";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { ImageReturnDto } from "../../upload/dto/image-return.dto";
 import { JwtPayload } from "src/common/interfaces/jwt-payload.interface";
+import { VideoReturnDto } from "../dto/video-return.dto";
 
 import * as fs from "fs";
 import * as path from "path";
@@ -63,44 +64,46 @@ export class UploadService {
     });
   }
 
-  // async uploadVideo(
-  //   files: Array<Express.Multer.File>,
-  //   jwtPayload: JwtPayload,
-  // ): Promise<void> {
-  //   const videoUrls: VideoReturnDto[] = [];
-  //   const author = jwtPayload.nickname;
+  async uploadVideo(
+    files: Array<Express.Multer.File>,
+    jwtPayload: JwtPayload,
+  ): Promise<void> {
+    const videoUrls: VideoReturnDto[] = [];
+    const uploader = jwtPayload.nickname;
 
-  //   if (!files.length) {
-  //     throw new BadRequestException(
-  //       "동영상을 업로드 할 수 없습니다. 동영상을 제시해주세요.",
-  //     );
-  //   } else if (files.length >= 2) {
-  //     for (const index of files) {
-  //       const fileName = index.filename;
-  //       const originalName = index.originalname;
-  //       videoUrls.push(
-  //         await this.uploadRepository.uploadImg({
-  //           fileName,
-  //           author,
-  //           originalName,
-  //         }),
-  //       );
-  //     }
-  //   } else {
-  //     const fileName = files[0].filename;
-  //     const originalName = files[0].originalname;
+    if (!files.length) {
+      throw new BadRequestException(
+        "동영상을 업로드 할 수 없습니다. 동영상을 제시해주세요.",
+      );
+    } else if (files.length >= 2) {
+      for (const index of files) {
+        const fileName = index.filename;
+        const originalName = index.originalname;
+        videoUrls
+          .push
+          // await this.uploadRepository.uploadVideo({
+          //   fileName,
+          //   uploader,
+          //   originalName,
+          // }),
+          ();
+      }
+    } else {
+      const fileName = files[0].filename;
+      const originalName = files[0].originalname;
 
-  //     videoUrls.push(
-  //       await this.uploadRepository.uploadImg({
-  //         fileName,
-  //         author,
-  //         originalName,
-  //       }),
-  //     );
-  //   }
+      videoUrls
+        .push
+        // await this.uploadRepository.uploadVideo({
+        //   fileName,
+        //   uploader,
+        //   originalName,
+        // }),
+        ();
+    }
 
-  //   return videoUrls;
-  // }
+    // return videoUrls;
+  }
 
   // create(createUploadDto: ImageUploadDto) {
   //   return "This action adds a new upload";

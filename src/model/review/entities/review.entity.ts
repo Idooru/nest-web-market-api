@@ -22,7 +22,7 @@ export class ReviewEntity extends CommonEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.activity.review)
   @JoinColumn({ name: "commenterId", referencedColumnName: "id" })
-  commenter: UserEntity;
+  reviewer: UserEntity;
 
   @ManyToMany(() => ProductEntity, (product) => product.review)
   product: ProductEntity[];

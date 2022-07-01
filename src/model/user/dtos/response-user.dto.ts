@@ -4,12 +4,13 @@ import { UserProfileEntity } from "../entities/user.profile.entity";
 import { UserEntity } from "../entities/user.entity";
 import { UserAuthEntity } from "../entities/user.auth.entity";
 import { IntersectionType } from "@nestjs/swagger";
+import { profile } from "console";
 
 export class ResponseUserCoreDto extends PickType(UserEntity, [
   "id",
 ] as const) {}
 
-export class ResponseUserCommonDto extends PickType(UserProfileEntity, [
+export class ResponseUserProfileDto extends PickType(UserProfileEntity, [
   "realname",
   "birth",
   "gender",
@@ -31,7 +32,7 @@ export class ResponseUserActivityDto extends PickType(UserActivityEntity, [
 
 export class ResponsePartialOneUserDto extends IntersectionType(
   ResponseUserCoreDto,
-  ResponseUserCommonDto,
+  ResponseUserProfileDto,
 ) {}
 
 export class ResponsePartialTwoUserDto extends IntersectionType(
@@ -46,12 +47,12 @@ export class ResponseUserDto extends IntersectionType(
 
 export const UserReturnFilter = (user: UserEntity): ResponseUserDto => ({
   id: user.id,
-  realname: user.common.realname,
+  realname: user.profile.realname,
   nickname: user.auth.nickname,
-  birth: user.common.birth,
-  gender: user.common.gender,
+  birth: user.profile.birth,
+  gender: user.profile.gender,
   email: user.auth.email,
-  phonenumber: user.common.phonenumber,
+  phonenumber: user.profile.phonenumber,
   userType: user.auth.userType,
   purchaseCount: user.activity.purchaseCount,
   bonusPoint: user.activity.bonusPoint,

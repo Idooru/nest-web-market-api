@@ -2,7 +2,14 @@ import { ImagesEntity } from "./../upload/entities/upload.entity";
 import { float } from "aws-sdk/clients/lightsail";
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
-import { Column, Entity, JoinColumn, ManyToMany, OneToOne } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  OneToOne,
+} from "typeorm";
 import { ReviewEntity } from "../review/entities/review.entity";
 
 @Entity("products")

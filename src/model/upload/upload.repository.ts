@@ -42,6 +42,8 @@ export class UploadRepository {
     return { name: originalName, url: fileNameOnUrl, uploadReason };
   }
 
+  // async uploadVideo() {}
+
   async findImageWithUrl(url: string): Promise<ImagesEntity> {
     return await this.imagesRepository
       .createQueryBuilder("i")

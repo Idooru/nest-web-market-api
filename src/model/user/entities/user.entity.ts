@@ -8,7 +8,7 @@ import { UserProfileEntity } from "./user.profile.entity";
 export class UserEntity extends CommonEntity {
   @OneToOne(() => UserProfileEntity, (common) => common.id)
   @JoinColumn({ name: "commonId", referencedColumnName: "id" })
-  common: UserProfileEntity;
+  profile: UserProfileEntity;
 
   @OneToOne(() => UserAuthEntity, (auth) => auth.id)
   @JoinColumn({ name: "authId", referencedColumnName: "id" })
@@ -18,6 +18,3 @@ export class UserEntity extends CommonEntity {
   @JoinColumn({ name: "activityId", referencedColumnName: "id" })
   activity: UserActivityEntity;
 }
-
-("atoB");
-("AtoB");
