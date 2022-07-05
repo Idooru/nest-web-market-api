@@ -62,16 +62,15 @@ export class UploadController {
   ) {
     console.log("logging video info ->\n", files);
 
-    const result = await this.uploadService.uploadImage(files, jwtPayload);
+    const image = await this.uploadService.uploadImage(files, jwtPayload);
+    const urls = image.map((idx) => idx.url);
 
-    result.forEach((idx: MediaReturnDto) => {
-      res.cookie("reviewImageUrl", idx.url, CookieOption);
-    });
+    res.cookie("reviewImageUrl", urls, CookieOption);
 
     return {
       statusCode: 201,
       message: "리뷰 사진을 업로드 하였습니다.",
-      result,
+      result: image,
     };
   }
 
@@ -85,16 +84,15 @@ export class UploadController {
   ) {
     console.log("logging video info ->\n", files);
 
-    const result = await this.uploadService.uploadVideo(files, jwtPayload);
+    const video = await this.uploadService.uploadVideo(files, jwtPayload);
+    const urls = video.map((idx) => idx.url);
 
-    result.forEach((idx: MediaReturnDto) => {
-      res.cookie("reviewVideoUrl", idx.url, CookieOption);
-    });
+    res.cookie("reviewVideoUrl", urls, CookieOption);
 
     return {
       statusCode: 201,
       message: "리뷰 동영상을 업로드 하였습니다.",
-      result,
+      result: video,
     };
   }
 
@@ -108,16 +106,15 @@ export class UploadController {
   ) {
     console.log("logging video info ->\n", files);
 
-    const result = await this.uploadService.uploadImage(files, jwtPayload);
+    const image = await this.uploadService.uploadImage(files, jwtPayload);
+    const urls = image.map((idx) => idx.url);
 
-    result.forEach((idx: MediaReturnDto) => {
-      res.cookie("inquirtyImageUrl", idx.url, CookieOption);
-    });
+    res.cookie("inquirtyImageUrl", urls, CookieOption);
 
     return {
       statusCode: 201,
       message: "문의 사진을 업로드 하였습니다.",
-      result,
+      result: image,
     };
   }
 
@@ -131,16 +128,15 @@ export class UploadController {
   ) {
     console.log("logging video info ->\n", files);
 
-    const result = await this.uploadService.uploadVideo(files, jwtPayload);
+    const image = await this.uploadService.uploadVideo(files, jwtPayload);
+    const urls = image.map((idx) => idx.url);
 
-    result.forEach((idx: MediaReturnDto) => {
-      res.cookie("inquirtyVideoUrl", idx.url, CookieOption);
-    });
+    res.cookie("InquirtyVideoUrl", urls, CookieOption);
 
     return {
       statusCode: 201,
       message: "문의 동영상을 업로드 하였습니다.",
-      result,
+      result: image,
     };
   }
 

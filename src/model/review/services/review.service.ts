@@ -1,11 +1,27 @@
+import { UserRepository } from "./../../user/user.repository";
+import { ReviewRepository } from "./../review.repository";
 import { Injectable } from "@nestjs/common";
-import { CreateReviewDto } from "../dto/create-review.dto";
+import { CreateReviewVo } from "../dto/create-review.dto";
 import { UpdateReviewDto } from "../dto/update-review.dto";
 
 @Injectable()
 export class ReviewService {
-  create(createReviewDto: CreateReviewDto) {
-    return "This action adds a new review";
+  constructor(
+    private readonly reviewRepository: ReviewRepository,
+    private readonly userRepository: UserRepository,
+  ) {}
+
+  async createReview(createReviewDao: CreateReviewVo): Promise<any> {
+    const { createReviewDto, jwtPayload, reviewImg, reviewVdo } =
+      createReviewDao;
+    const { comments, rating } = createReviewDto;
+    const { nickname } = jwtPayload;
+
+    const user = await this.userRepository.findUserWithNickName(nickname);
+
+    if (reviewImg || reviewVdo) {
+      1;
+    }
   }
 
   findAll() {

@@ -18,10 +18,7 @@ export class UserService {
     private readonly functions: Functions,
     private readonly userRepository: UserRepository,
     private readonly authService: AuthService,
-    private readonly uploadService: UploadService,
   ) {}
-
-  private readonly userReturnFilter = UserReturnFilter;
 
   async register(registerUserDto: RegisterUserDto): Promise<void> {
     const { nickname, email, password, phonenumber } = registerUserDto;

@@ -8,6 +8,7 @@ import { typeORMConfig } from "./common/config/typeorm.config";
 import { ConfigModule } from "@nestjs/config";
 import { UploadModule } from "./model/upload/upload.module";
 import { EtcModule } from "./model/etc/etc.module";
+import { ReviewModule } from "./model/review/review.module";
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { EtcModule } from "./model/etc/etc.module";
     UserModule,
     ProductModule,
     UploadModule,
+    ReviewModule,
     EtcModule,
   ],
   controllers: [],

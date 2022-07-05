@@ -1,3 +1,4 @@
+import { ReviewModule } from "./../review/review.module";
 import { UserActivityEntity } from "./entities/user.activity.entity";
 import { UserAuthEntity } from "./entities/user.auth.entity";
 import { UploadService } from "./../upload/services/upload.service";
@@ -22,6 +23,7 @@ import { EtcModule } from "../etc/etc.module";
     ]),
     forwardRef(() => AuthModule),
     forwardRef(() => UploadModule),
+    forwardRef(() => ReviewModule),
     EtcModule,
   ],
   controllers: [UserController],

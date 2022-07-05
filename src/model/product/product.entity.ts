@@ -1,6 +1,6 @@
 import { ImagesEntity } from "./../upload/entities/upload.entity";
 import { float } from "aws-sdk/clients/lightsail";
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsDecimal, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
 import {
   Column,
@@ -43,8 +43,13 @@ export class ProductEntity extends CommonEntity {
   @Column({ type: "int", default: 50 })
   quantity: number;
 
+  @IsNumber()
+  @IsNotEmpty()
   @Column({ type: "float", default: 0.0 })
-  rating: float;
+  rating: number;
+
+  @Column({ type: "int", default: 0 })
+  ratingCount: number;
 
   @OneToOne(() => ImagesEntity, (image) => image.product)
   @JoinColumn({ name: "imageId", referencedColumnName: "id" })

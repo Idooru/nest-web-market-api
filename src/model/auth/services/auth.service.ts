@@ -1,10 +1,9 @@
-import { Functions } from "src/model/etc/providers/functions";
 import {
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
-  BadRequestException,
 } from "@nestjs/common";
+import { Functions } from "src/model/etc/providers/functions";
 import { ResetPasswordDto } from "./../../user/dtos/reset-password.dto";
 import { FindEmailDto } from "./../../user/dtos/find-email.dto";
 import { JwtService } from "@nestjs/jwt";

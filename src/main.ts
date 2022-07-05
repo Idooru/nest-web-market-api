@@ -26,10 +26,10 @@ async function bootstrap() {
   app.use(cookieParser(cookieSecret));
   app.use(helmet());
 
-  app.useStaticAssets(join(__dirname, "../uploads/image"), {
+  app.useStaticAssets(join(__dirname, "..", "uploads", "image"), {
     prefix: "/media",
   });
-  app.useStaticAssets(join(__dirname, "../uploads/video"), {
+  app.useStaticAssets(join(__dirname, "..", "uploads", "video"), {
     prefix: "/media",
   });
 
@@ -39,4 +39,3 @@ async function bootstrap() {
 }
 
 bootstrap();
-// help me!
