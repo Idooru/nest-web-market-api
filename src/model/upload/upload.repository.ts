@@ -1,10 +1,10 @@
 import { UserRepository } from "./../user/user.repository";
-import { ImageUploadDto } from "./dto/image-upload.dto";
+import { MediaUploadDto } from "./dto/media-upload.dto";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ImagesEntity, VideosEntity } from "./entities/upload.entity";
 import { Repository } from "typeorm";
-import { ImageReturnDto } from "./dto/image-return.dto";
+import { MediaReturnDto } from "./dto/media-return.dto";
 
 @Injectable()
 export class UploadRepository {
@@ -17,12 +17,12 @@ export class UploadRepository {
   ) {}
 
   async uploadImageForProduct(
-    imageUploadDto: ImageUploadDto,
-  ): Promise<ImageReturnDto> {
-    const { uploader, url } = imageUploadDto;
+    imageUploadDto: MediaUploadDto,
+  ): Promise<MediaReturnDto> {
+    const { media, uploader } = imageUploadDto;
     const fileNameOnUrl =
-      `http://localhost:${process.env.PORT}/media/${url}`.toLowerCase();
-    const uploadReason = url.includes("imagepreparation")
+      `http://localhost:${process.env.PORT}/media/${media}`.toLowerCase();
+    const uploadReason = media.includes("imagepreparation")
       ? "product no image"
       : "product image";
 
@@ -42,15 +42,6 @@ export class UploadRepository {
     return { name: originalName, url: fileNameOnUrl, uploadReason };
   }
 
-  // async uploadVideo() {}
-
-  async findImageWithUrl(url: string): Promise<ImagesEntity> {
-    return await this.imagesRepository
-      .createQueryBuilder("i")
-      .where("i.url = :url", { url })
-      .getOne();
-  }
-
   async findImagePreparation(): Promise<ImagesEntity> {
     try {
       return await this.imagesRepository
@@ -65,6 +56,101 @@ export class UploadRepository {
         "이미지 준비 이미지를 찾을 수가 없습니다. 먼저 이미지 준비 이미지를 업로드 해주세요.",
       );
     }
+  }
+
+  async uploadImageForReview(videoUploadDto: MediaUploadDto) {
+    const { media, uploader } = videoUploadDto;
+    const fileNameOnUrl =
+      `http://localhost:${process.env.PORT}/media/${media}`.toLowerCase();
+    const uploadReason = "review";
+
+    const image = await this.imagesRepository.save({
+      url: fileNameOnUrl,
+      uploader,
+      uploadReason,
+    });
+
+    console.log(image);
+
+    const originalName = fileNameOnUrl.replace(
+      `http://localhost:${process.env.PORT}/media/`,
+      "",
+    );
+
+    return { name: originalName, url: fileNameOnUrl, uploadReason };
+  }
+
+  async uploadVideoForReview(videoUploadDto: MediaUploadDto) {
+    const { media, uploader } = videoUploadDto;
+    const fileNameOnUrl =
+      `http://localhost:${process.env.PORT}/media/${media}`.toLowerCase();
+    const uploadReason = "review";
+
+    const video = await this.videosRepository.save({
+      url: fileNameOnUrl,
+      uploader,
+      uploadReason,
+    });
+
+    console.log(video);
+
+    const originalName = fileNameOnUrl.replace(
+      `http://localhost:${process.env.PORT}/media/`,
+      "",
+    );
+
+    return { name: originalName, url: fileNameOnUrl, uploadReason };
+  }
+
+  async uploadImageForInquiry(videoUploadDto: MediaUploadDto) {
+    const { media, uploader } = videoUploadDto;
+    const fileNameOnUrl =
+      `http://localhost:${process.env.PORT}/media/${media}`.toLowerCase();
+    const uploadReason = "inquiry";
+
+    const image = await this.imagesRepository.save({
+      url: fileNameOnUrl,
+      uploader,
+      uploadReason,
+    });
+
+    console.log(image);
+
+    const originalName = fileNameOnUrl.replace(
+      `http://localhost:${process.env.PORT}/media/`,
+      "",
+    );
+
+    return { name: originalName, url: fileNameOnUrl, uploadReason };
+  }
+
+  async uploadVideoForInquiry(videoUploadDto: MediaUploadDto) {
+    const { media, uploader } = videoUploadDto;
+    const fileNameOnUrl =
+      `http://localhost:${process.env.PORT}/media/${media}`.toLowerCase();
+    const uploadReason = "inquiry";
+
+    const video = await this.videosRepository.save({
+      url: fileNameOnUrl,
+      uploader,
+      uploadReason,
+    });
+
+    console.log(video);
+
+    const originalName = fileNameOnUrl.replace(
+      `http://localhost:${process.env.PORT}/media/`,
+      "",
+    );
+
+    return { name: originalName, url: fileNameOnUrl, uploadReason };
+  }
+
+  async findImageWithUrl(url: string): Promise<ImagesEntity> {
+    return await this.imagesRepository
+      .createQueryBuilder("i")
+      .where("i.url = :url", { url })
+      .getOne();
   }
 
   // async findImageWithoutImage(url: string): Promise<ImagesEntity> {

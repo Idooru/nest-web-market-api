@@ -1,9 +1,8 @@
 import { UserRepository } from "./../../user/user.repository";
 import { UploadRepository } from "../../upload/upload.repository";
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { ImageReturnDto } from "../../upload/dto/image-return.dto";
+import { MediaReturnDto } from "../dto/media-return.dto";
 import { JwtPayload } from "src/common/interfaces/jwt-payload.interface";
-import { VideoReturnDto } from "../dto/video-return.dto";
 
 import * as fs from "fs";
 import * as path from "path";
@@ -18,7 +17,7 @@ export class UploadService {
   async uploadImageForProduct(
     file: Express.Multer.File,
     jwtPayload: JwtPayload,
-  ): Promise<ImageReturnDto> {
+  ): Promise<MediaReturnDto> {
     if (!file) {
       throw new BadRequestException(
         "사진을 업로드 할 수 없습니다. 사진을 제시해 주세요.",
@@ -32,15 +31,15 @@ export class UploadService {
     const image = file.filename;
 
     return await this.uploadRepository.uploadImageForProduct({
-      url: image,
+      media: image,
       uploader: user,
     });
   }
 
   async copyImageFromImagePreparation(
     creater: string,
-  ): Promise<ImageReturnDto> {
-    const uploader = await this.userRepository.findUserWithNickName(creater);
+  ): Promise<MediaReturnDto> {
+    const user = await this.userRepository.findUserWithNickName(creater);
 
     // 상품 준비 이미지를 가져온다.
     const imagePreparation = await this.uploadRepository.findImagePreparation();
@@ -59,53 +58,82 @@ export class UploadService {
     );
 
     return await this.uploadRepository.uploadImageForProduct({
-      url: image,
-      uploader,
+      media: image,
+      uploader: user,
     });
+  }
+
+  async uploadImage(
+    files: Array<Express.Multer.File>,
+    jwtPayload: JwtPayload,
+  ): Promise<MediaReturnDto[]> {
+    const imageUrls = [];
+    const uploader = jwtPayload.nickname;
+    const user = await this.userRepository.findUserWithNickName(uploader);
+
+    if (!files) {
+      throw new BadRequestException(
+        "사진을 업로드 할 수 없습니다. 사진을 제시해주세요.",
+      );
+    } else if (files.length >= 2) {
+      for (const index of files) {
+        const image = index.filename;
+        imageUrls.push(
+          await this.uploadRepository.uploadImageForReview({
+            media: image,
+            uploader: user,
+          }),
+        );
+      }
+    } else {
+      const image = files[0].filename;
+      imageUrls.push(
+        await this.uploadRepository.uploadImageForReview({
+          media: image,
+          uploader: user,
+        }),
+      );
+    }
+
+    return imageUrls;
   }
 
   async uploadVideo(
     files: Array<Express.Multer.File>,
     jwtPayload: JwtPayload,
-  ): Promise<void> {
-    const videoUrls: VideoReturnDto[] = [];
+  ): Promise<MediaReturnDto[]> {
+    const videoUrls = [];
     const uploader = jwtPayload.nickname;
+    const user = await this.userRepository.findUserWithNickName(uploader);
 
-    if (!files.length) {
+    if (!files) {
       throw new BadRequestException(
         "동영상을 업로드 할 수 없습니다. 동영상을 제시해주세요.",
       );
     } else if (files.length >= 2) {
       for (const index of files) {
-        const fileName = index.filename;
-        const originalName = index.originalname;
-        videoUrls
-          .push
-          // await this.uploadRepository.uploadVideo({
-          //   fileName,
-          //   uploader,
-          //   originalName,
-          // }),
-          ();
+        const video = index.filename;
+        videoUrls.push(
+          await this.uploadRepository.uploadVideoForInquiry({
+            media: video,
+            uploader: user,
+          }),
+        );
       }
     } else {
-      const fileName = files[0].filename;
-      const originalName = files[0].originalname;
-
-      videoUrls
-        .push
-        // await this.uploadRepository.uploadVideo({
-        //   fileName,
-        //   uploader,
-        //   originalName,
-        // }),
-        ();
+      const video = files[0].filename;
+      videoUrls.push(
+        await this.uploadRepository.uploadVideoForInquiry({
+          media: video,
+          uploader: user,
+        }),
+      );
     }
 
-    // return videoUrls;
+    return videoUrls;
   }
 
-  // create(createUploadDto: ImageUploadDto) {
+  // create(createUploadDto: MediaUploadDto) {
   //   return "This action adds a new upload";
   // }
 
@@ -117,7 +145,7 @@ export class UploadService {
   //   return `This action returns a #${id} upload`;
   // }
 
-  // update(id: number, updateUploadDto: ImageReturnDto) {
+  // update(id: number, updateUploadDto: MediaReturnDto) {
   //   return `This action updates a #${id} upload`;
   // }
 

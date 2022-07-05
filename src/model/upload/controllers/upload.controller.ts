@@ -9,7 +9,7 @@ import {
 } from "@nestjs/common";
 import { CookieOption } from "src/common/config/etc";
 import { UploadService } from "../../upload/services/upload.service";
-import { ImageReturnDto } from "../../upload/dto/image-return.dto";
+import { MediaReturnDto } from "../dto/media-return.dto";
 import { IsLoginGuard } from "../../../common/guards/is-login.guard";
 import { MulterConfig } from "src/common/config/multer.config";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
@@ -33,7 +33,7 @@ export class UploadController {
     @UploadedFile() file: Express.Multer.File,
     @GetDecodedJwt() jwtPayload: JwtPayload,
     @Res() res: Response,
-  ): Promise<JSON<ImageReturnDto>> {
+  ): Promise<JSON<MediaReturnDto>> {
     console.log("logging image info ->\n", file);
 
     const result = await this.uploadService.uploadImageForProduct(
@@ -53,9 +53,32 @@ export class UploadController {
   }
 
   @UseGuards(IsLoginGuard)
+  @UseInterceptors(FilesInterceptor("image", 3, MulterConfig.upload("image")))
+  @Post("/image/review")
+  async uploadImageForReview(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @GetDecodedJwt() jwtPayload: JwtPayload,
+    @Res() res: Response,
+  ) {
+    console.log("logging video info ->\n", files);
+
+    const result = await this.uploadService.uploadImage(files, jwtPayload);
+
+    result.forEach((idx: MediaReturnDto) => {
+      res.cookie("reviewImageUrl", idx.url, CookieOption);
+    });
+
+    return {
+      statusCode: 201,
+      message: "리뷰 사진을 업로드 하였습니다.",
+      result,
+    };
+  }
+
+  @UseGuards(IsLoginGuard)
   @UseInterceptors(FilesInterceptor("video", 3, MulterConfig.upload("video")))
-  @Post("/video")
-  async uploadVideo(
+  @Post("/video/review")
+  async uploadVideoForReview(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetDecodedJwt() jwtPayload: JwtPayload,
     @Res() res: Response,
@@ -64,11 +87,59 @@ export class UploadController {
 
     const result = await this.uploadService.uploadVideo(files, jwtPayload);
 
-    // res.cookie(VideoCookieKey, result.url, CookieOption);
+    result.forEach((idx: MediaReturnDto) => {
+      res.cookie("reviewVideoUrl", idx.url, CookieOption);
+    });
 
     return {
       statusCode: 201,
       message: "리뷰 동영상을 업로드 하였습니다.",
+      result,
+    };
+  }
+
+  @UseGuards(IsLoginGuard)
+  @UseInterceptors(FilesInterceptor("image", 3, MulterConfig.upload("image")))
+  @Post("/image/inquiry")
+  async uploadImageForInquiry(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @GetDecodedJwt() jwtPayload: JwtPayload,
+    @Res() res: Response,
+  ) {
+    console.log("logging video info ->\n", files);
+
+    const result = await this.uploadService.uploadImage(files, jwtPayload);
+
+    result.forEach((idx: MediaReturnDto) => {
+      res.cookie("inquirtyImageUrl", idx.url, CookieOption);
+    });
+
+    return {
+      statusCode: 201,
+      message: "문의 사진을 업로드 하였습니다.",
+      result,
+    };
+  }
+
+  @UseGuards(IsLoginGuard)
+  @UseInterceptors(FilesInterceptor("video", 3, MulterConfig.upload("video")))
+  @Post("/video/inquiry")
+  async uploadVideoForInquiry(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @GetDecodedJwt() jwtPayload: JwtPayload,
+    @Res() res: Response,
+  ) {
+    console.log("logging video info ->\n", files);
+
+    const result = await this.uploadService.uploadVideo(files, jwtPayload);
+
+    result.forEach((idx: MediaReturnDto) => {
+      res.cookie("inquirtyVideoUrl", idx.url, CookieOption);
+    });
+
+    return {
+      statusCode: 201,
+      message: "문의 동영상을 업로드 하였습니다.",
       result,
     };
   }
@@ -86,7 +157,7 @@ export class UploadController {
   // }
 
   // @Patch(":id")
-  // update(@Param("id") id: string, @Body() updateUploadDto: ImageReturnDto) {
+  // update(@Param("id") id: string, @Body() updateUploadDto: MediaReturnDto) {
   //   return this.uploadService.update(+id, updateUploadDto);
   // }
 

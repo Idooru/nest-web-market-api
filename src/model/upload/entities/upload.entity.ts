@@ -30,10 +30,10 @@ export class ImagesEntity extends CommonEntity {
 @Entity("videos")
 export class VideosEntity extends CommonEntity {
   @Column({ type: "varchar", nullable: false, unique: true })
-  uploadedVideo: string;
+  url: string;
 
-  @Column({ type: "enum", default: "review", enum: ["review", "Inquiry"] })
-  uploadReason: "review";
+  @Column({ type: "enum", enum: ["review", "inquiry"] })
+  uploadReason: "review" | "inquiry";
 
   @ManyToOne(() => UserEntity, (user) => user)
   @JoinColumn({ name: "uploaderId", referencedColumnName: "id" })
