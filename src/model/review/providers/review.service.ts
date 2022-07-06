@@ -16,10 +16,12 @@ export class ReviewService {
     private readonly productRepository: ProductRepository,
   ) {}
 
+  async putStarRating(userSelectPoint: number, productName: string) {}
+
   async createReview(createReviewVo: CreateReviewServiceDto): Promise<any> {
     // const { createReviewDto, jwtPayload, productName, reviewImg, reviewVdo } =
     //   createReviewVo;
-    // const { comments, rating } = createReviewDto;
+    // const { comments, userSelectPoint } = createReviewDto;
     // const { nickname } = jwtPayload;
     // const user = await this.userRepository.findUserWithNickName(nickname);
     // const product = await this.productRepository.findProductOneByName(
@@ -32,7 +34,7 @@ export class ReviewService {
     // if (reviewImg && reviewVdo) {
     //   return await this.reviewRepository.createReview(createReviewVo);
     // } else if (reviewImg) {
-    //   return await this.reviewRepository.createReview({createReviewDto,});
+    //   return await this.reviewRepository.createReview({ createReviewDto });
     // } else if (reviewVdo) {
     // } else {
     // }

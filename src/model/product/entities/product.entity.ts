@@ -12,7 +12,7 @@ import { float } from "aws-sdk/clients/lightsail";
 import { IsDecimal, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { ReviewEntity } from "../../review/entities/review.entity";
-import { RatingEntity } from "./rating.entity";
+import { RatingEntity } from "../../review/entities/rating.entity";
 
 @Entity("products")
 export class ProductEntity extends CommonEntity {

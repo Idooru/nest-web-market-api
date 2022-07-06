@@ -7,11 +7,10 @@ import { ProductService } from "./providers/product.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { EtcModule } from "../etc/etc.module";
 import { UserModule } from "../user/user.module";
-import { RatingEntity } from "./entities/rating.entity";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ProductEntity, RatingEntity]),
+    TypeOrmModule.forFeature([ProductEntity]),
     forwardRef(() => UserModule),
     forwardRef(() => UploadModule),
     forwardRef(() => EtcModule),

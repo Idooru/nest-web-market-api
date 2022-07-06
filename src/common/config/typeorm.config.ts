@@ -9,7 +9,7 @@ import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { UserActivityEntity } from "src/model/user/entities/user.activity.entity";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
 import { UserEntity } from "src/model/user/entities/user.entity";
-import { RatingEntity } from "../../model/product/entities/rating.entity";
+import { RatingEntity } from "../../model/review/entities/rating.entity";
 
 import * as dotenv from "dotenv";
 dotenv.config();
