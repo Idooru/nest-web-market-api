@@ -1,3 +1,4 @@
+import { StarRatingRepository } from "./../../review/providers/star-rating.repository";
 import { UploadService } from "src/model/upload/providers/upload.service";
 import { ProductEntity } from "../entities/product.entity";
 import { Functions } from "src/model/etc/providers/functions";
@@ -17,6 +18,7 @@ export class ProductService {
     private readonly userRepository: UserRepository,
     private readonly uploadService: UploadService,
     private readonly uploadRepository: UploadRepository,
+    private readonly starRatingRepository: StarRatingRepository,
   ) {}
 
   async getProductsAllFromLatest(): Promise<ProductEntity[]> {
@@ -52,7 +54,13 @@ export class ProductService {
       getImage = await this.uploadRepository.findImageWithUrl(image);
     }
 
+    const madeStarRating = await this.starRatingRepository.createRating();
+    const starRating = await this.starRatingRepository.findStarRatingWithId(
+      madeStarRating.id,
+    );
+
     createProductDto.image = getImage;
+    createProductDto.starRating = starRating;
 
     await this.productRepository.checkProductNameToCreate(name);
     await this.productRepository.createProduct(createProductDto);

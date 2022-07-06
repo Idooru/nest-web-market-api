@@ -5,6 +5,7 @@ import {
 } from "@nestjs/common";
 import {
   ProductReturnProperty,
+  ProductReturnWithStarRating,
   ProductsReturnProperty,
 } from "src/common/config/etc";
 import { ModifyProductDto } from "../dto/modify_product.dto";
@@ -111,6 +112,22 @@ export class ProductRepository {
     }
   }
 
+  async findProductWhenUseStarRatingWithName(
+    name: string,
+  ): Promise<ProductEntity> {
+    try {
+      return await this.productRepository
+        .createQueryBuilder("product")
+        .select(ProductReturnWithStarRating)
+        .innerJoin("product.image", "image")
+        .innerJoin("product.starRating", "starRating")
+        .where("product.name = :name", { name })
+        .getOneOrFail();
+    } catch (err) {
+      throw new NotFoundException("해당 상품 아이디는 존재하지 않습니다.");
+    }
+  }
+
   async createProduct(createProductDto: CreateProductDto): Promise<void> {
     await this.productRepository
       .createQueryBuilder("product")
@@ -137,7 +154,7 @@ export class ProductRepository {
     await this.productRepository.delete(id);
   }
 
-  async insertRatingOnProduct(id: string, starRating: StarRatingEntity) {
+  async insertStarRatingOnProduct(id: string, starRating: StarRatingEntity) {
     await this.productRepository.update(id, { starRating });
   }
 }

@@ -2,7 +2,7 @@ import { Repository } from "typeorm";
 import { StarRatingEntity } from "../entities/star-rating.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 
-export class StarRatingReposiotry {
+export class StarRatingRepository {
   constructor(
     @InjectRepository(StarRatingEntity)
     private readonly starRatingRepository: Repository<StarRatingEntity>,
@@ -43,5 +43,12 @@ export class StarRatingReposiotry {
         await this.starRatingRepository.save(starRating);
         break;
     }
+  }
+
+  async findStarRatingWithId(starRatingId: string) {
+    return await this.starRatingRepository
+      .createQueryBuilder("starRating")
+      .where("starRating.id = :id", { id: starRatingId })
+      .getOne();
   }
 }

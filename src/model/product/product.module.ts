@@ -7,6 +7,7 @@ import { ProductService } from "./providers/product.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { EtcModule } from "../etc/etc.module";
 import { UserModule } from "../user/user.module";
+import { ReviewModule } from "../review/review.module";
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { UserModule } from "../user/user.module";
     forwardRef(() => UserModule),
     forwardRef(() => UploadModule),
     forwardRef(() => EtcModule),
+    forwardRef(() => ReviewModule),
   ],
   controllers: [ProductController],
   providers: [ProductService, ProductRepository],

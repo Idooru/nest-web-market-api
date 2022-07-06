@@ -1,3 +1,4 @@
+import { StarRatingEntity } from "./../entities/star-rating.entity";
 import { Functions } from "src/model/etc/providers/functions";
 import { ProductRepository } from "../../product/providers/product.repository";
 import { UserRepository } from "../../user/providers/user.repository";
@@ -5,7 +6,7 @@ import { ReviewRepository } from "./review.repository";
 import { Injectable } from "@nestjs/common";
 import { CreateReviewServiceDto } from "../dto/create-review.dto";
 import { UpdateReviewDto } from "../dto/update-review.dto";
-import { StarRatingReposiotry } from "./star-rating.repository";
+import { StarRatingRepository } from "./star-rating.repository";
 
 @Injectable()
 export class ReviewService {
@@ -13,45 +14,41 @@ export class ReviewService {
     private readonly reviewRepository: ReviewRepository,
     private readonly userRepository: UserRepository,
     private readonly productRepository: ProductRepository,
-    private readonly starRatingRepository: StarRatingReposiotry,
+    private readonly starRatingRepository: StarRatingRepository,
     private readonly functions: Functions,
   ) {}
 
   async putStarRating(
     userSelectScore: number,
     productName: string,
-  ): Promise<string> {
-    const promise1 = await Promise.allSettled([
-      this.productRepository.findProductOneByName(productName),
-      this.starRatingRepository.createRating(),
-    ]);
+  ): Promise<StarRatingEntity> {
+    const product =
+      await this.productRepository.findProductWhenUseStarRatingWithName(
+        productName,
+      );
 
-    const promise1Result = this.functions.promiseSettledProcess(
-      promise1,
-      "find product and create starRating",
+    const productId = product.id;
+    const starRatingId = product.starRating.id;
+    const starRating = await this.starRatingRepository.findStarRatingWithId(
+      starRatingId,
     );
 
-    const [product, starRating] = promise1Result.map((idx) => idx.value);
-    const productId = product.id;
-
-    const promise2 = await Promise.allSettled([
+    const promise = await Promise.allSettled([
       this.starRatingRepository.starRatingIncreaseAndSum(
         starRating,
         userSelectScore,
       ),
-      this.productRepository.insertRatingOnProduct(productId, starRating),
+      this.productRepository.insertStarRatingOnProduct(productId, starRating),
     ]);
-
     this.functions.promiseSettledProcess(
-      promise2,
+      promise,
       "starRating Increase, sum and insert on product",
     );
-
     return starRating;
   }
 
-  async calculateRating(starRatingId: string) {
-    console.log(1);
+  async calculateRating(starRating: StarRatingEntity) {
+    1;
   }
 
   async createReview(createReviewVo: CreateReviewServiceDto): Promise<any> {

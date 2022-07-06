@@ -32,6 +32,20 @@ export const ProductReturnProperty = [
   "product.updatedAt",
 ];
 
+export const ProductReturnWithStarRating = [
+  "product.id",
+  "product.name",
+  "product.price",
+  "product.origin",
+  "product.type",
+  "product.description",
+  "image.url",
+  "product.starRatingPoint",
+  "product.createdAt",
+  "product.updatedAt",
+  "starRating.id",
+];
+
 export const UserReturnProperty = [
   "user.profile",
   "user.auth",

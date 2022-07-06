@@ -7,7 +7,7 @@ import { ReviewEntity } from "./entities/review.entity";
 import { UserModule } from "../user/user.module";
 import { ReviewRepository } from "./providers/review.repository";
 import { StarRatingEntity } from "../review/entities/star-rating.entity";
-import { StarRatingReposiotry } from "../review/providers/star-rating.repository";
+import { StarRatingRepository } from "../review/providers/star-rating.repository";
 import { EtcModule } from "../etc/etc.module";
 
 @Module({
@@ -18,7 +18,7 @@ import { EtcModule } from "../etc/etc.module";
     forwardRef(() => EtcModule),
   ],
   controllers: [ReviewController],
-  providers: [ReviewService, ReviewRepository, StarRatingReposiotry],
-  exports: [ReviewService, ReviewRepository],
+  providers: [ReviewService, ReviewRepository, StarRatingRepository],
+  exports: [ReviewService, ReviewRepository, StarRatingRepository],
 })
 export class ReviewModule {}
