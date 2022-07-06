@@ -1,15 +1,15 @@
 import { ReviewModule } from "./../review/review.module";
 import { UserActivityEntity } from "./entities/user.activity.entity";
 import { UserAuthEntity } from "./entities/user.auth.entity";
-import { UploadService } from "./../upload/services/upload.service";
+import { UploadService } from "../upload/providers/upload.service";
 import { UploadModule } from "./../upload/upload.module";
 import { AuthModule } from "./../auth/auth.module";
-import { UserRepository } from "./user.repository";
+import { UserRepository } from "../user/providers/user.repository";
 import { UserProfileEntity } from "./entities/user.profile.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { forwardRef, Module } from "@nestjs/common";
 import { UserController } from "./controllers/user.controller";
-import { UserService } from "./services/user.service";
+import { UserService } from "../user/providers/user.service";
 import { UserEntity } from "./entities/user.entity";
 import { EtcModule } from "../etc/etc.module";
 

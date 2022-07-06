@@ -6,8 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { ImagesEntity } from "./../../upload/entities/upload.entity";
-import { Exclude } from "class-transformer";
-import { IsEmail, IsNotEmpty, IsString } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString, Matches } from "class-validator";
 import { UserEntity } from "./user.entity";
 
 @Entity("users auth")
@@ -25,8 +24,10 @@ export class UserAuthEntity {
   @Column({ type: "varchar", length: 60, unique: true, nullable: false })
   email: string;
 
-  @Exclude()
-  @Column({ type: "varchar", nullable: false })
+  @IsString()
+  @IsNotEmpty()
+  @Matches(/^[A-Za-z\d!@#$%^&*()]{8,30}$/)
+  @Column({ type: "varchar", nullable: false, select: false })
   password: string;
 
   @Column({

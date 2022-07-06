@@ -7,11 +7,11 @@ import {
   ProductReturnProperty,
   ProductsReturnProperty,
 } from "src/common/config/etc";
-import { ModifyProductDto } from "./dto/modify_product.dto";
-import { CreateProductDto } from "./dto/create_product.dto";
+import { ModifyProductDto } from "../dto/modify_product.dto";
+import { CreateProductDto } from "../dto/create_product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { ProductEntity } from "./product.entity";
+import { ProductEntity } from "../entities/product.entity";
 
 @Injectable()
 export class ProductRepository {
@@ -135,4 +135,16 @@ export class ProductRepository {
   async removeProduct(id: string): Promise<void> {
     await this.productRepository.delete(id);
   }
+
+  // async increaseReviewCount(product: ProductEntity) {
+  //   product.ratingCount++;
+  //   await this.productRepository.save(product);
+  // }
+
+  // async updateRating(product: ProductEntity, rating: number) {
+  //   product.rating += rating;
+  //   await this.productRepository.save(product);
+  // }
 }
+// let count = product.ratingCount;
+// await this.productRepository.update(product.id, { ratingCount: count++ });

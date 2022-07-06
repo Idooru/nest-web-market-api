@@ -1,6 +1,6 @@
 import { ReviewEntity } from "./../../review/entities/review.entity";
 import { UserEntity } from "src/model/user/entities/user.entity";
-import { ProductEntity } from "./../../product/product.entity";
+import { ProductEntity } from "./../../product/entities/product.entity";
 import { CommonEntity } from "../../../common/entities/common.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from "typeorm";
 

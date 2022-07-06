@@ -1,10 +1,10 @@
-import { UserRepository } from "./../user/user.repository";
-import { MediaUploadDto } from "./dto/media-upload.dto";
+import { UserRepository } from "../../user/providers/user.repository";
+import { MediaUploadDto } from "../dto/media-upload.dto";
+import { MediaReturnDto } from "../dto/media-return.dto";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { ImagesEntity, VideosEntity } from "./entities/upload.entity";
+import { ImagesEntity, VideosEntity } from "../entities/upload.entity";
 import { Repository } from "typeorm";
-import { MediaReturnDto } from "./dto/media-return.dto";
 
 @Injectable()
 export class UploadRepository {

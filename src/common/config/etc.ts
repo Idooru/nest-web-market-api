@@ -28,8 +28,15 @@ export const ProductReturnProperty = [
   "product.description",
   "image.url",
   "product.rating",
+  "product.ratingCount",
   "product.createdAt",
   "product.updatedAt",
+];
+
+export const UserReturnProperty = [
+  "user.profile",
+  "user.auth",
+  "user.activity",
 ];
 
 export const UserInformationReturnProperty = [

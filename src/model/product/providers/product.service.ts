@@ -1,12 +1,12 @@
-import { UploadService } from "src/model/upload/services/upload.service";
-import { ProductEntity } from "./../product.entity";
+import { UploadService } from "src/model/upload/providers/upload.service";
+import { ProductEntity } from "../entities/product.entity";
 import { Functions } from "src/model/etc/providers/functions";
-import { UploadRepository } from "./../../upload/upload.repository";
-import { ProductRepository } from "./../product.repository";
+import { UploadRepository } from "../../upload/providers/upload.repository";
+import { ProductRepository } from "./product.repository";
 import { Injectable } from "@nestjs/common";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
-import { UserRepository } from "src/model/user/user.repository";
+import { UserRepository } from "../../user/providers/user.repository";
 import { ImagesEntity } from "src/model/upload/entities/upload.entity";
 
 @Injectable()

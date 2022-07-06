@@ -5,7 +5,7 @@ import {
   NestInterceptor,
 } from "@nestjs/common";
 import { Observable, map } from "rxjs";
-import { JSON } from "src/common/interfaces/json-success.interface";
+import { JsonRes } from "src/common/interfaces/json-success.interface";
 
 @Injectable()
 export class JsonResponseInterceptor implements NestInterceptor {
@@ -18,7 +18,7 @@ export class JsonResponseInterceptor implements NestInterceptor {
     const now = Date.now();
 
     return next.handle().pipe(
-      map((data: JSON<null>) => {
+      map((data: JsonRes<null>) => {
         // controller 도달 후
         console.log(
           `Response from ${req.method} ${req.originalUrl} :: time taken : ${

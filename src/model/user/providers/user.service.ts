@@ -1,12 +1,12 @@
-import { JwtPayload } from "./../../../common/interfaces/jwt-payload.interface";
-import { PatchUserDto } from "./../dtos/patch-user.dto";
-import { RegisterUserDto } from "./../dtos/register-user.dto";
+import { JwtPayload } from "../../../common/interfaces/jwt-payload.interface";
+import { PatchUserDto } from "../dtos/patch-user.dto";
+import { RegisterUserDto } from "../dtos/register-user.dto";
 import { Injectable } from "@nestjs/common";
-import { UserRepository } from "../user.repository";
+import { UserRepository } from "../providers/user.repository";
 import { ResponseUserDto } from "../dtos/response-user.dto";
 import { UserReturnFilter } from "../dtos/response-user.dto";
-import { AuthService } from "../../auth/services/auth.service";
-import { UploadService } from "src/model/upload/services/upload.service";
+import { AuthService } from "../../auth/providers/auth.service";
+import { UploadService } from "src/model/upload/providers/upload.service";
 import { Functions } from "src/model/etc/providers/functions";
 import { UserEntity } from "../entities/user.entity";
 

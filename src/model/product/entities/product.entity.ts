@@ -1,7 +1,3 @@
-import { ImagesEntity } from "./../upload/entities/upload.entity";
-import { float } from "aws-sdk/clients/lightsail";
-import { IsDecimal, IsNotEmpty, IsNumber, IsString } from "class-validator";
-import { CommonEntity } from "src/common/entities/common.entity";
 import {
   Column,
   Entity,
@@ -11,7 +7,12 @@ import {
   OneToOne,
   RelationId,
 } from "typeorm";
-import { ReviewEntity } from "../review/entities/review.entity";
+import { ImagesEntity } from "../../upload/entities/upload.entity";
+import { float } from "aws-sdk/clients/lightsail";
+import { IsDecimal, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { CommonEntity } from "src/common/entities/common.entity";
+import { ReviewEntity } from "../../review/entities/review.entity";
+import { RatingEntity } from "./rating.entity";
 
 @Entity("products")
 export class ProductEntity extends CommonEntity {
@@ -43,13 +44,12 @@ export class ProductEntity extends CommonEntity {
   @Column({ type: "int", default: 50 })
   quantity: number;
 
-  @IsNumber()
-  @IsNotEmpty()
   @Column({ type: "float", default: 0.0 })
-  rating: number;
+  ratingPoint: number;
 
-  @Column({ type: "int", default: 0 })
-  ratingCount: number;
+  @OneToOne(() => RatingEntity, (rating) => rating.product)
+  @JoinColumn({ name: "ratingId", referencedColumnName: "id" })
+  rating: RatingEntity;
 
   @OneToOne(() => ImagesEntity, (image) => image.product)
   @JoinColumn({ name: "imageId", referencedColumnName: "id" })

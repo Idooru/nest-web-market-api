@@ -8,14 +8,14 @@ import {
   UploadedFiles,
 } from "@nestjs/common";
 import { CookieOption } from "src/common/config/etc";
-import { UploadService } from "../../upload/services/upload.service";
+import { UploadService } from "../providers/upload.service";
 import { MediaReturnDto } from "../dto/media-return.dto";
 import { IsLoginGuard } from "../../../common/guards/is-login.guard";
 import { MulterConfig } from "src/common/config/multer.config";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { GetDecodedJwt } from "src/common/decorators/get-decoded-jwt.decorator";
 import { JwtPayload } from "src/common/interfaces/jwt-payload.interface";
-import { JSON } from "../../../common/interfaces/json-success.interface";
+import { JsonRes } from "../../../common/interfaces/json-success.interface";
 import { IsAdminGuard } from "../../../common/guards/is-admin.guard";
 import { Response } from "express";
 
@@ -33,7 +33,7 @@ export class UploadController {
     @UploadedFile() file: Express.Multer.File,
     @GetDecodedJwt() jwtPayload: JwtPayload,
     @Res() res: Response,
-  ): Promise<JSON<MediaReturnDto>> {
+  ): Promise<JsonRes<MediaReturnDto>> {
     console.log("logging image info ->\n", file);
 
     const result = await this.uploadService.uploadImageForProduct(

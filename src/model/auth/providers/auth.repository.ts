@@ -1,6 +1,6 @@
-import { UserEntity } from "../user/entities/user.entity";
+import { UserEntity } from "../../user/entities/user.entity";
 import { UnauthorizedException } from "@nestjs/common";
-import { UserAuthEntity } from "../user/entities/user.auth.entity";
+import { UserAuthEntity } from "../../user/entities/user.auth.entity";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";

@@ -7,12 +7,8 @@ export class PatchUserCommonDto extends RegisterUserCommonDto {}
 
 export class PatchUserAuthDto extends PickType(UserAuthEntity, [
   "nickname",
-] as const) {
-  @IsString()
-  @IsNotEmpty()
-  @Matches(/^[A-Za-z\d!@#$%^&*()]{8,30}$/)
-  password: string;
-}
+  "password",
+] as const) {}
 
 export class PatchUserDto extends IntersectionType(
   PatchUserCommonDto,

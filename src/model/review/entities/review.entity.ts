@@ -13,7 +13,7 @@ import {
 } from "src/model/upload/entities/upload.entity";
 
 import { UserEntity } from "./../../user/entities/user.entity";
-import { ProductEntity } from "./../../product/product.entity";
+import { ProductEntity } from "./../../product/entities/product.entity";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { IsNotEmpty, IsString } from "class-validator";
 

@@ -15,10 +15,10 @@ import {
   ResponseProductDto,
   ResponseProductsDto,
 } from "../dto/response_product.dto";
-import { JSON } from "../../../common/interfaces/json-success.interface";
+import { JsonRes } from "../../../common/interfaces/json-success.interface";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
-import { ProductService } from "./../services/product.service";
+import { ProductService } from "../providers/product.service";
 import { IsAdminGuard } from "../../../common/guards/is-admin.guard";
 import { IsLoginGuard } from "../../../common/guards/is-login.guard";
 import { Response } from "express";
@@ -30,7 +30,7 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get("/")
-  async getProductsAllFromLatest(): Promise<JSON<ResponseProductsDto[]>> {
+  async getProductsAllFromLatest(): Promise<JsonRes<ResponseProductsDto[]>> {
     return {
       statusCode: 200,
       message: "전체 상품 정보를 최신 순서로 가져옵니다.",
@@ -39,7 +39,7 @@ export class ProductController {
   }
 
   @Get("/oldest")
-  async getProductsAllFromOldest(): Promise<JSON<ResponseProductsDto[]>> {
+  async getProductsAllFromOldest(): Promise<JsonRes<ResponseProductsDto[]>> {
     return {
       statusCode: 200,
       message: "전체 상품 정보를 오래된 순서로 가져옵니다.",
@@ -50,7 +50,7 @@ export class ProductController {
   @Get("/search_name")
   async getProductByName(
     @Query("n") name: string,
-  ): Promise<JSON<ResponseProductDto>> {
+  ): Promise<JsonRes<ResponseProductDto>> {
     return {
       statusCode: 200,
       message: `${name}에 해당하는 상품 정보를 가져옵니다.`,
@@ -61,7 +61,7 @@ export class ProductController {
   @Get("/search_id")
   async getProductById(
     @Query("i") productId: string,
-  ): Promise<JSON<ResponseProductDto>> {
+  ): Promise<JsonRes<ResponseProductDto>> {
     return {
       statusCode: 200,
       message: `${productId}에 해당하는 상품 정보를 가져옵니다.`,
@@ -78,7 +78,7 @@ export class ProductController {
     @GetDecodedJwt() jwtPayload: JwtPayload,
     @Cookies("productImageUrl") productImg: string | null,
     @Res() res: Response,
-  ): Promise<JSON<void>> {
+  ): Promise<JsonRes<void>> {
     await this.productService.createProduct(
       createProductDto,
       jwtPayload.nickname,
@@ -107,7 +107,7 @@ export class ProductController {
     @GetDecodedJwt() JwtPayload: JwtPayload,
     @Cookies("productImageUrl") productImg: string | null,
     @Res() res: Response,
-  ): Promise<JSON<string>> {
+  ): Promise<JsonRes<string>> {
     await this.productService.modifyProduct(
       productId,
       modifyProductDto,
@@ -131,7 +131,7 @@ export class ProductController {
   @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)
   @Delete("/")
-  async removeProduct(@Query("id") productId: string): Promise<JSON<void>> {
+  async removeProduct(@Query("id") productId: string): Promise<JsonRes<void>> {
     await this.productService.removeProduct(productId);
 
     return {

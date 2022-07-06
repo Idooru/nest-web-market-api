@@ -1,5 +1,5 @@
-import { UserRepository } from "./../../user/user.repository";
-import { UploadRepository } from "../../upload/upload.repository";
+import { UserRepository } from "../../user/providers/user.repository";
+import { UploadRepository } from "../providers/upload.repository";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { MediaReturnDto } from "../dto/media-return.dto";
 import { JwtPayload } from "src/common/interfaces/jwt-payload.interface";

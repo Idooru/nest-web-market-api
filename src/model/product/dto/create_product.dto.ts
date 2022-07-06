@@ -1,4 +1,4 @@
-import { ProductEntity } from "./../product.entity";
+import { ProductEntity } from "../entities/product.entity";
 import { PickType } from "@nestjs/swagger";
 
 export class CreateProductDto extends PickType(ProductEntity, [

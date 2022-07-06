@@ -1,5 +1,3 @@
-import { CreateReviewDto } from "./../dto/create-review.dto";
-import { IsLoginGuard } from "./../../../common/guards/is-login.guard";
 import {
   Controller,
   Get,
@@ -10,11 +8,14 @@ import {
   Delete,
   UseGuards,
 } from "@nestjs/common";
-import { ReviewService } from "../services/review.service";
+import { CreateReviewDto } from "./../dto/create-review.dto";
+import { IsLoginGuard } from "./../../../common/guards/is-login.guard";
+import { ReviewService } from "../providers/review.service";
 import { UpdateReviewDto } from "../dto/update-review.dto";
 import { GetDecodedJwt } from "src/common/decorators/get-decoded-jwt.decorator";
 import { JwtPayload } from "src/common/interfaces/jwt-payload.interface";
 import { Cookies } from "src/common/decorators/cookies.decorator";
+import { JsonRes } from "src/common/interfaces/json-success.interface";
 
 @Controller("review")
 export class ReviewController {
@@ -28,7 +29,7 @@ export class ReviewController {
     @Cookies("reviewImageUrl") reviewImg: string[] | null,
     @Cookies("reviewVideoUrl") reviewVdo: string[] | null,
     @GetDecodedJwt() jwtPayload: JwtPayload,
-  ) {
+  ): Promise<JsonRes<void>> {
     if (reviewImg || reviewVdo) {
       await this.reviewService.createReview({
         createReviewDto,
@@ -44,14 +45,11 @@ export class ReviewController {
         productName,
       });
     }
-    // reviewImg.length && reviewVdo.length
-    //   ? await this.reviewService.createReview(
-    //       createReviewDto,
-    //       jwtPayload,
-    //       reviewImg,
-    //       reviewVdo,
-    //     )
-    //   : await this.reviewService.createReview(createReviewDto, jwtPayload);
+
+    return {
+      statusCode: 201,
+      message: "리뷰를 생성하였습니다.",
+    };
   }
 
   @Get()

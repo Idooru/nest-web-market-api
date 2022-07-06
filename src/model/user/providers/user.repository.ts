@@ -1,14 +1,15 @@
+import { UserReturnProperty } from "./../../../common/config/etc";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { UserActivityEntity } from "./entities/user.activity.entity";
+import { UserActivityEntity } from "../entities/user.activity.entity";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
-import { PatchUserDto } from "./dtos/patch-user.dto";
+import { PatchUserDto } from "../dtos/patch-user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
-import { UserProfileEntity } from "./entities/user.profile.entity";
+import { UserProfileEntity } from "../entities/user.profile.entity";
 import { Repository } from "typeorm";
-import { RegisterUserDto } from "./dtos/register-user.dto";
-import { UserEntity } from "./entities/user.entity";
-import { CreateUserDto } from "./dtos/create-user.dto";
-import { Functions } from "../etc/providers/functions";
+import { RegisterUserDto } from "../dtos/register-user.dto";
+import { UserEntity } from "../entities/user.entity";
+import { CreateUserDto } from "../dtos/create-user.dto";
+import { Functions } from "../../etc/providers/functions";
 
 @Injectable()
 export class UserRepository {
@@ -112,9 +113,10 @@ export class UserRepository {
     try {
       return await this.userRepository
         .createQueryBuilder("user")
-        .leftJoinAndSelect("user.profile", "profile")
-        .leftJoinAndSelect("user.auth", "auth")
-        .leftJoinAndSelect("user.activity", "activity")
+        .select(UserReturnProperty)
+        // .leftJoinAndSelect("user.profile", "profile")
+        // .leftJoinAndSelect("user.auth", "auth")
+        // .leftJoinAndSelect("user.activity", "activity")
         .where("user.id = :id", { id: userId })
         .getOneOrFail();
     } catch (err) {
