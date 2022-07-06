@@ -12,7 +12,7 @@ import { float } from "aws-sdk/clients/lightsail";
 import { IsDecimal, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { ReviewEntity } from "../../review/entities/review.entity";
-import { RatingEntity } from "../../review/entities/rating.entity";
+import { StarRatingEntity } from "../../review/entities/star-rating.entity";
 
 @Entity("products")
 export class ProductEntity extends CommonEntity {
@@ -45,11 +45,11 @@ export class ProductEntity extends CommonEntity {
   quantity: number;
 
   @Column({ type: "float", default: 0.0 })
-  ratingPoint: number;
+  starRatingPoint: number;
 
-  @OneToOne(() => RatingEntity, (rating) => rating.product)
-  @JoinColumn({ name: "ratingId", referencedColumnName: "id" })
-  rating: RatingEntity;
+  @OneToOne(() => StarRatingEntity, (starRating) => starRating.product)
+  @JoinColumn({ name: "starRatingId", referencedColumnName: "id" })
+  starRating: StarRatingEntity;
 
   @OneToOne(() => ImagesEntity, (image) => image.product)
   @JoinColumn({ name: "imageId", referencedColumnName: "id" })

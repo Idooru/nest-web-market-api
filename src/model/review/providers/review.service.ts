@@ -5,7 +5,7 @@ import { ReviewRepository } from "./review.repository";
 import { Injectable } from "@nestjs/common";
 import { CreateReviewServiceDto } from "../dto/create-review.dto";
 import { UpdateReviewDto } from "../dto/update-review.dto";
-import { RatingReposiotry } from "./rating.repository";
+import { StarRatingReposiotry } from "./star-rating.repository";
 
 @Injectable()
 export class ReviewService {
@@ -13,7 +13,7 @@ export class ReviewService {
     private readonly reviewRepository: ReviewRepository,
     private readonly userRepository: UserRepository,
     private readonly productRepository: ProductRepository,
-    private readonly ratingRepository: RatingReposiotry,
+    private readonly starRatingRepository: StarRatingReposiotry,
     private readonly functions: Functions,
   ) {}
 
@@ -23,31 +23,34 @@ export class ReviewService {
   ): Promise<string> {
     const promise1 = await Promise.allSettled([
       this.productRepository.findProductOneByName(productName),
-      this.ratingRepository.createRating(),
+      this.starRatingRepository.createRating(),
     ]);
 
     const promise1Result = this.functions.promiseSettledProcess(
       promise1,
-      "find product and create rating",
+      "find product and create starRating",
     );
 
-    const [product, rating] = promise1Result.map((idx) => idx.value);
+    const [product, starRating] = promise1Result.map((idx) => idx.value);
     const productId = product.id;
 
     const promise2 = await Promise.allSettled([
-      this.ratingRepository.ratingIncreaseAndSum(rating, userSelectScore),
-      this.productRepository.insertRatingOnProduct(productId, rating),
+      this.starRatingRepository.starRatingIncreaseAndSum(
+        starRating,
+        userSelectScore,
+      ),
+      this.productRepository.insertRatingOnProduct(productId, starRating),
     ]);
 
     this.functions.promiseSettledProcess(
       promise2,
-      "rating Increase, sum and insert on product",
+      "starRating Increase, sum and insert on product",
     );
 
-    return rating;
+    return starRating;
   }
 
-  async calculateRating(ratingId: string) {
+  async calculateRating(starRatingId: string) {
     console.log(1);
   }
 
@@ -61,8 +64,8 @@ export class ReviewService {
     //   productName,
     // );
     // await this.productRepository.increaseReviewCount(product);
-    // const ratingRatio = (rating + product.rating) / product.ratingCount / 5;
-    // await this.productRepository.updateRating(product, ratingRatio);
+    // const starRatingRatio = (starRating + product.starRating) / product.starRatingCount / 5;
+    // await this.productRepository.updateRating(product, starRatingRatio);
     // return;
     // if (reviewImg && reviewVdo) {
     //   return await this.reviewRepository.createReview(createReviewVo);

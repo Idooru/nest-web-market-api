@@ -12,7 +12,7 @@ import { CreateProductDto } from "../dto/create_product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
-import { RatingEntity } from "src/model/review/entities/rating.entity";
+import { StarRatingEntity } from "../../review/entities/star-rating.entity";
 
 @Injectable()
 export class ProductRepository {
@@ -137,7 +137,7 @@ export class ProductRepository {
     await this.productRepository.delete(id);
   }
 
-  async insertRatingOnProduct(id: string, rating: RatingEntity) {
-    await this.productRepository.update(id, { rating });
+  async insertRatingOnProduct(id: string, starRating: StarRatingEntity) {
+    await this.productRepository.update(id, { starRating });
   }
 }

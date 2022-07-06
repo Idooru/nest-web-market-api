@@ -31,11 +31,11 @@ export class ReviewController {
     @GetDecodedJwt() jwtPayload: JwtPayload,
   ): Promise<JsonRes<void>> {
     const { userSelectScore } = createReviewDto;
-    const ratingId = await this.reviewService.putStarRating(
+    const starRatingId = await this.reviewService.putStarRating(
       userSelectScore,
       productName,
     );
-    this.reviewService.calculateRating(ratingId);
+    this.reviewService.calculateRating(starRatingId);
 
     if (reviewImg || reviewVdo) {
       await this.reviewService.createReview({

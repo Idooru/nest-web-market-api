@@ -2,9 +2,9 @@ import { ProductEntity } from "src/model/product/entities/product.entity";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { Column, Entity, OneToOne } from "typeorm";
 
-@Entity("ratings")
-export class RatingEntity extends CommonEntity {
-  @OneToOne(() => ProductEntity, (product) => product.rating)
+@Entity("star ratings")
+export class StarRatingEntity extends CommonEntity {
+  @OneToOne(() => ProductEntity, (product) => product.starRating)
   product: ProductEntity;
 
   @Column({ type: "int", default: 0 })

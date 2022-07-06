@@ -9,7 +9,7 @@ export class ResponseProductDto extends PickType(ProductEntity, [
   "type",
   "description",
   "image",
-  "ratingPoint",
+  "starRatingPoint",
   "createdAt",
   "updatedAt",
 ] as const) {}
@@ -19,7 +19,7 @@ export class ResponseProductsDto extends PickType(ProductEntity, [
   "price",
   "type",
   "image",
-  "ratingPoint",
+  "starRatingPoint",
 ] as const) {}
 
 // export const ProductReturnFilter = (
@@ -34,7 +34,7 @@ export class ResponseProductsDto extends PickType(ProductEntity, [
 //     type: product.type,
 //     description: product.description,
 //     image: product.image,
-//     rating: product.rating,
+//     starRating: product.starRating,
 //     createdAt: product.createdAt,
 //     updatedAt: product.updatedAt,
 //   };
@@ -48,5 +48,5 @@ export class ResponseProductsDto extends PickType(ProductEntity, [
 //     price: idx.price,
 //     type: idx.type,
 //     image: idx.image,
-//     rating: idx.rating,
+//     starRating: idx.starRating,
 //   }));

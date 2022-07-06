@@ -6,19 +6,19 @@ import { ReviewController } from "./controllers/review.controller";
 import { ReviewEntity } from "./entities/review.entity";
 import { UserModule } from "../user/user.module";
 import { ReviewRepository } from "./providers/review.repository";
-import { RatingEntity } from "../review/entities/rating.entity";
-import { RatingReposiotry } from "./providers/rating.repository";
+import { StarRatingEntity } from "../review/entities/star-rating.entity";
+import { StarRatingReposiotry } from "../review/providers/star-rating.repository";
 import { EtcModule } from "../etc/etc.module";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ReviewEntity, RatingEntity]),
+    TypeOrmModule.forFeature([ReviewEntity, StarRatingEntity]),
     forwardRef(() => UserModule),
     forwardRef(() => ProductModule),
     forwardRef(() => EtcModule),
   ],
   controllers: [ReviewController],
-  providers: [ReviewService, ReviewRepository, RatingReposiotry],
+  providers: [ReviewService, ReviewRepository, StarRatingReposiotry],
   exports: [ReviewService, ReviewRepository],
 })
 export class ReviewModule {}
