@@ -27,7 +27,7 @@ export class UserAuthEntity {
   @IsString()
   @IsNotEmpty()
   @Matches(/^[A-Za-z\d!@#$%^&*()]{8,30}$/)
-  @Column({ type: "varchar", nullable: false, select: false })
+  @Column({ type: "varchar", nullable: false })
   password: string;
 
   @Column({

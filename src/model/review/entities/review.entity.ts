@@ -5,7 +5,6 @@ import {
   ManyToMany,
   ManyToOne,
   JoinColumn,
-  JoinTable,
 } from "typeorm";
 import {
   ImagesEntity,

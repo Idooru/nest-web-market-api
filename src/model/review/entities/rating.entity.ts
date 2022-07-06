@@ -1,4 +1,3 @@
-import { UserActivityEntity } from "src/model/user/entities/user.activity.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { Column, Entity, OneToOne } from "typeorm";

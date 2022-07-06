@@ -30,11 +30,12 @@ export class ReviewController {
     @Cookies("reviewVideoUrl") reviewVdo: string[] | null,
     @GetDecodedJwt() jwtPayload: JwtPayload,
   ): Promise<JsonRes<void>> {
-    const { userSelectPoint } = createReviewDto;
-    const ratingPoint = await this.reviewService.putStarRating(
-      userSelectPoint,
+    const { userSelectScore } = createReviewDto;
+    const ratingId = await this.reviewService.putStarRating(
+      userSelectScore,
       productName,
     );
+    this.reviewService.calculateRating(ratingId);
 
     if (reviewImg || reviewVdo) {
       await this.reviewService.createReview({

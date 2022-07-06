@@ -113,10 +113,9 @@ export class UserRepository {
     try {
       return await this.userRepository
         .createQueryBuilder("user")
-        .select(UserReturnProperty)
-        // .leftJoinAndSelect("user.profile", "profile")
-        // .leftJoinAndSelect("user.auth", "auth")
-        // .leftJoinAndSelect("user.activity", "activity")
+        .leftJoinAndSelect("user.profile", "profile")
+        .leftJoinAndSelect("user.auth", "auth")
+        .leftJoinAndSelect("user.activity", "activity")
         .where("user.id = :id", { id: userId })
         .getOneOrFail();
     } catch (err) {

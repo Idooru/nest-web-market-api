@@ -12,6 +12,7 @@ import { CreateProductDto } from "../dto/create_product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
+import { RatingEntity } from "src/model/review/entities/rating.entity";
 
 @Injectable()
 export class ProductRepository {
@@ -136,15 +137,7 @@ export class ProductRepository {
     await this.productRepository.delete(id);
   }
 
-  // async increaseReviewCount(product: ProductEntity) {
-  //   product.ratingCount++;
-  //   await this.productRepository.save(product);
-  // }
-
-  // async updateRating(product: ProductEntity, rating: number) {
-  //   product.rating += rating;
-  //   await this.productRepository.save(product);
-  // }
+  async insertRatingOnProduct(id: string, rating: RatingEntity) {
+    await this.productRepository.update(id, { rating });
+  }
 }
-// let count = product.ratingCount;
-// await this.productRepository.update(product.id, { ratingCount: count++ });

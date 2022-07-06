@@ -16,7 +16,7 @@ export const ProductsReturnProperty = [
   "product.price",
   "product.type",
   "image.url",
-  "product.rating",
+  "product.ratingPoint",
 ];
 
 export const ProductReturnProperty = [
@@ -27,8 +27,7 @@ export const ProductReturnProperty = [
   "product.type",
   "product.description",
   "image.url",
-  "product.rating",
-  "product.ratingCount",
+  "product.ratingPoint",
   "product.createdAt",
   "product.updatedAt",
 ];
