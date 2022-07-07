@@ -11,7 +11,7 @@ import { forwardRef, Module } from "@nestjs/common";
 import { UserController } from "./controllers/user.controller";
 import { UserService } from "../user/providers/user.service";
 import { UserEntity } from "./entities/user.entity";
-import { EtcModule } from "../etc/etc.module";
+import { EtcModule } from "../../common/config/etc/etc.module";
 
 @Module({
   imports: [

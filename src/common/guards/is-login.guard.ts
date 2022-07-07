@@ -7,7 +7,7 @@ import {
 import { JwtService } from "@nestjs/jwt";
 import { JwtPayload } from "../interfaces/jwt-payload.interface";
 import { Request } from "express";
-import { JwtOptions } from "../config/etc";
+import { JwtOptions } from "../config/etc/etc.variable";
 
 @Injectable()
 export class IsLoginGuard implements CanActivate {

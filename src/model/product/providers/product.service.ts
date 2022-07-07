@@ -1,7 +1,7 @@
 import { StarRatingRepository } from "./../../review/providers/star-rating.repository";
 import { UploadService } from "src/model/upload/providers/upload.service";
 import { ProductEntity } from "../entities/product.entity";
-import { Promises } from "src/model/etc/providers/promises";
+import { Promises } from "../../../common/config/etc/providers/functions";
 import { UploadRepository } from "../../upload/providers/upload.repository";
 import { ProductRepository } from "./product.repository";
 import { Injectable } from "@nestjs/common";

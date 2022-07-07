@@ -1,5 +1,5 @@
 import { StarRatingEntity } from "./../entities/star-rating.entity";
-import { Promises } from "src/model/etc/providers/promises";
+import { Promises } from "../../../common/config/etc/providers/functions";
 import { ProductRepository } from "../../product/providers/product.repository";
 import { UserRepository } from "../../user/providers/user.repository";
 import { ReviewRepository } from "./review.repository";

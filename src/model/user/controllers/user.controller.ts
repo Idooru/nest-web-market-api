@@ -16,7 +16,7 @@ import { UserService } from "../providers/user.service";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { LoginUserDto } from "../dtos/login-user.dto";
 import { Response } from "express";
-import { CookieOption } from "../../../common/config/etc";
+import { CookieOption } from "../../../common/config/etc/etc.variable";
 import { JsonRes } from "../../../common/interfaces/json-success.interface";
 import { UserEntity } from "../entities/user.entity";
 import { PatchUserDto } from "../dtos/patch-user.dto";

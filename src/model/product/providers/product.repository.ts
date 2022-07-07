@@ -7,7 +7,7 @@ import {
   ProductReturnProperty,
   ProductReturnWithStarRating,
   ProductsReturnProperty,
-} from "src/common/config/etc";
+} from "../../../common/config/etc/etc.variable";
 import { ModifyProductDto } from "../dto/modify_product.dto";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { InjectRepository } from "@nestjs/typeorm";

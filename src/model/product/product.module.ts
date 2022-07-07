@@ -5,7 +5,7 @@ import { Module, forwardRef } from "@nestjs/common";
 import { ProductController } from "../product/controllers/product.controller";
 import { ProductService } from "./providers/product.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { EtcModule } from "../etc/etc.module";
+import { EtcModule } from "../../common/config/etc/etc.module";
 import { UserModule } from "../user/user.module";
 import { ReviewModule } from "../review/review.module";
 

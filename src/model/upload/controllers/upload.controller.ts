@@ -7,7 +7,7 @@ import {
   Res,
   UploadedFiles,
 } from "@nestjs/common";
-import { CookieOption } from "src/common/config/etc";
+import { CookieOption } from "../../../common/config/etc/etc.variable";
 import { UploadService } from "../providers/upload.service";
 import { MediaReturnDto } from "../dto/media-return.dto";
 import { IsLoginGuard } from "../../../common/guards/is-login.guard";

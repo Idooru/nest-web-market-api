@@ -1,4 +1,3 @@
-import { UserReturnProperty } from "./../../../common/config/etc";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { UserActivityEntity } from "../entities/user.activity.entity";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
@@ -9,7 +8,7 @@ import { Repository } from "typeorm";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { UserEntity } from "../entities/user.entity";
 import { CreateUserDto } from "../dtos/create-user.dto";
-import { Promises } from "../../etc/providers/promises";
+import { Promises } from "../../../common/config/etc/providers/functions";
 
 @Injectable()
 export class UserRepository {

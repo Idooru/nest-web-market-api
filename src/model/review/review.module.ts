@@ -8,7 +8,7 @@ import { UserModule } from "../user/user.module";
 import { ReviewRepository } from "./providers/review.repository";
 import { StarRatingEntity } from "../review/entities/star-rating.entity";
 import { StarRatingRepository } from "../review/providers/star-rating.repository";
-import { EtcModule } from "../etc/etc.module";
+import { EtcModule } from "../../common/config/etc/etc.module";
 
 @Module({
   imports: [

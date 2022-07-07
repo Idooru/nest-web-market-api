@@ -12,7 +12,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { forwardRef } from "@nestjs/common";
 import { UserAuthEntity } from "../user/entities/user.auth.entity";
 import { UserEntity } from "../user/entities/user.entity";
-import { EtcModule } from "../etc/etc.module";
+import { EtcModule } from "../../common/config/etc/etc.module";
 
 @Module({
   imports: [
