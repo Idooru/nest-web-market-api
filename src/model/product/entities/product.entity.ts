@@ -1,15 +1,6 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  OneToOne,
-  RelationId,
-} from "typeorm";
+import { Column, Entity, JoinColumn, ManyToMany, OneToOne } from "typeorm";
 import { ImagesEntity } from "../../upload/entities/upload.entity";
-import { float } from "aws-sdk/clients/lightsail";
-import { IsDecimal, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { ReviewEntity } from "../../review/entities/review.entity";
 import { StarRatingEntity } from "../../review/entities/star-rating.entity";

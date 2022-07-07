@@ -5,7 +5,7 @@ import { ProductModule } from "./model/product/product.module";
 import { LoggerMiddleware } from "./common/middlewares/logger.middleware";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { typeORMConfig } from "./common/config/typeorm.config";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { UploadModule } from "./model/upload/upload.module";
 import { EtcModule } from "./common/config/etc/etc.module";
 import { ReviewModule } from "./model/review/review.module";
@@ -24,7 +24,7 @@ import { ReviewModule } from "./model/review/review.module";
     EtcModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [ConfigService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

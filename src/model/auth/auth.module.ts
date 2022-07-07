@@ -13,6 +13,7 @@ import { forwardRef } from "@nestjs/common";
 import { UserAuthEntity } from "../user/entities/user.auth.entity";
 import { UserEntity } from "../user/entities/user.entity";
 import { EtcModule } from "../../common/config/etc/etc.module";
+import { ConfigService } from "@nestjs/config";
 
 @Module({
   imports: [
@@ -25,8 +26,8 @@ import { EtcModule } from "../../common/config/etc/etc.module";
       UserActivityEntity,
     ]),
     JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: "1m" },
+      secret: new ConfigService().get("JWT_SECRET"),
+      signOptions: { expiresIn: "3h" },
     }),
     forwardRef(() => UserModule),
     forwardRef(() => EtcModule),

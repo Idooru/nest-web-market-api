@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { Promises } from "../etc/providers/functions";
+import { Promises } from "./providers/promises";
 
 @Module({
   providers: [Promises],

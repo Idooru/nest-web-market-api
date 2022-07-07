@@ -8,7 +8,7 @@ import { Repository } from "typeorm";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { UserEntity } from "../entities/user.entity";
 import { CreateUserDto } from "../dtos/create-user.dto";
-import { Promises } from "../../../common/config/etc/providers/functions";
+import { Promises } from "../../../common/config/etc/providers/promises";
 
 @Injectable()
 export class UserRepository {
