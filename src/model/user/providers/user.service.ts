@@ -26,9 +26,10 @@ export class UserService {
       this.userRepository.checkUserPhoneNumber(phonenumber),
     ]);
 
-    this.promises.twoPromiseSettled(
+    this.promises.threePromiseSettled(
       CheckUserColumn[0],
       CheckUserColumn[1],
+      CheckUserColumn[2],
       "Check User Column For Register",
     );
 
