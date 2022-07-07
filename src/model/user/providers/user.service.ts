@@ -7,7 +7,7 @@ import { ResponseUserDto } from "../dtos/response-user.dto";
 import { UserReturnFilter } from "../dtos/response-user.dto";
 import { AuthService } from "../../auth/providers/auth.service";
 import { UploadService } from "src/model/upload/providers/upload.service";
-import { Functions } from "src/model/etc/providers/functions";
+import { Promises } from "src/model/etc/providers/promises";
 import { UserEntity } from "../entities/user.entity";
 
 import * as bcrypt from "bcrypt";
@@ -15,7 +15,7 @@ import * as bcrypt from "bcrypt";
 @Injectable()
 export class UserService {
   constructor(
-    private readonly functions: Functions,
+    private readonly promises: Promises,
     private readonly userRepository: UserRepository,
     private readonly authService: AuthService,
   ) {}
@@ -29,8 +29,9 @@ export class UserService {
       this.userRepository.checkUserPhoneNumber(phonenumber),
     ]);
 
-    this.functions.promiseSettledProcess(
-      CheckUserColumn,
+    this.promises.twoPromiseSettled(
+      CheckUserColumn[0],
+      CheckUserColumn[1],
       "Check User Column For Register",
     );
 
@@ -59,8 +60,9 @@ export class UserService {
       ),
     ]);
 
-    this.functions.promiseSettledProcess(
-      checkUserColumn,
+    this.promises.twoPromiseSettled(
+      checkUserColumn[0],
+      checkUserColumn[1],
       "Check User Column For Patch User Info",
     );
 

@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
-import { Functions } from "./providers/functions";
+import { Promises } from "./providers/promises";
 
 @Module({
-  providers: [Functions],
-  exports: [Functions],
+  providers: [Promises],
+  exports: [Promises],
 })
 export class EtcModule {}

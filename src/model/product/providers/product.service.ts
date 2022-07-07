@@ -1,7 +1,7 @@
 import { StarRatingRepository } from "./../../review/providers/star-rating.repository";
 import { UploadService } from "src/model/upload/providers/upload.service";
 import { ProductEntity } from "../entities/product.entity";
-import { Functions } from "src/model/etc/providers/functions";
+import { Promises } from "src/model/etc/providers/promises";
 import { UploadRepository } from "../../upload/providers/upload.repository";
 import { ProductRepository } from "./product.repository";
 import { Injectable } from "@nestjs/common";
@@ -13,7 +13,7 @@ import { ImagesEntity } from "src/model/upload/entities/upload.entity";
 @Injectable()
 export class ProductService {
   constructor(
-    private readonly functions: Functions,
+    private readonly promises: Promises,
     private readonly productRepository: ProductRepository,
     private readonly userRepository: UserRepository,
     private readonly uploadService: UploadService,
@@ -80,14 +80,13 @@ export class ProductService {
       this.uploadRepository.findImageWithUrl(image),
     ]);
 
-    const findProductAndImageIdResult = this.functions.promiseSettledProcess(
-      findProductAndImageId,
+    const findProductAndImageIdResult = this.promises.twoPromiseSettled(
+      findProductAndImageId[0],
+      findProductAndImageId[1],
       "Find Product And ImageId",
     );
 
-    const [product, haveImage] = findProductAndImageIdResult.map(
-      (idx) => idx.value,
-    );
+    const [product, haveImage] = findProductAndImageIdResult;
 
     if (!haveImage) {
       const result = await this.uploadService.copyImageFromImagePreparation(

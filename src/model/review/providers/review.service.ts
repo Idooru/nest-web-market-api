@@ -1,5 +1,5 @@
 import { StarRatingEntity } from "./../entities/star-rating.entity";
-import { Functions } from "src/model/etc/providers/functions";
+import { Promises } from "src/model/etc/providers/promises";
 import { ProductRepository } from "../../product/providers/product.repository";
 import { UserRepository } from "../../user/providers/user.repository";
 import { ReviewRepository } from "./review.repository";
@@ -15,7 +15,7 @@ export class ReviewService {
     private readonly userRepository: UserRepository,
     private readonly productRepository: ProductRepository,
     private readonly starRatingRepository: StarRatingRepository,
-    private readonly functions: Functions,
+    private readonly promises: Promises,
   ) {}
 
   async putStarRating(
@@ -40,8 +40,9 @@ export class ReviewService {
       ),
       this.productRepository.insertStarRatingOnProduct(productId, starRating),
     ]);
-    this.functions.promiseSettledProcess(
-      promise,
+    this.promises.twoPromiseSettled(
+      promise[0],
+      promise[1],
       "starRating Increase, sum and insert on product",
     );
     return starRating;

@@ -3,7 +3,7 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { Functions } from "src/model/etc/providers/functions";
+import { Promises } from "src/model/etc/providers/promises";
 import { ResetPasswordDto } from "../../user/dtos/reset-password.dto";
 import { FindEmailDto } from "../../user/dtos/find-email.dto";
 import { JwtService } from "@nestjs/jwt";
@@ -16,7 +16,7 @@ import * as bcrypt from "bcrypt";
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly functions: Functions,
+    private readonly promises: Promises,
     private readonly authRepositry: AuthRepository,
     private readonly jwtService: JwtService,
   ) {}
@@ -70,30 +70,46 @@ export class AuthService {
       this.authRepositry.findUserWithPhoneNumber(phonenumber),
     ]);
 
-    const resultForCheckUserColumn = this.functions.promiseSettledProcess(
-      checkUserColumn,
+    const resultForCheckUserColumn = this.promises.twoPromiseSettled(
+      checkUserColumn[0],
+      checkUserColumn[1],
       "Check User Column For Find Email",
     );
 
     const [realNameResult, phoneNumberResult] = resultForCheckUserColumn;
 
-    if (!(realNameResult.value.id === phoneNumberResult.value.id)) {
+    // const realNameResult = await this.authRepositry.findUserWithRealName(
+    //   realname,
+    // );
+
+    // const phoneNumberResult = await this.authRepositry.findUserWithPhoneNumber(
+    //   phonenumber,
+    // );
+
+    if (!(realNameResult.id === phoneNumberResult.id)) {
       throw new UnauthorizedException(
         "사용자 실명과 전화번호가 서로 일치하지 않습니다.",
       );
     }
-    return realNameResult.value.auth.email;
+    return realNameResult.auth.email;
   }
 
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
     const { email, password } = resetPasswordDto;
-    const user = await this.authRepositry.findUserWithEmail(email);
 
-    if (!user) {
-      throw new UnauthorizedException("이메일에 해당하는 아이디가 없습니다.");
-    }
+    const promise = await Promise.allSettled([
+      this.authRepositry.findUserWithEmail(email),
+      bcrypt.hash(password, 10),
+    ]);
 
-    const hashed = await bcrypt.hash(password, 10);
+    const resultPromise = this.promises.twoPromiseSettled(
+      promise[0],
+      promise[1],
+      "Find User And Hash Password",
+    );
+
+    const [user, hashed] = resultPromise;
+
     await this.authRepositry.resetPassword(user.auth.id, hashed);
   }
 }

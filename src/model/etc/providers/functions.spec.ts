@@ -1,15 +1,15 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { Functions } from "./functions";
+import { Promises } from "./promises";
 
-describe("Functions", () => {
-  let provider: Functions;
+describe("Promises", () => {
+  let provider: Promises;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [Functions],
+      providers: [Promises],
     }).compile();
 
-    provider = module.get<Functions>(Functions);
+    provider = module.get<Promises>(Promises);
   });
 
   it("should be defined", () => {

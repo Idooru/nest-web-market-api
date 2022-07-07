@@ -9,12 +9,12 @@ import { Repository } from "typeorm";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { UserEntity } from "../entities/user.entity";
 import { CreateUserDto } from "../dtos/create-user.dto";
-import { Functions } from "../../etc/providers/functions";
+import { Promises } from "../../etc/providers/promises";
 
 @Injectable()
 export class UserRepository {
   constructor(
-    private readonly functions: Functions,
+    private readonly promises: Promises,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(UserProfileEntity)
@@ -152,14 +152,12 @@ export class UserRepository {
   }
 
   async findUserProfileInfoWithId(userId: string): Promise<UserEntity> {
-    const a = await this.userRepository
+    return await this.userRepository
       .createQueryBuilder("user")
       .innerJoin("user.profile", "profile")
       .select(["user.profile.realname"])
       .where("user.id = :id", { id: userId })
       .getOne();
-
-    return a;
   }
 
   async createUser(
@@ -180,34 +178,48 @@ export class UserRepository {
       this.userActivityRepository.save({ ...userActivityColumn }),
     ]);
 
-    const saveUSerColumnResult = this.functions.promiseSettledProcess(
-      saveUserColumn,
+    const saveUserColumnResult = this.promises.threePromiseSettled(
+      saveUserColumn[0],
+      saveUserColumn[1],
+      saveUserColumn[2],
       "Save User Column For Register",
     );
 
-    const [userProfileId, userAuthId, userActivityId] =
-      saveUSerColumnResult.map((idx) => idx.value.id);
+    const [userProfile, userAuth, userActivity] = saveUserColumnResult;
+    const profileId = userProfile.id;
+    const authId = userAuth.id;
+    const activityId = userActivity.id;
 
     const findUserObject = await Promise.allSettled([
-      this.userProfileRepository.findOne({ where: { id: userProfileId } }),
-      this.userAuthRepository.findOne({ where: { id: userAuthId } }),
-      this.userActivityRepository.findOne({ where: { id: userActivityId } }),
+      this.userProfileRepository
+        .createQueryBuilder("profile")
+        .where("profile.id = :id", { id: profileId })
+        .getOne(),
+      this.userAuthRepository
+        .createQueryBuilder("auth")
+        .where("auth.id = :id", { id: authId })
+        .getOne(),
+      this.userActivityRepository
+        .createQueryBuilder("activity")
+        .where("activity.id = :id", { id: activityId })
+        .getOne(),
     ]);
 
-    const findUserObjectResult = this.functions.promiseSettledProcess(
-      findUserObject,
+    const findUserObjectResult = this.promises.threePromiseSettled(
+      findUserObject[0],
+      findUserObject[1],
+      findUserObject[2],
       "Find User Object For Register",
     );
 
     const [userProfileObject, userAuthObject, userActivityObject] =
-      findUserObjectResult.map((idx) => idx.value);
+      findUserObjectResult;
 
     const createUserDto: CreateUserDto = {
       profile: userProfileObject,
       auth: userAuthObject,
       activity: userActivityObject,
     };
-
     await this.userRepository.save({ ...createUserDto });
   }
 
@@ -233,8 +245,9 @@ export class UserRepository {
       this.userAuthRepository.save(auth),
     ]);
 
-    this.functions.promiseSettledProcess(
-      saveObject,
+    this.promises.twoPromiseSettled(
+      saveObject[0],
+      saveObject[1],
       "Save Object For Patch User Info",
     );
   }
@@ -253,8 +266,11 @@ export class UserRepository {
       this.userActivityRepository.delete(userActivityId),
     ]);
 
-    this.functions.promiseSettledProcess(
-      deleteObject,
+    this.promises.fourPromiseSettled(
+      deleteObject[0],
+      deleteObject[1],
+      deleteObject[2],
+      deleteObject[3],
       "Delete Object For Secession User",
     );
   }

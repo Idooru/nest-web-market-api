@@ -56,8 +56,8 @@ export class AuthRepository {
     }
   }
 
-  async resetPassword(id: string, hashed: string) {
+  async resetPassword(userId: string, hashed: string) {
     const password = { password: hashed };
-    await this.authRepository.update(id, password);
+    await this.authRepository.update(userId, password);
   }
 }
