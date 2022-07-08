@@ -5,7 +5,7 @@ import {
   NestInterceptor,
 } from "@nestjs/common";
 import { Observable, map } from "rxjs";
-import { JsonResult } from "src/common/interfaces/json-success.interface";
+import { JSON } from "src/common/interfaces/json-success.interface";
 
 @Injectable()
 export class JsonResponseInterceptor implements NestInterceptor {
@@ -14,18 +14,19 @@ export class JsonResponseInterceptor implements NestInterceptor {
     const req = context.switchToHttp().getRequest();
     const res = context.switchToHttp().getResponse();
 
-    console.log(`Request from ${req.method} ${req.originalUrl}`);
+    console.log(`Receive request from ${req.method} ${req.originalUrl}`);
     const now = Date.now();
 
     return next.handle().pipe(
-      map((data: JsonResult<null>) => {
+      map((data: JSON<null>) => {
         // controller 도달 후
         console.log(
-          `Response from ${req.method} ${req.originalUrl} :: time taken : ${
-            Date.now() - now
-          }ms`,
+          `Send response from ${req.method} ${
+            req.originalUrl
+          } :: time taken : ${Date.now() - now}ms`,
         );
         res.status(data.statusCode).setHeader("X-Powered-By", "");
+
         return { success: true, ...data };
       }),
     );

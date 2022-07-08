@@ -15,7 +15,7 @@ import { UpdateReviewDto } from "../dto/update-review.dto";
 import { GetDecodedJwt } from "src/common/decorators/get-decoded-jwt.decorator";
 import { JwtPayload } from "src/common/interfaces/jwt-payload.interface";
 import { Cookies } from "src/common/decorators/cookies.decorator";
-import { JsonResult } from "src/common/interfaces/json-success.interface";
+import { JSON } from "src/common/interfaces/json-success.interface";
 
 @Controller("review")
 export class ReviewController {
@@ -29,7 +29,7 @@ export class ReviewController {
     @Cookies("reviewImageUrl") reviewImg: string[] | null,
     @Cookies("reviewVideoUrl") reviewVdo: string[] | null,
     @GetDecodedJwt() jwtPayload: JwtPayload,
-  ): Promise<JsonResult<void>> {
+  ): Promise<JSON<void>> {
     const { userSelectScore } = createReviewDto;
     const starRating = await this.reviewService.putStarRating(
       userSelectScore,

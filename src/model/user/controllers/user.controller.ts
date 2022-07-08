@@ -17,7 +17,7 @@ import { RegisterUserDto } from "../dtos/register-user.dto";
 import { LoginUserDto } from "../dtos/login-user.dto";
 import { Response } from "express";
 import { CookieOption } from "../../../common/config/etc/etc.variable";
-import { JsonResult } from "../../../common/interfaces/json-success.interface";
+import { JSON } from "../../../common/interfaces/json-success.interface";
 import { UserEntity } from "../entities/user.entity";
 import { PatchUserDto } from "../dtos/patch-user.dto";
 import { ResetPasswordDto } from "../dtos/reset-password.dto";
@@ -36,7 +36,7 @@ export class UserController {
   @Post("/register")
   async register(
     @Body() registerUserDto: RegisterUserDto,
-  ): Promise<JsonResult<void>> {
+  ): Promise<JSON<void>> {
     await this.userService.register(registerUserDto);
 
     return {
@@ -50,7 +50,7 @@ export class UserController {
   async login(
     @Body() loginUserDto: LoginUserDto,
     @Res() res: Response,
-  ): Promise<JsonResult<string>> {
+  ): Promise<JSON<string>> {
     const jwtToken = await this.authService.login(loginUserDto);
     res.cookie("JWT_COOKIE", jwtToken, CookieOption);
 
@@ -64,7 +64,7 @@ export class UserController {
   @Get("/profile")
   async whoAmI(
     @GetDecodedJwt() jwtPayload: JwtPayload,
-  ): Promise<JsonResult<UserEntity>> {
+  ): Promise<JSON<UserEntity>> {
     return {
       statusCode: 200,
       message: "본인 정보를 가져옵니다.",
@@ -77,7 +77,7 @@ export class UserController {
   async refreshToken(
     @GetDecodedJwt() jwtPayload: JwtPayload,
     @Res() res: Response,
-  ): Promise<JsonResult<string>> {
+  ): Promise<JSON<string>> {
     const jwtToken = await this.authService.refreshToken(jwtPayload);
     res.cookie("JWT_COOKIE", jwtToken, CookieOption);
 
@@ -93,7 +93,7 @@ export class UserController {
   logout(
     @GetDecodedJwt() jwtPayload: JwtPayload,
     @Res() res: Response,
-  ): JsonResult<string> {
+  ): JSON<string> {
     res.clearCookie("JWT_COOKIE");
 
     return {
@@ -109,7 +109,7 @@ export class UserController {
     @Body() patchUserDto: PatchUserDto,
     @GetDecodedJwt() jwtPayload: JwtPayload,
     @Res() res: Response,
-  ): Promise<JsonResult<string>> {
+  ): Promise<JSON<string>> {
     const jwtToken = await this.userService.patchUserInfoMyself(
       patchUserDto,
       jwtPayload.id,
@@ -128,7 +128,7 @@ export class UserController {
   async secession(
     @GetDecodedJwt() jwtPayload: JwtPayload,
     @Res() res: Response,
-  ): Promise<JsonResult<string>> {
+  ): Promise<JSON<string>> {
     await this.userService.deleteUserWithId(jwtPayload.id);
 
     res.clearCookie("JWT_COOKIE");
@@ -142,9 +142,7 @@ export class UserController {
 
   @UseGuards(IsNotLoginGuard)
   @Get("/find-email")
-  async findEmail(
-    @Query() findEmailDto: FindEmailDto,
-  ): Promise<JsonResult<string>> {
+  async findEmail(@Query() findEmailDto: FindEmailDto): Promise<JSON<string>> {
     return {
       statusCode: 200,
       message: "이메일 정보를 가져옵니다.",
@@ -156,7 +154,7 @@ export class UserController {
   @Patch("/reset-password")
   async resetPassword(
     @Body() resetPasswordDto: ResetPasswordDto,
-  ): Promise<JsonResult<void>> {
+  ): Promise<JSON<void>> {
     await this.authService.resetPassword(resetPasswordDto);
 
     return {

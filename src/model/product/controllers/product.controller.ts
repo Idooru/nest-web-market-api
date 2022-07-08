@@ -15,7 +15,7 @@ import {
   ResponseProductDto,
   ResponseProductsDto,
 } from "../dto/response_product.dto";
-import { JsonResult } from "../../../common/interfaces/json-success.interface";
+import { JSON } from "../../../common/interfaces/json-success.interface";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
 import { ProductService } from "../providers/product.service";
@@ -30,7 +30,7 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get("/")
-  async getProductsAllFromLatest(): Promise<JsonResult<ResponseProductsDto[]>> {
+  async getProductsAllFromLatest(): Promise<JSON<ResponseProductsDto[]>> {
     return {
       statusCode: 200,
       message: "전체 상품 정보를 최신 순서로 가져옵니다.",
@@ -39,7 +39,7 @@ export class ProductController {
   }
 
   @Get("/oldest")
-  async getProductsAllFromOldest(): Promise<JsonResult<ResponseProductsDto[]>> {
+  async getProductsAllFromOldest(): Promise<JSON<ResponseProductsDto[]>> {
     return {
       statusCode: 200,
       message: "전체 상품 정보를 오래된 순서로 가져옵니다.",
@@ -50,7 +50,7 @@ export class ProductController {
   @Get("/search_name")
   async getProductByName(
     @Query("n") name: string,
-  ): Promise<JsonResult<ResponseProductDto>> {
+  ): Promise<JSON<ResponseProductDto>> {
     return {
       statusCode: 200,
       message: `${name}에 해당하는 상품 정보를 가져옵니다.`,
@@ -61,7 +61,7 @@ export class ProductController {
   @Get("/search_id")
   async getProductById(
     @Query("i") productId: string,
-  ): Promise<JsonResult<ResponseProductDto>> {
+  ): Promise<JSON<ResponseProductDto>> {
     return {
       statusCode: 200,
       message: `${productId}에 해당하는 상품 정보를 가져옵니다.`,
@@ -78,7 +78,7 @@ export class ProductController {
     @GetDecodedJwt() jwtPayload: JwtPayload,
     @Cookies("productImageUrl") productImg: string | null,
     @Res() res: Response,
-  ): Promise<JsonResult<void>> {
+  ): Promise<JSON<void>> {
     await this.productService.createProduct(
       createProductDto,
       jwtPayload.nickname,
@@ -107,7 +107,7 @@ export class ProductController {
     @GetDecodedJwt() JwtPayload: JwtPayload,
     @Cookies("productImageUrl") productImg: string | null,
     @Res() res: Response,
-  ): Promise<JsonResult<string>> {
+  ): Promise<JSON<string>> {
     await this.productService.modifyProduct(
       productId,
       modifyProductDto,
@@ -131,9 +131,7 @@ export class ProductController {
   @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)
   @Delete("/")
-  async removeProduct(
-    @Query("id") productId: string,
-  ): Promise<JsonResult<void>> {
+  async removeProduct(@Query("id") productId: string): Promise<JSON<void>> {
     await this.productService.removeProduct(productId);
 
     return {

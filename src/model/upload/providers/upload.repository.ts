@@ -26,13 +26,11 @@ export class UploadRepository {
       ? "product no image"
       : "product image";
 
-    const image = await this.imagesRepository.save({
+    await this.imagesRepository.save({
       url: fileNameOnUrl,
       uploader,
       uploadReason,
     });
-
-    console.log(image);
 
     const originalName = fileNameOnUrl.replace(
       `http://localhost:${process.env.PORT}/media/`,
@@ -64,13 +62,11 @@ export class UploadRepository {
       `http://localhost:${process.env.PORT}/media/${media}`.toLowerCase();
     const uploadReason = "review";
 
-    const image = await this.imagesRepository.save({
+    await this.imagesRepository.save({
       url: fileNameOnUrl,
       uploader,
       uploadReason,
     });
-
-    console.log(image);
 
     const originalName = fileNameOnUrl.replace(
       `http://localhost:${process.env.PORT}/media/`,
@@ -108,13 +104,11 @@ export class UploadRepository {
       `http://localhost:${process.env.PORT}/media/${media}`.toLowerCase();
     const uploadReason = "inquiry";
 
-    const image = await this.imagesRepository.save({
+    await this.imagesRepository.save({
       url: fileNameOnUrl,
       uploader,
       uploadReason,
     });
-
-    console.log(image);
 
     const originalName = fileNameOnUrl.replace(
       `http://localhost:${process.env.PORT}/media/`,

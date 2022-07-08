@@ -48,9 +48,7 @@ export class ReviewService {
     return starRating;
   }
 
-  async calculateRating(starRating: StarRatingEntity) {
-    1;
-  }
+  async calculateRating(starRating: StarRatingEntity) {}
 
   async createReview(createReviewVo: CreateReviewServiceDto): Promise<any> {
     // const { createReviewDto, jwtPayload, productName, reviewImg, reviewVdo } =
