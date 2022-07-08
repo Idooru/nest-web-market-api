@@ -101,7 +101,7 @@ Nest is [MIT licensed](LICENSE).
 6.  인터셉터에서 res.json을 통한 응답을 하곤했었는데 그 방식이 포스트맨에서만  
     유효한지 웹에서 응답하게 될 때 cannot set headers 에러가 난다. 그래서 res.json 대신 return을 통한 방법으로 응답을 하려 했었는데 이유는 알 수 없지만 이 방법도 문제가 있는지 return으로 응답 한 후, 로직이 닿지 않는지 응답이 가지 않고 계속 로딩중인 상태였다. 아래 로직을 변경하니 정상작동 되었다. 방법이 맞는지는 잘 모르겠다. 해당 파일을 찾을 때 ctrl + e -> 파일 이름을 입력하자.
     파일 이름 : router-execution-context.js
+    파일 경로 : node_modules/@nestjs/core/router/router-execution-context.js
     줄 : 174 ~ 177
-    코드 : "result = await this.responseController.transformToResult(result);
-    const a =await this.responseController.apply(result, res, httpStatusCode);
-    !isResponseHandled && a"
+    코드 : result = await this.responseController.transformToResult  
+     (result); await this.responseController.apply(result, res, httpStatusCode);
