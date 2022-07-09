@@ -5,14 +5,15 @@ import { AppModule } from "./app.module";
 import { AllExceptionFilter } from "./common/exceptions/all-exception.filter";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { join } from "path";
+import { ConfigService } from "@nestjs/config";
 
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  const port = process.env.PORT;
-  const cookieSecret = process.env.COOKIE_SECRET;
+  const port = new ConfigService().get("PORT");
+  const cookieSecret = new ConfigService().get("COOKIE_SECRET");
 
   /* 각각의 서비스에서 발생하는 custom exception을 제외한 서버에서 발생하는 에러
   혹은 404 에러 등을 글로벌적으로 처리할수 있음*/

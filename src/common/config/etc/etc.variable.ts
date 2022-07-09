@@ -1,5 +1,6 @@
 import { CookieOptions } from "express";
 import { JwtModuleOptions } from "@nestjs/jwt";
+import { ConfigService } from "@nestjs/config";
 
 export const CookieOption: CookieOptions = {
   httpOnly: true,
@@ -8,7 +9,7 @@ export const CookieOption: CookieOptions = {
 };
 
 export const JwtOptions: JwtModuleOptions = {
-  secret: process.env.JWT_SECRET,
+  secret: new ConfigService().get("JWT_SECRET"),
 };
 
 export const ProductsReturnProperty = [

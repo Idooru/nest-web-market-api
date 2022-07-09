@@ -10,16 +10,14 @@ import { UserActivityEntity } from "src/model/user/entities/user.activity.entity
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
 import { UserEntity } from "src/model/user/entities/user.entity";
 import { StarRatingEntity } from "../../model/review/entities/star-rating.entity";
-
-import * as dotenv from "dotenv";
-dotenv.config();
+import { ConfigService } from "@nestjs/config";
 
 export const typeORMConfig: TypeOrmModuleOptions = {
   type: "mysql",
-  host: process.env.MYSQL_HOST,
+  host: new ConfigService().get("MYSQL_HOST"),
   port: 3306,
   username: "admin",
-  password: process.env.MYSQL_PASSWORD,
+  password: new ConfigService().get("MYSQL_PASSWORD"),
   database: "nestWebMarket_API",
   entities: [
     UserEntity,

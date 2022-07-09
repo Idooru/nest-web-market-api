@@ -6,6 +6,7 @@ import {
   UploadedFile,
   Res,
   UploadedFiles,
+  Delete,
 } from "@nestjs/common";
 import { CookieOption } from "../../../common/config/etc/etc.variable";
 import { UploadService } from "../providers/upload.service";
@@ -18,6 +19,7 @@ import { JwtPayload } from "src/common/interfaces/jwt-payload.interface";
 import { JSON } from "../../../common/interfaces/json-success.interface";
 import { IsAdminGuard } from "../../../common/guards/is-admin.guard";
 import { Response } from "express";
+import { Cookies } from "src/common/decorators/cookies.decorator";
 
 @Controller("upload")
 export class UploadController {
@@ -109,7 +111,7 @@ export class UploadController {
     const image = await this.uploadService.uploadImage(files, jwtPayload);
     const urls = image.map((idx) => idx.url);
 
-    res.cookie("inquirtyImageUrl", urls, CookieOption);
+    res.cookie("inquiryImageUrl", urls, CookieOption);
 
     return {
       statusCode: 201,
@@ -131,7 +133,7 @@ export class UploadController {
     const image = await this.uploadService.uploadVideo(files, jwtPayload);
     const urls = image.map((idx) => idx.url);
 
-    res.cookie("InquirtyVideoUrl", urls, CookieOption);
+    res.cookie("InquiryVideoUrl", urls, CookieOption);
 
     return {
       statusCode: 201,
@@ -140,25 +142,83 @@ export class UploadController {
     };
   }
 
-  // @UseGuards(IsLoginGuard)
-  // // @UseInterceptors(FilesInterceptor("video", new MulterProvider().apply()))
-  // @Get()
-  // findAll() {
-  //   return this.uploadService.findAll();
-  // }
+  @UseGuards(IsLoginGuard)
+  @Delete("/image/product/cancel")
+  async cancelImageUploadForProduct(
+    @Cookies("productImageUrl") url: string,
+    @Res() res: Response,
+  ) {
+    await this.uploadService.deleteUploadFile(url);
 
-  // @Get(":id")
-  // findOne(@Param("id") id: string) {
-  //   return this.uploadService.findOne(+id);
-  // }
+    res.clearCookie("productImageUrl");
 
-  // @Patch(":id")
-  // update(@Param("id") id: string, @Body() updateUploadDto: MediaReturnDto) {
-  //   return this.uploadService.update(+id, updateUploadDto);
-  // }
+    return {
+      statusCode: 200,
+      message: "상품 이미지 업로드를 취소하였습니다.",
+    };
+  }
 
-  // @Delete(":id")
-  // remove(@Param("id") id: string) {
-  //   return this.uploadService.remove(+id);
-  // }
+  @UseGuards(IsLoginGuard)
+  @Delete("/image/review/cancel")
+  async cancelImageUploadForReview(
+    @Cookies("reviewImageUrl") url: string,
+    @Res() res: Response,
+  ) {
+    await this.uploadService.deleteUploadFile(url);
+
+    res.clearCookie("reviewImageUrl");
+
+    return {
+      statusCode: 200,
+      message: "리뷰 이미지 업로드를 취소하였습니다.",
+    };
+  }
+
+  @UseGuards(IsLoginGuard)
+  @Delete("/video/review/cancel")
+  async cancelVideoUploadForReview(
+    @Cookies("reviewVideoUrl") url: string,
+    @Res() res: Response,
+  ) {
+    await this.uploadService.deleteUploadFile(url);
+
+    res.clearCookie("reviewVideoUrl");
+
+    return {
+      statusCode: 200,
+      message: "리뷰 동영상 업로드를 취소하였습니다.",
+    };
+  }
+
+  @UseGuards(IsLoginGuard)
+  @Delete("/image/inquiry/cancel")
+  async cancelImageUploadForInquiry(
+    @Cookies("inquiryImageUrl") url: string,
+    @Res() res: Response,
+  ) {
+    await this.uploadService.deleteUploadFile(url);
+
+    res.clearCookie("inquiryImageUrl");
+
+    return {
+      statusCode: 200,
+      message: "문의 이미지 업로드를 취소하였습니다.",
+    };
+  }
+
+  @UseGuards(IsLoginGuard)
+  @Delete("/video/inquiry/cancel")
+  async cancelVideoUploadForInquiry(
+    @Cookies("inquiryVideoUrl") url: string,
+    @Res() res: Response,
+  ) {
+    await this.uploadService.deleteUploadFile(url);
+
+    res.clearCookie("inquiryVideoUrl");
+
+    return {
+      statusCode: 200,
+      message: "문의 동영상 업로드를 취소하였습니다.",
+    };
+  }
 }

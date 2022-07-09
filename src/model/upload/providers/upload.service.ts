@@ -1,6 +1,11 @@
+import { ConfigService } from "@nestjs/config";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { UserRepository } from "../../user/providers/user.repository";
 import { UploadRepository } from "../providers/upload.repository";
-import { BadRequestException, Injectable } from "@nestjs/common";
 import { MediaReturnDto } from "../dto/media-return.dto";
 import { JwtPayload } from "src/common/interfaces/jwt-payload.interface";
 
@@ -12,6 +17,7 @@ export class UploadService {
   constructor(
     private readonly uploadRepository: UploadRepository,
     private readonly userRepository: UserRepository,
+    private readonly configService: ConfigService,
   ) {}
 
   async uploadImageForProduct(
@@ -43,14 +49,27 @@ export class UploadService {
 
     // 상품 준비 이미지를 가져온다.
     const imagePreparation = await this.uploadRepository.findImagePreparation();
-    const parseUrl = imagePreparation.url.slice(28);
+    const parseUrl = imagePreparation.url.replace(
+      `http://localhost:${this.configService.get("PORT")}/media/`,
+      "",
+    );
     const src = path.join(__dirname, `../../../../uploads/image/${parseUrl}`);
     const dest = path.join(
       __dirname,
       `../../../../uploads/image/imagepreparation-${Date.now()}.jpg`,
     );
 
-    fs.copyFileSync(src, dest);
+    try {
+      fs.copyFileSync(src, dest);
+    } catch (err) {
+      await this.uploadRepository.deleteUploadImageWithId(imagePreparation.id);
+
+      const errMsg = `서버 디스크에서 ${src.replace(
+        "/root/Coding/nodejs/nest_project/nestWebMarket_API/uploads/image/",
+        "",
+      )}를 찾을 수 없습니다. 이미지 준비 이미지를 다시 업로드 하세요.`;
+      throw new NotFoundException(errMsg);
+    }
 
     const image = dest.replace(
       "/root/Coding/nodejs/nest_project/nestWebMarket_API/uploads/image/",
@@ -133,23 +152,7 @@ export class UploadService {
     return videoUrls;
   }
 
-  // create(createUploadDto: MediaUploadDto) {
-  //   return "This action adds a new upload";
-  // }
-
-  // findAll() {
-  //   return `This action returns all upload`;
-  // }
-
-  // findOne(id: number) {
-  //   return `This action returns a #${id} upload`;
-  // }
-
-  // update(id: number, updateUploadDto: MediaReturnDto) {
-  //   return `This action updates a #${id} upload`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} upload`;
-  // }
+  async deleteUploadFile(url: string) {
+    await this.uploadRepository.deleteUploadFileWithUrl(url);
+  }
 }

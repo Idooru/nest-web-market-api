@@ -5,6 +5,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ImagesEntity, VideosEntity } from "../entities/upload.entity";
 import { Repository } from "typeorm";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class UploadRepository {
@@ -20,8 +21,9 @@ export class UploadRepository {
     imageUploadDto: MediaUploadDto,
   ): Promise<MediaReturnDto> {
     const { media, uploader } = imageUploadDto;
-    const fileNameOnUrl =
-      `http://localhost:${process.env.PORT}/media/${media}`.toLowerCase();
+    const fileNameOnUrl = `http://localhost:${new ConfigService().get(
+      "PORT",
+    )}/media/${media}`.toLowerCase();
     const uploadReason = media.includes("imagepreparation")
       ? "product no image"
       : "product image";
@@ -33,7 +35,7 @@ export class UploadRepository {
     });
 
     const originalName = fileNameOnUrl.replace(
-      `http://localhost:${process.env.PORT}/media/`,
+      `http://localhost:${new ConfigService().get("PORT")}/media/`,
       "",
     );
 
@@ -51,15 +53,16 @@ export class UploadRepository {
         .getOneOrFail();
     } catch (err) {
       throw new NotFoundException(
-        "이미지 준비 이미지를 찾을 수가 없습니다. 먼저 이미지 준비 이미지를 업로드 해주세요.",
+        "데이터베이스에서 이미지 준비 이미지를 찾을 수가 없습니다. 먼저 이미지 준비 이미지를 업로드 해주세요.",
       );
     }
   }
 
   async uploadImageForReview(videoUploadDto: MediaUploadDto) {
     const { media, uploader } = videoUploadDto;
-    const fileNameOnUrl =
-      `http://localhost:${process.env.PORT}/media/${media}`.toLowerCase();
+    const fileNameOnUrl = `http://localhost:${new ConfigService().get(
+      "PORT",
+    )}/media/${media}`.toLowerCase();
     const uploadReason = "review";
 
     await this.imagesRepository.save({
@@ -69,7 +72,7 @@ export class UploadRepository {
     });
 
     const originalName = fileNameOnUrl.replace(
-      `http://localhost:${process.env.PORT}/media/`,
+      `http://localhost:${new ConfigService().get("PORT")}/media/`,
       "",
     );
 
@@ -78,8 +81,9 @@ export class UploadRepository {
 
   async uploadVideoForReview(videoUploadDto: MediaUploadDto) {
     const { media, uploader } = videoUploadDto;
-    const fileNameOnUrl =
-      `http://localhost:${process.env.PORT}/media/${media}`.toLowerCase();
+    const fileNameOnUrl = `http://localhost:${new ConfigService().get(
+      "PORT",
+    )}/media/${media}`.toLowerCase();
     const uploadReason = "review";
 
     const video = await this.videosRepository.save({
@@ -91,7 +95,7 @@ export class UploadRepository {
     console.log(video);
 
     const originalName = fileNameOnUrl.replace(
-      `http://localhost:${process.env.PORT}/media/`,
+      `http://localhost:${new ConfigService().get("PORT")}/media/`,
       "",
     );
 
@@ -100,8 +104,9 @@ export class UploadRepository {
 
   async uploadImageForInquiry(videoUploadDto: MediaUploadDto) {
     const { media, uploader } = videoUploadDto;
-    const fileNameOnUrl =
-      `http://localhost:${process.env.PORT}/media/${media}`.toLowerCase();
+    const fileNameOnUrl = `http://localhost:${new ConfigService().get(
+      "PORT",
+    )}/media/${media}`.toLowerCase();
     const uploadReason = "inquiry";
 
     await this.imagesRepository.save({
@@ -111,7 +116,7 @@ export class UploadRepository {
     });
 
     const originalName = fileNameOnUrl.replace(
-      `http://localhost:${process.env.PORT}/media/`,
+      `http://localhost:${new ConfigService().get("PORT")}/media/`,
       "",
     );
 
@@ -120,8 +125,9 @@ export class UploadRepository {
 
   async uploadVideoForInquiry(videoUploadDto: MediaUploadDto) {
     const { media, uploader } = videoUploadDto;
-    const fileNameOnUrl =
-      `http://localhost:${process.env.PORT}/media/${media}`.toLowerCase();
+    const fileNameOnUrl = `http://localhost:${new ConfigService().get(
+      "PORT",
+    )}/media/${media}`.toLowerCase();
     const uploadReason = "inquiry";
 
     const video = await this.videosRepository.save({
@@ -133,7 +139,7 @@ export class UploadRepository {
     console.log(video);
 
     const originalName = fileNameOnUrl.replace(
-      `http://localhost:${process.env.PORT}/media/`,
+      `http://localhost:${new ConfigService().get("PORT")}/media/`,
       "",
     );
 
@@ -145,6 +151,14 @@ export class UploadRepository {
       .createQueryBuilder("i")
       .where("i.url = :url", { url })
       .getOne();
+  }
+
+  async deleteUploadImageWithId(id: string) {
+    return await this.imagesRepository.delete(id);
+  }
+
+  async deleteUploadFileWithUrl(url: string) {
+    return await this.imagesRepository.delete(url);
   }
 
   // async findImageWithoutImage(url: string): Promise<ImagesEntity> {
