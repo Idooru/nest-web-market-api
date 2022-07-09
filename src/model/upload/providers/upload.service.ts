@@ -62,7 +62,7 @@ export class UploadService {
     try {
       fs.copyFileSync(src, dest);
     } catch (err) {
-      await this.uploadRepository.deleteUploadImageWithId(imagePreparation.id);
+      await this.uploadRepository.deleteUploadFileWithId(imagePreparation.id);
 
       const errMsg = `서버 디스크에서 ${src.replace(
         "/root/Coding/nodejs/nest_project/nestWebMarket_API/uploads/image/",
@@ -153,6 +153,8 @@ export class UploadService {
   }
 
   async deleteUploadFile(url: string) {
-    await this.uploadRepository.deleteUploadFileWithUrl(url);
+    const image = await this.uploadRepository.findImageWithUrl(url);
+
+    await this.uploadRepository.deleteUploadFileWithId(image.id);
   }
 }

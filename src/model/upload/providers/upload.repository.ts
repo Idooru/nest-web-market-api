@@ -153,12 +153,8 @@ export class UploadRepository {
       .getOne();
   }
 
-  async deleteUploadImageWithId(id: string) {
+  async deleteUploadFileWithId(id: string) {
     return await this.imagesRepository.delete(id);
-  }
-
-  async deleteUploadFileWithUrl(url: string) {
-    return await this.imagesRepository.delete(url);
   }
 
   // async findImageWithoutImage(url: string): Promise<ImagesEntity> {
