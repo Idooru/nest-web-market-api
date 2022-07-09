@@ -18,9 +18,9 @@ export class UploadRepository {
   ) {}
 
   async uploadImageForProduct(
-    imageUploadDto: MediaUploadDto,
+    mediaUploadDto: MediaUploadDto,
   ): Promise<MediaReturnDto> {
-    const { media, uploader } = imageUploadDto;
+    const { media, uploader } = mediaUploadDto;
     const fileNameOnUrl = `http://localhost:${new ConfigService().get(
       "PORT",
     )}/media/${media}`.toLowerCase();
@@ -58,8 +58,10 @@ export class UploadRepository {
     }
   }
 
-  async uploadImageForReview(videoUploadDto: MediaUploadDto) {
-    const { media, uploader } = videoUploadDto;
+  async uploadImageForReview(
+    mediaUploadDto: MediaUploadDto,
+  ): Promise<MediaReturnDto> {
+    const { media, uploader } = mediaUploadDto;
     const fileNameOnUrl = `http://localhost:${new ConfigService().get(
       "PORT",
     )}/media/${media}`.toLowerCase();
@@ -79,8 +81,10 @@ export class UploadRepository {
     return { name: originalName, url: fileNameOnUrl, uploadReason };
   }
 
-  async uploadVideoForReview(videoUploadDto: MediaUploadDto) {
-    const { media, uploader } = videoUploadDto;
+  async uploadVideoForReview(
+    mediaUploadDto: MediaUploadDto,
+  ): Promise<MediaReturnDto> {
+    const { media, uploader } = mediaUploadDto;
     const fileNameOnUrl = `http://localhost:${new ConfigService().get(
       "PORT",
     )}/media/${media}`.toLowerCase();
@@ -102,8 +106,10 @@ export class UploadRepository {
     return { name: originalName, url: fileNameOnUrl, uploadReason };
   }
 
-  async uploadImageForInquiry(videoUploadDto: MediaUploadDto) {
-    const { media, uploader } = videoUploadDto;
+  async uploadImageForInquiry(
+    mediaUploadDto: MediaUploadDto,
+  ): Promise<MediaReturnDto> {
+    const { media, uploader } = mediaUploadDto;
     const fileNameOnUrl = `http://localhost:${new ConfigService().get(
       "PORT",
     )}/media/${media}`.toLowerCase();
@@ -123,8 +129,10 @@ export class UploadRepository {
     return { name: originalName, url: fileNameOnUrl, uploadReason };
   }
 
-  async uploadVideoForInquiry(videoUploadDto: MediaUploadDto) {
-    const { media, uploader } = videoUploadDto;
+  async uploadVideoForInquiry(
+    mediaUploadDto: MediaUploadDto,
+  ): Promise<MediaReturnDto> {
+    const { media, uploader } = mediaUploadDto;
     const fileNameOnUrl = `http://localhost:${new ConfigService().get(
       "PORT",
     )}/media/${media}`.toLowerCase();
@@ -146,14 +154,14 @@ export class UploadRepository {
     return { name: originalName, url: fileNameOnUrl, uploadReason };
   }
 
-  async findImageWithUrl(url: string): Promise<ImagesEntity> {
+  async findImageWithUrl(url: string | string[]): Promise<ImagesEntity> {
     return await this.imagesRepository
       .createQueryBuilder("i")
       .where("i.url = :url", { url })
       .getOne();
   }
 
-  async deleteUploadFileWithId(id: string) {
-    return await this.imagesRepository.delete(id);
+  async deleteUploadFileWithId(id: string): Promise<void> {
+    await this.imagesRepository.delete(id);
   }
 }

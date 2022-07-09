@@ -159,9 +159,9 @@ export class UploadController {
   @UseGuards(IsLoginGuard)
   @Delete("/image/review/cancel")
   async cancelImageUploadForReview(
-    @Cookies("Review_Image_Url_COOKIE") url: string,
+    @Cookies("Review_Image_Url_COOKIE") urls: string[],
   ): Promise<JSON<void>> {
-    await this.uploadService.deleteUploadFile(url);
+    await this.uploadService.deleteUploadFiles(urls);
 
     return {
       statusCode: 200,
@@ -174,9 +174,9 @@ export class UploadController {
   @UseGuards(IsLoginGuard)
   @Delete("/video/review/cancel")
   async cancelVideoUploadForReview(
-    @Cookies("Review_Video_Url_COOKIE") url: string,
+    @Cookies("Review_Video_Url_COOKIE") urls: string[],
   ): Promise<JSON<void>> {
-    await this.uploadService.deleteUploadFile(url);
+    await this.uploadService.deleteUploadFiles(urls);
 
     return {
       statusCode: 200,
@@ -189,9 +189,9 @@ export class UploadController {
   @UseGuards(IsLoginGuard)
   @Delete("/image/inquiry/cancel")
   async cancelImageUploadForInquiry(
-    @Cookies("Inquiry_Image_Url_COOKIE") url: string,
+    @Cookies("Inquiry_Image_Url_COOKIE") urls: string[],
   ): Promise<JSON<void>> {
-    await this.uploadService.deleteUploadFile(url);
+    await this.uploadService.deleteUploadFiles(urls);
 
     return {
       statusCode: 200,
@@ -204,9 +204,9 @@ export class UploadController {
   @UseGuards(IsLoginGuard)
   @Delete("/video/inquiry/cancel")
   async cancelVideoUploadForInquiry(
-    @Cookies("Inquiry_Video_Url_COOKIE") url: string,
+    @Cookies("Inquiry_Video_Url_COOKIE") urls: string[],
   ): Promise<JSON<void>> {
-    await this.uploadService.deleteUploadFile(url);
+    await this.uploadService.deleteUploadFiles(urls);
 
     return {
       statusCode: 200,

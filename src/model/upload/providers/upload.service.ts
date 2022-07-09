@@ -1,3 +1,4 @@
+import { ImagesEntity } from "./../entities/upload.entity";
 import { ConfigService } from "@nestjs/config";
 import {
   BadRequestException,
@@ -97,6 +98,7 @@ export class UploadService {
     } else if (files.length >= 2) {
       for (const index of files) {
         const image = index.filename;
+
         imageUrls.push(
           await this.uploadRepository.uploadImageForReview({
             media: image,
@@ -157,4 +159,25 @@ export class UploadService {
 
     await this.uploadRepository.deleteUploadFileWithId(image.id);
   }
+
+  async deleteUploadFiles(urls: string[]): Promise<void> {
+    let image: ImagesEntity;
+
+    if (urls.length >= 2) {
+      urls.forEach(async (idx) => {
+        image = await this.uploadRepository.findImageWithUrl(idx);
+        await this.uploadRepository.deleteUploadFileWithId(image.id);
+      });
+      return;
+    }
+    image = await this.uploadRepository.findImageWithUrl(urls[0]);
+
+    await this.uploadRepository.deleteUploadFileWithId(image.id);
+  }
 }
+
+// for (const idx of urls) {
+//   image = await this.uploadRepository.findImageWithUrl(idx);
+
+//   await this.uploadRepository.deleteUploadFileWithId(image.id);
+// }
