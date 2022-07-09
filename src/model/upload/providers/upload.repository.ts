@@ -156,18 +156,4 @@ export class UploadRepository {
   async deleteUploadFileWithId(id: string) {
     return await this.imagesRepository.delete(id);
   }
-
-  // async findImageWithoutImage(url: string): Promise<ImagesEntity> {
-  //   return await this.imagesRepository
-  //     .createQueryBuilder("i")
-  //     .where("i.url = :url", { url })
-  //     .getOne();
-  // }
-
-  // async findImageWithUploadedImage(url: ImagesEntity): Promise<ImagesEntity> {
-  //   return await this.imagesRepository.findOne({
-  //     select: ["id"],
-  //     where: { url },
-  //   });
-  // }
 }

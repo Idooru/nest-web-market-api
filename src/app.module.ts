@@ -24,7 +24,7 @@ import { ReviewModule } from "./model/review/review.module";
     EtcModule,
   ],
   controllers: [],
-  providers: [ConfigService],
+  providers: [],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
