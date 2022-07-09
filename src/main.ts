@@ -1,8 +1,7 @@
-import { JsonResponseInterceptor } from "./common/interceptors/json.response.interceptor";
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
-import { AllExceptionFilter } from "./common/exceptions/all-exception.filter";
+import { AllExceptionFilter } from "./common/exceptions/all.exception.filter";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { join } from "path";
 import { ConfigService } from "@nestjs/config";
@@ -23,7 +22,7 @@ async function bootstrap() {
       errorHttpStatusCode: 415,
     }),
   );
-  app.useGlobalInterceptors(new JsonResponseInterceptor());
+
   app.use(cookieParser(cookieSecret));
   app.use(helmet());
 

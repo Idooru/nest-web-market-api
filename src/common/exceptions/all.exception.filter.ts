@@ -4,8 +4,8 @@ import {
   ArgumentsHost,
   HttpException,
 } from "@nestjs/common";
-import { HttpError } from "../interfaces/http-error.interface";
-import { ValidationError } from "../interfaces/validation-error.interface";
+import { HttpError } from "../interfaces/http.error.interface";
+import { ValidationError } from "../interfaces/validation.error.interface";
 import { Response } from "express";
 
 @Catch(HttpException)

@@ -7,7 +7,7 @@ import {
 import { UserRepository } from "../../user/providers/user.repository";
 import { UploadRepository } from "../providers/upload.repository";
 import { MediaReturnDto } from "../dto/media-return.dto";
-import { JwtPayload } from "src/common/interfaces/jwt-payload.interface";
+import { JwtPayload } from "../../../common/interfaces/jwt.payload.interface";
 
 import * as fs from "fs";
 import * as path from "path";
@@ -152,7 +152,7 @@ export class UploadService {
     return videoUrls;
   }
 
-  async deleteUploadFile(url: string) {
+  async deleteUploadFile(url: string): Promise<void> {
     const image = await this.uploadRepository.findImageWithUrl(url);
 
     await this.uploadRepository.deleteUploadFileWithId(image.id);

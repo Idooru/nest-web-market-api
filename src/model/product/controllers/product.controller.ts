@@ -1,4 +1,4 @@
-import { JwtPayload } from "./../../../common/interfaces/jwt-payload.interface";
+import { JwtPayload } from "../../../common/interfaces/jwt.payload.interface";
 import {
   Controller,
   Get,
@@ -8,27 +8,28 @@ import {
   Patch,
   Delete,
   UseGuards,
-  Res,
-  NotFoundException,
+  UseInterceptors,
 } from "@nestjs/common";
 import {
   ResponseProductDto,
   ResponseProductsDto,
 } from "../dto/response_product.dto";
-import { JSON } from "../../../common/interfaces/json-success.interface";
+import { JSON } from "../../../common/interfaces/json.success.interface";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
 import { ProductService } from "../providers/product.service";
 import { IsAdminGuard } from "../../../common/guards/is-admin.guard";
 import { IsLoginGuard } from "../../../common/guards/is-login.guard";
-import { Response } from "express";
 import { Cookies } from "src/common/decorators/cookies.decorator";
-import { GetDecodedJwt } from "src/common/decorators/get-decoded-jwt.decorator";
+import { GetJWT } from "src/common/decorators/get.jwt.decorator";
+import { JsonNoCookieInterceptor } from "src/common/interceptors/json.no.cookie.interceptor";
+import { JsonClearCookieInterceptor } from "src/common/interceptors/json.clear.cookie.interceptor";
 
 @Controller("/product")
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  @UseInterceptors(JsonNoCookieInterceptor)
   @Get("/")
   async getProductsAllFromLatest(): Promise<JSON<ResponseProductsDto[]>> {
     return {
@@ -38,6 +39,7 @@ export class ProductController {
     };
   }
 
+  @UseInterceptors(JsonNoCookieInterceptor)
   @Get("/oldest")
   async getProductsAllFromOldest(): Promise<JSON<ResponseProductsDto[]>> {
     return {
@@ -47,6 +49,7 @@ export class ProductController {
     };
   }
 
+  @UseInterceptors(JsonNoCookieInterceptor)
   @Get("/search_name")
   async getProductByName(
     @Query("n") name: string,
@@ -58,6 +61,7 @@ export class ProductController {
     };
   }
 
+  @UseInterceptors(JsonNoCookieInterceptor)
   @Get("/search_id")
   async getProductById(
     @Query("i") productId: string,
@@ -69,15 +73,15 @@ export class ProductController {
     };
   }
 
+  @UseInterceptors(JsonClearCookieInterceptor)
   @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)
   @Post("/")
   async createProduct(
     @Body()
     createProductDto: CreateProductDto,
-    @GetDecodedJwt() jwtPayload: JwtPayload,
-    @Cookies("productImageUrl") productImg: string | null,
-    @Res() res: Response,
+    @GetJWT() jwtPayload: JwtPayload,
+    @Cookies("Product_Image_Url_COOKIE") productImg: string | null,
   ): Promise<JSON<void>> {
     await this.productService.createProduct(
       createProductDto,
@@ -85,28 +89,22 @@ export class ProductController {
       productImg,
     );
 
-    try {
-      res.clearCookie("productImageUrl");
-    } catch (err) {
-      throw new NotFoundException("쿠키가 변조 되었습니다.");
-    }
-
     return {
       statusCode: 201,
       message: "상품을 생성하였습니다.",
+      cookieKey: "Product_Image_Url_COOKIE",
     };
   }
 
+  @UseInterceptors(JsonClearCookieInterceptor)
   @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)
   @Patch("/")
   async modifyProduct(
-    @Query("id")
-    productId: string,
+    @Query("id") productId: string,
     @Body() modifyProductDto: ModifyProductDto,
-    @GetDecodedJwt() JwtPayload: JwtPayload,
-    @Cookies("productImageUrl") productImg: string | null,
-    @Res() res: Response,
+    @GetJWT() JwtPayload: JwtPayload,
+    @Cookies("Product_Image_Url_COOKIE") productImg: string | null,
   ): Promise<JSON<string>> {
     await this.productService.modifyProduct(
       productId,
@@ -115,19 +113,15 @@ export class ProductController {
       productImg,
     );
 
-    try {
-      res.clearCookie("productImageUrl");
-    } catch (err) {
-      throw new NotFoundException("쿠키가 변조 되었습니다.");
-    }
-
     return {
       statusCode: 201,
-      message: "상품을 수정하였습니다.",
+      message: `${productId}에 해당하는 상품을 수정하였습니다.`,
+      cookieKey: "Product_Image_Url_COOKIE",
       result: productId,
     };
   }
 
+  @UseInterceptors(JsonNoCookieInterceptor)
   @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)
   @Delete("/")

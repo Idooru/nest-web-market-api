@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { JwtPayload } from "../interfaces/jwt-payload.interface";
+import { JwtPayload } from "../interfaces/jwt.payload.interface";
 import { Request, Response } from "express";
 import { JwtOptions } from "../config/etc/etc.variable";
 
@@ -21,7 +21,7 @@ export class IsLoginGuard implements CanActivate {
 
     if (!JWT_COOKIE) {
       throw new UnauthorizedException(
-        "토큰이 없으므로 인중이 필요한 작업을 수행할 수 없습니다.",
+        "토큰이 없으므로 인증이 필요한 작업을 수행할 수 없습니다.",
       );
     }
 

@@ -124,7 +124,7 @@ export class ProductRepository {
         .where("product.name = :name", { name })
         .getOneOrFail();
     } catch (err) {
-      throw new NotFoundException("해당 상품 아이디는 존재하지 않습니다.");
+      throw new NotFoundException("해당 상품 이름은 존재하지 않습니다.");
     }
   }
 

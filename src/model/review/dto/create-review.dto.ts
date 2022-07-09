@@ -1,6 +1,6 @@
 import { IntersectionType, PickType } from "@nestjs/swagger";
 import { ReviewEntity } from "../entities/review.entity";
-import { JwtPayload } from "src/common/interfaces/jwt-payload.interface";
+import { JwtPayload } from "src/common/interfaces/jwt.payload.interface";
 import { IsEnum, IsNotEmpty, IsNumber } from "class-validator";
 
 export class Comments extends PickType(ReviewEntity, ["comments"] as const) {}
