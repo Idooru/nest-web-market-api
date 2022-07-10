@@ -4,11 +4,12 @@ import {
   Get,
   Post,
   Body,
-  Query,
   Patch,
   Delete,
   UseGuards,
   UseInterceptors,
+  Param,
+  BadRequestException,
 } from "@nestjs/common";
 import {
   ResponseProductDto,
@@ -50,21 +51,21 @@ export class ProductController {
   }
 
   @UseInterceptors(JsonNoCookieInterceptor)
-  @Get("/search_name")
+  @Get("/name/:name")
   async getProductByName(
-    @Query("n") name: string,
+    @Param("name") productName: string,
   ): Promise<JSON<ResponseProductDto>> {
     return {
       statusCode: 200,
-      message: `${name}에 해당하는 상품 정보를 가져옵니다.`,
-      result: await this.productService.getProductByName(name),
+      message: `${productName}에 해당하는 상품 정보를 가져옵니다.`,
+      result: await this.productService.getProductByName(productName),
     };
   }
 
   @UseInterceptors(JsonNoCookieInterceptor)
-  @Get("/search_id")
+  @Get("/id/:id")
   async getProductById(
-    @Query("i") productId: string,
+    @Param("id") productId: string,
   ): Promise<JSON<ResponseProductDto>> {
     return {
       statusCode: 200,
@@ -81,12 +82,13 @@ export class ProductController {
     @Body()
     createProductDto: CreateProductDto,
     @GetJWT() jwtPayload: JwtPayload,
-    @Cookies("Product_Image_Url_COOKIE") productImg: string | null,
+    @Cookies("Product_Image_Url_COOKIE")
+    productImgCookie: { name: string; url: string } | null,
   ): Promise<JSON<void>> {
     await this.productService.createProduct(
       createProductDto,
       jwtPayload.nickname,
-      productImg,
+      productImgCookie,
     );
 
     return {
@@ -99,13 +101,20 @@ export class ProductController {
   @UseInterceptors(JsonClearCookieInterceptor)
   @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)
-  @Patch("/")
+  @Patch("/id/:id")
   async modifyProduct(
-    @Query("id") productId: string,
+    @Param("id") productId: string,
     @Body() modifyProductDto: ModifyProductDto,
     @GetJWT() JwtPayload: JwtPayload,
-    @Cookies("Product_Image_Url_COOKIE") productImg: string | null,
-  ): Promise<JSON<string>> {
+    @Cookies("Product_Image_Url_COOKIE")
+    productImg: { name: string; url: string } | null,
+  ): Promise<JSON<void>> {
+    if (!productImg) {
+      throw new BadRequestException(
+        "상품을 수정할 때 사용할 이미지를 준비해주세요.",
+      );
+    }
+
     await this.productService.modifyProduct(
       productId,
       modifyProductDto,
@@ -115,17 +124,16 @@ export class ProductController {
 
     return {
       statusCode: 201,
-      message: `${productId}에 해당하는 상품을 수정하였습니다.`,
+      message: `id${productId}에 해당하는 상품을 수정하였습니다.`,
       cookieKey: "Product_Image_Url_COOKIE",
-      result: productId,
     };
   }
 
   @UseInterceptors(JsonNoCookieInterceptor)
   @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)
-  @Delete("/")
-  async removeProduct(@Query("id") productId: string): Promise<JSON<void>> {
+  @Delete("/id/:id")
+  async removeProduct(@Param("id") productId: string): Promise<JSON<void>> {
     await this.productService.removeProduct(productId);
 
     return {

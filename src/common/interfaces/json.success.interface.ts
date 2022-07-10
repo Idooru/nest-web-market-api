@@ -2,6 +2,7 @@ export class JSON<R> {
   statusCode: number;
   message: string;
   cookieKey?: string;
-  cookieValue?: string | string[];
+  cookieValue?: string | string[] | { name: string; url: string };
+
   result?: R;
 }

@@ -34,12 +34,7 @@ export class UploadRepository {
       uploadReason,
     });
 
-    const originalName = fileNameOnUrl.replace(
-      `http://localhost:${new ConfigService().get("PORT")}/media/`,
-      "",
-    );
-
-    return { name: originalName, url: fileNameOnUrl, uploadReason };
+    return { name: media, url: fileNameOnUrl, uploadReason };
   }
 
   async findImagePreparation(): Promise<ImagesEntity> {
@@ -73,12 +68,7 @@ export class UploadRepository {
       uploadReason,
     });
 
-    const originalName = fileNameOnUrl.replace(
-      `http://localhost:${new ConfigService().get("PORT")}/media/`,
-      "",
-    );
-
-    return { name: originalName, url: fileNameOnUrl, uploadReason };
+    return { name: media, url: fileNameOnUrl, uploadReason };
   }
 
   async uploadVideoForReview(
@@ -90,20 +80,13 @@ export class UploadRepository {
     )}/media/${media}`.toLowerCase();
     const uploadReason = "review";
 
-    const video = await this.videosRepository.save({
+    await this.videosRepository.save({
       url: fileNameOnUrl,
       uploader,
       uploadReason,
     });
 
-    console.log(video);
-
-    const originalName = fileNameOnUrl.replace(
-      `http://localhost:${new ConfigService().get("PORT")}/media/`,
-      "",
-    );
-
-    return { name: originalName, url: fileNameOnUrl, uploadReason };
+    return { name: media, url: fileNameOnUrl, uploadReason };
   }
 
   async uploadImageForInquiry(
@@ -121,12 +104,7 @@ export class UploadRepository {
       uploadReason,
     });
 
-    const originalName = fileNameOnUrl.replace(
-      `http://localhost:${new ConfigService().get("PORT")}/media/`,
-      "",
-    );
-
-    return { name: originalName, url: fileNameOnUrl, uploadReason };
+    return { name: media, url: fileNameOnUrl, uploadReason };
   }
 
   async uploadVideoForInquiry(
@@ -138,34 +116,35 @@ export class UploadRepository {
     )}/media/${media}`.toLowerCase();
     const uploadReason = "inquiry";
 
-    const video = await this.videosRepository.save({
+    await this.videosRepository.save({
       url: fileNameOnUrl,
       uploader,
       uploadReason,
     });
 
-    console.log(video);
-
-    const originalName = fileNameOnUrl.replace(
-      `http://localhost:${new ConfigService().get("PORT")}/media/`,
-      "",
-    );
-
-    return { name: originalName, url: fileNameOnUrl, uploadReason };
+    return { name: media, url: fileNameOnUrl, uploadReason };
   }
 
   async findImageWithUrl(url: string): Promise<ImagesEntity> {
-    return await this.imagesRepository
-      .createQueryBuilder("image")
-      .where("image.url = :url", { url })
-      .getOne();
+    try {
+      return await this.imagesRepository
+        .createQueryBuilder("image")
+        .where("image.url = :url", { url })
+        .getOneOrFail();
+    } catch (err) {
+      throw new NotFoundException("해당 url을 가진 이미지를 찾을 수 없습니다.");
+    }
   }
 
   async findVideoWithUrl(url: string): Promise<VideosEntity> {
-    return await this.videosRepository
-      .createQueryBuilder("video")
-      .where("video.url = :url", { url })
-      .getOne();
+    try {
+      return await this.videosRepository
+        .createQueryBuilder("video")
+        .where("video.url = :url", { url })
+        .getOneOrFail();
+    } catch (err) {
+      throw new NotFoundException("해당 url을 가진 동영상을 찾을 수 없습니다.");
+    }
   }
 
   async deleteUploadImageWithId(id: string): Promise<void> {

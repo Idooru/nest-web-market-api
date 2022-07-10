@@ -40,7 +40,7 @@ export class ProductService {
   async createProduct(
     createProductDto: CreateProductDto,
     creater: string,
-    image?: string,
+    image: { name: string; url: string },
   ): Promise<void> {
     const { name } = createProductDto;
     let getImage: ImagesEntity;
@@ -51,7 +51,7 @@ export class ProductService {
       );
       getImage = await this.uploadRepository.findImageWithUrl(result.url);
     } else {
-      getImage = await this.uploadRepository.findImageWithUrl(image);
+      getImage = await this.uploadRepository.findImageWithUrl(image.url);
     }
 
     const madeStarRating = await this.starRatingRepository.createRating();
@@ -70,14 +70,14 @@ export class ProductService {
     id: string,
     modifyProductDto: ModifyProductDto,
     modifier: string,
-    image?: string,
+    image: { name: string; url: string },
   ): Promise<void> {
     const { name } = modifyProductDto;
     let getImage: ImagesEntity;
 
     const findProductAndImageId = await Promise.allSettled([
       this.productRepository.findProductOneById(id),
-      this.uploadRepository.findImageWithUrl(image),
+      this.uploadRepository.findImageWithUrl(image.url),
     ]);
 
     const findProductAndImageIdResult = this.promises.twoPromiseSettled(

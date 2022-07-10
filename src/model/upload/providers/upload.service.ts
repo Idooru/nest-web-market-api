@@ -79,11 +79,12 @@ export class UploadService {
     }
   }
 
-  deleteProductImageOnServerDisk(url: string) {
-    const imageFileName = url.replace(
+  deleteProductImageOnServerDisk(imageName: string) {
+    const imageFileName = imageName.replace(
       `http://localhost:${new ConfigService().get("PORT")}/media/`,
       "",
     );
+
     const deletePath = path.join(
       __dirname,
       `../../../../uploads/image/${imageFileName}`,
@@ -229,11 +230,16 @@ export class UploadService {
     return videoUrls;
   }
 
-  async deleteUploadProductImage(url: string): Promise<void> {
-    const image = await this.uploadRepository.findImageWithUrl(url);
+  async deleteUploadProductImage(productImgCookie: {
+    name: string;
+    url: string;
+  }): Promise<void> {
+    const image = await this.uploadRepository.findImageWithUrl(
+      productImgCookie.url,
+    );
 
     await this.uploadRepository.deleteUploadImageWithId(image.id);
-    this.deleteProductImageOnServerDisk(image.url);
+    this.deleteProductImageOnServerDisk(productImgCookie.name);
   }
 
   async deleteUploadImages(urls: string[]): Promise<void> {

@@ -54,7 +54,7 @@ export class UploadController {
       statusCode: 201,
       message: "상품 사진을 업로드 하였습니다.",
       cookieKey: "Product_Image_Url_COOKIE",
-      cookieValue: image.url,
+      cookieValue: { name: image.name, url: image.url },
     };
   }
 
@@ -154,9 +154,13 @@ export class UploadController {
   @UseGuards(IsLoginGuard)
   @Delete("/image/product/cancel")
   async cancelImageUploadForProduct(
-    @Cookies("Product_Image_Url_COOKIE") url: string,
+    @Cookies("Product_Image_Url_COOKIE")
+    productImgCookie: {
+      name: string;
+      url: string;
+    },
   ): Promise<JSON<void>> {
-    await this.uploadService.deleteUploadProductImage(url);
+    await this.uploadService.deleteUploadProductImage(productImgCookie);
 
     return {
       statusCode: 200,
