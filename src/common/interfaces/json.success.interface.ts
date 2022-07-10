@@ -1,4 +1,4 @@
-export interface JSON<R> {
+export class JSON<R> {
   statusCode: number;
   message: string;
   cookieKey?: string;

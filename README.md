@@ -109,4 +109,4 @@ Nest is [MIT licensed](LICENSE).
     해결함 인터셉터를 여러개로 나누어 둔 후 인터셉터내에서 res객체를 사용해서 컨트롤러에서는 res, req 등을 사용하지 않게 한다.
 
 7.  uploadImage 함수에서 files 배열에 메서드를 사용해서 async/await을 붙인
-    후 리파지토리에서 값을 받아와야 하는데 await을 붙혔는데도 불구하고 promise값을 받게 된다.
+    후 리파지토리에서 값을 받아와야 하는데 await을 붙혔는데도 불구하고 promise값을 받게 된다. files의 타입은 @UploadedFiles()데코레이터를 통해 값을 받아오게 되는데 타입은 Array<Express.Multer.File>이다.

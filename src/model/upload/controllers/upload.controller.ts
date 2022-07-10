@@ -36,6 +36,8 @@ export class UploadController {
   ): Promise<JSON<void>> {
     console.log("logging image info ->\n", file);
 
+    this.uploadService.checkExtensionTypeForProductImage(file);
+
     const image = await this.uploadService.uploadImageForProduct(
       file,
       jwtPayload,
@@ -44,7 +46,7 @@ export class UploadController {
     if (image.name.includes("imagepreparation")) {
       return {
         statusCode: 201,
-        message: "상품 사진을 업로드 하였습니다.",
+        message: "상품 준비 이미지를 업로드 하였습니다.",
       };
     }
 
@@ -65,6 +67,8 @@ export class UploadController {
     @GetJWT() jwtPayload: JwtPayload,
   ): Promise<JSON<void>> {
     console.log("logging video info ->\n", files);
+
+    this.uploadService.checkExtensionTypeForImages(files);
 
     const image = await this.uploadService.uploadImage(files, jwtPayload);
     const urls = image.map((idx) => idx.url);
@@ -87,6 +91,8 @@ export class UploadController {
   ): Promise<JSON<void>> {
     console.log("logging video info ->\n", files);
 
+    this.uploadService.checkExtensionTypeForVideos(files);
+
     const video = await this.uploadService.uploadVideo(files, jwtPayload);
     const urls = video.map((idx) => idx.url);
 
@@ -108,6 +114,8 @@ export class UploadController {
   ): Promise<JSON<void>> {
     console.log("logging video info ->\n", files);
 
+    this.uploadService.checkExtensionTypeForImages(files);
+
     const image = await this.uploadService.uploadImage(files, jwtPayload);
     const urls = image.map((idx) => idx.url);
 
@@ -119,7 +127,7 @@ export class UploadController {
     };
   }
 
-  @UseInterceptors()
+  @UseInterceptors(JsonSendCookieInterceptor)
   @UseInterceptors(FilesInterceptor("video", 3, MulterConfig.upload("video")))
   @UseGuards(IsLoginGuard)
   @Post("/video/inquiry")
@@ -129,8 +137,10 @@ export class UploadController {
   ): Promise<JSON<void>> {
     console.log("logging video info ->\n", files);
 
-    const image = await this.uploadService.uploadVideo(files, jwtPayload);
-    const urls = image.map((idx) => idx.url);
+    this.uploadService.checkExtensionTypeForVideos(files);
+
+    const video = await this.uploadService.uploadVideo(files, jwtPayload);
+    const urls = video.map((idx) => idx.url);
 
     return {
       statusCode: 201,
@@ -146,7 +156,7 @@ export class UploadController {
   async cancelImageUploadForProduct(
     @Cookies("Product_Image_Url_COOKIE") url: string,
   ): Promise<JSON<void>> {
-    await this.uploadService.deleteUploadFile(url);
+    await this.uploadService.deleteUploadProductImage(url);
 
     return {
       statusCode: 200,
@@ -161,7 +171,7 @@ export class UploadController {
   async cancelImageUploadForReview(
     @Cookies("Review_Image_Url_COOKIE") urls: string[],
   ): Promise<JSON<void>> {
-    await this.uploadService.deleteUploadFiles(urls);
+    await this.uploadService.deleteUploadImages(urls);
 
     return {
       statusCode: 200,
@@ -176,7 +186,7 @@ export class UploadController {
   async cancelVideoUploadForReview(
     @Cookies("Review_Video_Url_COOKIE") urls: string[],
   ): Promise<JSON<void>> {
-    await this.uploadService.deleteUploadFiles(urls);
+    await this.uploadService.deleteUploadVideos(urls);
 
     return {
       statusCode: 200,
@@ -191,7 +201,7 @@ export class UploadController {
   async cancelImageUploadForInquiry(
     @Cookies("Inquiry_Image_Url_COOKIE") urls: string[],
   ): Promise<JSON<void>> {
-    await this.uploadService.deleteUploadFiles(urls);
+    await this.uploadService.deleteUploadImages(urls);
 
     return {
       statusCode: 200,
@@ -206,7 +216,7 @@ export class UploadController {
   async cancelVideoUploadForInquiry(
     @Cookies("Inquiry_Video_Url_COOKIE") urls: string[],
   ): Promise<JSON<void>> {
-    await this.uploadService.deleteUploadFiles(urls);
+    await this.uploadService.deleteUploadVideos(urls);
 
     return {
       statusCode: 200,

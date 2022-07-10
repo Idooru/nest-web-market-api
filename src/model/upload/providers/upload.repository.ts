@@ -154,14 +154,25 @@ export class UploadRepository {
     return { name: originalName, url: fileNameOnUrl, uploadReason };
   }
 
-  async findImageWithUrl(url: string | string[]): Promise<ImagesEntity> {
+  async findImageWithUrl(url: string): Promise<ImagesEntity> {
     return await this.imagesRepository
-      .createQueryBuilder("i")
-      .where("i.url = :url", { url })
+      .createQueryBuilder("image")
+      .where("image.url = :url", { url })
       .getOne();
   }
 
-  async deleteUploadFileWithId(id: string): Promise<void> {
+  async findVideoWithUrl(url: string): Promise<VideosEntity> {
+    return await this.videosRepository
+      .createQueryBuilder("video")
+      .where("video.url = :url", { url })
+      .getOne();
+  }
+
+  async deleteUploadImageWithId(id: string): Promise<void> {
     await this.imagesRepository.delete(id);
+  }
+
+  async deleteUploadVideoWithId(id: string): Promise<void> {
+    await this.videosRepository.delete(id);
   }
 }

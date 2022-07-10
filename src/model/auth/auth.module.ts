@@ -27,7 +27,7 @@ import { ConfigService } from "@nestjs/config";
     ]),
     JwtModule.register({
       secret: new ConfigService().get("JWT_SECRET"),
-      signOptions: { expiresIn: "3h" },
+      signOptions: { expiresIn: "1d" },
     }),
     forwardRef(() => UserModule),
     forwardRef(() => EtcModule),
