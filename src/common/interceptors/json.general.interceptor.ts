@@ -5,10 +5,9 @@ import {
   NestInterceptor,
 } from "@nestjs/common";
 import { Observable, map } from "rxjs";
-import { JSON } from "src/common/interfaces/json.success.interface";
 
 @Injectable()
-export class JsonNoCookieInterceptor implements NestInterceptor {
+export class JsonGeneralInterceptor implements NestInterceptor {
   intercept(context: ArgumentsHost, next: CallHandler<any>): Observable<any> {
     // controller 도달 전
     const req = context.switchToHttp().getRequest();
@@ -18,7 +17,7 @@ export class JsonNoCookieInterceptor implements NestInterceptor {
     const now = Date.now();
 
     return next.handle().pipe(
-      map((data: JSON<null>) => {
+      map((data) => {
         // controller 도달 후
         console.log(
           `Send response from ${req.method} ${

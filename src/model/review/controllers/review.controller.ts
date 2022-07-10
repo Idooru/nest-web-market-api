@@ -15,7 +15,6 @@ import { UpdateReviewDto } from "../dto/update-review.dto";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtPayload } from "src/common/interfaces/jwt.payload.interface";
 import { Cookies } from "src/common/decorators/cookies.decorator";
-import { JSON } from "src/common/interfaces/json.success.interface";
 
 @Controller("review")
 export class ReviewController {

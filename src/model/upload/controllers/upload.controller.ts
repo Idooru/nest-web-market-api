@@ -7,6 +7,7 @@ import {
   UploadedFiles,
   Delete,
 } from "@nestjs/common";
+import { JsonClearCookieInterface } from "./../../../common/interfaces/json.clear.cookie.interface";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/json.clear.cookie.interceptor";
 import { UploadService } from "../providers/upload.service";
 import { IsLoginGuard } from "../../../common/guards/is-login.guard";
@@ -14,10 +15,12 @@ import { MulterConfig } from "src/common/config/multer.config";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtPayload } from "src/common/interfaces/jwt.payload.interface";
-import { JSON } from "../../../common/interfaces/json.success.interface";
+import { JsonSendCookieInterface } from "../../../common/interfaces/json.send.cookie.interface";
 import { IsAdminGuard } from "../../../common/guards/is-admin.guard";
 import { Cookies } from "src/common/decorators/cookies.decorator";
 import { JsonSendCookieInterceptor } from "src/common/interceptors/json.send.cookie.interceptor";
+import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface";
+import { JsonGeneralInterface } from "src/common/interfaces/json.general.interface";
 
 @Controller("upload")
 export class UploadController {
@@ -33,7 +36,9 @@ export class UploadController {
   async uploadImageForProduct(
     @UploadedFile() file: Express.Multer.File,
     @GetJWT() jwtPayload: JwtPayload,
-  ): Promise<JSON<void>> {
+  ): Promise<
+    JsonSendCookieInterface<MediaUrlCookie> | JsonGeneralInterface<void>
+  > {
     console.log("logging image info ->\n", file);
 
     this.uploadService.checkExtensionTypeForProductImage(file);
@@ -65,19 +70,23 @@ export class UploadController {
   async uploadImageForReview(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtPayload,
-  ): Promise<JSON<void>> {
+  ): Promise<JsonSendCookieInterface<string[][]>> {
     console.log("logging video info ->\n", files);
 
     this.uploadService.checkExtensionTypeForImages(files);
 
-    const image = await this.uploadService.uploadImage(files, jwtPayload);
-    const urls = image.map((idx) => idx.url);
+    const image = await this.uploadService.uploadImageForReview(
+      files,
+      jwtPayload,
+    );
+
+    const reviewImages = image.map((idx) => [idx.name, idx.url]);
 
     return {
       statusCode: 201,
       message: "리뷰 사진을 업로드 하였습니다.",
       cookieKey: "Review_Image_Url_COOKIE",
-      cookieValue: urls,
+      cookieValue: reviewImages,
     };
   }
 
@@ -88,19 +97,22 @@ export class UploadController {
   async uploadVideoForReview(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtPayload,
-  ): Promise<JSON<void>> {
+  ): Promise<JsonSendCookieInterface<string[][]>> {
     console.log("logging video info ->\n", files);
 
     this.uploadService.checkExtensionTypeForVideos(files);
 
-    const video = await this.uploadService.uploadVideo(files, jwtPayload);
-    const urls = video.map((idx) => idx.url);
+    const video = await this.uploadService.uploadVideoForReview(
+      files,
+      jwtPayload,
+    );
+    const reviewVideos = video.map((idx) => [idx.name, idx.url]);
 
     return {
       statusCode: 201,
       message: "리뷰 동영상을 업로드 하였습니다.",
       cookieKey: "Review_Video_Url_COOKIE",
-      cookieValue: urls,
+      cookieValue: reviewVideos,
     };
   }
 
@@ -111,19 +123,22 @@ export class UploadController {
   async uploadImageForInquiry(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtPayload,
-  ): Promise<JSON<void>> {
+  ): Promise<JsonSendCookieInterface<string[][]>> {
     console.log("logging video info ->\n", files);
 
     this.uploadService.checkExtensionTypeForImages(files);
 
-    const image = await this.uploadService.uploadImage(files, jwtPayload);
-    const urls = image.map((idx) => idx.url);
+    const image = await this.uploadService.uploadImageForInquiry(
+      files,
+      jwtPayload,
+    );
+    const inquiryImages = image.map((idx) => [idx.name, idx.url]);
 
     return {
       statusCode: 201,
       message: "문의 사진을 업로드 하였습니다.",
       cookieKey: "Inquiry_Image_Url_COOKIE",
-      cookieValue: urls,
+      cookieValue: inquiryImages,
     };
   }
 
@@ -134,19 +149,22 @@ export class UploadController {
   async uploadVideoForInquiry(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtPayload,
-  ): Promise<JSON<void>> {
+  ): Promise<JsonSendCookieInterface<string[][]>> {
     console.log("logging video info ->\n", files);
 
     this.uploadService.checkExtensionTypeForVideos(files);
 
-    const video = await this.uploadService.uploadVideo(files, jwtPayload);
-    const urls = video.map((idx) => idx.url);
+    const video = await this.uploadService.uploadVideoForInquiry(
+      files,
+      jwtPayload,
+    );
+    const InquiryVideos = video.map((idx) => [idx.name, idx.url]);
 
     return {
       statusCode: 201,
       message: "문의 동영상을 업로드 하였습니다.",
       cookieKey: "Inquiry_Video_Url_COOKIE",
-      cookieValue: urls,
+      cookieValue: InquiryVideos,
     };
   }
 
@@ -155,11 +173,8 @@ export class UploadController {
   @Delete("/image/product/cancel")
   async cancelImageUploadForProduct(
     @Cookies("Product_Image_Url_COOKIE")
-    productImgCookie: {
-      name: string;
-      url: string;
-    },
-  ): Promise<JSON<void>> {
+    productImgCookie: MediaUrlCookie,
+  ): Promise<JsonClearCookieInterface> {
     await this.uploadService.deleteUploadProductImage(productImgCookie);
 
     return {
@@ -173,9 +188,9 @@ export class UploadController {
   @UseGuards(IsLoginGuard)
   @Delete("/image/review/cancel")
   async cancelImageUploadForReview(
-    @Cookies("Review_Image_Url_COOKIE") urls: string[],
-  ): Promise<JSON<void>> {
-    await this.uploadService.deleteUploadImages(urls);
+    @Cookies("Review_Image_Url_COOKIE") reviewImgCookie: MediaUrlCookie[],
+  ): Promise<JsonClearCookieInterface> {
+    await this.uploadService.deleteUploadImages(reviewImgCookie);
 
     return {
       statusCode: 200,
@@ -188,9 +203,9 @@ export class UploadController {
   @UseGuards(IsLoginGuard)
   @Delete("/video/review/cancel")
   async cancelVideoUploadForReview(
-    @Cookies("Review_Video_Url_COOKIE") urls: string[],
-  ): Promise<JSON<void>> {
-    await this.uploadService.deleteUploadVideos(urls);
+    @Cookies("Review_Video_Url_COOKIE") reviewVdoCookie: MediaUrlCookie[],
+  ): Promise<JsonClearCookieInterface> {
+    await this.uploadService.deleteUploadVideos(reviewVdoCookie);
 
     return {
       statusCode: 200,
@@ -203,9 +218,9 @@ export class UploadController {
   @UseGuards(IsLoginGuard)
   @Delete("/image/inquiry/cancel")
   async cancelImageUploadForInquiry(
-    @Cookies("Inquiry_Image_Url_COOKIE") urls: string[],
-  ): Promise<JSON<void>> {
-    await this.uploadService.deleteUploadImages(urls);
+    @Cookies("Inquiry_Image_Url_COOKIE") inquiryImgCookie: MediaUrlCookie[],
+  ): Promise<JsonClearCookieInterface> {
+    await this.uploadService.deleteUploadImages(inquiryImgCookie);
 
     return {
       statusCode: 200,
@@ -218,9 +233,9 @@ export class UploadController {
   @UseGuards(IsLoginGuard)
   @Delete("/video/inquiry/cancel")
   async cancelVideoUploadForInquiry(
-    @Cookies("Inquiry_Video_Url_COOKIE") urls: string[],
-  ): Promise<JSON<void>> {
-    await this.uploadService.deleteUploadVideos(urls);
+    @Cookies("Inquiry_Video_Url_COOKIE") InquiryVdoCookie: MediaUrlCookie[],
+  ): Promise<JsonClearCookieInterface> {
+    await this.uploadService.deleteUploadVideos(InquiryVdoCookie);
 
     return {
       statusCode: 200,

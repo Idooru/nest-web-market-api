@@ -78,14 +78,6 @@ export class AuthService {
 
     const [realNameResult, phoneNumberResult] = resultForCheckUserColumn;
 
-    // const realNameResult = await this.authRepositry.findUserWithRealName(
-    //   realname,
-    // );
-
-    // const phoneNumberResult = await this.authRepositry.findUserWithPhoneNumber(
-    //   phonenumber,
-    // );
-
     if (!(realNameResult.id === phoneNumberResult.id)) {
       throw new UnauthorizedException(
         "사용자 실명과 전화번호가 서로 일치하지 않습니다.",

@@ -7,7 +7,6 @@ import { ProductRepository } from "./product.repository";
 import { Injectable } from "@nestjs/common";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
-import { UserRepository } from "../../user/providers/user.repository";
 import { ImagesEntity } from "src/model/upload/entities/upload.entity";
 
 @Injectable()
@@ -15,7 +14,6 @@ export class ProductService {
   constructor(
     private readonly promises: Promises,
     private readonly productRepository: ProductRepository,
-    private readonly userRepository: UserRepository,
     private readonly uploadService: UploadService,
     private readonly uploadRepository: UploadRepository,
     private readonly starRatingRepository: StarRatingRepository,

@@ -1,3 +1,5 @@
+import { JsonClearCookieInterface } from "./../../../common/interfaces/json.clear.cookie.interface";
+import { JsonSendCookieInterface } from "./../../../common/interfaces/json.send.cookie.interface";
 import {
   Body,
   Controller,
@@ -15,7 +17,6 @@ import { AuthService } from "../../auth/providers/auth.service";
 import { UserService } from "../providers/user.service";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { LoginUserDto } from "../dtos/login-user.dto";
-import { JSON } from "../../../common/interfaces/json.success.interface";
 import { UserEntity } from "../entities/user.entity";
 import { PatchUserDto } from "../dtos/patch-user.dto";
 import { ResetPasswordDto } from "../dtos/reset-password.dto";
@@ -23,8 +24,9 @@ import { GetJWT } from "../../../common/decorators/get.jwt.decorator";
 import { FindEmailDto } from "./../dtos/find-email.dto";
 import { IsNotLoginGuard } from "../../../common/guards/is-not-login.guard";
 import { JsonSendCookieInterceptor } from "src/common/interceptors/json.send.cookie.interceptor";
-import { JsonNoCookieInterceptor } from "src/common/interceptors/json.no.cookie.interceptor";
+import { JsonGeneralInterceptor } from "src/common/interceptors/json.general.interceptor";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/json.clear.cookie.interceptor";
+import { JsonGeneralInterface } from "src/common/interfaces/json.general.interface";
 
 @Controller("/user")
 export class UserController {
@@ -33,12 +35,12 @@ export class UserController {
     private readonly authService: AuthService,
   ) {}
 
-  @UseInterceptors(JsonNoCookieInterceptor)
+  @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Post("/register")
   async register(
     @Body() registerUserDto: RegisterUserDto,
-  ): Promise<JSON<void>> {
+  ): Promise<JsonGeneralInterface<void>> {
     await this.userService.register(registerUserDto);
 
     return {
@@ -47,10 +49,12 @@ export class UserController {
     };
   }
 
-  @UseInterceptors(JsonNoCookieInterceptor)
+  @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Get("/profile")
-  async whoAmI(@GetJWT() jwtPayload: JwtPayload): Promise<JSON<UserEntity>> {
+  async whoAmI(
+    @GetJWT() jwtPayload: JwtPayload,
+  ): Promise<JsonGeneralInterface<UserEntity>> {
     return {
       statusCode: 200,
       message: "본인 정보를 가져옵니다.",
@@ -61,7 +65,9 @@ export class UserController {
   @UseInterceptors(JsonSendCookieInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Post("/login")
-  async login(@Body() loginUserDto: LoginUserDto): Promise<JSON<void>> {
+  async login(
+    @Body() loginUserDto: LoginUserDto,
+  ): Promise<JsonSendCookieInterface<string>> {
     const jwtToken = await this.authService.login(loginUserDto);
 
     return {
@@ -75,7 +81,9 @@ export class UserController {
   @UseInterceptors(JsonSendCookieInterceptor)
   @UseGuards(IsLoginGuard)
   @Get("/refresh-token")
-  async refreshToken(@GetJWT() jwtPayload: JwtPayload): Promise<JSON<string>> {
+  async refreshToken(
+    @GetJWT() jwtPayload: JwtPayload,
+  ): Promise<JsonSendCookieInterface<string>> {
     const jwtToken = await this.authService.refreshToken(jwtPayload);
 
     return {
@@ -89,7 +97,7 @@ export class UserController {
   @UseInterceptors(JsonClearCookieInterceptor)
   @UseGuards(IsLoginGuard)
   @Delete("/logout")
-  logout(): JSON<void> {
+  logout(): JsonClearCookieInterface {
     return {
       statusCode: 200,
       message: "로그아웃을 완료하였습니다.",
@@ -103,7 +111,7 @@ export class UserController {
   async setUser(
     @Body() patchUserDto: PatchUserDto,
     @GetJWT() jwtPayload: JwtPayload,
-  ): Promise<JSON<string>> {
+  ): Promise<JsonSendCookieInterface<string>> {
     const jwtToken = await this.userService.patchUserInfoMyself(
       patchUserDto,
       jwtPayload.id,
@@ -120,7 +128,9 @@ export class UserController {
   @UseInterceptors(JsonClearCookieInterceptor)
   @UseGuards(IsLoginGuard)
   @Delete("/secession")
-  async secession(@GetJWT() jwtPayload: JwtPayload): Promise<JSON<string>> {
+  async secession(
+    @GetJWT() jwtPayload: JwtPayload,
+  ): Promise<JsonClearCookieInterface> {
     await this.userService.deleteUserWithId(jwtPayload.id);
 
     return {
@@ -130,10 +140,12 @@ export class UserController {
     };
   }
 
-  @UseInterceptors(JsonNoCookieInterceptor)
+  @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Get("/find-email")
-  async findEmail(@Query() findEmailDto: FindEmailDto): Promise<JSON<string>> {
+  async findEmail(
+    @Query() findEmailDto: FindEmailDto,
+  ): Promise<JsonGeneralInterface<string>> {
     return {
       statusCode: 200,
       message: "이메일 정보를 가져옵니다.",
@@ -141,12 +153,12 @@ export class UserController {
     };
   }
 
-  @UseInterceptors(JsonNoCookieInterceptor)
+  @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Patch("/reset-password")
   async resetPassword(
     @Body() resetPasswordDto: ResetPasswordDto,
-  ): Promise<JSON<void>> {
+  ): Promise<JsonGeneralInterface<void>> {
     await this.authService.resetPassword(resetPasswordDto);
 
     return {
