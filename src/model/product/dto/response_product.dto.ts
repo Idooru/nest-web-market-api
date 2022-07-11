@@ -9,7 +9,6 @@ export class ResponseProductDto extends PickType(ProductEntity, [
   "type",
   "description",
   "image",
-  "starRatingPoint",
   "createdAt",
   "updatedAt",
 ] as const) {}
@@ -19,7 +18,6 @@ export class ResponseProductsDto extends PickType(ProductEntity, [
   "price",
   "type",
   "image",
-  "starRatingPoint",
 ] as const) {}
 
 // export const ProductReturnFilter = (

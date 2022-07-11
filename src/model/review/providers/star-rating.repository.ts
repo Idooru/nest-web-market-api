@@ -45,10 +45,14 @@ export class StarRatingRepository {
     }
   }
 
-  async findStarRatingWithId(starRatingId: string) {
+  async findStarRatingWithId(starRatingId: string): Promise<StarRatingEntity> {
     return await this.starRatingRepository
       .createQueryBuilder("starRating")
       .where("starRating.id = :id", { id: starRatingId })
       .getOne();
+  }
+
+  async insertTotalScoreOnStarRating(averageScore: number, id: string) {
+    await this.starRatingRepository.update(id, { averageScore });
   }
 }

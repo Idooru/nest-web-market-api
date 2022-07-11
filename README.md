@@ -74,10 +74,8 @@ Nest is [MIT licensed](LICENSE).
 
 ## 작성시 유의 사항
 
-1.  이유는 알 수 없지만 커스텀 데코레이터를 사용해서 user type이 admin인 계정만  
-    수행 할 수 있게끔 데코레이터를
-    설정 한 후에 상품 업데이트나 삭제를 할 시 "TypeORMError: Empty criteria(s)
-    are not allowed for the update method." 에러가 난다.
+1.  이유는 알 수 없지만 커스텀 데코레이터를 사용해서 user type이 admin인  
+    계정만 수행 할 수 있게끔 데코레이터를 설정 한 후에 상품 업데이트나 삭제를 할 시 "TypeORMError: Empty criteria(s) are not allowed for the update method." 에러가 난다.
     해결함
 
 2.  위와 같은 이유 때문에 커스텀 데코레이터 대신 가드를 IsLoginGuard와
@@ -87,10 +85,10 @@ Nest is [MIT licensed](LICENSE).
 
 3.  multer.config.ts에 있는 MulterOperation 클래스를 좀 더 다양한 곳에서  
     사용하기 위해 upload라는 모델을 만든 후 그 모델에서 multer.provider.ts라는  
-    파일로 이전 시킨 후 multer 모듈에 provider에 넣어 주었다.
+    파일로 변경 시킨 후 multer 모듈의 provider에 넣어 주었다.
 
-4.  그리고 멀티 미디어 파일 (사진, 동영상) 등을 처리할 수 있게끔 upload 컨트롤러에
-    3가지 api를 만들었다. 각각 상품 사진 업로드, 리뷰 사진 업로드, 리뷰 동영상 업로드 등이 있다. 각 api들은 FileInterceptor(혹은 FilesInterceptor)라는 인터셉터를 거쳐야 한다. 인터셉터 인수에는 localOption이 필요로 하는데 그곳에 3. 에서 언급한 multer.provider.ts에 있는 MulterProvider 클래스를 넣으려 하였지만
+4.  그리고 멀티 미디어 파일 (사진, 동영상) 등을 처리할 수 있게끔 upload
+    컨트롤러에 3가지 api를 만들었다. 각각 상품 사진 업로드, 리뷰 사진 업로드, 리뷰 동영상 업로드 등이 있다. 각 api들은 FileInterceptor(혹은 FilesInterceptor)라는 인터셉터를 거쳐야 한다. 인터셉터 인수에는 localOption이 필요로 하는데 그곳에 3. 에서 언급한 multer.provider.ts에 있는 MulterProvider 클래스를 넣으려 하였지만
     이유는 알 수 없는데 this 사용이 불가하여 DI된 MulterProvider를 인수로 넣어줄 수가 없다.
     reason: 데코레이터에는 this 사용이 불가능하다.
 
@@ -110,3 +108,7 @@ Nest is [MIT licensed](LICENSE).
 
 7.  uploadImage 함수에서 files 배열에 메서드를 사용해서 async/await을 붙인
     후 리파지토리에서 값을 받아와야 하는데 await을 붙혔는데도 불구하고 promise값을 받게 된다. files의 타입은 @UploadedFiles()데코레이터를 통해 값을 받아오게 되는데 타입은 Array<Express.Multer.File>이다.
+
+8.  기존에는 응답 인터페이스와 인터셉터를 한가지만 사용하였지만 능동적인 응답  
+    처리를 하기 위해 쿠키를 보낼 때, 쿠키를 제거 할 때, 쿠키를 사용하지 않을 때
+    등을 처리하기 위해 각각 인터페이스와 인터셉터를 3개씩 사용한다.

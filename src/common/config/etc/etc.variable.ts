@@ -17,7 +17,7 @@ export const ProductsReturnProperty = [
   "product.price",
   "product.type",
   "image.url",
-  "product.starRatingPoint",
+  "starRating.averageScore",
 ];
 
 export const ProductReturnProperty = [
@@ -28,7 +28,7 @@ export const ProductReturnProperty = [
   "product.type",
   "product.description",
   "image.url",
-  "product.starRatingPoint",
+  "starRating.averageScore",
   "product.createdAt",
   "product.updatedAt",
 ];
@@ -41,7 +41,7 @@ export const ProductReturnWithStarRating = [
   "product.type",
   "product.description",
   "image.url",
-  "product.starRatingPoint",
+  "starRating.averageScore",
   "product.createdAt",
   "product.updatedAt",
   "starRating.id",

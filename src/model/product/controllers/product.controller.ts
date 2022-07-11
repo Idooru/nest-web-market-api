@@ -1,4 +1,3 @@
-import { JwtPayload } from "../../../common/interfaces/jwt.payload.interface";
 import {
   Controller,
   Get,
@@ -15,6 +14,7 @@ import {
   ResponseProductDto,
   ResponseProductsDto,
 } from "../dto/response_product.dto";
+import { JwtPayload } from "../../../common/interfaces/jwt.payload.interface";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
 import { ProductService } from "../providers/product.service";
@@ -111,7 +111,7 @@ export class ProductController {
   async modifyProduct(
     @Param("id") productId: string,
     @Body() modifyProductDto: ModifyProductDto,
-    @GetJWT() JwtPayload: JwtPayload,
+    @GetJWT() jwtPayload: JwtPayload,
     @Cookies("Product_Image_Url_COOKIE")
     productImg: MediaUrlCookie,
   ): Promise<JsonClearCookieInterface> {
@@ -124,7 +124,7 @@ export class ProductController {
     await this.productService.modifyProduct(
       productId,
       modifyProductDto,
-      JwtPayload.nickname,
+      jwtPayload.nickname,
       productImg,
     );
 

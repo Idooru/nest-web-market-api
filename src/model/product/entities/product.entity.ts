@@ -35,9 +35,6 @@ export class ProductEntity extends CommonEntity {
   @Column({ type: "int", default: 50 })
   quantity: number;
 
-  @Column({ type: "float", default: 0.0 })
-  starRatingPoint: number;
-
   @OneToOne(() => StarRatingEntity, (starRating) => starRating.product)
   @JoinColumn({ name: "starRatingId", referencedColumnName: "id" })
   starRating: StarRatingEntity;

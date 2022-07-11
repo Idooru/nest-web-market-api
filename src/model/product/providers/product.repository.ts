@@ -31,10 +31,14 @@ export class ProductRepository {
     if (!found) {
       return;
     }
+
     throw new BadRequestException("해당 상품명은 사용중입니다.");
   }
 
-  async checkProductNameToModify(replaceName: string, originalName: string) {
+  async checkProductNameToModify(
+    replaceName: string,
+    originalName: string,
+  ): Promise<void> {
     const found = await this.productRepository
       .createQueryBuilder("product")
       .where("product.name = :name", { name: replaceName })
@@ -44,10 +48,12 @@ export class ProductRepository {
       그 이외의 경우는 DB에 저장된 상품의 이름으로 바꾸게 되는 경우 이므로 에러를 던짐*/
     if (!found || found.name === originalName) {
       return;
-    } else throw new BadRequestException("해당 상품명은 사용중입니다.");
+    } else {
+      throw new BadRequestException("해당 상품명은 사용중입니다.");
+    }
   }
 
-  async checkProductIdToExist(id: string) {
+  async checkProductIdToExist(id: string): Promise<void> {
     const found = await this.productRepository
       .createQueryBuilder("product")
       .where("product.id = :id", { id })
@@ -63,6 +69,7 @@ export class ProductRepository {
       .createQueryBuilder("product")
       .select(ProductsReturnProperty)
       .innerJoin("product.image", "image")
+      .innerJoin("product.starRating", "starRating")
       .orderBy("product.createdAt", "DESC")
       .getMany();
 
@@ -77,6 +84,7 @@ export class ProductRepository {
       .createQueryBuilder("product")
       .select(ProductsReturnProperty)
       .innerJoin("product.image", "image")
+      .innerJoin("product.starRating", "starRating")
       .orderBy("product.createdAt", "ASC")
       .getMany();
 
@@ -92,6 +100,7 @@ export class ProductRepository {
         .createQueryBuilder("product")
         .select(ProductReturnProperty)
         .innerJoin("product.image", "image")
+        .innerJoin("product.starRating", "starRating")
         .where("product.name = :name", { name })
         .getOneOrFail();
     } catch (err) {
@@ -105,6 +114,7 @@ export class ProductRepository {
         .createQueryBuilder("product")
         .select(ProductReturnProperty)
         .innerJoin("product.image", "image")
+        .innerJoin("product.starRating", "starRating")
         .where("product.id = :id", { id })
         .getOneOrFail();
     } catch (err) {

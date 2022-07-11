@@ -9,6 +9,7 @@ import { ReviewRepository } from "./providers/review.repository";
 import { StarRatingEntity } from "../review/entities/star-rating.entity";
 import { StarRatingRepository } from "../review/providers/star-rating.repository";
 import { EtcModule } from "../../common/config/etc/etc.module";
+import { StarRatingService } from "./providers/star-rating.service";
 
 @Module({
   imports: [
@@ -18,7 +19,12 @@ import { EtcModule } from "../../common/config/etc/etc.module";
     forwardRef(() => EtcModule),
   ],
   controllers: [ReviewController],
-  providers: [ReviewService, ReviewRepository, StarRatingRepository],
+  providers: [
+    ReviewService,
+    StarRatingService,
+    ReviewRepository,
+    StarRatingRepository,
+  ],
   exports: [ReviewService, ReviewRepository, StarRatingRepository],
 })
 export class ReviewModule {}

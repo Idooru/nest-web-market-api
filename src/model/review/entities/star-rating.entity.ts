@@ -4,8 +4,8 @@ import { Column, Entity, OneToOne } from "typeorm";
 
 @Entity("star ratings")
 export class StarRatingEntity extends CommonEntity {
-  @OneToOne(() => ProductEntity, (product) => product.starRating)
-  product: ProductEntity;
+  @Column({ type: "float", default: 0 })
+  averageScore: number;
 
   @Column({ type: "int", default: 0 })
   onePointSum: number;
@@ -36,4 +36,7 @@ export class StarRatingEntity extends CommonEntity {
 
   @Column({ type: "int", default: 0 })
   fivePointCount: number;
+
+  @OneToOne(() => ProductEntity, (product) => product.starRating)
+  product: ProductEntity;
 }
