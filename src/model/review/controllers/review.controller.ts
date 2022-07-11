@@ -34,8 +34,8 @@ export class ReviewController {
   async createReview(
     @Body() createReviewDto: CreateReviewDto,
     @Param("productName") productName: string,
-    @Cookies("Review_Image_Url_COOKIE") reviewImgCookie: MediaUrlCookie,
-    @Cookies("Review_Video_Url_COOKIE") reviewVdoCookie: MediaUrlCookie,
+    @Cookies("Review_Image_Url_COOKIE") reviewImgCookie: MediaUrlCookie[],
+    @Cookies("Review_Video_Url_COOKIE") reviewVdoCookie: MediaUrlCookie[],
     @GetJWT() jwtPayload: JwtPayload,
   ): Promise<JsonClearCookieInterface> {
     const { userSelectScore } = createReviewDto;
@@ -46,21 +46,35 @@ export class ReviewController {
 
     await this.starRatingService.calculateRating(starRating);
 
-    // if (reviewImg || reviewVdo) {
-    //   await this.reviewService.createReview({
-    //     createReviewDto,
-    //     jwtPayload,
-    //     productName,
-    //     reviewImg,
-    //     reviewVdo,
-    //   });
-    // } else {
-    //   await this.reviewService.createReview({
-    //     createReviewDto,
-    //     jwtPayload,
-    //     productName,
-    //   });
-    // }
+    if (reviewImgCookie.length && reviewVdoCookie.length) {
+      await this.reviewService.createReviewWithImageAndVideo({
+        createReviewDto,
+        jwtPayload,
+        productName,
+        reviewImgCookie,
+        reviewVdoCookie,
+      });
+    } else if (reviewImgCookie.length) {
+      await this.reviewService.createReviewWithImage({
+        createReviewDto,
+        jwtPayload,
+        productName,
+        reviewImgCookie,
+      });
+    } else if (reviewVdoCookie.length) {
+      await this.reviewService.CreateReviewWithVideo({
+        createReviewDto,
+        jwtPayload,
+        productName,
+        reviewVdoCookie,
+      });
+    } else {
+      await this.reviewService.createReviewWithoutMedia({
+        createReviewDto,
+        jwtPayload,
+        productName,
+      });
+    }
 
     return {
       statusCode: 201,

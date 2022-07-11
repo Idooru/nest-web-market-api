@@ -32,7 +32,7 @@ export class StarRatingService {
     return starRating;
   }
 
-  async calculateRating(starRating: StarRatingEntity) {
+  async calculateRating(starRating: StarRatingEntity): Promise<void> {
     const starRatingProperty = Object.entries(starRating);
     const pointSum = [];
     const pointCount = [];
@@ -49,19 +49,13 @@ export class StarRatingService {
       continue;
     }
 
-    const countSum: number =
-      pointCount[0][1] +
-      pointCount[1][1] +
-      pointCount[2][1] +
-      pointCount[3][1] +
-      pointCount[4][1];
+    let countSum = 0;
+    let scoreSum = 0;
 
-    const scoreSum: number =
-      pointSum[0][1] +
-      pointSum[1][1] +
-      pointSum[2][1] +
-      pointSum[3][1] +
-      pointSum[4][1];
+    for (let i = 0; i <= pointSum.length; i++) {
+      countSum += pointCount[i][1];
+      scoreSum += pointSum[i][1];
+    }
 
     const averageScore = Number((scoreSum / countSum).toFixed(2));
     const starRatingId = starRating.id;
