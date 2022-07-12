@@ -20,7 +20,7 @@ import { ModifyProductDto } from "../dto/modify_product.dto";
 import { ProductService } from "../providers/product.service";
 import { IsAdminGuard } from "../../../common/guards/is-admin.guard";
 import { IsLoginGuard } from "../../../common/guards/is-login.guard";
-import { Cookies } from "src/common/decorators/cookies.decorator";
+import { Cookie } from "src/common/decorators/cookie.decorator";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JsonGeneralInterceptor } from "src/common/interceptors/json.general.interceptor";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/json.clear.cookie.interceptor";
@@ -88,7 +88,7 @@ export class ProductController {
     @Body()
     createProductDto: CreateProductDto,
     @GetJWT() jwtPayload: JwtPayload,
-    @Cookies("Product_Image_Url_COOKIE")
+    @Cookie("Product_Image_Url_COOKIE")
     productImgCookie: MediaUrlCookie,
   ): Promise<JsonClearCookieInterface> {
     await this.productService.createProduct(
@@ -112,7 +112,7 @@ export class ProductController {
     @Param("id") productId: string,
     @Body() modifyProductDto: ModifyProductDto,
     @GetJWT() jwtPayload: JwtPayload,
-    @Cookies("Product_Image_Url_COOKIE")
+    @Cookie("Product_Image_Url_COOKIE")
     productImg: MediaUrlCookie,
   ): Promise<JsonClearCookieInterface> {
     if (!productImg) {

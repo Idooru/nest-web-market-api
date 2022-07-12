@@ -51,7 +51,7 @@ export class UploadController {
     if (image.name.includes("imagepreparation")) {
       return {
         statusCode: 201,
-        message: "상품 준비 이미지를 업로드 하였습니다.",
+        message: "이미지 준비 사진을 업로드 하였습니다.",
       };
     }
 
@@ -85,7 +85,7 @@ export class UploadController {
     return {
       statusCode: 201,
       message: "리뷰 사진을 업로드 하였습니다.",
-      cookieKey: "Review_Image_Url_COOKIE",
+      cookieKey: "Review_Image_Url_COOKIES",
       cookieValue: reviewImages,
     };
   }
@@ -111,7 +111,7 @@ export class UploadController {
     return {
       statusCode: 201,
       message: "리뷰 동영상을 업로드 하였습니다.",
-      cookieKey: "Review_Video_Url_COOKIE",
+      cookieKey: "Review_Video_Url_COOKIES",
       cookieValue: reviewVideos,
     };
   }
@@ -137,7 +137,7 @@ export class UploadController {
     return {
       statusCode: 201,
       message: "문의 사진을 업로드 하였습니다.",
-      cookieKey: "Inquiry_Image_Url_COOKIE",
+      cookieKey: "Inquiry_Image_Url_COOKIES",
       cookieValue: inquiryImages,
     };
   }
@@ -163,7 +163,7 @@ export class UploadController {
     return {
       statusCode: 201,
       message: "문의 동영상을 업로드 하였습니다.",
-      cookieKey: "Inquiry_Video_Url_COOKIE",
+      cookieKey: "Inquiry_Video_Url_COOKIES",
       cookieValue: InquiryVideos,
     };
   }
@@ -188,14 +188,14 @@ export class UploadController {
   @UseGuards(IsLoginGuard)
   @Delete("/image/review/cancel")
   async cancelImageUploadForReview(
-    @Cookies("Review_Image_Url_COOKIE") reviewImgCookie: MediaUrlCookie[],
+    @Cookies("Review_Image_Url_COOKIES") reviewImgCookie: MediaUrlCookie[],
   ): Promise<JsonClearCookieInterface> {
     await this.uploadService.deleteUploadImages(reviewImgCookie);
 
     return {
       statusCode: 200,
       message: "리뷰 이미지 업로드를 취소하였습니다.",
-      cookieKey: "Review_Image_Url_COOKIE",
+      cookieKey: "Review_Image_Url_COOKIES",
     };
   }
 
@@ -203,14 +203,14 @@ export class UploadController {
   @UseGuards(IsLoginGuard)
   @Delete("/video/review/cancel")
   async cancelVideoUploadForReview(
-    @Cookies("Review_Video_Url_COOKIE") reviewVdoCookie: MediaUrlCookie[],
+    @Cookies("Review_Video_Url_COOKIES") reviewVdoCookie: MediaUrlCookie[],
   ): Promise<JsonClearCookieInterface> {
     await this.uploadService.deleteUploadVideos(reviewVdoCookie);
 
     return {
       statusCode: 200,
       message: "리뷰 동영상 업로드를 취소하였습니다.",
-      cookieKey: "Review_Video_Url_COOKIE",
+      cookieKey: "Review_Video_Url_COOKIES",
     };
   }
 
@@ -218,14 +218,14 @@ export class UploadController {
   @UseGuards(IsLoginGuard)
   @Delete("/image/inquiry/cancel")
   async cancelImageUploadForInquiry(
-    @Cookies("Inquiry_Image_Url_COOKIE") inquiryImgCookie: MediaUrlCookie[],
+    @Cookies("Inquiry_Image_Url_COOKIES") inquiryImgCookie: MediaUrlCookie[],
   ): Promise<JsonClearCookieInterface> {
     await this.uploadService.deleteUploadImages(inquiryImgCookie);
 
     return {
       statusCode: 200,
       message: "문의 이미지 업로드를 취소하였습니다.",
-      cookieKey: "Inquiry_Image_Url_COOKIE",
+      cookieKey: "Inquiry_Image_Url_COOKIES",
     };
   }
 
@@ -233,14 +233,14 @@ export class UploadController {
   @UseGuards(IsLoginGuard)
   @Delete("/video/inquiry/cancel")
   async cancelVideoUploadForInquiry(
-    @Cookies("Inquiry_Video_Url_COOKIE") InquiryVdoCookie: MediaUrlCookie[],
+    @Cookies("Inquiry_Video_Url_COOKIES") InquiryVdoCookie: MediaUrlCookie[],
   ): Promise<JsonClearCookieInterface> {
     await this.uploadService.deleteUploadVideos(InquiryVdoCookie);
 
     return {
       statusCode: 200,
       message: "문의 동영상 업로드를 취소하였습니다.",
-      cookieKey: "Inquiry_Video_Url_COOKIE",
+      cookieKey: "Inquiry_Video_Url_COOKIES",
     };
   }
 }

@@ -33,6 +33,6 @@ export class UserProfileEntity {
   @Column({ type: "varchar", length: 15, unique: true, nullable: false })
   phonenumber: string;
 
-  @OneToOne(() => UserEntity)
+  @OneToOne(() => UserEntity, (user) => user.profile)
   user: UserEntity;
 }

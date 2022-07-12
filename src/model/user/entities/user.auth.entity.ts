@@ -1,11 +1,4 @@
-import {
-  Column,
-  Entity,
-  OneToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from "typeorm";
-import { ImagesEntity } from "./../../upload/entities/upload.entity";
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { IsEmail, IsNotEmpty, IsString, Matches } from "class-validator";
 import { UserEntity } from "./user.entity";
 
@@ -39,7 +32,4 @@ export class UserAuthEntity {
 
   @OneToOne(() => UserEntity)
   user: UserEntity;
-
-  @OneToMany(() => ImagesEntity, (join) => join.uploader)
-  image: ImagesEntity[];
 }

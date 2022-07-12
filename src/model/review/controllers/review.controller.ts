@@ -20,6 +20,7 @@ import { JsonClearCookieInterceptor } from "src/common/interceptors/json.clear.c
 import { JsonClearCookieInterface } from "src/common/interfaces/json.clear.cookie.interface";
 import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface";
 import { StarRatingService } from "../providers/star-rating.service";
+import { JsonGeneralInterface } from "src/common/interfaces/json.general.interface";
 
 @Controller("review")
 export class ReviewController {
@@ -34,10 +35,10 @@ export class ReviewController {
   async createReview(
     @Body() createReviewDto: CreateReviewDto,
     @Param("productName") productName: string,
-    @Cookies("Review_Image_Url_COOKIE") reviewImgCookie: MediaUrlCookie[],
-    @Cookies("Review_Video_Url_COOKIE") reviewVdoCookie: MediaUrlCookie[],
+    @Cookies("Review_Image_Url_COOKIES") reviewImgCookie: MediaUrlCookie[],
+    @Cookies("Review_Video_Url_COOKIES") reviewVdoCookie: MediaUrlCookie[],
     @GetJWT() jwtPayload: JwtPayload,
-  ): Promise<JsonClearCookieInterface> {
+  ): Promise<JsonClearCookieInterface | JsonGeneralInterface<void>> {
     const { userSelectScore } = createReviewDto;
     const starRating = await this.starRatingService.putStarRating(
       userSelectScore,
@@ -54,6 +55,11 @@ export class ReviewController {
         reviewImgCookie,
         reviewVdoCookie,
       });
+      return {
+        statusCode: 201,
+        message: "리뷰를 생성하였습니다.",
+        cookieKey: ["Review_Image_Url_COOKIES", "Review_Video_Url_COOKIES"],
+      };
     } else if (reviewImgCookie.length) {
       await this.reviewService.createReviewWithImage({
         createReviewDto,
@@ -61,6 +67,11 @@ export class ReviewController {
         productName,
         reviewImgCookie,
       });
+      return {
+        statusCode: 201,
+        message: "리뷰를 생성하였습니다.",
+        cookieKey: ["Review_Image_Url_COOKIES"],
+      };
     } else if (reviewVdoCookie.length) {
       await this.reviewService.CreateReviewWithVideo({
         createReviewDto,
@@ -68,18 +79,21 @@ export class ReviewController {
         productName,
         reviewVdoCookie,
       });
+      return {
+        statusCode: 201,
+        message: "리뷰를 생성하였습니다.",
+        cookieKey: ["Review_Video_Url_COOKIES"],
+      };
     } else {
       await this.reviewService.createReviewWithoutMedia({
         createReviewDto,
         jwtPayload,
         productName,
       });
+      return {
+        statusCode: 201,
+        message: "리뷰를 생성하였습니다.",
+      };
     }
-
-    return {
-      statusCode: 201,
-      message: "리뷰를 생성하였습니다.",
-      cookieKey: [],
-    };
   }
 }

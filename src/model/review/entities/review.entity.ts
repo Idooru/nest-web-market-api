@@ -29,10 +29,4 @@ export class ReviewEntity extends CommonEntity {
 
   @ManyToMany(() => ProductEntity, (product) => product.review)
   product: ProductEntity[];
-
-  @OneToMany(() => ImagesEntity, (image) => image.review)
-  image?: ImagesEntity[];
-
-  @OneToMany(() => VideosEntity, (video) => video.review)
-  video?: VideosEntity[];
 }

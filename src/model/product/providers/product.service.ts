@@ -8,6 +8,7 @@ import { Injectable } from "@nestjs/common";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
 import { ImagesEntity } from "src/model/upload/entities/upload.entity";
+import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface";
 
 @Injectable()
 export class ProductService {
@@ -38,18 +39,18 @@ export class ProductService {
   async createProduct(
     createProductDto: CreateProductDto,
     creater: string,
-    image: { name: string; url: string },
+    imageCookie: MediaUrlCookie,
   ): Promise<void> {
     const { name } = createProductDto;
     let getImage: ImagesEntity;
 
-    if (!image) {
+    if (!imageCookie) {
       const result = await this.uploadService.copyImageFromImagePreparation(
         creater,
       );
       getImage = await this.uploadRepository.findImageWithUrl(result.url);
     } else {
-      getImage = await this.uploadRepository.findImageWithUrl(image.url);
+      getImage = await this.uploadRepository.findImageWithUrl(imageCookie.url);
     }
 
     const madeStarRating = await this.starRatingRepository.createRating();

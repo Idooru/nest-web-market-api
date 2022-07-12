@@ -26,10 +26,17 @@ export class JsonClearCookieInterceptor implements NestInterceptor {
           } :: time taken : ${Date.now() - now}ms`,
         );
 
-        res
-          .status(data.statusCode)
-          .setHeader("X-Powered-By", "")
-          .clearCookie(cookieKey);
+        if (typeof cookieKey === "string") {
+          res.clearCookie(cookieKey);
+        } else {
+          if (cookieKey.length >= 2) {
+            cookieKey.forEach((idx: string) => res.clearCookie(idx));
+          } else {
+            res.clearCookie(cookieKey[0]);
+          }
+        }
+
+        res.status(data.statusCode).setHeader("X-Powered-By", "");
 
         return { success: true, ...{ statusCode, message, result } };
       }),

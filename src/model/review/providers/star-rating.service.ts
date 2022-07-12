@@ -52,7 +52,7 @@ export class StarRatingService {
     let countSum = 0;
     let scoreSum = 0;
 
-    for (let i = 0; i <= pointSum.length; i++) {
+    for (let i = 0; i < pointSum.length; i++) {
       countSum += pointCount[i][1];
       scoreSum += pointSum[i][1];
     }

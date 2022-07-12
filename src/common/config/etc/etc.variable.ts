@@ -12,57 +12,50 @@ export const JwtOptions: JwtModuleOptions = {
   secret: new ConfigService().get("JWT_SECRET"),
 };
 
-export const ProductsReturnProperty = [
-  "product.name",
-  "product.price",
-  "product.type",
-  "image.url",
-  "starRating.averageScore",
-];
-
-export const ProductReturnProperty = [
-  "product.id",
-  "product.name",
-  "product.price",
-  "product.origin",
-  "product.type",
-  "product.description",
-  "image.url",
-  "starRating.averageScore",
-  "product.createdAt",
-  "product.updatedAt",
-];
-
-export const ProductReturnWithStarRating = [
-  "product.id",
-  "product.name",
-  "product.price",
-  "product.origin",
-  "product.type",
-  "product.description",
-  "image.url",
-  "starRating.averageScore",
-  "product.createdAt",
-  "product.updatedAt",
-  "starRating.id",
-];
-
-export const UserReturnProperty = [
-  "user.profile",
-  "user.auth",
-  "user.activity",
-];
-
-export const UserInformationReturnProperty = [
-  "profile.realname",
-  "auth.nickname",
-  "profile.birth",
-  "profile.gender",
-  "auth.email",
-  "profile.phonenumber",
-  "auth.userType",
-  "activity.purchaseCount",
-  "activity.bonusPoint",
-  "activity.productInquiryCount",
-  "activity.productReviewCount",
-];
+export const ReturnPropertyWithSelect = {
+  ProductsReturnProperty: [
+    "product.name",
+    "product.price",
+    "product.type",
+    "image.url",
+    "starRating.averageScore",
+  ],
+  ProductReturnProperty: [
+    "product.id",
+    "product.name",
+    "product.price",
+    "product.origin",
+    "product.type",
+    "product.description",
+    "image.url",
+    "starRating.averageScore",
+    "product.createdAt",
+    "product.updatedAt",
+  ],
+  ProductReturnWithStarRating: [
+    "product.id",
+    "product.name",
+    "product.price",
+    "product.origin",
+    "product.type",
+    "product.description",
+    "image.url",
+    "starRating.averageScore",
+    "product.createdAt",
+    "product.updatedAt",
+    "starRating.id",
+  ],
+  UserInformationReturnProperty: [
+    "profile.realname",
+    "auth.nickname",
+    "profile.birth",
+    "profile.gender",
+    "auth.email",
+    "profile.phonenumber",
+    "auth.userType",
+    "activity.purchaseCount",
+    "activity.bonusPoint",
+    "activity.productInquiryCount",
+    "activity.productReviewCount",
+  ],
+};

@@ -3,11 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import {
-  ProductReturnProperty,
-  ProductReturnWithStarRating,
-  ProductsReturnProperty,
-} from "../../../common/config/etc/etc.variable";
+import { ReturnPropertyWithSelect } from "../../../common/config/etc/etc.variable";
 import { ModifyProductDto } from "../dto/modify_product.dto";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -21,6 +17,8 @@ export class ProductRepository {
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
   ) {}
+
+  private readonly select = ReturnPropertyWithSelect;
 
   async checkProductNameToCreate(name: string): Promise<void> {
     const found = await this.productRepository
@@ -67,7 +65,7 @@ export class ProductRepository {
   async findProductsAllFromLatest(): Promise<ProductEntity[]> {
     const found = await this.productRepository
       .createQueryBuilder("product")
-      .select(ProductsReturnProperty)
+      .select(this.select.ProductsReturnProperty)
       .innerJoin("product.image", "image")
       .innerJoin("product.starRating", "starRating")
       .orderBy("product.createdAt", "DESC")
@@ -82,7 +80,7 @@ export class ProductRepository {
   async findProductsAllFromOldest(): Promise<ProductEntity[]> {
     const found = await this.productRepository
       .createQueryBuilder("product")
-      .select(ProductsReturnProperty)
+      .select(this.select.ProductsReturnProperty)
       .innerJoin("product.image", "image")
       .innerJoin("product.starRating", "starRating")
       .orderBy("product.createdAt", "ASC")
@@ -98,7 +96,7 @@ export class ProductRepository {
     try {
       return await this.productRepository
         .createQueryBuilder("product")
-        .select(ProductReturnProperty)
+        .select(this.select.ProductReturnProperty)
         .innerJoin("product.image", "image")
         .innerJoin("product.starRating", "starRating")
         .where("product.name = :name", { name })
@@ -112,7 +110,7 @@ export class ProductRepository {
     try {
       return await this.productRepository
         .createQueryBuilder("product")
-        .select(ProductReturnProperty)
+        .select(this.select.ProductReturnProperty)
         .innerJoin("product.image", "image")
         .innerJoin("product.starRating", "starRating")
         .where("product.id = :id", { id })
@@ -128,7 +126,7 @@ export class ProductRepository {
     try {
       return await this.productRepository
         .createQueryBuilder("product")
-        .select(ProductReturnWithStarRating)
+        .select(this.select.ProductReturnWithStarRating)
         .innerJoin("product.image", "image")
         .innerJoin("product.starRating", "starRating")
         .where("product.name = :name", { name })

@@ -1,4 +1,3 @@
-import { ReviewEntity } from "./../../review/entities/review.entity";
 import { UserEntity } from "src/model/user/entities/user.entity";
 import { ProductEntity } from "./../../product/entities/product.entity";
 import { CommonEntity } from "../../../common/entities/common.entity";
@@ -21,10 +20,6 @@ export class ImagesEntity extends CommonEntity {
   @ManyToOne(() => UserEntity, (user) => user)
   @JoinColumn({ name: "uploaderId", referencedColumnName: "id" })
   uploader: UserEntity;
-
-  @ManyToOne(() => ReviewEntity, (review) => review.image)
-  @JoinColumn({ name: "reviewId", referencedColumnName: "id" })
-  review: ReviewEntity;
 }
 
 @Entity("videos")
@@ -38,8 +33,4 @@ export class VideosEntity extends CommonEntity {
   @ManyToOne(() => UserEntity, (user) => user)
   @JoinColumn({ name: "uploaderId", referencedColumnName: "id" })
   uploader: UserEntity;
-
-  @ManyToOne(() => ReviewEntity, (review) => review.image)
-  @JoinColumn({ name: "reviewId", referencedColumnName: "id" })
-  review: ReviewEntity;
 }
