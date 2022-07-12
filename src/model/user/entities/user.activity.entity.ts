@@ -14,6 +14,10 @@ export class UserActivityEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
+  @OneToOne(() => UserEntity, (user) => user.Activity)
+  @JoinColumn({ name: "userId", referencedColumnName: "id" })
+  User: UserEntity;
+
   @Column({ type: "smallint", default: 0 })
   bonusPoint: number;
 
@@ -25,10 +29,6 @@ export class UserActivityEntity {
 
   @Column({ type: "smallint", default: 0 })
   productReviewCount: number;
-
-  @OneToOne(() => UserEntity, (user) => user.activity)
-  @JoinColumn({ name: "activityId", referencedColumnName: "id" })
-  user: UserEntity;
 
   @OneToMany(() => ReviewEntity, (review) => review.reviewer)
   review: ReviewEntity;

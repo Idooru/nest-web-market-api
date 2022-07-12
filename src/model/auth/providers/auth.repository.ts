@@ -18,10 +18,10 @@ export class AuthRepository {
     try {
       return await this.userRepository
         .createQueryBuilder("user")
-        .leftJoinAndSelect("user.profile", "profile")
-        .leftJoinAndSelect("user.auth", "auth")
-        .leftJoinAndSelect("user.activity", "activity")
-        .where("auth.email = :email", { email })
+        .leftJoinAndSelect("user.Profile", "Profile")
+        .leftJoinAndSelect("user.Auth", "Auth")
+        .leftJoinAndSelect("user.Activity", "Activity")
+        .where("Auth.email = :email", { email })
         .getOneOrFail();
     } catch (err) {
       throw new UnauthorizedException("아이디 혹은 비밀번호가 틀렸습니다.");
@@ -32,10 +32,10 @@ export class AuthRepository {
     try {
       return await this.userRepository
         .createQueryBuilder("user")
-        .leftJoinAndSelect("user.profile", "profile")
-        .leftJoinAndSelect("user.auth", "auth")
-        .leftJoinAndSelect("user.activity", "activity")
-        .where("profile.realname = :realname", { realname })
+        .leftJoinAndSelect("user.Profile", "Profile")
+        .leftJoinAndSelect("user.Auth", "Auth")
+        .leftJoinAndSelect("user.Activity", "Activity")
+        .where("Profile.realname = :realname", { realname })
         .getOneOrFail();
     } catch (err) {
       throw new UnauthorizedException("해당 이름(실명)은 존재하지 않습니다.");
@@ -46,10 +46,10 @@ export class AuthRepository {
     try {
       return await this.userRepository
         .createQueryBuilder("user")
-        .leftJoinAndSelect("user.profile", "profile")
-        .leftJoinAndSelect("user.auth", "auth")
-        .leftJoinAndSelect("user.activity", "activity")
-        .where("profile.phonenumber = :phonenumber", { phonenumber })
+        .leftJoinAndSelect("user.Profile", "Profile")
+        .leftJoinAndSelect("user.Auth", "Auth")
+        .leftJoinAndSelect("user.Activity", "Activity")
+        .where("Profile.phonenumber = :phonenumber", { phonenumber })
         .getOneOrFail();
     } catch (err) {
       throw new UnauthorizedException("해당 전화번호는 존재하지 않습니다.");

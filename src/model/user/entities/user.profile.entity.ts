@@ -7,10 +7,10 @@ import {
 } from "class-validator";
 import {
   Column,
-  JoinColumn,
   Entity,
   OneToOne,
   PrimaryGeneratedColumn,
+  JoinColumn,
 } from "typeorm";
 import { UserEntity } from "./user.entity";
 
@@ -18,6 +18,10 @@ import { UserEntity } from "./user.entity";
 export class UserProfileEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
+
+  @OneToOne(() => UserEntity, (user) => user.Profile)
+  @JoinColumn({ name: "userId", referencedColumnName: "id" })
+  User: UserEntity;
 
   @IsString()
   @IsNotEmpty()
@@ -38,8 +42,4 @@ export class UserProfileEntity {
   @IsNotEmpty()
   @Column({ type: "varchar", length: 15, unique: true, nullable: false })
   phonenumber: string;
-
-  @OneToOne(() => UserEntity, (user) => user.profile)
-  @JoinColumn({ name: "profileId", referencedColumnName: "id" })
-  user: UserEntity;
 }

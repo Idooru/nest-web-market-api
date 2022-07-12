@@ -23,7 +23,7 @@ export class ReviewEntity extends CommonEntity {
   @Column({ type: "text", nullable: false })
   comments: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.activity.review)
+  @ManyToOne(() => UserEntity, (user) => user.Activity.review)
   @JoinColumn({ name: "commenterId", referencedColumnName: "id" })
   reviewer: UserEntity;
 

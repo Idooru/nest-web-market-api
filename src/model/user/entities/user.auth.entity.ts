@@ -13,6 +13,10 @@ export class UserAuthEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
+  @OneToOne(() => UserEntity, (user) => user.Auth)
+  @JoinColumn({ name: "userId", referencedColumnName: "id" })
+  User: UserEntity;
+
   @IsString()
   @IsNotEmpty()
   @Column({ type: "varchar", length: 20, unique: true, nullable: false })
@@ -35,8 +39,4 @@ export class UserAuthEntity {
     default: "general",
   })
   userType: "general" | "special" | "admin";
-
-  @OneToOne(() => UserEntity, (user) => user.auth)
-  @JoinColumn({ name: "authId", referencedColumnName: "id" })
-  user: UserEntity;
 }

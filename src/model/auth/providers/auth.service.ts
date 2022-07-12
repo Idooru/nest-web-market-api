@@ -42,15 +42,15 @@ export class AuthService {
     const { email, password } = loginUserDto;
     const user = await this.authRepositry.findUserWithEmail(email);
 
-    if (!(await bcrypt.compare(password, user.auth.password))) {
+    if (!(await bcrypt.compare(password, user.Auth.password))) {
       throw new UnauthorizedException("아이디 혹은 비밀번호가 틀렸습니다.");
     }
 
     const jwtPayload = {
       id: user.id,
-      email: user.auth.email,
-      nickname: user.auth.nickname,
-      userType: user.auth.userType,
+      email: user.Auth.email,
+      nickname: user.Auth.nickname,
+      userType: user.Auth.userType,
     };
 
     try {
@@ -83,7 +83,7 @@ export class AuthService {
         "사용자 실명과 전화번호가 서로 일치하지 않습니다.",
       );
     }
-    return realNameResult.auth.email;
+    return realNameResult.Auth.email;
   }
 
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
@@ -102,6 +102,6 @@ export class AuthService {
 
     const [user, hashed] = resultPromise;
 
-    await this.authRepositry.resetPassword(user.auth.id, hashed);
+    await this.authRepositry.resetPassword(user.Auth.id, hashed);
   }
 }

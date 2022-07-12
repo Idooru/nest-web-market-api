@@ -1,20 +1,17 @@
 import { CommonEntity } from "../../../common/entities/common.entity";
-import { Entity, JoinColumn, OneToOne } from "typeorm";
+import { Entity, OneToOne } from "typeorm";
 import { UserAuthEntity } from "./user.auth.entity";
 import { UserActivityEntity } from "./user.activity.entity";
 import { UserProfileEntity } from "./user.profile.entity";
 
 @Entity("users")
 export class UserEntity extends CommonEntity {
-  @OneToOne(() => UserProfileEntity, (profile) => profile.id)
-  @JoinColumn({ name: "profileId", referencedColumnName: "id" })
-  profile: UserProfileEntity;
+  @OneToOne(() => UserProfileEntity, (profile) => profile.User)
+  Profile: UserProfileEntity;
 
-  @OneToOne(() => UserAuthEntity, (auth) => auth.id)
-  @JoinColumn({ name: "authId", referencedColumnName: "id" })
-  auth: UserAuthEntity;
+  @OneToOne(() => UserAuthEntity, (auth) => auth.User)
+  Auth: UserAuthEntity;
 
-  @OneToOne(() => UserActivityEntity, (activity) => activity.id)
-  @JoinColumn({ name: "activityId", referencedColumnName: "id" })
-  activity: UserActivityEntity;
+  @OneToOne(() => UserActivityEntity, (activity) => activity.User)
+  Activity: UserActivityEntity;
 }

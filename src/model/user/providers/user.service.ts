@@ -47,8 +47,8 @@ export class UserService {
   ): Promise<string> {
     const { nickname, phonenumber } = patchUserDto;
     const user = await this.userRepository.findUserWithId(userId);
-    const myNickName = user.auth.nickname;
-    const myPhoneNumber = user.profile.phonenumber;
+    const myNickName = user.Auth.nickname;
+    const myPhoneNumber = user.Profile.phonenumber;
 
     const checkUserColumn = await Promise.allSettled([
       this.userRepository.checkUserNickNameWhenUpdate(myNickName, nickname),
