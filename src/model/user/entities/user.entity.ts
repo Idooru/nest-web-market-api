@@ -7,7 +7,7 @@ import { UserProfileEntity } from "./user.profile.entity";
 @Entity("users")
 export class UserEntity extends CommonEntity {
   @OneToOne(() => UserProfileEntity, (profile) => profile.id)
-  @JoinColumn({ name: "commonId", referencedColumnName: "id" })
+  @JoinColumn({ name: "profileId", referencedColumnName: "id" })
   profile: UserProfileEntity;
 
   @OneToOne(() => UserAuthEntity, (auth) => auth.id)

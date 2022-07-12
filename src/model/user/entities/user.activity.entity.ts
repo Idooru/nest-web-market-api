@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   OneToOne,
   OneToMany,
+  JoinColumn,
 } from "typeorm";
 import { UserEntity } from "./user.entity";
 
@@ -25,7 +26,8 @@ export class UserActivityEntity {
   @Column({ type: "smallint", default: 0 })
   productReviewCount: number;
 
-  @OneToOne(() => UserEntity)
+  @OneToOne(() => UserEntity, (user) => user.activity)
+  @JoinColumn({ name: "activityId", referencedColumnName: "id" })
   user: UserEntity;
 
   @OneToMany(() => ReviewEntity, (review) => review.reviewer)

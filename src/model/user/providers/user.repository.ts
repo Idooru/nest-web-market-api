@@ -115,10 +115,10 @@ export class UserRepository {
     try {
       return await this.userRepository
         .createQueryBuilder("user")
+        .innerJoinAndSelect("user.profile", "profile")
+        .innerJoinAndSelect("user.auth", "auth")
+        .innerJoinAndSelect("user.activity", "activity")
         .select(this.select.UserInformationReturnProperty)
-        .innerJoin("user.profile", "profile")
-        .innerJoin("user.auth", "auth")
-        .innerJoin("user.activity", "activity")
         .where("user.id = :id", { id: userId })
         .getOneOrFail();
     } catch (err) {

@@ -5,7 +5,13 @@ import {
   IsDateString,
   IsMobilePhone,
 } from "class-validator";
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  JoinColumn,
+  Entity,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { UserEntity } from "./user.entity";
 
 @Entity("users profile")
@@ -34,5 +40,6 @@ export class UserProfileEntity {
   phonenumber: string;
 
   @OneToOne(() => UserEntity, (user) => user.profile)
+  @JoinColumn({ name: "profileId", referencedColumnName: "id" })
   user: UserEntity;
 }

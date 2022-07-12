@@ -1,4 +1,10 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+} from "typeorm";
 import { IsEmail, IsNotEmpty, IsString, Matches } from "class-validator";
 import { UserEntity } from "./user.entity";
 
@@ -30,6 +36,7 @@ export class UserAuthEntity {
   })
   userType: "general" | "special" | "admin";
 
-  @OneToOne(() => UserEntity)
+  @OneToOne(() => UserEntity, (user) => user.auth)
+  @JoinColumn({ name: "authId", referencedColumnName: "id" })
   user: UserEntity;
 }
