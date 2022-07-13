@@ -58,8 +58,8 @@ export class ProductService {
       madeStarRating.id,
     );
 
-    createProductDto.image = getImage;
-    createProductDto.starRating = starRating;
+    createProductDto.Image = getImage;
+    createProductDto.StarRating = starRating;
 
     await this.productRepository.checkProductNameToCreate(name);
     await this.productRepository.createProduct(createProductDto);
@@ -96,7 +96,7 @@ export class ProductService {
       getImage = await this.uploadRepository.findImageWithUrl(haveImage.url);
     }
 
-    modifyProductDto.image = getImage;
+    modifyProductDto.Image = getImage;
 
     await this.productRepository.checkProductNameToModify(name, product.name);
     await this.productRepository.modifyProduct(id, modifyProductDto);

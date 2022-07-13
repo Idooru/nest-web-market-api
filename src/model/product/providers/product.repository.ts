@@ -65,9 +65,9 @@ export class ProductRepository {
   async findProductsAllFromLatest(): Promise<ProductEntity[]> {
     const found = await this.productRepository
       .createQueryBuilder("product")
+      .leftJoin("product.Image", "Image")
+      .leftJoin("product.StarRating", "StarRating")
       .select(this.select.ProductsReturnProperty)
-      .innerJoin("product.image", "image")
-      .innerJoin("product.starRating", "starRating")
       .orderBy("product.createdAt", "DESC")
       .getMany();
 
@@ -80,9 +80,9 @@ export class ProductRepository {
   async findProductsAllFromOldest(): Promise<ProductEntity[]> {
     const found = await this.productRepository
       .createQueryBuilder("product")
+      .leftJoin("product.Image", "Image")
+      .leftJoin("product.StarRating", "StarRating")
       .select(this.select.ProductsReturnProperty)
-      .innerJoin("product.image", "image")
-      .innerJoin("product.starRating", "starRating")
       .orderBy("product.createdAt", "ASC")
       .getMany();
 
@@ -97,8 +97,8 @@ export class ProductRepository {
       return await this.productRepository
         .createQueryBuilder("product")
         .select(this.select.ProductReturnProperty)
-        .innerJoin("product.image", "image")
-        .innerJoin("product.starRating", "starRating")
+        .innerJoin("product.Image", "Image")
+        .innerJoin("product.StarRating", "StarRating")
         .where("product.name = :name", { name })
         .getOneOrFail();
     } catch (err) {
@@ -111,8 +111,8 @@ export class ProductRepository {
       return await this.productRepository
         .createQueryBuilder("product")
         .select(this.select.ProductReturnProperty)
-        .innerJoin("product.image", "image")
-        .innerJoin("product.starRating", "starRating")
+        .innerJoin("product.Image", "Image")
+        .innerJoin("product.StarRating", "StarRating")
         .where("product.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
@@ -127,8 +127,8 @@ export class ProductRepository {
       return await this.productRepository
         .createQueryBuilder("product")
         .select(this.select.ProductReturnWithStarRating)
-        .innerJoin("product.image", "image")
-        .innerJoin("product.starRating", "starRating")
+        .innerJoin("product.Image", "Image")
+        .innerJoin("product.StarRating", "StarRating")
         .where("product.name = :name", { name })
         .getOneOrFail();
     } catch (err) {
@@ -163,6 +163,6 @@ export class ProductRepository {
   }
 
   async insertStarRatingOnProduct(id: string, starRating: StarRatingEntity) {
-    await this.productRepository.update(id, { starRating });
+    await this.productRepository.update(id, { StarRating: starRating });
   }
 }

@@ -7,6 +7,6 @@ export class ModifyProductDto extends PickType(ProductEntity, [
   "origin",
   "type",
   "description",
-  "image",
+  "Image",
   "quantity",
 ] as const) {}

@@ -118,7 +118,7 @@ export class UserRepository {
         .leftJoinAndSelect("user.Profile", "Profile")
         .leftJoinAndSelect("user.Auth", "Auth")
         .leftJoinAndSelect("user.Activity", "Activity")
-        // .select(this.select.UserInformationReturnProperty)
+        .select(this.select.UserInformationReturnProperty)
         .where("user.id = :id", { id: userId })
         .getOneOrFail();
       return a;

@@ -5,8 +5,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from "typeorm";
 
 @Entity("images")
 export class ImagesEntity extends CommonEntity {
-  @OneToOne(() => ProductEntity, (product) => product.image)
-  @JoinColumn({ name: "imageId", referencedColumnName: "id" })
+  @OneToOne(() => ProductEntity, (product) => product.Image)
   product: ProductEntity;
 
   @Column({ type: "varchar", nullable: false, unique: true })

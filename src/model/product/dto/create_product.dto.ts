@@ -7,6 +7,6 @@ export class CreateProductDto extends PickType(ProductEntity, [
   "origin",
   "type",
   "description",
-  "image",
-  "starRating",
+  "Image",
+  "StarRating",
 ] as const) {}

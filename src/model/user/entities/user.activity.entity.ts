@@ -30,6 +30,6 @@ export class UserActivityEntity {
   @Column({ type: "smallint", default: 0 })
   productReviewCount: number;
 
-  @OneToMany(() => ReviewEntity, (review) => review.reviewer)
-  review: ReviewEntity;
+  @OneToMany(() => ReviewEntity, (review) => review.Reviewer)
+  Review: ReviewEntity;
 }

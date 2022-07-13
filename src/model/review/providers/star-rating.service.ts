@@ -19,7 +19,7 @@ export class StarRatingService {
         productName,
       );
 
-    const starRatingId = product.starRating.id;
+    const starRatingId = product.StarRating.id;
     const starRating = await this.starRatingRepository.findStarRatingWithId(
       starRatingId,
     );

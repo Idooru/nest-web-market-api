@@ -37,11 +37,12 @@ export class ProductEntity extends CommonEntity {
 
   @OneToOne(() => StarRatingEntity, (starRating) => starRating.product)
   @JoinColumn({ name: "starRatingId", referencedColumnName: "id" })
-  starRating: StarRatingEntity;
+  StarRating: StarRatingEntity;
 
   @OneToOne(() => ImagesEntity, (image) => image.product)
-  image: ImagesEntity;
+  @JoinColumn({ name: "imageId", referencedColumnName: "id" })
+  Image: ImagesEntity;
 
-  @ManyToMany(() => ReviewEntity, (review) => review.product)
-  review: ReviewEntity[];
+  @ManyToMany(() => ReviewEntity, (review) => review.Product)
+  Review: ReviewEntity[];
 }
