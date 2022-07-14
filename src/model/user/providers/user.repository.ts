@@ -113,15 +113,13 @@ export class UserRepository {
 
   async findUserWithId(userId: string): Promise<UserEntity> {
     try {
-      const a = await this.userRepository
+      return await this.userRepository
         .createQueryBuilder("user")
         .leftJoinAndSelect("user.Profile", "Profile")
         .leftJoinAndSelect("user.Auth", "Auth")
         .leftJoinAndSelect("user.Activity", "Activity")
-        .select(this.select.UserInformationReturnProperty)
         .where("user.id = :id", { id: userId })
         .getOneOrFail();
-      return a;
     } catch (err) {
       throw new UnauthorizedException("해당 사용자아이디는 존재하지 않습니다.");
     }

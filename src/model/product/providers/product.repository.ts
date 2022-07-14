@@ -96,9 +96,9 @@ export class ProductRepository {
     try {
       return await this.productRepository
         .createQueryBuilder("product")
-        .select(this.select.ProductReturnProperty)
         .innerJoin("product.Image", "Image")
         .innerJoin("product.StarRating", "StarRating")
+        .select(this.select.ProductReturnProperty)
         .where("product.name = :name", { name })
         .getOneOrFail();
     } catch (err) {
