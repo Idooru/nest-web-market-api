@@ -96,8 +96,8 @@ export class ProductRepository {
     try {
       return await this.productRepository
         .createQueryBuilder("product")
-        .innerJoin("product.Image", "Image")
-        .innerJoin("product.StarRating", "StarRating")
+        .leftJoin("product.Image", "Image")
+        .leftJoin("product.StarRating", "StarRating")
         .select(this.select.ProductReturnProperty)
         .where("product.name = :name", { name })
         .getOneOrFail();
@@ -149,20 +149,17 @@ export class ProductRepository {
     id: string,
     modifyProductDto: ModifyProductDto,
   ): Promise<void> {
-    // await this.productRepository
-    //   .createQueryBuilder("product")
-    //   .update()
-    //   .where("product.id = :id", { id })
-    //   .set({ ...modifyProductDto })
-    //   .execute();
+    // await this.productRepository;
+    // .createQueryBuilder("product")
+    // .update()
+    // .set(ProductEntity)
+    // .where("product.id = :id", { id })
+    // .set({ ...modifyProductDto })
+    // .execute();
     await this.productRepository.update(id, { ...modifyProductDto });
   }
 
   async removeProduct(id: string): Promise<void> {
     await this.productRepository.delete(id);
-  }
-
-  async insertStarRatingOnProduct(id: string, starRating: StarRatingEntity) {
-    await this.productRepository.update(id, { StarRating: starRating });
   }
 }

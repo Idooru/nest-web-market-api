@@ -1,7 +1,15 @@
 import { UserEntity } from "src/model/user/entities/user.entity";
 import { ProductEntity } from "./../../product/entities/product.entity";
 import { CommonEntity } from "../../../common/entities/common.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToMany,
+  ManyToOne,
+  OneToOne,
+} from "typeorm";
+import { ReviewEntity } from "src/model/review/entities/review.entity";
 
 @Entity("images")
 export class ImagesEntity extends CommonEntity {
@@ -20,6 +28,9 @@ export class ImagesEntity extends CommonEntity {
   @ManyToOne(() => UserEntity, (user) => user)
   @JoinColumn({ name: "uploaderId", referencedColumnName: "id" })
   uploader: UserEntity;
+
+  @ManyToMany(() => ReviewEntity, (review) => review.Image)
+  Review?: ReviewEntity[];
 }
 
 @Entity("videos")

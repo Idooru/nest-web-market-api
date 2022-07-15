@@ -4,15 +4,11 @@ import { JwtPayload } from "src/common/interfaces/jwt.payload.interface";
 import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface";
 import { IsEnum, IsNotEmpty } from "class-validator";
 
-export class Comments extends PickType(ReviewEntity, ["comments"] as const) {}
-
-export class Rating {
-  @IsEnum([1, 2, 3, 4, 5])
-  @IsNotEmpty()
-  userSelectScore: 1 | 2 | 3 | 4 | 5;
-}
-
-export class CreateReviewDto extends IntersectionType(Comments, Rating) {}
+export class CreateReviewDto extends PickType(ReviewEntity, [
+  "comments",
+  "userSelectScore",
+  "Image",
+] as const) {}
 
 export class CreateReviewWithImageAndVideoDao {
   createReviewDto: CreateReviewDto;

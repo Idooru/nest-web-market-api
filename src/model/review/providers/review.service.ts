@@ -1,19 +1,22 @@
-import { Promises } from "../../../common/config/etc/providers/promises";
-import { UserRepository } from "../../user/providers/user.repository";
-import { ReviewRepository } from "./review.repository";
-import { Injectable } from "@nestjs/common";
 import {
   CreateReviewWithImageAndVideoDao,
   CreateReviewWithoutMediaDao,
   CreateReviewWithImage,
   CreateReviewWithVideo,
 } from "../dto/create-review.dto";
+import { ProductRepository } from "./../../product/providers/product.repository";
+import { Promises } from "../../../common/config/etc/providers/promises";
+import { UserRepository } from "../../user/providers/user.repository";
+import { ReviewRepository } from "./review.repository";
+import { Injectable } from "@nestjs/common";
+import { ReviewEntity } from "../entities/review.entity";
 import { UpdateReviewDto } from "../dto/update-review.dto";
 
 @Injectable()
 export class ReviewService {
   constructor(
     private readonly reviewRepository: ReviewRepository,
+    private readonly productRepository: ProductRepository,
     private readonly userRepository: UserRepository,
     private readonly promises: Promises,
   ) {}
@@ -48,13 +51,31 @@ export class ReviewService {
     createReviewDao: CreateReviewWithImage,
   ): Promise<void> {}
 
-  async CreateReviewWithVideo(
+  async createReviewWithVideo(
     createReviewDao: CreateReviewWithVideo,
   ): Promise<void> {}
 
   async createReviewWithoutMedia(
     createReviewDao: CreateReviewWithoutMediaDao,
-  ): Promise<void> {}
+  ): Promise<ReviewEntity> {
+    const { createReviewDto, jwtPayload, productName } = createReviewDao;
+    const { id } = jwtPayload;
+
+    const user = await this.userRepository.findUserWithId(id);
+    const product = await this.productRepository.findProductOneByName(
+      productName,
+    );
+
+    createReviewDto.Image = null;
+
+    const a = await this.reviewRepository.createReviewWithoutMedia(
+      createReviewDto,
+      user,
+      product,
+    );
+
+    return a;
+  }
 }
 
 // findAll() {

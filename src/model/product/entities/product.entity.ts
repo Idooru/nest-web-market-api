@@ -1,4 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToMany, OneToOne } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToMany,
+  OneToMany,
+  OneToOne,
+} from "typeorm";
 import { ImagesEntity } from "../../upload/entities/upload.entity";
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
@@ -35,14 +42,14 @@ export class ProductEntity extends CommonEntity {
   @Column({ type: "int", default: 50 })
   quantity: number;
 
-  @OneToOne(() => StarRatingEntity, (starRating) => starRating.product)
-  @JoinColumn({ name: "starRatingId", referencedColumnName: "id" })
-  StarRating: StarRatingEntity;
-
   @OneToOne(() => ImagesEntity, (image) => image.product)
   @JoinColumn({ name: "imageId", referencedColumnName: "id" })
   Image: ImagesEntity;
 
-  @ManyToMany(() => ReviewEntity, (review) => review.Product)
-  Review: ReviewEntity[];
+  @OneToOne(() => StarRatingEntity, (starRating) => starRating.Product)
+  @JoinColumn({ name: "starRatingId", referencedColumnName: "id" })
+  StarRating: StarRatingEntity;
+
+  @OneToMany(() => ReviewEntity, (review) => review.Product)
+  Review: ReviewEntity;
 }

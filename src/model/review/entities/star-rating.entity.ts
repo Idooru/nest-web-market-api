@@ -1,14 +1,15 @@
+import { ReviewEntity } from "./review.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { CommonEntity } from "src/common/entities/common.entity";
-import { Column, Entity, OneToOne, JoinColumn } from "typeorm";
+import { Column, Entity, OneToOne } from "typeorm";
 
 @Entity("star ratings")
 export class StarRatingEntity extends CommonEntity {
-  @OneToOne(() => ProductEntity, (product) => product.StarRating)
-  product: ProductEntity;
-
   @Column({ type: "float", default: 0 })
   averageScore: number;
+
+  @OneToOne(() => ReviewEntity, (review) => review.Product)
+  Product: ProductEntity;
 
   @Column({ type: "int", default: 0 })
   onePointSum: number;

@@ -2,34 +2,36 @@ import { Injectable } from "@nestjs/common";
 import { ProductRepository } from "../../product/providers/product.repository";
 import { StarRatingRepository } from "./star-rating.repository";
 import { StarRatingEntity } from "./../entities/star-rating.entity";
+import { ReviewRepository } from "./review.repository";
+import { UserEntity } from "src/model/user/entities/user.entity";
 
 @Injectable()
 export class StarRatingService {
   constructor(
     private readonly productRepository: ProductRepository,
+    private readonly reviewRepository: ReviewRepository,
     private readonly starRatingRepository: StarRatingRepository,
   ) {}
 
   async putStarRating(
     userSelectScore: number,
-    productName: string,
-  ): Promise<StarRatingEntity> {
-    const product =
-      await this.productRepository.findProductWhenUseStarRatingWithName(
-        productName,
-      );
-
-    const starRatingId = product.StarRating.id;
-    const starRating = await this.starRatingRepository.findStarRatingWithId(
-      starRatingId,
-    );
-
-    this.starRatingRepository.starRatingIncreaseAndSum(
-      starRating,
-      userSelectScore,
-    );
-
-    return starRating;
+    reviewer: UserEntity,
+  ): Promise<void> {
+    // const product =
+    //   await this.productRepository.findProductWhenUseStarRatingWithName(
+    //     productName,
+    //   );
+    const review = await this.reviewRepository.findReviewWithReviewer(reviewer);
+    1;
+    // const starRatingId = product.StarRating.id;
+    // const starRating = await this.starRatingRepository.findStarRatingWithId(
+    //   starRatingId,
+    // );
+    // this.starRatingRepository.starRatingIncreaseAndSum(
+    //   starRating,
+    //   userSelectScore,
+    // );
+    // return starRating;
   }
 
   async calculateRating(starRating: StarRatingEntity): Promise<void> {

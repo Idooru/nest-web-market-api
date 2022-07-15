@@ -53,13 +53,7 @@ export class ProductService {
       getImage = await this.uploadRepository.findImageWithUrl(imageCookie.url);
     }
 
-    const madeStarRating = await this.starRatingRepository.createRating();
-    const starRating = await this.starRatingRepository.findStarRatingWithId(
-      madeStarRating.id,
-    );
-
     createProductDto.Image = getImage;
-    createProductDto.StarRating = starRating;
 
     await this.productRepository.checkProductNameToCreate(name);
     await this.productRepository.createProduct(createProductDto);
