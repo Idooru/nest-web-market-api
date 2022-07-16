@@ -18,11 +18,14 @@ export class ReviewRepository {
     user: UserEntity,
     product: ProductEntity,
   ) {
-    return await this.reviewRepository.save({
-      ...createReviewDto,
-      productId: product,
-      commenterId: user,
-    });
+    const review = this.reviewRepository.create();
+
+    review.comments = createReviewDto.comments;
+    review.userSelectScore = createReviewDto.userSelectScore;
+    review.Product = product;
+    review.Reviewer = user;
+
+    return await this.reviewRepository.save(review);
   }
 
   async findReviewWithReviewer(reviewer: UserEntity) {

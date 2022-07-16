@@ -40,105 +40,64 @@ export class ReviewController {
     @GetJWT() jwtPayload: JwtPayload,
   ): Promise<JsonClearCookieInterface | JsonGeneralInterface<void>> {
     const { userSelectScore } = createReviewDto;
-
-    const review = await this.reviewService.createReviewWithoutMedia({
-      createReviewDto,
-      jwtPayload,
-      productName,
-    });
-
     const starRating = await this.starRatingService.putStarRating(
       userSelectScore,
-      review.Reviewer,
+      productName,
     );
 
-    // await this.starRatingService.calculateRating(starRating);
+    await this.starRatingService.calculateRating(starRating);
 
-    return {
-      statusCode: 201,
-      message: "리뷰를 생성하였습니다.",
-    };
+    if (reviewImgCookie.length && reviewVdoCookie.length) {
+      await this.reviewService.createReviewWithImageAndVideo({
+        createReviewDto,
+        jwtPayload,
+        productName,
+        reviewImgCookie,
+        reviewVdoCookie,
+      });
 
-    //   if (reviewImgCookie.length && reviewVdoCookie.length) {
-    //     await this.reviewService.createReviewWithImageAndVideo({
-    //       createReviewDto,
-    //       jwtPayload,
-    //       productName,
-    //       reviewImgCookie,
-    //       reviewVdoCookie,
-    //     });
+      return {
+        statusCode: 201,
+        message: "리뷰를 생성하였습니다.",
+        cookieKey: ["Review_Image_Url_COOKIES", "Review_Video_Url_COOKIES"],
+      };
+    } else if (reviewImgCookie.length) {
+      await this.reviewService.createReviewWithImage({
+        createReviewDto,
+        jwtPayload,
+        productName,
+        reviewImgCookie,
+      });
 
-    //     const starRating = await this.starRatingService.putStarRating(
-    //       userSelectScore,
-    //       productName,
-    //     );
+      return {
+        statusCode: 201,
+        message: "리뷰를 생성하였습니다.",
+        cookieKey: ["Review_Image_Url_COOKIES"],
+      };
+    } else if (reviewVdoCookie.length) {
+      await this.reviewService.createReviewWithVideo({
+        createReviewDto,
+        jwtPayload,
+        productName,
+        reviewVdoCookie,
+      });
 
-    //     await this.starRatingService.calculateRating(starRating);
+      return {
+        statusCode: 201,
+        message: "리뷰를 생성하였습니다.",
+        cookieKey: ["Review_Video_Url_COOKIES"],
+      };
+    } else {
+      await this.reviewService.createReviewWithoutMedia({
+        createReviewDto,
+        jwtPayload,
+        productName,
+      });
 
-    //     return {
-    //       statusCode: 201,
-    //       message: "리뷰를 생성하였습니다.",
-    //       cookieKey: ["Review_Image_Url_COOKIES", "Review_Video_Url_COOKIES"],
-    //     };
-    //   } else if (reviewImgCookie.length) {
-    //     await this.reviewService.createReviewWithImage({
-    //       createReviewDto,
-    //       jwtPayload,
-    //       productName,
-    //       reviewImgCookie,
-    //     });
-
-    //     const starRating = await this.starRatingService.putStarRating(
-    //       userSelectScore,
-    //       productName,
-    //     );
-
-    //     await this.starRatingService.calculateRating(starRating);
-
-    //     return {
-    //       statusCode: 201,
-    //       message: "리뷰를 생성하였습니다.",
-    //       cookieKey: ["Review_Image_Url_COOKIES"],
-    //     };
-    //   } else if (reviewVdoCookie.length) {
-    //     await this.reviewService.CreateReviewWithVideo({
-    //       createReviewDto,
-    //       jwtPayload,
-    //       productName,
-    //       reviewVdoCookie,
-    //     });
-
-    //     const starRating = await this.starRatingService.putStarRating(
-    //       userSelectScore,
-    //       productName,
-    //     );
-
-    //     await this.starRatingService.calculateRating(starRating);
-
-    //     return {
-    //       statusCode: 201,
-    //       message: "리뷰를 생성하였습니다.",
-    //       cookieKey: ["Review_Video_Url_COOKIES"],
-    //     };
-    //   } else {
-    //     const review = await this.reviewService.createReviewWithoutMedia({
-    //       createReviewDto,
-    //       jwtPayload,
-    //       productName,
-    //     });
-
-    //     const starRating = await this.starRatingService.putStarRating(
-    //       userSelectScore,
-    //       review.Reviewer,
-    //     );
-
-    //     await this.starRatingService.calculateRating(starRating);
-
-    //     return {
-    //       statusCode: 201,
-    //       message: "리뷰를 생성하였습니다.",
-    //     };
-    //   }
-    // }
+      return {
+        statusCode: 201,
+        message: "리뷰를 생성하였습니다.",
+      };
+    }
   }
 }

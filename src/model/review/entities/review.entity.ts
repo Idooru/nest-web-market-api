@@ -38,7 +38,11 @@ export class ReviewEntity extends CommonEntity {
   @JoinColumn({ name: "productId", referencedColumnName: "id" })
   Product: ProductEntity;
 
-  @ManyToMany(() => ImagesEntity, (image) => image.Review)
-  @JoinTable()
+  @ManyToOne(() => ImagesEntity, (image) => image.Review)
+  @JoinColumn({ name: "imageId", referencedColumnName: "id" })
   Image?: ImagesEntity[];
+
+  @ManyToOne(() => VideosEntity, (video) => video.Review)
+  @JoinColumn({ name: "videoId", referencedColumnName: "id" })
+  Video?: VideosEntity[];
 }

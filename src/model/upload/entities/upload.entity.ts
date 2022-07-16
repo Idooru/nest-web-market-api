@@ -5,7 +5,7 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToMany,
+  OneToMany,
   ManyToOne,
   OneToOne,
 } from "typeorm";
@@ -29,8 +29,8 @@ export class ImagesEntity extends CommonEntity {
   @JoinColumn({ name: "uploaderId", referencedColumnName: "id" })
   uploader: UserEntity;
 
-  @ManyToMany(() => ReviewEntity, (review) => review.Image)
-  Review?: ReviewEntity[];
+  @OneToMany(() => ReviewEntity, (review) => review.Image)
+  Review?: ReviewEntity;
 }
 
 @Entity("videos")
@@ -44,4 +44,7 @@ export class VideosEntity extends CommonEntity {
   @ManyToOne(() => UserEntity, (user) => user)
   @JoinColumn({ name: "uploaderId", referencedColumnName: "id" })
   uploader: UserEntity;
+
+  @OneToMany(() => ReviewEntity, (review) => review.Video)
+  Review?: ReviewEntity;
 }

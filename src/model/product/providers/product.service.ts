@@ -53,7 +53,13 @@ export class ProductService {
       getImage = await this.uploadRepository.findImageWithUrl(imageCookie.url);
     }
 
+    const madeStarRating = await this.starRatingRepository.createRating();
+    const starRating = await this.starRatingRepository.findStarRatingWithId(
+      madeStarRating.id,
+    );
+
     createProductDto.Image = getImage;
+    createProductDto.StarRating = starRating;
 
     await this.productRepository.checkProductNameToCreate(name);
     await this.productRepository.createProduct(createProductDto);
@@ -63,14 +69,14 @@ export class ProductService {
     id: string,
     modifyProductDto: ModifyProductDto,
     modifier: string,
-    image: { name: string; url: string },
+    imageCookie: MediaUrlCookie,
   ): Promise<void> {
     const { name } = modifyProductDto;
     let getImage: ImagesEntity;
 
     const findProductAndImageId = await Promise.allSettled([
       this.productRepository.findProductOneById(id),
-      this.uploadRepository.findImageWithUrl(image.url),
+      this.uploadRepository.findImageWithUrl(imageCookie.url),
     ]);
 
     const findProductAndImageIdResult = this.promises.twoPromiseSettled(
@@ -79,15 +85,15 @@ export class ProductService {
       "Find Product And ImageId",
     );
 
-    const [product, haveImage] = findProductAndImageIdResult;
+    const [product, image] = findProductAndImageIdResult;
 
-    if (!haveImage) {
+    if (!image) {
       const result = await this.uploadService.copyImageFromImagePreparation(
         modifier,
       );
       getImage = await this.uploadRepository.findImageWithUrl(result.url);
     } else {
-      getImage = await this.uploadRepository.findImageWithUrl(haveImage.url);
+      getImage = await this.uploadRepository.findImageWithUrl(image.url);
     }
 
     modifyProductDto.Image = getImage;

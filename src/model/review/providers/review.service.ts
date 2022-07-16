@@ -66,15 +66,11 @@ export class ReviewService {
       productName,
     );
 
-    createReviewDto.Image = null;
-
-    const a = await this.reviewRepository.createReviewWithoutMedia(
+    return await this.reviewRepository.createReviewWithoutMedia(
       createReviewDto,
       user,
       product,
     );
-
-    return a;
   }
 }
 
