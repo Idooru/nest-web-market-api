@@ -6,6 +6,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { ImagesEntity, VideosEntity } from "../entities/upload.entity";
 import { Repository } from "typeorm";
 import { ConfigService } from "@nestjs/config";
+import { ReviewEntity } from "src/model/review/entities/review.entity";
 
 @Injectable()
 export class UploadRepository {
@@ -153,5 +154,25 @@ export class UploadRepository {
 
   async deleteUploadVideoWithId(id: string): Promise<void> {
     await this.videosRepository.delete(id);
+  }
+
+  async insertImageOnReview(id: string, review: ReviewEntity) {
+    const image = await this.imagesRepository
+      .createQueryBuilder("image")
+      .where("image.id = :id", { id })
+      .getOne();
+
+    image.Review = review;
+    await this.imagesRepository.save(image);
+  }
+
+  async insertVideoOnReview(id: string, review: ReviewEntity) {
+    const video = await this.videosRepository
+      .createQueryBuilder("video")
+      .where("video.id = :id", { id })
+      .getOne();
+
+    video.Review = review;
+    await this.videosRepository.save(video);
   }
 }

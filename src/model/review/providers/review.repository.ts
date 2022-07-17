@@ -13,11 +13,11 @@ export class ReviewRepository {
     private readonly reviewRepository: Repository<ReviewEntity>,
   ) {}
 
-  async createReviewWithoutMedia(
+  async createReview(
     createReviewDto: CreateReviewDto,
     user: UserEntity,
     product: ProductEntity,
-  ) {
+  ): Promise<ReviewEntity> {
     const review = this.reviewRepository.create();
 
     review.comments = createReviewDto.comments;

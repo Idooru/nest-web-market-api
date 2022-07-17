@@ -10,10 +10,12 @@ import { StarRatingEntity } from "../review/entities/star-rating.entity";
 import { StarRatingRepository } from "../review/providers/star-rating.repository";
 import { EtcModule } from "../../common/config/etc/etc.module";
 import { StarRatingService } from "./providers/star-rating.service";
+import { UploadModule } from "../upload/upload.module";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ReviewEntity, StarRatingEntity]),
+    forwardRef(() => UploadModule),
     forwardRef(() => UserModule),
     forwardRef(() => ProductModule),
     forwardRef(() => EtcModule),

@@ -29,7 +29,8 @@ export class ImagesEntity extends CommonEntity {
   @JoinColumn({ name: "uploaderId", referencedColumnName: "id" })
   uploader: UserEntity;
 
-  @OneToMany(() => ReviewEntity, (review) => review.Image)
+  @ManyToOne(() => ReviewEntity, (review) => review.Image)
+  @JoinColumn({ name: "reviewId", referencedColumnName: "id" })
   Review?: ReviewEntity;
 }
 
@@ -45,6 +46,7 @@ export class VideosEntity extends CommonEntity {
   @JoinColumn({ name: "uploaderId", referencedColumnName: "id" })
   uploader: UserEntity;
 
-  @OneToMany(() => ReviewEntity, (review) => review.Video)
+  @ManyToOne(() => ReviewEntity, (review) => review.Video)
+  @JoinColumn({ name: "reviewId", referencedColumnName: "id" })
   Review?: ReviewEntity;
 }

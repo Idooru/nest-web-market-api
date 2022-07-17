@@ -4,7 +4,6 @@ import { UploadService } from "./providers/upload.service";
 import { UploadController } from "../upload/controllers/upload.controller";
 import { ImagesEntity, VideosEntity } from "./entities/upload.entity";
 import { UploadRepository } from "./providers/upload.repository";
-import { MulterConfig } from "src/common/config/multer.config";
 import { NestjsFormDataModule } from "nestjs-form-data";
 import { UserModule } from "../user/user.module";
 
@@ -15,19 +14,7 @@ import { UserModule } from "../user/user.module";
     NestjsFormDataModule,
   ],
   controllers: [UploadController],
-  providers: [
-    UploadService,
-    UploadRepository,
-    MulterConfig,
-    ImagesEntity,
-    VideosEntity,
-  ],
-  exports: [
-    UploadService,
-    UploadRepository,
-    ImagesEntity,
-    VideosEntity,
-    MulterConfig,
-  ],
+  providers: [UploadService, UploadRepository],
+  exports: [UploadService, UploadRepository],
 })
 export class UploadModule {}

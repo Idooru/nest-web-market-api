@@ -15,7 +15,7 @@ import { UpdateReviewDto } from "../dto/update-review.dto";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtPayload } from "src/common/interfaces/jwt.payload.interface";
 import { Cookies } from "src/common/decorators/cookies.decorator";
-import { UseInterceptors } from "@nestjs/common";
+import { UseInterceptors, NotFoundException } from "@nestjs/common";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/json.clear.cookie.interceptor";
 import { JsonClearCookieInterface } from "src/common/interfaces/json.clear.cookie.interface";
 import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface";
@@ -39,7 +39,12 @@ export class ReviewController {
     @Cookies("Review_Video_Url_COOKIES") reviewVdoCookie: MediaUrlCookie[],
     @Body() createReviewDto: CreateReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
-  ): Promise<JsonClearCookieInterface | JsonGeneralInterface<void>> {
+  ): Promise<JsonClearCookieInterface> {
+    if (!reviewImgCookie.length || !reviewVdoCookie.length) {
+      throw new NotFoundException(
+        "이미지, 비디오 쿠키를 찾을 수 없습니다. 우선 사진과 동영상을 업로드 해주세요.",
+      );
+    }
     const { userSelectScore } = createReviewDto;
     const starRating = await this.starRatingService.putStarRating(
       userSelectScore,
@@ -71,7 +76,12 @@ export class ReviewController {
     @Cookies("Review_Image_Url_COOKIES") reviewImgCookie: MediaUrlCookie[],
     @Body() createReviewDto: CreateReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
-  ): Promise<JsonClearCookieInterface | JsonGeneralInterface<void>> {
+  ): Promise<JsonClearCookieInterface> {
+    if (!reviewImgCookie.length) {
+      throw new NotFoundException(
+        "이미지 쿠키를 찾을 수 없습니다. 우선 사진을 업로드 해주세요.",
+      );
+    }
     const { userSelectScore } = createReviewDto;
     const starRating = await this.starRatingService.putStarRating(
       userSelectScore,
@@ -102,7 +112,13 @@ export class ReviewController {
     @Cookies("Review_Video_Url_COOKIES") reviewVdoCookie: MediaUrlCookie[],
     @Body() createReviewDto: CreateReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
-  ): Promise<JsonClearCookieInterface | JsonGeneralInterface<void>> {
+  ): Promise<JsonClearCookieInterface> {
+    if (!reviewVdoCookie.length) {
+      throw new NotFoundException(
+        "비디오 쿠키를 찾을 수 없습니다. 우선 동영상을 업로드 해주세요.",
+      );
+    }
+
     const { userSelectScore } = createReviewDto;
     const starRating = await this.starRatingService.putStarRating(
       userSelectScore,
@@ -132,7 +148,7 @@ export class ReviewController {
     @Param("productName") productName: string,
     @Body() createReviewDto: CreateReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
-  ): Promise<JsonClearCookieInterface | JsonGeneralInterface<void>> {
+  ): Promise<JsonGeneralInterface<void>> {
     const { userSelectScore } = createReviewDto;
     const starRating = await this.starRatingService.putStarRating(
       userSelectScore,

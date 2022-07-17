@@ -16,7 +16,6 @@ import { UserEntity } from "./../../user/entities/user.entity";
 import { ProductEntity } from "./../../product/entities/product.entity";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { IsNotEmpty, IsString, IsEnum } from "class-validator";
-import { StarRatingEntity } from "./star-rating.entity";
 
 @Entity("reviews")
 export class ReviewEntity extends CommonEntity {
@@ -38,11 +37,9 @@ export class ReviewEntity extends CommonEntity {
   @JoinColumn({ name: "productId", referencedColumnName: "id" })
   Product: ProductEntity;
 
-  @ManyToOne(() => ImagesEntity, (image) => image.Review)
-  @JoinColumn({ name: "imageId", referencedColumnName: "id" })
+  @OneToMany(() => ImagesEntity, (image) => image.Review)
   Image?: ImagesEntity[];
 
-  @ManyToOne(() => VideosEntity, (video) => video.Review)
-  @JoinColumn({ name: "videoId", referencedColumnName: "id" })
+  @OneToMany(() => VideosEntity, (video) => video.Review)
   Video?: VideosEntity[];
 }
