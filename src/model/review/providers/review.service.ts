@@ -53,7 +53,15 @@ export class ReviewService {
 
   async createReviewWithVideo(
     createReviewDao: CreateReviewWithVideo,
-  ): Promise<void> {}
+  ): Promise<void> {
+    const { createReviewDto, jwtPayload, productName } = createReviewDao;
+    const { id } = jwtPayload;
+
+    const user = await this.userRepository.findUserWithId(id);
+    const product = await this.productRepository.findProductOneByName(
+      productName,
+    );
+  }
 
   async createReviewWithoutMedia(
     createReviewDao: CreateReviewWithoutMediaDao,

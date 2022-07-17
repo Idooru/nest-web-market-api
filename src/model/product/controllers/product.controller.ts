@@ -113,9 +113,9 @@ export class ProductController {
     @Body() modifyProductDto: ModifyProductDto,
     @GetJWT() jwtPayload: JwtPayload,
     @Cookie("Product_Image_Url_COOKIE")
-    productImg: MediaUrlCookie,
+    productImgCookie: MediaUrlCookie,
   ): Promise<JsonClearCookieInterface> {
-    if (!productImg) {
+    if (!productImgCookie) {
       throw new BadRequestException(
         "상품을 수정할 때 사용할 이미지를 준비해주세요.",
       );
@@ -125,7 +125,7 @@ export class ProductController {
       productId,
       modifyProductDto,
       jwtPayload.nickname,
-      productImg,
+      productImgCookie,
     );
 
     return {
