@@ -17,7 +17,7 @@ import { AuthService } from "../../auth/providers/auth.service";
 import { UserService } from "../providers/user.service";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { LoginUserDto } from "../dtos/login-user.dto";
-import { UserEntity } from "../entities/user.entity";
+import { UsersEntity } from "../entities/user.entity";
 import { PatchUserDto } from "../dtos/patch-user.dto";
 import { ResetPasswordDto } from "../dtos/reset-password.dto";
 import { GetJWT } from "../../../common/decorators/get.jwt.decorator";
@@ -54,7 +54,7 @@ export class UserController {
   @Get("/profile")
   async whoAmI(
     @GetJWT() jwtPayload: JwtPayload,
-  ): Promise<JsonGeneralInterface<UserEntity>> {
+  ): Promise<JsonGeneralInterface<UsersEntity>> {
     return {
       statusCode: 200,
       message: "본인 정보를 가져옵니다.",

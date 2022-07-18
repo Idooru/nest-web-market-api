@@ -1,4 +1,3 @@
-import { ReviewEntity } from "./../../review/entities/review.entity";
 import {
   Column,
   Entity,
@@ -7,16 +6,16 @@ import {
   OneToMany,
   JoinColumn,
 } from "typeorm";
-import { UserEntity } from "./user.entity";
+import { UsersEntity } from "./user.entity";
 
 @Entity("users_activity")
 export class UserActivityEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @OneToOne(() => UserEntity, (user) => user.Activity)
+  @OneToOne(() => UsersEntity, (user) => user.Activity)
   @JoinColumn({ name: "userId", referencedColumnName: "id" })
-  User: UserEntity;
+  User: UsersEntity;
 
   @Column({ type: "smallint", default: 0 })
   bonusPoint: number;
@@ -29,7 +28,4 @@ export class UserActivityEntity {
 
   @Column({ type: "smallint", default: 0 })
   productReviewCount: number;
-
-  @OneToMany(() => ReviewEntity, (review) => review.Reviewer)
-  Review: ReviewEntity;
 }

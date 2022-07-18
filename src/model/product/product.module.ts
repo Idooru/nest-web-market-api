@@ -1,6 +1,6 @@
 import { UploadModule } from "./../upload/upload.module";
 import { ProductRepository } from "./providers/product.repository";
-import { ProductEntity } from "../product/entities/product.entity";
+import { ProductsEntity } from "../product/entities/product.entity";
 import { Module, forwardRef } from "@nestjs/common";
 import { ProductController } from "../product/controllers/product.controller";
 import { ProductService } from "./providers/product.service";
@@ -11,7 +11,7 @@ import { ReviewModule } from "../review/review.module";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ProductEntity]),
+    TypeOrmModule.forFeature([ProductsEntity]),
     forwardRef(() => UserModule),
     forwardRef(() => UploadModule),
     forwardRef(() => EtcModule),

@@ -1,4 +1,4 @@
-import { UserEntity } from "../../user/entities/user.entity";
+import { UsersEntity } from "../../user/entities/user.entity";
 import { UnauthorizedException } from "@nestjs/common";
 import { UserAuthEntity } from "../../user/entities/user.auth.entity";
 import { Injectable } from "@nestjs/common";
@@ -8,13 +8,13 @@ import { Repository } from "typeorm";
 @Injectable()
 export class AuthRepository {
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(UsersEntity)
+    private readonly userRepository: Repository<UsersEntity>,
     @InjectRepository(UserAuthEntity)
     private readonly authRepository: Repository<UserAuthEntity>,
   ) {}
 
-  async findUserWithEmail(email: string): Promise<UserEntity> {
+  async findUserWithEmail(email: string): Promise<UsersEntity> {
     try {
       return await this.userRepository
         .createQueryBuilder("user")
@@ -28,7 +28,7 @@ export class AuthRepository {
     }
   }
 
-  async findUserWithRealName(realname: string): Promise<UserEntity> {
+  async findUserWithRealName(realname: string): Promise<UsersEntity> {
     try {
       return await this.userRepository
         .createQueryBuilder("user")
@@ -42,7 +42,7 @@ export class AuthRepository {
     }
   }
 
-  async findUserWithPhoneNumber(phonenumber: string): Promise<UserEntity> {
+  async findUserWithPhoneNumber(phonenumber: string): Promise<UsersEntity> {
     try {
       return await this.userRepository
         .createQueryBuilder("user")

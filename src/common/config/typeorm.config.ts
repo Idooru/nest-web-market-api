@@ -1,10 +1,10 @@
-import { ReviewEntity } from "./../../model/review/entities/review.entity";
-import { ProductEntity } from "./../../model/product/entities/product.entity";
+import { ReviewsEntity } from "./../../model/review/entities/review.entity";
+import { ProductsEntity } from "./../../model/product/entities/product.entity";
 import { UserProfileEntity } from "../../model/user/entities/user.profile.entity";
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { UserActivityEntity } from "src/model/user/entities/user.activity.entity";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
-import { UserEntity } from "src/model/user/entities/user.entity";
+import { UsersEntity } from "src/model/user/entities/user.entity";
 import { StarRatingEntity } from "../../model/review/entities/star-rating.entity";
 import { ProductsImageEntity } from "src/model/upload/entities/product.image.entity";
 import { ReviewsImageEntity } from "src/model/upload/entities/review.image.entity";
@@ -20,15 +20,15 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   password: new ConfigService().get("MYSQL_PASSWORD"),
   database: "nestWebMarket_API",
   entities: [
-    UserEntity,
+    UsersEntity,
     UserProfileEntity,
     UserAuthEntity,
     UserActivityEntity,
-    ProductEntity,
+    ProductsEntity,
     ProductsImageEntity,
     ReviewsImageEntity,
     ReviewsVideoEntity,
-    ReviewEntity,
+    ReviewsEntity,
     StarRatingEntity,
   ],
   migrations: [__dirname, "/src/migrations/*.ts"],

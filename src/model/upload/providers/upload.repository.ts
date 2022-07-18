@@ -1,4 +1,3 @@
-import { UserRepository } from "../../user/providers/user.repository";
 import { MediaUploadDto } from "../dto/media-upload.dto";
 import { MediaReturnDto } from "../dto/media-return.dto";
 import { Injectable, NotFoundException } from "@nestjs/common";
@@ -8,7 +7,8 @@ import { ReviewsImageEntity } from "../entities/review.image.entity";
 import { ReviewsVideoEntity } from "../entities/review.video.entity";
 import { Repository } from "typeorm";
 import { ConfigService } from "@nestjs/config";
-import { ReviewEntity } from "src/model/review/entities/review.entity";
+import { InquiriesImageEntity } from "src/model/inquiry/entities/inquiry.image.entity";
+import { InquiriesVideoEntity } from "src/model/inquiry/entities/inquiry.video.entity";
 
 @Injectable()
 export class UploadRepository {
@@ -19,6 +19,10 @@ export class UploadRepository {
     private readonly reviewsImageRepository: Repository<ReviewsImageEntity>,
     @InjectRepository(ReviewsVideoEntity)
     private readonly reviewsVideoRepository: Repository<ReviewsVideoEntity>,
+    @InjectRepository(InquiriesImageEntity)
+    private readonly inquiriesImageRepository: Repository<InquiriesImageEntity>,
+    @InjectRepository(InquiriesVideoEntity)
+    private readonly inquiriesVideoRepository: Repository<InquiriesVideoEntity>,
   ) {}
 
   async uploadImageForProduct(
@@ -101,7 +105,7 @@ export class UploadRepository {
     )}/media/${media}`.toLowerCase();
     const uploadReason = "inquiry";
 
-    await this..save({
+    await this.inquiriesImageRepository.save({
       url: fileNameOnUrl,
       uploader,
       uploadReason,
@@ -119,7 +123,7 @@ export class UploadRepository {
     )}/media/${media}`.toLowerCase();
     const uploadReason = "inquiry";
 
-    await this.videosRepository.save({
+    await this.inquiriesVideoRepository.save({
       url: fileNameOnUrl,
       uploader,
       uploadReason,
@@ -159,22 +163,22 @@ export class UploadRepository {
   }
 
   async insertImageOnReview(id: string, review: ReviewEntity) {
-    const image = await this.imagesRepository
+    const image = await this.reviewsImageRepository
       .createQueryBuilder("image")
       .where("image.id = :id", { id })
       .getOne();
 
     image.Review = review;
-    await this.imagesRepository.save(image);
+    await this.reviewsImageRepository.save(image);
   }
 
   async insertVideoOnReview(id: string, review: ReviewEntity) {
-    const video = await this.videosRepository
+    const video = await this.reviewsVideoRepository
       .createQueryBuilder("video")
       .where("video.id = :id", { id })
       .getOne();
 
     video.Review = review;
-    await this.videosRepository.save(video);
+    await this.reviewsVideoRepository.save(video);
   }
 }

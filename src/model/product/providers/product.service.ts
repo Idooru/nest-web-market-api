@@ -1,7 +1,7 @@
 import { ProductsImageEntity } from "./../../upload/entities/product.image.entity";
 import { StarRatingRepository } from "./../../review/providers/star-rating.repository";
 import { UploadService } from "src/model/upload/providers/upload.service";
-import { ProductEntity } from "../entities/product.entity";
+import { ProductsEntity } from "../entities/product.entity";
 import { Promises } from "../../../common/config/etc/providers/promises";
 import { UploadRepository } from "../../upload/providers/upload.repository";
 import { ProductRepository } from "./product.repository";
@@ -20,19 +20,19 @@ export class ProductService {
     private readonly starRatingRepository: StarRatingRepository,
   ) {}
 
-  async getProductsAllFromLatest(): Promise<ProductEntity[]> {
+  async getProductsAllFromLatest(): Promise<ProductsEntity[]> {
     return await this.productRepository.findProductsAllFromLatest();
   }
 
-  async getProductsAllFromOldest(): Promise<ProductEntity[]> {
+  async getProductsAllFromOldest(): Promise<ProductsEntity[]> {
     return await this.productRepository.findProductsAllFromOldest();
   }
 
-  async getProductByName(name: string): Promise<ProductEntity> {
+  async getProductByName(name: string): Promise<ProductsEntity> {
     return await this.productRepository.findProductOneByName(name);
   }
 
-  async getProductById(id: string): Promise<ProductEntity> {
+  async getProductById(id: string): Promise<ProductsEntity> {
     return await this.productRepository.findProductOneById(id);
   }
 

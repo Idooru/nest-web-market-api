@@ -1,26 +1,26 @@
-import { ProductEntity } from "src/model/product/entities/product.entity";
+import { ProductsEntity } from "src/model/product/entities/product.entity";
 import { CreateReviewDto } from "./../dto/create-review.dto";
-import { ReviewEntity } from "../entities/review.entity";
+import { ReviewsEntity } from "../entities/review.entity";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { UserEntity } from "src/model/user/entities/user.entity";
+import { UsersEntity } from "src/model/user/entities/user.entity";
 
 @Injectable()
 export class ReviewRepository {
   constructor(
-    @InjectRepository(ReviewEntity)
-    private readonly reviewRepository: Repository<ReviewEntity>,
+    @InjectRepository(ReviewsEntity)
+    private readonly reviewRepository: Repository<ReviewsEntity>,
   ) {}
 
   async createReview(
     createReviewDto: CreateReviewDto,
-    user: UserEntity,
-    product: ProductEntity,
-  ): Promise<ReviewEntity> {
+    user: UsersEntity,
+    product: ProductsEntity,
+  ): Promise<ReviewsEntity> {
     const review = this.reviewRepository.create();
 
-    review.comments = createReviewDto.comments;
+    review.reviews = createReviewDto.reviews;
     review.userSelectScore = createReviewDto.userSelectScore;
     review.Product = product;
     review.Reviewer = user;
@@ -28,7 +28,7 @@ export class ReviewRepository {
     return await this.reviewRepository.save(review);
   }
 
-  async findReviewWithReviewer(reviewer: UserEntity) {
+  async findReviewWithReviewer(reviewer: UsersEntity) {
     try {
       return await this.reviewRepository
         .createQueryBuilder("review")

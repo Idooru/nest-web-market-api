@@ -11,7 +11,7 @@ import { AuthService } from "./providers/auth.service";
 import { JwtModule } from "@nestjs/jwt";
 import { forwardRef } from "@nestjs/common";
 import { UserAuthEntity } from "../user/entities/user.auth.entity";
-import { UserEntity } from "../user/entities/user.entity";
+import { UsersEntity } from "../user/entities/user.entity";
 import { EtcModule } from "../../common/config/etc/etc.module";
 import { ConfigService } from "@nestjs/config";
 
@@ -20,7 +20,7 @@ import { ConfigService } from "@nestjs/config";
     ConfigModule.forRoot(),
     PassportModule.register({ defaultStrategy: "jwt", session: false }),
     TypeOrmModule.forFeature([
-      UserEntity,
+      UsersEntity,
       UserProfileEntity,
       UserAuthEntity,
       UserActivityEntity,

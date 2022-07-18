@@ -1,11 +1,11 @@
 import { IntersectionType, PickType } from "@nestjs/swagger";
-import { ReviewEntity } from "../entities/review.entity";
+import { ReviewsEntity } from "../entities/review.entity";
 import { JwtPayload } from "src/common/interfaces/jwt.payload.interface";
 import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface";
 import { IsEnum, IsNotEmpty } from "class-validator";
 
-export class CreateReviewDto extends PickType(ReviewEntity, [
-  "comments",
+export class CreateReviewDto extends PickType(ReviewsEntity, [
+  "reviews",
   "userSelectScore",
   "Image",
   "Video",

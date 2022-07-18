@@ -1,7 +1,7 @@
 import { PickType } from "@nestjs/mapped-types";
-import { ProductEntity } from "../entities/product.entity";
+import { ProductsEntity } from "../entities/product.entity";
 
-export class ResponseProductDto extends PickType(ProductEntity, [
+export class ResponseProductDto extends PickType(ProductsEntity, [
   "id",
   "name",
   "price",
@@ -13,7 +13,7 @@ export class ResponseProductDto extends PickType(ProductEntity, [
   "updatedAt",
 ] as const) {}
 
-export class ResponseProductsDto extends PickType(ProductEntity, [
+export class ResponseProductsDto extends PickType(ProductsEntity, [
   "name",
   "price",
   "type",

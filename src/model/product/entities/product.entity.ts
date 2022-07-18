@@ -1,12 +1,13 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
+import { Column, Entity, OneToMany, OneToOne } from "typeorm";
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
-import { ReviewEntity } from "../../review/entities/review.entity";
+import { ReviewsEntity } from "src/model/review/entities/review.entity";
 import { StarRatingEntity } from "../../review/entities/star-rating.entity";
 import { ProductsImageEntity } from "src/model/upload/entities/product.image.entity";
+import { InquiriesEntity } from "../../inquiry/entities/inquiry.entity";
 
 @Entity("products")
-export class ProductEntity extends CommonEntity {
+export class ProductsEntity extends CommonEntity {
   @IsString()
   @IsNotEmpty()
   @Column({ type: "varchar", length: 20, unique: true, nullable: false })
@@ -39,9 +40,11 @@ export class ProductEntity extends CommonEntity {
   Image: ProductsImageEntity;
 
   @OneToOne(() => StarRatingEntity, (starRating) => starRating.Product)
-  @JoinColumn({ name: "starRatingId" })
   StarRating: StarRatingEntity;
 
-  @OneToMany(() => ReviewEntity, (review) => review.Product)
-  Review: ReviewEntity;
+  @OneToMany(() => ReviewsEntity, (review) => review.Product)
+  Review: ReviewsEntity;
+
+  @OneToMany(() => InquiriesEntity, (inquiry) => inquiry.Product)
+  Inquiry: InquiriesEntity;
 }

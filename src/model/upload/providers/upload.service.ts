@@ -3,7 +3,6 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { ImagesEntity, VideosEntity } from "./../entities/upload.entity";
 import { ConfigService } from "@nestjs/config";
 import { UserRepository } from "../../user/providers/user.repository";
 import { UploadRepository } from "../providers/upload.repository";

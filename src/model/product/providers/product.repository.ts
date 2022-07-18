@@ -8,14 +8,14 @@ import { ModifyProductDto } from "../dto/modify_product.dto";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { ProductEntity } from "../entities/product.entity";
+import { ProductsEntity } from "../entities/product.entity";
 import { StarRatingEntity } from "../../review/entities/star-rating.entity";
 
 @Injectable()
 export class ProductRepository {
   constructor(
-    @InjectRepository(ProductEntity)
-    private readonly productRepository: Repository<ProductEntity>,
+    @InjectRepository(ProductsEntity)
+    private readonly productRepository: Repository<ProductsEntity>,
   ) {}
 
   private readonly select = ReturnPropertyWithSelect;
@@ -62,7 +62,7 @@ export class ProductRepository {
     }
   }
 
-  async findProductsAllFromLatest(): Promise<ProductEntity[]> {
+  async findProductsAllFromLatest(): Promise<ProductsEntity[]> {
     const found = await this.productRepository
       .createQueryBuilder("product")
       .leftJoin("product.Image", "Image")
@@ -77,7 +77,7 @@ export class ProductRepository {
     return found;
   }
 
-  async findProductsAllFromOldest(): Promise<ProductEntity[]> {
+  async findProductsAllFromOldest(): Promise<ProductsEntity[]> {
     const found = await this.productRepository
       .createQueryBuilder("product")
       .leftJoin("product.Image", "Image")
@@ -92,7 +92,7 @@ export class ProductRepository {
     return found;
   }
 
-  async findProductOneByName(name: string): Promise<ProductEntity> {
+  async findProductOneByName(name: string): Promise<ProductsEntity> {
     try {
       return await this.productRepository
         .createQueryBuilder("product")
@@ -106,7 +106,7 @@ export class ProductRepository {
     }
   }
 
-  async findProductOneById(id: string): Promise<ProductEntity> {
+  async findProductOneById(id: string): Promise<ProductsEntity> {
     try {
       return await this.productRepository
         .createQueryBuilder("product")
@@ -122,7 +122,7 @@ export class ProductRepository {
 
   async findProductWhenUseStarRatingWithName(
     name: string,
-  ): Promise<ProductEntity> {
+  ): Promise<ProductsEntity> {
     try {
       return await this.productRepository
         .createQueryBuilder("product")
@@ -140,7 +140,7 @@ export class ProductRepository {
     await this.productRepository
       .createQueryBuilder("product")
       .insert()
-      .into(ProductEntity)
+      .into(ProductsEntity)
       .values({ ...createProductDto })
       .execute();
   }
@@ -152,7 +152,7 @@ export class ProductRepository {
     // await this.productRepository;
     // .createQueryBuilder("product")
     // .update()
-    // .set(ProductEntity)
+    // .set(ProductsEntity)
     // .where("product.id = :id", { id })
     // .set({ ...modifyProductDto })
     // .execute();

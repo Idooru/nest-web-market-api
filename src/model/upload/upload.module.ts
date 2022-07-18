@@ -8,6 +8,8 @@ import { ReviewsVideoEntity } from "./entities/review.video.entity";
 import { UploadRepository } from "./providers/upload.repository";
 import { NestjsFormDataModule } from "nestjs-form-data";
 import { UserModule } from "../user/user.module";
+import { InquiriesImageEntity } from "../inquiry/entities/inquiry.image.entity";
+import { InquiriesVideoEntity } from "../inquiry/entities/inquiry.video.entity";
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { UserModule } from "../user/user.module";
       ProductsImageEntity,
       ReviewsImageEntity,
       ReviewsVideoEntity,
+      InquiriesImageEntity,
+      InquiriesVideoEntity,
     ]),
     forwardRef(() => UserModule),
     NestjsFormDataModule,

@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, ManyToOne, JoinColumn } from "typeorm";
-import { UserEntity } from "./../../user/entities/user.entity";
-import { ProductEntity } from "./../../product/entities/product.entity";
+import { UsersEntity } from "./../../user/entities/user.entity";
+import { ProductsEntity } from "./../../product/entities/product.entity";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { IsNotEmpty, IsString, IsEnum } from "class-validator";
 import { ReviewsImageEntity } from "src/model/upload/entities/review.image.entity";
@@ -18,13 +18,13 @@ export class ReviewsEntity extends CommonEntity {
   @Column({ type: "enum", enum: [1, 2, 3, 4, 5] })
   userSelectScore: 1 | 2 | 3 | 4 | 5;
 
-  @ManyToOne(() => UserEntity, (user) => user)
-  @JoinColumn({ name: "reviewerId" })
-  Reviewer: UserEntity;
+  @ManyToOne(() => UsersEntity, (user) => user)
+  @JoinColumn({ name: "userId" })
+  Reviewer: UsersEntity;
 
-  @ManyToOne(() => ProductEntity, (product) => product.Review)
+  @ManyToOne(() => ProductsEntity, (product) => product.Review)
   @JoinColumn({ name: "productId" })
-  Product: ProductEntity;
+  Product: ProductsEntity;
 
   @OneToMany(() => ReviewsImageEntity, (image) => image.Review)
   Image?: ReviewsImageEntity[];

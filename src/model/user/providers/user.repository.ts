@@ -6,7 +6,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { UserProfileEntity } from "../entities/user.profile.entity";
 import { Repository } from "typeorm";
 import { RegisterUserDto } from "../dtos/register-user.dto";
-import { UserEntity } from "../entities/user.entity";
+import { UsersEntity } from "../entities/user.entity";
 import { CreateUserDto } from "../dtos/create-user.dto";
 import { Promises } from "../../../common/config/etc/providers/promises";
 import { ReturnPropertyWithSelect } from "src/common/config/etc/etc.variable";
@@ -15,8 +15,8 @@ import { ReturnPropertyWithSelect } from "src/common/config/etc/etc.variable";
 export class UserRepository {
   constructor(
     private readonly promises: Promises,
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(UsersEntity)
+    private readonly userRepository: Repository<UsersEntity>,
     @InjectRepository(UserProfileEntity)
     private readonly userProfileRepository: Repository<UserProfileEntity>,
     @InjectRepository(UserAuthEntity)
@@ -111,7 +111,7 @@ export class UserRepository {
     throw new UnauthorizedException("해당 전화번호는 사용중입니다.");
   }
 
-  async findUserWithId(userId: string): Promise<UserEntity> {
+  async findUserWithId(userId: string): Promise<UsersEntity> {
     try {
       return await this.userRepository
         .createQueryBuilder("user")
@@ -125,7 +125,7 @@ export class UserRepository {
     }
   }
 
-  async findUserWithEmail(email: string): Promise<UserEntity> {
+  async findUserWithEmail(email: string): Promise<UsersEntity> {
     try {
       return await this.userRepository
         .createQueryBuilder("user")
@@ -139,7 +139,7 @@ export class UserRepository {
     }
   }
 
-  async findUserWithNickName(nickname: string): Promise<UserEntity> {
+  async findUserWithNickName(nickname: string): Promise<UsersEntity> {
     try {
       return await this.userRepository
         .createQueryBuilder("user")
@@ -153,7 +153,7 @@ export class UserRepository {
     }
   }
 
-  async findUserProfileInfoWithId(userId: string): Promise<UserEntity> {
+  async findUserProfileInfoWithId(userId: string): Promise<UsersEntity> {
     return await this.userRepository
       .createQueryBuilder("user")
       .innerJoin("user.Profile", "Profile")

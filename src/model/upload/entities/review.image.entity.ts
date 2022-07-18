@@ -1,18 +1,22 @@
-import { Entity, ManyToOne, Column, JoinColumn } from "typeorm";
+import { Entity, ManyToOne, Column, JoinColumn, OneToOne } from "typeorm";
 import { CommonEntity } from "src/common/entities/common.entity";
-import { ReviewEntity } from "src/model/review/entities/review.entity";
-import { UserEntity } from "src/model/user/entities/user.entity";
+import { ReviewsEntity } from "src/model/review/entities/review.entity";
+import { UsersEntity } from "src/model/user/entities/user.entity";
+import { ImagesEntity } from "./Images.entity";
 
 @Entity("reviews_images")
 export class ReviewsImageEntity extends CommonEntity {
-  @ManyToOne(() => ReviewEntity, (review) => review.Image)
+  @OneToOne(() => ImagesEntity)
+  Image: ImagesEntity;
+
+  @ManyToOne(() => ReviewsEntity, (review) => review.Image)
   @JoinColumn({ name: "reviewId" })
-  Review: ReviewEntity;
+  Review: ReviewsEntity;
 
   @Column({ type: "varchar", nullable: false, unique: true })
   url: string;
 
-  @ManyToOne(() => UserEntity, (user) => user)
+  @ManyToOne(() => UsersEntity, (user) => user)
   @JoinColumn({ name: "uploaderId" })
-  uploader: UserEntity;
+  uploader: UsersEntity;
 }

@@ -9,7 +9,7 @@ import { Promises } from "../../../common/config/etc/providers/promises";
 import { UserRepository } from "../../user/providers/user.repository";
 import { ReviewRepository } from "./review.repository";
 import { Injectable } from "@nestjs/common";
-import { ReviewEntity } from "../entities/review.entity";
+import { ReviewsEntity } from "../entities/review.entity";
 import { UpdateReviewDto } from "../dto/update-review.dto";
 import { UploadRepository } from "src/model/upload/providers/upload.repository";
 
