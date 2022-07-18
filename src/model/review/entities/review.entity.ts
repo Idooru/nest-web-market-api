@@ -1,28 +1,17 @@
-import {
-  Column,
-  Entity,
-  OneToMany,
-  ManyToMany,
-  ManyToOne,
-  JoinColumn,
-  JoinTable,
-  OneToOne,
-} from "typeorm";
-import {
-  ImagesEntity,
-  VideosEntity,
-} from "src/model/upload/entities/upload.entity";
+import { Column, Entity, OneToMany, ManyToOne, JoinColumn } from "typeorm";
 import { UserEntity } from "./../../user/entities/user.entity";
 import { ProductEntity } from "./../../product/entities/product.entity";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { IsNotEmpty, IsString, IsEnum } from "class-validator";
+import { ReviewsImageEntity } from "src/model/upload/entities/review.image.entity";
+import { ReviewsVideoEntity } from "src/model/upload/entities/review.video.entity";
 
 @Entity("reviews")
-export class ReviewEntity extends CommonEntity {
+export class ReviewsEntity extends CommonEntity {
   @IsString()
   @IsNotEmpty()
   @Column({ type: "text", nullable: false })
-  comments: string;
+  reviews: string;
 
   @IsEnum([1, 2, 3, 4, 5])
   @IsNotEmpty()
@@ -30,16 +19,16 @@ export class ReviewEntity extends CommonEntity {
   userSelectScore: 1 | 2 | 3 | 4 | 5;
 
   @ManyToOne(() => UserEntity, (user) => user)
-  @JoinColumn({ name: "commenterId", referencedColumnName: "id" })
+  @JoinColumn({ name: "reviewerId" })
   Reviewer: UserEntity;
 
   @ManyToOne(() => ProductEntity, (product) => product.Review)
-  @JoinColumn({ name: "productId", referencedColumnName: "id" })
+  @JoinColumn({ name: "productId" })
   Product: ProductEntity;
 
-  @OneToMany(() => ImagesEntity, (image) => image.Review)
-  Image?: ImagesEntity[];
+  @OneToMany(() => ReviewsImageEntity, (image) => image.Review)
+  Image?: ReviewsImageEntity[];
 
-  @OneToMany(() => VideosEntity, (video) => video.Review)
-  Video?: VideosEntity[];
+  @OneToMany(() => ReviewsVideoEntity, (video) => video.Review)
+  Video?: ReviewsVideoEntity[];
 }

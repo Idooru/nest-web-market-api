@@ -9,7 +9,7 @@ import {
 } from "typeorm";
 import { UserEntity } from "./user.entity";
 
-@Entity("users activity")
+@Entity("users_activity")
 export class UserActivityEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;

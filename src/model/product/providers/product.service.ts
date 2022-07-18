@@ -1,3 +1,4 @@
+import { ProductsImageEntity } from "./../../upload/entities/product.image.entity";
 import { StarRatingRepository } from "./../../review/providers/star-rating.repository";
 import { UploadService } from "src/model/upload/providers/upload.service";
 import { ProductEntity } from "../entities/product.entity";
@@ -7,7 +8,6 @@ import { ProductRepository } from "./product.repository";
 import { Injectable } from "@nestjs/common";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
-import { ImagesEntity } from "src/model/upload/entities/upload.entity";
 import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface";
 
 @Injectable()
@@ -42,7 +42,7 @@ export class ProductService {
     imageCookie: MediaUrlCookie,
   ): Promise<void> {
     const { name } = createProductDto;
-    let getImage: ImagesEntity;
+    let getImage: ProductsImageEntity;
 
     if (!imageCookie) {
       const result = await this.uploadService.copyImageFromImagePreparation(
@@ -72,7 +72,7 @@ export class ProductService {
     imageCookie: MediaUrlCookie,
   ): Promise<void> {
     const { name } = modifyProductDto;
-    let getImage: ImagesEntity;
+    let getImage: ProductsImageEntity;
 
     const findProductAndImageId = await Promise.allSettled([
       this.productRepository.findProductOneById(id),

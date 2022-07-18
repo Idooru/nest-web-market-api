@@ -12,10 +12,6 @@ import { Injectable } from "@nestjs/common";
 import { ReviewEntity } from "../entities/review.entity";
 import { UpdateReviewDto } from "../dto/update-review.dto";
 import { UploadRepository } from "src/model/upload/providers/upload.repository";
-import {
-  ImagesEntity,
-  VideosEntity,
-} from "../../upload/entities/upload.entity";
 
 @Injectable()
 export class ReviewService {

@@ -3,7 +3,7 @@ import { ProductEntity } from "src/model/product/entities/product.entity";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { Column, Entity, OneToOne } from "typeorm";
 
-@Entity("star ratings")
+@Entity("star_ratings")
 export class StarRatingEntity extends CommonEntity {
   @Column({ type: "float", default: 0 })
   averageScore: number;

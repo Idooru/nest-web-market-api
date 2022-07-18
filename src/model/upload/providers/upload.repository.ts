@@ -3,7 +3,9 @@ import { MediaUploadDto } from "../dto/media-upload.dto";
 import { MediaReturnDto } from "../dto/media-return.dto";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { ImagesEntity, VideosEntity } from "../entities/upload.entity";
+import { ProductsImageEntity } from "../entities/product.image.entity";
+import { ReviewsImageEntity } from "../entities/review.image.entity";
+import { ReviewsVideoEntity } from "../entities/review.video.entity";
 import { Repository } from "typeorm";
 import { ConfigService } from "@nestjs/config";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
@@ -11,11 +13,12 @@ import { ReviewEntity } from "src/model/review/entities/review.entity";
 @Injectable()
 export class UploadRepository {
   constructor(
-    @InjectRepository(ImagesEntity)
-    private readonly imagesRepository: Repository<ImagesEntity>,
-    @InjectRepository(VideosEntity)
-    private readonly videosRepository: Repository<VideosEntity>,
-    private readonly userRepository: UserRepository,
+    @InjectRepository(ProductsImageEntity)
+    private readonly productsImageRepository: Repository<ProductsImageEntity>,
+    @InjectRepository(ReviewsImageEntity)
+    private readonly reviewsImageRepository: Repository<ReviewsImageEntity>,
+    @InjectRepository(ReviewsVideoEntity)
+    private readonly reviewsVideoRepository: Repository<ReviewsVideoEntity>,
   ) {}
 
   async uploadImageForProduct(
@@ -29,18 +32,18 @@ export class UploadRepository {
       ? "product no image"
       : "product image";
 
-    await this.imagesRepository.save({
+    await this.productsImageRepository.save({
       url: fileNameOnUrl,
       uploader,
       uploadReason,
     });
 
-    return { name: media, url: fileNameOnUrl, uploadReason };
+    return { name: media, url: fileNameOnUrl };
   }
 
-  async findImagePreparation(): Promise<ImagesEntity> {
+  async findImagePreparation(): Promise<ProductsImageEntity> {
     try {
-      return await this.imagesRepository
+      return await this.productsImageRepository
         .createQueryBuilder("i")
         .where("i.uploadReason = :uploadReason", {
           uploadReason: "product no image",
@@ -63,13 +66,12 @@ export class UploadRepository {
     )}/media/${media}`.toLowerCase();
     const uploadReason = "review";
 
-    await this.imagesRepository.save({
+    await this.reviewsImageRepository.save({
       url: fileNameOnUrl,
       uploader,
-      uploadReason,
     });
 
-    return { name: media, url: fileNameOnUrl, uploadReason };
+    return { name: media, url: fileNameOnUrl };
   }
 
   async uploadVideoForReview(
@@ -81,7 +83,7 @@ export class UploadRepository {
     )}/media/${media}`.toLowerCase();
     const uploadReason = "review";
 
-    await this.videosRepository.save({
+    await this.reviewsVideoRepository.save({
       url: fileNameOnUrl,
       uploader,
       uploadReason,
@@ -99,7 +101,7 @@ export class UploadRepository {
     )}/media/${media}`.toLowerCase();
     const uploadReason = "inquiry";
 
-    await this.imagesRepository.save({
+    await this..save({
       url: fileNameOnUrl,
       uploader,
       uploadReason,

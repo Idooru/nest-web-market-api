@@ -1,16 +1,9 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToMany,
-  OneToMany,
-  OneToOne,
-} from "typeorm";
-import { ImagesEntity } from "../../upload/entities/upload.entity";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { ReviewEntity } from "../../review/entities/review.entity";
 import { StarRatingEntity } from "../../review/entities/star-rating.entity";
+import { ProductsImageEntity } from "src/model/upload/entities/product.image.entity";
 
 @Entity("products")
 export class ProductEntity extends CommonEntity {
@@ -42,12 +35,11 @@ export class ProductEntity extends CommonEntity {
   @Column({ type: "int", default: 50 })
   quantity: number;
 
-  @OneToOne(() => ImagesEntity, (image) => image.product)
-  @JoinColumn({ name: "imageId", referencedColumnName: "id" })
-  Image: ImagesEntity;
+  @OneToOne(() => ProductsImageEntity, (image) => image.Product)
+  Image: ProductsImageEntity;
 
   @OneToOne(() => StarRatingEntity, (starRating) => starRating.Product)
-  @JoinColumn({ name: "starRatingId", referencedColumnName: "id" })
+  @JoinColumn({ name: "starRatingId" })
   StarRating: StarRatingEntity;
 
   @OneToMany(() => ReviewEntity, (review) => review.Product)

@@ -14,7 +14,7 @@ import {
 } from "typeorm";
 import { UserEntity } from "./user.entity";
 
-@Entity("users profile")
+@Entity("users_profile")
 export class UserProfileEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;

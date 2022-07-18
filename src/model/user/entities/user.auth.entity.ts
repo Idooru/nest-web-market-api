@@ -8,7 +8,7 @@ import {
 import { IsEmail, IsNotEmpty, IsString, Matches } from "class-validator";
 import { UserEntity } from "./user.entity";
 
-@Entity("users auth")
+@Entity("users_auth")
 export class UserAuthEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
