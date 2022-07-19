@@ -8,6 +8,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { EtcModule } from "../../common/config/etc/etc.module";
 import { UserModule } from "../user/user.module";
 import { ReviewModule } from "../review/review.module";
+import { InquiryModule } from "../inquiry/inquiry.module";
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ReviewModule } from "../review/review.module";
     forwardRef(() => UploadModule),
     forwardRef(() => EtcModule),
     forwardRef(() => ReviewModule),
+    forwardRef(() => InquiryModule),
   ],
   controllers: [ProductController],
   providers: [ProductService, ProductRepository],

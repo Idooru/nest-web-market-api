@@ -24,8 +24,8 @@ export class UserActivityEntity {
   purchaseCount: number;
 
   @Column({ type: "smallint", default: 0 })
-  productInquiryCount: number;
+  productReviewCount: number;
 
   @Column({ type: "smallint", default: 0 })
-  productReviewCount: number;
+  productInquiryCount: number;
 }

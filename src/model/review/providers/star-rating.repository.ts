@@ -1,6 +1,7 @@
 import { Repository } from "typeorm";
 import { StarRatingEntity } from "../entities/star-rating.entity";
 import { InjectRepository } from "@nestjs/typeorm";
+import { ProductsEntity } from "src/model/product/entities/product.entity";
 
 export class StarRatingRepository {
   constructor(
@@ -8,8 +9,9 @@ export class StarRatingRepository {
     private readonly starRatingRepository: Repository<StarRatingEntity>,
   ) {}
 
-  async createRating(): Promise<StarRatingEntity> {
-    return await this.starRatingRepository.save({});
+  async createStarRatingSample(): Promise<StarRatingEntity> {
+    const starRating = this.starRatingRepository.create({});
+    return await this.starRatingRepository.save(starRating);
   }
 
   async starRatingIncreaseAndSum(
@@ -54,5 +56,15 @@ export class StarRatingRepository {
 
   async insertTotalScoreOnStarRating(averageScore: number, id: string) {
     await this.starRatingRepository.update(id, { averageScore });
+  }
+
+  async insertStarRatingOnProduct(id: string, product: ProductsEntity) {
+    const starRating = await this.starRatingRepository
+      .createQueryBuilder("starRating")
+      .where("starRating.id = :id", { id })
+      .getOne();
+
+    starRating.Product = product;
+    await this.starRatingRepository.save(starRating);
   }
 }

@@ -11,6 +11,9 @@ import { ReviewsImageEntity } from "src/model/upload/entities/review.image.entit
 import { ReviewsVideoEntity } from "src/model/upload/entities/review.video.entity";
 
 import { ConfigService } from "@nestjs/config";
+import { InquiriesEntity } from "../../model/inquiry/entities/inquiry.entity";
+import { InquiriesImageEntity } from "../../model/inquiry/entities/inquiry.image.entity";
+import { InquiriesVideoEntity } from "../../model/inquiry/entities/inquiry.video.entity";
 
 export const typeORMConfig: TypeOrmModuleOptions = {
   type: "mysql",
@@ -26,10 +29,13 @@ export const typeORMConfig: TypeOrmModuleOptions = {
     UserActivityEntity,
     ProductsEntity,
     ProductsImageEntity,
+    StarRatingEntity,
+    ReviewsEntity,
     ReviewsImageEntity,
     ReviewsVideoEntity,
-    ReviewsEntity,
-    StarRatingEntity,
+    InquiriesEntity,
+    InquiriesImageEntity,
+    InquiriesVideoEntity,
   ],
   migrations: [__dirname, "/src/migrations/*.ts"],
   cli: { migrationsDir: "src/migrations" },

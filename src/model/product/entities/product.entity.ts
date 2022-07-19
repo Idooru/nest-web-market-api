@@ -43,8 +43,8 @@ export class ProductsEntity extends CommonEntity {
   StarRating: StarRatingEntity;
 
   @OneToMany(() => ReviewsEntity, (review) => review.Product)
-  Review: ReviewsEntity;
+  Review: ReviewsEntity[];
 
   @OneToMany(() => InquiriesEntity, (inquiry) => inquiry.Product)
-  Inquiry: InquiriesEntity;
+  Inquiry: InquiriesEntity[];
 }

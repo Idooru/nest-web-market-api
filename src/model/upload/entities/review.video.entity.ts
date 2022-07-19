@@ -8,11 +8,11 @@ export class ReviewsVideoEntity extends CommonEntity {
   @Column({ type: "varchar", nullable: false, unique: true })
   url: string;
 
-  @ManyToOne(() => UsersEntity, (user) => user)
-  @JoinColumn({ name: "uploaderId" })
-  uploader: UsersEntity;
-
   @ManyToOne(() => ReviewsEntity, (review) => review.Video)
   @JoinColumn({ name: "reviewId" })
-  Review?: ReviewsEntity;
+  Review: ReviewsEntity;
+
+  @ManyToOne(() => UsersEntity, (user) => user)
+  @JoinColumn({ name: "userId" })
+  uploader: UsersEntity;
 }

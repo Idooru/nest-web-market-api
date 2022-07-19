@@ -5,14 +5,14 @@ import { UsersEntity } from "src/model/user/entities/user.entity";
 
 @Entity("inquiries_videos")
 export class InquiriesVideoEntity extends CommonEntity {
+  @Column({ type: "varchar", nullable: false, unique: true })
+  url: string;
+
   @ManyToOne(() => InquiriesEntity, (inquiry) => inquiry.Image)
   @JoinColumn({ name: "inquiryId" })
   Inquiry: InquiriesEntity;
 
-  @Column({ type: "varchar", nullable: false, unique: true })
-  url: string;
-
   @ManyToOne(() => UsersEntity, (user) => user)
-  @JoinColumn({ name: "uploaderId" })
+  @JoinColumn({ name: "userId" })
   uploader: UsersEntity;
 }

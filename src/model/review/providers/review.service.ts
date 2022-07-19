@@ -48,11 +48,13 @@ export class ReviewService {
 
     if (reviewImgCookie.length >= 2) {
       for (const idx of reviewImgCookie) {
-        const image = await this.uploadRepository.findImageWithUrl(idx[1]);
+        const image = await this.uploadRepository.findReviewImageWithUrl(
+          idx[1],
+        );
         await this.uploadRepository.insertImageOnReview(image.id, review);
       }
     } else {
-      const image = await this.uploadRepository.findImageWithUrl(
+      const image = await this.uploadRepository.findReviewImageWithUrl(
         reviewImgCookie[0][1],
       );
       await this.uploadRepository.insertImageOnReview(image.id, review);
@@ -60,15 +62,19 @@ export class ReviewService {
 
     if (reviewVdoCookie.length >= 2) {
       for (const idx of reviewVdoCookie) {
-        const video = await this.uploadRepository.findVideoWithUrl(idx[1]);
+        const video = await this.uploadRepository.findReviewVideoWithUrl(
+          idx[1],
+        );
         await this.uploadRepository.insertVideoOnReview(video.id, review);
       }
     } else {
-      const video = await this.uploadRepository.findVideoWithUrl(
+      const video = await this.uploadRepository.findReviewVideoWithUrl(
         reviewVdoCookie[0][1],
       );
       await this.uploadRepository.insertVideoOnReview(video.id, review);
     }
+
+    await this.userRepository.increaseReviewCount(user);
   }
 
   async createReviewWithImage(
@@ -91,15 +97,19 @@ export class ReviewService {
 
     if (reviewImgCookie.length >= 2) {
       for (const idx of reviewImgCookie) {
-        const image = await this.uploadRepository.findImageWithUrl(idx[1]);
+        const image = await this.uploadRepository.findReviewImageWithUrl(
+          idx[1],
+        );
         await this.uploadRepository.insertImageOnReview(image.id, review);
       }
     } else {
-      const image = await this.uploadRepository.findImageWithUrl(
+      const image = await this.uploadRepository.findReviewImageWithUrl(
         reviewImgCookie[0][1],
       );
       await this.uploadRepository.insertImageOnReview(image.id, review);
     }
+
+    await this.userRepository.increaseReviewCount(user);
   }
 
   async createReviewWithVideo(
@@ -122,15 +132,19 @@ export class ReviewService {
 
     if (reviewVdoCookie.length >= 2) {
       for (const idx of reviewVdoCookie) {
-        const video = await this.uploadRepository.findVideoWithUrl(idx[1]);
+        const video = await this.uploadRepository.findReviewVideoWithUrl(
+          idx[1],
+        );
         await this.uploadRepository.insertVideoOnReview(video.id, review);
       }
     } else {
-      const video = await this.uploadRepository.findVideoWithUrl(
+      const video = await this.uploadRepository.findReviewVideoWithUrl(
         reviewVdoCookie[0][1],
       );
       await this.uploadRepository.insertVideoOnReview(video.id, review);
     }
+
+    await this.userRepository.increaseReviewCount(user);
   }
 
   async createReviewWithoutMedia(
@@ -145,6 +159,7 @@ export class ReviewService {
     );
 
     await this.reviewRepository.createReview(createReviewDto, user, product);
+    await this.userRepository.increaseReviewCount(user);
   }
 }
 

@@ -13,6 +13,11 @@ export class ReviewRepository {
     private readonly reviewRepository: Repository<ReviewsEntity>,
   ) {}
 
+  async createReviewSample(): Promise<ReviewsEntity[]> {
+    const review = this.reviewRepository.create();
+    return [await this.reviewRepository.save(review)];
+  }
+
   async createReview(
     createReviewDto: CreateReviewDto,
     user: UsersEntity,

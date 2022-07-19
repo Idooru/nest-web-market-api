@@ -19,6 +19,8 @@ export const ReturnPropertyWithSelect = {
     "product.type",
     "Image.url",
     "StarRating.averageScore",
+    "Review",
+    "Inquiry",
   ],
   ProductReturnProperty: [
     "product.id",

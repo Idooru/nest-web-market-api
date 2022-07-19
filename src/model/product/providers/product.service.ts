@@ -9,6 +9,8 @@ import { Injectable } from "@nestjs/common";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
 import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface";
+import { ReviewRepository } from "../../review/providers/review.repository";
+import { InquiryRepository } from "src/model/inquiry/providers/inquiry.repository";
 
 @Injectable()
 export class ProductService {
@@ -18,6 +20,8 @@ export class ProductService {
     private readonly uploadService: UploadService,
     private readonly uploadRepository: UploadRepository,
     private readonly starRatingRepository: StarRatingRepository,
+    private readonly reviewRepository: ReviewRepository,
+    private readonly inquiryRepository: InquiryRepository,
   ) {}
 
   async getProductsAllFromLatest(): Promise<ProductsEntity[]> {
@@ -42,23 +46,22 @@ export class ProductService {
     imageCookie: MediaUrlCookie,
   ): Promise<void> {
     const { name } = createProductDto;
-    let getImage: ProductsImageEntity;
+    let image: ProductsImageEntity;
 
     if (!imageCookie) {
       const result = await this.uploadService.copyImageFromImagePreparation(
         creater,
       );
-      getImage = await this.uploadRepository.findImageWithUrl(result.url);
+      image = await this.uploadRepository.findProductImageWithUrl(result.url);
     } else {
-      getImage = await this.uploadRepository.findImageWithUrl(imageCookie.url);
+      image = await this.uploadRepository.findProductImageWithUrl(
+        imageCookie.url,
+      );
     }
 
-    const madeStarRating = await this.starRatingRepository.createRating();
-    const starRating = await this.starRatingRepository.findStarRatingWithId(
-      madeStarRating.id,
-    );
+    const starRating = await this.starRatingRepository.createStarRatingSample();
 
-    createProductDto.Image = getImage;
+    createProductDto.Image = image;
     createProductDto.StarRating = starRating;
 
     await this.productRepository.checkProductNameToCreate(name);
@@ -76,7 +79,7 @@ export class ProductService {
 
     const findProductAndImageId = await Promise.allSettled([
       this.productRepository.findProductOneById(id),
-      this.uploadRepository.findImageWithUrl(imageCookie.url),
+      this.uploadRepository.findProductImageWithUrl(imageCookie.url),
     ]);
 
     const findProductAndImageIdResult = this.promises.twoPromiseSettled(
@@ -91,15 +94,22 @@ export class ProductService {
       const result = await this.uploadService.copyImageFromImagePreparation(
         modifier,
       );
-      getImage = await this.uploadRepository.findImageWithUrl(result.url);
+      getImage = await this.uploadRepository.findProductImageWithUrl(
+        result.url,
+      );
     } else {
-      getImage = await this.uploadRepository.findImageWithUrl(image.url);
+      getImage = await this.uploadRepository.findProductImageWithUrl(image.url);
     }
 
     modifyProductDto.Image = getImage;
 
     await this.productRepository.checkProductNameToModify(name, product.name);
-    await this.productRepository.modifyProduct(id, modifyProductDto);
+    const productOb = await this.productRepository.modifyProduct(
+      id,
+      modifyProductDto,
+    );
+
+    await this.uploadRepository.insertImageOnProduct(productOb.id, productOb);
   }
 
   async removeProduct(id: string): Promise<void> {

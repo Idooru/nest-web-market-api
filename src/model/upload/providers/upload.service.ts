@@ -12,6 +12,11 @@ import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface
 
 import * as fs from "fs";
 import * as path from "path";
+import { ReviewsImageEntity } from "../entities/review.image.entity";
+import { InquiriesEntity } from "src/model/inquiry/entities/inquiry.entity";
+import { ReviewsVideoEntity } from "../entities/review.video.entity";
+import { InquiriesImageEntity } from "../../inquiry/entities/inquiry.image.entity";
+import { InquiriesVideoEntity } from "../../inquiry/entities/inquiry.video.entity";
 
 @Injectable()
 export class UploadService {
@@ -111,7 +116,7 @@ export class UploadService {
     fs.rmSync(deletePath);
   }
 
-  async uploadImageForProduct(
+  async uploadProductImage(
     file: Express.Multer.File,
     jwtPayload: JwtPayload,
   ): Promise<MediaReturnDto> {
@@ -127,7 +132,7 @@ export class UploadService {
 
     const image = file.filename;
 
-    return await this.uploadRepository.uploadImageForProduct({
+    return await this.uploadRepository.uploadProductImage({
       media: image,
       uploader: user,
     });
@@ -153,7 +158,7 @@ export class UploadService {
     try {
       fs.copyFileSync(src, dest);
     } catch (err) {
-      await this.uploadRepository.deleteUploadImageWithId(imagePreparation.id);
+      await this.uploadRepository.deleteProductImageWithId(imagePreparation.id);
 
       const errMsg = `서버 디스크에서 ${src.replace(
         "/root/Coding/nodejs/nest_project/nestWebMarket_API/uploads/image/",
@@ -167,13 +172,13 @@ export class UploadService {
       "",
     );
 
-    return await this.uploadRepository.uploadImageForProduct({
+    return await this.uploadRepository.uploadProductImage({
       media: image,
       uploader: user,
     });
   }
 
-  async uploadImageForReview(
+  async uploadReviewImage(
     files: Array<Express.Multer.File>,
     jwtPayload: JwtPayload,
   ): Promise<MediaReturnDto[]> {
@@ -189,7 +194,7 @@ export class UploadService {
       for (const index of files) {
         const image = index.filename;
         imageUrls.push(
-          await this.uploadRepository.uploadImageForReview({
+          await this.uploadRepository.uploadReviewImage({
             media: image,
             uploader: user,
           }),
@@ -198,7 +203,7 @@ export class UploadService {
     } else {
       const image = files[0].filename;
       imageUrls.push(
-        await this.uploadRepository.uploadImageForReview({
+        await this.uploadRepository.uploadReviewImage({
           media: image,
           uploader: user,
         }),
@@ -208,7 +213,7 @@ export class UploadService {
     return imageUrls;
   }
 
-  async uploadVideoForReview(
+  async uploadReviewVideo(
     files: Array<Express.Multer.File>,
     jwtPayload: JwtPayload,
   ): Promise<MediaReturnDto[]> {
@@ -224,7 +229,7 @@ export class UploadService {
       for (const index of files) {
         const video = index.filename;
         videoUrls.push(
-          await this.uploadRepository.uploadVideoForReview({
+          await this.uploadRepository.uploadReviewVideo({
             media: video,
             uploader: user,
           }),
@@ -233,7 +238,7 @@ export class UploadService {
     } else {
       const video = files[0].filename;
       videoUrls.push(
-        await this.uploadRepository.uploadVideoForReview({
+        await this.uploadRepository.uploadReviewVideo({
           media: video,
           uploader: user,
         }),
@@ -243,7 +248,7 @@ export class UploadService {
     return videoUrls;
   }
 
-  async uploadImageForInquiry(
+  async uploadInquiryImage(
     files: Array<Express.Multer.File>,
     jwtPayload: JwtPayload,
   ): Promise<MediaReturnDto[]> {
@@ -259,7 +264,7 @@ export class UploadService {
       for (const index of files) {
         const image = index.filename;
         imageUrls.push(
-          await this.uploadRepository.uploadImageForInquiry({
+          await this.uploadRepository.uploadInquiryImage({
             media: image,
             uploader: user,
           }),
@@ -268,7 +273,7 @@ export class UploadService {
     } else {
       const image = files[0].filename;
       imageUrls.push(
-        await this.uploadRepository.uploadImageForInquiry({
+        await this.uploadRepository.uploadInquiryImage({
           media: image,
           uploader: user,
         }),
@@ -278,7 +283,7 @@ export class UploadService {
     return imageUrls;
   }
 
-  async uploadVideoForInquiry(
+  async uploadInquiryVideo(
     files: Array<Express.Multer.File>,
     jwtPayload: JwtPayload,
   ): Promise<MediaReturnDto[]> {
@@ -294,7 +299,7 @@ export class UploadService {
       for (const index of files) {
         const video = index.filename;
         videoUrls.push(
-          await this.uploadRepository.uploadVideoForInquiry({
+          await this.uploadRepository.uploadInquiryVideo({
             media: video,
             uploader: user,
           }),
@@ -303,7 +308,7 @@ export class UploadService {
     } else {
       const video = files[0].filename;
       videoUrls.push(
-        await this.uploadRepository.uploadVideoForInquiry({
+        await this.uploadRepository.uploadInquiryVideo({
           media: video,
           uploader: user,
         }),
@@ -313,50 +318,92 @@ export class UploadService {
     return videoUrls;
   }
 
-  async deleteUploadProductImage(
-    productImgCookie: MediaUrlCookie,
-  ): Promise<void> {
-    const image = await this.uploadRepository.findImageWithUrl(
+  async deleteProductImage(productImgCookie: MediaUrlCookie): Promise<void> {
+    const image = await this.uploadRepository.findProductImageWithUrl(
       productImgCookie.url,
     );
 
-    await this.uploadRepository.deleteUploadImageWithId(image.id);
+    await this.uploadRepository.deleteProductImageWithId(image.id);
     this.deleteProductImageOnServerDisk(productImgCookie.name);
   }
 
-  async deleteUploadImages(imageCookies: MediaUrlCookie[]): Promise<void> {
-    let image: ImagesEntity;
+  async deleteReviewImages(imageCookies: MediaUrlCookie[]): Promise<void> {
+    let image: ReviewsImageEntity;
 
     if (imageCookies.length >= 2) {
       for (const idx of imageCookies) {
-        image = await this.uploadRepository.findImageWithUrl(idx[1]);
-        await this.uploadRepository.deleteUploadImageWithId(image.id);
+        image = await this.uploadRepository.findReviewImageWithUrl(idx[1]);
+        await this.uploadRepository.deleteReviewImageWithId(image.id);
         this.deleteImageFilesOnServerDisk(idx[0]);
       }
       return;
     }
 
-    image = await this.uploadRepository.findImageWithUrl(imageCookies[0].url);
+    image = await this.uploadRepository.findReviewImageWithUrl(
+      imageCookies[0].url,
+    );
 
-    await this.uploadRepository.deleteUploadImageWithId(image.id);
+    await this.uploadRepository.deleteReviewImageWithId(image.id);
     this.deleteImageFilesOnServerDisk(imageCookies[0].name);
   }
 
-  async deleteUploadVideos(videoCookies: MediaUrlCookie[]): Promise<void> {
-    let video: VideosEntity;
+  async deleteReviewVideos(videoCookies: MediaUrlCookie[]): Promise<void> {
+    let video: ReviewsVideoEntity;
 
     if (videoCookies.length >= 2) {
       for (const idx of videoCookies) {
-        video = await this.uploadRepository.findVideoWithUrl(idx[1]);
-        await this.uploadRepository.deleteUploadVideoWithId(video.id);
+        video = await this.uploadRepository.findReviewVideoWithUrl(idx[1]);
+        await this.uploadRepository.deleteReviewVideoWithId(video.id);
         this.deleteVideoFilesOnServerDisk(idx[0]);
       }
       return;
     }
 
-    video = await this.uploadRepository.findVideoWithUrl(videoCookies[0].url);
+    video = await this.uploadRepository.findReviewVideoWithUrl(
+      videoCookies[0].url,
+    );
 
-    await this.uploadRepository.deleteUploadVideoWithId(video.id);
+    await this.uploadRepository.deleteReviewVideoWithId(video.id);
+    this.deleteVideoFilesOnServerDisk(videoCookies[0].name);
+  }
+
+  async deleteInquiryImages(imageCookies: MediaUrlCookie[]): Promise<void> {
+    let image: InquiriesImageEntity;
+
+    if (imageCookies.length >= 2) {
+      for (const idx of imageCookies) {
+        image = await this.uploadRepository.findInquiryImageWithUrl(idx[1]);
+        await this.uploadRepository.deleteInquiryImageWithId(image.id);
+        this.deleteImageFilesOnServerDisk(idx[0]);
+      }
+      return;
+    }
+
+    image = await this.uploadRepository.findInquiryImageWithUrl(
+      imageCookies[0].url,
+    );
+
+    await this.uploadRepository.deleteInquiryImageWithId(image.id);
+    this.deleteImageFilesOnServerDisk(imageCookies[0].name);
+  }
+
+  async deleteInquiryVideos(videoCookies: MediaUrlCookie[]): Promise<void> {
+    let video: InquiriesVideoEntity;
+
+    if (videoCookies.length >= 2) {
+      for (const idx of videoCookies) {
+        video = await this.uploadRepository.findInquiryVideoWithUrl(idx[1]);
+        await this.uploadRepository.deleteInquiryVideoWithId(video.id);
+        this.deleteVideoFilesOnServerDisk(idx[0]);
+      }
+      return;
+    }
+
+    video = await this.uploadRepository.findInquiryVideoWithUrl(
+      videoCookies[0].url,
+    );
+
+    await this.uploadRepository.deleteInquiryVideoWithId(video.id);
     this.deleteVideoFilesOnServerDisk(videoCookies[0].name);
   }
 }

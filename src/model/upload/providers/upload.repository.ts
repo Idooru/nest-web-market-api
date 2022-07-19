@@ -9,6 +9,8 @@ import { Repository } from "typeorm";
 import { ConfigService } from "@nestjs/config";
 import { InquiriesImageEntity } from "src/model/inquiry/entities/inquiry.image.entity";
 import { InquiriesVideoEntity } from "src/model/inquiry/entities/inquiry.video.entity";
+import { ReviewsEntity } from "src/model/review/entities/review.entity";
+import { ProductsEntity } from "src/model/product/entities/product.entity";
 
 @Injectable()
 export class UploadRepository {
@@ -23,23 +25,22 @@ export class UploadRepository {
     private readonly inquiriesImageRepository: Repository<InquiriesImageEntity>,
     @InjectRepository(InquiriesVideoEntity)
     private readonly inquiriesVideoRepository: Repository<InquiriesVideoEntity>,
+    private readonly configService: ConfigService,
   ) {}
 
-  async uploadImageForProduct(
+  async uploadProductImage(
     mediaUploadDto: MediaUploadDto,
   ): Promise<MediaReturnDto> {
     const { media, uploader } = mediaUploadDto;
-    const fileNameOnUrl = `http://localhost:${new ConfigService().get(
+    const fileNameOnUrl = `http://localhost:${this.configService.get(
       "PORT",
     )}/media/${media}`.toLowerCase();
-    const uploadReason = media.includes("imagepreparation")
-      ? "product no image"
-      : "product image";
+    const hasOwnImage = media.includes("imagepreparation") ? false : true;
 
     await this.productsImageRepository.save({
       url: fileNameOnUrl,
       uploader,
-      uploadReason,
+      hasOwnImage,
     });
 
     return { name: media, url: fileNameOnUrl };
@@ -49,8 +50,8 @@ export class UploadRepository {
     try {
       return await this.productsImageRepository
         .createQueryBuilder("i")
-        .where("i.uploadReason = :uploadReason", {
-          uploadReason: "product no image",
+        .where("i.hasOwnImage = :hasOwnImage", {
+          hasOwnImage: false,
         })
         .orderBy("i.createdAt", "ASC")
         .getOneOrFail();
@@ -61,14 +62,13 @@ export class UploadRepository {
     }
   }
 
-  async uploadImageForReview(
+  async uploadReviewImage(
     mediaUploadDto: MediaUploadDto,
   ): Promise<MediaReturnDto> {
     const { media, uploader } = mediaUploadDto;
     const fileNameOnUrl = `http://localhost:${new ConfigService().get(
       "PORT",
     )}/media/${media}`.toLowerCase();
-    const uploadReason = "review";
 
     await this.reviewsImageRepository.save({
       url: fileNameOnUrl,
@@ -78,91 +78,150 @@ export class UploadRepository {
     return { name: media, url: fileNameOnUrl };
   }
 
-  async uploadVideoForReview(
+  async uploadReviewVideo(
     mediaUploadDto: MediaUploadDto,
   ): Promise<MediaReturnDto> {
     const { media, uploader } = mediaUploadDto;
     const fileNameOnUrl = `http://localhost:${new ConfigService().get(
       "PORT",
     )}/media/${media}`.toLowerCase();
-    const uploadReason = "review";
 
     await this.reviewsVideoRepository.save({
       url: fileNameOnUrl,
       uploader,
-      uploadReason,
     });
 
-    return { name: media, url: fileNameOnUrl, uploadReason };
+    return { name: media, url: fileNameOnUrl };
   }
 
-  async uploadImageForInquiry(
+  async uploadInquiryImage(
     mediaUploadDto: MediaUploadDto,
   ): Promise<MediaReturnDto> {
     const { media, uploader } = mediaUploadDto;
     const fileNameOnUrl = `http://localhost:${new ConfigService().get(
       "PORT",
     )}/media/${media}`.toLowerCase();
-    const uploadReason = "inquiry";
 
     await this.inquiriesImageRepository.save({
       url: fileNameOnUrl,
       uploader,
-      uploadReason,
     });
 
-    return { name: media, url: fileNameOnUrl, uploadReason };
+    return { name: media, url: fileNameOnUrl };
   }
 
-  async uploadVideoForInquiry(
+  async uploadInquiryVideo(
     mediaUploadDto: MediaUploadDto,
   ): Promise<MediaReturnDto> {
     const { media, uploader } = mediaUploadDto;
     const fileNameOnUrl = `http://localhost:${new ConfigService().get(
       "PORT",
     )}/media/${media}`.toLowerCase();
-    const uploadReason = "inquiry";
 
     await this.inquiriesVideoRepository.save({
       url: fileNameOnUrl,
       uploader,
-      uploadReason,
     });
 
-    return { name: media, url: fileNameOnUrl, uploadReason };
+    return { name: media, url: fileNameOnUrl };
   }
 
-  async findImageWithUrl(url: string): Promise<ImagesEntity> {
+  async findProductImageWithUrl(url: string): Promise<ProductsImageEntity> {
     try {
-      return await this.imagesRepository
+      return await this.productsImageRepository
         .createQueryBuilder("image")
         .where("image.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
-      throw new NotFoundException("해당 url을 가진 이미지를 찾을 수 없습니다.");
+      throw new NotFoundException(
+        "해당 url을 가진 상품 이미지를 찾을 수 없습니다.",
+      );
     }
   }
 
-  async findVideoWithUrl(url: string): Promise<VideosEntity> {
+  async findReviewImageWithUrl(url: string): Promise<ReviewsImageEntity> {
     try {
-      return await this.videosRepository
+      return await this.reviewsImageRepository
+        .createQueryBuilder("image")
+        .where("image.url = :url", { url })
+        .getOneOrFail();
+    } catch (err) {
+      throw new NotFoundException(
+        "해당 url을 가진 리뷰 이미지를 찾을 수 없습니다.",
+      );
+    }
+  }
+
+  async findReviewVideoWithUrl(url: string): Promise<ReviewsVideoEntity> {
+    try {
+      return await this.reviewsVideoRepository
         .createQueryBuilder("video")
         .where("video.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
-      throw new NotFoundException("해당 url을 가진 동영상을 찾을 수 없습니다.");
+      throw new NotFoundException(
+        "해당 url을 가진 리뷰 동영상을 찾을 수 없습니다.",
+      );
     }
   }
 
-  async deleteUploadImageWithId(id: string): Promise<void> {
-    await this.imagesRepository.delete(id);
+  async findInquiryImageWithUrl(url: string): Promise<InquiriesImageEntity> {
+    try {
+      return await this.inquiriesImageRepository
+        .createQueryBuilder("image")
+        .where("image.url = :url", { url })
+        .getOneOrFail();
+    } catch (err) {
+      throw new NotFoundException(
+        "해당 url을 가진 문의 이미지를 찾을 수 없습니다.",
+      );
+    }
   }
 
-  async deleteUploadVideoWithId(id: string): Promise<void> {
-    await this.videosRepository.delete(id);
+  async findInquiryVideoWithUrl(url: string): Promise<InquiriesVideoEntity> {
+    try {
+      return await this.inquiriesVideoRepository
+        .createQueryBuilder("video")
+        .where("video.url = :url", { url })
+        .getOneOrFail();
+    } catch (err) {
+      throw new NotFoundException(
+        "해당 url을 가진 문의 동영상을 찾을 수 없습니다.",
+      );
+    }
   }
 
-  async insertImageOnReview(id: string, review: ReviewEntity) {
+  async deleteProductImageWithId(id: string): Promise<void> {
+    await this.productsImageRepository.delete(id);
+  }
+
+  async deleteReviewImageWithId(id: string): Promise<void> {
+    await this.reviewsImageRepository.delete(id);
+  }
+
+  async deleteReviewVideoWithId(id: string): Promise<void> {
+    await this.reviewsVideoRepository.delete(id);
+  }
+
+  async deleteInquiryImageWithId(id: string): Promise<void> {
+    await this.inquiriesImageRepository.delete(id);
+  }
+
+  async deleteInquiryVideoWithId(id: string): Promise<void> {
+    await this.reviewsVideoRepository.delete(id);
+  }
+
+  async insertImageOnProduct(id: string, product: ProductsEntity) {
+    const image = await this.productsImageRepository
+      .createQueryBuilder("image")
+      .where("image.id = :id", { id })
+      .getOne();
+
+    image.Product = product;
+    await this.productsImageRepository.save(image);
+  }
+
+  async insertImageOnReview(id: string, review: ReviewsEntity) {
     const image = await this.reviewsImageRepository
       .createQueryBuilder("image")
       .where("image.id = :id", { id })
@@ -172,7 +231,7 @@ export class UploadRepository {
     await this.reviewsImageRepository.save(image);
   }
 
-  async insertVideoOnReview(id: string, review: ReviewEntity) {
+  async insertVideoOnReview(id: string, review: ReviewsEntity) {
     const video = await this.reviewsVideoRepository
       .createQueryBuilder("video")
       .where("video.id = :id", { id })

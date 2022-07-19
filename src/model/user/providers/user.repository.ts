@@ -154,12 +154,19 @@ export class UserRepository {
   }
 
   async findUserProfileInfoWithId(userId: string): Promise<UsersEntity> {
-    return await this.userRepository
+    const user = await this.userRepository
       .createQueryBuilder("user")
-      .innerJoin("user.Profile", "Profile")
-      .select(["user.Profile.realname"])
+      .leftJoin("user.Profile", "Profile")
+      .select(["Profile.realname"])
+      // .leftJoinAndSelect("user.Auth", "Auth")
+      // .leftJoinAndSelect("user.Activity", "Activity")
+      // .select(this.select.UserInformationReturnProperty)
       .where("user.id = :id", { id: userId })
       .getOne();
+
+    console.log(this.select.UserInformationReturnProperty);
+
+    return user;
   }
 
   async createUser(
@@ -275,5 +282,15 @@ export class UserRepository {
       deleteObject[3],
       "Delete Object For Secession User",
     );
+  }
+
+  async increaseReviewCount(user: UsersEntity) {
+    user.Activity.productReviewCount++;
+    await this.userRepository.save(user);
+  }
+
+  async increaseInquiryCount(user: UsersEntity) {
+    user.Activity.productInquiryCount++;
+    await this.userRepository.save(user);
   }
 }
