@@ -22,12 +22,14 @@ import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface
 import { StarRatingService } from "../providers/star-rating.service";
 import { JsonGeneralInterface } from "src/common/interfaces/json.general.interface";
 import { JsonGeneralInterceptor } from "../../../common/interceptors/json.general.interceptor";
+import { Bundle } from "src/common/config/etc/providers/bundle";
 
 @Controller("review")
 export class ReviewController {
   constructor(
     private readonly reviewService: ReviewService,
     private readonly starRatingService: StarRatingService,
+    private readonly bundle: Bundle,
   ) {}
 
   @UseInterceptors(JsonClearCookieInterceptor)
@@ -45,13 +47,8 @@ export class ReviewController {
         "이미지, 비디오 쿠키를 찾을 수 없습니다. 우선 사진과 동영상을 업로드 해주세요.",
       );
     }
-    const { userSelectScore } = createReviewDto;
-    const starRating = await this.starRatingService.putStarRating(
-      userSelectScore,
-      productName,
-    );
 
-    await this.starRatingService.calculateRating(starRating);
+    this.bundle.starRating(createReviewDto, productName);
 
     await this.reviewService.createReviewWithImageAndVideo({
       createReviewDto,
@@ -82,13 +79,7 @@ export class ReviewController {
         "이미지 쿠키를 찾을 수 없습니다. 우선 사진을 업로드 해주세요.",
       );
     }
-    const { userSelectScore } = createReviewDto;
-    const starRating = await this.starRatingService.putStarRating(
-      userSelectScore,
-      productName,
-    );
-
-    await this.starRatingService.calculateRating(starRating);
+    this.bundle.starRating(createReviewDto, productName);
 
     await this.reviewService.createReviewWithImage({
       createReviewDto,
@@ -119,13 +110,7 @@ export class ReviewController {
       );
     }
 
-    const { userSelectScore } = createReviewDto;
-    const starRating = await this.starRatingService.putStarRating(
-      userSelectScore,
-      productName,
-    );
-
-    await this.starRatingService.calculateRating(starRating);
+    this.bundle.starRating(createReviewDto, productName);
 
     await this.reviewService.createReviewWithVideo({
       createReviewDto,
@@ -149,13 +134,7 @@ export class ReviewController {
     @Body() createReviewDto: CreateReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    const { userSelectScore } = createReviewDto;
-    const starRating = await this.starRatingService.putStarRating(
-      userSelectScore,
-      productName,
-    );
-
-    await this.starRatingService.calculateRating(starRating);
+    this.bundle.starRating(createReviewDto, productName);
 
     await this.reviewService.createReviewWithoutMedia({
       createReviewDto,

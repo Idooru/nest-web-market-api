@@ -35,12 +35,12 @@ export class UploadRepository {
     const fileNameOnUrl = `http://localhost:${this.configService.get(
       "PORT",
     )}/media/${media}`.toLowerCase();
-    const hasOwnImage = media.includes("imagepreparation") ? false : true;
+    const hasInherentImage = media.includes("imagepreparation") ? false : true;
 
     await this.productsImageRepository.save({
       url: fileNameOnUrl,
       uploader,
-      hasOwnImage,
+      hasInherentImage,
     });
 
     return { name: media, url: fileNameOnUrl };
@@ -49,11 +49,11 @@ export class UploadRepository {
   async findImagePreparation(): Promise<ProductsImageEntity> {
     try {
       return await this.productsImageRepository
-        .createQueryBuilder("i")
-        .where("i.hasOwnImage = :hasOwnImage", {
-          hasOwnImage: false,
+        .createQueryBuilder("image")
+        .where("image.hasInherentImage = :hasInherentImage", {
+          hasInherentImage: false,
         })
-        .orderBy("i.createdAt", "ASC")
+        .orderBy("image.createdAt", "DESC")
         .getOneOrFail();
     } catch (err) {
       throw new NotFoundException(

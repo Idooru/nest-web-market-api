@@ -18,6 +18,38 @@ export class ReviewRepository {
     return [await this.reviewRepository.save(review)];
   }
 
+  async createReviewWithImage(
+    createReviewDto: CreateReviewDto,
+    user: UsersEntity,
+    product: ProductsEntity,
+  ): Promise<ReviewsEntity> {
+    const review = this.reviewRepository.create();
+
+    review.reviews = createReviewDto.reviews;
+    review.userSelectScore = createReviewDto.userSelectScore;
+    review.Image = createReviewDto.Image;
+    review.Product = product;
+    review.Reviewer = user;
+
+    return await this.reviewRepository.save(review);
+  }
+
+  async createReviewWithVideo(
+    createReviewDto: CreateReviewDto,
+    user: UsersEntity,
+    product: ProductsEntity,
+  ): Promise<ReviewsEntity> {
+    const review = this.reviewRepository.create();
+
+    review.reviews = createReviewDto.reviews;
+    review.userSelectScore = createReviewDto.userSelectScore;
+    review.Video = createReviewDto.Video;
+    review.Product = product;
+    review.Reviewer = user;
+
+    return await this.reviewRepository.save(review);
+  }
+
   async createReview(
     createReviewDto: CreateReviewDto,
     user: UsersEntity,

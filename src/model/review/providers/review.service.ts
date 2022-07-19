@@ -12,6 +12,8 @@ import { Injectable } from "@nestjs/common";
 import { ReviewsEntity } from "../entities/review.entity";
 import { UpdateReviewDto } from "../dto/update-review.dto";
 import { UploadRepository } from "src/model/upload/providers/upload.repository";
+import { ReviewsImageEntity } from "src/model/upload/entities/review.image.entity";
+import { ReviewsVideoEntity } from "src/model/upload/entities/review.video.entity";
 
 @Injectable()
 export class ReviewService {
@@ -89,24 +91,32 @@ export class ReviewService {
       productName,
     );
 
-    const review = await this.reviewRepository.createReview(
-      createReviewDto,
-      user,
-      product,
-    );
-
     if (reviewImgCookie.length >= 2) {
       for (const idx of reviewImgCookie) {
         const image = await this.uploadRepository.findReviewImageWithUrl(
           idx[1],
         );
-        await this.uploadRepository.insertImageOnReview(image.id, review);
+
+        createReviewDto.Image = [image];
+
+        await this.reviewRepository.createReviewWithImage(
+          createReviewDto,
+          user,
+          product,
+        );
       }
     } else {
       const image = await this.uploadRepository.findReviewImageWithUrl(
         reviewImgCookie[0][1],
       );
-      await this.uploadRepository.insertImageOnReview(image.id, review);
+
+      createReviewDto.Image = [image];
+
+      await this.reviewRepository.createReviewWithImage(
+        createReviewDto,
+        user,
+        product,
+      );
     }
 
     await this.userRepository.increaseReviewCount(user);
@@ -124,24 +134,32 @@ export class ReviewService {
       productName,
     );
 
-    const review = await this.reviewRepository.createReview(
-      createReviewDto,
-      user,
-      product,
-    );
-
     if (reviewVdoCookie.length >= 2) {
       for (const idx of reviewVdoCookie) {
         const video = await this.uploadRepository.findReviewVideoWithUrl(
           idx[1],
         );
-        await this.uploadRepository.insertVideoOnReview(video.id, review);
+
+        createReviewDto.Video = [video];
+
+        await this.reviewRepository.createReviewWithVideo(
+          createReviewDto,
+          user,
+          product,
+        );
       }
     } else {
       const video = await this.uploadRepository.findReviewVideoWithUrl(
         reviewVdoCookie[0][1],
       );
-      await this.uploadRepository.insertVideoOnReview(video.id, review);
+
+      createReviewDto.Video = [video];
+
+      await this.reviewRepository.createReviewWithVideo(
+        createReviewDto,
+        user,
+        product,
+      );
     }
 
     await this.userRepository.increaseReviewCount(user);
@@ -177,4 +195,39 @@ export class ReviewService {
 
 // remove(id: number) {
 //   return `This action removes a #${id} review`;
+// }
+
+// async createReviewWithImage(
+//   createReviewDao: CreateReviewWithImageDao,
+// ): Promise<void> {
+//   const { createReviewDto, jwtPayload, productName, reviewImgCookie } =
+//     createReviewDao;
+//   const { id } = jwtPayload;
+
+//   const user = await this.userRepository.findUserWithId(id);
+//   const product = await this.productRepository.findProductOneByName(
+//     productName,
+//   );
+
+//   const review = await this.reviewRepository.createReview(
+//     createReviewDto,
+//     user,
+//     product,
+//   );
+
+//   if (reviewImgCookie.length >= 2) {
+//     for (const idx of reviewImgCookie) {
+//       const image = await this.uploadRepository.findReviewImageWithUrl(
+//         idx[1],
+//       );
+//       await this.uploadRepository.insertImageOnReview(image.id, review);
+//     }
+//   } else {
+//     const image = await this.uploadRepository.findReviewImageWithUrl(
+//       reviewImgCookie[0][1],
+//     );
+//     await this.uploadRepository.insertImageOnReview(image.id, review);
+//   }
+
+//   await this.userRepository.increaseReviewCount(user);
 // }

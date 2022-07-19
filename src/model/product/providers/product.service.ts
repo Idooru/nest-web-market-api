@@ -20,8 +20,6 @@ export class ProductService {
     private readonly uploadService: UploadService,
     private readonly uploadRepository: UploadRepository,
     private readonly starRatingRepository: StarRatingRepository,
-    private readonly reviewRepository: ReviewRepository,
-    private readonly inquiryRepository: InquiryRepository,
   ) {}
 
   async getProductsAllFromLatest(): Promise<ProductsEntity[]> {
@@ -69,7 +67,7 @@ export class ProductService {
   }
 
   async modifyProduct(
-    id: string,
+    productId: string,
     modifyProductDto: ModifyProductDto,
     modifier: string,
     imageCookie: MediaUrlCookie,
@@ -78,7 +76,7 @@ export class ProductService {
     let getImage: ProductsImageEntity;
 
     const findProductAndImageId = await Promise.allSettled([
-      this.productRepository.findProductOneById(id),
+      this.productRepository.findProductOneById(productId),
       this.uploadRepository.findProductImageWithUrl(imageCookie.url),
     ]);
 
@@ -104,12 +102,7 @@ export class ProductService {
     modifyProductDto.Image = getImage;
 
     await this.productRepository.checkProductNameToModify(name, product.name);
-    const productOb = await this.productRepository.modifyProduct(
-      id,
-      modifyProductDto,
-    );
-
-    await this.uploadRepository.insertImageOnProduct(productOb.id, productOb);
+    await this.productRepository.modifyProduct(productId, modifyProductDto);
   }
 
   async removeProduct(id: string): Promise<void> {

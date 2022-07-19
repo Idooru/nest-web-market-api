@@ -9,13 +9,15 @@ import { CreateProductDto } from "../dto/create_product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ProductsEntity } from "../entities/product.entity";
-import { StarRatingEntity } from "../../review/entities/star-rating.entity";
+import { ProductsImageEntity } from "../../upload/entities/product.image.entity";
 
 @Injectable()
 export class ProductRepository {
   constructor(
     @InjectRepository(ProductsEntity)
     private readonly productRepository: Repository<ProductsEntity>,
+    @InjectRepository(ProductsImageEntity)
+    private readonly productsImageRepository: Repository<ProductsImageEntity>,
   ) {}
 
   private readonly select = ReturnPropertyWithSelect;
@@ -114,9 +116,9 @@ export class ProductRepository {
     try {
       return await this.productRepository
         .createQueryBuilder("product")
+        .leftJoin("product.Image", "Image")
+        .leftJoin("product.StarRating", "StarRating")
         .select(this.select.ProductReturnProperty)
-        .innerJoin("product.Image", "Image")
-        .innerJoin("product.StarRating", "StarRating")
         .where("product.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
@@ -130,9 +132,9 @@ export class ProductRepository {
     try {
       return await this.productRepository
         .createQueryBuilder("product")
+        .leftJoin("product.Image", "Image")
+        .leftJoin("product.StarRating", "StarRating")
         .select(this.select.ProductReturnWithStarRating)
-        .innerJoin("product.Image", "Image")
-        .innerJoin("product.StarRating", "StarRating")
         .where("product.name = :name", { name })
         .getOneOrFail();
     } catch (err) {
@@ -157,10 +159,11 @@ export class ProductRepository {
   }
 
   async modifyProduct(
-    id: string,
+    productId: string,
+    imageId: string,
     modifyProductDto: ModifyProductDto,
   ): Promise<ProductsEntity> {
-    const product = await this.findProductOneById(id);
+    const product = await this.findProductOneById(productId);
 
     product.name = modifyProductDto.name;
     product.price = modifyProductDto.price;
@@ -170,7 +173,13 @@ export class ProductRepository {
     product.Image = modifyProductDto.Image;
     product.quantity = modifyProductDto.quantity;
 
-    return this.productRepository.save(product);
+    await this.productsImageRepository
+      .createQueryBuilder("image")
+      .where("image.id = :id", { id: imageId })
+      .delete()
+      .execute();
+
+    return await this.productRepository.save(product);
   }
 
   async removeProduct(id: string): Promise<void> {
