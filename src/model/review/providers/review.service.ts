@@ -3,6 +3,7 @@ import {
   CreateReviewWithoutMediaDao,
   CreateReviewWithImageDao,
   CreateReviewWithVideoDao,
+  CreateReviewDto,
 } from "../dto/create-review.dto";
 import { ProductRepository } from "./../../product/providers/product.repository";
 import { Promises } from "../../../common/config/etc/providers/promises";
@@ -12,8 +13,7 @@ import { Injectable } from "@nestjs/common";
 import { ReviewsEntity } from "../entities/review.entity";
 import { UpdateReviewDto } from "../dto/update-review.dto";
 import { UploadRepository } from "src/model/upload/providers/upload.repository";
-import { ReviewsImageEntity } from "src/model/upload/entities/review.image.entity";
-import { ReviewsVideoEntity } from "src/model/upload/entities/review.video.entity";
+import { StarRatingService } from "src/model/review/providers/star-rating.service";
 
 @Injectable()
 export class ReviewService {
@@ -22,8 +22,18 @@ export class ReviewService {
     private readonly productRepository: ProductRepository,
     private readonly userRepository: UserRepository,
     private readonly uploadRepository: UploadRepository,
+    private readonly starRatingService: StarRatingService,
     private readonly promises: Promises,
   ) {}
+
+  async starRating(createReviewDto: CreateReviewDto, productName: string) {
+    const { userSelectScore } = createReviewDto;
+    const starRating = await this.starRatingService.putStarRating(
+      userSelectScore,
+      productName,
+    );
+    await this.starRatingService.calculateRating(starRating);
+  }
 
   async createReviewWithImageAndVideo(
     createReviewDao: CreateReviewWithImageAndVideoDao,

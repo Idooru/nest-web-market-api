@@ -9,15 +9,12 @@ import { Injectable } from "@nestjs/common";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
 import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface";
-import { ReviewRepository } from "../../review/providers/review.repository";
-import { InquiryRepository } from "src/model/inquiry/providers/inquiry.repository";
 
 @Injectable()
 export class ProductService {
   constructor(
     private readonly promises: Promises,
     private readonly productRepository: ProductRepository,
-    private readonly uploadService: UploadService,
     private readonly uploadRepository: UploadRepository,
     private readonly starRatingRepository: StarRatingRepository,
   ) {}

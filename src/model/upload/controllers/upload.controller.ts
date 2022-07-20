@@ -20,7 +20,6 @@ import { IsAdminGuard } from "../../../common/guards/is-admin.guard";
 import { Cookies } from "src/common/decorators/cookies.decorator";
 import { JsonSendCookieInterceptor } from "src/common/interceptors/json.send.cookie.interceptor";
 import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface";
-import { JsonGeneralInterface } from "src/common/interfaces/json.general.interface";
 
 @Controller("upload")
 export class UploadController {
@@ -36,21 +35,12 @@ export class UploadController {
   async uploadProductImage(
     @UploadedFile() file: Express.Multer.File,
     @GetJWT() jwtPayload: JwtPayload,
-  ): Promise<
-    JsonSendCookieInterface<MediaUrlCookie> | JsonGeneralInterface<void>
-  > {
+  ): Promise<JsonSendCookieInterface<MediaUrlCookie>> {
     console.log("logging image info ->\n", file);
 
     this.uploadService.checkExtensionTypeForProductImage(file);
 
     const image = await this.uploadService.uploadProductImage(file, jwtPayload);
-
-    if (image.name.includes("imagepreparation")) {
-      return {
-        statusCode: 201,
-        message: "이미지 준비 사진을 업로드 하였습니다.",
-      };
-    }
 
     return {
       statusCode: 201,

@@ -33,6 +33,8 @@ export const ReturnPropertyWithSelect = {
     "StarRating.averageScore",
     "product.createdAt",
     "product.updatedAt",
+    "Review",
+    "Inquiry",
   ],
   ProductReturnWithStarRating: [
     "product.id",

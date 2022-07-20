@@ -12,7 +12,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { forwardRef } from "@nestjs/common";
 import { UserAuthEntity } from "../user/entities/user.auth.entity";
 import { UsersEntity } from "../user/entities/user.entity";
-import { FunctionModule } from "../../common/config/etc/function.module";
+import { EtcModule } from "../../common/config/etc/etc.module";
 import { ConfigService } from "@nestjs/config";
 
 @Module({
@@ -30,7 +30,7 @@ import { ConfigService } from "@nestjs/config";
       signOptions: { expiresIn: "1d" },
     }),
     forwardRef(() => UserModule),
-    forwardRef(() => FunctionModule),
+    forwardRef(() => EtcModule),
   ],
   providers: [AuthService, JwtStrategy, AuthRepository],
   exports: [AuthService],

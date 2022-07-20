@@ -92,7 +92,7 @@ export class ProductController {
   ): Promise<JsonClearCookieInterface> {
     if (!productImgCookie) {
       throw new BadRequestException(
-        "상품을 수정할 때 사용할 이미지를 준비해주세요.",
+        "상품을 생성할 때 사용할 이미지를 준비해주세요.",
       );
     }
 

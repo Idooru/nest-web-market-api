@@ -8,7 +8,7 @@ import { UserModule } from "../user/user.module";
 import { ReviewRepository } from "./providers/review.repository";
 import { StarRatingEntity } from "../review/entities/star-rating.entity";
 import { StarRatingRepository } from "../review/providers/star-rating.repository";
-import { FunctionModule } from "../../common/config/etc/function.module";
+import { EtcModule } from "../../common/config/etc/etc.module";
 import { StarRatingService } from "./providers/star-rating.service";
 import { UploadModule } from "../upload/upload.module";
 
@@ -18,7 +18,7 @@ import { UploadModule } from "../upload/upload.module";
     forwardRef(() => UploadModule),
     forwardRef(() => UserModule),
     forwardRef(() => ProductModule),
-    forwardRef(() => FunctionModule),
+    forwardRef(() => EtcModule),
   ],
   controllers: [ReviewController],
   providers: [

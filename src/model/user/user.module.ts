@@ -11,7 +11,7 @@ import { forwardRef, Module } from "@nestjs/common";
 import { UserController } from "./controllers/user.controller";
 import { UserService } from "../user/providers/user.service";
 import { UsersEntity } from "./entities/user.entity";
-import { FunctionModule } from "../../common/config/etc/function.module";
+import { EtcModule } from "../../common/config/etc/etc.module";
 
 @Module({
   imports: [
@@ -24,7 +24,7 @@ import { FunctionModule } from "../../common/config/etc/function.module";
     forwardRef(() => AuthModule),
     forwardRef(() => UploadModule),
     forwardRef(() => ReviewModule),
-    FunctionModule,
+    EtcModule,
   ],
   controllers: [UserController],
   providers: [UserService, UserRepository, UploadService],

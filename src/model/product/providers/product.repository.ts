@@ -70,7 +70,7 @@ export class ProductRepository {
       .leftJoin("product.Image", "Image")
       .leftJoin("product.StarRating", "StarRating")
       .leftJoin("product.Review", "Review")
-      .leftJoin("product.Inquiry", "Imquiry")
+      .leftJoin("product.Inquiry", "Inquiry")
       .select(this.select.ProductsReturnProperty)
       .orderBy("product.createdAt", "DESC")
       .getMany();
@@ -87,7 +87,7 @@ export class ProductRepository {
       .leftJoin("product.Image", "Image")
       .leftJoin("product.StarRating", "StarRating")
       .leftJoin("product.Review", "Review")
-      .leftJoin("product.Inquiry", "Imquiry")
+      .leftJoin("product.Inquiry", "Inquiry")
       .select(this.select.ProductsReturnProperty)
       .orderBy("product.createdAt", "ASC")
       .getMany();
@@ -104,6 +104,8 @@ export class ProductRepository {
         .createQueryBuilder("product")
         .leftJoin("product.Image", "Image")
         .leftJoin("product.StarRating", "StarRating")
+        .leftJoin("product.Review", "Review")
+        .leftJoin("product.Inquiry", "Inquiry")
         .select(this.select.ProductReturnProperty)
         .where("product.name = :name", { name })
         .getOneOrFail();
@@ -118,6 +120,8 @@ export class ProductRepository {
         .createQueryBuilder("product")
         .leftJoin("product.Image", "Image")
         .leftJoin("product.StarRating", "StarRating")
+        .leftJoin("product.Review", "Review")
+        .leftJoin("product.Inquiry", "Inquiry")
         .select(this.select.ProductReturnProperty)
         .where("product.id = :id", { id })
         .getOneOrFail();
@@ -143,43 +147,48 @@ export class ProductRepository {
   }
 
   async createProduct(createProductDto: CreateProductDto): Promise<void> {
-    // const product = this.productRepository.create();
-    // product.name = createProductDto.name;
-    // product.price = createProductDto.price;
-    // product.origin = createProductDto.origin;
-    // product.type = createProductDto.type;
-    // product.description = createProductDto.description;
-    // product.Image = createProductDto.Image;
-    // product.StarRating = createProductDto.StarRating;
-    // await this.productRepository.save(product);
-    await this.productRepository
-      .createQueryBuilder("product")
-      .insert()
-      .into(ProductsEntity)
-      .values({ ...createProductDto })
-      .execute();
+    // 엑티브 레코드 패턴
+    const product = this.productRepository.create();
+    product.name = createProductDto.name;
+    product.price = createProductDto.price;
+    product.origin = createProductDto.origin;
+    product.type = createProductDto.type;
+    product.description = createProductDto.description;
+    product.Image = createProductDto.Image;
+    product.StarRating = createProductDto.StarRating;
+    await this.productRepository.save(product);
+
+    // 리파지토리 패턴
+    // await this.productRepository
+    //   .createQueryBuilder("product")
+    //   .insert()
+    //   .into(ProductsEntity)
+    //   .values({ ...createProductDto })
+    //   .execute();
   }
 
   async modifyProduct(
     productId: string,
     modifyProductDto: ModifyProductDto,
   ): Promise<void> {
-    await this.productRepository
-      .createQueryBuilder("product")
-      .update(ProductsEntity)
-      .set({ ...modifyProductDto })
-      .where("product.id = :id", { id: productId })
-      .execute();
-    // const product = await this.findProductOneById(productId);
-    // product.name = modifyProductDto.name;
-    // product.price = modifyProductDto.price;
-    // product.origin = modifyProductDto.origin;
-    // product.type = modifyProductDto.type;
-    // product.description = modifyProductDto.description;
-    // product.Image = modifyProductDto.Image;
-    // product.quantity = modifyProductDto.quantity;
+    // 엑티브 레코드 패턴
+    const product = await this.findProductOneById(productId);
+    product.name = modifyProductDto.name;
+    product.price = modifyProductDto.price;
+    product.origin = modifyProductDto.origin;
+    product.type = modifyProductDto.type;
+    product.description = modifyProductDto.description;
+    product.Image = modifyProductDto.Image;
+    product.quantity = modifyProductDto.quantity;
+    await this.productRepository.save(product);
 
-    // await this.productRepository.save(product);
+    // 리파지토리 패턴
+    // await this.productRepository
+    //   .createQueryBuilder("product")
+    //   .update(ProductsEntity)
+    //   .set({ ...modifyProductDto })
+    //   .where("product.id = :id", { id: productId })
+    //   .execute();
   }
 
   async removeProduct(id: string): Promise<void> {

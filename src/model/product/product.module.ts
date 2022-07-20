@@ -5,7 +5,7 @@ import { Module, forwardRef } from "@nestjs/common";
 import { ProductController } from "../product/controllers/product.controller";
 import { ProductService } from "./providers/product.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { FunctionModule } from "../../common/config/etc/function.module";
+import { EtcModule } from "../../common/config/etc/etc.module";
 import { UserModule } from "../user/user.module";
 import { ReviewModule } from "../review/review.module";
 import { InquiryModule } from "../inquiry/inquiry.module";
@@ -16,7 +16,7 @@ import { ProductsImageEntity } from "../upload/entities/product.image.entity";
     TypeOrmModule.forFeature([ProductsEntity, ProductsImageEntity]),
     forwardRef(() => UserModule),
     forwardRef(() => UploadModule),
-    forwardRef(() => FunctionModule),
+    forwardRef(() => EtcModule),
     forwardRef(() => ReviewModule),
     forwardRef(() => InquiryModule),
   ],

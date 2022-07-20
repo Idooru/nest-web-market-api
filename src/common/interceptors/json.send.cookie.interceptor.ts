@@ -27,14 +27,10 @@ export class JsonSendCookieInterceptor implements NestInterceptor {
           } :: time taken : ${Date.now() - now}ms`,
         );
 
-        if (cookieKey) {
-          res
-            .status(data.statusCode)
-            .setHeader("X-Powered-By", "")
-            .cookie(cookieKey, cookieValue, CookieOption);
-        } else {
-          res.status(data.statusCode).setHeader("X-Powered-By", "");
-        }
+        res
+          .status(data.statusCode)
+          .setHeader("X-Powered-By", "")
+          .cookie(cookieKey, cookieValue, CookieOption);
 
         return { success: true, ...{ statusCode, message, result } };
       }),

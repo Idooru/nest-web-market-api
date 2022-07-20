@@ -26,11 +26,7 @@ import { Bundle } from "src/common/config/etc/providers/bundle";
 
 @Controller("review")
 export class ReviewController {
-  constructor(
-    private readonly reviewService: ReviewService,
-    private readonly starRatingService: StarRatingService,
-    private readonly bundle: Bundle,
-  ) {}
+  constructor(private readonly reviewService: ReviewService) {}
 
   @UseInterceptors(JsonClearCookieInterceptor)
   @UseGuards(IsLoginGuard)
@@ -48,7 +44,7 @@ export class ReviewController {
       );
     }
 
-    this.bundle.starRating(createReviewDto, productName);
+    await this.reviewService.starRating(createReviewDto, productName);
 
     await this.reviewService.createReviewWithImageAndVideo({
       createReviewDto,
@@ -79,7 +75,8 @@ export class ReviewController {
         "이미지 쿠키를 찾을 수 없습니다. 우선 사진을 업로드 해주세요.",
       );
     }
-    this.bundle.starRating(createReviewDto, productName);
+
+    await this.reviewService.starRating(createReviewDto, productName);
 
     await this.reviewService.createReviewWithImage({
       createReviewDto,
@@ -110,7 +107,7 @@ export class ReviewController {
       );
     }
 
-    this.bundle.starRating(createReviewDto, productName);
+    await this.reviewService.starRating(createReviewDto, productName);
 
     await this.reviewService.createReviewWithVideo({
       createReviewDto,
@@ -134,7 +131,7 @@ export class ReviewController {
     @Body() createReviewDto: CreateReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    this.bundle.starRating(createReviewDto, productName);
+    await this.reviewService.starRating(createReviewDto, productName);
 
     await this.reviewService.createReviewWithoutMedia({
       createReviewDto,

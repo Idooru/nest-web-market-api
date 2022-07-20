@@ -8,4 +8,4 @@ import { Bundle } from "./providers/bundle";
   providers: [Promises, Bundle],
   exports: [Promises, Bundle],
 })
-export class FunctionModule {}
+export class EtcModule {}

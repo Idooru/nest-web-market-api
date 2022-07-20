@@ -7,7 +7,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { typeORMConfig } from "./common/config/typeorm.config";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { UploadModule } from "./model/upload/upload.module";
-import { FunctionModule } from "./common/config/etc/function.module";
+import { EtcModule } from "./common/config/etc/etc.module";
 import { ReviewModule } from "./model/review/review.module";
 
 @Module({
@@ -21,7 +21,7 @@ import { ReviewModule } from "./model/review/review.module";
     ProductModule,
     UploadModule,
     ReviewModule,
-    FunctionModule,
+    EtcModule,
   ],
   controllers: [],
   providers: [],
