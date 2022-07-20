@@ -87,15 +87,16 @@ export class ProductController {
   async createProduct(
     @Body()
     createProductDto: CreateProductDto,
-    @GetJWT() jwtPayload: JwtPayload,
     @Cookie("Product_Image_Url_COOKIE")
     productImgCookie: MediaUrlCookie,
   ): Promise<JsonClearCookieInterface> {
-    await this.productService.createProduct(
-      createProductDto,
-      jwtPayload.nickname,
-      productImgCookie,
-    );
+    if (!productImgCookie) {
+      throw new BadRequestException(
+        "상품을 수정할 때 사용할 이미지를 준비해주세요.",
+      );
+    }
+
+    await this.productService.createProduct(createProductDto, productImgCookie);
 
     return {
       statusCode: 201,
@@ -111,7 +112,6 @@ export class ProductController {
   async modifyProduct(
     @Param("id") productId: string,
     @Body() modifyProductDto: ModifyProductDto,
-    @GetJWT() jwtPayload: JwtPayload,
     @Cookie("Product_Image_Url_COOKIE")
     productImgCookie: MediaUrlCookie,
   ): Promise<JsonClearCookieInterface> {
@@ -124,7 +124,6 @@ export class ProductController {
     await this.productService.modifyProduct(
       productId,
       modifyProductDto,
-      jwtPayload.nickname,
       productImgCookie,
     );
 

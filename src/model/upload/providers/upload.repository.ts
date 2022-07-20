@@ -139,6 +139,21 @@ export class UploadRepository {
     }
   }
 
+  async findProductImageWithProductId(
+    productId: string,
+  ): Promise<ProductsImageEntity> {
+    try {
+      return await this.productsImageRepository
+        .createQueryBuilder()
+        .where("productId = :productId", { productId })
+        .getOneOrFail();
+    } catch (err) {
+      throw new NotFoundException(
+        "해당 상품아이디와 관계가 맺어진 상품 이미지를 찾을 수 없습니다.",
+      );
+    }
+  }
+
   async findReviewImageWithUrl(url: string): Promise<ReviewsImageEntity> {
     try {
       return await this.reviewsImageRepository
@@ -209,16 +224,6 @@ export class UploadRepository {
 
   async deleteInquiryVideoWithId(id: string): Promise<void> {
     await this.reviewsVideoRepository.delete(id);
-  }
-
-  async insertImageOnProduct(id: string, product: ProductsEntity) {
-    const image = await this.productsImageRepository
-      .createQueryBuilder("image")
-      .where("image.id = :id", { id })
-      .getOne();
-
-    image.Product = product;
-    await this.productsImageRepository.save(image);
   }
 
   async insertImageOnReview(id: string, review: ReviewsEntity) {

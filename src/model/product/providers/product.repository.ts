@@ -142,44 +142,44 @@ export class ProductRepository {
     }
   }
 
-  async createProduct(
-    createProductDto: CreateProductDto,
-  ): Promise<ProductsEntity> {
-    const product = this.productRepository.create();
-
-    product.name = createProductDto.name;
-    product.price = createProductDto.price;
-    product.origin = createProductDto.origin;
-    product.type = createProductDto.type;
-    product.description = createProductDto.description;
-    product.Image = createProductDto.Image;
-    product.StarRating = createProductDto.StarRating;
-
-    return await this.productRepository.save(product);
+  async createProduct(createProductDto: CreateProductDto): Promise<void> {
+    // const product = this.productRepository.create();
+    // product.name = createProductDto.name;
+    // product.price = createProductDto.price;
+    // product.origin = createProductDto.origin;
+    // product.type = createProductDto.type;
+    // product.description = createProductDto.description;
+    // product.Image = createProductDto.Image;
+    // product.StarRating = createProductDto.StarRating;
+    // await this.productRepository.save(product);
+    await this.productRepository
+      .createQueryBuilder("product")
+      .insert()
+      .into(ProductsEntity)
+      .values({ ...createProductDto })
+      .execute();
   }
 
   async modifyProduct(
     productId: string,
-    imageId: string,
     modifyProductDto: ModifyProductDto,
-  ): Promise<ProductsEntity> {
-    const product = await this.findProductOneById(productId);
-
-    product.name = modifyProductDto.name;
-    product.price = modifyProductDto.price;
-    product.origin = modifyProductDto.origin;
-    product.type = modifyProductDto.type;
-    product.description = modifyProductDto.description;
-    product.Image = modifyProductDto.Image;
-    product.quantity = modifyProductDto.quantity;
-
-    await this.productsImageRepository
-      .createQueryBuilder("image")
-      .where("image.id = :id", { id: imageId })
-      .delete()
+  ): Promise<void> {
+    await this.productRepository
+      .createQueryBuilder("product")
+      .update(ProductsEntity)
+      .set({ ...modifyProductDto })
+      .where("product.id = :id", { id: productId })
       .execute();
+    // const product = await this.findProductOneById(productId);
+    // product.name = modifyProductDto.name;
+    // product.price = modifyProductDto.price;
+    // product.origin = modifyProductDto.origin;
+    // product.type = modifyProductDto.type;
+    // product.description = modifyProductDto.description;
+    // product.Image = modifyProductDto.Image;
+    // product.quantity = modifyProductDto.quantity;
 
-    return await this.productRepository.save(product);
+    // await this.productRepository.save(product);
   }
 
   async removeProduct(id: string): Promise<void> {

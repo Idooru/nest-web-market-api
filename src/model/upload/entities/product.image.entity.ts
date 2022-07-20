@@ -12,9 +12,6 @@ export class ProductsImageEntity extends CommonEntity {
   @Column({ type: "varchar", nullable: false, unique: true })
   url: string;
 
-  @Column({ type: "boolean", nullable: false })
-  hasInherentImage: boolean;
-
   @ManyToOne(() => UsersEntity, (user) => user)
   @JoinColumn({ name: "uploaderId" })
   uploader: UsersEntity;

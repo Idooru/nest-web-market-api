@@ -40,41 +40,29 @@ export class ProductService {
 
   async createProduct(
     createProductDto: CreateProductDto,
-    creater: string,
     imageCookie: MediaUrlCookie,
   ): Promise<void> {
     const { name } = createProductDto;
-    let image: ProductsImageEntity;
 
-    if (!imageCookie) {
-      const result = await this.uploadService.copyImageFromImagePreparation(
-        creater,
-      );
-      image = await this.uploadRepository.findProductImageWithUrl(result.url);
-    } else {
-      image = await this.uploadRepository.findProductImageWithUrl(
-        imageCookie.url,
-      );
-    }
+    await this.productRepository.checkProductNameToCreate(name);
 
+    const image = await this.uploadRepository.findProductImageWithUrl(
+      imageCookie.url,
+    );
     const starRating = await this.starRatingRepository.createStarRatingSample();
 
     createProductDto.Image = image;
     createProductDto.StarRating = starRating;
 
-    await this.productRepository.checkProductNameToCreate(name);
     await this.productRepository.createProduct(createProductDto);
   }
 
   async modifyProduct(
     productId: string,
     modifyProductDto: ModifyProductDto,
-    modifier: string,
     imageCookie: MediaUrlCookie,
   ): Promise<void> {
     const { name } = modifyProductDto;
-    let getImage: ProductsImageEntity;
-
     const findProductAndImageId = await Promise.allSettled([
       this.productRepository.findProductOneById(productId),
       this.uploadRepository.findProductImageWithUrl(imageCookie.url),
@@ -88,20 +76,17 @@ export class ProductService {
 
     const [product, image] = findProductAndImageIdResult;
 
-    if (!image) {
-      const result = await this.uploadService.copyImageFromImagePreparation(
-        modifier,
-      );
-      getImage = await this.uploadRepository.findProductImageWithUrl(
-        result.url,
-      );
-    } else {
-      getImage = await this.uploadRepository.findProductImageWithUrl(image.url);
-    }
+    await this.productRepository.checkProductNameToModify(name, product.name);
+    const getImage = await this.uploadRepository.findProductImageWithUrl(
+      image.url,
+    );
 
     modifyProductDto.Image = getImage;
 
-    await this.productRepository.checkProductNameToModify(name, product.name);
+    const beforeImage =
+      await this.uploadRepository.findProductImageWithProductId(product.id);
+    await this.uploadRepository.deleteProductImageWithId(beforeImage.id);
+
     await this.productRepository.modifyProduct(productId, modifyProductDto);
   }
 
