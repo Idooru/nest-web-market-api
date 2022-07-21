@@ -3,7 +3,7 @@ import { ProductRepository } from "../../product/providers/product.repository";
 import { StarRatingRepository } from "./star-rating.repository";
 import { StarRatingEntity } from "./../entities/star-rating.entity";
 import { ReviewRepository } from "./review.repository";
-import { ProductsEntity } from "src/model/product/entities/product.entity";
+import { ProductEntity } from "src/model/product/entities/product.entity";
 
 @Injectable()
 export class StarRatingService {

@@ -10,10 +10,10 @@ import { Promises } from "../../../common/config/etc/providers/promises";
 import { UserRepository } from "../../user/providers/user.repository";
 import { ReviewRepository } from "./review.repository";
 import { Injectable } from "@nestjs/common";
-import { ReviewsEntity } from "../entities/review.entity";
-import { UpdateReviewDto } from "../dto/update-review.dto";
 import { UploadRepository } from "src/model/upload/providers/upload.repository";
 import { StarRatingService } from "src/model/review/providers/star-rating.service";
+import { UserEntity } from "src/model/user/entities/user.entity";
+import { ProductEntity } from "src/model/product/entities/product.entity";
 
 @Injectable()
 export class ReviewService {
@@ -35,6 +35,24 @@ export class ReviewService {
     await this.starRatingService.calculateRating(starRating);
   }
 
+  async findUserAndProduct(
+    nickname: string,
+    productName: string,
+  ): Promise<[UserEntity, ProductEntity]> {
+    const findUserAndProduct = await Promise.allSettled([
+      this.userRepository.findUserWithNickName(nickname),
+      this.productRepository.findProductOneByName(productName),
+    ]);
+
+    const resultForUserAndProduct = this.promises.twoPromiseSettled(
+      findUserAndProduct[0],
+      findUserAndProduct[1],
+      "Find User And Product",
+    );
+
+    return resultForUserAndProduct;
+  }
+
   async createReviewWithImageAndVideo(
     createReviewDao: CreateReviewWithImageAndVideoDao,
   ): Promise<any> {
@@ -47,8 +65,8 @@ export class ReviewService {
     } = createReviewDao;
     const { nickname } = jwtPayload;
 
-    const user = await this.userRepository.findUserWithNickName(nickname);
-    const product = await this.productRepository.findProductOneByName(
+    const [user, product] = await this.findUserAndProduct(
+      nickname,
       productName,
     );
 
@@ -94,10 +112,10 @@ export class ReviewService {
   ): Promise<void> {
     const { createReviewDto, jwtPayload, productName, reviewImgCookie } =
       createReviewDao;
-    const { id } = jwtPayload;
+    const { nickname } = jwtPayload;
 
-    const user = await this.userRepository.findUserWithId(id);
-    const product = await this.productRepository.findProductOneByName(
+    const [user, product] = await this.findUserAndProduct(
+      nickname,
       productName,
     );
 
@@ -137,10 +155,10 @@ export class ReviewService {
   ): Promise<void> {
     const { createReviewDto, jwtPayload, productName, reviewVdoCookie } =
       createReviewDao;
-    const { id } = jwtPayload;
+    const { nickname } = jwtPayload;
 
-    const user = await this.userRepository.findUserWithId(id);
-    const product = await this.productRepository.findProductOneByName(
+    const [user, product] = await this.findUserAndProduct(
+      nickname,
       productName,
     );
 
@@ -179,10 +197,10 @@ export class ReviewService {
     createReviewDao: CreateReviewWithoutMediaDao,
   ): Promise<void> {
     const { createReviewDto, jwtPayload, productName } = createReviewDao;
-    const { id } = jwtPayload;
+    const { nickname } = jwtPayload;
 
-    const user = await this.userRepository.findUserWithId(id);
-    const product = await this.productRepository.findProductOneByName(
+    const [user, product] = await this.findUserAndProduct(
+      nickname,
       productName,
     );
 

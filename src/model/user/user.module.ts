@@ -10,13 +10,13 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { forwardRef, Module } from "@nestjs/common";
 import { UserController } from "./controllers/user.controller";
 import { UserService } from "../user/providers/user.service";
-import { UsersEntity } from "./entities/user.entity";
+import { UserEntity } from "./entities/user.entity";
 import { EtcModule } from "../../common/config/etc/etc.module";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      UsersEntity,
+      UserEntity,
       UserProfileEntity,
       UserAuthEntity,
       UserActivityEntity,

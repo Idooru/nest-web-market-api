@@ -3,7 +3,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { Module, forwardRef } from "@nestjs/common";
 import { ReviewService } from "./providers/review.service";
 import { ReviewController } from "./controllers/review.controller";
-import { ReviewsEntity } from "./entities/review.entity";
+import { ReviewEntity } from "./entities/review.entity";
 import { UserModule } from "../user/user.module";
 import { ReviewRepository } from "./providers/review.repository";
 import { StarRatingEntity } from "../review/entities/star-rating.entity";
@@ -14,7 +14,7 @@ import { UploadModule } from "../upload/upload.module";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ReviewsEntity, StarRatingEntity]),
+    TypeOrmModule.forFeature([ReviewEntity, StarRatingEntity]),
     forwardRef(() => UploadModule),
     forwardRef(() => UserModule),
     forwardRef(() => ProductModule),

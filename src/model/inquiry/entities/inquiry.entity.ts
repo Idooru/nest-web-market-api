@@ -1,13 +1,14 @@
 import { IsEnum, IsNotEmpty, IsString } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
-import { ProductsEntity } from "src/model/product/entities/product.entity";
-import { UsersEntity } from "src/model/user/entities/user.entity";
+import { ProductEntity } from "src/model/product/entities/product.entity";
+import { UserEntity } from "src/model/user/entities/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
-import { InquiriesImageEntity } from "./inquiry.image.entity";
-import { InquiriesVideoEntity } from "./inquiry.video.entity";
+import { InquiryImageEntity } from "./inquiry.image.entity";
+import { InquiryVideoEntity } from "./inquiry.video.entity";
+import { UserActivityEntity } from "src/model/user/entities/user.activity.entity";
 
 @Entity("inquiries")
-export class InquiriesEntity extends CommonEntity {
+export class InquiryEntity extends CommonEntity {
   @IsString()
   @IsNotEmpty()
   @Column({ type: "text", nullable: false })
@@ -18,17 +19,17 @@ export class InquiriesEntity extends CommonEntity {
   @Column({ type: "enum", enum: ["product status", "delivery status"] })
   categories: "product status" | "delivery status";
 
-  @ManyToOne(() => UsersEntity, (user) => user)
-  @JoinColumn({ name: "userId" })
-  Inquirer: UsersEntity;
+  @ManyToOne(() => UserEntity, (user) => user.Activity)
+  @JoinColumn({ name: "userActivityId" })
+  Inquirer: UserActivityEntity;
 
-  @ManyToOne(() => ProductsEntity, (product) => product.Inquiry)
+  @ManyToOne(() => ProductEntity, (product) => product.Inquiry)
   @JoinColumn({ name: "productId" })
-  Product: ProductsEntity;
+  Product: ProductEntity;
 
-  @OneToMany(() => InquiriesImageEntity, (image) => image.Inquiry)
-  Image: InquiriesImageEntity;
+  @OneToMany(() => InquiryImageEntity, (image) => image.Inquiry)
+  Image: InquiryImageEntity;
 
-  @OneToMany(() => InquiriesVideoEntity, (video) => video.Inquiry)
-  Video: InquiriesVideoEntity;
+  @OneToMany(() => InquiryVideoEntity, (video) => video.Inquiry)
+  Video: InquiryVideoEntity;
 }

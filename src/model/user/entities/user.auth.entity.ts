@@ -6,16 +6,16 @@ import {
   JoinColumn,
 } from "typeorm";
 import { IsEmail, IsNotEmpty, IsString, Matches } from "class-validator";
-import { UsersEntity } from "./user.entity";
+import { UserEntity } from "./user.entity";
 
 @Entity("users_auth")
 export class UserAuthEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @OneToOne(() => UsersEntity, (user) => user.Auth)
+  @OneToOne(() => UserEntity, (user) => user.Auth)
   @JoinColumn({ name: "userId", referencedColumnName: "id" })
-  User: UsersEntity;
+  User: UserEntity;
 
   @IsString()
   @IsNotEmpty()

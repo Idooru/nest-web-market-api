@@ -12,16 +12,16 @@ import {
   PrimaryGeneratedColumn,
   JoinColumn,
 } from "typeorm";
-import { UsersEntity } from "./user.entity";
+import { UserEntity } from "./user.entity";
 
 @Entity("users_profile")
 export class UserProfileEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @OneToOne(() => UsersEntity, (user) => user.Profile)
+  @OneToOne(() => UserEntity, (user) => user.Profile)
   @JoinColumn({ name: "userId", referencedColumnName: "id" })
-  User: UsersEntity;
+  User: UserEntity;
 
   @IsString()
   @IsNotEmpty()

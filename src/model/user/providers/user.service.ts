@@ -5,7 +5,7 @@ import { Injectable } from "@nestjs/common";
 import { UserRepository } from "../providers/user.repository";
 import { AuthService } from "../../auth/providers/auth.service";
 import { Promises } from "../../../common/config/etc/providers/promises";
-import { UsersEntity } from "../entities/user.entity";
+import { UserEntity } from "../entities/user.entity";
 
 import * as bcrypt from "bcrypt";
 
@@ -37,7 +37,7 @@ export class UserService {
     await this.userRepository.createUser(registerUserDto, hashed);
   }
 
-  async findSelfInfoWithId(userId: string): Promise<UsersEntity> {
+  async findSelfInfoWithId(userId: string): Promise<UserEntity> {
     return await this.userRepository.findUserWithId(userId);
   }
 

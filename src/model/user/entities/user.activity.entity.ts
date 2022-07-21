@@ -6,16 +6,24 @@ import {
   OneToMany,
   JoinColumn,
 } from "typeorm";
-import { UsersEntity } from "./user.entity";
+import { UserEntity } from "./user.entity";
+import { ReviewEntity } from "src/model/review/entities/review.entity";
+import { InquiryEntity } from "src/model/inquiry/entities/inquiry.entity";
 
 @Entity("users_activity")
 export class UserActivityEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @OneToOne(() => UsersEntity, (user) => user.Activity)
+  @OneToOne(() => UserEntity, (user) => user.Activity)
   @JoinColumn({ name: "userId", referencedColumnName: "id" })
-  User: UsersEntity;
+  User: UserEntity;
+
+  @OneToMany(() => ReviewEntity, (review) => review.UserActivity)
+  Review: ReviewEntity[];
+
+  @OneToMany(() => InquiryEntity, (inquiry) => inquiry.Inquirer)
+  Inquiry: InquiryEntity[];
 
   @Column({ type: "smallint", default: 0 })
   bonusPoint: number;

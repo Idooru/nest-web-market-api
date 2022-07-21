@@ -40,7 +40,7 @@
 //     });
 //   }
 
-// async findImagePreparation(): Promise<ProductsImageEntity> {
+// async findImagePreparation(): Promise<ProductImageEntity> {
 //     try {
 //       return await this.productsImageRepository
 //         .createQueryBuilder("image")

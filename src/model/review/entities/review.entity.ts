@@ -1,13 +1,14 @@
 import { Column, Entity, OneToMany, ManyToOne, JoinColumn } from "typeorm";
-import { UsersEntity } from "./../../user/entities/user.entity";
-import { ProductsEntity } from "./../../product/entities/product.entity";
+import { UserEntity } from "./../../user/entities/user.entity";
+import { ProductEntity } from "./../../product/entities/product.entity";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { IsNotEmpty, IsString, IsEnum } from "class-validator";
-import { ReviewsImageEntity } from "src/model/upload/entities/review.image.entity";
-import { ReviewsVideoEntity } from "src/model/upload/entities/review.video.entity";
+import { ReviewImageEntity } from "src/model/upload/entities/review.image.entity";
+import { ReviewVideoEntity } from "src/model/upload/entities/review.video.entity";
+import { UserActivityEntity } from "../../user/entities/user.activity.entity";
 
 @Entity("reviews")
-export class ReviewsEntity extends CommonEntity {
+export class ReviewEntity extends CommonEntity {
   @IsString()
   @IsNotEmpty()
   @Column({ type: "text", nullable: false })
@@ -18,17 +19,17 @@ export class ReviewsEntity extends CommonEntity {
   @Column({ type: "enum", enum: [1, 2, 3, 4, 5] })
   userSelectScore: 1 | 2 | 3 | 4 | 5;
 
-  @ManyToOne(() => UsersEntity, (user) => user)
-  @JoinColumn({ name: "userId" })
-  Reviewer: UsersEntity;
+  @ManyToOne(() => UserActivityEntity, (activity) => activity.Review)
+  @JoinColumn({ name: "userActivityId" })
+  UserActivity: UserActivityEntity;
 
-  @ManyToOne(() => ProductsEntity, (product) => product.Review)
+  @ManyToOne(() => ProductEntity, (product) => product.Review)
   @JoinColumn({ name: "productId" })
-  Product: ProductsEntity;
+  Product: ProductEntity;
 
-  @OneToMany(() => ReviewsImageEntity, (image) => image.Review)
-  Image?: ReviewsImageEntity[];
+  @OneToMany(() => ReviewImageEntity, (image) => image.Review)
+  Image?: ReviewImageEntity[];
 
-  @OneToMany(() => ReviewsVideoEntity, (video) => video.Review)
-  Video?: ReviewsVideoEntity[];
+  @OneToMany(() => ReviewVideoEntity, (video) => video.Review)
+  Video?: ReviewVideoEntity[];
 }

@@ -12,11 +12,11 @@ import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface
 
 import * as fs from "fs";
 import * as path from "path";
-import { ReviewsImageEntity } from "../entities/review.image.entity";
-import { InquiriesEntity } from "src/model/inquiry/entities/inquiry.entity";
-import { ReviewsVideoEntity } from "../entities/review.video.entity";
-import { InquiriesImageEntity } from "../../inquiry/entities/inquiry.image.entity";
-import { InquiriesVideoEntity } from "../../inquiry/entities/inquiry.video.entity";
+import { ReviewImageEntity } from "../entities/review.image.entity";
+import { InquiryEntity } from "src/model/inquiry/entities/inquiry.entity";
+import { ReviewVideoEntity } from "../entities/review.video.entity";
+import { InquiryImageEntity } from "../../inquiry/entities/inquiry.image.entity";
+import { InquiryVideoEntity } from "../../inquiry/entities/inquiry.video.entity";
 
 @Injectable()
 export class UploadService {
@@ -288,7 +288,7 @@ export class UploadService {
   }
 
   async deleteReviewImages(imageCookies: MediaUrlCookie[]): Promise<void> {
-    let image: ReviewsImageEntity;
+    let image: ReviewImageEntity;
 
     if (imageCookies.length >= 2) {
       for (const idx of imageCookies) {
@@ -308,7 +308,7 @@ export class UploadService {
   }
 
   async deleteReviewVideos(videoCookies: MediaUrlCookie[]): Promise<void> {
-    let video: ReviewsVideoEntity;
+    let video: ReviewVideoEntity;
 
     if (videoCookies.length >= 2) {
       for (const idx of videoCookies) {
@@ -328,7 +328,7 @@ export class UploadService {
   }
 
   async deleteInquiryImages(imageCookies: MediaUrlCookie[]): Promise<void> {
-    let image: InquiriesImageEntity;
+    let image: InquiryImageEntity;
 
     if (imageCookies.length >= 2) {
       for (const idx of imageCookies) {
@@ -348,7 +348,7 @@ export class UploadService {
   }
 
   async deleteInquiryVideos(videoCookies: MediaUrlCookie[]): Promise<void> {
-    let video: InquiriesVideoEntity;
+    let video: InquiryVideoEntity;
 
     if (videoCookies.length >= 2) {
       for (const idx of videoCookies) {

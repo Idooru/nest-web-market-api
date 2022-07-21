@@ -1,12 +1,12 @@
-import { ProductsEntity } from "src/model/product/entities/product.entity";
+import { ProductEntity } from "src/model/product/entities/product.entity";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { Column, Entity, OneToOne, JoinColumn } from "typeorm";
 
 @Entity("star_ratings")
 export class StarRatingEntity extends CommonEntity {
-  @OneToOne(() => ProductsEntity, (product) => product.StarRating)
+  @OneToOne(() => ProductEntity, (product) => product.StarRating)
   @JoinColumn({ name: "productId" })
-  Product: ProductsEntity;
+  Product: ProductEntity;
 
   @Column({ type: "float", default: 0 })
   averageScore: number;

@@ -1,12 +1,12 @@
 import { UserActivityEntity } from "./../entities/user.activity.entity";
 import { PickType } from "@nestjs/mapped-types";
 import { UserProfileEntity } from "../entities/user.profile.entity";
-import { UsersEntity } from "../entities/user.entity";
+import { UserEntity } from "../entities/user.entity";
 import { UserAuthEntity } from "../entities/user.auth.entity";
 import { IntersectionType } from "@nestjs/swagger";
 import { profile } from "console";
 
-export class ResponseUserCoreDto extends PickType(UsersEntity, [
+export class ResponseUserCoreDto extends PickType(UserEntity, [
   "id",
 ] as const) {}
 
@@ -45,7 +45,7 @@ export class ResponseUserDto extends IntersectionType(
   ResponsePartialTwoUserDto,
 ) {}
 
-export const UserReturnFilter = (user: UsersEntity): ResponseUserDto => ({
+export const UserReturnFilter = (user: UserEntity): ResponseUserDto => ({
   id: user.id,
   realname: user.Profile.realname,
   nickname: user.Auth.nickname,
