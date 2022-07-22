@@ -5,6 +5,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { UserEntity } from "src/model/user/entities/user.entity";
+import { UserActivityEntity } from "src/model/user/entities/user.activity.entity";
 
 @Injectable()
 export class ReviewRepository {
@@ -12,6 +13,23 @@ export class ReviewRepository {
     @InjectRepository(ReviewEntity)
     private readonly reviewRepository: Repository<ReviewEntity>,
   ) {}
+
+  async findAllReviewsWithUserActivity(
+    activity: UserActivityEntity,
+  ): Promise<ReviewEntity[]> {
+    const reviews = await this.reviewRepository
+      .createQueryBuilder("review")
+      .select(["UserActivity.id"])
+      .leftJoin("review.UserActivity", "activity")
+      .where("review.activity = :UserActivity", { UserActivity: activity })
+      .getMany();
+
+    if (!reviews.length) {
+      throw new NotFoundException(`${activity.id}로 작성된 리뷰가 없습니다.`);
+    }
+
+    return reviews;
+  }
 
   async createReviewSample(): Promise<ReviewEntity[]> {
     const review = this.reviewRepository.create();
@@ -66,11 +84,11 @@ export class ReviewRepository {
     return await this.reviewRepository.save(review);
   }
 
-  async findReviewWithReviewer(reviewer: UserEntity) {
+  async findReviewWithUserActivity(reviewer: UserEntity) {
     try {
       return await this.reviewRepository
-        .createQueryBuilder("review")
-        .where("review.reviewer = :reviewer", { reviewer })
+        .createQueryBuilder()
+        .where("reviewer = :reviewer", { reviewer })
         .getOneOrFail();
     } catch (err) {
       throw new NotFoundException("해당 리뷰어를 찾을 수 없습니다.");

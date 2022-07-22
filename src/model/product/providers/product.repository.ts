@@ -130,16 +130,14 @@ export class ProductRepository {
     }
   }
 
-  async findProductWhenUseStarRatingWithName(
-    name: string,
-  ): Promise<ProductEntity> {
+  async findProductWhenUseStarRatingWithId(id: string): Promise<ProductEntity> {
     try {
       return await this.productRepository
         .createQueryBuilder("product")
         .leftJoin("product.Image", "Image")
         .leftJoin("product.StarRating", "StarRating")
         .select(this.select.ProductReturnWithStarRating)
-        .where("product.name = :name", { name })
+        .where("product.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
       throw new NotFoundException("해당 상품 이름은 존재하지 않습니다.");

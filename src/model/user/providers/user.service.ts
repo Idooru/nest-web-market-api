@@ -69,7 +69,7 @@ export class UserService {
     await this.userRepository.patchUser(patchUserDto, hashed, userId);
 
     const jwtPaylaod: JwtPayload = {
-      id: userId,
+      userId,
       nickname: patchUserDto.nickname,
     };
 

@@ -23,7 +23,7 @@ export class AuthService {
 
   async refreshToken(user: JwtPayload): Promise<string> {
     const jwtPayload = {
-      id: user.id,
+      userId: user.userId,
       email: user.email,
       nickname: user.nickname,
       userType: user.userType,
@@ -47,7 +47,7 @@ export class AuthService {
     }
 
     const jwtPayload = {
-      id: user.id,
+      userId: user.id,
       email: user.Auth.email,
       nickname: user.Auth.nickname,
       userType: user.Auth.userType,

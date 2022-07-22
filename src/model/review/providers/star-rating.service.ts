@@ -15,11 +15,11 @@ export class StarRatingService {
 
   async putStarRating(
     userSelectScore: number,
-    productName: string,
+    productId: string,
   ): Promise<StarRatingEntity> {
     const product =
-      await this.productRepository.findProductWhenUseStarRatingWithName(
-        productName,
+      await this.productRepository.findProductWhenUseStarRatingWithId(
+        productId,
       );
     const starRatingId = product.StarRating.id;
     const starRating = await this.starRatingRepository.findStarRatingWithId(

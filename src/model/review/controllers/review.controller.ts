@@ -11,7 +11,7 @@ import {
 import { CreateReviewDto } from "./../dto/create-review.dto";
 import { IsLoginGuard } from "./../../../common/guards/is-login.guard";
 import { ReviewService } from "../providers/review.service";
-import { UpdateReviewDto } from "../dto/update-review.dto";
+import { ModifyReviewDto } from "../dto/modify-review.dto";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtPayload } from "src/common/interfaces/jwt.payload.interface";
 import { Cookies } from "src/common/decorators/cookies.decorator";
@@ -19,10 +19,8 @@ import { UseInterceptors, NotFoundException } from "@nestjs/common";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/json.clear.cookie.interceptor";
 import { JsonClearCookieInterface } from "src/common/interfaces/json.clear.cookie.interface";
 import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface";
-import { StarRatingService } from "../providers/star-rating.service";
 import { JsonGeneralInterface } from "src/common/interfaces/json.general.interface";
 import { JsonGeneralInterceptor } from "../../../common/interceptors/json.general.interceptor";
-import { Bundle } from "src/common/config/etc/providers/bundle";
 
 @Controller("review")
 export class ReviewController {
@@ -30,9 +28,9 @@ export class ReviewController {
 
   @UseInterceptors(JsonClearCookieInterceptor)
   @UseGuards(IsLoginGuard)
-  @Post("/product/:productName/image&video")
+  @Post("/product/:productId/image&video")
   async createReviewWithImageAndVideo(
-    @Param("productName") productName: string,
+    @Param("productId") productId: string,
     @Cookies("Review_Image_Url_COOKIES") reviewImgCookie: MediaUrlCookie[],
     @Cookies("Review_Video_Url_COOKIES") reviewVdoCookie: MediaUrlCookie[],
     @Body() createReviewDto: CreateReviewDto,
@@ -44,12 +42,12 @@ export class ReviewController {
       );
     }
 
-    await this.reviewService.starRating(createReviewDto, productName);
+    await this.reviewService.starRating(createReviewDto, productId);
 
     await this.reviewService.createReviewWithImageAndVideo({
       createReviewDto,
       jwtPayload,
-      productName,
+      productId,
       reviewImgCookie,
       reviewVdoCookie,
     });
@@ -63,9 +61,9 @@ export class ReviewController {
 
   @UseInterceptors(JsonClearCookieInterceptor)
   @UseGuards(IsLoginGuard)
-  @Post("/product/:productName/image")
+  @Post("/product/:productId/image")
   async createReviewWithImage(
-    @Param("productName") productName: string,
+    @Param("productId") productId: string,
     @Cookies("Review_Image_Url_COOKIES") reviewImgCookie: MediaUrlCookie[],
     @Body() createReviewDto: CreateReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
@@ -76,12 +74,12 @@ export class ReviewController {
       );
     }
 
-    await this.reviewService.starRating(createReviewDto, productName);
+    await this.reviewService.starRating(createReviewDto, productId);
 
     await this.reviewService.createReviewWithImage({
       createReviewDto,
       jwtPayload,
-      productName,
+      productId,
       reviewImgCookie,
     });
 
@@ -94,9 +92,9 @@ export class ReviewController {
 
   @UseInterceptors(JsonClearCookieInterceptor)
   @UseGuards(IsLoginGuard)
-  @Post("/product/:productName/video")
+  @Post("/product/:productId/video")
   async createReview(
-    @Param("productName") productName: string,
+    @Param("productId") productId: string,
     @Cookies("Review_Video_Url_COOKIES") reviewVdoCookie: MediaUrlCookie[],
     @Body() createReviewDto: CreateReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
@@ -107,12 +105,12 @@ export class ReviewController {
       );
     }
 
-    await this.reviewService.starRating(createReviewDto, productName);
+    await this.reviewService.starRating(createReviewDto, productId);
 
     await this.reviewService.createReviewWithVideo({
       createReviewDto,
       jwtPayload,
-      productName,
+      productId,
       reviewVdoCookie,
     });
 
@@ -125,23 +123,45 @@ export class ReviewController {
 
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
-  @Post("/product/:productName")
+  @Post("/product/:productId")
   async createReviewWithoutMedia(
-    @Param("productName") productName: string,
+    @Param("productId") productId: string,
     @Body() createReviewDto: CreateReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.reviewService.starRating(createReviewDto, productName);
+    await this.reviewService.starRating(createReviewDto, productId);
 
     await this.reviewService.createReviewWithoutMedia({
       createReviewDto,
       jwtPayload,
-      productName,
+      productId,
     });
 
     return {
       statusCode: 201,
       message: "리뷰를 생성하였습니다.",
     };
+  }
+
+  @UseInterceptors(JsonClearCookieInterceptor)
+  @UseGuards(IsLoginGuard)
+  @Patch("/product/:productId/review/:reviewId")
+  async modifyReveiwWithoutMedia(
+    @Param("productId") productId: string,
+    @Param("reviewId") reviewId: string,
+    @Body() modifyReviewDto: ModifyReviewDto,
+    @GetJWT() jwtPayload: JwtPayload,
+  ): Promise<void> {
+    await this.reviewService.starRating(modifyReviewDto, productId);
+    await this.reviewService.selfAuthForModifyReview(
+      reviewId,
+      jwtPayload.userId,
+    );
+
+    // await this.reviewService.modifyReviewWithoutMedia(
+    //   modifyReviewDto,
+    //   jwtPayload,
+    //   productId,
+    // );
   }
 }

@@ -58,7 +58,7 @@ export class UserController {
     return {
       statusCode: 200,
       message: "본인 정보를 가져옵니다.",
-      result: await this.userService.findSelfInfoWithId(jwtPayload.id),
+      result: await this.userService.findSelfInfoWithId(jwtPayload.userId),
     };
   }
 
@@ -114,7 +114,7 @@ export class UserController {
   ): Promise<JsonSendCookieInterface<string>> {
     const jwtToken = await this.userService.patchUserInfoMyself(
       patchUserDto,
-      jwtPayload.id,
+      jwtPayload.userId,
     );
 
     return {
@@ -131,7 +131,7 @@ export class UserController {
   async secession(
     @GetJWT() jwtPayload: JwtPayload,
   ): Promise<JsonClearCookieInterface> {
-    await this.userService.deleteUserWithId(jwtPayload.id);
+    await this.userService.deleteUserWithId(jwtPayload.userId);
 
     return {
       statusCode: 203,

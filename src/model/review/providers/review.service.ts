@@ -14,6 +14,7 @@ import { UploadRepository } from "src/model/upload/providers/upload.repository";
 import { StarRatingService } from "src/model/review/providers/star-rating.service";
 import { UserEntity } from "src/model/user/entities/user.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
+import { ModifyReviewDto } from "../dto/modify-review.dto";
 
 @Injectable()
 export class ReviewService {
@@ -26,22 +27,25 @@ export class ReviewService {
     private readonly promises: Promises,
   ) {}
 
-  async starRating(createReviewDto: CreateReviewDto, productName: string) {
-    const { userSelectScore } = createReviewDto;
+  async starRating(
+    reviewDto: CreateReviewDto | ModifyReviewDto,
+    productId: string,
+  ) {
+    const { userSelectScore } = reviewDto;
     const starRating = await this.starRatingService.putStarRating(
       userSelectScore,
-      productName,
+      productId,
     );
     await this.starRatingService.calculateRating(starRating);
   }
 
   async findUserAndProduct(
-    nickname: string,
-    productName: string,
+    userId: string,
+    productId: string,
   ): Promise<[UserEntity, ProductEntity]> {
     const findUserAndProduct = await Promise.allSettled([
-      this.userRepository.findUserWithNickName(nickname),
-      this.productRepository.findProductOneByName(productName),
+      this.userRepository.findUserWithId(userId),
+      this.productRepository.findProductOneById(productId),
     ]);
 
     const resultForUserAndProduct = this.promises.twoPromiseSettled(
@@ -53,22 +57,29 @@ export class ReviewService {
     return resultForUserAndProduct;
   }
 
+  async selfAuthForModifyReview(reviewId: string, userId: string) {
+    const { Activity } = await this.userRepository.findUserWithId(userId);
+
+    const reviews = await this.reviewRepository.findAllReviewsWithUserActivity(
+      Activity,
+    );
+
+    1;
+  }
+
   async createReviewWithImageAndVideo(
     createReviewDao: CreateReviewWithImageAndVideoDao,
   ): Promise<any> {
     const {
       createReviewDto,
       jwtPayload,
-      productName,
+      productId,
       reviewImgCookie,
       reviewVdoCookie,
     } = createReviewDao;
-    const { nickname } = jwtPayload;
+    const { userId } = jwtPayload;
 
-    const [user, product] = await this.findUserAndProduct(
-      nickname,
-      productName,
-    );
+    const [user, product] = await this.findUserAndProduct(userId, productId);
 
     const review = await this.reviewRepository.createReview(
       createReviewDto,
@@ -110,14 +121,11 @@ export class ReviewService {
   async createReviewWithImage(
     createReviewDao: CreateReviewWithImageDao,
   ): Promise<void> {
-    const { createReviewDto, jwtPayload, productName, reviewImgCookie } =
+    const { createReviewDto, jwtPayload, productId, reviewImgCookie } =
       createReviewDao;
-    const { nickname } = jwtPayload;
+    const { userId } = jwtPayload;
 
-    const [user, product] = await this.findUserAndProduct(
-      nickname,
-      productName,
-    );
+    const [user, product] = await this.findUserAndProduct(userId, productId);
 
     if (reviewImgCookie.length >= 2) {
       for (const idx of reviewImgCookie) {
@@ -153,14 +161,11 @@ export class ReviewService {
   async createReviewWithVideo(
     createReviewDao: CreateReviewWithVideoDao,
   ): Promise<void> {
-    const { createReviewDto, jwtPayload, productName, reviewVdoCookie } =
+    const { createReviewDto, jwtPayload, productId, reviewVdoCookie } =
       createReviewDao;
-    const { nickname } = jwtPayload;
+    const { userId } = jwtPayload;
 
-    const [user, product] = await this.findUserAndProduct(
-      nickname,
-      productName,
-    );
+    const [user, product] = await this.findUserAndProduct(userId, productId);
 
     if (reviewVdoCookie.length >= 2) {
       for (const idx of reviewVdoCookie) {
@@ -196,17 +201,16 @@ export class ReviewService {
   async createReviewWithoutMedia(
     createReviewDao: CreateReviewWithoutMediaDao,
   ): Promise<void> {
-    const { createReviewDto, jwtPayload, productName } = createReviewDao;
-    const { nickname } = jwtPayload;
+    const { createReviewDto, jwtPayload, productId } = createReviewDao;
+    const { userId } = jwtPayload;
 
-    const [user, product] = await this.findUserAndProduct(
-      nickname,
-      productName,
-    );
+    const [user, product] = await this.findUserAndProduct(userId, productId);
 
     await this.reviewRepository.createReview(createReviewDto, user, product);
     await this.userRepository.increaseReviewCount(user);
   }
+
+  async modifyReviewWithoutMedia() {}
 }
 
 // findAll() {
@@ -228,9 +232,9 @@ export class ReviewService {
 // async createReviewWithImage(
 //   createReviewDao: CreateReviewWithImageDao,
 // ): Promise<void> {
-//   const { createReviewDto, jwtPayload, productName, reviewImgCookie } =
+//   const { createReviewDto, jwtPayload, productId, reviewImgCookie } =
 //     createReviewDao;
-//   const { id } = jwtPayload;
+//   const { userId } = jwtPayload;
 
 //   const user = await this.userRepository.findUserWithId(id);
 //   const product = await this.productRepository.findProductOneByName(
