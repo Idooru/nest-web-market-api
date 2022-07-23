@@ -1,5 +1,4 @@
 import { Column, Entity, OneToMany, ManyToOne, JoinColumn } from "typeorm";
-import { UserEntity } from "./../../user/entities/user.entity";
 import { ProductEntity } from "./../../product/entities/product.entity";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { IsNotEmpty, IsString, IsEnum } from "class-validator";

@@ -9,12 +9,13 @@ import { ProductRepository } from "./../../product/providers/product.repository"
 import { Promises } from "../../../common/config/etc/providers/promises";
 import { UserRepository } from "../../user/providers/user.repository";
 import { ReviewRepository } from "./review.repository";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { UploadRepository } from "src/model/upload/providers/upload.repository";
 import { StarRatingService } from "src/model/review/providers/star-rating.service";
 import { UserEntity } from "src/model/user/entities/user.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { ModifyReviewDto } from "../dto/modify-review.dto";
+import { ReviewEntity } from "../entities/review.entity";
 
 @Injectable()
 export class ReviewService {
@@ -48,13 +49,11 @@ export class ReviewService {
       this.productRepository.findProductOneById(productId),
     ]);
 
-    const resultForUserAndProduct = this.promises.twoPromiseSettled(
+    return this.promises.twoPromiseSettled(
       findUserAndProduct[0],
       findUserAndProduct[1],
       "Find User And Product",
     );
-
-    return resultForUserAndProduct;
   }
 
   async selfAuthForModifyReview(reviewId: string, userId: string) {
@@ -64,7 +63,15 @@ export class ReviewService {
       Activity,
     );
 
-    1;
+    const review = reviews.find((idx) => idx.id === reviewId);
+
+    if (!review) {
+      throw new NotFoundException(
+        `해당 id(${reviewId})로 작성된 리뷰가 없습니다.`,
+      );
+    }
+
+    return review;
   }
 
   async createReviewWithImageAndVideo(
@@ -210,7 +217,10 @@ export class ReviewService {
     await this.userRepository.increaseReviewCount(user);
   }
 
-  async modifyReviewWithoutMedia() {}
+  async modifyReviewWithoutMedia(
+    modifyReviewDto: ModifyReviewDto,
+    review: ReviewEntity,
+  ) {}
 }
 
 // findAll() {

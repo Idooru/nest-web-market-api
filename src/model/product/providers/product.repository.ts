@@ -70,6 +70,7 @@ export class ProductRepository {
       .leftJoin("product.Image", "Image")
       .leftJoin("product.StarRating", "StarRating")
       .leftJoin("product.Review", "Review")
+      .leftJoin("Review.UserActivity", "UserActivity")
       .leftJoin("product.Inquiry", "Inquiry")
       .select(this.select.ProductsReturnProperty)
       .orderBy("product.createdAt", "DESC")
@@ -87,6 +88,7 @@ export class ProductRepository {
       .leftJoin("product.Image", "Image")
       .leftJoin("product.StarRating", "StarRating")
       .leftJoin("product.Review", "Review")
+      .leftJoin("Review.UserActivity", "UserActivity")
       .leftJoin("product.Inquiry", "Inquiry")
       .select(this.select.ProductsReturnProperty)
       .orderBy("product.createdAt", "ASC")
@@ -105,6 +107,9 @@ export class ProductRepository {
         .leftJoin("product.Image", "Image")
         .leftJoin("product.StarRating", "StarRating")
         .leftJoin("product.Review", "Review")
+        .leftJoin("Review.Image", "ReviewImage")
+        .leftJoin("Review.Video", "ReviewVideo")
+        .leftJoin("Review.UserActivity", "UserActivity")
         .leftJoin("product.Inquiry", "Inquiry")
         .select(this.select.ProductReturnProperty)
         .where("product.name = :name", { name })
@@ -121,6 +126,9 @@ export class ProductRepository {
         .leftJoin("product.Image", "Image")
         .leftJoin("product.StarRating", "StarRating")
         .leftJoin("product.Review", "Review")
+        .leftJoin("Review.Image", "ReviewImage")
+        .leftJoin("Review.Video", "ReviewVideo")
+        .leftJoin("Review.UserActivity", "UserActivity")
         .leftJoin("product.Inquiry", "Inquiry")
         .select(this.select.ProductReturnProperty)
         .where("product.id = :id", { id })
@@ -140,7 +148,7 @@ export class ProductRepository {
         .where("product.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
-      throw new NotFoundException("해당 상품 이름은 존재하지 않습니다.");
+      throw new NotFoundException("해당 상품 아이디는 존재하지 않습니다.");
     }
   }
 

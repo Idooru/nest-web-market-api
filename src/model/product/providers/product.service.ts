@@ -41,10 +41,16 @@ export class ProductService {
 
     await this.productRepository.checkProductNameToCreate(name);
 
-    const image = await this.uploadRepository.findProductImageWithUrl(
-      imageCookie.url,
+    const findImageAndStarRating = await Promise.allSettled([
+      this.uploadRepository.findProductImageWithUrl(imageCookie.url),
+      this.starRatingRepository.createStarRatingSample(),
+    ]);
+
+    const [image, starRating] = this.promises.twoPromiseSettled(
+      findImageAndStarRating[0],
+      findImageAndStarRating[1],
+      "Find Image And StarRating",
     );
-    const starRating = await this.starRatingRepository.createStarRatingSample();
 
     createProductDto.Image = image;
     createProductDto.StarRating = starRating;
@@ -58,18 +64,16 @@ export class ProductService {
     imageCookie: MediaUrlCookie,
   ): Promise<void> {
     const { name } = modifyProductDto;
-    const findProductAndImageId = await Promise.allSettled([
+    const findProductAndImage = await Promise.allSettled([
       this.productRepository.findProductOneById(productId),
       this.uploadRepository.findProductImageWithUrl(imageCookie.url),
     ]);
 
-    const findProductAndImageIdResult = this.promises.twoPromiseSettled(
-      findProductAndImageId[0],
-      findProductAndImageId[1],
+    const [product, image] = this.promises.twoPromiseSettled(
+      findProductAndImage[0],
+      findProductAndImage[1],
       "Find Product And ImageId",
     );
-
-    const [product, image] = findProductAndImageIdResult;
 
     await this.productRepository.checkProductNameToModify(name, product.name);
     const getImage = await this.uploadRepository.findProductImageWithUrl(

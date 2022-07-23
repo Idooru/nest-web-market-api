@@ -19,9 +19,8 @@ export class ReviewRepository {
   ): Promise<ReviewEntity[]> {
     const reviews = await this.reviewRepository
       .createQueryBuilder("review")
-      .select(["UserActivity.id"])
-      .leftJoin("review.UserActivity", "activity")
-      .where("review.activity = :UserActivity", { UserActivity: activity })
+      .leftJoinAndSelect("review.UserActivity", "activity")
+      .where("activity.id = :id", { id: activity.id })
       .getMany();
 
     if (!reviews.length) {

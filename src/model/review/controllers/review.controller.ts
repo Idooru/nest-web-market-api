@@ -21,10 +21,14 @@ import { JsonClearCookieInterface } from "src/common/interfaces/json.clear.cooki
 import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface";
 import { JsonGeneralInterface } from "src/common/interfaces/json.general.interface";
 import { JsonGeneralInterceptor } from "../../../common/interceptors/json.general.interceptor";
+import { Promises } from "../../../common/config/etc/providers/promises";
 
 @Controller("review")
 export class ReviewController {
-  constructor(private readonly reviewService: ReviewService) {}
+  constructor(
+    private readonly reviewService: ReviewService,
+    private readonly promises: Promises,
+  ) {}
 
   @UseInterceptors(JsonClearCookieInterceptor)
   @UseGuards(IsLoginGuard)
@@ -41,16 +45,22 @@ export class ReviewController {
         "이미지, 비디오 쿠키를 찾을 수 없습니다. 우선 사진과 동영상을 업로드 해주세요.",
       );
     }
+    const promise = await Promise.allSettled([
+      this.reviewService.starRating(createReviewDto, productId),
+      this.reviewService.createReviewWithImageAndVideo({
+        createReviewDto,
+        jwtPayload,
+        productId,
+        reviewImgCookie,
+        reviewVdoCookie,
+      }),
+    ]);
 
-    await this.reviewService.starRating(createReviewDto, productId);
-
-    await this.reviewService.createReviewWithImageAndVideo({
-      createReviewDto,
-      jwtPayload,
-      productId,
-      reviewImgCookie,
-      reviewVdoCookie,
-    });
+    this.promises.twoPromiseSettled(
+      promise[0],
+      promise[1],
+      "StarRating And Create Review With Image And Video",
+    );
 
     return {
       statusCode: 201,
@@ -74,14 +84,21 @@ export class ReviewController {
       );
     }
 
-    await this.reviewService.starRating(createReviewDto, productId);
+    const promise = await Promise.allSettled([
+      this.reviewService.starRating(createReviewDto, productId),
+      this.reviewService.createReviewWithImage({
+        createReviewDto,
+        jwtPayload,
+        productId,
+        reviewImgCookie,
+      }),
+    ]);
 
-    await this.reviewService.createReviewWithImage({
-      createReviewDto,
-      jwtPayload,
-      productId,
-      reviewImgCookie,
-    });
+    this.promises.twoPromiseSettled(
+      promise[0],
+      promise[1],
+      "StarRating And Create Review With Image",
+    );
 
     return {
       statusCode: 201,
@@ -104,15 +121,21 @@ export class ReviewController {
         "비디오 쿠키를 찾을 수 없습니다. 우선 동영상을 업로드 해주세요.",
       );
     }
+    const promise = await Promise.allSettled([
+      this.reviewService.starRating(createReviewDto, productId),
+      this.reviewService.createReviewWithVideo({
+        createReviewDto,
+        jwtPayload,
+        productId,
+        reviewVdoCookie,
+      }),
+    ]);
 
-    await this.reviewService.starRating(createReviewDto, productId);
-
-    await this.reviewService.createReviewWithVideo({
-      createReviewDto,
-      jwtPayload,
-      productId,
-      reviewVdoCookie,
-    });
+    this.promises.twoPromiseSettled(
+      promise[0],
+      promise[1],
+      "StarRating And Create Review With Video",
+    );
 
     return {
       statusCode: 201,
@@ -129,13 +152,20 @@ export class ReviewController {
     @Body() createReviewDto: CreateReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.reviewService.starRating(createReviewDto, productId);
+    const promise = await Promise.allSettled([
+      this.reviewService.starRating(createReviewDto, productId),
+      this.reviewService.createReviewWithoutMedia({
+        createReviewDto,
+        jwtPayload,
+        productId,
+      }),
+    ]);
 
-    await this.reviewService.createReviewWithoutMedia({
-      createReviewDto,
-      jwtPayload,
-      productId,
-    });
+    this.promises.twoPromiseSettled(
+      promise[0],
+      promise[1],
+      "StarRating And Create Review Without Media",
+    );
 
     return {
       statusCode: 201,
@@ -152,16 +182,17 @@ export class ReviewController {
     @Body() modifyReviewDto: ModifyReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
   ): Promise<void> {
-    await this.reviewService.starRating(modifyReviewDto, productId);
-    await this.reviewService.selfAuthForModifyReview(
-      reviewId,
-      jwtPayload.userId,
+    const promise = await Promise.allSettled([
+      this.reviewService.starRating(modifyReviewDto, productId),
+      this.reviewService.selfAuthForModifyReview(reviewId, jwtPayload.userId),
+    ]);
+
+    const [, review] = this.promises.twoPromiseSettled(
+      promise[0],
+      promise[1],
+      "StarRating And Self Auth",
     );
 
-    // await this.reviewService.modifyReviewWithoutMedia(
-    //   modifyReviewDto,
-    //   jwtPayload,
-    //   productId,
-    // );
+    await this.reviewService.modifyReviewWithoutMedia(modifyReviewDto, review);
   }
 }

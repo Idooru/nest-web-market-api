@@ -70,13 +70,11 @@ export class AuthService {
       this.authRepositry.findUserWithPhoneNumber(phonenumber),
     ]);
 
-    const resultForCheckUserColumn = this.promises.twoPromiseSettled(
+    const [realNameResult, phoneNumberResult] = this.promises.twoPromiseSettled(
       checkUserColumn[0],
       checkUserColumn[1],
       "Check User Column For Find Email",
     );
-
-    const [realNameResult, phoneNumberResult] = resultForCheckUserColumn;
 
     if (!(realNameResult.id === phoneNumberResult.id)) {
       throw new UnauthorizedException(

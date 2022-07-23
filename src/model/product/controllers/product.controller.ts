@@ -14,14 +14,12 @@ import {
   ResponseProductDto,
   ResponseProductsDto,
 } from "../dto/response_product.dto";
-import { JwtPayload } from "../../../common/interfaces/jwt.payload.interface";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
 import { ProductService } from "../providers/product.service";
 import { IsAdminGuard } from "../../../common/guards/is-admin.guard";
 import { IsLoginGuard } from "../../../common/guards/is-login.guard";
 import { Cookie } from "src/common/decorators/cookie.decorator";
-import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JsonGeneralInterceptor } from "src/common/interceptors/json.general.interceptor";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/json.clear.cookie.interceptor";
 import { JsonGeneralInterface } from "src/common/interfaces/json.general.interface";
@@ -108,7 +106,7 @@ export class ProductController {
   @UseInterceptors(JsonClearCookieInterceptor)
   @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)
-  @Patch("/id/:id")
+  @Patch("/:id")
   async modifyProduct(
     @Param("id") productId: string,
     @Body() modifyProductDto: ModifyProductDto,
@@ -137,7 +135,7 @@ export class ProductController {
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)
-  @Delete("/id/:id")
+  @Delete("/:id")
   async removeProduct(
     @Param("id") productId: string,
   ): Promise<JsonGeneralInterface<void>> {

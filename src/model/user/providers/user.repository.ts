@@ -189,42 +189,40 @@ export class UserRepository {
       this.userActivityRepository.save({ ...userActivityColumn }),
     ]);
 
-    const saveUserColumnResult = this.promises.threePromiseSettled(
-      saveUserColumn[0],
-      saveUserColumn[1],
-      saveUserColumn[2],
-      "Save User Column For Register",
-    );
+    const [userProfile, userAuth, userActivity] =
+      this.promises.threePromiseSettled(
+        saveUserColumn[0],
+        saveUserColumn[1],
+        saveUserColumn[2],
+        "Save User Column For Register",
+      );
 
-    const [userProfile, userAuth, userActivity] = saveUserColumnResult;
     const profileId = userProfile.id;
     const authId = userAuth.id;
     const activityId = userActivity.id;
 
     const findUserObject = await Promise.allSettled([
       this.userProfileRepository
-        .createQueryBuilder("Profile")
-        .where("Profile.id = :id", { id: profileId })
+        .createQueryBuilder("profile")
+        .where("profile.id = :id", { id: profileId })
         .getOne(),
       this.userAuthRepository
-        .createQueryBuilder("Auth")
-        .where("Auth.id = :id", { id: authId })
+        .createQueryBuilder("auth")
+        .where("auth.id = :id", { id: authId })
         .getOne(),
       this.userActivityRepository
-        .createQueryBuilder("Activity")
-        .where("Activity.id = :id", { id: activityId })
+        .createQueryBuilder("activity")
+        .where("activity.id = :id", { id: activityId })
         .getOne(),
     ]);
 
-    const findUserObjectResult = this.promises.threePromiseSettled(
-      findUserObject[0],
-      findUserObject[1],
-      findUserObject[2],
-      "Find User Object For Register",
-    );
-
     const [userProfileObject, userAuthObject, userActivityObject] =
-      findUserObjectResult;
+      this.promises.threePromiseSettled(
+        findUserObject[0],
+        findUserObject[1],
+        findUserObject[2],
+        "Find User Object For Register",
+      );
 
     const createUserDto: CreateUserDto = {
       Profile: userProfileObject,
