@@ -129,3 +129,13 @@ Nest is [MIT licensed](LICENSE).
     아이디가 저장된다. 이처럼 A를 수정하면서 B까지 수정할 일이 생길 때 (예를 들면
     상품 생성후 같이 생성된 이미지를 수정할 시) 이전에 있던 B의 외래키 컬럼에는 A의
     아이디가 남아있게 된다. 따라서 남아 있던 A의 아이디를 지우지 않고 B의 로우에 값을 추가하게 될 때 기존에 있던 B의 외래키(A의 id)가 두 개가 되면서 에러가 발생하게 된다. 엑티브 레코드(active record) 방식을 사용하여 로우를 수정하는 방식이 아닌 아예 새로운 객체를 만들고 저장하는 방식은 위의 상황에 유의한다. 리파지토리 패턴으로 update혹은 쿼리빌더를 사용해 수정할 경우, 로우를 새로 생성하는 방식은 아니므로 예외이다.
+
+12. Promise.AllSettled안에 한번 더 Promise.AllSettled를 호출하게 될 때 첫  
+    번째 Promise.AllSettled가 호출 될 때 에러와 두 번째 Promise.AllSettled가 호출 될 때 에러가 혼합 되어 exception filter에 나타나게 된다. 따라서 이를
+    Promise.AllSettled를 한 번만 사용할 때와 위처럼 중첩되게 사용할 때를 구분하여야 한다. 만약 중첩되게 사용할 때 에러가 발생하게 된다면 err.message 배열 인덱스 중 reason 프로퍼티에 InternalServerErrorException으로 나타나게 될 것이다. reason 프로퍼티에 InternalServerErrorException 유무를
+    구별하는것이 Promise.AllSettled를 한번 사용하였는지 아니면 중첩해서 사용하였
+    는지를 구별짓는 방법이 될것이다.
+    문제는 따로 메서드를 만든 후, err.message배열에서 배열 메서드를 사용한 후 idx 매개변수를 이용해 접근해보려 했지만 idx 변수에 타입을 주지 않으면 idx.reason에 접근이 불가능해진다. idx에 정확한 타입을 주어야 할거 같다.
+
+13. cascade
+14. UserEntity에서 원하는 정보만 쿼리빌더를 사용해서 빼오기

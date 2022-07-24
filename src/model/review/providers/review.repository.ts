@@ -6,6 +6,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { UserEntity } from "src/model/user/entities/user.entity";
 import { UserActivityEntity } from "src/model/user/entities/user.activity.entity";
+import { ModifyReviewDto } from "../dto/modify-review.dto";
 
 @Injectable()
 export class ReviewRepository {
@@ -28,6 +29,17 @@ export class ReviewRepository {
     }
 
     return reviews;
+  }
+
+  async findReviewWithUserActivity(reviewer: UserEntity) {
+    try {
+      return await this.reviewRepository
+        .createQueryBuilder()
+        .where("reviewer = :reviewer", { reviewer })
+        .getOneOrFail();
+    } catch (err) {
+      throw new NotFoundException("해당 리뷰어를 찾을 수 없습니다.");
+    }
   }
 
   async createReviewSample(): Promise<ReviewEntity[]> {
@@ -67,7 +79,7 @@ export class ReviewRepository {
     return await this.reviewRepository.save(review);
   }
 
-  async createReview(
+  async createReviewWithoutMedia(
     createReviewDto: CreateReviewDto,
     user: UserEntity,
     product: ProductEntity,
@@ -83,14 +95,13 @@ export class ReviewRepository {
     return await this.reviewRepository.save(review);
   }
 
-  async findReviewWithUserActivity(reviewer: UserEntity) {
-    try {
-      return await this.reviewRepository
-        .createQueryBuilder()
-        .where("reviewer = :reviewer", { reviewer })
-        .getOneOrFail();
-    } catch (err) {
-      throw new NotFoundException("해당 리뷰어를 찾을 수 없습니다.");
-    }
+  async modifyReviewWithoutMedia(
+    modifyReviewDto: ModifyReviewDto,
+    review: ReviewEntity,
+  ): Promise<void> {
+    review.reviews = modifyReviewDto.reviews;
+    review.userSelectScore = modifyReviewDto.userSelectScore;
+
+    await this.reviewRepository.save(review);
   }
 }

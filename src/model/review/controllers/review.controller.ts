@@ -110,7 +110,7 @@ export class ReviewController {
   @UseInterceptors(JsonClearCookieInterceptor)
   @UseGuards(IsLoginGuard)
   @Post("/product/:productId/video")
-  async createReview(
+  async createReviewWithVideo(
     @Param("productId") productId: string,
     @Cookies("Review_Video_Url_COOKIES") reviewVdoCookie: MediaUrlCookie[],
     @Body() createReviewDto: CreateReviewDto,
@@ -173,7 +173,7 @@ export class ReviewController {
     };
   }
 
-  @UseInterceptors(JsonClearCookieInterceptor)
+  @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/product/:productId/review/:reviewId")
   async modifyReveiwWithoutMedia(
@@ -181,10 +181,10 @@ export class ReviewController {
     @Param("reviewId") reviewId: string,
     @Body() modifyReviewDto: ModifyReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
-  ): Promise<void> {
+  ): Promise<JsonGeneralInterface<void>> {
     const promise = await Promise.allSettled([
       this.reviewService.starRating(modifyReviewDto, productId),
-      this.reviewService.selfAuthForModifyReview(reviewId, jwtPayload.userId),
+      this.reviewService.distinguishOwnReview(reviewId, jwtPayload.userId),
     ]);
 
     const [, review] = this.promises.twoPromiseSettled(
@@ -194,5 +194,10 @@ export class ReviewController {
     );
 
     await this.reviewService.modifyReviewWithoutMedia(modifyReviewDto, review);
+
+    return {
+      statusCode: 200,
+      message: "리뷰를 수정하였습니다.",
+    };
   }
 }

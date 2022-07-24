@@ -56,7 +56,7 @@ export class ReviewService {
     );
   }
 
-  async selfAuthForModifyReview(reviewId: string, userId: string) {
+  async distinguishOwnReview(reviewId: string, userId: string) {
     const { Activity } = await this.userRepository.findUserWithId(userId);
 
     const reviews = await this.reviewRepository.findAllReviewsWithUserActivity(
@@ -88,7 +88,7 @@ export class ReviewService {
 
     const [user, product] = await this.findUserAndProduct(userId, productId);
 
-    const review = await this.reviewRepository.createReview(
+    const review = await this.reviewRepository.createReviewWithoutMedia(
       createReviewDto,
       user,
       product,
@@ -131,6 +131,7 @@ export class ReviewService {
     const { createReviewDto, jwtPayload, productId, reviewImgCookie } =
       createReviewDao;
     const { userId } = jwtPayload;
+    createReviewDto.Image = [];
 
     const [user, product] = await this.findUserAndProduct(userId, productId);
 
@@ -139,28 +140,21 @@ export class ReviewService {
         const image = await this.uploadRepository.findReviewImageWithUrl(
           idx[1],
         );
-
-        createReviewDto.Image = [image];
-
-        await this.reviewRepository.createReviewWithImage(
-          createReviewDto,
-          user,
-          product,
-        );
+        createReviewDto.Image.push(image);
       }
     } else {
       const image = await this.uploadRepository.findReviewImageWithUrl(
         reviewImgCookie[0][1],
       );
 
-      createReviewDto.Image = [image];
-
-      await this.reviewRepository.createReviewWithImage(
-        createReviewDto,
-        user,
-        product,
-      );
+      createReviewDto.Image.push(image);
     }
+
+    await this.reviewRepository.createReviewWithImage(
+      createReviewDto,
+      user,
+      product,
+    );
 
     await this.userRepository.increaseReviewCount(user);
   }
@@ -171,6 +165,7 @@ export class ReviewService {
     const { createReviewDto, jwtPayload, productId, reviewVdoCookie } =
       createReviewDao;
     const { userId } = jwtPayload;
+    createReviewDto.Video = [];
 
     const [user, product] = await this.findUserAndProduct(userId, productId);
 
@@ -180,27 +175,21 @@ export class ReviewService {
           idx[1],
         );
 
-        createReviewDto.Video = [video];
-
-        await this.reviewRepository.createReviewWithVideo(
-          createReviewDto,
-          user,
-          product,
-        );
+        createReviewDto.Video.push(video);
       }
     } else {
       const video = await this.uploadRepository.findReviewVideoWithUrl(
         reviewVdoCookie[0][1],
       );
 
-      createReviewDto.Video = [video];
-
-      await this.reviewRepository.createReviewWithVideo(
-        createReviewDto,
-        user,
-        product,
-      );
+      createReviewDto.Video.push(video);
     }
+
+    await this.reviewRepository.createReviewWithVideo(
+      createReviewDto,
+      user,
+      product,
+    );
 
     await this.userRepository.increaseReviewCount(user);
   }
@@ -213,14 +202,23 @@ export class ReviewService {
 
     const [user, product] = await this.findUserAndProduct(userId, productId);
 
-    await this.reviewRepository.createReview(createReviewDto, user, product);
+    await this.reviewRepository.createReviewWithoutMedia(
+      createReviewDto,
+      user,
+      product,
+    );
     await this.userRepository.increaseReviewCount(user);
   }
 
   async modifyReviewWithoutMedia(
     modifyReviewDto: ModifyReviewDto,
     review: ReviewEntity,
-  ) {}
+  ) {
+    await this.reviewRepository.modifyReviewWithoutMedia(
+      modifyReviewDto,
+      review,
+    );
+  }
 }
 
 // findAll() {
@@ -251,7 +249,7 @@ export class ReviewService {
 //     productName,
 //   );
 
-//   const review = await this.reviewRepository.createReview(
+//   const review = await this.reviewRepository.createReviewWithoutMedia(
 //     createReviewDto,
 //     user,
 //     product,

@@ -1,5 +1,6 @@
 export class HttpError {
   statusCode: number;
-  message: string[] | PromiseRejectedResult[];
+  message: Array<string>;
   error: string;
 }
+// string[] | PromiseRejectedResult[]
