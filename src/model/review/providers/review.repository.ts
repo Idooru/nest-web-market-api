@@ -31,7 +31,7 @@ export class ReviewRepository {
     return reviews;
   }
 
-  async findReviewWithUserActivity(reviewer: UserEntity) {
+  async findReviewWithUserActivity(reviewer: UserActivityEntity) {
     try {
       return await this.reviewRepository
         .createQueryBuilder()
@@ -45,6 +45,23 @@ export class ReviewRepository {
   async createReviewSample(): Promise<ReviewEntity[]> {
     const review = this.reviewRepository.create();
     return [await this.reviewRepository.save(review)];
+  }
+
+  async createReviewWithImageAndVideo(
+    createReviewDto: CreateReviewDto,
+    user: UserEntity,
+    product: ProductEntity,
+  ) {
+    const review = this.reviewRepository.create();
+
+    review.reviews = createReviewDto.reviews;
+    review.userSelectScore = createReviewDto.userSelectScore;
+    review.Image = createReviewDto.Image;
+    review.Video = createReviewDto.Video;
+    review.Product = product;
+    review.UserActivity = user.Activity;
+
+    return await this.reviewRepository.save(review);
   }
 
   async createReviewWithImage(

@@ -1,13 +1,13 @@
 import {
   CreateReviewDto,
-  CreateReviewWithImageAndVideoDao,
-  CreateReviewWithImageDao,
-  CreateReviewWithoutMediaDao,
-  CreateReviewWithVideoDao,
+  CreateReviewWithImageAndVideoDto,
+  CreateReviewWithImageDto,
+  CreateReviewWithoutMediaDto,
+  CreateReviewWithVideoDto,
 } from "./create-review.dto";
 
 export class ModifyReviewDto extends CreateReviewDto {}
-export class ModifyReviewWithImageAndVideoDao extends CreateReviewWithImageAndVideoDao {}
-export class ModifyReviewWithImageDao extends CreateReviewWithImageDao {}
-export class ModifyReviewWithVideoDao extends CreateReviewWithVideoDao {}
-export class ModifyReviewWithoutMediaDao extends CreateReviewWithoutMediaDao {}
+export class ModifyReviewWithImageAndVideoDao extends CreateReviewWithImageAndVideoDto {}
+export class ModifyReviewWithImageDao extends CreateReviewWithImageDto {}
+export class ModifyReviewWithVideoDao extends CreateReviewWithVideoDto {}
+export class ModifyReviewWithoutMediaDao extends CreateReviewWithoutMediaDto {}

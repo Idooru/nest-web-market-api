@@ -1,8 +1,8 @@
 import {
-  CreateReviewWithImageAndVideoDao,
-  CreateReviewWithoutMediaDao,
-  CreateReviewWithImageDao,
-  CreateReviewWithVideoDao,
+  CreateReviewWithImageAndVideoDto,
+  CreateReviewWithoutMediaDto,
+  CreateReviewWithImageDto,
+  CreateReviewWithVideoDto,
   CreateReviewDto,
 } from "../dto/create-review.dto";
 import { ProductRepository } from "./../../product/providers/product.repository";
@@ -28,14 +28,29 @@ export class ReviewService {
     private readonly promises: Promises,
   ) {}
 
-  async starRating(
-    reviewDto: CreateReviewDto | ModifyReviewDto,
+  async increaeStarRating(
+    createReviewDto: CreateReviewDto,
     productId: string,
-  ) {
-    const { userSelectScore } = reviewDto;
-    const starRating = await this.starRatingService.putStarRating(
+  ): Promise<void> {
+    const { userSelectScore } = createReviewDto;
+    const starRating = await this.starRatingService.increateStarRating(
       userSelectScore,
       productId,
+    );
+    await this.starRatingService.calculateRating(starRating);
+  }
+
+  async modifyStarRating(
+    modifyReviewDto: ModifyReviewDto,
+    productId: string,
+    review: ReviewEntity,
+  ): Promise<void> {
+    const { userSelectScore } = modifyReviewDto;
+
+    const starRating = await this.starRatingService.modifyStarRating(
+      userSelectScore,
+      productId,
+      review,
     );
     await this.starRatingService.calculateRating(starRating);
   }
@@ -75,7 +90,7 @@ export class ReviewService {
   }
 
   async createReviewWithImageAndVideo(
-    createReviewDao: CreateReviewWithImageAndVideoDao,
+    createReviewDao: CreateReviewWithImageAndVideoDto,
   ): Promise<any> {
     const {
       createReviewDto,
@@ -85,27 +100,23 @@ export class ReviewService {
       reviewVdoCookie,
     } = createReviewDao;
     const { userId } = jwtPayload;
+    createReviewDto.Image = [];
+    createReviewDto.Video = [];
 
     const [user, product] = await this.findUserAndProduct(userId, productId);
-
-    const review = await this.reviewRepository.createReviewWithoutMedia(
-      createReviewDto,
-      user,
-      product,
-    );
 
     if (reviewImgCookie.length >= 2) {
       for (const idx of reviewImgCookie) {
         const image = await this.uploadRepository.findReviewImageWithUrl(
           idx[1],
         );
-        await this.uploadRepository.insertImageOnReview(image.id, review);
+        createReviewDto.Image.push(image);
       }
     } else {
       const image = await this.uploadRepository.findReviewImageWithUrl(
         reviewImgCookie[0][1],
       );
-      await this.uploadRepository.insertImageOnReview(image.id, review);
+      createReviewDto.Image.push(image);
     }
 
     if (reviewVdoCookie.length >= 2) {
@@ -113,20 +124,24 @@ export class ReviewService {
         const video = await this.uploadRepository.findReviewVideoWithUrl(
           idx[1],
         );
-        await this.uploadRepository.insertVideoOnReview(video.id, review);
+        createReviewDto.Video.push(video);
       }
     } else {
       const video = await this.uploadRepository.findReviewVideoWithUrl(
         reviewVdoCookie[0][1],
       );
-      await this.uploadRepository.insertVideoOnReview(video.id, review);
+      createReviewDto.Video.push(video);
     }
 
-    await this.userRepository.increaseReviewCount(user);
+    await this.reviewRepository.createReviewWithImageAndVideo(
+      createReviewDto,
+      user,
+      product,
+    );
   }
 
   async createReviewWithImage(
-    createReviewDao: CreateReviewWithImageDao,
+    createReviewDao: CreateReviewWithImageDto,
   ): Promise<void> {
     const { createReviewDto, jwtPayload, productId, reviewImgCookie } =
       createReviewDao;
@@ -160,7 +175,7 @@ export class ReviewService {
   }
 
   async createReviewWithVideo(
-    createReviewDao: CreateReviewWithVideoDao,
+    createReviewDao: CreateReviewWithVideoDto,
   ): Promise<void> {
     const { createReviewDto, jwtPayload, productId, reviewVdoCookie } =
       createReviewDao;
@@ -195,7 +210,7 @@ export class ReviewService {
   }
 
   async createReviewWithoutMedia(
-    createReviewDao: CreateReviewWithoutMediaDao,
+    createReviewDao: CreateReviewWithoutMediaDto,
   ): Promise<void> {
     const { createReviewDto, jwtPayload, productId } = createReviewDao;
     const { userId } = jwtPayload;
@@ -238,7 +253,7 @@ export class ReviewService {
 // }
 
 // async createReviewWithImage(
-//   createReviewDao: CreateReviewWithImageDao,
+//   createReviewDao: CreateReviewWithImageDto,
 // ): Promise<void> {
 //   const { createReviewDto, jwtPayload, productId, reviewImgCookie } =
 //     createReviewDao;

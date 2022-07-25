@@ -19,7 +19,7 @@ export class AllExceptionFilter implements ExceptionFilter {
   // }
 
   // 프로미스 처리 중 프로미스 처리에 발생한 에러
-  // if (err.error.includes("Errors")) {
+  // if (err.error.includes("Errors") && this.findPromiseErrorInsidePromise()) {
   //   return res
   //     .status(err.statusCode)
   //     .setHeader("X-Powered-By", "")

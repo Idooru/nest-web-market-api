@@ -48,10 +48,10 @@ export const ReturnPropertyWithSelect = {
     "product.type",
     "product.description",
     "Image.url",
+    "StarRating.id",
     "StarRating.averageScore",
     "product.createdAt",
     "product.updatedAt",
-    "StarRating.id",
   ],
   UserInformationReturnProperty: [
     "Profile.realname",

@@ -4,6 +4,7 @@ import { StarRatingRepository } from "./star-rating.repository";
 import { StarRatingEntity } from "./../entities/star-rating.entity";
 import { ReviewRepository } from "./review.repository";
 import { ProductEntity } from "src/model/product/entities/product.entity";
+import { ReviewEntity } from "../entities/review.entity";
 
 @Injectable()
 export class StarRatingService {
@@ -13,7 +14,7 @@ export class StarRatingService {
     private readonly starRatingRepository: StarRatingRepository,
   ) {}
 
-  async putStarRating(
+  async increateStarRating(
     userSelectScore: number,
     productId: string,
   ): Promise<StarRatingEntity> {
@@ -25,9 +26,32 @@ export class StarRatingService {
     const starRating = await this.starRatingRepository.findStarRatingWithId(
       starRatingId,
     );
-    this.starRatingRepository.starRatingIncreaseAndSum(
+    this.starRatingRepository.increaseStarRatingAndSum(
       starRating,
       userSelectScore,
+    );
+    return starRating;
+  }
+
+  async modifyStarRating(
+    userSelectScore: number,
+    productId: string,
+    review: ReviewEntity,
+  ): Promise<StarRatingEntity> {
+    const product =
+      await this.productRepository.findProductWhenUseStarRatingWithId(
+        productId,
+      );
+
+    const starRatingId = product.StarRating.id;
+    const starRating = await this.starRatingRepository.findStarRatingWithId(
+      starRatingId,
+    );
+
+    this.starRatingRepository.modifyStarRating(
+      starRating,
+      userSelectScore,
+      review,
     );
     return starRating;
   }

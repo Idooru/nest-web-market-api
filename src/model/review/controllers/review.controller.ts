@@ -46,7 +46,7 @@ export class ReviewController {
       );
     }
     const promise = await Promise.allSettled([
-      this.reviewService.starRating(createReviewDto, productId),
+      this.reviewService.increaeStarRating(createReviewDto, productId),
       this.reviewService.createReviewWithImageAndVideo({
         createReviewDto,
         jwtPayload,
@@ -85,7 +85,7 @@ export class ReviewController {
     }
 
     const promise = await Promise.allSettled([
-      this.reviewService.starRating(createReviewDto, productId),
+      this.reviewService.increaeStarRating(createReviewDto, productId),
       this.reviewService.createReviewWithImage({
         createReviewDto,
         jwtPayload,
@@ -122,7 +122,7 @@ export class ReviewController {
       );
     }
     const promise = await Promise.allSettled([
-      this.reviewService.starRating(createReviewDto, productId),
+      this.reviewService.increaeStarRating(createReviewDto, productId),
       this.reviewService.createReviewWithVideo({
         createReviewDto,
         jwtPayload,
@@ -153,7 +153,7 @@ export class ReviewController {
     @GetJWT() jwtPayload: JwtPayload,
   ): Promise<JsonGeneralInterface<void>> {
     const promise = await Promise.allSettled([
-      this.reviewService.starRating(createReviewDto, productId),
+      this.reviewService.increaeStarRating(createReviewDto, productId),
       this.reviewService.createReviewWithoutMedia({
         createReviewDto,
         jwtPayload,
@@ -182,15 +182,15 @@ export class ReviewController {
     @Body() modifyReviewDto: ModifyReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    const promise = await Promise.allSettled([
-      this.reviewService.starRating(modifyReviewDto, productId),
-      this.reviewService.distinguishOwnReview(reviewId, jwtPayload.userId),
-    ]);
+    const review = await this.reviewService.distinguishOwnReview(
+      reviewId,
+      jwtPayload.userId,
+    );
 
-    const [, review] = this.promises.twoPromiseSettled(
-      promise[0],
-      promise[1],
-      "StarRating And Self Auth",
+    await this.reviewService.modifyStarRating(
+      modifyReviewDto,
+      productId,
+      review,
     );
 
     await this.reviewService.modifyReviewWithoutMedia(modifyReviewDto, review);
