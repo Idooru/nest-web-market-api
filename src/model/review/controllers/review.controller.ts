@@ -42,7 +42,7 @@ export class ReviewController {
   ): Promise<JsonClearCookieInterface> {
     if (!reviewImgCookie.length || !reviewVdoCookie.length) {
       throw new NotFoundException(
-        "이미지, 비디오 쿠키를 찾을 수 없습니다. 우선 사진과 동영상을 업로드 해주세요.",
+        "이미지, 비디오 쿠키가 동시에 준비되어 있어야 합니다.",
       );
     }
     const promise = await Promise.allSettled([
@@ -173,6 +173,138 @@ export class ReviewController {
     };
   }
 
+  @UseInterceptors(JsonClearCookieInterceptor)
+  @UseGuards(IsLoginGuard)
+  @Patch("/product/:productId/review/:reviewId")
+  async modifyReviewWithImageAndVideo(
+    @Param("productId") productId: string,
+    @Param("reviewId") reviewId: string,
+    @Cookies("Review_Image_Url_COOKIES")
+    reviewImgCookie: MediaUrlCookie[],
+    @Cookies("Review_Video_Url_COOKIES")
+    reviewVdoCookie: MediaUrlCookie[],
+    @Body() modifyReviewDto: ModifyReviewDto,
+    @GetJWT() jwtPayload: JwtPayload,
+  ) {
+    if (!reviewImgCookie.length || !reviewVdoCookie.length) {
+      throw new NotFoundException(
+        "이미지, 비디오 쿠키가 동시에 준비되어 있어야 합니다.",
+      );
+    }
+
+    const review = await this.reviewService.distinguishOwnReview(
+      reviewId,
+      jwtPayload.userId,
+    );
+
+    const promise = await Promise.allSettled([
+      this.reviewService.modifyStarRating(modifyReviewDto, productId, review),
+      this.reviewService.modifyReviewWithImageAndVideo({
+        modifyReviewDto,
+        review,
+        reviewImgCookie,
+        reviewVdoCookie,
+      }),
+    ]);
+
+    this.promises.twoPromiseSettled(
+      promise[0],
+      promise[1],
+      "Modify Star Rating And Review with Image And Video",
+    );
+
+    return {
+      status: 200,
+      message: "리뷰를 수정하였습니다.",
+    };
+  }
+
+  @UseInterceptors(JsonClearCookieInterceptor)
+  @UseGuards(IsLoginGuard)
+  @Patch("/product/:productId/review/:reviewId")
+  async modifyReviewWithImage(
+    @Param("productId") productId: string,
+    @Param("reviewId") reviewId: string,
+    @Cookies("Review_Video_Url_COOKIES")
+    reviewImgCookie: MediaUrlCookie[],
+    @Body() modifyReviewDto: ModifyReviewDto,
+    @GetJWT() jwtPayload: JwtPayload,
+  ) {
+    if (!reviewImgCookie.length) {
+      throw new NotFoundException(
+        "이미지 쿠키를 찾을 수 없습니다. 우선 이미지를 업로드 해주세요.",
+      );
+    }
+
+    const review = await this.reviewService.distinguishOwnReview(
+      reviewId,
+      jwtPayload.userId,
+    );
+
+    const promise = await Promise.allSettled([
+      this.reviewService.modifyStarRating(modifyReviewDto, productId, review),
+      this.reviewService.modifyReviewWithImage({
+        modifyReviewDto,
+        review,
+        reviewImgCookie,
+      }),
+    ]);
+
+    this.promises.twoPromiseSettled(
+      promise[0],
+      promise[1],
+      "Modify Star Rating And Review with Image",
+    );
+
+    return {
+      status: 200,
+      message: "리뷰를 수정하였습니다.",
+    };
+  }
+
+  @UseInterceptors(JsonClearCookieInterceptor)
+  @UseGuards(IsLoginGuard)
+  @Patch("/product/:productId/review/:reviewId")
+  async modifyReviewWithVideo(
+    @Param("productId") productId: string,
+    @Param("reviewId") reviewId: string,
+    @Cookies("Review_Video_Url_COOKIES")
+    reviewVdoCookie: MediaUrlCookie[],
+    @Body() modifyReviewDto: ModifyReviewDto,
+    @GetJWT() jwtPayload: JwtPayload,
+  ) {
+    if (!reviewVdoCookie.length) {
+      throw new NotFoundException(
+        "비디오 쿠키를 찾을 수 없습니다. 우선 동영상을 업로드 해주세요.",
+      );
+    }
+
+    const review = await this.reviewService.distinguishOwnReview(
+      reviewId,
+      jwtPayload.userId,
+    );
+
+    const promise = await Promise.allSettled([
+      this.reviewService.modifyStarRating(modifyReviewDto, productId, review),
+      this.reviewService.modifyReviewWithVideo({
+        modifyReviewDto,
+        review,
+        reviewVdoCookie,
+      }),
+    ]);
+
+    this.promises.twoPromiseSettled(
+      promise[0],
+      promise[1],
+      "Modify Star Rating And Review with Video",
+    );
+
+    return {
+      status: 200,
+      message: "리뷰를 수정하였습니다.",
+    };
+  }
+
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/product/:productId/review/:reviewId")
@@ -187,13 +319,16 @@ export class ReviewController {
       jwtPayload.userId,
     );
 
-    await this.reviewService.modifyStarRating(
-      modifyReviewDto,
-      productId,
-      review,
-    );
+    const promise = await Promise.allSettled([
+      this.reviewService.modifyStarRating(modifyReviewDto, productId, review),
+      this.reviewService.modifyReviewWithoutMedia({ modifyReviewDto, review }),
+    ]);
 
-    await this.reviewService.modifyReviewWithoutMedia(modifyReviewDto, review);
+    this.promises.twoPromiseSettled(
+      promise[0],
+      promise[1],
+      "Modify Star Rating And Review Without Media",
+    );
 
     return {
       statusCode: 200,

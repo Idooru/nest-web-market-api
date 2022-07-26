@@ -1,12 +1,10 @@
-import { ProductEntity } from "src/model/product/entities/product.entity";
-import { CreateReviewDto } from "./../dto/create-review.dto";
 import { ReviewEntity } from "../entities/review.entity";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { UserEntity } from "src/model/user/entities/user.entity";
 import { UserActivityEntity } from "src/model/user/entities/user.activity.entity";
-import { ModifyReviewDto } from "../dto/modify-review.dto";
+import { ModifyReviewDao } from "../dto/modify-review.dto";
+import { CreateReviewDao } from "./../dto/create-review.dto";
 
 @Injectable()
 export class ReviewRepository {
@@ -48,10 +46,10 @@ export class ReviewRepository {
   }
 
   async createReviewWithImageAndVideo(
-    createReviewDto: CreateReviewDto,
-    user: UserEntity,
-    product: ProductEntity,
-  ) {
+    createReviewDao: CreateReviewDao,
+  ): Promise<ReviewEntity> {
+    const { createReviewDto, user, product } = createReviewDao;
+
     const review = this.reviewRepository.create();
 
     review.reviews = createReviewDto.reviews;
@@ -65,10 +63,10 @@ export class ReviewRepository {
   }
 
   async createReviewWithImage(
-    createReviewDto: CreateReviewDto,
-    user: UserEntity,
-    product: ProductEntity,
+    createReviewDao: CreateReviewDao,
   ): Promise<ReviewEntity> {
+    const { createReviewDto, user, product } = createReviewDao;
+
     const review = this.reviewRepository.create();
 
     review.reviews = createReviewDto.reviews;
@@ -81,10 +79,10 @@ export class ReviewRepository {
   }
 
   async createReviewWithVideo(
-    createReviewDto: CreateReviewDto,
-    user: UserEntity,
-    product: ProductEntity,
+    createReviewDao: CreateReviewDao,
   ): Promise<ReviewEntity> {
+    const { createReviewDto, user, product } = createReviewDao;
+
     const review = this.reviewRepository.create();
 
     review.reviews = createReviewDto.reviews;
@@ -97,25 +95,58 @@ export class ReviewRepository {
   }
 
   async createReviewWithoutMedia(
-    createReviewDto: CreateReviewDto,
-    user: UserEntity,
-    product: ProductEntity,
+    createReviewDao: CreateReviewDao,
   ): Promise<ReviewEntity> {
+    const { createReviewDto, user, product } = createReviewDao;
+
     const review = this.reviewRepository.create();
-    const Activity = user.Activity;
 
     review.reviews = createReviewDto.reviews;
     review.userSelectScore = createReviewDto.userSelectScore;
     review.Product = product;
-    review.UserActivity = Activity;
+    review.UserActivity = user.Activity;
 
     return await this.reviewRepository.save(review);
   }
 
-  async modifyReviewWithoutMedia(
-    modifyReviewDto: ModifyReviewDto,
-    review: ReviewEntity,
+  async modifyReviewWithImageAndVideo(
+    modifyReviewDao: ModifyReviewDao,
   ): Promise<void> {
+    const { modifyReviewDto, review } = modifyReviewDao;
+
+    review.reviews = modifyReviewDto.reviews;
+    review.userSelectScore = modifyReviewDto.userSelectScore;
+    review.Image = modifyReviewDto.Image;
+    review.Video = modifyReviewDto.Video;
+
+    await this, this.reviewRepository.save(review);
+  }
+
+  async modifyReviewWithImage(modifyReviewDao: ModifyReviewDao): Promise<void> {
+    const { modifyReviewDto, review } = modifyReviewDao;
+
+    review.reviews = modifyReviewDto.reviews;
+    review.userSelectScore = modifyReviewDto.userSelectScore;
+    review.Image = modifyReviewDto.Image;
+
+    await this.reviewRepository.save(review);
+  }
+
+  async modifyReviewWithVideo(modifyReviewDao: ModifyReviewDao): Promise<void> {
+    const { modifyReviewDto, review } = modifyReviewDao;
+
+    review.reviews = modifyReviewDto.reviews;
+    review.userSelectScore = modifyReviewDto.userSelectScore;
+    review.Video = modifyReviewDto.Video;
+
+    await this.reviewRepository.save(review);
+  }
+
+  async modifyReviewWithoutMedia(
+    modifyReviewDao: ModifyReviewDao,
+  ): Promise<void> {
+    const { modifyReviewDto, review } = modifyReviewDao;
+
     review.reviews = modifyReviewDto.reviews;
     review.userSelectScore = modifyReviewDto.userSelectScore;
 

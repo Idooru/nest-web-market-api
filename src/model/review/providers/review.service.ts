@@ -1,3 +1,4 @@
+import { ModifyReviewWithImageAndVideoDto } from "./../dto/modify-review.dto";
 import {
   CreateReviewWithImageAndVideoDto,
   CreateReviewWithoutMediaDto,
@@ -14,7 +15,12 @@ import { UploadRepository } from "src/model/upload/providers/upload.repository";
 import { StarRatingService } from "src/model/review/providers/star-rating.service";
 import { UserEntity } from "src/model/user/entities/user.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
-import { ModifyReviewDto } from "../dto/modify-review.dto";
+import {
+  ModifyReviewDto,
+  ModifyReviewDao,
+  ModifyReviewWithImageDto,
+  ModifyReviewWithVideoDto,
+} from "../dto/modify-review.dto";
 import { ReviewEntity } from "../entities/review.entity";
 
 @Injectable()
@@ -100,10 +106,10 @@ export class ReviewService {
       reviewVdoCookie,
     } = createReviewDao;
     const { userId } = jwtPayload;
-    createReviewDto.Image = [];
-    createReviewDto.Video = [];
 
     const [user, product] = await this.findUserAndProduct(userId, productId);
+    createReviewDto.Image = [];
+    createReviewDto.Video = [];
 
     if (reviewImgCookie.length >= 2) {
       for (const idx of reviewImgCookie) {
@@ -133,11 +139,11 @@ export class ReviewService {
       createReviewDto.Video.push(video);
     }
 
-    await this.reviewRepository.createReviewWithImageAndVideo(
+    await this.reviewRepository.createReviewWithImageAndVideo({
       createReviewDto,
       user,
       product,
-    );
+    });
   }
 
   async createReviewWithImage(
@@ -165,11 +171,11 @@ export class ReviewService {
       createReviewDto.Image.push(image);
     }
 
-    await this.reviewRepository.createReviewWithImage(
+    await this.reviewRepository.createReviewWithImage({
       createReviewDto,
       user,
       product,
-    );
+    });
 
     await this.userRepository.increaseReviewCount(user);
   }
@@ -180,9 +186,8 @@ export class ReviewService {
     const { createReviewDto, jwtPayload, productId, reviewVdoCookie } =
       createReviewDao;
     const { userId } = jwtPayload;
-    createReviewDto.Video = [];
-
     const [user, product] = await this.findUserAndProduct(userId, productId);
+    createReviewDto.Video = [];
 
     if (reviewVdoCookie.length >= 2) {
       for (const idx of reviewVdoCookie) {
@@ -200,11 +205,11 @@ export class ReviewService {
       createReviewDto.Video.push(video);
     }
 
-    await this.reviewRepository.createReviewWithVideo(
+    await this.reviewRepository.createReviewWithVideo({
       createReviewDto,
       user,
       product,
-    );
+    });
 
     await this.userRepository.increaseReviewCount(user);
   }
@@ -217,22 +222,118 @@ export class ReviewService {
 
     const [user, product] = await this.findUserAndProduct(userId, productId);
 
-    await this.reviewRepository.createReviewWithoutMedia(
+    await this.reviewRepository.createReviewWithoutMedia({
       createReviewDto,
       user,
       product,
-    );
+    });
     await this.userRepository.increaseReviewCount(user);
   }
 
-  async modifyReviewWithoutMedia(
-    modifyReviewDto: ModifyReviewDto,
-    review: ReviewEntity,
-  ) {
-    await this.reviewRepository.modifyReviewWithoutMedia(
+  async modifyReviewWithImageAndVideo(
+    ModifyReviewWithImageAndVideoDto: ModifyReviewWithImageAndVideoDto,
+  ): Promise<void> {
+    const { modifyReviewDto, review, reviewImgCookie, reviewVdoCookie } =
+      ModifyReviewWithImageAndVideoDto;
+
+    if (reviewImgCookie.length >= 2) {
+      for (const idx of reviewImgCookie) {
+        const image = await this.uploadRepository.findReviewImageWithUrl(
+          idx[1],
+        );
+
+        modifyReviewDto.Image.push(image);
+      }
+    } else {
+      const image = await this.uploadRepository.findReviewImageWithUrl(
+        reviewImgCookie[0][1],
+      );
+
+      modifyReviewDto.Image.push(image);
+    }
+
+    if (reviewVdoCookie.length >= 2) {
+      for (const idx of reviewVdoCookie) {
+        const video = await this.uploadRepository.findReviewVideoWithUrl(
+          idx[1],
+        );
+
+        modifyReviewDto.Video.push(video);
+      }
+    } else {
+      const video = await this.uploadRepository.findReviewVideoWithUrl(
+        reviewVdoCookie[0][1],
+      );
+
+      modifyReviewDto.Video.push(video);
+    }
+
+    await this.reviewRepository.modifyReviewWithImageAndVideo({
       modifyReviewDto,
       review,
-    );
+    });
+  }
+
+  async modifyReviewWithImage(
+    modifyReviewWithImageDto: ModifyReviewWithImageDto,
+  ): Promise<void> {
+    const { modifyReviewDto, review, reviewImgCookie } =
+      modifyReviewWithImageDto;
+
+    if (reviewImgCookie.length >= 2) {
+      for (const idx of reviewImgCookie) {
+        const image = await this.uploadRepository.findReviewImageWithUrl(
+          idx[1],
+        );
+
+        modifyReviewDto.Image.push(image);
+      }
+    } else {
+      const image = await this.uploadRepository.findReviewImageWithUrl(
+        reviewImgCookie[0][1],
+      );
+
+      modifyReviewDto.Image.push(image);
+    }
+
+    await this.reviewRepository.modifyReviewWithImage({
+      modifyReviewDto,
+      review,
+    });
+  }
+
+  async modifyReviewWithVideo(
+    modifyReviewWithVideoDto: ModifyReviewWithVideoDto,
+  ): Promise<void> {
+    const { modifyReviewDto, review, reviewVdoCookie } =
+      modifyReviewWithVideoDto;
+
+    if (reviewVdoCookie.length >= 2) {
+      for (const idx of reviewVdoCookie) {
+        const video = await this.uploadRepository.findReviewVideoWithUrl(
+          idx[1],
+        );
+
+        modifyReviewDto.Video.push(video);
+      }
+    } else {
+      const video = await this.uploadRepository.findReviewVideoWithUrl(
+        reviewVdoCookie[0][1],
+      );
+
+      modifyReviewDto.Video.push(video);
+    }
+
+    await this.reviewRepository.modifyReviewWithVideo({
+      modifyReviewDto,
+      review,
+    });
+  }
+
+  async modifyReviewWithoutMedia(
+    modifyReviewDao: ModifyReviewDao,
+  ): Promise<void> {
+    await this.reviewRepository.modifyReviewWithoutMedia(modifyReviewDao);
   }
 }
 
