@@ -175,7 +175,7 @@ export class ReviewController {
 
   @UseInterceptors(JsonClearCookieInterceptor)
   @UseGuards(IsLoginGuard)
-  @Patch("/product/:productId/review/:reviewId")
+  @Patch("/product/:productId/review/:reviewId/image&video")
   async modifyReviewWithImageAndVideo(
     @Param("productId") productId: string,
     @Param("reviewId") reviewId: string,
@@ -221,7 +221,7 @@ export class ReviewController {
 
   @UseInterceptors(JsonClearCookieInterceptor)
   @UseGuards(IsLoginGuard)
-  @Patch("/product/:productId/review/:reviewId")
+  @Patch("/product/:productId/review/:reviewId/image")
   async modifyReviewWithImage(
     @Param("productId") productId: string,
     @Param("reviewId") reviewId: string,
@@ -264,7 +264,7 @@ export class ReviewController {
 
   @UseInterceptors(JsonClearCookieInterceptor)
   @UseGuards(IsLoginGuard)
-  @Patch("/product/:productId/review/:reviewId")
+  @Patch("/product/:productId/review/:reviewId/video")
   async modifyReviewWithVideo(
     @Param("productId") productId: string,
     @Param("reviewId") reviewId: string,

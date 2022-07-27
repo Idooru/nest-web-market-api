@@ -16,8 +16,6 @@ export class ProductRepository {
   constructor(
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
-    @InjectRepository(ProductImageEntity)
-    private readonly productsImageRepository: Repository<ProductImageEntity>,
   ) {}
 
   private readonly select = ReturnPropertyWithSelect;

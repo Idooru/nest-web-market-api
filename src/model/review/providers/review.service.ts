@@ -87,8 +87,9 @@ export class ReviewService {
     const review = reviews.find((idx) => idx.id === reviewId);
 
     if (!review) {
+      // 만약 리뷰를 하나도 작성하지 않은 사용자가 다른 사용자의 리뷰를 수정하려고 시도할시 아래 예외가 발생한다.
       throw new NotFoundException(
-        `해당 id(${reviewId})로 작성된 리뷰가 없습니다.`,
+        `해당 activityId(${reviewId})로 작성된 리뷰중에 reviewId(${reviewId})와 같은 리뷰를 찾을 수 없습니다.`,
       );
     }
 
@@ -231,10 +232,12 @@ export class ReviewService {
   }
 
   async modifyReviewWithImageAndVideo(
-    ModifyReviewWithImageAndVideoDto: ModifyReviewWithImageAndVideoDto,
+    modifyReviewWithImageAndVideoDto: ModifyReviewWithImageAndVideoDto,
   ): Promise<void> {
     const { modifyReviewDto, review, reviewImgCookie, reviewVdoCookie } =
-      ModifyReviewWithImageAndVideoDto;
+      modifyReviewWithImageAndVideoDto;
+    modifyReviewDto.Image = [];
+    modifyReviewDto.Video = [];
 
     if (reviewImgCookie.length >= 2) {
       for (const idx of reviewImgCookie) {
@@ -279,6 +282,7 @@ export class ReviewService {
   ): Promise<void> {
     const { modifyReviewDto, review, reviewImgCookie } =
       modifyReviewWithImageDto;
+    modifyReviewDto.Image = [];
 
     if (reviewImgCookie.length >= 2) {
       for (const idx of reviewImgCookie) {
@@ -307,6 +311,7 @@ export class ReviewService {
   ): Promise<void> {
     const { modifyReviewDto, review, reviewVdoCookie } =
       modifyReviewWithVideoDto;
+    modifyReviewDto.Video = [];
 
     if (reviewVdoCookie.length >= 2) {
       for (const idx of reviewVdoCookie) {

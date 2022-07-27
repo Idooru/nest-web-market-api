@@ -92,7 +92,7 @@ export class UploadService {
 
     const deletePath = path.join(
       __dirname,
-      `../../../../uploads/image/${imageFileName}`,
+      `../../../../../uploads/image/${imageFileName}`,
     );
 
     fs.rmSync(deletePath);
@@ -101,7 +101,7 @@ export class UploadService {
   deleteImageFilesOnServerDisk(imageName: string) {
     const deletePath = path.join(
       __dirname,
-      `../../../../uploads/image/${imageName}`,
+      `../../../../../uploads/image/${imageName}`,
     );
 
     fs.rmSync(deletePath);
@@ -110,7 +110,7 @@ export class UploadService {
   deleteVideoFilesOnServerDisk(videoName: string) {
     const deletePath = path.join(
       __dirname,
-      `../../../../uploads/video/${videoName}`,
+      `../../../../../uploads/video/${videoName}`,
     );
 
     fs.rmSync(deletePath);

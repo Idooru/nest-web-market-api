@@ -23,7 +23,10 @@ export class ReviewRepository {
       .getMany();
 
     if (!reviews.length) {
-      throw new NotFoundException(`${activity.id}로 작성된 리뷰가 없습니다.`);
+      // 만약 리뷰를 하나도 작성하지 않은 사용자가 다른 사용자의 리뷰를 수정하려고 시도할시 아래 예외가 발생한다.
+      throw new NotFoundException(
+        `activityId(${activity.id})로 작성된 리뷰가 없습니다.`,
+      );
     }
 
     return reviews;
@@ -119,7 +122,7 @@ export class ReviewRepository {
     review.Image = modifyReviewDto.Image;
     review.Video = modifyReviewDto.Video;
 
-    await this, this.reviewRepository.save(review);
+    await this.reviewRepository.save(review);
   }
 
   async modifyReviewWithImage(modifyReviewDao: ModifyReviewDao): Promise<void> {
