@@ -17,7 +17,7 @@ export class MulterConfig {
     }
 
     try {
-      logger.log(`create ${folder1} folder into uploads foler`);
+      logger.log(`create ${folder1} folder into uploads folder`);
       fs.mkdirSync(path.join(__dirname, `../../../../uploads/${folder1}`));
     } catch (err) {
       logger.log(`${folder1} is already exist`);

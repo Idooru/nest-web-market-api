@@ -10,21 +10,18 @@ import {
   Param,
   BadRequestException,
 } from "@nestjs/common";
-import {
-  ResponseProductDto,
-  ResponseProductsDto,
-} from "../dto/response_product.dto";
-import { CreateProductDto } from "../dto/create_product.dto";
-import { ModifyProductDto } from "../dto/modify_product.dto";
+import * as response_productDto from "../dto/response_product.dto";
+import * as modify_productDto from "../dto/modify_product.dto";
 import { ProductService } from "../providers/product.service";
 import { IsAdminGuard } from "../../../common/guards/is-admin.guard";
 import { IsLoginGuard } from "../../../common/guards/is-login.guard";
 import { Cookie } from "src/common/decorators/cookie.decorator";
 import { JsonGeneralInterceptor } from "src/common/interceptors/json.general.interceptor";
-import { JsonClearCookieInterceptor } from "src/common/interceptors/json.clear.cookie.interceptor";
+import * as jsonClearCookieInterceptor from "src/common/interceptors/json.clear.cookie.interceptor";
 import { JsonGeneralInterface } from "src/common/interfaces/json.general.interface";
 import { JsonClearCookieInterface } from "src/common/interfaces/json.clear.cookie.interface";
 import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface";
+import { CreateProductDto } from "../dto/create_product.dto";
 
 @Controller("/product")
 export class ProductController {
@@ -33,7 +30,7 @@ export class ProductController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/")
   async getProductsAllFromLatest(): Promise<
-    JsonGeneralInterface<ResponseProductsDto[]>
+    JsonGeneralInterface<response_productDto.ResponseProductsDto[]>
   > {
     return {
       statusCode: 200,
@@ -45,7 +42,7 @@ export class ProductController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/oldest")
   async getProductsAllFromOldest(): Promise<
-    JsonGeneralInterface<ResponseProductsDto[]>
+    JsonGeneralInterface<response_productDto.ResponseProductsDto[]>
   > {
     return {
       statusCode: 200,
@@ -58,7 +55,7 @@ export class ProductController {
   @Get("/name/:name")
   async getProductByName(
     @Param("name") productName: string,
-  ): Promise<JsonGeneralInterface<ResponseProductDto>> {
+  ): Promise<JsonGeneralInterface<response_productDto.ResponseProductDto>> {
     return {
       statusCode: 200,
       message: `${productName}에 해당하는 상품 정보를 가져옵니다.`,
@@ -70,7 +67,7 @@ export class ProductController {
   @Get("/id/:id")
   async getProductById(
     @Param("id") productId: string,
-  ): Promise<JsonGeneralInterface<ResponseProductDto>> {
+  ): Promise<JsonGeneralInterface<response_productDto.ResponseProductDto>> {
     return {
       statusCode: 200,
       message: `${productId}에 해당하는 상품 정보를 가져옵니다.`,
@@ -78,7 +75,7 @@ export class ProductController {
     };
   }
 
-  @UseInterceptors(JsonClearCookieInterceptor)
+  @UseInterceptors(jsonClearCookieInterceptor.JsonClearCookieInterceptor)
   @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)
   @Post("/")
@@ -103,13 +100,13 @@ export class ProductController {
     };
   }
 
-  @UseInterceptors(JsonClearCookieInterceptor)
+  @UseInterceptors(jsonClearCookieInterceptor.JsonClearCookieInterceptor)
   @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)
   @Patch("/:id")
   async modifyProduct(
     @Param("id") productId: string,
-    @Body() modifyProductDto: ModifyProductDto,
+    @Body() modifyProductDto: modify_productDto.ModifyProductDto,
     @Cookie("Product_Image_Url_COOKIE")
     productImgCookie: MediaUrlCookie,
   ): Promise<JsonClearCookieInterface> {
