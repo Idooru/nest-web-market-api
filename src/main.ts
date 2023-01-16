@@ -1,4 +1,4 @@
-import { ValidationPipe } from "@nestjs/common";
+import { Logger, ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { AllExceptionFilter } from "./common/exceptions/all.exception.filter";
@@ -34,7 +34,9 @@ async function bootstrap() {
   });
 
   await app.listen(port, () => {
-    console.log(`### Server is running at http://localhost:${port} ###`);
+    new Logger("NestApplication").log(
+      `Server is running at http://localhost:${port}`,
+    );
   });
 }
 
