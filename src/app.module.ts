@@ -4,10 +4,9 @@ import { UserModule } from "./model/user/user.module";
 import { ProductModule } from "./model/product/product.module";
 import { LoggerMiddleware } from "./common/middlewares/logger.middleware";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { typeORMConfig } from "./common/config/typeorm.config";
+import { EtcConfig } from "./common/config/etc.config";
 import { ConfigModule } from "@nestjs/config";
 import { UploadModule } from "./model/upload/upload.module";
-import { EtcModule } from "./common/config/etc/etc.module";
 import { ReviewModule } from "./model/review/review.module";
 
 @Module({
@@ -15,13 +14,13 @@ import { ReviewModule } from "./model/review/review.module";
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot(typeORMConfig),
+    TypeOrmModule.forRoot(new EtcConfig().typeOrmConfig),
     AuthModule,
     UserModule,
     ProductModule,
     UploadModule,
     ReviewModule,
-    EtcModule,
+    ConfigModule,
   ],
   controllers: [],
   providers: [],
