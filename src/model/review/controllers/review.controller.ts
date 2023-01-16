@@ -1,4 +1,11 @@
-import * as common from "@nestjs/common";
+import {
+  Controller,
+  Param,
+  Body,
+  UseGuards,
+  Post,
+  Patch,
+} from "@nestjs/common";
 import { CreateReviewDto } from "./../dto/create-review.dto";
 import { IsLoginGuard } from "./../../../common/guards/is-login.guard";
 import { ReviewService } from "../providers/review.service";
@@ -14,7 +21,7 @@ import { JsonGeneralInterface } from "src/common/interfaces/json.general.interfa
 import { JsonGeneralInterceptor } from "../../../common/interceptors/json.general.interceptor";
 import { Promises } from "../../../common/config/etc/providers/promises";
 
-@common.Controller("review")
+@Controller("review")
 export class ReviewController {
   constructor(
     private readonly reviewService: ReviewService,
@@ -22,13 +29,13 @@ export class ReviewController {
   ) {}
 
   @UseInterceptors(JsonClearCookieInterceptor)
-  @common.UseGuards(IsLoginGuard)
-  @common.Post("/product/:productId/image&video")
+  @UseGuards(IsLoginGuard)
+  @Post("/product/:productId/image&video")
   async createReviewWithImageAndVideo(
-    @common.Param("productId") productId: string,
+    @Param("productId") productId: string,
     @Cookies("Review_Image_Url_COOKIES") reviewImgCookie: MediaUrlCookie[],
     @Cookies("Review_Video_Url_COOKIES") reviewVdoCookie: MediaUrlCookie[],
-    @common.Body() createReviewDto: CreateReviewDto,
+    @Body() createReviewDto: CreateReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
   ): Promise<JsonClearCookieInterface> {
     if (!reviewImgCookie.length || !reviewVdoCookie.length) {
@@ -37,7 +44,7 @@ export class ReviewController {
       );
     }
     const promise = await Promise.allSettled([
-      this.reviewService.increaeStarRating(createReviewDto, productId),
+      this.reviewService.increaseStarRating(createReviewDto, productId),
       this.reviewService.createReviewWithImageAndVideo({
         createReviewDto,
         jwtPayload,
@@ -61,12 +68,12 @@ export class ReviewController {
   }
 
   @UseInterceptors(JsonClearCookieInterceptor)
-  @common.UseGuards(IsLoginGuard)
-  @common.Post("/product/:productId/image")
+  @UseGuards(IsLoginGuard)
+  @Post("/product/:productId/image")
   async createReviewWithImage(
-    @common.Param("productId") productId: string,
+    @Param("productId") productId: string,
     @Cookies("Review_Image_Url_COOKIES") reviewImgCookie: MediaUrlCookie[],
-    @common.Body() createReviewDto: CreateReviewDto,
+    @Body() createReviewDto: CreateReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
   ): Promise<JsonClearCookieInterface> {
     if (!reviewImgCookie.length) {
@@ -76,7 +83,7 @@ export class ReviewController {
     }
 
     const promise = await Promise.allSettled([
-      this.reviewService.increaeStarRating(createReviewDto, productId),
+      this.reviewService.increaseStarRating(createReviewDto, productId),
       this.reviewService.createReviewWithImage({
         createReviewDto,
         jwtPayload,
@@ -99,12 +106,12 @@ export class ReviewController {
   }
 
   @UseInterceptors(JsonClearCookieInterceptor)
-  @common.UseGuards(IsLoginGuard)
-  @common.Post("/product/:productId/video")
+  @UseGuards(IsLoginGuard)
+  @Post("/product/:productId/video")
   async createReviewWithVideo(
-    @common.Param("productId") productId: string,
+    @Param("productId") productId: string,
     @Cookies("Review_Video_Url_COOKIES") reviewVdoCookie: MediaUrlCookie[],
-    @common.Body() createReviewDto: CreateReviewDto,
+    @Body() createReviewDto: CreateReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
   ): Promise<JsonClearCookieInterface> {
     if (!reviewVdoCookie.length) {
@@ -113,7 +120,7 @@ export class ReviewController {
       );
     }
     const promise = await Promise.allSettled([
-      this.reviewService.increaeStarRating(createReviewDto, productId),
+      this.reviewService.increaseStarRating(createReviewDto, productId),
       this.reviewService.createReviewWithVideo({
         createReviewDto,
         jwtPayload,
@@ -136,15 +143,15 @@ export class ReviewController {
   }
 
   @UseInterceptors(JsonGeneralInterceptor)
-  @common.UseGuards(IsLoginGuard)
-  @common.Post("/product/:productId")
+  @UseGuards(IsLoginGuard)
+  @Post("/product/:productId")
   async createReviewWithoutMedia(
-    @common.Param("productId") productId: string,
-    @common.Body() createReviewDto: CreateReviewDto,
+    @Param("productId") productId: string,
+    @Body() createReviewDto: CreateReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
   ): Promise<JsonGeneralInterface<void>> {
     const promise = await Promise.allSettled([
-      this.reviewService.increaeStarRating(createReviewDto, productId),
+      this.reviewService.increaseStarRating(createReviewDto, productId),
       this.reviewService.createReviewWithoutMedia({
         createReviewDto,
         jwtPayload,
@@ -165,16 +172,16 @@ export class ReviewController {
   }
 
   @UseInterceptors(JsonClearCookieInterceptor)
-  @common.UseGuards(IsLoginGuard)
-  @common.Patch("/product/:productId/review/:reviewId/image&video")
+  @UseGuards(IsLoginGuard)
+  @Patch("/product/:productId/review/:reviewId/image&video")
   async modifyReviewWithImageAndVideo(
-    @common.Param("productId") productId: string,
-    @common.Param("reviewId") reviewId: string,
+    @Param("productId") productId: string,
+    @Param("reviewId") reviewId: string,
     @Cookies("Review_Image_Url_COOKIES")
     reviewImgCookie: MediaUrlCookie[],
     @Cookies("Review_Video_Url_COOKIES")
     reviewVdoCookie: MediaUrlCookie[],
-    @common.Body() modifyReviewDto: ModifyReviewDto,
+    @Body() modifyReviewDto: ModifyReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
   ) {
     if (!reviewImgCookie.length || !reviewVdoCookie.length) {
@@ -211,14 +218,14 @@ export class ReviewController {
   }
 
   @UseInterceptors(JsonClearCookieInterceptor)
-  @common.UseGuards(IsLoginGuard)
-  @common.Patch("/product/:productId/review/:reviewId/image")
+  @UseGuards(IsLoginGuard)
+  @Patch("/product/:productId/review/:reviewId/image")
   async modifyReviewWithImage(
-    @common.Param("productId") productId: string,
-    @common.Param("reviewId") reviewId: string,
+    @Param("productId") productId: string,
+    @Param("reviewId") reviewId: string,
     @Cookies("Review_Video_Url_COOKIES")
     reviewImgCookie: MediaUrlCookie[],
-    @common.Body() modifyReviewDto: ModifyReviewDto,
+    @Body() modifyReviewDto: ModifyReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
   ) {
     if (!reviewImgCookie.length) {
@@ -254,14 +261,14 @@ export class ReviewController {
   }
 
   @UseInterceptors(JsonClearCookieInterceptor)
-  @common.UseGuards(IsLoginGuard)
-  @common.Patch("/product/:productId/review/:reviewId/video")
+  @UseGuards(IsLoginGuard)
+  @Patch("/product/:productId/review/:reviewId/video")
   async modifyReviewWithVideo(
-    @common.Param("productId") productId: string,
-    @common.Param("reviewId") reviewId: string,
+    @Param("productId") productId: string,
+    @Param("reviewId") reviewId: string,
     @Cookies("Review_Video_Url_COOKIES")
     reviewVdoCookie: MediaUrlCookie[],
-    @common.Body() modifyReviewDto: ModifyReviewDto,
+    @Body() modifyReviewDto: ModifyReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
   ) {
     if (!reviewVdoCookie.length) {
@@ -297,12 +304,12 @@ export class ReviewController {
   }
 
   @UseInterceptors(JsonGeneralInterceptor)
-  @common.UseGuards(IsLoginGuard)
-  @common.Patch("/product/:productId/review/:reviewId")
-  async modifyReveiwWithoutMedia(
-    @common.Param("productId") productId: string,
-    @common.Param("reviewId") reviewId: string,
-    @common.Body() modifyReviewDto: ModifyReviewDto,
+  @UseGuards(IsLoginGuard)
+  @Patch("/product/:productId/review/:reviewId")
+  async modifyReviewWithoutMedia(
+    @Param("productId") productId: string,
+    @Param("reviewId") reviewId: string,
+    @Body() modifyReviewDto: ModifyReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
   ): Promise<JsonGeneralInterface<void>> {
     const review = await this.reviewService.distinguishOwnReview(
