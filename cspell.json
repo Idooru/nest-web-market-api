@@ -4,6 +4,6 @@
   "dictionaryDefinitions": [],
   "dictionaries": [],
   "words": [],
-  "ignoreWords": ["nestjs"],
+  "ignoreWords": ["nestjs", "typeorm", "shopcart"],
   "import": []
 }
