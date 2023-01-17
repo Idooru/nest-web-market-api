@@ -11,7 +11,6 @@ import { StarRatingRepository } from "../review/providers/star-rating.repository
 import { StarRatingService } from "./providers/star-rating.service";
 import { UploadModule } from "../upload/upload.module";
 import { LibarayModule } from "src/common/lib/library.module";
-import { AppConfigModule } from "src/common/config/app.config.module";
 
 @Module({
   imports: [
@@ -19,7 +18,6 @@ import { AppConfigModule } from "src/common/config/app.config.module";
     forwardRef(() => UploadModule),
     forwardRef(() => UserModule),
     forwardRef(() => ProductModule),
-    AppConfigModule,
     LibarayModule,
   ],
   controllers: [ReviewController],

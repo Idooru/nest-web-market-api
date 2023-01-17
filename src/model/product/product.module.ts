@@ -10,7 +10,6 @@ import { ReviewModule } from "../review/review.module";
 import { InquiryModule } from "../inquiry/inquiry.module";
 import { ProductImageEntity } from "../upload/entities/product.image.entity";
 import { LibarayModule } from "src/common/lib/library.module";
-import { AppConfigModule } from "src/common/config/app.config.module";
 
 @Module({
   imports: [
@@ -19,7 +18,6 @@ import { AppConfigModule } from "src/common/config/app.config.module";
     forwardRef(() => UploadModule),
     forwardRef(() => ReviewModule),
     forwardRef(() => InquiryModule),
-    AppConfigModule,
     LibarayModule,
   ],
   controllers: [ProductController],

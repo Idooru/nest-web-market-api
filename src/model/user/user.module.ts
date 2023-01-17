@@ -12,7 +12,6 @@ import { UserController } from "./controllers/user.controller";
 import { UserService } from "../user/providers/user.service";
 import { UserEntity } from "./entities/user.entity";
 import { LibarayModule } from "src/common/lib/library.module";
-import { AppConfigModule } from "src/common/config/app.config.module";
 
 @Module({
   imports: [
@@ -25,7 +24,6 @@ import { AppConfigModule } from "src/common/config/app.config.module";
     forwardRef(() => AuthModule),
     forwardRef(() => UploadModule),
     forwardRef(() => ReviewModule),
-    AppConfigModule,
     LibarayModule,
   ],
   controllers: [UserController],
