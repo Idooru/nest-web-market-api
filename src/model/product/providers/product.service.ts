@@ -1,6 +1,6 @@
 import { StarRatingRepository } from "./../../review/providers/star-rating.repository";
 import { ProductEntity } from "../entities/product.entity";
-import { Promises } from "../../../common/config/etc/providers/promises";
+import { PromisesConfig } from "../../../common/config/promises.config";
 import { UploadRepository } from "../../upload/providers/upload.repository";
 import { ProductRepository } from "./product.repository";
 import { Injectable } from "@nestjs/common";
@@ -11,7 +11,7 @@ import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface
 @Injectable()
 export class ProductService {
   constructor(
-    private readonly promises: Promises,
+    private readonly promises: PromisesConfig,
     private readonly productRepository: ProductRepository,
     private readonly uploadRepository: UploadRepository,
     private readonly starRatingRepository: StarRatingRepository,
