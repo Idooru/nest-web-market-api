@@ -4,7 +4,7 @@ import { RegisterUserDto } from "../dtos/register-user.dto";
 import { Injectable } from "@nestjs/common";
 import { UserRepository } from "../providers/user.repository";
 import { AuthService } from "../../auth/providers/auth.service";
-import { Promises } from "../../../common/config/etc/providers/promises";
+import { PromisesConfig } from "../../../common/config/promises.config";
 import { UserEntity } from "../entities/user.entity";
 
 import * as bcrypt from "bcrypt";
@@ -12,7 +12,7 @@ import * as bcrypt from "bcrypt";
 @Injectable()
 export class UserService {
   constructor(
-    private readonly promises: Promises,
+    private readonly promises: PromisesConfig,
     private readonly userRepository: UserRepository,
     private readonly authService: AuthService,
   ) {}
@@ -20,16 +20,17 @@ export class UserService {
   async register(registerUserDto: RegisterUserDto): Promise<void> {
     const { nickname, email, password, phonenumber } = registerUserDto;
 
-    const CheckUserColumn = await Promise.allSettled([
-      this.userRepository.checkUserEmail(email),
-      this.userRepository.checkUserNickName(nickname),
-      this.userRepository.checkUserPhoneNumber(phonenumber),
-    ]);
+    const [CheckUserColumnOne, CheckUserColumnTwo, CheckUserColumnThree] =
+      await Promise.allSettled([
+        this.userRepository.checkUserEmail(email),
+        this.userRepository.checkUserNickName(nickname),
+        this.userRepository.checkUserPhoneNumber(phonenumber),
+      ]);
 
     this.promises.threePromiseSettled(
-      CheckUserColumn[0],
-      CheckUserColumn[1],
-      CheckUserColumn[2],
+      CheckUserColumnOne,
+      CheckUserColumnTwo,
+      CheckUserColumnThree,
       "Check User Column For Register",
     );
 
@@ -68,12 +69,12 @@ export class UserService {
     const hashed = await bcrypt.hash(password, 10);
     await this.userRepository.patchUser(patchUserDto, hashed, userId);
 
-    const jwtPaylaod: JwtPayload = {
+    const jwtPayload: JwtPayload = {
       userId,
       nickname: patchUserDto.nickname,
     };
 
-    return await this.authService.refreshToken(jwtPaylaod);
+    return await this.authService.refreshToken(jwtPayload);
   }
 
   async deleteUserWithId(userId: string): Promise<void> {

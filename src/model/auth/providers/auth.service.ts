@@ -3,7 +3,7 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { Promises } from "../../../common/config/etc/providers/promises";
+import { PromisesConfig } from "../../../common/config/promises.config.js";
 import { ResetPasswordDto } from "../../user/dtos/reset-password.dto";
 import { FindEmailDto } from "../../user/dtos/find-email.dto";
 import { JwtService } from "@nestjs/jwt";
@@ -16,7 +16,7 @@ import * as bcrypt from "bcrypt";
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly promises: Promises,
+    private readonly promises: PromisesConfig,
     private readonly authRepositry: AuthRepository,
     private readonly jwtService: JwtService,
   ) {}

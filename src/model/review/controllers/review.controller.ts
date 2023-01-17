@@ -19,13 +19,13 @@ import { JsonClearCookieInterface } from "src/common/interfaces/json.clear.cooki
 import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface";
 import { JsonGeneralInterface } from "src/common/interfaces/json.general.interface";
 import { JsonGeneralInterceptor } from "../../../common/interceptors/json.general.interceptor";
-import { Promises } from "../../../common/config/etc/providers/promises";
+import { PromisesConfig } from "../../../common/config/promises.config";
 
 @Controller("review")
 export class ReviewController {
   constructor(
     private readonly reviewService: ReviewService,
-    private readonly promises: Promises,
+    private readonly promises: PromisesConfig,
   ) {}
 
   @UseInterceptors(JsonClearCookieInterceptor)

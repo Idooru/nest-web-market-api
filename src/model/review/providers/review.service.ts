@@ -7,7 +7,7 @@ import {
   CreateReviewDto,
 } from "../dto/create-review.dto";
 import { ProductRepository } from "./../../product/providers/product.repository";
-import { Promises } from "../../../common/config/etc/providers/promises";
+import { PromisesConfig } from "../../../common/config/promises.config";
 import { UserRepository } from "../../user/providers/user.repository";
 import { ReviewRepository } from "./review.repository";
 import { Injectable, NotFoundException } from "@nestjs/common";
@@ -31,10 +31,10 @@ export class ReviewService {
     private readonly userRepository: UserRepository,
     private readonly uploadRepository: UploadRepository,
     private readonly starRatingService: StarRatingService,
-    private readonly promises: Promises,
+    private readonly promises: PromisesConfig,
   ) {}
 
-  async increaeStarRating(
+  async increaseStarRating(
     createReviewDto: CreateReviewDto,
     productId: string,
   ): Promise<void> {

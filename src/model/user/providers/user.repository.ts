@@ -8,13 +8,13 @@ import { Repository } from "typeorm";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { UserEntity } from "../entities/user.entity";
 import { CreateUserDto } from "../dtos/create-user.dto";
-import { Promises } from "../../../common/config/etc/providers/promises";
-import { ReturnPropertyWithSelect } from "src/common/config/etc/etc.variable";
+import { PromisesConfig } from "../../../common/config/promises.config";
+import { EtcConfig } from "src/common/config/etc.config";
 
 @Injectable()
 export class UserRepository {
   constructor(
-    private readonly promises: Promises,
+    private readonly promises: PromisesConfig,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(UserProfileEntity)
@@ -23,9 +23,10 @@ export class UserRepository {
     private readonly userAuthRepository: Repository<UserAuthEntity>,
     @InjectRepository(UserActivityEntity)
     private readonly userActivityRepository: Repository<UserActivityEntity>,
+    private readonly etcConfig: EtcConfig,
   ) {}
 
-  private readonly select = ReturnPropertyWithSelect;
+  private readonly select = this.etcConfig.returnPropertyWithSelect;
 
   async checkUserEmail(email: string): Promise<void> {
     const found = await this.userRepository
@@ -166,7 +167,7 @@ export class UserRepository {
       .where("user.id = :id", { id: userId })
       .getOne();
 
-    console.log(this.select.UserInformationReturnProperty);
+    console.log(this.select.userInformationReturnProperty);
 
     return user;
   }
@@ -183,17 +184,18 @@ export class UserRepository {
     const userAuthColumn = { nickname, email, password };
     const userActivityColumn = {};
 
-    const saveUserColumn = await Promise.allSettled([
-      this.userProfileRepository.save({ ...userProfileColumn }),
-      this.userAuthRepository.save({ ...userAuthColumn }),
-      this.userActivityRepository.save({ ...userActivityColumn }),
-    ]);
+    const [saveUserColumnOne, saveUserColumnTwo, saveUserColumnThree] =
+      await Promise.allSettled([
+        this.userProfileRepository.save({ ...userProfileColumn }),
+        this.userAuthRepository.save({ ...userAuthColumn }),
+        this.userActivityRepository.save({ ...userActivityColumn }),
+      ]);
 
     const [userProfile, userAuth, userActivity] =
       this.promises.threePromiseSettled(
-        saveUserColumn[0],
-        saveUserColumn[1],
-        saveUserColumn[2],
+        saveUserColumnOne,
+        saveUserColumnTwo,
+        saveUserColumnThree,
         "Save User Column For Register",
       );
 
