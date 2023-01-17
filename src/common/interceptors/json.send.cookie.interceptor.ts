@@ -5,15 +5,12 @@ import {
   NestInterceptor,
 } from "@nestjs/common";
 import { Observable, map } from "rxjs";
-import { EtcConfig } from "../config/etc.config";
 import { TimeLoggerLibrary } from "../lib/time.logger.library";
+import { cookieOption } from "../config/etc.config";
 
 @Injectable()
 export class JsonSendCookieInterceptor implements NestInterceptor {
-  constructor(
-    private readonly etcConfig: EtcConfig,
-    private readonly timeLoggerLibrary: TimeLoggerLibrary,
-  ) {}
+  constructor(private readonly timeLoggerLibrary: TimeLoggerLibrary) {}
 
   intercept(context: ArgumentsHost, next: CallHandler<any>): Observable<any> {
     // controller 도달 전
@@ -31,7 +28,7 @@ export class JsonSendCookieInterceptor implements NestInterceptor {
         res
           .status(data.statusCode)
           .setHeader("X-Powered-By", "")
-          .cookie(cookieKey, cookieValue, this.etcConfig.cookieOption);
+          .cookie(cookieKey, cookieValue, cookieOption);
 
         return { success: true, ...{ statusCode, message, result } };
       }),

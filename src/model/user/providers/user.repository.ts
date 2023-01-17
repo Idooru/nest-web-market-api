@@ -9,7 +9,7 @@ import { RegisterUserDto } from "../dtos/register-user.dto";
 import { UserEntity } from "../entities/user.entity";
 import { CreateUserDto } from "../dtos/create-user.dto";
 import { PromisesLibrary } from "../../../common/lib/promises.library";
-import { EtcConfig } from "src/common/config/etc.config";
+import { returnPropertyWithSelect } from "src/common/config/etc.config";
 
 @Injectable()
 export class UserRepository {
@@ -23,10 +23,9 @@ export class UserRepository {
     private readonly userAuthRepository: Repository<UserAuthEntity>,
     @InjectRepository(UserActivityEntity)
     private readonly userActivityRepository: Repository<UserActivityEntity>,
-    private readonly etcConfig: EtcConfig,
   ) {}
 
-  private readonly select = this.etcConfig.returnPropertyWithSelect;
+  private readonly select = returnPropertyWithSelect;
 
   async checkUserEmail(email: string): Promise<void> {
     const found = await this.userRepository

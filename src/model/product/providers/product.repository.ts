@@ -3,22 +3,21 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { EtcConfig } from "src/common/config/etc.config";
 import { ModifyProductDto } from "../dto/modify_product.dto";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
+import { returnPropertyWithSelect } from "src/common/config/etc.config";
 
 @Injectable()
 export class ProductRepository {
   constructor(
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
-    private readonly etcConfig: EtcConfig,
   ) {}
 
-  private readonly select = this.etcConfig.returnPropertyWithSelect;
+  private readonly select = returnPropertyWithSelect;
 
   async checkProductNameToCreate(name: string): Promise<void> {
     const found = await this.productRepository
