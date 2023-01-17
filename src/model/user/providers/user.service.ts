@@ -4,7 +4,7 @@ import { RegisterUserDto } from "../dtos/register-user.dto";
 import { Injectable } from "@nestjs/common";
 import { UserRepository } from "../providers/user.repository";
 import { AuthService } from "../../auth/providers/auth.service";
-import { PromisesConfig } from "../../../common/config/promises.config";
+import { PromisesLibrary } from "../../../common/lib/promises.library";
 import { UserEntity } from "../entities/user.entity";
 
 import * as bcrypt from "bcrypt";
@@ -12,7 +12,7 @@ import * as bcrypt from "bcrypt";
 @Injectable()
 export class UserService {
   constructor(
-    private readonly promises: PromisesConfig,
+    private readonly promisesLibrary: PromisesLibrary,
     private readonly userRepository: UserRepository,
     private readonly authService: AuthService,
   ) {}
@@ -27,7 +27,7 @@ export class UserService {
         this.userRepository.checkUserPhoneNumber(phonenumber),
       ]);
 
-    this.promises.threePromiseSettled(
+    this.promisesLibrary.threePromiseSettled(
       CheckUserColumnOne,
       CheckUserColumnTwo,
       CheckUserColumnThree,
@@ -59,7 +59,7 @@ export class UserService {
       ),
     ]);
 
-    this.promises.twoPromiseSettled(
+    this.promisesLibrary.twoPromiseSettled(
       checkUserColumn[0],
       checkUserColumn[1],
       "Check User Column For Patch User Info",

@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InternalServerErrorException } from "@nestjs/common";
 
 @Injectable()
-export class PromisesConfig {
+export class PromisesLibrary {
   twoPromiseSettled<T, U>(
     promiseOne: PromiseSettledResult<T>,
     promiseTwo: PromiseSettledResult<U>,

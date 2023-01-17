@@ -19,13 +19,13 @@ import { JsonClearCookieInterface } from "src/common/interfaces/json.clear.cooki
 import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface";
 import { JsonGeneralInterface } from "src/common/interfaces/json.general.interface";
 import { JsonGeneralInterceptor } from "../../../common/interceptors/json.general.interceptor";
-import { PromisesConfig } from "../../../common/config/promises.config";
+import { PromisesLibrary } from "../../../common/lib/promises.library";
 
 @Controller("review")
 export class ReviewController {
   constructor(
     private readonly reviewService: ReviewService,
-    private readonly promises: PromisesConfig,
+    private readonly promisesLibrary: PromisesLibrary,
   ) {}
 
   @UseInterceptors(JsonClearCookieInterceptor)
@@ -54,7 +54,7 @@ export class ReviewController {
       }),
     ]);
 
-    this.promises.twoPromiseSettled(
+    this.promisesLibrary.twoPromiseSettled(
       promise[0],
       promise[1],
       "StarRating And Create Review With Image And Video",
@@ -92,7 +92,7 @@ export class ReviewController {
       }),
     ]);
 
-    this.promises.twoPromiseSettled(
+    this.promisesLibrary.twoPromiseSettled(
       promise[0],
       promise[1],
       "StarRating And Create Review With Image",
@@ -129,7 +129,7 @@ export class ReviewController {
       }),
     ]);
 
-    this.promises.twoPromiseSettled(
+    this.promisesLibrary.twoPromiseSettled(
       promise[0],
       promise[1],
       "StarRating And Create Review With Video",
@@ -159,7 +159,7 @@ export class ReviewController {
       }),
     ]);
 
-    this.promises.twoPromiseSettled(
+    this.promisesLibrary.twoPromiseSettled(
       promise[0],
       promise[1],
       "StarRating And Create Review Without Media",
@@ -205,7 +205,7 @@ export class ReviewController {
       }),
     ]);
 
-    this.promises.twoPromiseSettled(
+    this.promisesLibrary.twoPromiseSettled(
       promise[0],
       promise[1],
       "Modify Star Rating And Review with Image And Video",
@@ -248,7 +248,7 @@ export class ReviewController {
       }),
     ]);
 
-    this.promises.twoPromiseSettled(
+    this.promisesLibrary.twoPromiseSettled(
       promise[0],
       promise[1],
       "Modify Star Rating And Review with Image",
@@ -291,7 +291,7 @@ export class ReviewController {
       }),
     ]);
 
-    this.promises.twoPromiseSettled(
+    this.promisesLibrary.twoPromiseSettled(
       promise[0],
       promise[1],
       "Modify Star Rating And Review with Video",
@@ -322,7 +322,7 @@ export class ReviewController {
       this.reviewService.modifyReviewWithoutMedia({ modifyReviewDto, review }),
     ]);
 
-    this.promises.twoPromiseSettled(
+    this.promisesLibrary.twoPromiseSettled(
       promise[0],
       promise[1],
       "Modify Star Rating And Review Without Media",

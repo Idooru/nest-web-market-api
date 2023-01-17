@@ -3,7 +3,7 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { PromisesConfig } from "../../../common/config/promises.config.js";
+import { PromisesLibrary } from "../../../common/lib/promises.library.js";
 import { ResetPasswordDto } from "../../user/dtos/reset-password.dto";
 import { FindEmailDto } from "../../user/dtos/find-email.dto";
 import { JwtService } from "@nestjs/jwt";
@@ -16,7 +16,7 @@ import * as bcrypt from "bcrypt";
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly promises: PromisesConfig,
+    private readonly promisesLibrary: PromisesLibrary,
     private readonly authRepositry: AuthRepository,
     private readonly jwtService: JwtService,
   ) {}
@@ -70,11 +70,12 @@ export class AuthService {
       this.authRepositry.findUserWithPhoneNumber(phonenumber),
     ]);
 
-    const [realNameResult, phoneNumberResult] = this.promises.twoPromiseSettled(
-      checkUserColumn[0],
-      checkUserColumn[1],
-      "Check User Column For Find Email",
-    );
+    const [realNameResult, phoneNumberResult] =
+      this.promisesLibrary.twoPromiseSettled(
+        checkUserColumn[0],
+        checkUserColumn[1],
+        "Check User Column For Find Email",
+      );
 
     if (!(realNameResult.id === phoneNumberResult.id)) {
       throw new UnauthorizedException(
@@ -92,7 +93,7 @@ export class AuthService {
       bcrypt.hash(password, 10),
     ]);
 
-    const resultPromise = this.promises.twoPromiseSettled(
+    const resultPromise = this.promisesLibrary.twoPromiseSettled(
       promise[0],
       promise[1],
       "Find User And Hash Password",

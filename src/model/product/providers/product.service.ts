@@ -1,6 +1,6 @@
 import { StarRatingRepository } from "./../../review/providers/star-rating.repository";
 import { ProductEntity } from "../entities/product.entity";
-import { PromisesConfig } from "../../../common/config/promises.config";
+import { PromisesLibrary } from "../../../common/lib/promises.library";
 import { UploadRepository } from "../../upload/providers/upload.repository";
 import { ProductRepository } from "./product.repository";
 import { Injectable } from "@nestjs/common";
@@ -11,7 +11,7 @@ import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface
 @Injectable()
 export class ProductService {
   constructor(
-    private readonly promises: PromisesConfig,
+    private readonly promisesLibrary: PromisesLibrary,
     private readonly productRepository: ProductRepository,
     private readonly uploadRepository: UploadRepository,
     private readonly starRatingRepository: StarRatingRepository,
@@ -46,7 +46,7 @@ export class ProductService {
       this.starRatingRepository.createStarRatingSample(),
     ]);
 
-    const [image, starRating] = this.promises.twoPromiseSettled(
+    const [image, starRating] = this.promisesLibrary.twoPromiseSettled(
       findImageAndStarRating[0],
       findImageAndStarRating[1],
       "Find Image And StarRating",
@@ -69,7 +69,7 @@ export class ProductService {
       this.uploadRepository.findProductImageWithUrl(imageCookie.url),
     ]);
 
-    const [product, image] = this.promises.twoPromiseSettled(
+    const [product, image] = this.promisesLibrary.twoPromiseSettled(
       findProductAndImage[0],
       findProductAndImage[1],
       "Find Product And ImageId",

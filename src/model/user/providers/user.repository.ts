@@ -8,13 +8,13 @@ import { Repository } from "typeorm";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { UserEntity } from "../entities/user.entity";
 import { CreateUserDto } from "../dtos/create-user.dto";
-import { PromisesConfig } from "../../../common/config/promises.config";
+import { PromisesLibrary } from "../../../common/lib/promises.library";
 import { EtcConfig } from "src/common/config/etc.config";
 
 @Injectable()
 export class UserRepository {
   constructor(
-    private readonly promises: PromisesConfig,
+    private readonly promisesLibrary: PromisesLibrary,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(UserProfileEntity)
@@ -192,7 +192,7 @@ export class UserRepository {
       ]);
 
     const [userProfile, userAuth, userActivity] =
-      this.promises.threePromiseSettled(
+      this.promisesLibrary.threePromiseSettled(
         saveUserColumnOne,
         saveUserColumnTwo,
         saveUserColumnThree,
@@ -219,7 +219,7 @@ export class UserRepository {
     ]);
 
     const [userProfileObject, userAuthObject, userActivityObject] =
-      this.promises.threePromiseSettled(
+      this.promisesLibrary.threePromiseSettled(
         findUserObject[0],
         findUserObject[1],
         findUserObject[2],
@@ -256,7 +256,7 @@ export class UserRepository {
       this.userAuthRepository.save(Auth),
     ]);
 
-    this.promises.twoPromiseSettled(
+    this.promisesLibrary.twoPromiseSettled(
       saveObject[0],
       saveObject[1],
       "Save Object For Patch User Info",
@@ -277,7 +277,7 @@ export class UserRepository {
       this.userActivityRepository.delete(userActivityId),
     ]);
 
-    this.promises.fourPromiseSettled(
+    this.promisesLibrary.fourPromiseSettled(
       deleteObject[0],
       deleteObject[1],
       deleteObject[2],
