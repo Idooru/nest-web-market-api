@@ -5,10 +5,12 @@ import {
   NestInterceptor,
 } from "@nestjs/common";
 import { Observable, map } from "rxjs";
-import { CookieOption } from "../config/etc/etc.variable";
+import { EtcConfig } from "../config/etc.config";
 
 @Injectable()
 export class JsonSendCookieInterceptor implements NestInterceptor {
+  constructor(private readonly etcConfig: EtcConfig) {}
+
   intercept(context: ArgumentsHost, next: CallHandler<any>): Observable<any> {
     // controller 도달 전
     const req = context.switchToHttp().getRequest();
@@ -19,8 +21,8 @@ export class JsonSendCookieInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       map((data) => {
-        const { cookieKey, cookieValue, statusCode, message, result } = data;
         // controller 도달 후
+        const { cookieKey, cookieValue, statusCode, message, result } = data;
         console.log(
           `Send response from ${req.method} ${
             req.originalUrl
@@ -30,7 +32,7 @@ export class JsonSendCookieInterceptor implements NestInterceptor {
         res
           .status(data.statusCode)
           .setHeader("X-Powered-By", "")
-          .cookie(cookieKey, cookieValue, CookieOption);
+          .cookie(cookieKey, cookieValue, this.etcConfig.cookieOption);
 
         return { success: true, ...{ statusCode, message, result } };
       }),

@@ -3,22 +3,22 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { ReturnPropertyWithSelect } from "../../../common/config/etc/etc.variable";
+import { EtcConfig } from "src/common/config/etc.config";
 import { ModifyProductDto } from "../dto/modify_product.dto";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
-import { ProductImageEntity } from "../../upload/entities/product.image.entity";
 
 @Injectable()
 export class ProductRepository {
   constructor(
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
+    private readonly etcConfig: EtcConfig,
   ) {}
 
-  private readonly select = ReturnPropertyWithSelect;
+  private readonly select = this.etcConfig.returnPropertyWithSelect;
 
   async checkProductNameToCreate(name: string): Promise<void> {
     const found = await this.productRepository
@@ -70,7 +70,7 @@ export class ProductRepository {
       .leftJoin("product.Review", "Review")
       .leftJoin("Review.UserActivity", "UserActivity")
       .leftJoin("product.Inquiry", "Inquiry")
-      .select(this.select.ProductsReturnProperty)
+      .select(this.select.productsReturnProperty)
       .orderBy("product.createdAt", "DESC")
       .getMany();
 
@@ -88,7 +88,7 @@ export class ProductRepository {
       .leftJoin("product.Review", "Review")
       .leftJoin("Review.UserActivity", "UserActivity")
       .leftJoin("product.Inquiry", "Inquiry")
-      .select(this.select.ProductsReturnProperty)
+      .select(this.select.productsReturnProperty)
       .orderBy("product.createdAt", "ASC")
       .getMany();
 
@@ -109,7 +109,7 @@ export class ProductRepository {
         .leftJoin("Review.Video", "ReviewVideo")
         .leftJoin("Review.UserActivity", "UserActivity")
         .leftJoin("product.Inquiry", "Inquiry")
-        .select(this.select.ProductReturnProperty)
+        .select(this.select.productReturnProperty)
         .where("product.name = :name", { name })
         .getOneOrFail();
     } catch (err) {
@@ -128,7 +128,7 @@ export class ProductRepository {
         .leftJoin("Review.Video", "ReviewVideo")
         .leftJoin("Review.UserActivity", "UserActivity")
         .leftJoin("product.Inquiry", "Inquiry")
-        .select(this.select.ProductReturnProperty)
+        .select(this.select.productReturnProperty)
         .where("product.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
@@ -142,7 +142,7 @@ export class ProductRepository {
         .createQueryBuilder("product")
         .leftJoin("product.Image", "Image")
         .leftJoin("product.StarRating", "StarRating")
-        .select(this.select.ProductReturnWithStarRating)
+        .select(this.select.productReturnWithStarRating)
         .where("product.id = :id", { id })
         .getOneOrFail();
     } catch (err) {

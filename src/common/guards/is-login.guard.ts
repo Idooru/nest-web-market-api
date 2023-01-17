@@ -7,11 +7,13 @@ import {
 import { JwtService } from "@nestjs/jwt";
 import { JwtPayload } from "../interfaces/jwt.payload.interface";
 import { Request, Response } from "express";
-import { JwtOptions } from "../config/etc/etc.variable";
+import { EtcConfig } from "../config/etc.config";
 
 @Injectable()
 export class IsLoginGuard implements CanActivate {
-  private readonly jwtOptions = JwtOptions;
+  constructor(private readonly etcConfig: EtcConfig) {}
+
+  private readonly jwtOptions = this.etcConfig.jwtOptions;
   private readonly jwtService = new JwtService(this.jwtOptions);
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
