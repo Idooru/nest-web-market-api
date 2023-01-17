@@ -17,11 +17,11 @@ import { IsAdminGuard } from "../../../common/guards/is-admin.guard";
 import { IsLoginGuard } from "../../../common/guards/is-login.guard";
 import { Cookie } from "src/common/decorators/cookie.decorator";
 import { JsonGeneralInterceptor } from "src/common/interceptors/json.general.interceptor";
-import * as jsonClearCookieInterceptor from "src/common/interceptors/json.clear.cookie.interceptor";
 import { JsonGeneralInterface } from "src/common/interfaces/json.general.interface";
 import { JsonClearCookieInterface } from "src/common/interfaces/json.clear.cookie.interface";
 import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface";
 import { CreateProductDto } from "../dto/create_product.dto";
+import { JsonClearCookieInterceptor } from "src/common/interceptors/json.clear.cookie.interceptor";
 
 @Controller("/product")
 export class ProductController {
@@ -75,7 +75,7 @@ export class ProductController {
     };
   }
 
-  @UseInterceptors(jsonClearCookieInterceptor.JsonClearCookieInterceptor)
+  @UseInterceptors(JsonClearCookieInterceptor)
   @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)
   @Post("/")
@@ -100,7 +100,7 @@ export class ProductController {
     };
   }
 
-  @UseInterceptors(jsonClearCookieInterceptor.JsonClearCookieInterceptor)
+  @UseInterceptors(JsonClearCookieInterceptor)
   @UseGuards(IsAdminGuard)
   @UseGuards(IsLoginGuard)
   @Patch("/:id")

@@ -21,27 +21,27 @@ export class StarRatingRepository {
   ): Promise<void> {
     switch (userSelectScore) {
       case 1:
-        starRating.onePointCount++;
+        ++starRating.onePointCount;
         starRating.onePointSum += userSelectScore;
         await this.starRatingRepository.save(starRating);
         break;
       case 2:
-        starRating.twoPointCount++;
+        ++starRating.twoPointCount;
         starRating.twoPointSum += userSelectScore;
         await this.starRatingRepository.save(starRating);
         break;
       case 3:
-        starRating.threePointCount++;
+        ++starRating.threePointCount;
         starRating.threePointSum += userSelectScore;
         await this.starRatingRepository.save(starRating);
         break;
       case 4:
-        starRating.fourPointCount++;
+        ++starRating.fourPointCount;
         starRating.fourPointSum += userSelectScore;
         await this.starRatingRepository.save(starRating);
         break;
       case 5:
-        starRating.fivePointCount++;
+        ++starRating.fivePointCount;
         starRating.fivePointSum += userSelectScore;
         await this.starRatingRepository.save(starRating);
         break;
@@ -54,27 +54,27 @@ export class StarRatingRepository {
   ): Promise<void> {
     switch (beforeScore) {
       case 1:
-        starRating.onePointCount--;
+        --starRating.onePointCount;
         starRating.onePointSum -= beforeScore;
         await this.starRatingRepository.save(starRating);
         break;
       case 2:
-        starRating.twoPointCount--;
+        --starRating.twoPointCount;
         starRating.twoPointSum -= beforeScore;
         await this.starRatingRepository.save(starRating);
         break;
       case 3:
-        starRating.threePointCount--;
+        --starRating.threePointCount;
         starRating.threePointSum -= beforeScore;
         await this.starRatingRepository.save(starRating);
         break;
       case 4:
-        starRating.fourPointCount--;
+        --starRating.fourPointCount;
         starRating.fourPointSum -= beforeScore;
         await this.starRatingRepository.save(starRating);
         break;
       case 5:
-        starRating.fivePointCount--;
+        --starRating.fivePointCount;
         starRating.fivePointSum -= beforeScore;
         await this.starRatingRepository.save(starRating);
         1;

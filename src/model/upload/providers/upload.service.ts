@@ -13,7 +13,6 @@ import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface
 import * as fs from "fs";
 import * as path from "path";
 import { ReviewImageEntity } from "../entities/review.image.entity";
-import { InquiryEntity } from "src/model/inquiry/entities/inquiry.entity";
 import { ReviewVideoEntity } from "../entities/review.video.entity";
 import { InquiryImageEntity } from "../../inquiry/entities/inquiry.image.entity";
 import { InquiryVideoEntity } from "../../inquiry/entities/inquiry.video.entity";
