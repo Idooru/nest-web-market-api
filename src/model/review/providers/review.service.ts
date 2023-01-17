@@ -7,7 +7,7 @@ import {
   CreateReviewDto,
 } from "../dto/create-review.dto";
 import { ProductRepository } from "./../../product/providers/product.repository";
-import { PromisesConfig } from "../../../common/config/promises.config";
+import { PromisesLibrary } from "../../../common/lib/promises.library";
 import { UserRepository } from "../../user/providers/user.repository";
 import { ReviewRepository } from "./review.repository";
 import { Injectable, NotFoundException } from "@nestjs/common";
@@ -31,7 +31,7 @@ export class ReviewService {
     private readonly userRepository: UserRepository,
     private readonly uploadRepository: UploadRepository,
     private readonly starRatingService: StarRatingService,
-    private readonly promises: PromisesConfig,
+    private readonly promisesLibrary: PromisesLibrary,
   ) {}
 
   async increaseStarRating(
@@ -70,7 +70,7 @@ export class ReviewService {
       this.productRepository.findProductOneById(productId),
     ]);
 
-    return this.promises.twoPromiseSettled(
+    return this.promisesLibrary.twoPromiseSettled(
       findUserAndProduct[0],
       findUserAndProduct[1],
       "Find User And Product",

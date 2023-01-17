@@ -8,9 +8,10 @@ import { UserModule } from "../user/user.module";
 import { ReviewRepository } from "./providers/review.repository";
 import { StarRatingEntity } from "../review/entities/star-rating.entity";
 import { StarRatingRepository } from "../review/providers/star-rating.repository";
-import { AppConfigModule } from "src/common/config/app.config.module";
 import { StarRatingService } from "./providers/star-rating.service";
 import { UploadModule } from "../upload/upload.module";
+import { LibarayModule } from "src/common/lib/library.module";
+import { AppConfigModule } from "src/common/config/app.config.module";
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { UploadModule } from "../upload/upload.module";
     forwardRef(() => UploadModule),
     forwardRef(() => UserModule),
     forwardRef(() => ProductModule),
-    forwardRef(() => AppConfigModule),
+    AppConfigModule,
+    LibarayModule,
   ],
   controllers: [ReviewController],
   providers: [

@@ -14,6 +14,7 @@ import { UserAuthEntity } from "../user/entities/user.auth.entity";
 import { UserEntity } from "../user/entities/user.entity";
 import { AppConfigModule } from "../../common/config/app.config.module";
 import { ConfigService } from "@nestjs/config";
+import { LibarayModule } from "src/common/lib/library.module";
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ConfigService } from "@nestjs/config";
     }),
     forwardRef(() => UserModule),
     forwardRef(() => AppConfigModule),
+    LibarayModule,
   ],
   providers: [AuthService, JwtStrategy, AuthRepository],
   exports: [AuthService],
