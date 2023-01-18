@@ -6,7 +6,7 @@ import {
   ImATeapotException,
 } from "@nestjs/common";
 import { Response } from "express";
-import { ValidationError } from "../interfaces/validation.error.interface";
+import { ValidationError } from "./interface/validation.error.interface";
 
 /**
  * Promise Exception Filter 처럼 내가 원하는 타이밍에

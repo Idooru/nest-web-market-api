@@ -3,4 +3,3 @@ export class HttpError {
   message: Array<string>;
   error: string;
 }
-// string[] | PromiseRejectedResult[]

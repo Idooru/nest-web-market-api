@@ -15,9 +15,9 @@ import { JwtPayload } from "src/common/interfaces/jwt.payload.interface";
 import { Cookies } from "src/common/decorators/cookies.decorator";
 import { UseInterceptors, NotFoundException } from "@nestjs/common";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/json.clear.cookie.interceptor";
-import { JsonClearCookieInterface } from "src/common/interfaces/json.clear.cookie.interface";
+import { JsonClearCookieInterface } from "src/common/interceptors/interface/json.clear.cookie.interface";
 import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface";
-import { JsonGeneralInterface } from "src/common/interfaces/json.general.interface";
+import { JsonGeneralInterface } from "src/common/interceptors/interface/json.general.interface";
 import { JsonGeneralInterceptor } from "../../../common/interceptors/json.general.interceptor";
 import { PromisesLibrary } from "../../../common/lib/promises.library";
 

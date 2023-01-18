@@ -4,7 +4,7 @@ import {
   ArgumentsHost,
   HttpException,
 } from "@nestjs/common";
-import { HttpError } from "../interfaces/http.error.interface";
+import { HttpError } from "./interface/http.error.interface";
 import { Response } from "express";
 
 @Catch(HttpException)

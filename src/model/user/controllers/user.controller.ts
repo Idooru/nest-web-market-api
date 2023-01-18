@@ -1,5 +1,5 @@
-import { JsonClearCookieInterface } from "./../../../common/interfaces/json.clear.cookie.interface";
-import { JsonSendCookieInterface } from "./../../../common/interfaces/json.send.cookie.interface";
+import { JsonClearCookieInterface } from "../../../common/interceptors/interface/json.clear.cookie.interface";
+import { JsonSendCookieInterface } from "../../../common/interceptors/interface/json.send.cookie.interface";
 import {
   Body,
   Controller,
@@ -26,7 +26,7 @@ import { IsNotLoginGuard } from "../../../common/guards/is-not-login.guard";
 import { JsonSendCookieInterceptor } from "src/common/interceptors/json.send.cookie.interceptor";
 import { JsonGeneralInterceptor } from "src/common/interceptors/json.general.interceptor";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/json.clear.cookie.interceptor";
-import { JsonGeneralInterface } from "src/common/interfaces/json.general.interface";
+import { JsonGeneralInterface } from "src/common/interceptors/interface/json.general.interface";
 
 @Controller("/user")
 export class UserController {
