@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { InternalServerErrorException } from "@nestjs/common";
+import { PromiseHandleException } from "../exceptions/promise.handle.exception";
 
 @Injectable()
 export class PromisesLibrary {
@@ -16,7 +16,7 @@ export class PromisesLibrary {
     );
 
     if (errors.length) {
-      throw new InternalServerErrorException(errors, msg + " Errors");
+      throw new PromiseHandleException(errors, msg + " Errors");
     }
 
     const successOne = [promiseOne].find(
@@ -46,7 +46,7 @@ export class PromisesLibrary {
     );
 
     if (errors.length) {
-      throw new InternalServerErrorException(errors, msg + " Errors");
+      throw new PromiseHandleException(errors, msg + " Errors");
     }
 
     const successOne = [promiseOne].find(
@@ -82,7 +82,7 @@ export class PromisesLibrary {
     );
 
     if (errors.length) {
-      throw new InternalServerErrorException(errors, msg + " Errors");
+      throw new PromiseHandleException(errors, msg + " Errors");
     }
 
     const successOne = [promiseOne].find(
