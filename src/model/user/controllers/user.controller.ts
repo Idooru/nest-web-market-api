@@ -5,6 +5,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
   Query,
@@ -142,9 +143,9 @@ export class UserController {
 
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsNotLoginGuard)
-  @Get("/find-email")
+  @Get("/find-email/name/:realname/phone-number/:phonenumber")
   async findEmail(
-    @Query() findEmailDto: FindEmailDto,
+    @Param() findEmailDto: FindEmailDto,
   ): Promise<JsonGeneralInterface<string>> {
     return {
       statusCode: 200,
