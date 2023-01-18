@@ -6,7 +6,7 @@ import {
   ImATeapotException,
 } from "@nestjs/common";
 import { Response } from "express";
-import { ValidationError } from "./interface/validation.error.interface";
+import { ValidationExceptionType } from "./interface/validation-exception.interface";
 
 /**
  * Promise Exception Filter 처럼 내가 원하는 타이밍에
@@ -25,7 +25,7 @@ import { ValidationError } from "./interface/validation.error.interface";
 export class ValidationExceptionFilter implements ExceptionFilter {
   catch(exception: UnsupportedMediaTypeException, host: ArgumentsHost) {
     const res = host.switchToHttp().getResponse<Response>();
-    const err = exception.getResponse() as ValidationError;
+    const err = exception.getResponse() as ValidationExceptionType;
 
     return res.status(400).json({
       success: false,

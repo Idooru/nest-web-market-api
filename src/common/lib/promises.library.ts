@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PromiseHandleException } from "../exceptions/promise.handle.exception";
+import { PromiseHandleException } from "../exceptions/promise-handle.exception";
 
 @Injectable()
 export class PromisesLibrary {

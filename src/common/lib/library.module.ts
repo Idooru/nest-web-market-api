@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { PromisesLibrary } from "./promises.library";
-import { TimeLoggerLibrary } from "./time.logger.library";
+import { TimeLoggerLibrary } from "./time-logger.library";
 
 @Module({
   imports: [],

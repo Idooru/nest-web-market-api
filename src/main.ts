@@ -1,15 +1,15 @@
 import { Logger, ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
-import { HttpExceptionFilter } from "./common/filters/http.exception.filter";
-import { PromiseExcptionFilter } from "./common/filters/promise.exception.filter";
+import { HttpExceptionFilter } from "./common/filters/http-exception.filter";
+import { PromiseExcptionFilter } from "./common/filters/promise-exception.filter";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { join } from "path";
 import { ConfigService } from "@nestjs/config";
 
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
-import { ValidationExceptionFilter } from "./common/filters/validation.exception.filter";
+import { ValidationExceptionFilter } from "./common/filters/validation-exception.filter";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);

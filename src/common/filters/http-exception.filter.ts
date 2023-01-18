@@ -4,14 +4,14 @@ import {
   ArgumentsHost,
   HttpException,
 } from "@nestjs/common";
-import { HttpError } from "./interface/http.error.interface";
+import { HttpExceptionType } from "./interface/http-exception.interface";
 import { Response } from "express";
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const res = host.switchToHttp().getResponse<Response>();
-    const err = exception.getResponse() as HttpError;
+    const err = exception.getResponse() as HttpExceptionType;
 
     return res.status(err.statusCode).setHeader("X-Powered-By", "").json({
       success: false,

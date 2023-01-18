@@ -7,18 +7,18 @@ import {
   UploadedFiles,
   Delete,
 } from "@nestjs/common";
-import { JsonClearCookieInterface } from "../../../common/interceptors/interface/json.clear.cookie.interface";
-import { JsonClearCookieInterceptor } from "src/common/interceptors/json.clear.cookie.interceptor";
+import { JsonClearCookieInterface } from "../../../common/interceptors/interface/json-clear-cookie.interface";
+import { JsonClearCookieInterceptor } from "src/common/interceptors/json-clear-cookie.interceptor";
 import { UploadService } from "../providers/upload.service";
 import { IsLoginGuard } from "../../../common/guards/is-login.guard";
 import { MulterConfig } from "src/common/config/multer.config";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtPayload } from "src/common/interfaces/jwt.payload.interface";
-import { JsonSendCookieInterface } from "../../../common/interceptors/interface/json.send.cookie.interface";
+import { JsonSendCookieInterface } from "../../../common/interceptors/interface/json-send-cookie.interface";
 import { IsAdminGuard } from "../../../common/guards/is-admin.guard";
 import { Cookies } from "src/common/decorators/cookies.decorator";
-import { JsonSendCookieInterceptor } from "src/common/interceptors/json.send.cookie.interceptor";
+import { JsonSendCookieInterceptor } from "src/common/interceptors/json-send-cookie.interceptor";
 import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface";
 
 @Controller("upload")

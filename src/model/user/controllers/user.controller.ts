@@ -1,5 +1,5 @@
-import { JsonClearCookieInterface } from "../../../common/interceptors/interface/json.clear.cookie.interface";
-import { JsonSendCookieInterface } from "../../../common/interceptors/interface/json.send.cookie.interface";
+import { JsonClearCookieInterface } from "../../../common/interceptors/interface/json-clear-cookie.interface";
+import { JsonSendCookieInterface } from "../../../common/interceptors/interface/json-send-cookie.interface";
 import {
   Body,
   Controller,
@@ -23,10 +23,10 @@ import { ResetPasswordDto } from "../dtos/reset-password.dto";
 import { GetJWT } from "../../../common/decorators/get.jwt.decorator";
 import { FindEmailDto } from "./../dtos/find-email.dto";
 import { IsNotLoginGuard } from "../../../common/guards/is-not-login.guard";
-import { JsonSendCookieInterceptor } from "src/common/interceptors/json.send.cookie.interceptor";
-import { JsonGeneralInterceptor } from "src/common/interceptors/json.general.interceptor";
-import { JsonClearCookieInterceptor } from "src/common/interceptors/json.clear.cookie.interceptor";
-import { JsonGeneralInterface } from "src/common/interceptors/interface/json.general.interface";
+import { JsonGeneralInterceptor } from "src/common/interceptors/json-general.interceptor";
+import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
+import { JsonSendCookieInterceptor } from "src/common/interceptors/json-send-cookie.interceptor";
+import { JsonClearCookieInterceptor } from "src/common/interceptors/json-clear-cookie.interceptor";
 
 @Controller("/user")
 export class UserController {
