@@ -74,7 +74,7 @@ export class PromisesLibrary {
     promiseFour: PromiseSettledResult<W>,
     msg: string,
   ): [T, U, V, W] {
-    const promiseArray = [promiseOne, promiseTwo, promiseThree];
+    const promiseArray = [promiseOne, promiseTwo, promiseThree, promiseFour];
 
     const errors = promiseArray.filter(
       (idx: PromiseSettledResult<unknown>): idx is PromiseRejectedResult =>
