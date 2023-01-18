@@ -6,11 +6,9 @@ import { Response } from "express";
 export class PromiseExcptionFilter implements ExceptionFilter {
   catch(exception: PromiseHandleException, host: ArgumentsHost) {
     const res = host.switchToHttp().getResponse<Response>();
-
-    return res.status(500).json({
+    return res.status(400).json({
       success: false,
-      statusCode: 500,
-      message: "Promise Handle Exception이 발생하였습니다.",
+      message: `${exception.msg}가 발생하였습니다.`,
       timestamp: new Date().toString(),
       reason: exception.errors.map((idx) => idx.reason.response),
     });

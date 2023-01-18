@@ -1,13 +1,15 @@
 import { Logger, ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
-import { AllExceptionFilter } from "./common/exceptions/all.exception.filter";
+import { HttpExceptionFilter } from "./common/filters/http.exception.filter";
+import { PromiseExcptionFilter } from "./common/filters/promise.exception.filter";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { join } from "path";
 import { ConfigService } from "@nestjs/config";
 
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
+import { ValidationExceptionFilter } from "./common/filters/validation.exception.filter";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -16,10 +18,14 @@ async function bootstrap() {
 
   /* 각각의 서비스에서 발생하는 custom exception을 제외한 서버에서 발생하는 에러
   혹은 404 에러 등을 글로벌적으로 처리할수 있음*/
-  app.useGlobalFilters(new AllExceptionFilter());
+  app.useGlobalFilters(
+    new HttpExceptionFilter(),
+    new PromiseExcptionFilter(),
+    new ValidationExceptionFilter(),
+  );
   app.useGlobalPipes(
     new ValidationPipe({
-      errorHttpStatusCode: 415,
+      errorHttpStatusCode: 418,
     }),
   );
 

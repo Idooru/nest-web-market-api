@@ -1,5 +1,5 @@
 export interface ValidationError {
-  statusCode: 400;
+  statusCode: 415;
   message: string[];
   error: string;
 }
