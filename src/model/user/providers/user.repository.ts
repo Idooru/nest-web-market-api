@@ -166,8 +166,6 @@ export class UserRepository {
       .where("user.id = :id", { id: userId })
       .getOne();
 
-    console.log(this.select.userInformationReturnProperty);
-
     return user;
   }
 
