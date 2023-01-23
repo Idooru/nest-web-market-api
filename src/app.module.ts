@@ -7,7 +7,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule } from "@nestjs/config";
 import { UploadModule } from "./model/upload/upload.module";
 import { ReviewModule } from "./model/review/review.module";
-import { typeOrmConfig } from "./common/config/etc.config";
+import { typeOrmConfig } from "./common/config/typeorm.config";
 
 @Module({
   imports: [

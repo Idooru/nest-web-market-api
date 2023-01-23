@@ -6,7 +6,7 @@ import {
 } from "@nestjs/common";
 import { Observable, map } from "rxjs";
 import { TimeLoggerLibrary } from "../lib/time-logger.library";
-import { cookieOption } from "../config/etc.config";
+import { cookieOption } from "../config/security.config";
 
 @Injectable()
 export class JsonSendCookieInterceptor implements NestInterceptor {

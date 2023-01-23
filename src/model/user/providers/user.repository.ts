@@ -9,7 +9,7 @@ import { RegisterUserDto } from "../dtos/register-user.dto";
 import { UserEntity } from "../entities/user.entity";
 import { CreateUserDto } from "../dtos/create-user.dto";
 import { PromisesLibrary } from "../../../common/lib/promises.library";
-import { returnPropertyWithSelect } from "src/common/config/etc.config";
+import { returnPropertyWithSelect } from "src/common/config/select.config";
 
 @Injectable()
 export class UserRepository {

@@ -8,7 +8,7 @@ import { CreateProductDto } from "../dto/create_product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
-import { returnPropertyWithSelect } from "src/common/config/etc.config";
+import { returnPropertyWithSelect } from "src/common/config/select.config";
 
 @Injectable()
 export class ProductRepository {
