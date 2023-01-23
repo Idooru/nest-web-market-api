@@ -11,8 +11,7 @@ import { jwtOptions } from "../config/security.config";
 
 @Injectable()
 export class IsLoginGuard implements CanActivate {
-  private readonly jwtOptions = jwtOptions;
-  private readonly jwtService = new JwtService(this.jwtOptions);
+  private readonly jwtService = new JwtService(jwtOptions);
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<Request>();
@@ -32,7 +31,7 @@ export class IsLoginGuard implements CanActivate {
 
   async validateToken(token: string, res: Response): Promise<JwtPayload> {
     try {
-      return await this.jwtService.verifyAsync(token, this.jwtOptions);
+      return await this.jwtService.verifyAsync(token, jwtOptions);
     } catch (err) {
       if (err.name.includes("Expired")) {
         res.clearCookie("JWT_COOKIE");
