@@ -7,4 +7,4 @@ import { TimeLoggerLibrary } from "./time-logger.library";
   providers: [PromisesLibrary, TimeLoggerLibrary],
   exports: [PromisesLibrary, TimeLoggerLibrary],
 })
-export class LibarayModule {}
+export class LibraryModule {}

@@ -10,7 +10,7 @@ import { StarRatingEntity } from "../review/entities/star-rating.entity";
 import { StarRatingRepository } from "../review/providers/star-rating.repository";
 import { StarRatingService } from "./providers/star-rating.service";
 import { UploadModule } from "../upload/upload.module";
-import { LibarayModule } from "src/common/lib/library.module";
+import { LibraryModule } from "src/common/lib/library.module";
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { LibarayModule } from "src/common/lib/library.module";
     forwardRef(() => UploadModule),
     forwardRef(() => UserModule),
     forwardRef(() => ProductModule),
-    LibarayModule,
+    LibraryModule,
   ],
   controllers: [ReviewController],
   providers: [

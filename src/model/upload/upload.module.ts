@@ -12,7 +12,7 @@ import { InquiryImageEntity } from "../inquiry/entities/inquiry.image.entity";
 import { InquiryVideoEntity } from "../inquiry/entities/inquiry.video.entity";
 import { ProductEntity } from "../product/entities/product.entity";
 import { MulterConfig } from "src/common/config/multer.config";
-import { LibarayModule } from "src/common/lib/library.module";
+import { LibraryModule } from "src/common/lib/library.module";
 
 @Module({
   imports: [
@@ -26,7 +26,7 @@ import { LibarayModule } from "src/common/lib/library.module";
     ]),
     forwardRef(() => UserModule),
     NestjsFormDataModule,
-    LibarayModule,
+    LibraryModule,
   ],
   controllers: [UploadController],
   providers: [UploadService, UploadRepository, MulterConfig],

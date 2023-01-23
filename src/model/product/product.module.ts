@@ -9,7 +9,7 @@ import { UserModule } from "../user/user.module";
 import { ReviewModule } from "../review/review.module";
 import { InquiryModule } from "../inquiry/inquiry.module";
 import { ProductImageEntity } from "../upload/entities/product.image.entity";
-import { LibarayModule } from "src/common/lib/library.module";
+import { LibraryModule } from "src/common/lib/library.module";
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { LibarayModule } from "src/common/lib/library.module";
     forwardRef(() => UploadModule),
     forwardRef(() => ReviewModule),
     forwardRef(() => InquiryModule),
-    LibarayModule,
+    LibraryModule,
   ],
   controllers: [ProductController],
   providers: [ProductService, ProductRepository],

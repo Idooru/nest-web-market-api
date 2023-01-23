@@ -11,7 +11,7 @@ import { forwardRef, Module } from "@nestjs/common";
 import { UserController } from "./controllers/user.controller";
 import { UserService } from "../user/providers/user.service";
 import { UserEntity } from "./entities/user.entity";
-import { LibarayModule } from "src/common/lib/library.module";
+import { LibraryModule } from "src/common/lib/library.module";
 
 @Module({
   imports: [
@@ -24,7 +24,7 @@ import { LibarayModule } from "src/common/lib/library.module";
     forwardRef(() => AuthModule),
     forwardRef(() => UploadModule),
     forwardRef(() => ReviewModule),
-    LibarayModule,
+    LibraryModule,
   ],
   controllers: [UserController],
   providers: [UserService, UserRepository, UploadService],

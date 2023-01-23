@@ -13,7 +13,7 @@ import { forwardRef } from "@nestjs/common";
 import { UserAuthEntity } from "../user/entities/user.auth.entity";
 import { UserEntity } from "../user/entities/user.entity";
 import { ConfigService } from "@nestjs/config";
-import { LibarayModule } from "src/common/lib/library.module";
+import { LibraryModule } from "src/common/lib/library.module";
 
 @Module({
   imports: [
@@ -30,7 +30,7 @@ import { LibarayModule } from "src/common/lib/library.module";
       signOptions: { expiresIn: "1d" },
     }),
     forwardRef(() => UserModule),
-    LibarayModule,
+    LibraryModule,
   ],
   providers: [AuthService, JwtStrategy, AuthRepository],
   exports: [AuthService],
