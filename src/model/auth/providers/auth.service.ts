@@ -17,7 +17,7 @@ import * as bcrypt from "bcrypt";
 export class AuthService {
   constructor(
     private readonly promisesLibrary: PromisesLibrary,
-    private readonly authRepositry: AuthRepository,
+    private readonly authRepository: AuthRepository,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -40,7 +40,7 @@ export class AuthService {
 
   async login(loginUserDto: LoginUserDto): Promise<string> {
     const { email, password } = loginUserDto;
-    const user = await this.authRepositry.findUserWithEmail(email);
+    const user = await this.authRepository.findUserWithEmail(email);
 
     if (!(await bcrypt.compare(password, user.Auth.password))) {
       throw new UnauthorizedException("아이디 혹은 비밀번호가 틀렸습니다.");
@@ -66,8 +66,8 @@ export class AuthService {
     const { realname, phonenumber } = findEmailDto;
 
     const checkUserColumn = await Promise.allSettled([
-      this.authRepositry.findUserWithRealName(realname),
-      this.authRepositry.findUserWithPhoneNumber(phonenumber),
+      this.authRepository.findUserWithRealName(realname),
+      this.authRepository.findUserWithPhoneNumber(phonenumber),
     ]);
 
     const [realNameResult, phoneNumberResult] =
@@ -89,7 +89,7 @@ export class AuthService {
     const { email, password } = resetPasswordDto;
 
     const promise = await Promise.allSettled([
-      this.authRepositry.findUserWithEmail(email),
+      this.authRepository.findUserWithEmail(email),
       bcrypt.hash(password, 10),
     ]);
 
@@ -101,6 +101,6 @@ export class AuthService {
 
     const [user, hashed] = resultPromise;
 
-    await this.authRepositry.resetPassword(user.Auth.id, hashed);
+    await this.authRepository.resetPassword(user.Auth.id, hashed);
   }
 }
