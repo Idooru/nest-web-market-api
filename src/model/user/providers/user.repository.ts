@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { UserActivityEntity } from "../entities/user.activity.entity";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
 import { PatchUserDto } from "../dtos/patch-user.dto";
@@ -30,6 +26,10 @@ export class UserRepository {
   ) {}
 
   private readonly select = userSelectProperty;
+
+  async isExistUser(userId: string): Promise<boolean> {
+    return (await this.userRepository.findOne(userId)) ? true : false;
+  }
 
   async verifyUserEmail(email: string): Promise<void> {
     const found = await this.userRepository
@@ -176,23 +176,17 @@ export class UserRepository {
   }
 
   async findUserProfileInfoWithId(userId: string): Promise<any> {
-    try {
-      return await this.userRepository
-        .createQueryBuilder()
-        .select(this.select.userProfileSelect)
-        .from(UserEntity, "user")
-        .innerJoin("user.Profile", "Profile")
-        .innerJoin("user.Auth", "Auth")
-        .innerJoin("user.Activity", "Activity")
-        .leftJoin("Activity.Review", "Review")
-        .leftJoin("Activity.Inquiry", "Inquiry")
-        .where("user.id = :id", { id: userId })
-        .getOne();
-    } catch (err) {
-      throw new InternalServerErrorException(
-        "사용자의 프로필을 가져오는 중 에러가 발생하였습니다.",
-      );
-    }
+    return await this.userRepository
+      .createQueryBuilder()
+      .select(this.select.userProfileSelect)
+      .from(UserEntity, "user")
+      .innerJoin("user.Profile", "Profile")
+      .innerJoin("user.Auth", "Auth")
+      .innerJoin("user.Activity", "Activity")
+      .leftJoin("Activity.Review", "Review")
+      .leftJoin("Activity.Inquiry", "Inquiry")
+      .where("user.id = :id", { id: userId })
+      .getOne();
   }
 
   async createUser(
@@ -287,26 +281,16 @@ export class UserRepository {
   }
 
   async deleteUser(userId: string): Promise<void> {
-    const user = await this.findUserWithId(userId);
-
-    const userProfileId = user.Profile.id;
-    const userAuthId = user.Auth.id;
-    const userActivityId = user.Activity.id;
-
-    const deleteObject = await Promise.allSettled([
-      this.userRepository.delete({ id: userId }),
-      this.userProfileRepository.delete(userProfileId),
-      this.userAuthRepository.delete(userAuthId),
-      this.userActivityRepository.delete(userActivityId),
-    ]);
-
-    this.promisesLibrary.fourPromiseSettled(
-      deleteObject[0],
-      deleteObject[1],
-      deleteObject[2],
-      deleteObject[3],
-      "Delete Object For Secession User",
-    );
+    try {
+      await this.userRepository
+        .createQueryBuilder()
+        .delete()
+        .from(UserEntity)
+        .where("id = :id", { id: userId })
+        .execute();
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   async increaseReviewCount(user: UserEntity) {

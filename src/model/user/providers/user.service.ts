@@ -1,7 +1,7 @@
 import { JwtPayload } from "../../../common/interfaces/jwt.payload.interface";
 import { PatchUserDto } from "../dtos/patch-user.dto";
 import { RegisterUserDto } from "../dtos/register-user.dto";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { UserRepository } from "../providers/user.repository";
 import { AuthService } from "../../auth/providers/auth.service";
 import { PromisesLibrary } from "../../../common/lib/promises.library";
@@ -78,6 +78,12 @@ export class UserService {
   }
 
   async deleteUserWithId(userId: string): Promise<void> {
+    const existUser = await this.userRepository.isExistUser(userId);
+
+    if (!existUser) {
+      throw new NotFoundException("해당 아이디의 사용자를 찾을 수 없습니다.");
+    }
+
     await this.userRepository.deleteUser(userId);
   }
 }

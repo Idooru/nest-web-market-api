@@ -194,7 +194,12 @@ export class ProductRepository {
     //   .execute();
   }
 
-  async removeProduct(id: string): Promise<void> {
-    await this.productRepository.delete(id);
+  async removeProduct(productId: string): Promise<void> {
+    await this.productRepository
+      .createQueryBuilder()
+      .delete()
+      .from(ProductEntity, "product")
+      .where("product.id =: id", { id: productId })
+      .execute();
   }
 }
