@@ -8,7 +8,7 @@ import { CreateProductDto } from "../dto/create_product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
-import { returnPropertyWithSelect } from "src/common/config/select.config";
+import { productSelectProperty } from "src/common/config/repository-select-configs/product-select";
 
 @Injectable()
 export class ProductRepository {
@@ -17,7 +17,7 @@ export class ProductRepository {
     private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
-  private readonly select = returnPropertyWithSelect;
+  private readonly select = productSelectProperty;
 
   async checkProductNameToCreate(name: string): Promise<void> {
     const found = await this.productRepository
