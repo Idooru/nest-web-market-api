@@ -18,7 +18,9 @@ export class ReviewEntity extends CommonEntity {
   @Column({ type: "enum", enum: [1, 2, 3, 4, 5] })
   userSelectScore: 1 | 2 | 3 | 4 | 5;
 
-  @ManyToOne(() => UserActivityEntity, (activity) => activity.Review)
+  @ManyToOne(() => UserActivityEntity, (activity) => activity.Review, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "userActivityId" })
   UserActivity: UserActivityEntity;
 

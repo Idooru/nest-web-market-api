@@ -15,14 +15,20 @@ export class UserActivityEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @OneToOne(() => UserEntity, (user) => user.Activity)
+  @OneToOne(() => UserEntity, (user) => user.Activity, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "userId", referencedColumnName: "id" })
   User: UserEntity;
 
-  @OneToMany(() => ReviewEntity, (review) => review.UserActivity)
+  @OneToMany(() => ReviewEntity, (review) => review.UserActivity, {
+    cascade: true,
+  })
   Review: ReviewEntity[];
 
-  @OneToMany(() => InquiryEntity, (inquiry) => inquiry.Inquirer)
+  @OneToMany(() => InquiryEntity, (inquiry) => inquiry.Inquirer, {
+    cascade: true,
+  })
   Inquiry: InquiryEntity[];
 
   @Column({ type: "smallint", default: 0 })

@@ -13,7 +13,9 @@ export class UserAuthEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @OneToOne(() => UserEntity, (user) => user.Auth)
+  @OneToOne(() => UserEntity, (user) => user.Auth, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "userId", referencedColumnName: "id" })
   User: UserEntity;
 

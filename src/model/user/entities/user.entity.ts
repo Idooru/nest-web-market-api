@@ -6,12 +6,18 @@ import { UserProfileEntity } from "./user.profile.entity";
 
 @Entity("users")
 export class UserEntity extends CommonEntity {
-  @OneToOne(() => UserProfileEntity, (profile) => profile.User)
+  @OneToOne(() => UserProfileEntity, (profile) => profile.User, {
+    cascade: true,
+  })
   Profile: UserProfileEntity;
 
-  @OneToOne(() => UserAuthEntity, (auth) => auth.User)
+  @OneToOne(() => UserAuthEntity, (auth) => auth.User, {
+    cascade: true,
+  })
   Auth: UserAuthEntity;
 
-  @OneToOne(() => UserActivityEntity, (activity) => activity.User)
+  @OneToOne(() => UserActivityEntity, (activity) => activity.User, {
+    cascade: true,
+  })
   Activity: UserActivityEntity;
 }

@@ -19,7 +19,9 @@ export class InquiryEntity extends CommonEntity {
   @Column({ type: "enum", enum: ["product status", "delivery status"] })
   categories: "product status" | "delivery status";
 
-  @ManyToOne(() => UserEntity, (user) => user.Activity)
+  @ManyToOne(() => UserEntity, (user) => user.Activity, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "userActivityId" })
   Inquirer: UserActivityEntity;
 

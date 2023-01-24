@@ -4,7 +4,9 @@ import { Column, Entity, OneToOne, JoinColumn } from "typeorm";
 
 @Entity("star_ratings")
 export class StarRatingEntity extends CommonEntity {
-  @OneToOne(() => ProductEntity, (product) => product.StarRating)
+  @OneToOne(() => ProductEntity, (product) => product.StarRating, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "productId" })
   Product: ProductEntity;
 

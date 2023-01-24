@@ -5,7 +5,9 @@ import { UserEntity } from "src/model/user/entities/user.entity";
 
 @Entity("products_images")
 export class ProductImageEntity extends CommonEntity {
-  @OneToOne(() => ProductEntity, (product) => product.Image)
+  @OneToOne(() => ProductEntity, (product) => product.Image, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "productId" })
   Product: ProductEntity;
 

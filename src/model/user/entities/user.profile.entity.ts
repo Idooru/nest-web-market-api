@@ -19,7 +19,9 @@ export class UserProfileEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @OneToOne(() => UserEntity, (user) => user.Profile)
+  @OneToOne(() => UserEntity, (user) => user.Profile, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "userId", referencedColumnName: "id" })
   User: UserEntity;
 

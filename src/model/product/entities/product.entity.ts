@@ -36,15 +36,21 @@ export class ProductEntity extends CommonEntity {
   @Column({ type: "int", default: 50 })
   quantity: number;
 
-  @OneToOne(() => ProductImageEntity, (image) => image.Product)
+  @OneToOne(() => ProductImageEntity, (image) => image.Product, {
+    cascade: true,
+  })
   Image: ProductImageEntity;
 
-  @OneToOne(() => StarRatingEntity, (starRating) => starRating.Product)
+  @OneToOne(() => StarRatingEntity, (starRating) => starRating.Product, {
+    cascade: true,
+  })
   StarRating: StarRatingEntity;
 
-  @OneToMany(() => ReviewEntity, (review) => review.Product)
+  @OneToMany(() => ReviewEntity, (review) => review.Product, { cascade: true })
   Review: ReviewEntity[];
 
-  @OneToMany(() => InquiryEntity, (inquiry) => inquiry.Product)
+  @OneToMany(() => InquiryEntity, (inquiry) => inquiry.Product, {
+    cascade: true,
+  })
   Inquiry: InquiryEntity[];
 }
