@@ -24,13 +24,19 @@ export class ReviewEntity extends CommonEntity {
   @JoinColumn({ name: "userActivityId" })
   UserActivity: UserActivityEntity;
 
-  @ManyToOne(() => ProductEntity, (product) => product.Review)
+  @ManyToOne(() => ProductEntity, (product) => product.Review, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "productId" })
   Product: ProductEntity;
 
-  @OneToMany(() => ReviewImageEntity, (image) => image.Review)
+  @OneToMany(() => ReviewImageEntity, (image) => image.Review, {
+    cascade: true,
+  })
   Image?: ReviewImageEntity[];
 
-  @OneToMany(() => ReviewVideoEntity, (video) => video.Review)
+  @OneToMany(() => ReviewVideoEntity, (video) => video.Review, {
+    cascade: true,
+  })
   Video?: ReviewVideoEntity[];
 }

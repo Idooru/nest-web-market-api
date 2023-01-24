@@ -25,13 +25,19 @@ export class InquiryEntity extends CommonEntity {
   @JoinColumn({ name: "userActivityId" })
   Inquirer: UserActivityEntity;
 
-  @ManyToOne(() => ProductEntity, (product) => product.Inquiry)
+  @ManyToOne(() => ProductEntity, (product) => product.Inquiry, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "productId" })
   Product: ProductEntity;
 
-  @OneToMany(() => InquiryImageEntity, (image) => image.Inquiry)
+  @OneToMany(() => InquiryImageEntity, (image) => image.Inquiry, {
+    cascade: true,
+  })
   Image: InquiryImageEntity;
 
-  @OneToMany(() => InquiryVideoEntity, (video) => video.Inquiry)
+  @OneToMany(() => InquiryVideoEntity, (video) => video.Inquiry, {
+    cascade: true,
+  })
   Video: InquiryVideoEntity;
 }

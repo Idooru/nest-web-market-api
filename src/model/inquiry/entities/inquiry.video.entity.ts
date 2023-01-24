@@ -8,7 +8,9 @@ export class InquiryVideoEntity extends CommonEntity {
   @Column({ type: "varchar", nullable: false, unique: true })
   url: string;
 
-  @ManyToOne(() => InquiryEntity, (inquiry) => inquiry.Image)
+  @ManyToOne(() => InquiryEntity, (inquiry) => inquiry.Image, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "inquiryId" })
   Inquiry: InquiryEntity;
 
