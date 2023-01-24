@@ -1,5 +1,5 @@
 export const productSelectProperty = {
-  productsReturnProperty: [
+  productsSelect: [
     "product.name",
     "product.price",
     "product.type",
@@ -9,7 +9,7 @@ export const productSelectProperty = {
     "Inquiry",
     "UserActivity.id",
   ],
-  productReturnProperty: [
+  productSelect: [
     "product.id",
     "product.name",
     "product.price",
@@ -26,7 +26,7 @@ export const productSelectProperty = {
     "ReviewImage.url",
     "ReviewVideo.url",
   ],
-  productReturnWithStarRating: [
+  productSelectWithStarRating: [
     "product.id",
     "product.name",
     "product.price",

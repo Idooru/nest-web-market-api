@@ -1,5 +1,6 @@
 export const userSelectProperty = {
-  userProfileReturnProperty: [
+  userSelect: ["user", "Profile", "Auth", "Activity"],
+  userProfileSelect: [
     "user",
     "Profile.realname",
     "Profile.birth",
