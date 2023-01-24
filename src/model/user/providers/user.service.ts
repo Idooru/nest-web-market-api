@@ -39,7 +39,7 @@ export class UserService {
   }
 
   async findSelfInfoWithId(userId: string): Promise<UserEntity> {
-    return await this.userRepository.findUserWithId(userId);
+    return await this.userRepository.findUserProfileInfoWithId(userId);
   }
 
   async patchUserInfoMyself(
