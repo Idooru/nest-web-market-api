@@ -69,7 +69,7 @@ export class ProductRepository {
       .leftJoin("product.Review", "Review")
       .leftJoin("Review.UserActivity", "UserActivity")
       .leftJoin("product.Inquiry", "Inquiry")
-      .select(this.select.productsReturnProperty)
+      .select(this.select.productsSelect)
       .orderBy("product.createdAt", "DESC")
       .getMany();
 
@@ -87,7 +87,7 @@ export class ProductRepository {
       .leftJoin("product.Review", "Review")
       .leftJoin("Review.UserActivity", "UserActivity")
       .leftJoin("product.Inquiry", "Inquiry")
-      .select(this.select.productsReturnProperty)
+      .select(this.select.productsSelect)
       .orderBy("product.createdAt", "ASC")
       .getMany();
 
@@ -108,7 +108,7 @@ export class ProductRepository {
         .leftJoin("Review.Video", "ReviewVideo")
         .leftJoin("Review.UserActivity", "UserActivity")
         .leftJoin("product.Inquiry", "Inquiry")
-        .select(this.select.productReturnProperty)
+        .select(this.select.productSelect)
         .where("product.name = :name", { name })
         .getOneOrFail();
     } catch (err) {
@@ -127,7 +127,7 @@ export class ProductRepository {
         .leftJoin("Review.Video", "ReviewVideo")
         .leftJoin("Review.UserActivity", "UserActivity")
         .leftJoin("product.Inquiry", "Inquiry")
-        .select(this.select.productReturnProperty)
+        .select(this.select.productSelect)
         .where("product.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
@@ -141,7 +141,7 @@ export class ProductRepository {
         .createQueryBuilder("product")
         .leftJoin("product.Image", "Image")
         .leftJoin("product.StarRating", "StarRating")
-        .select(this.select.productReturnWithStarRating)
+        .select(this.select.productSelectWithStarRating)
         .where("product.id = :id", { id })
         .getOneOrFail();
     } catch (err) {

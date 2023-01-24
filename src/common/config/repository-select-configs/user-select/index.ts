@@ -1,5 +1,13 @@
 export const userSelectProperty = {
   userSelect: ["user", "Profile", "Auth", "Activity"],
+  userSelectWithActivityProperty: [
+    "user",
+    "Profile",
+    "Auth",
+    "Activity",
+    "Review",
+    "Inquiry",
+  ],
   userProfileSelect: [
     "user",
     "Profile.realname",

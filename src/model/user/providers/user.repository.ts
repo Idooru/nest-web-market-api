@@ -31,10 +31,10 @@ export class UserRepository {
 
   private readonly select = userSelectProperty;
 
-  async checkUserEmail(email: string): Promise<void> {
+  async verifyUserEmail(email: string): Promise<void> {
     const found = await this.userRepository
       .createQueryBuilder()
-      .select(["user", "Profile", "Auth", "Activity"])
+      .select(this.select.userSelect)
       .from(UserEntity, "user")
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
@@ -47,12 +47,14 @@ export class UserRepository {
     }
   }
 
-  async checkUserNickName(nickname: string): Promise<void> {
+  async verifyUserNickName(nickname: string): Promise<void> {
     const found = await this.userRepository
-      .createQueryBuilder("user")
-      .leftJoinAndSelect("user.Profile", "Profile")
-      .leftJoinAndSelect("user.Auth", "Auth")
-      .leftJoinAndSelect("user.Activity", "Activity")
+      .createQueryBuilder()
+      .select(this.select.userSelect)
+      .from(UserEntity, "user")
+      .innerJoin("user.Profile", "Profile")
+      .innerJoin("user.Auth", "Auth")
+      .innerJoin("user.Activity", "Activity")
       .where("Auth.nickname = :nickname", { nickname })
       .getOne();
 
@@ -61,12 +63,14 @@ export class UserRepository {
     }
   }
 
-  async checkUserPhoneNumber(phonenumber: string): Promise<void> {
+  async verifyUserPhoneNumber(phonenumber: string): Promise<void> {
     const found = await this.userRepository
-      .createQueryBuilder("user")
-      .leftJoinAndSelect("user.Profile", "Profile")
-      .leftJoinAndSelect("user.Auth", "Auth")
-      .leftJoinAndSelect("user.Activity", "Activity")
+      .createQueryBuilder()
+      .select(this.select.userSelect)
+      .from(UserEntity, "user")
+      .innerJoin("user.Profile", "Profile")
+      .innerJoin("user.Auth", "Auth")
+      .innerJoin("user.Activity", "Activity")
       .where("Profile.phonenumber = :phonenumber", { phonenumber })
       .getOne();
 
@@ -75,15 +79,17 @@ export class UserRepository {
     }
   }
 
-  async checkUserNickNameWhenUpdate(
+  async verifyUserNickNameWhenUpdate(
     myNickName: string,
     nickNameToUpdate: string,
   ): Promise<void> {
     const found = await this.userRepository
-      .createQueryBuilder("user")
-      .leftJoinAndSelect("user.Profile", "Profile")
-      .leftJoinAndSelect("user.Auth", "Auth")
-      .leftJoinAndSelect("user.Activity", "Activity")
+      .createQueryBuilder()
+      .select(this.select.userSelect)
+      .from(UserEntity, "user")
+      .innerJoin("user.Profile", "Profile")
+      .innerJoin("user.Auth", "Auth")
+      .innerJoin("user.Activity", "Activity")
       .where("Auth.nickname = :nickname", { nickname: nickNameToUpdate })
       .getOne();
 
@@ -95,15 +101,17 @@ export class UserRepository {
     throw new UnauthorizedException("해당 닉네임은 사용중입니다.");
   }
 
-  async checkUserPhoneNumberWhenUpdate(
+  async verifyUserPhoneNumberWhenUpdate(
     myPhoneNumber: string,
     phoneNumberToUpdate: string,
   ): Promise<void> {
     const found = await this.userRepository
-      .createQueryBuilder("user")
-      .leftJoinAndSelect("user.Profile", "Profile")
-      .leftJoinAndSelect("user.Auth", "Auth")
-      .leftJoinAndSelect("user.Activity", "Activity")
+      .createQueryBuilder()
+      .select(this.select.userSelect)
+      .from(UserEntity, "user")
+      .innerJoin("user.Profile", "Profile")
+      .innerJoin("user.Auth", "Auth")
+      .innerJoin("user.Activity", "Activity")
       .where("Profile.phonenumber = :phoennumber", {
         phonenumber: phoneNumberToUpdate,
       })
@@ -120,12 +128,14 @@ export class UserRepository {
   async findUserWithId(userId: string): Promise<UserEntity> {
     try {
       return await this.userRepository
-        .createQueryBuilder("user")
-        .leftJoin("user.Profile", "Profile")
-        .leftJoin("user.Auth", "Auth")
-        .innerJoinAndSelect("user.Activity", "Activity")
-        .leftJoinAndSelect("Activity.Review", "Review")
-        .leftJoinAndSelect("Activity.Inquiry", "Inquiry")
+        .createQueryBuilder()
+        .select(this.select.userSelectWithActivityProperty)
+        .from(UserEntity, "user")
+        .innerJoin("user.Profile", "Profile")
+        .innerJoin("user.Auth", "Auth")
+        .innerJoin("user.Activity", "Activity")
+        .leftJoin("Activity.Review", "Review")
+        .leftJoin("Activity.Inquiry", "Inquiry")
         .where("user.id = :id", { id: userId })
         .getOneOrFail();
     } catch (err) {
@@ -136,10 +146,12 @@ export class UserRepository {
   async findUserWithEmail(email: string): Promise<UserEntity> {
     try {
       return await this.userRepository
-        .createQueryBuilder("user")
-        .leftJoinAndSelect("user.Profile", "Profile")
-        .leftJoinAndSelect("user.Auth", "Auth")
-        .leftJoinAndSelect("user.Activity", "Activity")
+        .createQueryBuilder()
+        .select(this.select.userSelect)
+        .from(UserEntity, "user")
+        .innerJoin("user.Profile", "Profile")
+        .innerJoin("user.Auth", "Auth")
+        .innerJoin("user.Activity", "Activity")
         .where("Auth.email = :email", { email })
         .getOneOrFail();
     } catch (err) {
@@ -150,10 +162,12 @@ export class UserRepository {
   async findUserWithNickName(nickname: string): Promise<UserEntity> {
     try {
       return await this.userRepository
-        .createQueryBuilder("user")
-        .leftJoinAndSelect("user.Profile", "Profile")
-        .leftJoinAndSelect("user.Auth", "Auth")
-        .leftJoinAndSelect("user.Activity", "Activity")
+        .createQueryBuilder()
+        .select(this.select.userSelect)
+        .from(UserEntity, "user")
+        .innerJoin("user.Profile", "Profile")
+        .innerJoin("user.Auth", "Auth")
+        .innerJoin("user.Activity", "Activity")
         .where("Auth.nickname = :nickname", { nickname })
         .getOneOrFail();
     } catch (err) {
@@ -165,7 +179,7 @@ export class UserRepository {
     try {
       return await this.userRepository
         .createQueryBuilder()
-        .select(this.select.userProfileReturnProperty)
+        .select(this.select.userProfileSelect)
         .from(UserEntity, "user")
         .innerJoin("user.Profile", "Profile")
         .innerJoin("user.Auth", "Auth")

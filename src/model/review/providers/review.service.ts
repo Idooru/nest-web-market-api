@@ -89,7 +89,7 @@ export class ReviewService {
     if (!review) {
       // 만약 리뷰를 하나도 작성하지 않은 사용자가 다른 사용자의 리뷰를 수정하려고 시도할시 아래 예외가 발생한다.
       throw new NotFoundException(
-        `해당 activityId(${reviewId})로 작성된 리뷰중에 reviewId(${reviewId})와 같은 리뷰를 찾을 수 없습니다.`,
+        `해당 activityId(${userId})로 작성된 리뷰중에 reviewId(${reviewId})와 같은 리뷰를 찾을 수 없습니다.`,
       );
     }
 

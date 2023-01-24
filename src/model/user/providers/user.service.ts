@@ -22,9 +22,9 @@ export class UserService {
 
     const [CheckUserColumnOne, CheckUserColumnTwo, CheckUserColumnThree] =
       await Promise.allSettled([
-        this.userRepository.checkUserEmail(email),
-        this.userRepository.checkUserNickName(nickname),
-        this.userRepository.checkUserPhoneNumber(phonenumber),
+        this.userRepository.verifyUserEmail(email),
+        this.userRepository.verifyUserNickName(nickname),
+        this.userRepository.verifyUserPhoneNumber(phonenumber),
       ]);
 
     this.promisesLibrary.threePromiseSettled(
@@ -52,8 +52,8 @@ export class UserService {
     const myPhoneNumber = user.Profile.phonenumber;
 
     const checkUserColumn = await Promise.allSettled([
-      this.userRepository.checkUserNickNameWhenUpdate(myNickName, nickname),
-      this.userRepository.checkUserPhoneNumberWhenUpdate(
+      this.userRepository.verifyUserNickNameWhenUpdate(myNickName, nickname),
+      this.userRepository.verifyUserPhoneNumberWhenUpdate(
         myPhoneNumber,
         phonenumber,
       ),
