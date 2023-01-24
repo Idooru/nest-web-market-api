@@ -4,7 +4,6 @@ import { UserProfileEntity } from "../entities/user.profile.entity";
 import { UserEntity } from "../entities/user.entity";
 import { UserAuthEntity } from "../entities/user.auth.entity";
 import { IntersectionType } from "@nestjs/swagger";
-import { profile } from "console";
 
 export class ResponseUserCoreDto extends PickType(UserEntity, [
   "id",
