@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { UserActivityEntity } from "../entities/user.activity.entity";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
 import { PatchUserDto } from "../dtos/patch-user.dto";
@@ -9,7 +13,7 @@ import { RegisterUserDto } from "../dtos/register-user.dto";
 import { UserEntity } from "../entities/user.entity";
 import { CreateUserDto } from "../dtos/create-user.dto";
 import { PromisesLibrary } from "../../../common/lib/promises.library";
-import { returnPropertyWithSelect } from "src/common/config/select.config";
+import { userSelectProperty } from "src/common/config/repository-select-configs/user-select";
 
 @Injectable()
 export class UserRepository {
@@ -25,14 +29,16 @@ export class UserRepository {
     private readonly userActivityRepository: Repository<UserActivityEntity>,
   ) {}
 
-  private readonly select = returnPropertyWithSelect;
+  private readonly select = userSelectProperty;
 
   async checkUserEmail(email: string): Promise<void> {
     const found = await this.userRepository
-      .createQueryBuilder("user")
-      .leftJoinAndSelect("user.Profile", "Profile")
-      .leftJoinAndSelect("user.Auth", "Auth")
-      .leftJoinAndSelect("user.Activity", "Activity")
+      .createQueryBuilder()
+      .select(["user", "Profile", "Auth", "Activity"])
+      .from(UserEntity, "user")
+      .innerJoin("user.Profile", "Profile")
+      .innerJoin("user.Auth", "Auth")
+      .innerJoin("user.Activity", "Activity")
       .where("Auth.email = :email", { email })
       .getOne();
 
@@ -115,9 +121,9 @@ export class UserRepository {
     try {
       return await this.userRepository
         .createQueryBuilder("user")
-        .leftJoinAndSelect("user.Profile", "Profile")
-        .leftJoinAndSelect("user.Auth", "Auth")
-        .leftJoinAndSelect("user.Activity", "Activity")
+        .leftJoin("user.Profile", "Profile")
+        .leftJoin("user.Auth", "Auth")
+        .innerJoinAndSelect("user.Activity", "Activity")
         .leftJoinAndSelect("Activity.Review", "Review")
         .leftJoinAndSelect("Activity.Inquiry", "Inquiry")
         .where("user.id = :id", { id: userId })
@@ -155,18 +161,24 @@ export class UserRepository {
     }
   }
 
-  async findUserProfileInfoWithId(userId: string): Promise<UserEntity> {
-    const user = await this.userRepository
-      .createQueryBuilder("user")
-      .leftJoin("user.Profile", "Profile")
-      .select(["Profile.realname"])
-      // .leftJoinAndSelect("user.Auth", "Auth")
-      // .leftJoinAndSelect("user.Activity", "Activity")
-      // .select(this.select.UserInformationReturnProperty)
-      .where("user.id = :id", { id: userId })
-      .getOne();
-
-    return user;
+  async findUserProfileInfoWithId(userId: string): Promise<any> {
+    try {
+      return await this.userRepository
+        .createQueryBuilder()
+        .select(this.select.userProfileReturnProperty)
+        .from(UserEntity, "user")
+        .innerJoin("user.Profile", "Profile")
+        .innerJoin("user.Auth", "Auth")
+        .innerJoin("user.Activity", "Activity")
+        .leftJoin("Activity.Review", "Review")
+        .leftJoin("Activity.Inquiry", "Inquiry")
+        .where("user.id = :id", { id: userId })
+        .getOne();
+    } catch (err) {
+      throw new InternalServerErrorException(
+        "사용자의 프로필을 가져오는 중 에러가 발생하였습니다.",
+      );
+    }
   }
 
   async createUser(
@@ -284,12 +296,12 @@ export class UserRepository {
   }
 
   async increaseReviewCount(user: UserEntity) {
-    user.Activity.productReviewCount++;
+    ++user.Activity.productReviewCount;
     await this.userRepository.save(user);
   }
 
   async increaseInquiryCount(user: UserEntity) {
-    user.Activity.productInquiryCount++;
+    ++user.Activity.productInquiryCount;
     await this.userRepository.save(user);
   }
 }
