@@ -17,7 +17,6 @@ import { LibraryModule } from "src/common/lib/library.module";
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
     PassportModule.register({ defaultStrategy: "jwt", session: false }),
     TypeOrmModule.forFeature([
       UserEntity,

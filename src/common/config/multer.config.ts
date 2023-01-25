@@ -66,5 +66,3 @@ export class MulterConfig {
     return result;
   }
 }
-
-console.log(__dirname);
