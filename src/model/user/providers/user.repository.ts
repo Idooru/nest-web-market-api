@@ -281,16 +281,12 @@ export class UserRepository {
   }
 
   async deleteUser(userId: string): Promise<void> {
-    try {
-      await this.userRepository
-        .createQueryBuilder()
-        .delete()
-        .from(UserEntity)
-        .where("id = :id", { id: userId })
-        .execute();
-    } catch (err) {
-      console.error(err);
-    }
+    await this.userRepository
+      .createQueryBuilder()
+      .delete()
+      .from(UserEntity)
+      .where("id = :id", { id: userId })
+      .execute();
   }
 
   async increaseReviewCount(user: UserEntity) {
