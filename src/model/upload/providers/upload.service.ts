@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { UserRepository } from "../../user/providers/user.repository";
 import { UploadRepository } from "../providers/upload.repository";
@@ -22,7 +18,6 @@ export class UploadService {
   constructor(
     private readonly uploadRepository: UploadRepository,
     private readonly userRepository: UserRepository,
-    private readonly configService: ConfigService,
   ) {}
 
   checkExtensionTypeForProductImage(file: Express.Multer.File) {
@@ -85,13 +80,13 @@ export class UploadService {
 
   deleteProductImageOnServerDisk(imageName: string) {
     const imageFileName = imageName.replace(
-      `http://localhost:${new ConfigService().get("PORT")}/media/`,
+      `http://localhost:${new ConfigService().get("APPLICATION_PORT")}/media/`,
       "",
     );
 
     const deletePath = path.join(
       __dirname,
-      `../../../../../uploads/image/${imageFileName}`,
+      `../../../../uploads/image/${imageFileName}`,
     );
 
     fs.rmSync(deletePath);
@@ -100,7 +95,7 @@ export class UploadService {
   deleteImageFilesOnServerDisk(imageName: string) {
     const deletePath = path.join(
       __dirname,
-      `../../../../../uploads/image/${imageName}`,
+      `../../../../uploads/image/${imageName}`,
     );
 
     fs.rmSync(deletePath);
@@ -109,7 +104,7 @@ export class UploadService {
   deleteVideoFilesOnServerDisk(videoName: string) {
     const deletePath = path.join(
       __dirname,
-      `../../../../../uploads/video/${videoName}`,
+      `../../../../uploads/video/${videoName}`,
     );
 
     fs.rmSync(deletePath);

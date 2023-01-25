@@ -11,21 +11,21 @@ export class MulterConfig {
 
     try {
       logger.log("create uploads folder");
-      fs.mkdirSync(path.join(__dirname, "../../../../uploads"));
+      fs.mkdirSync(path.join(__dirname, "../../../uploads"));
     } catch (err) {
       logger.log("uploads folder is already exist");
     }
 
     try {
       logger.log(`create ${folder1} folder into uploads folder`);
-      fs.mkdirSync(path.join(__dirname, `../../../../uploads/${folder1}`));
+      fs.mkdirSync(path.join(__dirname, `../../../uploads/${folder1}`));
     } catch (err) {
       logger.log(`${folder1} is already exist`);
     }
 
     try {
       logger.log(`create ${folder2} folder into uploads folder`);
-      fs.mkdirSync(path.join(__dirname, `../../../../uploads/${folder2}`));
+      fs.mkdirSync(path.join(__dirname, `../../../uploads/${folder2}`));
     } catch (err) {
       logger.log(`${folder2} is already exist`);
     }
@@ -42,10 +42,7 @@ export class MulterConfig {
             null,
           );
         }
-        const folderName = path.join(
-          __dirname,
-          `../../../../uploads/${folder}`,
-        );
+        const folderName = path.join(__dirname, `../../../uploads/${folder}`);
 
         cb(null, folderName);
       },
@@ -69,3 +66,5 @@ export class MulterConfig {
     return result;
   }
 }
+
+console.log(__dirname);
