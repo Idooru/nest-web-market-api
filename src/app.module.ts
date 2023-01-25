@@ -3,18 +3,16 @@ import { AuthModule } from "./model/auth/auth.module";
 import { UserModule } from "./model/user/user.module";
 import { ProductModule } from "./model/product/product.module";
 import { ResponseLoggerMiddleware } from "./common/middlewares/response-logger.middleware";
-import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule } from "@nestjs/config";
 import { UploadModule } from "./model/upload/upload.module";
 import { ReviewModule } from "./model/review/review.module";
-import { typeOrmConfig } from "./common/config/typeorm.config";
+import { DotenvConfigurationModule } from "./common/config/dotenv.config";
+import { TypeormConfigurationModule } from "./common/config/typeorm.config";
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    TypeOrmModule.forRoot(typeOrmConfig),
+    DotenvConfigurationModule,
+    TypeormConfigurationModule,
     AuthModule,
     UserModule,
     ProductModule,
