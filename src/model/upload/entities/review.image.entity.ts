@@ -8,7 +8,9 @@ export class ReviewImageEntity extends CommonEntity {
   @Column({ type: "varchar", nullable: false, unique: true })
   url: string;
 
-  @ManyToOne(() => ReviewEntity, (review) => review.Image)
+  @ManyToOne(() => ReviewEntity, (review) => review.Image, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "reviewId" })
   Review: ReviewEntity;
 
