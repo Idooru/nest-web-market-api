@@ -32,8 +32,10 @@ export class UploadRepository {
     mediaUploadDto: MediaUploadDto,
   ): Promise<MediaReturnDto> {
     const { media, uploader } = mediaUploadDto;
-    const fileNameOnUrl = `http://localhost:${this.configService.get(
-      "PORT",
+    const fileNameOnUrl = `http://${this.configService.get(
+      "APPLICATION_HOST",
+    )}:${this.configService.get(
+      "APPLICATION_PORT",
     )}/media/${media}`.toLowerCase();
 
     await this.productsImageRepository.save({
@@ -48,8 +50,10 @@ export class UploadRepository {
     mediaUploadDto: MediaUploadDto,
   ): Promise<MediaReturnDto> {
     const { media, uploader } = mediaUploadDto;
-    const fileNameOnUrl = `http://localhost:${new ConfigService().get(
-      "PORT",
+    const fileNameOnUrl = `http://${this.configService.get(
+      "APPLICATION_HOST",
+    )}:${new ConfigService().get(
+      "APPLICATION_PORT",
     )}/media/${media}`.toLowerCase();
 
     await this.reviewsImageRepository.save({
@@ -64,8 +68,10 @@ export class UploadRepository {
     mediaUploadDto: MediaUploadDto,
   ): Promise<MediaReturnDto> {
     const { media, uploader } = mediaUploadDto;
-    const fileNameOnUrl = `http://localhost:${new ConfigService().get(
-      "PORT",
+    const fileNameOnUrl = `http://${this.configService.get(
+      "APPLICATION_HOST",
+    )}:${new ConfigService().get(
+      "APPLICATION_PORT",
     )}/media/${media}`.toLowerCase();
 
     await this.reviewsVideoRepository.save({
@@ -80,8 +86,10 @@ export class UploadRepository {
     mediaUploadDto: MediaUploadDto,
   ): Promise<MediaReturnDto> {
     const { media, uploader } = mediaUploadDto;
-    const fileNameOnUrl = `http://localhost:${new ConfigService().get(
-      "PORT",
+    const fileNameOnUrl = `http://${this.configService.get(
+      "APPLICATION_HOST",
+    )}:${new ConfigService().get(
+      "APPLICATION_PORT",
     )}/media/${media}`.toLowerCase();
 
     await this.inquiryImageRepository.save({
@@ -96,8 +104,10 @@ export class UploadRepository {
     mediaUploadDto: MediaUploadDto,
   ): Promise<MediaReturnDto> {
     const { media, uploader } = mediaUploadDto;
-    const fileNameOnUrl = `http://localhost:${new ConfigService().get(
-      "PORT",
+    const fileNameOnUrl = `http://${this.configService.get(
+      "APPLICATION_HOST",
+    )}:${new ConfigService().get(
+      "APPLICATION_PORT",
     )}/media/${media}`.toLowerCase();
 
     await this.inquiryVideoRepository.save({

@@ -18,6 +18,7 @@ export class UploadService {
   constructor(
     private readonly uploadRepository: UploadRepository,
     private readonly userRepository: UserRepository,
+    private readonly configService: ConfigService,
   ) {}
 
   checkExtensionTypeForProductImage(file: Express.Multer.File) {
@@ -80,7 +81,9 @@ export class UploadService {
 
   deleteProductImageOnServerDisk(imageName: string) {
     const imageFileName = imageName.replace(
-      `http://localhost:${new ConfigService().get("APPLICATION_PORT")}/media/`,
+      `http://${this.configService.get(
+        "APPLICATION_HOST",
+      )}:${this.configService.get("APPLICATION_PORT")}/media/`,
       "",
     );
 

@@ -13,7 +13,8 @@ import { ValidationExceptionFilter } from "./common/filters/validation-exception
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  const port = new ConfigService().get("PORT");
+  const host = new ConfigService().get("APPLICATION_HOST");
+  const port = new ConfigService().get("APPLICATION_PORT");
   const cookieSecret = new ConfigService().get("COOKIE_SECRET");
 
   /* 각각의 서비스에서 발생하는 custom exception을 제외한 서버에서 발생하는 에러
@@ -41,7 +42,7 @@ async function bootstrap() {
 
   await app.listen(port, () => {
     new Logger("NestApplication").log(
-      `Server is running at http://localhost:${port}`,
+      `Server is running at http://${host}:${port}`,
     );
   });
 }
