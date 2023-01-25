@@ -6,7 +6,6 @@ import { PromiseExcptionFilter } from "./common/filters/promise-exception.filter
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { join } from "path";
 import { ConfigService } from "@nestjs/config";
-
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import { ValidationExceptionFilter } from "./common/filters/validation-exception.filter";
