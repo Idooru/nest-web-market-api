@@ -6,16 +6,20 @@ import {
 } from "@nestjs/common";
 import { Observable, map } from "rxjs";
 import { TimeLoggerLibrary } from "../lib/time-logger.library";
-import { cookieOption } from "../config/security.config";
+import { SecurityLibrary } from "../lib/security.library";
 
 @Injectable()
 export class JsonSendCookieInterceptor implements NestInterceptor {
-  constructor(private readonly timeLoggerLibrary: TimeLoggerLibrary) {}
+  constructor(
+    private readonly timeLoggerLibrary: TimeLoggerLibrary,
+    private readonly securityLibrary: SecurityLibrary,
+  ) {}
 
   intercept(context: ArgumentsHost, next: CallHandler<any>): Observable<any> {
     // controller 도달 전
     const req = context.switchToHttp().getRequest();
     const res = context.switchToHttp().getResponse();
+    const cookieOption = this.securityLibrary.getCookieOption();
 
     this.timeLoggerLibrary.receiveRequest(req);
 
