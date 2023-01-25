@@ -227,4 +227,20 @@ export class UploadRepository {
     video.Review = review;
     await this.reviewsVideoRepository.save(video);
   }
+
+  async insertProductIdOnProductImage(
+    image: ProductImageEntity,
+    product: ProductEntity,
+  ) {
+    try {
+      await this.productsImageRepository
+        .createQueryBuilder()
+        .update(ProductImageEntity)
+        .set({ Product: product })
+        .where("id = :id", { id: image.id })
+        .execute();
+    } catch (err) {
+      console.error(err);
+    }
+  }
 }

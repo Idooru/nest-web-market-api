@@ -9,6 +9,8 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
 import { productSelectProperty } from "src/common/config/repository-select-configs/product-select";
+import { StarRatingEntity } from "src/model/review/entities/star-rating.entity";
+import { ProductImageEntity } from "src/model/upload/entities/product.image.entity";
 
 @Injectable()
 export class ProductRepository {
@@ -19,17 +21,16 @@ export class ProductRepository {
 
   private readonly select = productSelectProperty;
 
-  async checkProductNameToCreate(name: string): Promise<void> {
-    const found = await this.productRepository
-      .createQueryBuilder("product")
-      .where("product.name = :name", { name })
-      .getOne();
+  async isExistProductWithName(name: string): Promise<boolean> {
+    return (await this.productRepository.findOne({ where: { name } }))
+      ? true
+      : false;
+  }
 
-    if (!found) {
-      return;
-    }
-
-    throw new BadRequestException("해당 상품명은 사용중입니다.");
+  async isExistProductWithId(id: string): Promise<boolean> {
+    return (await this.productRepository.findOne({ where: { id } }))
+      ? true
+      : false;
   }
 
   async checkProductNameToModify(
@@ -149,25 +150,24 @@ export class ProductRepository {
     }
   }
 
-  async createProduct(createProductDto: CreateProductDto): Promise<void> {
-    // 엑티브 레코드 패턴
-    const product = this.productRepository.create();
-    product.name = createProductDto.name;
-    product.price = createProductDto.price;
-    product.origin = createProductDto.origin;
-    product.type = createProductDto.type;
-    product.description = createProductDto.description;
-    product.Image = createProductDto.Image;
-    product.StarRating = createProductDto.StarRating;
-    await this.productRepository.save(product);
+  // 웬만해선 상품 생성 서비스 로직에서만 호출하도록 한다.
+  async findLastCreatedProduct(): Promise<ProductEntity> {
+    return await this.productRepository
+      .createQueryBuilder()
+      .select("product")
+      .from(ProductEntity, "product")
+      .orderBy("product.createdAt", "DESC")
+      .limit(1)
+      .getOne();
+  }
 
-    // 리파지토리 패턴
-    // await this.productRepository
-    //   .createQueryBuilder("product")
-    //   .insert()
-    //   .into(ProductEntity)
-    //   .values({ ...createProductDto })
-    //   .execute();
+  async createProduct(createProductDto: CreateProductDto): Promise<void> {
+    await this.productRepository
+      .createQueryBuilder()
+      .insert()
+      .into(ProductEntity)
+      .values({ ...createProductDto })
+      .execute();
   }
 
   async modifyProduct(
@@ -198,8 +198,8 @@ export class ProductRepository {
     await this.productRepository
       .createQueryBuilder()
       .delete()
-      .from(ProductEntity, "product")
-      .where("product.id =: id", { id: productId })
+      .from(ProductEntity)
+      .where("id = :id", { id: productId })
       .execute();
   }
 }

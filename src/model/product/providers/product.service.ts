@@ -3,7 +3,11 @@ import { ProductEntity } from "../entities/product.entity";
 import { PromisesLibrary } from "../../../common/lib/promises.library";
 import { UploadRepository } from "../../upload/providers/upload.repository";
 import { ProductRepository } from "./product.repository";
-import { Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
 import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface";
@@ -38,8 +42,13 @@ export class ProductService {
     imageCookie: MediaUrlCookie,
   ): Promise<void> {
     const { name } = createProductDto;
+    const existProduct = await this.productRepository.isExistProductWithName(
+      name,
+    );
 
-    await this.productRepository.checkProductNameToCreate(name);
+    if (existProduct) {
+      throw new BadRequestException("해당 상품명은 사용중입니다.");
+    }
 
     const findImageAndStarRating = await Promise.allSettled([
       this.uploadRepository.findProductImageWithUrl(imageCookie.url),
@@ -52,10 +61,13 @@ export class ProductService {
       "Find Image And StarRating",
     );
 
-    createProductDto.Image = image;
-    createProductDto.StarRating = starRating;
-
     await this.productRepository.createProduct(createProductDto);
+    const product = await this.productRepository.findLastCreatedProduct();
+    await this.uploadRepository.insertProductIdOnProductImage(image, product);
+    await this.starRatingRepository.insertProductIdOnStarRating(
+      starRating,
+      product,
+    );
   }
 
   async modifyProduct(
@@ -90,6 +102,12 @@ export class ProductService {
   }
 
   async removeProduct(id: string): Promise<void> {
+    const existProduct = await this.productRepository.isExistProductWithId(id);
+
+    if (!existProduct) {
+      throw new NotFoundException("해당 아이디의 상품을 찾을 수 없습니다.");
+    }
+
     await this.productRepository.removeProduct(id);
   }
 }

@@ -112,13 +112,19 @@ export class StarRatingRepository {
     // await this.starRatingRepository.update(id, { averageScore });
   }
 
-  async insertStarRatingOnProduct(id: string, product: ProductEntity) {
-    const starRating = await this.starRatingRepository
-      .createQueryBuilder("starRating")
-      .where("starRating.id = :id", { id })
-      .getOne();
-
-    starRating.Product = product;
-    await this.starRatingRepository.save(starRating);
+  async insertProductIdOnStarRating(
+    starRating: StarRatingEntity,
+    product: ProductEntity,
+  ) {
+    try {
+      await this.starRatingRepository
+        .createQueryBuilder()
+        .update(StarRatingEntity)
+        .set({ Product: product })
+        .where("id = :id", { id: starRating.id })
+        .execute();
+    } catch (err) {
+      console.error(err);
+    }
   }
 }
