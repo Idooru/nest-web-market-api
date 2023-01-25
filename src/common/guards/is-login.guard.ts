@@ -7,11 +7,14 @@ import {
 import { JwtService } from "@nestjs/jwt";
 import { JwtPayload } from "../interfaces/jwt.payload.interface";
 import { Request, Response } from "express";
-import { jwtOptions } from "../config/security.config";
+import { SecurityLibrary } from "../lib/security.library";
 
 @Injectable()
 export class IsLoginGuard implements CanActivate {
-  private readonly jwtService = new JwtService(jwtOptions);
+  constructor(private readonly securityLibrary: SecurityLibrary) {}
+
+  private readonly jwtOption = this.securityLibrary.getJwtOption();
+  private readonly jwtService = new JwtService(this.jwtOption);
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<Request>();
@@ -31,7 +34,7 @@ export class IsLoginGuard implements CanActivate {
 
   async validateToken(token: string, res: Response): Promise<JwtPayload> {
     try {
-      return await this.jwtService.verifyAsync(token, jwtOptions);
+      return await this.jwtService.verifyAsync(token, this.jwtOption);
     } catch (err) {
       if (err.name.includes("Expired")) {
         res.clearCookie("JWT_COOKIE");
