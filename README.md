@@ -137,5 +137,6 @@ Nest is [MIT licensed](LICENSE).
     는지를 구별짓는 방법이 될것이다.
     문제는 따로 메서드를 만든 후, err.message배열에서 배열 메서드를 사용한 후 idx 매개변수를 이용해 접근해보려 했지만 idx 변수에 타입을 주지 않으면 idx.reason에 접근이 불가능해진다. idx에 정확한 타입을 주어야 할거 같다.
 
-13. cascade
-14. UserEntity에서 원하는 정보만 쿼리빌더를 사용해서 빼오기
+13. cascade 해결
+14. UserEntity에서 원하는 정보만 쿼리빌더를 사용해서 빼오기 해결
+15. 전체 사용자가 사용할 수 있는 api 컨트롤러를 free-use와 only-admin으로 나눠 보았다. 아직은 Product 도메인만 적용되었지만 나중에 모든 도메인에 적용해볼것이다.
