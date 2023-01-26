@@ -1,4 +1,4 @@
-import { Controller, Get, UseInterceptors, Query, Param } from "@nestjs/common";
+import { Controller, Get, UseInterceptors, Param } from "@nestjs/common";
 import * as response_productDto from "../dto/response_product.dto";
 import { ProductService } from "../providers/product.service";
 import { JsonGeneralInterceptor } from "src/common/interceptors/json-general.interceptor";
