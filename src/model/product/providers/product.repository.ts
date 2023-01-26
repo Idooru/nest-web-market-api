@@ -9,8 +9,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
 import { productSelectProperty } from "src/common/config/repository-select-configs/product-select";
-import { StarRatingEntity } from "src/model/review/entities/star-rating.entity";
-import { ProductImageEntity } from "src/model/upload/entities/product.image.entity";
 
 @Injectable()
 export class ProductRepository {
@@ -174,17 +172,23 @@ export class ProductRepository {
     productId: string,
     modifyProductDto: ModifyProductDto,
   ): Promise<void> {
-    // 엑티브 레코드 패턴
-    const product = await this.findProductOneById(productId);
-    product.name = modifyProductDto.name;
-    product.price = modifyProductDto.price;
-    product.origin = modifyProductDto.origin;
-    product.type = modifyProductDto.type;
-    product.description = modifyProductDto.description;
-    product.Image = modifyProductDto.Image;
-    product.quantity = modifyProductDto.quantity;
-    await this.productRepository.save(product);
+    await this.productRepository
+      .createQueryBuilder()
+      .update(ProductEntity)
+      .set({ ...modifyProductDto })
+      .where("id = :id", { id: productId })
+      .execute();
 
+    // 엑티브 레코드 패턴
+    // const product = await this.findProductOneById(productId);
+    // product.name = modifyProductDto.name;
+    // product.price = modifyProductDto.price;
+    // product.origin = modifyProductDto.origin;
+    // product.type = modifyProductDto.type;
+    // product.description = modifyProductDto.description;
+    // product.Image = modifyProductDto.Image;
+    // product.quantity = modifyProductDto.quantity;
+    // await this.productRepository.save(product);
     // 리파지토리 패턴
     // await this.productRepository
     //   .createQueryBuilder("product")

@@ -242,15 +242,22 @@ export class UploadRepository {
     image: ProductImageEntity,
     product: ProductEntity,
   ) {
-    try {
-      await this.productsImageRepository
-        .createQueryBuilder()
-        .update(ProductImageEntity)
-        .set({ Product: product })
-        .where("id = :id", { id: image.id })
-        .execute();
-    } catch (err) {
-      console.error(err);
-    }
+    await this.productsImageRepository
+      .createQueryBuilder()
+      .update(ProductImageEntity)
+      .set({ Product: product })
+      .where("id = :id", { id: image.id })
+      .execute();
+  }
+
+  async findProductImageEvenUse(productId: string) {
+    return await this.productsImageRepository
+      .createQueryBuilder()
+      .select("products_images")
+      .from(ProductImageEntity, "products_images")
+      .where("products_images.Product = :Product", {
+        Product: productId,
+      })
+      .getOne();
   }
 }

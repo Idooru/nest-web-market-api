@@ -76,29 +76,35 @@ export class ProductService {
     imageCookie: MediaUrlCookie,
   ): Promise<void> {
     const { name } = modifyProductDto;
+
     const findProductAndImage = await Promise.allSettled([
       this.productRepository.findProductOneById(productId),
       this.uploadRepository.findProductImageWithUrl(imageCookie.url),
+      this.uploadRepository.findProductImageEvenUse(productId),
     ]);
 
-    const [product, image] = this.promisesLibrary.twoPromiseSettled(
-      findProductAndImage[0],
-      findProductAndImage[1],
-      "Find Product And ImageId",
-    );
+    const [product, newImage, oldImage] =
+      this.promisesLibrary.threePromiseSettled(
+        findProductAndImage[0],
+        findProductAndImage[1],
+        findProductAndImage[2],
+        "Find Product And Image",
+      );
 
     await this.productRepository.checkProductNameToModify(name, product.name);
-    const getImage = await this.uploadRepository.findProductImageWithUrl(
-      image.url,
+
+    const replaceImageAndModifyProduct = await Promise.allSettled([
+      this.uploadRepository.deleteProductImageWithId(oldImage.id),
+      this.uploadRepository.insertProductIdOnProductImage(newImage, product),
+      this.productRepository.modifyProduct(productId, modifyProductDto),
+    ]);
+
+    this.promisesLibrary.threePromiseSettled(
+      replaceImageAndModifyProduct[0],
+      replaceImageAndModifyProduct[1],
+      replaceImageAndModifyProduct[2],
+      "Replace Image And Modify Product",
     );
-
-    modifyProductDto.Image = getImage;
-
-    const beforeImage =
-      await this.uploadRepository.findProductImageWithProductId(product.id);
-    await this.uploadRepository.deleteProductImageWithId(beforeImage.id);
-
-    await this.productRepository.modifyProduct(productId, modifyProductDto);
   }
 
   async removeProduct(id: string): Promise<void> {
