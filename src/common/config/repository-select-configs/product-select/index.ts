@@ -7,7 +7,7 @@ export const productSelectProperty = {
     "StarRating.averageScore",
     "Review",
     "Inquiry",
-    "UserActivity.id",
+    "User.id",
   ],
   productSelect: [
     "product.id",
@@ -22,7 +22,6 @@ export const productSelectProperty = {
     "product.updatedAt",
     "Review",
     "Inquiry",
-    "UserActivity.id",
     "ReviewImage.url",
     "ReviewVideo.url",
   ],

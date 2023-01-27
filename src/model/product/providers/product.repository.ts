@@ -36,7 +36,9 @@ export class ProductRepository {
     originalName: string,
   ): Promise<void> {
     const found = await this.productRepository
-      .createQueryBuilder("product")
+      .createQueryBuilder()
+      .select("product")
+      .from(ProductEntity, "product")
       .where("product.name = :name", { name: replaceName })
       .getOne();
 
@@ -49,26 +51,19 @@ export class ProductRepository {
     }
   }
 
-  async checkProductIdToExist(id: string): Promise<void> {
-    const found = await this.productRepository
-      .createQueryBuilder("product")
-      .where("product.id = :id", { id })
-      .getOne();
-
-    if (!found) {
-      throw new BadRequestException("해당 상품 아이디는 존재하지 않습니다.");
-    }
-  }
-
   async findProductsAllFromLatest(): Promise<ProductEntity[]> {
     const found = await this.productRepository
-      .createQueryBuilder("product")
-      .leftJoin("product.Image", "Image")
-      .leftJoin("product.StarRating", "StarRating")
-      .leftJoin("product.Review", "Review")
-      .leftJoin("Review.UserActivity", "UserActivity")
-      .leftJoin("product.Inquiry", "Inquiry")
+      .createQueryBuilder()
       .select(this.select.productsSelect)
+      .from(ProductEntity, "product")
+      .innerJoin("product.Image", "Image")
+      .innerJoin("product.StarRating", "StarRating")
+      .leftJoin("product.Review", "Review")
+      .leftJoin("product.Inquiry", "Inquiry")
+      .leftJoin("Review.Image", "ReviewImage")
+      .leftJoin("Review.Video", "ReviewVideo")
+      .leftJoin("Review.UserActivity", "UserActivity")
+      .leftJoin("UserActivity.User", "User")
       .orderBy("product.createdAt", "DESC")
       .getMany();
 
@@ -80,13 +75,17 @@ export class ProductRepository {
 
   async findProductsAllFromOldest(): Promise<ProductEntity[]> {
     const found = await this.productRepository
-      .createQueryBuilder("product")
-      .leftJoin("product.Image", "Image")
-      .leftJoin("product.StarRating", "StarRating")
-      .leftJoin("product.Review", "Review")
-      .leftJoin("Review.UserActivity", "UserActivity")
-      .leftJoin("product.Inquiry", "Inquiry")
+      .createQueryBuilder()
       .select(this.select.productsSelect)
+      .from(ProductEntity, "product")
+      .innerJoin("product.Image", "Image")
+      .innerJoin("product.StarRating", "StarRating")
+      .leftJoin("product.Review", "Review")
+      .leftJoin("product.Inquiry", "Inquiry")
+      .leftJoin("Review.Image", "ReviewImage")
+      .leftJoin("Review.Video", "ReviewVideo")
+      .leftJoin("Review.UserActivity", "UserActivity")
+      .leftJoin("UserActivity.User", "User")
       .orderBy("product.createdAt", "ASC")
       .getMany();
 
@@ -99,15 +98,16 @@ export class ProductRepository {
   async findProductOneByName(name: string): Promise<ProductEntity> {
     try {
       return await this.productRepository
-        .createQueryBuilder("product")
-        .leftJoin("product.Image", "Image")
-        .leftJoin("product.StarRating", "StarRating")
+        .createQueryBuilder()
+        .select(this.select.productSelect)
+        .from(ProductEntity, "product")
+        .innerJoin("product.Image", "Image")
+        .innerJoin("product.StarRating", "StarRating")
         .leftJoin("product.Review", "Review")
+        .leftJoin("product.Inquiry", "Inquiry")
         .leftJoin("Review.Image", "ReviewImage")
         .leftJoin("Review.Video", "ReviewVideo")
         .leftJoin("Review.UserActivity", "UserActivity")
-        .leftJoin("product.Inquiry", "Inquiry")
-        .select(this.select.productSelect)
         .where("product.name = :name", { name })
         .getOneOrFail();
     } catch (err) {
@@ -118,15 +118,16 @@ export class ProductRepository {
   async findProductOneById(id: string): Promise<ProductEntity> {
     try {
       return await this.productRepository
-        .createQueryBuilder("product")
-        .leftJoin("product.Image", "Image")
-        .leftJoin("product.StarRating", "StarRating")
+        .createQueryBuilder()
+        .select(this.select.productSelect)
+        .from(ProductEntity, "product")
+        .innerJoin("product.Image", "Image")
+        .innerJoin("product.StarRating", "StarRating")
         .leftJoin("product.Review", "Review")
+        .leftJoin("product.Inquiry", "Inquiry")
         .leftJoin("Review.Image", "ReviewImage")
         .leftJoin("Review.Video", "ReviewVideo")
         .leftJoin("Review.UserActivity", "UserActivity")
-        .leftJoin("product.Inquiry", "Inquiry")
-        .select(this.select.productSelect)
         .where("product.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
@@ -137,10 +138,11 @@ export class ProductRepository {
   async findProductWhenUseStarRatingWithId(id: string): Promise<ProductEntity> {
     try {
       return await this.productRepository
-        .createQueryBuilder("product")
-        .leftJoin("product.Image", "Image")
-        .leftJoin("product.StarRating", "StarRating")
+        .createQueryBuilder()
         .select(this.select.productSelectWithStarRating)
+        .from(ProductEntity, "product")
+        .innerJoin("product.Image", "Image")
+        .innerJoin("product.StarRating", "StarRating")
         .where("product.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
@@ -178,24 +180,6 @@ export class ProductRepository {
       .set({ ...modifyProductDto })
       .where("id = :id", { id: productId })
       .execute();
-
-    // 엑티브 레코드 패턴
-    // const product = await this.findProductOneById(productId);
-    // product.name = modifyProductDto.name;
-    // product.price = modifyProductDto.price;
-    // product.origin = modifyProductDto.origin;
-    // product.type = modifyProductDto.type;
-    // product.description = modifyProductDto.description;
-    // product.Image = modifyProductDto.Image;
-    // product.quantity = modifyProductDto.quantity;
-    // await this.productRepository.save(product);
-    // 리파지토리 패턴
-    // await this.productRepository
-    //   .createQueryBuilder("product")
-    //   .update(ProductEntity)
-    //   .set({ ...modifyProductDto })
-    //   .where("product.id = :id", { id: productId })
-    //   .execute();
   }
 
   async removeProduct(productId: string): Promise<void> {
