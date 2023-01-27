@@ -3,7 +3,6 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { PromisesLibrary } from "../../../common/lib/promises.library.js";
 import { ResetPasswordDto } from "../../user/dtos/reset-password.dto";
 import { FindEmailDto } from "../../user/dtos/find-email.dto";
 import { JwtService } from "@nestjs/jwt";
@@ -12,11 +11,12 @@ import { AuthRepository } from "./auth.repository";
 import { JwtPayload } from "../../../common/interfaces/jwt.payload.interface";
 
 import * as bcrypt from "bcrypt";
+import { PromiseLibrary } from "src/common/lib/promise.library";
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly promisesLibrary: PromisesLibrary,
+    private readonly promiseLibrary: PromiseLibrary,
     private readonly authRepository: AuthRepository,
     private readonly jwtService: JwtService,
   ) {}
@@ -65,15 +65,10 @@ export class AuthService {
   async findEmail(findEmailDto: FindEmailDto): Promise<string> {
     const { realname, phonenumber } = findEmailDto;
 
-    const checkUserColumn = await Promise.allSettled([
-      this.authRepository.findUserWithRealName(realname),
-      this.authRepository.findUserWithPhoneNumber(phonenumber),
-    ]);
-
     const [realNameResult, phoneNumberResult] =
-      this.promisesLibrary.twoPromiseSettled(
-        checkUserColumn[0],
-        checkUserColumn[1],
+      await this.promiseLibrary.twoPromiseBundle(
+        this.authRepository.findUserWithRealName(realname),
+        this.authRepository.findUserWithPhoneNumber(phonenumber),
         "Check User Column For Find Email",
       );
 
@@ -88,14 +83,9 @@ export class AuthService {
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
     const { email, password } = resetPasswordDto;
 
-    const promise = await Promise.allSettled([
+    const resultPromise = await this.promiseLibrary.twoPromiseBundle(
       this.authRepository.findUserWithEmail(email),
       bcrypt.hash(password, 10),
-    ]);
-
-    const resultPromise = this.promisesLibrary.twoPromiseSettled(
-      promise[0],
-      promise[1],
       "Find User And Hash Password",
     );
 

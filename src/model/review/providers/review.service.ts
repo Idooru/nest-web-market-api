@@ -7,7 +7,6 @@ import {
   CreateReviewDto,
 } from "../dto/create-review.dto";
 import { ProductRepository } from "./../../product/providers/product.repository";
-import { PromisesLibrary } from "../../../common/lib/promises.library";
 import { UserRepository } from "../../user/providers/user.repository";
 import { ReviewRepository } from "./review.repository";
 import { Injectable, NotFoundException } from "@nestjs/common";
@@ -22,6 +21,7 @@ import {
   ModifyReviewWithVideoDto,
 } from "../dto/modify-review.dto";
 import { ReviewEntity } from "../entities/review.entity";
+import { PromiseLibrary } from "src/common/lib/promise.library";
 
 @Injectable()
 export class ReviewService {
@@ -31,7 +31,7 @@ export class ReviewService {
     private readonly userRepository: UserRepository,
     private readonly uploadRepository: UploadRepository,
     private readonly starRatingService: StarRatingService,
-    private readonly promisesLibrary: PromisesLibrary,
+    private readonly promiseLibrary: PromiseLibrary,
   ) {}
 
   async increaseStarRating(
@@ -65,14 +65,9 @@ export class ReviewService {
     userId: string,
     productId: string,
   ): Promise<[UserEntity, ProductEntity]> {
-    const findUserAndProduct = await Promise.allSettled([
+    return await this.promiseLibrary.twoPromiseBundle(
       this.userRepository.findUserWithId(userId),
       this.productRepository.findProductOneById(productId),
-    ]);
-
-    return this.promisesLibrary.twoPromiseSettled(
-      findUserAndProduct[0],
-      findUserAndProduct[1],
       "Find User And Product",
     );
   }

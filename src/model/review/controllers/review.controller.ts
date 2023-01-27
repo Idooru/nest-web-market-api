@@ -19,13 +19,13 @@ import { JsonClearCookieInterface } from "src/common/interceptors/interface/json
 import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { JsonGeneralInterceptor } from "../../../common/interceptors/json-general.interceptor";
-import { PromisesLibrary } from "../../../common/lib/promises.library";
+import { PromiseLibrary } from "src/common/lib/promise.library";
 
 @Controller("review")
 export class ReviewController {
   constructor(
     private readonly reviewService: ReviewService,
-    private readonly promisesLibrary: PromisesLibrary,
+    private readonly promiseLbirary: PromiseLibrary,
   ) {}
 
   @UseInterceptors(JsonClearCookieInterceptor)
@@ -43,7 +43,8 @@ export class ReviewController {
         "이미지, 비디오 쿠키가 동시에 준비되어 있어야 합니다.",
       );
     }
-    const promise = await Promise.allSettled([
+
+    await this.promiseLbirary.twoPromiseBundle(
       this.reviewService.increaseStarRating(createReviewDto, productId),
       this.reviewService.createReviewWithImageAndVideo({
         createReviewDto,
@@ -52,11 +53,6 @@ export class ReviewController {
         reviewImgCookie,
         reviewVdoCookie,
       }),
-    ]);
-
-    this.promisesLibrary.twoPromiseSettled(
-      promise[0],
-      promise[1],
       "StarRating And Create Review With Image And Video",
     );
 
@@ -82,7 +78,7 @@ export class ReviewController {
       );
     }
 
-    const promise = await Promise.allSettled([
+    await this.promiseLbirary.twoPromiseBundle(
       this.reviewService.increaseStarRating(createReviewDto, productId),
       this.reviewService.createReviewWithImage({
         createReviewDto,
@@ -90,11 +86,6 @@ export class ReviewController {
         productId,
         reviewImgCookie,
       }),
-    ]);
-
-    this.promisesLibrary.twoPromiseSettled(
-      promise[0],
-      promise[1],
       "StarRating And Create Review With Image",
     );
 
@@ -119,7 +110,8 @@ export class ReviewController {
         "비디오 쿠키를 찾을 수 없습니다. 우선 동영상을 업로드 해주세요.",
       );
     }
-    const promise = await Promise.allSettled([
+
+    await this.promiseLbirary.twoPromiseBundle(
       this.reviewService.increaseStarRating(createReviewDto, productId),
       this.reviewService.createReviewWithVideo({
         createReviewDto,
@@ -127,11 +119,6 @@ export class ReviewController {
         productId,
         reviewVdoCookie,
       }),
-    ]);
-
-    this.promisesLibrary.twoPromiseSettled(
-      promise[0],
-      promise[1],
       "StarRating And Create Review With Video",
     );
 
@@ -150,18 +137,13 @@ export class ReviewController {
     @Body() createReviewDto: CreateReviewDto,
     @GetJWT() jwtPayload: JwtPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    const promise = await Promise.allSettled([
+    await this.promiseLbirary.twoPromiseBundle(
       this.reviewService.increaseStarRating(createReviewDto, productId),
       this.reviewService.createReviewWithoutMedia({
         createReviewDto,
         jwtPayload,
         productId,
       }),
-    ]);
-
-    this.promisesLibrary.twoPromiseSettled(
-      promise[0],
-      promise[1],
       "StarRating And Create Review Without Media",
     );
 
@@ -195,7 +177,7 @@ export class ReviewController {
       jwtPayload.userId,
     );
 
-    const promise = await Promise.allSettled([
+    await this.promiseLbirary.twoPromiseBundle(
       this.reviewService.modifyStarRating(modifyReviewDto, productId, review),
       this.reviewService.modifyReviewWithImageAndVideo({
         modifyReviewDto,
@@ -203,11 +185,6 @@ export class ReviewController {
         reviewImgCookie,
         reviewVdoCookie,
       }),
-    ]);
-
-    this.promisesLibrary.twoPromiseSettled(
-      promise[0],
-      promise[1],
       "Modify Star Rating And Review with Image And Video",
     );
 
@@ -239,18 +216,13 @@ export class ReviewController {
       jwtPayload.userId,
     );
 
-    const promise = await Promise.allSettled([
+    await this.promiseLbirary.twoPromiseBundle(
       this.reviewService.modifyStarRating(modifyReviewDto, productId, review),
       this.reviewService.modifyReviewWithImage({
         modifyReviewDto,
         review,
         reviewImgCookie,
       }),
-    ]);
-
-    this.promisesLibrary.twoPromiseSettled(
-      promise[0],
-      promise[1],
       "Modify Star Rating And Review with Image",
     );
 
@@ -282,18 +254,13 @@ export class ReviewController {
       jwtPayload.userId,
     );
 
-    const promise = await Promise.allSettled([
+    await this.promiseLbirary.twoPromiseBundle(
       this.reviewService.modifyStarRating(modifyReviewDto, productId, review),
       this.reviewService.modifyReviewWithVideo({
         modifyReviewDto,
         review,
         reviewVdoCookie,
       }),
-    ]);
-
-    this.promisesLibrary.twoPromiseSettled(
-      promise[0],
-      promise[1],
       "Modify Star Rating And Review with Video",
     );
 
@@ -317,14 +284,9 @@ export class ReviewController {
       jwtPayload.userId,
     );
 
-    const promise = await Promise.allSettled([
+    await this.promiseLbirary.twoPromiseBundle(
       this.reviewService.modifyStarRating(modifyReviewDto, productId, review),
       this.reviewService.modifyReviewWithoutMedia({ modifyReviewDto, review }),
-    ]);
-
-    this.promisesLibrary.twoPromiseSettled(
-      promise[0],
-      promise[1],
       "Modify Star Rating And Review Without Media",
     );
 

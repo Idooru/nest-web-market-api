@@ -8,13 +8,13 @@ import { Repository } from "typeorm";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { UserEntity } from "../entities/user.entity";
 import { CreateUserDto } from "../dtos/create-user.dto";
-import { PromisesLibrary } from "../../../common/lib/promises.library";
 import { userSelectProperty } from "src/common/config/repository-select-configs/user-select";
+import { PromiseLibrary } from "src/common/lib/promise.library";
 
 @Injectable()
 export class UserRepository {
   constructor(
-    private readonly promisesLibrary: PromisesLibrary,
+    private readonly promiseLibrary: PromiseLibrary,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(UserProfileEntity)
@@ -201,18 +201,11 @@ export class UserRepository {
     const userAuthColumn = { nickname, email, password };
     const userActivityColumn = {};
 
-    const [saveUserColumnOne, saveUserColumnTwo, saveUserColumnThree] =
-      await Promise.allSettled([
+    const [userProfile, userAuth, userActivity] =
+      await this.promiseLibrary.threePromiseBundle(
         this.userProfileRepository.save({ ...userProfileColumn }),
         this.userAuthRepository.save({ ...userAuthColumn }),
         this.userActivityRepository.save({ ...userActivityColumn }),
-      ]);
-
-    const [userProfile, userAuth, userActivity] =
-      this.promisesLibrary.threePromiseSettled(
-        saveUserColumnOne,
-        saveUserColumnTwo,
-        saveUserColumnThree,
         "Save User Column For Register",
       );
 
@@ -220,26 +213,20 @@ export class UserRepository {
     const authId = userAuth.id;
     const activityId = userActivity.id;
 
-    const findUserObject = await Promise.allSettled([
-      this.userProfileRepository
-        .createQueryBuilder("profile")
-        .where("profile.id = :id", { id: profileId })
-        .getOne(),
-      this.userAuthRepository
-        .createQueryBuilder("auth")
-        .where("auth.id = :id", { id: authId })
-        .getOne(),
-      this.userActivityRepository
-        .createQueryBuilder("activity")
-        .where("activity.id = :id", { id: activityId })
-        .getOne(),
-    ]);
-
     const [userProfileObject, userAuthObject, userActivityObject] =
-      this.promisesLibrary.threePromiseSettled(
-        findUserObject[0],
-        findUserObject[1],
-        findUserObject[2],
+      await this.promiseLibrary.threePromiseBundle(
+        this.userProfileRepository
+          .createQueryBuilder("profile")
+          .where("profile.id = :id", { id: profileId })
+          .getOne(),
+        this.userAuthRepository
+          .createQueryBuilder("auth")
+          .where("auth.id = :id", { id: authId })
+          .getOne(),
+        this.userActivityRepository
+          .createQueryBuilder("activity")
+          .where("activity.id = :id", { id: activityId })
+          .getOne(),
         "Find User Object For Register",
       );
 
@@ -268,14 +255,9 @@ export class UserRepository {
     Auth.nickname = nickname;
     Auth.password = hashed;
 
-    const saveObject = await Promise.allSettled([
+    await this.promiseLibrary.twoPromiseBundle(
       this.userProfileRepository.save(Profile),
       this.userAuthRepository.save(Auth),
-    ]);
-
-    this.promisesLibrary.twoPromiseSettled(
-      saveObject[0],
-      saveObject[1],
       "Save Object For Patch User Info",
     );
   }

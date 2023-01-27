@@ -1,18 +1,18 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { ConfigService } from "aws-sdk";
-import { PromisesLibrary } from "./promises.library";
+import { PromiseLibrary } from "./promise.library";
 import { SecurityLibrary } from "./security.library";
 import { TimeLoggerLibrary } from "./time-logger.library";
 
 @Module({
   imports: [ConfigModule],
   providers: [
-    PromisesLibrary,
+    PromiseLibrary,
     TimeLoggerLibrary,
     SecurityLibrary,
     ConfigService,
   ],
-  exports: [PromisesLibrary, TimeLoggerLibrary, SecurityLibrary],
+  exports: [PromiseLibrary, TimeLoggerLibrary, SecurityLibrary],
 })
 export class LibraryModule {}

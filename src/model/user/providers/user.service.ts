@@ -4,15 +4,15 @@ import { RegisterUserDto } from "../dtos/register-user.dto";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { UserRepository } from "../providers/user.repository";
 import { AuthService } from "../../auth/providers/auth.service";
-import { PromisesLibrary } from "../../../common/lib/promises.library";
 import { UserEntity } from "../entities/user.entity";
 
 import * as bcrypt from "bcrypt";
+import { PromiseLibrary } from "src/common/lib/promise.library";
 
 @Injectable()
 export class UserService {
   constructor(
-    private readonly promisesLibrary: PromisesLibrary,
+    private readonly promiseLibrary: PromiseLibrary,
     private readonly userRepository: UserRepository,
     private readonly authService: AuthService,
   ) {}
@@ -20,17 +20,10 @@ export class UserService {
   async register(registerUserDto: RegisterUserDto): Promise<void> {
     const { nickname, email, password, phonenumber } = registerUserDto;
 
-    const [CheckUserColumnOne, CheckUserColumnTwo, CheckUserColumnThree] =
-      await Promise.allSettled([
-        this.userRepository.verifyUserEmail(email),
-        this.userRepository.verifyUserNickName(nickname),
-        this.userRepository.verifyUserPhoneNumber(phonenumber),
-      ]);
-
-    this.promisesLibrary.threePromiseSettled(
-      CheckUserColumnOne,
-      CheckUserColumnTwo,
-      CheckUserColumnThree,
+    await this.promiseLibrary.threePromiseBundle(
+      this.userRepository.verifyUserEmail(email),
+      this.userRepository.verifyUserNickName(nickname),
+      this.userRepository.verifyUserPhoneNumber(phonenumber),
       "Check User Column For Register",
     );
 
@@ -51,22 +44,18 @@ export class UserService {
     const myNickName = user.Auth.nickname;
     const myPhoneNumber = user.Profile.phonenumber;
 
-    const checkUserColumn = await Promise.allSettled([
+    await this.promiseLibrary.twoPromiseBundle(
       this.userRepository.verifyUserNickNameWhenUpdate(myNickName, nickname),
       this.userRepository.verifyUserPhoneNumberWhenUpdate(
         myPhoneNumber,
         phonenumber,
       ),
-    ]);
-
-    this.promisesLibrary.twoPromiseSettled(
-      checkUserColumn[0],
-      checkUserColumn[1],
       "Check User Column For Patch User Info",
     );
 
     const { password } = patchUserDto;
     const hashed = await bcrypt.hash(password, 10);
+
     await this.userRepository.patchUser(patchUserDto, hashed, userId);
 
     const jwtPayload: JwtPayload = {

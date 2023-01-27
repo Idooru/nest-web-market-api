@@ -1,9 +1,7 @@
-import { Injectable } from "@nestjs/common";
 import { PromiseHandleException } from "../exceptions/promise-handle.exception";
 
-@Injectable()
-export class PromisesLibrary {
-  twoPromiseSettled<T, U>(
+export abstract class PromiseProcessor {
+  protected twoPromiseSettled<T, U>(
     promiseOne: PromiseSettledResult<T>,
     promiseTwo: PromiseSettledResult<U>,
     msg: string,
@@ -32,7 +30,7 @@ export class PromisesLibrary {
     return [successOne.value, successTwo.value];
   }
 
-  threePromiseSettled<T, U, V>(
+  protected threePromiseSettled<T, U, V>(
     promiseOne: PromiseSettledResult<T>,
     promiseTwo: PromiseSettledResult<U>,
     promiseThree: PromiseSettledResult<V>,
@@ -67,7 +65,7 @@ export class PromisesLibrary {
     return [successOne.value, successTwo.value, successThree.value];
   }
 
-  fourPromiseSettled<T, U, V, W>(
+  protected fourPromiseSettled<T, U, V, W>(
     promiseOne: PromiseSettledResult<T>,
     promiseTwo: PromiseSettledResult<U>,
     promiseThree: PromiseSettledResult<V>,
