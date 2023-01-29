@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { JwtPayload } from "../interfaces/jwt.payload.interface";
+import { JwtPayload } from "src/model/auth/jwt/jwt.payload.interface";
 import { Request, Response } from "express";
 import { SecurityLibrary } from "../lib/security.library";
 
