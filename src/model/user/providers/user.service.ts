@@ -1,4 +1,4 @@
-import { JwtPayload } from "../../../common/interfaces/jwt.payload.interface";
+import { JwtPayload } from "../../auth/jwt/jwt.payload.interface";
 import { PatchUserDto } from "../dtos/patch-user.dto";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { Injectable, NotFoundException } from "@nestjs/common";

@@ -1,6 +1,6 @@
 import { CreateReviewDto } from "./create-review.dto";
 import { ReviewEntity } from "../entities/review.entity";
-import { MediaUrlCookie } from "../../../common/interfaces/media.url.cookie.interface";
+import { MediaUrlCookie } from "../../upload/media.url.cookie.interface";
 
 export class ModifyReviewDto extends CreateReviewDto {}
 

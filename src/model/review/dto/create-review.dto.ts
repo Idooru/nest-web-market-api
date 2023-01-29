@@ -1,7 +1,7 @@
 import { PickType } from "@nestjs/swagger";
 import { ReviewEntity } from "../entities/review.entity";
-import { JwtPayload } from "src/common/interfaces/jwt.payload.interface";
-import { MediaUrlCookie } from "src/common/interfaces/media.url.cookie.interface";
+import { JwtPayload } from "src/model/auth/jwt/jwt.payload.interface";
+import { MediaUrlCookie } from "src/model/upload/media.url.cookie.interface";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { UserEntity } from "src/model/user/entities/user.entity";
 

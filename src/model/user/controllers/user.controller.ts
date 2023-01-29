@@ -12,7 +12,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
-import { JwtPayload } from "../../../common/interfaces/jwt.payload.interface";
+import { JwtPayload } from "../../auth/jwt/jwt.payload.interface";
 import { IsLoginGuard } from "../../../common/guards/is-login.guard";
 import { AuthService } from "../../auth/providers/auth.service";
 import { UserService } from "../providers/user.service";
@@ -75,7 +75,7 @@ export class UserController {
       statusCode: 201,
       message: "로그인을 완료하였습니다. 쿠키를 확인하세요.",
       cookieKey: "JWT_COOKIE",
-      cookieValue: jwtToken,
+      cookieValue: jwtToken.accessToken,
     };
   }
 
