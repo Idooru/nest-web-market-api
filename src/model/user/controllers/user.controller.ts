@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
@@ -142,7 +143,7 @@ export class UserController {
 
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsNotLoginGuard)
-  @Get("/find-email/name/:realname/phone-number/:phonenumber")
+  @Get("/find-email/realname/:realname/phonenumber/:phonenumber")
   async findEmail(
     @Param() findEmailDto: FindEmailDto,
   ): Promise<JsonGeneralInterface<string>> {
