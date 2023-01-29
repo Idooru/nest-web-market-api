@@ -74,7 +74,7 @@ export class UserController {
       statusCode: 201,
       message: "로그인을 완료하였습니다. 쿠키를 확인하세요.",
       cookieKey: "JWT_COOKIE",
-      cookieValue: jwtToken.accessToken,
+      cookieValue: jwtToken,
     };
   }
 
@@ -142,7 +142,7 @@ export class UserController {
 
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsNotLoginGuard)
-  @Get("/find-email/name/:realname/phone-number/:phonenumber")
+  @Get("/find-email/realname/:realname/phonenumber/:phonenumber")
   async findEmail(
     @Param() findEmailDto: FindEmailDto,
   ): Promise<JsonGeneralInterface<string>> {

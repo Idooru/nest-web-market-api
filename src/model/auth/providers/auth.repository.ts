@@ -1,7 +1,6 @@
+import { UnauthorizedException, Injectable } from "@nestjs/common";
 import { UserEntity } from "../../user/entities/user.entity";
-import { UnauthorizedException } from "@nestjs/common";
 import { UserAuthEntity } from "../../user/entities/user.auth.entity";
-import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
@@ -17,10 +16,12 @@ export class AuthRepository {
   async findUserWithEmail(email: string): Promise<UserEntity> {
     try {
       return await this.userRepository
-        .createQueryBuilder("user")
-        .leftJoinAndSelect("user.Profile", "Profile")
-        .leftJoinAndSelect("user.Auth", "Auth")
-        .leftJoinAndSelect("user.Activity", "Activity")
+        .createQueryBuilder()
+        .select(["user", "Auth"])
+        .from(UserEntity, "user")
+        .innerJoin("user.Profile", "Profile")
+        .innerJoin("user.Auth", "Auth")
+        .innerJoin("user.Activity", "Activity")
         .where("Auth.email = :email", { email })
         .getOneOrFail();
     } catch (err) {
@@ -31,10 +32,12 @@ export class AuthRepository {
   async findUserWithRealName(realname: string): Promise<UserEntity> {
     try {
       return await this.userRepository
-        .createQueryBuilder("user")
-        .leftJoinAndSelect("user.Profile", "Profile")
-        .leftJoinAndSelect("user.Auth", "Auth")
-        .leftJoinAndSelect("user.Activity", "Activity")
+        .createQueryBuilder()
+        .select(["user", "Auth"])
+        .from(UserEntity, "user")
+        .innerJoin("user.Profile", "Profile")
+        .innerJoin("user.Auth", "Auth")
+        .innerJoin("user.Activity", "Activity")
         .where("Profile.realname = :realname", { realname })
         .getOneOrFail();
     } catch (err) {
@@ -45,10 +48,12 @@ export class AuthRepository {
   async findUserWithPhoneNumber(phonenumber: string): Promise<UserEntity> {
     try {
       return await this.userRepository
-        .createQueryBuilder("user")
-        .leftJoinAndSelect("user.Profile", "Profile")
-        .leftJoinAndSelect("user.Auth", "Auth")
-        .leftJoinAndSelect("user.Activity", "Activity")
+        .createQueryBuilder()
+        .select(["user", "Auth"])
+        .from(UserEntity, "user")
+        .innerJoin("user.Profile", "Profile")
+        .innerJoin("user.Auth", "Auth")
+        .innerJoin("user.Activity", "Activity")
         .where("Profile.phonenumber = :phonenumber", { phonenumber })
         .getOneOrFail();
     } catch (err) {
@@ -58,6 +63,11 @@ export class AuthRepository {
 
   async resetPassword(userId: string, hashed: string) {
     const password = { password: hashed };
-    await this.authRepository.update(userId, password);
+    await this.authRepository
+      .createQueryBuilder()
+      .update(UserAuthEntity)
+      .set({ ...password })
+      .where("id = :id", { id: userId })
+      .execute();
   }
 }
