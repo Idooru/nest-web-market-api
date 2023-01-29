@@ -2,7 +2,6 @@ import { UserActivityEntity } from "src/model/user/entities/user.activity.entity
 import { UserProfileEntity } from "../user/entities/user.profile.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthRepository } from "./providers/auth.repository";
-import { JwtStrategy } from "./jwt/jwt.strategy";
 import { UserModule } from "./../user/user.module";
 import { PassportModule } from "@nestjs/passport";
 import { Module } from "@nestjs/common";
@@ -16,7 +15,6 @@ import { LibraryModule } from "src/common/lib/library.module";
 
 @Module({
   imports: [
-    PassportModule.register({ defaultStrategy: "jwt", session: false }),
     TypeOrmModule.forFeature([
       UserEntity,
       UserProfileEntity,
@@ -35,7 +33,7 @@ import { LibraryModule } from "src/common/lib/library.module";
     forwardRef(() => UserModule),
     LibraryModule,
   ],
-  providers: [AuthService, JwtStrategy, AuthRepository],
+  providers: [AuthService, AuthRepository],
   exports: [AuthService],
 })
 export class AuthModule {}
