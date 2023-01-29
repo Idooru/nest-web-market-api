@@ -2,7 +2,7 @@ import { UserActivityEntity } from "src/model/user/entities/user.activity.entity
 import { UserProfileEntity } from "../user/entities/user.profile.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthRepository } from "./providers/auth.repository";
-import { JwtStrategy } from "./jwt.strategy";
+import { JwtStrategy } from "./jwt/jwt.strategy";
 import { UserModule } from "./../user/user.module";
 import { PassportModule } from "@nestjs/passport";
 import { Module } from "@nestjs/common";

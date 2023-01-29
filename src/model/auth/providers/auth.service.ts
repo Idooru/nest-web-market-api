@@ -8,7 +8,7 @@ import { FindEmailDto } from "../../user/dtos/find-email.dto";
 import { JwtService } from "@nestjs/jwt";
 import { LoginUserDto } from "../../user/dtos/login-user.dto";
 import { AuthRepository } from "./auth.repository";
-import { JwtPayload } from "../../../common/interfaces/jwt.payload.interface";
+import { JwtPayload } from "../jwt/jwt.payload.interface";
 
 import * as bcrypt from "bcrypt";
 import { PromiseLibrary } from "src/common/lib/promise.library";
