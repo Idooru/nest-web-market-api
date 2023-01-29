@@ -3,7 +3,6 @@ import { UserProfileEntity } from "../user/entities/user.profile.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthRepository } from "./providers/auth.repository";
 import { UserModule } from "./../user/user.module";
-import { PassportModule } from "@nestjs/passport";
 import { Module } from "@nestjs/common";
 import { AuthService } from "./providers/auth.service";
 import { JwtModule } from "@nestjs/jwt";
@@ -27,7 +26,9 @@ import { LibraryModule } from "src/common/lib/library.module";
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         secret: config.get("JWT_SECRET"),
-        signOptions: { expiresIn: "1d" },
+        signOptions: {
+          expiresIn: config.get("JWT_EXPIRES"),
+        },
       }),
     }),
     forwardRef(() => UserModule),
