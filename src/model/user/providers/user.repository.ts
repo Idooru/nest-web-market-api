@@ -112,7 +112,7 @@ export class UserRepository {
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
       .innerJoin("user.Activity", "Activity")
-      .where("Profile.phonenumber = :phonenumber", {
+      .where("Profile.phonenumber = :phoennumber", {
         phonenumber: phoneNumberToUpdate,
       })
       .getOne();
@@ -216,21 +216,15 @@ export class UserRepository {
     const [userProfileObject, userAuthObject, userActivityObject] =
       await this.promiseLibrary.threePromiseBundle(
         this.userProfileRepository
-          .createQueryBuilder()
-          .select("profile")
-          .from(UserProfileEntity, "profile")
+          .createQueryBuilder("profile")
           .where("profile.id = :id", { id: profileId })
           .getOne(),
         this.userAuthRepository
-          .createQueryBuilder()
-          .select("auth")
-          .from(UserAuthEntity, "auth")
+          .createQueryBuilder("auth")
           .where("auth.id = :id", { id: authId })
           .getOne(),
         this.userActivityRepository
-          .createQueryBuilder()
-          .select("activity")
-          .from(UserActivityEntity, "activity")
+          .createQueryBuilder("activity")
           .where("activity.id = :id", { id: activityId })
           .getOne(),
         "Find User Object For Register",
@@ -250,20 +244,20 @@ export class UserRepository {
     userId: string,
   ): Promise<void> {
     const { realname, birth, gender, phonenumber, nickname } = patchUserDto;
+    const user = await this.findUserWithId(userId);
+
+    const { Profile, Auth } = user;
+
+    Profile.realname = realname;
+    Profile.birth = birth;
+    Profile.gender = gender;
+    Profile.phonenumber = phonenumber;
+    Auth.nickname = nickname;
+    Auth.password = hashed;
 
     await this.promiseLibrary.twoPromiseBundle(
-      this.userProfileRepository
-        .createQueryBuilder()
-        .update(UserProfileEntity)
-        .set({ realname, birth, gender, phonenumber })
-        .where("id = :id", { id: userId })
-        .execute(),
-      this.userAuthRepository
-        .createQueryBuilder()
-        .update(UserAuthEntity)
-        .set({ nickname, password: hashed })
-        .where("id = :id", { id: userId })
-        .execute(),
+      this.userProfileRepository.save(Profile),
+      this.userAuthRepository.save(Auth),
       "Save Object For Patch User Info",
     );
   }

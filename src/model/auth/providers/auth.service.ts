@@ -77,7 +77,6 @@ export class AuthService {
         "사용자 실명과 전화번호가 서로 일치하지 않습니다.",
       );
     }
-
     return realNameResult.Auth.email;
   }
 
