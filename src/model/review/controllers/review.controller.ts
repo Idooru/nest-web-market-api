@@ -11,7 +11,7 @@ import { IsLoginGuard } from "./../../../common/guards/is-login.guard";
 import { ReviewService } from "../providers/review.service";
 import { ModifyReviewDto } from "../dto/modify-review.dto";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
-import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt.payload.interface";
+import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { Cookies } from "src/common/decorators/cookies.decorator";
 import { UseInterceptors, NotFoundException } from "@nestjs/common";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/json-clear-cookie.interceptor";

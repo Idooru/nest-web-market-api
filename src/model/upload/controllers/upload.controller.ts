@@ -15,7 +15,7 @@ import { IsLoginGuard } from "../../../common/guards/is-login.guard";
 import { MulterConfig } from "src/common/config/multer.config";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
-import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt.payload.interface";
+import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { JsonSendCookieInterface } from "../../../common/interceptors/interface/json-send-cookie.interface";
 import { IsAdminGuard } from "../../../common/guards/is-admin.guard";
 import { Cookies } from "src/common/decorators/cookies.decorator";

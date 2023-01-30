@@ -11,7 +11,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
-import { JwtAccessTokenPayload } from "../../auth/jwt/jwt.payload.interface";
+import { JwtAccessTokenPayload } from "../../auth/jwt/jwt-access-token-payload.interface";
 import { IsLoginGuard } from "../../../common/guards/is-login.guard";
 import { AuthService } from "../../auth/providers/auth.service";
 import { UserService } from "../providers/user.service";

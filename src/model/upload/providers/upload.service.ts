@@ -3,7 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { UserRepository } from "../../user/providers/user.repository";
 import { UploadRepository } from "../providers/upload.repository";
 import { MediaReturnDto } from "../dto/media-return.dto";
-import { JwtAccessTokenPayload } from "../../auth/jwt/jwt.payload.interface";
+import { JwtAccessTokenPayload } from "../../auth/jwt/jwt-access-token-payload.interface";
 import { MediaUrlCookie } from "src/model/upload/media.url.cookie.interface";
 
 import * as fs from "fs";
