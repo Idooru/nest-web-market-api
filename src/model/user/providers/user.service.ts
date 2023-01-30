@@ -1,9 +1,7 @@
-import { JwtAccessTokenPayload } from "../../auth/jwt/jwt-access-token-payload.interface";
 import { PatchUserDto } from "../dtos/patch-user.dto";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { UserRepository } from "../providers/user.repository";
-import { AuthService } from "../../auth/providers/auth.service";
 import { UserEntity } from "../entities/user.entity";
 
 import * as bcrypt from "bcrypt";
@@ -14,7 +12,6 @@ export class UserService {
   constructor(
     private readonly promiseLibrary: PromiseLibrary,
     private readonly userRepository: UserRepository,
-    private readonly authService: AuthService,
   ) {}
 
   async register(registerUserDto: RegisterUserDto): Promise<void> {
