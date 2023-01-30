@@ -11,7 +11,7 @@ import { IsLoginGuard } from "./../../../common/guards/is-login.guard";
 import { ReviewService } from "../providers/review.service";
 import { ModifyReviewDto } from "../dto/modify-review.dto";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
-import { JwtPayload } from "src/model/auth/jwt/jwt.payload.interface";
+import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt.payload.interface";
 import { Cookies } from "src/common/decorators/cookies.decorator";
 import { UseInterceptors, NotFoundException } from "@nestjs/common";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/json-clear-cookie.interceptor";
@@ -36,7 +36,7 @@ export class ReviewController {
     @Cookies("Review_Image_Url_COOKIES") reviewImgCookie: MediaUrlCookie[],
     @Cookies("Review_Video_Url_COOKIES") reviewVdoCookie: MediaUrlCookie[],
     @Body() createReviewDto: CreateReviewDto,
-    @GetJWT() jwtPayload: JwtPayload,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookieInterface> {
     if (!reviewImgCookie.length || !reviewVdoCookie.length) {
       throw new NotFoundException(
@@ -70,7 +70,7 @@ export class ReviewController {
     @Param("productId") productId: string,
     @Cookies("Review_Image_Url_COOKIES") reviewImgCookie: MediaUrlCookie[],
     @Body() createReviewDto: CreateReviewDto,
-    @GetJWT() jwtPayload: JwtPayload,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookieInterface> {
     if (!reviewImgCookie.length) {
       throw new NotFoundException(
@@ -103,7 +103,7 @@ export class ReviewController {
     @Param("productId") productId: string,
     @Cookies("Review_Video_Url_COOKIES") reviewVdoCookie: MediaUrlCookie[],
     @Body() createReviewDto: CreateReviewDto,
-    @GetJWT() jwtPayload: JwtPayload,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookieInterface> {
     if (!reviewVdoCookie.length) {
       throw new NotFoundException(
@@ -135,7 +135,7 @@ export class ReviewController {
   async createReviewWithoutMedia(
     @Param("productId") productId: string,
     @Body() createReviewDto: CreateReviewDto,
-    @GetJWT() jwtPayload: JwtPayload,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
     await this.promiseLbirary.twoPromiseBundle(
       this.reviewService.increaseStarRating(createReviewDto, productId),
@@ -164,7 +164,7 @@ export class ReviewController {
     @Cookies("Review_Video_Url_COOKIES")
     reviewVdoCookie: MediaUrlCookie[],
     @Body() modifyReviewDto: ModifyReviewDto,
-    @GetJWT() jwtPayload: JwtPayload,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ) {
     if (!reviewImgCookie.length || !reviewVdoCookie.length) {
       throw new NotFoundException(
@@ -203,7 +203,7 @@ export class ReviewController {
     @Cookies("Review_Video_Url_COOKIES")
     reviewImgCookie: MediaUrlCookie[],
     @Body() modifyReviewDto: ModifyReviewDto,
-    @GetJWT() jwtPayload: JwtPayload,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ) {
     if (!reviewImgCookie.length) {
       throw new NotFoundException(
@@ -241,7 +241,7 @@ export class ReviewController {
     @Cookies("Review_Video_Url_COOKIES")
     reviewVdoCookie: MediaUrlCookie[],
     @Body() modifyReviewDto: ModifyReviewDto,
-    @GetJWT() jwtPayload: JwtPayload,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ) {
     if (!reviewVdoCookie.length) {
       throw new NotFoundException(
@@ -277,7 +277,7 @@ export class ReviewController {
     @Param("productId") productId: string,
     @Param("reviewId") reviewId: string,
     @Body() modifyReviewDto: ModifyReviewDto,
-    @GetJWT() jwtPayload: JwtPayload,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
     const review = await this.reviewService.distinguishOwnReview(
       reviewId,

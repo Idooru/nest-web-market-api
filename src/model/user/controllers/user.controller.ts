@@ -11,7 +11,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
-import { JwtPayload } from "../../auth/jwt/jwt.payload.interface";
+import { JwtAccessTokenPayload } from "../../auth/jwt/jwt.payload.interface";
 import { IsLoginGuard } from "../../../common/guards/is-login.guard";
 import { AuthService } from "../../auth/providers/auth.service";
 import { UserService } from "../providers/user.service";
@@ -53,7 +53,7 @@ export class UserController {
   @UseGuards(IsLoginGuard)
   @Get("/profile")
   async whoAmI(
-    @GetJWT() jwtPayload: JwtPayload,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<UserEntity>> {
     return {
       statusCode: 200,
@@ -68,7 +68,9 @@ export class UserController {
   async login(
     @Body() loginUserDto: LoginUserDto,
   ): Promise<JsonSendCookieInterface<string>> {
-    const jwtToken = await this.authService.login(loginUserDto);
+    const user = await this.authService.validateUser(loginUserDto);
+
+    const jwtToken = await this.authService.signToken(user);
 
     return {
       statusCode: 201,
@@ -82,7 +84,7 @@ export class UserController {
   @UseGuards(IsLoginGuard)
   @Get("/refresh-token")
   async refreshToken(
-    @GetJWT() jwtPayload: JwtPayload,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookieInterface<string>> {
     const jwtToken = await this.authService.refreshToken(jwtPayload);
 
@@ -110,7 +112,7 @@ export class UserController {
   @Patch("/set-user")
   async setUser(
     @Body() patchUserDto: PatchUserDto,
-    @GetJWT() jwtPayload: JwtPayload,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookieInterface<string>> {
     const jwtToken = await this.userService.patchUserInfoMyself(
       patchUserDto,
@@ -129,7 +131,7 @@ export class UserController {
   @UseGuards(IsLoginGuard)
   @Delete("/secession")
   async secession(
-    @GetJWT() jwtPayload: JwtPayload,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookieInterface> {
     await this.userService.deleteUserWithId(jwtPayload.userId);
 

@@ -61,13 +61,25 @@ export class AuthRepository {
     }
   }
 
-  async resetPassword(userId: string, hashed: string) {
+  async resetPassword(userAuthId: string, hashed: string) {
     const password = { password: hashed };
     await this.authRepository
       .createQueryBuilder()
       .update(UserAuthEntity)
       .set({ ...password })
-      .where("id = :id", { id: userId })
+      .where("id = :id", { id: userAuthId })
+      .execute();
+  }
+
+  async injectRefreshToken(
+    userAuthId: string,
+    refreshToken: string,
+  ): Promise<void> {
+    await this.authRepository
+      .createQueryBuilder()
+      .update(UserAuthEntity)
+      .set({ refreshtoken: refreshToken })
+      .where("id = :id", { id: userAuthId })
       .execute();
   }
 }

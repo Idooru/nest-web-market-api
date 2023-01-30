@@ -1,4 +1,4 @@
-import { JwtPayload } from "../../auth/jwt/jwt.payload.interface";
+import { JwtAccessTokenPayload } from "../../auth/jwt/jwt.payload.interface";
 import { PatchUserDto } from "../dtos/patch-user.dto";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { Injectable, NotFoundException } from "@nestjs/common";
@@ -58,7 +58,7 @@ export class UserService {
 
     await this.userRepository.patchUser(patchUserDto, hashed, userId);
 
-    const jwtPayload: JwtPayload = {
+    const jwtPayload: JwtAccessTokenPayload = {
       userId,
       nickname: patchUserDto.nickname,
     };

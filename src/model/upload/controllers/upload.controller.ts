@@ -15,7 +15,7 @@ import { IsLoginGuard } from "../../../common/guards/is-login.guard";
 import { MulterConfig } from "src/common/config/multer.config";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
-import { JwtPayload } from "src/model/auth/jwt/jwt.payload.interface";
+import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt.payload.interface";
 import { JsonSendCookieInterface } from "../../../common/interceptors/interface/json-send-cookie.interface";
 import { IsAdminGuard } from "../../../common/guards/is-admin.guard";
 import { Cookies } from "src/common/decorators/cookies.decorator";
@@ -37,7 +37,7 @@ export class UploadController {
   @Post("/image/product")
   async uploadProductImage(
     @UploadedFile() file: Express.Multer.File,
-    @GetJWT() jwtPayload: JwtPayload,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookieInterface<MediaUrlCookie>> {
     this.logger.debug("loggin image info ->\n", file);
 
@@ -59,7 +59,7 @@ export class UploadController {
   @Post("/image/review")
   async uploadReviewImage(
     @UploadedFiles() files: Array<Express.Multer.File>,
-    @GetJWT() jwtPayload: JwtPayload,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookieInterface<string[][]>> {
     this.logger.debug("logging image info ->\n", files);
 
@@ -83,7 +83,7 @@ export class UploadController {
   @Post("/video/review")
   async uploadReviewVideo(
     @UploadedFiles() files: Array<Express.Multer.File>,
-    @GetJWT() jwtPayload: JwtPayload,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookieInterface<string[][]>> {
     this.logger.debug("logging video info ->\n", files);
     this.uploadService.checkExtensionTypeForVideos(files);
@@ -105,7 +105,7 @@ export class UploadController {
   @Post("/image/inquiry")
   async uploadInquiryImage(
     @UploadedFiles() files: Array<Express.Multer.File>,
-    @GetJWT() jwtPayload: JwtPayload,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookieInterface<string[][]>> {
     this.logger.debug("logging image info ->\n", files);
 
@@ -131,7 +131,7 @@ export class UploadController {
   @Post("/video/inquiry")
   async uploadInquiryVideo(
     @UploadedFiles() files: Array<Express.Multer.File>,
-    @GetJWT() jwtPayload: JwtPayload,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookieInterface<string[][]>> {
     this.logger.debug("logging video info ->\n", files);
     this.uploadService.checkExtensionTypeForVideos(files);

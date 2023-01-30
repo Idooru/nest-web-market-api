@@ -3,7 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { UserRepository } from "../../user/providers/user.repository";
 import { UploadRepository } from "../providers/upload.repository";
 import { MediaReturnDto } from "../dto/media-return.dto";
-import { JwtPayload } from "../../auth/jwt/jwt.payload.interface";
+import { JwtAccessTokenPayload } from "../../auth/jwt/jwt.payload.interface";
 import { MediaUrlCookie } from "src/model/upload/media.url.cookie.interface";
 
 import * as fs from "fs";
@@ -115,7 +115,7 @@ export class UploadService {
 
   async uploadProductImage(
     file: Express.Multer.File,
-    jwtPayload: JwtPayload,
+    jwtPayload: JwtAccessTokenPayload,
   ): Promise<MediaReturnDto> {
     if (!file) {
       throw new BadRequestException(
@@ -137,7 +137,7 @@ export class UploadService {
 
   async uploadReviewImage(
     files: Array<Express.Multer.File>,
-    jwtPayload: JwtPayload,
+    jwtPayload: JwtAccessTokenPayload,
   ): Promise<MediaReturnDto[]> {
     const imageUrls = [];
     const uploader = jwtPayload.nickname;
@@ -172,7 +172,7 @@ export class UploadService {
 
   async uploadReviewVideo(
     files: Array<Express.Multer.File>,
-    jwtPayload: JwtPayload,
+    jwtPayload: JwtAccessTokenPayload,
   ): Promise<MediaReturnDto[]> {
     const videoUrls = [];
     const uploader = jwtPayload.nickname;
@@ -207,7 +207,7 @@ export class UploadService {
 
   async uploadInquiryImage(
     files: Array<Express.Multer.File>,
-    jwtPayload: JwtPayload,
+    jwtPayload: JwtAccessTokenPayload,
   ): Promise<MediaReturnDto[]> {
     const imageUrls = [];
     const uploader = jwtPayload.nickname;
@@ -242,7 +242,7 @@ export class UploadService {
 
   async uploadInquiryVideo(
     files: Array<Express.Multer.File>,
-    jwtPayload: JwtPayload,
+    jwtPayload: JwtAccessTokenPayload,
   ): Promise<MediaReturnDto[]> {
     const videoUrls = [];
     const uploader = jwtPayload.nickname;

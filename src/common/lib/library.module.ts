@@ -1,12 +1,12 @@
 import { Module } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
-import { ConfigService } from "aws-sdk";
+import { ConfigService } from "@nestjs/config";
+import { DotenvConfigurationModule } from "../config/dotenv.config";
 import { PromiseLibrary } from "./promise.library";
 import { SecurityLibrary } from "./security.library";
 import { TimeLoggerLibrary } from "./time-logger.library";
 
 @Module({
-  imports: [ConfigModule],
+  imports: [DotenvConfigurationModule],
   providers: [
     PromiseLibrary,
     TimeLoggerLibrary,

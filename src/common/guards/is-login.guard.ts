@@ -5,20 +5,20 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { JwtPayload } from "src/model/auth/jwt/jwt.payload.interface";
-import { Request, Response } from "express";
+import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt.payload.interface";
+import { Request } from "express";
 import { SecurityLibrary } from "../lib/security.library";
 
 @Injectable()
 export class IsLoginGuard implements CanActivate {
   constructor(private readonly securityLibrary: SecurityLibrary) {}
 
-  private readonly jwtOption = this.securityLibrary.getJwtOption();
-  private readonly jwtService = new JwtService(this.jwtOption);
+  private readonly jwtAccesTokenOption =
+    this.securityLibrary.getJwtAceessTokenOption();
+  private readonly jwtService = new JwtService(this.jwtAccesTokenOption);
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<Request>();
-    const res = context.switchToHttp().getResponse<Response>();
     const { JWT_COOKIE } = req.signedCookies;
 
     if (!JWT_COOKIE) {
@@ -27,20 +27,18 @@ export class IsLoginGuard implements CanActivate {
       );
     }
 
-    req.user = await this.validateToken(JWT_COOKIE, res);
+    req.user = await this.validateToken(JWT_COOKIE);
 
     return true;
   }
 
-  async validateToken(token: string, res: Response): Promise<JwtPayload> {
+  async validateToken(token: string): Promise<JwtAccessTokenPayload> {
     try {
-      return await this.jwtService.verifyAsync(token, this.jwtOption);
+      return await this.jwtService.verifyAsync(token, this.jwtAccesTokenOption);
     } catch (err) {
       if (err.name.includes("Expired")) {
-        res.clearCookie("JWT_COOKIE");
-
         throw new UnauthorizedException(
-          "만료된 토큰입니다. 다시 로그인 해주세요.",
+          "만료된 토큰입니다. 토큰을 재발급 받거나 다시 로그인 해주세요.",
         );
       }
       throw new UnauthorizedException("유효하지 않은 토큰입니다.");

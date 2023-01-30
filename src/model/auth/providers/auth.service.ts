@@ -8,20 +8,31 @@ import { FindEmailDto } from "../../user/dtos/find-email.dto";
 import { JwtService } from "@nestjs/jwt";
 import { LoginUserDto } from "../../user/dtos/login-user.dto";
 import { AuthRepository } from "./auth.repository";
-import { JwtPayload } from "../jwt/jwt.payload.interface";
+import { JwtAccessTokenPayload } from "../jwt/jwt.payload.interface";
 
 import * as bcrypt from "bcrypt";
 import { PromiseLibrary } from "src/common/lib/promise.library";
+import { UserEntity } from "src/model/user/entities/user.entity";
+import { SecurityLibrary } from "src/common/lib/security.library";
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly promiseLibrary: PromiseLibrary,
     private readonly authRepository: AuthRepository,
+    private readonly promiseLibrary: PromiseLibrary,
+    private readonly securityLibrary: SecurityLibrary,
     private readonly jwtService: JwtService,
   ) {}
 
-  async refreshToken(user: JwtPayload): Promise<string> {
+  private readonly accessTokenSign = new JwtService(
+    this.securityLibrary.getJwtAceessTokenOption(),
+  );
+
+  private readonly refreshTokenSign = new JwtService(
+    this.securityLibrary.getJwtRefreshTokenOption(),
+  );
+
+  async refreshToken(user: JwtAccessTokenPayload): Promise<string> {
     const jwtPayload = {
       userId: user.userId,
       email: user.email,
@@ -38,7 +49,7 @@ export class AuthService {
     }
   }
 
-  async login(loginUserDto: LoginUserDto): Promise<string> {
+  async validateUser(loginUserDto: LoginUserDto): Promise<UserEntity> {
     const { email, password } = loginUserDto;
     const user = await this.authRepository.findUserWithEmail(email);
 
@@ -46,15 +57,33 @@ export class AuthService {
       throw new UnauthorizedException("아이디 혹은 비밀번호가 틀렸습니다.");
     }
 
-    const jwtPayload = {
+    return user;
+  }
+
+  async signToken(user: UserEntity) {
+    const jwtAccessTokenPayload = {
       userId: user.id,
       email: user.Auth.email,
       nickname: user.Auth.nickname,
       userType: user.Auth.userType,
     };
 
+    const jwtRefreshTokenPayload = {
+      ...jwtAccessTokenPayload,
+      isRefreshToken: true,
+    };
+
     try {
-      return await this.jwtService.signAsync(jwtPayload);
+      const [accessToken, refreshToken] =
+        await this.promiseLibrary.twoPromiseBundle(
+          this.accessTokenSign.signAsync(jwtAccessTokenPayload),
+          this.accessTokenSign.signAsync(jwtRefreshTokenPayload),
+          "Sign jwt token access and refresh",
+        );
+
+      await this.authRepository.injectRefreshToken(user.Auth.id, refreshToken);
+
+      return { accessToken, refreshToken };
     } catch (err) {
       throw new InternalServerErrorException(
         "JWT 토큰을 발행하는데 실패하였습니다.",

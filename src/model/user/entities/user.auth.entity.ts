@@ -5,7 +5,7 @@ import {
   PrimaryGeneratedColumn,
   JoinColumn,
 } from "typeorm";
-import { IsEmail, IsNotEmpty, IsString, Matches } from "class-validator";
+import { IsEmail, IsJWT, IsNotEmpty, IsString, Matches } from "class-validator";
 import { UserEntity } from "./user.entity";
 
 @Entity("users_auth")
@@ -41,4 +41,8 @@ export class UserAuthEntity {
     default: "general",
   })
   userType: "general" | "special" | "admin";
+
+  @IsJWT()
+  @Column({ type: "text", unique: true, nullable: true })
+  refreshtoken: string;
 }
