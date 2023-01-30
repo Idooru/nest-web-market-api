@@ -247,7 +247,8 @@ export class UserRepository {
   async patchUser(
     patchUserDto: PatchUserDto,
     hashed: string,
-    userId: string,
+    userProfileId: string,
+    userAuthId: string,
   ): Promise<void> {
     const { realname, birth, gender, phonenumber, nickname } = patchUserDto;
 
@@ -256,13 +257,13 @@ export class UserRepository {
         .createQueryBuilder()
         .update(UserProfileEntity)
         .set({ realname, birth, gender, phonenumber })
-        .where("id = :id", { id: userId })
+        .where("id = :id", { id: userProfileId })
         .execute(),
       this.userAuthRepository
         .createQueryBuilder()
         .update(UserAuthEntity)
         .set({ nickname, password: hashed })
-        .where("id = :id", { id: userId })
+        .where("id = :id", { id: userAuthId })
         .execute(),
       "Save Object For Patch User Info",
     );

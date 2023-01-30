@@ -53,7 +53,12 @@ export class UserService {
     const { password } = patchUserDto;
     const hashed = await bcrypt.hash(password, 10);
 
-    await this.userRepository.patchUser(patchUserDto, hashed, userId);
+    await this.userRepository.patchUser(
+      patchUserDto,
+      hashed,
+      user.Profile.id,
+      user.Auth.id,
+    );
   }
 
   async deleteUserWithId(userId: string): Promise<void> {
