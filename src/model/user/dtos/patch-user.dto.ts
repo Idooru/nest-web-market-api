@@ -1,16 +1,16 @@
 import { UserAuthEntity } from "../entities/user.auth.entity";
-import { RegisterUserCommonDto } from "./register-user.dto";
-import { IsNotEmpty, IsString, Matches } from "class-validator";
+import { RegisterUserProfileDto } from "./register-user.dto";
 import { IntersectionType, PickType } from "@nestjs/swagger";
 
-export class PatchUserCommonDto extends RegisterUserCommonDto {}
+export class PatchUserProfileDto extends RegisterUserProfileDto {}
 
 export class PatchUserAuthDto extends PickType(UserAuthEntity, [
+  "email",
   "nickname",
   "password",
 ] as const) {}
 
 export class PatchUserDto extends IntersectionType(
-  PatchUserCommonDto,
+  PatchUserProfileDto,
   PatchUserAuthDto,
 ) {}

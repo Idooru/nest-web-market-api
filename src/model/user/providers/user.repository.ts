@@ -250,7 +250,8 @@ export class UserRepository {
     userProfileId: string,
     userAuthId: string,
   ): Promise<void> {
-    const { realname, birth, gender, phonenumber, nickname } = patchUserDto;
+    const { realname, birth, gender, phonenumber, nickname, email } =
+      patchUserDto;
 
     await this.promiseLibrary.twoPromiseBundle(
       this.userProfileRepository
@@ -262,7 +263,7 @@ export class UserRepository {
       this.userAuthRepository
         .createQueryBuilder()
         .update(UserAuthEntity)
-        .set({ nickname, password: hashed })
+        .set({ email, nickname, password: hashed })
         .where("id = :id", { id: userAuthId })
         .execute(),
       "Save Object For Patch User Info",

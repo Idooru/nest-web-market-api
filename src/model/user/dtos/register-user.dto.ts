@@ -4,7 +4,7 @@ import { IntersectionType } from "@nestjs/swagger";
 import { IsNotEmpty, IsString, Matches } from "class-validator";
 import { UserAuthEntity } from "../entities/user.auth.entity";
 
-export class RegisterUserCommonDto extends PickType(UserProfileEntity, [
+export class RegisterUserProfileDto extends PickType(UserProfileEntity, [
   "realname",
   "birth",
   "gender",
@@ -22,6 +22,6 @@ export class RegisterUserAuthDto extends PickType(UserAuthEntity, [
 }
 
 export class RegisterUserDto extends IntersectionType(
-  RegisterUserCommonDto,
+  RegisterUserProfileDto,
   RegisterUserAuthDto,
 ) {}
