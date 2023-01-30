@@ -6,13 +6,13 @@ import { ProductImageEntity } from "./entities/product.image.entity";
 import { ReviewImageEntity } from "./entities/review.image.entity";
 import { ReviewVideoEntity } from "./entities/review.video.entity";
 import { UploadRepository } from "./providers/upload.repository";
-import { NestjsFormDataModule } from "nestjs-form-data";
 import { UserModule } from "../user/user.module";
 import { InquiryImageEntity } from "../inquiry/entities/inquiry.image.entity";
 import { InquiryVideoEntity } from "../inquiry/entities/inquiry.video.entity";
 import { ProductEntity } from "../product/entities/product.entity";
 import { MulterConfig } from "src/common/config/multer.config";
 import { LibraryModule } from "src/common/lib/library.module";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
   imports: [
@@ -25,7 +25,7 @@ import { LibraryModule } from "src/common/lib/library.module";
       InquiryVideoEntity,
     ]),
     forwardRef(() => UserModule),
-    NestjsFormDataModule,
+    JwtModule,
     LibraryModule,
   ],
   controllers: [UploadController],

@@ -12,6 +12,7 @@ import { UserController } from "./controllers/user.controller";
 import { UserService } from "../user/providers/user.service";
 import { UserEntity } from "./entities/user.entity";
 import { LibraryModule } from "src/common/lib/library.module";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { LibraryModule } from "src/common/lib/library.module";
     forwardRef(() => AuthModule),
     forwardRef(() => UploadModule),
     forwardRef(() => ReviewModule),
+    JwtModule,
     LibraryModule,
   ],
   controllers: [UserController],

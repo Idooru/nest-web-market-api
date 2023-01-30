@@ -11,6 +11,7 @@ import { StarRatingRepository } from "../review/providers/star-rating.repository
 import { StarRatingService } from "./providers/star-rating.service";
 import { UploadModule } from "../upload/upload.module";
 import { LibraryModule } from "src/common/lib/library.module";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { LibraryModule } from "src/common/lib/library.module";
     forwardRef(() => UploadModule),
     forwardRef(() => UserModule),
     forwardRef(() => ProductModule),
+    JwtModule,
     LibraryModule,
   ],
   controllers: [ReviewController],

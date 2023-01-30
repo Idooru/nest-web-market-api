@@ -11,6 +11,7 @@ import { InquiryModule } from "../inquiry/inquiry.module";
 import { ProductImageEntity } from "../upload/entities/product.image.entity";
 import { LibraryModule } from "src/common/lib/library.module";
 import { ProductVersionOneOnlyAdminController } from "./controllers/product-v1-only-admin.controller";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ProductVersionOneOnlyAdminController } from "./controllers/product-v1-o
     forwardRef(() => UploadModule),
     forwardRef(() => ReviewModule),
     forwardRef(() => InquiryModule),
+    JwtModule,
     LibraryModule,
   ],
   controllers: [
