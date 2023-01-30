@@ -113,13 +113,11 @@ export class AuthService {
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
     const { email, password } = resetPasswordDto;
 
-    const resultPromise = await this.promiseLibrary.twoPromiseBundle(
+    const [user, hashed] = await this.promiseLibrary.twoPromiseBundle(
       this.authRepository.findUserWithEmail(email),
       bcrypt.hash(password, 10),
       "Find User And Hash Password",
     );
-
-    const [user, hashed] = resultPromise;
 
     await this.authRepository.resetPassword(user.Auth.id, hashed);
   }
