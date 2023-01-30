@@ -140,3 +140,4 @@ Nest is [MIT licensed](LICENSE).
 13. cascade 해결
 14. UserEntity에서 원하는 정보만 쿼리빌더를 사용해서 빼오기 해결
 15. 전체 사용자가 사용할 수 있는 api 컨트롤러를 free-use와 only-admin으로 나눠 보았다. 아직은 Product 도메인만 적용되었지만 나중에 모든 도메인에 적용해볼것이다.
+16. jwt 인증 로직 기능 중 access token과 refresh token을 나누어 사용해 보았다. 주요 인증 기능인 access token의 유효 시간을 짧게 한 후, 유효 시간이 초과되었을 때 access token과 refresh token을 다시 발급 하여 사용할 수 있게 하였다. 이렇게 되면 access token이 탈취 되었다고 가정할 때 refresh token만큼은 잘 간직하고 있다가 refresh token API를 호출할 때 키로 사용하여 토큰을 다시 복구할 수 있게 된다. 만약 refresh token 마저 탈취 되면 답이 없을 거 같다.
