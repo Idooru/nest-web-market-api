@@ -38,7 +38,7 @@ export class UserService {
   async patchUserInfoMyself(
     patchUserDto: PatchUserDto,
     userId: string,
-  ): Promise<string> {
+  ): Promise<void> {
     const { nickname, phonenumber } = patchUserDto;
     const user = await this.userRepository.findUserWithId(userId);
     const myNickName = user.Auth.nickname;
@@ -57,13 +57,6 @@ export class UserService {
     const hashed = await bcrypt.hash(password, 10);
 
     await this.userRepository.patchUser(patchUserDto, hashed, userId);
-
-    const jwtPayload: JwtAccessTokenPayload = {
-      userId,
-      nickname: patchUserDto.nickname,
-    };
-
-    return await this.authService.refreshToken(jwtPayload);
   }
 
   async deleteUserWithId(userId: string): Promise<void> {

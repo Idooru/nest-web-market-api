@@ -8,12 +8,13 @@ import { FindEmailDto } from "../../user/dtos/find-email.dto";
 import { JwtService } from "@nestjs/jwt";
 import { LoginUserDto } from "../../user/dtos/login-user.dto";
 import { AuthRepository } from "./auth.repository";
-import { JwtAccessTokenPayload } from "../jwt/jwt-access-token-payload.interface";
-
-import * as bcrypt from "bcrypt";
 import { PromiseLibrary } from "src/common/lib/promise.library";
 import { UserEntity } from "src/model/user/entities/user.entity";
 import { SecurityLibrary } from "src/common/lib/security.library";
+import { JwtPayload } from "../jwt/jwt-payload.interface";
+import * as bcrypt from "bcrypt";
+import { v4 } from "uuid";
+import { JwtRefreshTokenPayload } from "../jwt/jwt-refresh-token-payload.interface";
 
 @Injectable()
 export class AuthService {
@@ -24,29 +25,10 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  private readonly accessTokenSign = new JwtService(
-    this.securityLibrary.getJwtAceessTokenOption(),
-  );
+  async refreshToken(jwtPayload: JwtRefreshTokenPayload): Promise<JwtPayload> {
+    const user = await this.authRepository.findUserWithEmail(jwtPayload.email);
 
-  private readonly refreshTokenSign = new JwtService(
-    this.securityLibrary.getJwtRefreshTokenOption(),
-  );
-
-  async refreshToken(user: JwtAccessTokenPayload): Promise<string> {
-    const jwtPayload = {
-      userId: user.userId,
-      email: user.email,
-      nickname: user.nickname,
-      userType: user.userType,
-    };
-
-    try {
-      return await this.jwtService.signAsync(jwtPayload);
-    } catch (err) {
-      throw new InternalServerErrorException(
-        "JWT 토큰을 발행하는데 실패하였습니다.",
-      );
-    }
+    return await this.signToken(user);
   }
 
   async validateUser(loginUserDto: LoginUserDto): Promise<UserEntity> {
@@ -60,7 +42,7 @@ export class AuthService {
     return user;
   }
 
-  async signToken(user: UserEntity) {
+  async signToken(user: UserEntity): Promise<JwtPayload> {
     const jwtAccessTokenPayload = {
       userId: user.id,
       email: user.Auth.email,
@@ -71,17 +53,22 @@ export class AuthService {
     const jwtRefreshTokenPayload = {
       ...jwtAccessTokenPayload,
       isRefreshToken: true,
+      randomToken: v4(),
     };
 
     try {
       const [accessToken, refreshToken] =
         await this.promiseLibrary.twoPromiseBundle(
-          this.accessTokenSign.signAsync(jwtAccessTokenPayload),
-          this.accessTokenSign.signAsync(jwtRefreshTokenPayload),
+          this.jwtService.signAsync(
+            jwtAccessTokenPayload,
+            this.securityLibrary.getJwtAceessTokenSignOption(),
+          ),
+          this.jwtService.signAsync(
+            jwtRefreshTokenPayload,
+            this.securityLibrary.getJwtRefreshTokenSignOption(),
+          ),
           "Sign jwt token access and refresh",
         );
-
-      await this.authRepository.injectRefreshToken(user.Auth.id, refreshToken);
 
       return { accessToken, refreshToken };
     } catch (err) {

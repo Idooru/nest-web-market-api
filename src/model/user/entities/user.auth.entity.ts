@@ -41,8 +41,4 @@ export class UserAuthEntity {
     default: "general",
   })
   userType: "general" | "special" | "admin";
-
-  @IsJWT()
-  @Column({ type: "text", unique: true, nullable: true })
-  refreshtoken: string;
 }

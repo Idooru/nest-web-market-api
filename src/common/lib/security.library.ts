@@ -1,5 +1,10 @@
 import { CookieOptions } from "express";
-import { JwtModuleAsyncOptions, JwtModuleOptions } from "@nestjs/jwt";
+import {
+  JwtModuleAsyncOptions,
+  JwtModuleOptions,
+  JwtSignOptions,
+  JwtVerifyOptions,
+} from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { Injectable } from "@nestjs/common";
 
@@ -14,41 +19,75 @@ export class SecurityLibrary {
     expires: new Date(Date.now() + 100000000),
   };
 
-  private readonly jwtAccessTokenOption: JwtModuleOptions = {
+  public getCookieOption(): CookieOptions {
+    return this.cookieOption;
+  }
+
+  private readonly jwtAccessTokenSignOption: JwtSignOptions = {
+    secret: this.configService.get("JWT_ACCESSTOKEN_SECRET"),
+    expiresIn: this.configService.get("JWT_ACCESSTOKEN_EXPIRES"),
+  };
+
+  private readonly jwtAccessTokenVerifyOption: JwtVerifyOptions = {
+    secret: this.configService.get("JWT_ACCESSTOKEN_SECRET"),
+  };
+
+  private readonly jwtRefreshTokenSignOption: JwtSignOptions = {
+    secret: this.configService.get("JWT_REFRESHTOKEN_SECRET"),
+    expiresIn: this.configService.get("JWT_REFRESHTOKEN_EXPIRES"),
+  };
+
+  private readonly jwtRefreshTokenVerifyOption: JwtVerifyOptions = {
+    secret: this.configService.get("JWT_REFRESHTOKEN_SECRET"),
+  };
+
+  private readonly jwtAccessTokenModuleOption: JwtModuleOptions = {
     secret: this.configService.get("JWT_ACCESSTOKEN_SECRET"),
     signOptions: {
       expiresIn: this.configService.get("JWT_ACCESSTOKEN_EXPIRES"),
     },
   };
 
-  private readonly jwtRefreshTokenOption: JwtModuleOptions = {
+  private readonly jwtRefreshTokenModuleOption: JwtModuleOptions = {
     secret: this.configService.get("JWT_REFRESHTOKEN_SECRET"),
     signOptions: {
       expiresIn: this.configService.get("JWT_REFRESHTOKEN_EXPIRES"),
     },
   };
 
-  public getCookieOption(): CookieOptions {
-    return this.cookieOption;
+  public getJwtAceessTokenSignOption(): JwtSignOptions {
+    return this.jwtAccessTokenSignOption;
   }
 
-  public getJwtAceessTokenOption(): JwtModuleOptions {
-    return this.jwtAccessTokenOption;
+  public getJwtAcessTokenVerifyOption(): JwtVerifyOptions {
+    return this.jwtAccessTokenVerifyOption;
   }
 
-  public getJwtRefreshTokenOption(): JwtModuleOptions {
-    return this.jwtRefreshTokenOption;
+  public getJwtRefreshTokenSignOption(): JwtSignOptions {
+    return this.jwtRefreshTokenSignOption;
+  }
+
+  public getJwtRefreshTokenVerifyOption(): JwtVerifyOptions {
+    return this.jwtRefreshTokenVerifyOption;
+  }
+
+  public getJwtAccessTokenModuleOption(): JwtModuleOptions {
+    return this.jwtAccessTokenModuleOption;
+  }
+
+  public getJwtRefreshTokenModuleOption(): JwtModuleOptions {
+    return this.jwtRefreshTokenModuleOption;
   }
 
   public getJwtAccessTokenForJwtModule(): JwtModuleAsyncOptions {
     return {
-      useFactory: () => this.getJwtAceessTokenOption(),
+      useFactory: () => this.getJwtAccessTokenModuleOption(),
     };
   }
 
   public getJwtRefreshTokenForJwtModule(): JwtModuleAsyncOptions {
     return {
-      useFactory: () => this.getJwtRefreshTokenOption(),
+      useFactory: () => this.getJwtRefreshTokenModuleOption(),
     };
   }
 }

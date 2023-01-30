@@ -70,16 +70,4 @@ export class AuthRepository {
       .where("id = :id", { id: userAuthId })
       .execute();
   }
-
-  async injectRefreshToken(
-    userAuthId: string,
-    refreshToken: string,
-  ): Promise<void> {
-    await this.authRepository
-      .createQueryBuilder()
-      .update(UserAuthEntity)
-      .set({ refreshtoken: refreshToken })
-      .where("id = :id", { id: userAuthId })
-      .execute();
-  }
 }

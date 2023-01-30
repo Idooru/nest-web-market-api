@@ -29,11 +29,14 @@ export class JsonSendCookieInterceptor implements NestInterceptor {
         const { cookieKey, cookieValue, statusCode, message, result } = data;
         this.timeLoggerLibrary.sendResponse(req);
 
-        res
-          .status(data.statusCode)
-          .setHeader("X-Powered-By", "")
-          .cookie(cookieKey, cookieValue, cookieOption);
-
+        if (cookieKey.length >= 2 && cookieValue.length >= 2) {
+          for (let i = 0; i < cookieKey.length; i++) {
+            res.cookie(cookieKey[i], cookieValue[i], cookieOption);
+          }
+        } else {
+          res.cookie(cookieKey, cookieValue, cookieOption);
+        }
+        res.status(data.statusCode).setHeader("X-Powered-By", "");
         return { success: true, ...{ statusCode, message, result } };
       }),
     );

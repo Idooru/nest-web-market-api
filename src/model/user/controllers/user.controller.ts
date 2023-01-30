@@ -27,6 +27,8 @@ import { JsonGeneralInterceptor } from "src/common/interceptors/json-general.int
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { JsonSendCookieInterceptor } from "src/common/interceptors/json-send-cookie.interceptor";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/json-clear-cookie.interceptor";
+import { IsRefreshTokenAvailableGuard } from "src/common/guards/is-refresh-token-available.guard";
+import { JwtRefreshTokenPayload } from "src/model/auth/jwt/jwt-refresh-token-payload.interface";
 
 @Controller("/user")
 export class UserController {
@@ -70,29 +72,33 @@ export class UserController {
   ): Promise<JsonSendCookieInterface<string>> {
     const user = await this.authService.validateUser(loginUserDto);
 
-    const jwtToken = await this.authService.signToken(user);
+    const { accessToken, refreshToken } = await this.authService.signToken(
+      user,
+    );
 
     return {
       statusCode: 201,
       message: "로그인을 완료하였습니다. 쿠키를 확인하세요.",
-      cookieKey: "JWT_COOKIE",
-      cookieValue: jwtToken,
+      cookieKey: ["access_token", "refresh_token"],
+      cookieValue: [accessToken, refreshToken],
     };
   }
 
   @UseInterceptors(JsonSendCookieInterceptor)
-  @UseGuards(IsLoginGuard)
+  @UseGuards(IsRefreshTokenAvailableGuard)
   @Get("/refresh-token")
   async refreshToken(
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
+    @GetJWT() jwtPayload: JwtRefreshTokenPayload,
   ): Promise<JsonSendCookieInterface<string>> {
-    const jwtToken = await this.authService.refreshToken(jwtPayload);
+    const { accessToken, refreshToken } = await this.authService.refreshToken(
+      jwtPayload,
+    );
 
     return {
       statusCode: 200,
       message: "토큰을 재발급 받았습니다. 쿠키를 확인하세요.",
-      cookieKey: "JWT_COOKIE",
-      cookieValue: jwtToken,
+      cookieKey: ["access_token", "refresh_token"],
+      cookieValue: [accessToken, refreshToken],
     };
   }
 
@@ -103,27 +109,22 @@ export class UserController {
     return {
       statusCode: 200,
       message: "로그아웃을 완료하였습니다.",
-      cookieKey: "JWT_COOKIE",
+      cookieKey: ["access_token", "refresh_token"],
     };
   }
 
-  @UseInterceptors(JsonSendCookieInterceptor)
+  @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/set-user")
   async setUser(
     @Body() patchUserDto: PatchUserDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookieInterface<string>> {
-    const jwtToken = await this.userService.patchUserInfoMyself(
-      patchUserDto,
-      jwtPayload.userId,
-    );
+  ): Promise<JsonGeneralInterface<null>> {
+    await this.userService.patchUserInfoMyself(patchUserDto, jwtPayload.userId);
 
     return {
       statusCode: 200,
-      message: "사용자 정보를 수정하고 토큰을 재발급합니다.",
-      cookieKey: "JWT_COOKIE",
-      cookieValue: jwtToken,
+      message: "사용자 정보를 수정합니다.",
     };
   }
 
