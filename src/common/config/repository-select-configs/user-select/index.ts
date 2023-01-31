@@ -24,4 +24,11 @@ export const userSelectProperty = {
     "Review",
     "Inquiry",
   ],
+  userSimpleSelect: [
+    "user",
+    "user.id",
+    "Profile.realname",
+    "Auth.email",
+    "Auth.userType",
+  ],
 };
