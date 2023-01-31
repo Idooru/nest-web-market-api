@@ -1,11 +1,8 @@
 import { Controller, Get, UseInterceptors, Param } from "@nestjs/common";
-import {
-  ResponseProductDto,
-  ResponseProductsDto,
-} from "../dto/response_product.dto";
 import { ProductService } from "../providers/product.service";
 import { JsonGeneralInterceptor } from "src/common/interceptors/json-general.interceptor";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
+import { ProductEntity } from "../entities/product.entity";
 
 @Controller("/api/v1/free-use/product")
 export class ProductVersionOneFreeUseController {
@@ -14,7 +11,7 @@ export class ProductVersionOneFreeUseController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/")
   async getProductsAllFromLatest(): Promise<
-    JsonGeneralInterface<ResponseProductsDto[]>
+    JsonGeneralInterface<ProductEntity[]>
   > {
     return {
       statusCode: 200,
@@ -26,7 +23,7 @@ export class ProductVersionOneFreeUseController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/oldest")
   async getProductsAllFromOldest(): Promise<
-    JsonGeneralInterface<ResponseProductsDto[]>
+    JsonGeneralInterface<ProductEntity[]>
   > {
     return {
       statusCode: 200,
@@ -39,23 +36,11 @@ export class ProductVersionOneFreeUseController {
   @Get("/name/:name")
   async getProductByName(
     @Param("name") productName: string,
-  ): Promise<JsonGeneralInterface<ResponseProductDto>> {
+  ): Promise<JsonGeneralInterface<ProductEntity>> {
     return {
       statusCode: 200,
       message: `${productName}에 해당하는 상품 정보를 가져옵니다.`,
       result: await this.productService.getProductByName(productName),
-    };
-  }
-
-  @UseInterceptors(JsonGeneralInterceptor)
-  @Get("/id/:id")
-  async getProductById(
-    @Param("id") productId: string,
-  ): Promise<JsonGeneralInterface<ResponseProductDto>> {
-    return {
-      statusCode: 200,
-      message: `${productId}에 해당하는 상품 정보를 가져옵니다.`,
-      result: await this.productService.getProductById(productId),
     };
   }
 }
