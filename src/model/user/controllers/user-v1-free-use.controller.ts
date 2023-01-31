@@ -21,7 +21,7 @@ import { UserEntity } from "../entities/user.entity";
 import { PatchUserDto } from "../dtos/patch-user.dto";
 import { ResetPasswordDto } from "../dtos/reset-password.dto";
 import { GetJWT } from "../../../common/decorators/get.jwt.decorator";
-import { FindEmailDto } from "./../dtos/find-email.dto";
+import { FindEmailDto } from "../dtos/find-email.dto";
 import { IsNotLoginGuard } from "../../../common/guards/is-not-login.guard";
 import { JsonGeneralInterceptor } from "src/common/interceptors/json-general.interceptor";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
@@ -30,8 +30,8 @@ import { JsonClearCookieInterceptor } from "src/common/interceptors/json-clear-c
 import { IsRefreshTokenAvailableGuard } from "src/common/guards/is-refresh-token-available.guard";
 import { JwtRefreshTokenPayload } from "src/model/auth/jwt/jwt-refresh-token-payload.interface";
 
-@Controller("/user")
-export class UserController {
+@Controller("/api/v1/free-use/user")
+export class UserVersionOneFreeUseController {
   constructor(
     private readonly userService: UserService,
     private readonly authService: AuthService,

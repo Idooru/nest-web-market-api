@@ -8,11 +8,12 @@ import { UserRepository } from "../user/providers/user.repository";
 import { UserProfileEntity } from "./entities/user.profile.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { forwardRef, Module } from "@nestjs/common";
-import { UserController } from "./controllers/user.controller";
 import { UserService } from "../user/providers/user.service";
 import { UserEntity } from "./entities/user.entity";
 import { LibraryModule } from "src/common/lib/library.module";
 import { JwtModule } from "@nestjs/jwt";
+import { UserVersionOneFreeUseController } from "./controllers/user-v1-free-use.controller";
+import { UserVersionOneOnlyAdminController } from "./controllers/user-v1-only-admin.controller";
 
 @Module({
   imports: [
@@ -28,7 +29,10 @@ import { JwtModule } from "@nestjs/jwt";
     JwtModule,
     LibraryModule,
   ],
-  controllers: [UserController],
+  controllers: [
+    UserVersionOneFreeUseController,
+    UserVersionOneOnlyAdminController,
+  ],
   providers: [UserService, UserRepository, UploadService],
   exports: [UserService, UserRepository],
 })
