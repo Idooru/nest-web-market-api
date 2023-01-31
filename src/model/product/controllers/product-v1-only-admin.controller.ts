@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   Delete,
   Param,
   Patch,
@@ -19,6 +20,7 @@ import { JsonGeneralInterceptor } from "src/common/interceptors/json-general.int
 import { MediaUrlCookie } from "src/model/upload/media.url.cookie.interface";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
+import { ProductEntity } from "../entities/product.entity";
 import { ProductService } from "../providers/product.service";
 
 @UseGuards(IsAdminGuard)
@@ -26,6 +28,18 @@ import { ProductService } from "../providers/product.service";
 @Controller("/api/v1/only-admin/product")
 export class ProductVersionOneOnlyAdminController {
   constructor(private readonly productService: ProductService) {}
+
+  @UseInterceptors(JsonGeneralInterceptor)
+  @Get("/id/:id")
+  async getProductById(
+    @Param("id") productId: string,
+  ): Promise<JsonGeneralInterface<ProductEntity>> {
+    return {
+      statusCode: 200,
+      message: `${productId}에 해당하는 상품 정보를 가져옵니다.`,
+      result: await this.productService.getProductById(productId),
+    };
+  }
 
   @UseInterceptors(JsonClearCookieInterceptor)
   @Post("/")
