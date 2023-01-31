@@ -20,12 +20,16 @@ import { IsLoginGuard } from "src/common/guards/is-login.guard";
 import { Cookies } from "src/common/decorators/cookies.decorator";
 import { JsonClearCookieInterface } from "src/common/interceptors/interface/json-clear-cookie.interface";
 import { IsAdminGuard } from "src/common/guards/is-admin.guard";
+import { MeidaLoggerLibrary } from "src/common/lib/media-logger.library";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
 @Controller("/api/v1/only-admin/upload")
 export class UploadVersionOneOnlyAdminController {
-  constructor(private readonly uploadService: UploadService) {}
+  constructor(
+    private readonly uploadService: UploadService,
+    private readonly mediaLoggerLibrary: MeidaLoggerLibrary,
+  ) {}
 
   private logger = new Logger("Media");
 
@@ -36,8 +40,7 @@ export class UploadVersionOneOnlyAdminController {
     @UploadedFile() file: Express.Multer.File,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookieInterface<MediaUrlCookie>> {
-    this.logger.debug("loggin image info ->\n", file);
-
+    this.mediaLoggerLibrary.log("product image", file, null);
     this.uploadService.checkExtensionTypeForProductImage(file);
 
     const image = await this.uploadService.uploadProductImage(file, jwtPayload);

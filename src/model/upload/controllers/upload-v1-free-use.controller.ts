@@ -5,7 +5,6 @@ import {
   UseInterceptors,
   UploadedFiles,
   Delete,
-  Logger,
 } from "@nestjs/common";
 import { JsonClearCookieInterface } from "../../../common/interceptors/interface/json-clear-cookie.interface";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/json-clear-cookie.interceptor";
@@ -19,14 +18,16 @@ import { JsonSendCookieInterface } from "../../../common/interceptors/interface/
 import { Cookies } from "src/common/decorators/cookies.decorator";
 import { JsonSendCookieInterceptor } from "src/common/interceptors/json-send-cookie.interceptor";
 import { MediaUrlCookie } from "src/model/upload/media.url.cookie.interface";
+import { MeidaLoggerLibrary } from "src/common/lib/media-logger.library";
 
 @Controller("upload")
 export class UploadVersionOneFreeUseController {
-  constructor(private readonly uploadService: UploadService) {
+  constructor(
+    private readonly uploadService: UploadService,
+    private readonly mediaLoggerLibrary: MeidaLoggerLibrary,
+  ) {
     MulterConfig.createFolder("video", "image");
   }
-
-  private logger = new Logger("Media");
 
   @UseInterceptors(JsonSendCookieInterceptor)
   @UseInterceptors(FilesInterceptor("image", 3, MulterConfig.upload("image")))
@@ -36,12 +37,10 @@ export class UploadVersionOneFreeUseController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookieInterface<string[][]>> {
-    this.logger.debug("logging image info ->\n", files);
-
+    this.mediaLoggerLibrary.log("review images", null, files);
     this.uploadService.checkExtensionTypeForImages(files);
 
     const image = await this.uploadService.uploadReviewImage(files, jwtPayload);
-
     const reviewImages = image.map((idx) => [idx.name, idx.url]);
 
     return {
@@ -60,7 +59,7 @@ export class UploadVersionOneFreeUseController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookieInterface<string[][]>> {
-    this.logger.debug("logging video info ->\n", files);
+    this.mediaLoggerLibrary.log("review videos", null, files);
     this.uploadService.checkExtensionTypeForVideos(files);
 
     const video = await this.uploadService.uploadReviewVideo(files, jwtPayload);
@@ -82,8 +81,7 @@ export class UploadVersionOneFreeUseController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookieInterface<string[][]>> {
-    this.logger.debug("logging image info ->\n", files);
-
+    this.mediaLoggerLibrary.log("inquiry images", null, files);
     this.uploadService.checkExtensionTypeForImages(files);
 
     const image = await this.uploadService.uploadInquiryImage(
@@ -108,7 +106,7 @@ export class UploadVersionOneFreeUseController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookieInterface<string[][]>> {
-    this.logger.debug("logging video info ->\n", files);
+    this.mediaLoggerLibrary.log("inquiry videos", null, files);
     this.uploadService.checkExtensionTypeForVideos(files);
 
     const video = await this.uploadService.uploadInquiryVideo(
