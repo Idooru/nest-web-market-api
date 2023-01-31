@@ -3,9 +3,8 @@ import { RegisterUserDto } from "../dtos/register-user.dto";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { UserRepository } from "../providers/user.repository";
 import { UserEntity } from "../entities/user.entity";
-
-import * as bcrypt from "bcrypt";
 import { PromiseLibrary } from "src/common/lib/promise.library";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class UserService {
@@ -69,5 +68,17 @@ export class UserService {
     }
 
     await this.userRepository.deleteUser(userId);
+  }
+
+  async getUsersAllFromLastest(): Promise<UserEntity[]> {
+    return await this.userRepository.findUsersAllFromLastest();
+  }
+
+  async getUsersAllFromOldest(): Promise<UserEntity[]> {
+    return await this.userRepository.findUsersAllFromOldest();
+  }
+
+  async getUserById(userId: string): Promise<UserEntity> {
+    return await this.userRepository.findUserProfileInfoWithId(userId);
   }
 }

@@ -279,6 +279,30 @@ export class UserRepository {
       .execute();
   }
 
+  async findUsersAllFromLastest(): Promise<UserEntity[]> {
+    return await this.userProfileRepository
+      .createQueryBuilder()
+      .select(this.select.userSimpleSelect)
+      .from(UserEntity, "user")
+      .innerJoin("user.Profile", "Profile")
+      .innerJoin("user.Auth", "Auth")
+      .innerJoin("user.Activity", "Activity")
+      .orderBy("user.createdAt", "DESC")
+      .getMany();
+  }
+
+  async findUsersAllFromOldest(): Promise<UserEntity[]> {
+    return await this.userActivityRepository
+      .createQueryBuilder()
+      .select(this.select.userSimpleSelect)
+      .from(UserEntity, "user")
+      .innerJoin("user.Profile", "Profile")
+      .innerJoin("user.Auth", "Auth")
+      .innerJoin("user.Activity", "Activity")
+      .orderBy("user.createdAt", "ASC")
+      .getMany();
+  }
+
   async increaseReviewCount(user: UserEntity) {
     ++user.Activity.productReviewCount;
     await this.userRepository.save(user);
