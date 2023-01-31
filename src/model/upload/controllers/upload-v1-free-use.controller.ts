@@ -127,22 +127,6 @@ export class UploadVersionOneFreeUseController {
 
   @UseInterceptors(JsonClearCookieInterceptor)
   @UseGuards(IsLoginGuard)
-  @Delete("/image/product/cancel")
-  async cancelImageUploadForProduct(
-    @Cookies("Product_Image_Url_COOKIE")
-    productImgCookie: MediaUrlCookie,
-  ): Promise<JsonClearCookieInterface> {
-    await this.uploadService.deleteProductImage(productImgCookie);
-
-    return {
-      statusCode: 200,
-      message: "상품 사진 업로드를 취소하였습니다.",
-      cookieKey: "Product_Image_Url_COOKIE",
-    };
-  }
-
-  @UseInterceptors(JsonClearCookieInterceptor)
-  @UseGuards(IsLoginGuard)
   @Delete("/image/review/cancel")
   async cancelImageUploadForReview(
     @Cookies("Review_Image_Url_COOKIES") reviewImgCookie: MediaUrlCookie[],
