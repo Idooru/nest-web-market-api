@@ -1,5 +1,8 @@
 import { Controller, Get, UseInterceptors, Param } from "@nestjs/common";
-import * as response_productDto from "../dto/response_product.dto";
+import {
+  ResponseProductDto,
+  ResponseProductsDto,
+} from "../dto/response_product.dto";
 import { ProductService } from "../providers/product.service";
 import { JsonGeneralInterceptor } from "src/common/interceptors/json-general.interceptor";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
@@ -11,7 +14,7 @@ export class ProductVersionOneFreeUseController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/")
   async getProductsAllFromLatest(): Promise<
-    JsonGeneralInterface<response_productDto.ResponseProductsDto[]>
+    JsonGeneralInterface<ResponseProductsDto[]>
   > {
     return {
       statusCode: 200,
@@ -23,7 +26,7 @@ export class ProductVersionOneFreeUseController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/oldest")
   async getProductsAllFromOldest(): Promise<
-    JsonGeneralInterface<response_productDto.ResponseProductsDto[]>
+    JsonGeneralInterface<ResponseProductsDto[]>
   > {
     return {
       statusCode: 200,
@@ -36,7 +39,7 @@ export class ProductVersionOneFreeUseController {
   @Get("/name/:name")
   async getProductByName(
     @Param("name") productName: string,
-  ): Promise<JsonGeneralInterface<response_productDto.ResponseProductDto>> {
+  ): Promise<JsonGeneralInterface<ResponseProductDto>> {
     return {
       statusCode: 200,
       message: `${productName}에 해당하는 상품 정보를 가져옵니다.`,
@@ -48,7 +51,7 @@ export class ProductVersionOneFreeUseController {
   @Get("/id/:id")
   async getProductById(
     @Param("id") productId: string,
-  ): Promise<JsonGeneralInterface<response_productDto.ResponseProductDto>> {
+  ): Promise<JsonGeneralInterface<ResponseProductDto>> {
     return {
       statusCode: 200,
       message: `${productId}에 해당하는 상품 정보를 가져옵니다.`,
