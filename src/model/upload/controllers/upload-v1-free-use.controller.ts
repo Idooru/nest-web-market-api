@@ -3,7 +3,6 @@ import {
   Post,
   UseGuards,
   UseInterceptors,
-  UploadedFile,
   UploadedFiles,
   Delete,
   Logger,
@@ -13,45 +12,21 @@ import { JsonClearCookieInterceptor } from "src/common/interceptors/json-clear-c
 import { UploadService } from "../providers/upload.service";
 import { IsLoginGuard } from "../../../common/guards/is-login.guard";
 import { MulterConfig } from "src/common/config/multer.config";
-import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
+import { FilesInterceptor } from "@nestjs/platform-express";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { JsonSendCookieInterface } from "../../../common/interceptors/interface/json-send-cookie.interface";
-import { IsAdminGuard } from "../../../common/guards/is-admin.guard";
 import { Cookies } from "src/common/decorators/cookies.decorator";
 import { JsonSendCookieInterceptor } from "src/common/interceptors/json-send-cookie.interceptor";
 import { MediaUrlCookie } from "src/model/upload/media.url.cookie.interface";
 
 @Controller("upload")
-export class UploadController {
+export class UploadVersionOneFreeUseController {
   constructor(private readonly uploadService: UploadService) {
     MulterConfig.createFolder("video", "image");
   }
 
   private logger = new Logger("Media");
-
-  @UseInterceptors(JsonSendCookieInterceptor)
-  @UseGuards(IsAdminGuard)
-  @UseGuards(IsLoginGuard)
-  @UseInterceptors(FileInterceptor("image", MulterConfig.upload("image")))
-  @Post("/image/product")
-  async uploadProductImage(
-    @UploadedFile() file: Express.Multer.File,
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookieInterface<MediaUrlCookie>> {
-    this.logger.debug("loggin image info ->\n", file);
-
-    this.uploadService.checkExtensionTypeForProductImage(file);
-
-    const image = await this.uploadService.uploadProductImage(file, jwtPayload);
-
-    return {
-      statusCode: 201,
-      message: "상품 사진을 업로드 하였습니다.",
-      cookieKey: "Product_Image_Url_COOKIE",
-      cookieValue: { name: image.name, url: image.url },
-    };
-  }
 
   @UseInterceptors(JsonSendCookieInterceptor)
   @UseInterceptors(FilesInterceptor("image", 3, MulterConfig.upload("image")))

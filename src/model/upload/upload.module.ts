@@ -1,7 +1,7 @@
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Module, forwardRef } from "@nestjs/common";
 import { UploadService } from "./providers/upload.service";
-import { UploadController } from "../upload/controllers/upload.controller";
+import { UploadVersionOneFreeUseController } from "./controllers/upload-v1-free-use.controller";
 import { ProductImageEntity } from "./entities/product.image.entity";
 import { ReviewImageEntity } from "./entities/review.image.entity";
 import { ReviewVideoEntity } from "./entities/review.video.entity";
@@ -13,6 +13,7 @@ import { ProductEntity } from "../product/entities/product.entity";
 import { MulterConfig } from "src/common/config/multer.config";
 import { LibraryModule } from "src/common/lib/library.module";
 import { JwtModule } from "@nestjs/jwt";
+import { UploadVersionOneOnlyAdminController } from "./controllers/upload-v1-only-admin.controller";
 
 @Module({
   imports: [
@@ -28,7 +29,10 @@ import { JwtModule } from "@nestjs/jwt";
     JwtModule,
     LibraryModule,
   ],
-  controllers: [UploadController],
+  controllers: [
+    UploadVersionOneFreeUseController,
+    UploadVersionOneOnlyAdminController,
+  ],
   providers: [UploadService, UploadRepository, MulterConfig],
   exports: [UploadService, UploadRepository],
 })
