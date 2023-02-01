@@ -1,5 +1,4 @@
 import { Logger, UnsupportedMediaTypeException } from "@nestjs/common";
-import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 
 import * as fs from "fs";
 import * as path from "path";
@@ -10,23 +9,29 @@ export class MulterConfig {
     const logger = new Logger("Multer");
 
     try {
-      logger.log("create uploads folder");
+      logger.log("Create uploads folder");
       fs.mkdirSync(path.join(__dirname, "../../../uploads"));
     } catch (err) {
       logger.log("uploads folder is already exist");
     }
 
     try {
-      logger.log(`create ${folder1} folder into uploads folder`);
+      logger.log(`Create ${folder1} ${folder2} folder into uploads folder`);
       fs.mkdirSync(path.join(__dirname, `../../../uploads/${folder1}`));
+      fs.mkdirSync(path.join(__dirname, `../../../uploads/${folder2}`));
+
+      ["review", "inquiry", "announcement"].forEach((idx) => {
+        fs.mkdirSync(
+          path.join(__dirname, `../../../uploads/${folder1}/${idx}`),
+        );
+        fs.mkdirSync(
+          path.join(__dirname, `../../../uploads/${folder2}/${idx}`),
+        );
+      });
+
+      fs.mkdirSync(path.join(__dirname, `../../../uploads/${folder1}/product`));
     } catch (err) {
       logger.log(`${folder1} is already exist`);
-    }
-
-    try {
-      logger.log(`create ${folder2} folder into uploads folder`);
-      fs.mkdirSync(path.join(__dirname, `../../../uploads/${folder2}`));
-    } catch (err) {
       logger.log(`${folder2} is already exist`);
     }
   }
@@ -59,10 +64,7 @@ export class MulterConfig {
     });
   }
 
-  static upload(folder: string) {
-    const result: MulterOptions = {
-      storage: this.storage(folder),
-    };
-    return result;
-  }
+  static upload = (folder: string) => ({
+    storage: this.storage(folder),
+  });
 }
