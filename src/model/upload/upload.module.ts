@@ -14,6 +14,7 @@ import { MulterConfig } from "src/common/config/multer.config";
 import { LibraryModule } from "src/common/lib/library.module";
 import { JwtModule } from "@nestjs/jwt";
 import { UploadVersionOneOnlyAdminController } from "./controllers/upload-v1-only-admin.controller";
+import { DotenvConfigurationModule } from "src/common/config/dotenv.config";
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { UploadVersionOneOnlyAdminController } from "./controllers/upload-v1-onl
     forwardRef(() => UserModule),
     JwtModule,
     LibraryModule,
+    DotenvConfigurationModule,
   ],
   controllers: [
     UploadVersionOneFreeUseController,
