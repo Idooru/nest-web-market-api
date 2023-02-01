@@ -1,7 +1,6 @@
 import {
   Controller,
   Delete,
-  Logger,
   Post,
   UploadedFile,
   UseGuards,
@@ -31,15 +30,16 @@ export class UploadVersionOneOnlyAdminController {
     private readonly mediaLoggerLibrary: MeidaLoggerLibrary,
   ) {}
 
-  private logger = new Logger("Media");
-
   @UseInterceptors(JsonSendCookieInterceptor)
-  @UseInterceptors(FileInterceptor("image", MulterConfig.upload("image")))
+  @UseInterceptors(
+    FileInterceptor("product_image", MulterConfig.upload("/image/product")),
+  )
   @Post("/image/product")
   async uploadProductImage(
     @UploadedFile() file: Express.Multer.File,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookieInterface<MediaUrlCookie>> {
+    this.uploadService.isExistMediaFile("product image", file);
     this.mediaLoggerLibrary.log("product image", file, null);
     this.uploadService.checkExtensionTypeForProductImage(file);
 
@@ -48,7 +48,7 @@ export class UploadVersionOneOnlyAdminController {
     return {
       statusCode: 201,
       message: "상품 사진을 업로드 하였습니다.",
-      cookieKey: "Product_Image_Url_COOKIE",
+      cookieKey: "product_image_url_cookie",
       cookieValue: { name: image.name, url: image.url },
     };
   }
@@ -56,7 +56,7 @@ export class UploadVersionOneOnlyAdminController {
   @UseInterceptors(JsonClearCookieInterceptor)
   @Delete("/image/product/cancel")
   async cancelImageUploadForProduct(
-    @Cookies("Product_Image_Url_COOKIE")
+    @Cookies("product_image_url_cookie")
     productImgCookie: MediaUrlCookie,
   ): Promise<JsonClearCookieInterface> {
     await this.uploadService.deleteProductImage(productImgCookie);
@@ -64,7 +64,7 @@ export class UploadVersionOneOnlyAdminController {
     return {
       statusCode: 200,
       message: "상품 사진 업로드를 취소하였습니다.",
-      cookieKey: "Product_Image_Url_COOKIE",
+      cookieKey: "product_image_url_cookie",
     };
   }
 }

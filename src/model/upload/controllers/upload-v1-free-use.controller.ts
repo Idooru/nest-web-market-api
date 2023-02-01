@@ -20,17 +20,19 @@ import { JsonSendCookieInterceptor } from "src/common/interceptors/json-send-coo
 import { MediaUrlCookie } from "src/model/upload/media.url.cookie.interface";
 import { MeidaLoggerLibrary } from "src/common/lib/media-logger.library";
 
-@Controller("upload")
+@Controller("/api/v1/free-use/upload")
 export class UploadVersionOneFreeUseController {
   constructor(
     private readonly uploadService: UploadService,
     private readonly mediaLoggerLibrary: MeidaLoggerLibrary,
   ) {
-    MulterConfig.createFolder("video", "image");
+    MulterConfig.createFolder("image", "video");
   }
 
   @UseInterceptors(JsonSendCookieInterceptor)
-  @UseInterceptors(FilesInterceptor("image", 3, MulterConfig.upload("image")))
+  @UseInterceptors(
+    FilesInterceptor("review_image", 3, MulterConfig.upload("image/review")),
+  )
   @UseGuards(IsLoginGuard)
   @Post("/image/review")
   async uploadReviewImage(
@@ -46,13 +48,15 @@ export class UploadVersionOneFreeUseController {
     return {
       statusCode: 201,
       message: "리뷰 사진을 업로드 하였습니다.",
-      cookieKey: "Review_Image_Url_COOKIES",
+      cookieKey: "review_image_url_cookies",
       cookieValue: reviewImages,
     };
   }
 
   @UseInterceptors(JsonSendCookieInterceptor)
-  @UseInterceptors(FilesInterceptor("video", 3, MulterConfig.upload("video")))
+  @UseInterceptors(
+    FilesInterceptor("review_video", 3, MulterConfig.upload("video/review")),
+  )
   @UseGuards(IsLoginGuard)
   @Post("/video/review")
   async uploadReviewVideo(
@@ -68,13 +72,15 @@ export class UploadVersionOneFreeUseController {
     return {
       statusCode: 201,
       message: "리뷰 동영상을 업로드 하였습니다.",
-      cookieKey: "Review_Video_Url_COOKIES",
+      cookieKey: "review_video_url_cookies",
       cookieValue: reviewVideos,
     };
   }
 
   @UseInterceptors(JsonSendCookieInterceptor)
-  @UseInterceptors(FilesInterceptor("image", 3, MulterConfig.upload("image")))
+  @UseInterceptors(
+    FilesInterceptor("inquiry_image", 3, MulterConfig.upload("image/inquiry")),
+  )
   @UseGuards(IsLoginGuard)
   @Post("/image/inquiry")
   async uploadInquiryImage(
@@ -93,13 +99,15 @@ export class UploadVersionOneFreeUseController {
     return {
       statusCode: 201,
       message: "문의 사진을 업로드 하였습니다.",
-      cookieKey: "Inquiry_Image_Url_COOKIES",
+      cookieKey: "inquiry_image_url_cookies",
       cookieValue: inquiryImages,
     };
   }
 
   @UseInterceptors(JsonSendCookieInterceptor)
-  @UseInterceptors(FilesInterceptor("video", 3, MulterConfig.upload("video")))
+  @UseInterceptors(
+    FilesInterceptor("inquiry_video", 3, MulterConfig.upload("video/inquiry")),
+  )
   @UseGuards(IsLoginGuard)
   @Post("/video/inquiry")
   async uploadInquiryVideo(
@@ -127,14 +135,14 @@ export class UploadVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Delete("/image/review/cancel")
   async cancelImageUploadForReview(
-    @Cookies("Review_Image_Url_COOKIES") reviewImgCookie: MediaUrlCookie[],
+    @Cookies("review_image_url_cookies") reviewImgCookie: MediaUrlCookie[],
   ): Promise<JsonClearCookieInterface> {
     await this.uploadService.deleteReviewImages(reviewImgCookie);
 
     return {
       statusCode: 200,
       message: "리뷰 사진 업로드를 취소하였습니다.",
-      cookieKey: "Review_Image_Url_COOKIES",
+      cookieKey: "review_image_url_cookies",
     };
   }
 
@@ -142,14 +150,14 @@ export class UploadVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Delete("/video/review/cancel")
   async cancelVideoUploadForReview(
-    @Cookies("Review_Video_Url_COOKIES") reviewVdoCookie: MediaUrlCookie[],
+    @Cookies("review_video_url_cookies") reviewVdoCookie: MediaUrlCookie[],
   ): Promise<JsonClearCookieInterface> {
     await this.uploadService.deleteReviewVideos(reviewVdoCookie);
 
     return {
       statusCode: 200,
       message: "리뷰 동영상 업로드를 취소하였습니다.",
-      cookieKey: "Review_Video_Url_COOKIES",
+      cookieKey: "review_video_url_cookies",
     };
   }
 
@@ -157,14 +165,14 @@ export class UploadVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Delete("/image/inquiry/cancel")
   async cancelImageUploadForInquiry(
-    @Cookies("Inquiry_Image_Url_COOKIES") inquiryImgCookie: MediaUrlCookie[],
+    @Cookies("inquiry_image_url_COOKIES") inquiryImgCookie: MediaUrlCookie[],
   ): Promise<JsonClearCookieInterface> {
     await this.uploadService.deleteInquiryImages(inquiryImgCookie);
 
     return {
       statusCode: 200,
       message: "문의 사진 업로드를 취소하였습니다.",
-      cookieKey: "Inquiry_Image_Url_COOKIES",
+      cookieKey: "inquiry_image_url_cookies",
     };
   }
 
