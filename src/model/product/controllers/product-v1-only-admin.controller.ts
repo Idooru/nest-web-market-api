@@ -46,7 +46,7 @@ export class ProductVersionOneOnlyAdminController {
   async createProduct(
     @Body()
     createProductDto: CreateProductDto,
-    @Cookie("Product_Image_Url_COOKIE")
+    @Cookie("product_image_url_cookie")
     productImgCookie: MediaUrlCookie,
   ): Promise<JsonClearCookieInterface> {
     if (!productImgCookie) {
@@ -69,7 +69,7 @@ export class ProductVersionOneOnlyAdminController {
   async modifyProduct(
     @Param("id") productId: string,
     @Body() modifyProductDto: ModifyProductDto,
-    @Cookie("Product_Image_Url_COOKIE")
+    @Cookie("product_image_url_cookie")
     productImgCookie: MediaUrlCookie,
   ): Promise<JsonClearCookieInterface> {
     if (!productImgCookie) {
