@@ -60,7 +60,7 @@ export class ProductVersionOneOnlyAdminController {
     return {
       statusCode: 201,
       message: "상품을 생성하였습니다.",
-      cookieKey: "Product_Image_Url_COOKIE",
+      cookieKey: "product_image_url_cookie",
     };
   }
 
