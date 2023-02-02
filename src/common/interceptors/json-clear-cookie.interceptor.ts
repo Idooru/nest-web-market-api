@@ -23,17 +23,10 @@ export class JsonClearCookieInterceptor implements NestInterceptor {
         // controller 도달 후
         this.timeLoggerLibrary.sendResponse(req);
 
-        if (typeof cookieKey === "string") {
-          res.clearCookie(cookieKey);
-        } else {
-          if (cookieKey.length >= 2) {
-            cookieKey.forEach((idx: string) => res.clearCookie(idx));
-          } else {
-            res.clearCookie(cookieKey[0]);
-          }
-        }
-
-        res.status(data.statusCode).setHeader("X-Powered-By", "");
+        res
+          .status(data.statusCode)
+          .setHeader("X-Powered-By", "")
+          .clearCookie(cookieKey);
 
         return { success: true, ...{ statusCode, message, result } };
       }),
