@@ -19,13 +19,13 @@ export const mediaSelectProperty = {
   inquiryImagesSelect: [
     "inquiry_image.id",
     "inquiry_image.url",
-    "inquiry_image.Review",
+    "inquiry_image.Inquiry",
     "inquiry_image.uploader",
   ],
   inquiryVideosSelect: [
-    "inquiry_image.id",
-    "inquiry_image.url",
-    "inquiry_image.Review",
-    "inquiry_inage.uploader",
+    "inquiry_video.id",
+    "inquiry_video.url",
+    "inquiry_video.Inquiry",
+    "inquiry_video.uploader",
   ],
 };
