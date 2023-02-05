@@ -15,11 +15,12 @@ import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-paylo
 import { Cookies } from "src/common/decorators/cookies.decorator";
 import { UseInterceptors, NotFoundException } from "@nestjs/common";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/json-clear-cookie.interceptor";
-import { JsonClearCookieInterface } from "src/common/interceptors/interface/json-clear-cookie.interface";
-import { MediaUrlCookie } from "src/model/upload/media.url.cookie.interface";
+import { MediaUrlCookies } from "src/model/upload/media.url.cookies.interface";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { JsonGeneralInterceptor } from "../../../common/interceptors/json-general.interceptor";
 import { PromiseLibrary } from "src/common/lib/promise.library";
+import { Cookie } from "src/common/decorators/cookie.decorator";
+import { JsonClearCookiesInterface } from "src/common/interceptors/interface/json-clear-cookies.interface";
 
 @Controller("review")
 export class ReviewController {
@@ -33,11 +34,13 @@ export class ReviewController {
   @Post("/product/:productId/image&video")
   async createReviewWithImageAndVideo(
     @Param("productId") productId: string,
-    @Cookies("Review_Image_Url_COOKIES") reviewImgCookie: MediaUrlCookie[],
-    @Cookies("Review_Video_Url_COOKIES") reviewVdoCookie: MediaUrlCookie[],
+    @Cookies("Review_Image_Url_COOKIES")
+    reviewImgCookie: MediaUrlCookies[],
+    @Cookies("Review_Video_Url_COOKIES")
+    reviewVdoCookie: MediaUrlCookies[],
     @Body() createReviewDto: CreateReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonClearCookieInterface> {
+  ): Promise<JsonClearCookiesInterface> {
     if (!reviewImgCookie.length || !reviewVdoCookie.length) {
       throw new NotFoundException(
         "이미지, 비디오 쿠키가 동시에 준비되어 있어야 합니다.",
@@ -68,10 +71,10 @@ export class ReviewController {
   @Post("/product/:productId/image")
   async createReviewWithImage(
     @Param("productId") productId: string,
-    @Cookies("Review_Image_Url_COOKIES") reviewImgCookie: MediaUrlCookie[],
+    @Cookie("Review_Image_Url_COOKIES") reviewImgCookie: MediaUrlCookies[],
     @Body() createReviewDto: CreateReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonClearCookieInterface> {
+  ): Promise<JsonClearCookiesInterface> {
     if (!reviewImgCookie.length) {
       throw new NotFoundException(
         "이미지 쿠키를 찾을 수 없습니다. 우선 사진을 업로드 해주세요.",
@@ -101,10 +104,11 @@ export class ReviewController {
   @Post("/product/:productId/video")
   async createReviewWithVideo(
     @Param("productId") productId: string,
-    @Cookies("Review_Video_Url_COOKIES") reviewVdoCookie: MediaUrlCookie[],
+    @Cookies("Review_Video_Url_COOKIES")
+    reviewVdoCookie: MediaUrlCookies[],
     @Body() createReviewDto: CreateReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonClearCookieInterface> {
+  ): Promise<JsonClearCookiesInterface> {
     if (!reviewVdoCookie.length) {
       throw new NotFoundException(
         "비디오 쿠키를 찾을 수 없습니다. 우선 동영상을 업로드 해주세요.",
@@ -160,9 +164,9 @@ export class ReviewController {
     @Param("productId") productId: string,
     @Param("reviewId") reviewId: string,
     @Cookies("Review_Image_Url_COOKIES")
-    reviewImgCookie: MediaUrlCookie[],
+    reviewImgCookie: MediaUrlCookies[],
     @Cookies("Review_Video_Url_COOKIES")
-    reviewVdoCookie: MediaUrlCookie[],
+    reviewVdoCookie: MediaUrlCookies[],
     @Body() modifyReviewDto: ModifyReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ) {
@@ -201,7 +205,7 @@ export class ReviewController {
     @Param("productId") productId: string,
     @Param("reviewId") reviewId: string,
     @Cookies("Review_Video_Url_COOKIES")
-    reviewImgCookie: MediaUrlCookie[],
+    reviewImgCookie: MediaUrlCookies[],
     @Body() modifyReviewDto: ModifyReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ) {
@@ -239,7 +243,7 @@ export class ReviewController {
     @Param("productId") productId: string,
     @Param("reviewId") reviewId: string,
     @Cookies("Review_Video_Url_COOKIES")
-    reviewVdoCookie: MediaUrlCookie[],
+    reviewVdoCookie: MediaUrlCookies[],
     @Body() modifyReviewDto: ModifyReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ) {

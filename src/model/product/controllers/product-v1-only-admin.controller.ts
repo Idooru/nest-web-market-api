@@ -17,7 +17,7 @@ import { JsonClearCookieInterface } from "src/common/interceptors/interface/json
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/json-clear-cookie.interceptor";
 import { JsonGeneralInterceptor } from "src/common/interceptors/json-general.interceptor";
-import { MediaUrlCookie } from "src/model/upload/media.url.cookie.interface";
+import { MediaUrlCookie } from "src/model/upload/media.url.cookies.interface";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
 import { ProductEntity } from "../entities/product.entity";

@@ -9,7 +9,7 @@ import {
 } from "@nestjs/common";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
-import { MediaUrlCookie } from "src/model/upload/media.url.cookie.interface";
+import { MediaUrlCookie } from "src/model/upload/media.url.cookies.interface";
 import { PromiseLibrary } from "src/common/lib/promise.library";
 
 @Injectable()
