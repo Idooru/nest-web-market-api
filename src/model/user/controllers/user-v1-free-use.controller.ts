@@ -1,5 +1,4 @@
 import { JsonClearCookieInterface } from "../../../common/interceptors/interface/json-clear-cookie.interface";
-import { JsonSendCookieInterface } from "../../../common/interceptors/interface/json-send-cookie.interface";
 import {
   Body,
   Controller,
@@ -25,10 +24,12 @@ import { FindEmailDto } from "../dtos/find-email.dto";
 import { IsNotLoginGuard } from "../../../common/guards/is-not-login.guard";
 import { JsonGeneralInterceptor } from "src/common/interceptors/json-general.interceptor";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
-import { JsonSendCookieInterceptor } from "src/common/interceptors/json-send-cookie.interceptor";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/json-clear-cookie.interceptor";
 import { IsRefreshTokenAvailableGuard } from "src/common/guards/is-refresh-token-available.guard";
 import { JwtRefreshTokenPayload } from "src/model/auth/jwt/jwt-refresh-token-payload.interface";
+import { JsonJwtAuthInterceptor } from "src/common/interceptors/json-jwt-auth.interceptor";
+import { JsonJwtAuthInterface } from "src/common/interceptors/interface/json-jwt-auth.interface";
+import { JsonClearCookiesInterface } from "src/common/interceptors/interface/json-clear-cookies.interface";
 
 @Controller("/api/v1/free-use/user")
 export class UserVersionOneFreeUseController {
@@ -64,12 +65,12 @@ export class UserVersionOneFreeUseController {
     };
   }
 
-  @UseInterceptors(JsonSendCookieInterceptor)
+  @UseInterceptors(JsonJwtAuthInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Post("/login")
   async login(
     @Body() loginUserDto: LoginUserDto,
-  ): Promise<JsonSendCookieInterface<string>> {
+  ): Promise<JsonJwtAuthInterface> {
     const user = await this.authService.validateUser(loginUserDto);
 
     const { accessToken, refreshToken } = await this.authService.signToken(
@@ -84,12 +85,12 @@ export class UserVersionOneFreeUseController {
     };
   }
 
-  @UseInterceptors(JsonSendCookieInterceptor)
+  @UseInterceptors(JsonJwtAuthInterceptor)
   @UseGuards(IsRefreshTokenAvailableGuard)
   @Get("/refresh-token")
   async refreshToken(
     @GetJWT() jwtPayload: JwtRefreshTokenPayload,
-  ): Promise<JsonSendCookieInterface<string>> {
+  ): Promise<JsonJwtAuthInterface> {
     const { accessToken, refreshToken } = await this.authService.refreshToken(
       jwtPayload,
     );
@@ -105,7 +106,7 @@ export class UserVersionOneFreeUseController {
   @UseInterceptors(JsonClearCookieInterceptor)
   @UseGuards(IsLoginGuard)
   @Delete("/logout")
-  logout(): JsonClearCookieInterface {
+  logout(): JsonClearCookiesInterface {
     return {
       statusCode: 200,
       message: "로그아웃을 완료하였습니다.",
