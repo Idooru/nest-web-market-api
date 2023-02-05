@@ -23,7 +23,7 @@ import { Module } from "@nestjs/common";
       port: 3306,
       username: new ConfigService().get("MYSQL_USERNAME"),
       password: new ConfigService().get("MYSQL_PASSWORD"),
-      database: "nestWebMarket-API",
+      database: "nestWebMarket_API",
       entities: [
         UserEntity,
         UserProfileEntity,
@@ -41,7 +41,7 @@ import { Module } from "@nestjs/common";
       ],
       migrations: [__dirname, "/src/migrations/*.ts"],
       cli: { migrationsDir: "src/migrations" },
-      synchronize: true,
+      synchronize: false,
       logging: false,
       keepConnectionAlive: true,
     }),
