@@ -1,9 +1,10 @@
 import { createParamDecorator, ArgumentsHost } from "@nestjs/common";
 import { BadRequestException } from "@nestjs/common/exceptions";
+import { Request } from "express";
 
 export const Cookies = createParamDecorator(
   (data: string, context: ArgumentsHost): any => {
-    const req = context.switchToHttp().getRequest();
+    const req = context.switchToHttp().getRequest() as Request;
 
     const filtering = Object.keys(req.signedCookies).filter((cookie) =>
       cookie.includes(data),
@@ -15,8 +16,8 @@ export const Cookies = createParamDecorator(
       );
     }
 
-    return Object.entries(req.signedCookies).filter((cookie) =>
-      cookie[0].includes(data),
-    );
+    return Object.entries(req.signedCookies)
+      .filter((cookie) => cookie[0].includes(data))
+      .map((cookie) => cookie[1]);
   },
 );
