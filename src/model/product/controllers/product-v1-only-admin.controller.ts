@@ -17,7 +17,7 @@ import { JsonClearCookieInterface } from "src/common/interceptors/interface/json
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/json-clear-cookie.interceptor";
 import { JsonGeneralInterceptor } from "src/common/interceptors/json-general.interceptor";
-import { MediaUrlCookie } from "src/model/upload/media.url.cookies.interface";
+import { MediaUrlCookieValue } from "src/model/upload/media.url.cookies.interface";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
 import { ProductEntity } from "../entities/product.entity";
@@ -47,7 +47,7 @@ export class ProductVersionOneOnlyAdminController {
     @Body()
     createProductDto: CreateProductDto,
     @Cookie("product_image_url_cookie")
-    productImgCookie: MediaUrlCookie,
+    productImgCookie: MediaUrlCookieValue,
   ): Promise<JsonClearCookieInterface> {
     if (!productImgCookie) {
       throw new BadRequestException(
@@ -70,7 +70,7 @@ export class ProductVersionOneOnlyAdminController {
     @Param("id") productId: string,
     @Body() modifyProductDto: ModifyProductDto,
     @Cookie("product_image_url_cookie")
-    productImgCookie: MediaUrlCookie,
+    productImgCookie: MediaUrlCookieValue,
   ): Promise<JsonClearCookieInterface> {
     if (!productImgCookie) {
       throw new BadRequestException(
