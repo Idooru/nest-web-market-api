@@ -9,7 +9,7 @@ import {
 } from "@nestjs/common";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
-import { MediaUrlCookie } from "src/model/upload/media.url.cookies.interface";
+import { MediaUrlCookieValue } from "src/model/upload/media.url.cookies.interface";
 import { PromiseLibrary } from "src/common/lib/promise.library";
 
 @Injectable()
@@ -39,7 +39,7 @@ export class ProductService {
 
   async createProduct(
     createProductDto: CreateProductDto,
-    imageCookie: MediaUrlCookie,
+    imageCookie: MediaUrlCookieValue,
   ): Promise<void> {
     const { name } = createProductDto;
     const existProduct = await this.productRepository.isExistProductWithName(
@@ -72,7 +72,7 @@ export class ProductService {
   async modifyProduct(
     productId: string,
     modifyProductDto: ModifyProductDto,
-    imageCookie: MediaUrlCookie,
+    imageCookie: MediaUrlCookieValue,
   ): Promise<void> {
     const { name } = modifyProductDto;
 
