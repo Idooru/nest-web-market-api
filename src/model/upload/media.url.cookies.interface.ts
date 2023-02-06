@@ -1,8 +1,9 @@
-export class MediaUrlCookie {
+export class MediaUrlCookieValue {
+  whatCookie: string;
   name: string;
   url: string;
 }
 
 export class MediaUrlCookies {
-  cookies: [string, MediaUrlCookie];
+  cookies: [string, MediaUrlCookieValue];
 }
