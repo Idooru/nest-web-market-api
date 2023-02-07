@@ -1,49 +1,91 @@
 import { Logger, ValidationPipe } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
+import { NestExpressApplication } from "@nestjs/platform-express";
+import cookieParser from "cookie-parser";
 import { AppModule } from "./app.module";
 import { HttpExceptionFilter } from "./common/filters/http-exception.filter";
 import { PromiseExcptionFilter } from "./common/filters/promise-exception.filter";
-import { NestExpressApplication } from "@nestjs/platform-express";
-import { join } from "path";
-import { ConfigService } from "@nestjs/config";
-import cookieParser from "cookie-parser";
-import helmet from "helmet";
 import { ValidationExceptionFilter } from "./common/filters/validation-exception.filter";
 
-async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  const host = new ConfigService().get("APPLICATION_HOST");
-  const port = new ConfigService().get("APPLICATION_PORT");
-  const cookieSecret = new ConfigService().get("COOKIE_SECRET");
+import path from "path";
+import helmet from "helmet";
 
-  /* 각각의 서비스에서 발생하는 custom exception을 제외한 서버에서 발생하는 에러
-  혹은 404 에러 등을 글로벌적으로 처리할수 있음*/
-  app.useGlobalFilters(
-    new HttpExceptionFilter(),
-    new PromiseExcptionFilter(),
-    new ValidationExceptionFilter(),
-  );
-  app.useGlobalPipes(
-    new ValidationPipe({
-      errorHttpStatusCode: 418,
-    }),
-  );
+class NestCoreConfig {
+  private readonly host = new ConfigService().get("APPLICATION_HOST");
+  private readonly port = new ConfigService().get("APPLICATION_PORT");
+  private readonly cookieSecret = new ConfigService().get("COOKIE_SECRET");
 
-  app.use(cookieParser(cookieSecret));
-  app.use(helmet());
+  constructor(private readonly app: NestExpressApplication) {
+    this.setGlobals();
+    this.setMiddlewares();
+    this.setStaticAssets();
+  }
 
-  app.useStaticAssets(join(__dirname, "..", "uploads", "image"), {
-    prefix: "/media",
-  });
-  app.useStaticAssets(join(__dirname, "..", "uploads", "video"), {
-    prefix: "/media",
-  });
-
-  await app.listen(port, () => {
-    new Logger("NestApplication").log(
-      `Server is running at http://${host}:${port}`,
+  private setGlobals() {
+    this.app.useGlobalFilters(
+      new HttpExceptionFilter(),
+      new PromiseExcptionFilter(),
+      new ValidationExceptionFilter(),
     );
-  });
+    this.app.useGlobalPipes(new ValidationPipe({ errorHttpStatusCode: 418 }));
+  }
+
+  private setMiddlewares() {
+    this.app.use(cookieParser(this.cookieSecret));
+    this.app.use(helmet());
+  }
+
+  private setStaticAssets() {
+    this.app.useStaticAssets(
+      path.join(__dirname, "..", "uploads", "image", "product"),
+      { prefix: "/media" },
+    );
+
+    this.app.useStaticAssets(
+      path.join(__dirname, "..", "uploads", "image", "review"),
+      { prefix: "/media" },
+    );
+
+    this.app.useStaticAssets(
+      path.join(__dirname, "..", "uploads", "video", "review"),
+      { prefix: "/media" },
+    );
+
+    this.app.useStaticAssets(
+      path.join(__dirname, "..", "uploads", "image", "inquiry"),
+      { prefix: "/media" },
+    );
+
+    this.app.useStaticAssets(
+      path.join(__dirname, "..", "uploads", "video", "inquiry"),
+      { prefix: "/media" },
+    );
+
+    this.app.useStaticAssets(
+      path.join(__dirname, "..", "uploads", "image", "announcement"),
+      { prefix: "/media" },
+    );
+
+    this.app.useStaticAssets(
+      path.join(__dirname, "..", "uploads", "video", "announcement"),
+      { prefix: "/media" },
+    );
+  }
+
+  public async run() {
+    await this.app.listen(this.port, () =>
+      new Logger("NestApplication").log(
+        `Server is running at http://${this.host}:${this.port}`,
+      ),
+    );
+  }
 }
 
-bootstrap();
+async function init() {
+  const nestApp = await NestFactory.create<NestExpressApplication>(AppModule);
+  const server = new NestCoreConfig(nestApp);
+  server.run();
+}
+
+init().catch((err) => new Logger("NestApplication").error(err));
