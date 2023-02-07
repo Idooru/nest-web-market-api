@@ -8,18 +8,19 @@ import {
 } from "@nestjs/common";
 import { MulterConfig } from "src/common/config/multer.config";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
-import { JsonSendCookieInterface } from "src/common/interceptors/interface/json-send-cookie.interface";
-import { JsonSendCookieInterceptor } from "src/common/interceptors/json-send-cookie.interceptor";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { MediaUrlCookie } from "../media.url.cookie.interface";
+import { MediaUrlCookieValue } from "../media.url.cookies.interface";
 import { UploadService } from "../providers/upload.service";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/json-clear-cookie.interceptor";
 import { IsLoginGuard } from "src/common/guards/is-login.guard";
-import { Cookies } from "src/common/decorators/cookies.decorator";
 import { JsonClearCookieInterface } from "src/common/interceptors/interface/json-clear-cookie.interface";
 import { IsAdminGuard } from "src/common/guards/is-admin.guard";
 import { MeidaLoggerLibrary } from "src/common/lib/media-logger.library";
+import { JsonSendCookieInterceptor } from "src/common/interceptors/json-send-cookie.interceptor";
+import { JsonSendCookieInterface } from "src/common/interceptors/interface/json-send-cookie.interface";
+import { Cookie } from "src/common/decorators/cookie.decorator";
+import { CookieLibrary } from "src/common/lib/cookie.library";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
@@ -28,6 +29,7 @@ export class UploadVersionOneOnlyAdminController {
   constructor(
     private readonly uploadService: UploadService,
     private readonly mediaLoggerLibrary: MeidaLoggerLibrary,
+    private readonly cookieLibrary: CookieLibrary,
   ) {}
 
   @UseInterceptors(JsonSendCookieInterceptor)
@@ -38,26 +40,35 @@ export class UploadVersionOneOnlyAdminController {
   async uploadProductImage(
     @UploadedFile() file: Express.Multer.File,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookieInterface<MediaUrlCookie>> {
+  ): Promise<JsonSendCookieInterface<MediaUrlCookieValue>> {
     this.uploadService.isExistMediaFile("product image", file);
     this.mediaLoggerLibrary.log("product image", file, null);
-    this.uploadService.checkExtensionTypeForProductImage(file);
 
-    const image = await this.uploadService.uploadProductImage(file, jwtPayload);
+    const productImage = await this.uploadService.uploadProductImage(
+      file,
+      jwtPayload,
+    );
+
+    const cookieKey = "product_image_url_cookie";
+
+    const extendedProductImage = this.cookieLibrary.wrapCookieKeyInCookieValue(
+      productImage,
+      cookieKey,
+    );
 
     return {
       statusCode: 201,
       message: "상품 사진을 업로드 하였습니다.",
-      cookieKey: "product_image_url_cookie",
-      cookieValue: { name: image.name, url: image.url },
+      cookieKey,
+      cookieValue: extendedProductImage,
     };
   }
 
   @UseInterceptors(JsonClearCookieInterceptor)
   @Delete("/image/product/cancel")
   async cancelImageUploadForProduct(
-    @Cookies("product_image_url_cookie")
-    productImgCookie: MediaUrlCookie,
+    @Cookie("product_image_url_cookie")
+    productImgCookie: MediaUrlCookieValue,
   ): Promise<JsonClearCookieInterface> {
     await this.uploadService.deleteProductImage(productImgCookie);
 

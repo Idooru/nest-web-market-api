@@ -1,6 +1,11 @@
 import { MediaUploadDto } from "../dto/media-upload.dto";
 import { MediaReturnDto } from "../dto/media-return.dto";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  UseFilters,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ProductImageEntity } from "../entities/product.image.entity";
 import { ReviewImageEntity } from "../entities/review.image.entity";
@@ -11,7 +16,9 @@ import { InquiryImageEntity } from "src/model/inquiry/entities/inquiry.image.ent
 import { InquiryVideoEntity } from "src/model/inquiry/entities/inquiry.video.entity";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
+import { mediaSelectProperty } from "src/common/config/repository-select-configs/media-select";
 
+@UseFilters(InternalServerErrorException)
 @Injectable()
 export class UploadRepository {
   constructor(
@@ -27,6 +34,8 @@ export class UploadRepository {
     private readonly inquiryVideoRepository: Repository<InquiryVideoEntity>,
     private readonly configService: ConfigService,
   ) {}
+
+  private readonly select = mediaSelectProperty;
 
   async uploadProductImage(
     mediaUploadDto: MediaUploadDto,
@@ -121,8 +130,11 @@ export class UploadRepository {
   async findProductImageWithUrl(url: string): Promise<ProductImageEntity> {
     try {
       return await this.productsImageRepository
-        .createQueryBuilder("image")
-        .where("image.url = :url", { url })
+        .createQueryBuilder()
+        .select(this.select.productImagesSelect)
+        .from(ProductImageEntity, "product_image")
+        .leftJoin("product_image.uploader", "uploader")
+        .where("product_image.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
       throw new NotFoundException(
@@ -131,26 +143,15 @@ export class UploadRepository {
     }
   }
 
-  async findProductImageWithProductId(
-    productId: string,
-  ): Promise<ProductImageEntity> {
-    try {
-      return await this.productsImageRepository
-        .createQueryBuilder()
-        .where("productId = :productId", { productId })
-        .getOneOrFail();
-    } catch (err) {
-      throw new NotFoundException(
-        "해당 상품아이디와 관계가 맺어진 상품 이미지를 찾을 수 없습니다.",
-      );
-    }
-  }
-
   async findReviewImageWithUrl(url: string): Promise<ReviewImageEntity> {
     try {
       return await this.reviewsImageRepository
-        .createQueryBuilder("image")
-        .where("image.url = :url", { url })
+        .createQueryBuilder()
+        .select(this.select.reviewImagesSelect)
+        .from(ReviewImageEntity, "review_image")
+        .leftJoin("review_image.Review", "Review")
+        .innerJoin("review_image.uploader", "uploader")
+        .where("review_image.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
       throw new NotFoundException(
@@ -162,8 +163,12 @@ export class UploadRepository {
   async findReviewVideoWithUrl(url: string): Promise<ReviewVideoEntity> {
     try {
       return await this.reviewsVideoRepository
-        .createQueryBuilder("video")
-        .where("video.url = :url", { url })
+        .createQueryBuilder()
+        .select(this.select.reviewVideosSelect)
+        .from(ReviewVideoEntity, "review_video")
+        .leftJoin("review_video.Review", "Review")
+        .innerJoin("review_video.uploader", "uploader")
+        .where("review_video.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
       throw new NotFoundException(
@@ -175,8 +180,12 @@ export class UploadRepository {
   async findInquiryImageWithUrl(url: string): Promise<InquiryImageEntity> {
     try {
       return await this.inquiryImageRepository
-        .createQueryBuilder("image")
-        .where("image.url = :url", { url })
+        .createQueryBuilder()
+        .select(this.select.inquiryImagesSelect)
+        .from(InquiryImageEntity, "inquiry_image")
+        .leftJoin("inquiry_image.Inquiry", "Inquiry")
+        .innerJoin("inquiry_image.uploader", "uploader")
+        .where("inquiry_image.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
       throw new NotFoundException(
@@ -188,8 +197,12 @@ export class UploadRepository {
   async findInquiryVideoWithUrl(url: string): Promise<InquiryVideoEntity> {
     try {
       return await this.inquiryVideoRepository
-        .createQueryBuilder("video")
-        .where("video.url = :url", { url })
+        .createQueryBuilder()
+        .select(this.select.inquiryVideosSelect)
+        .from(InquiryVideoEntity, "inquiry_video")
+        .leftJoin("inquiry_video.Inquiry", "Inquiry")
+        .innerJoin("inquiry_video.uploader", "uploader")
+        .where("inquiry_video.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
       throw new NotFoundException(
@@ -199,23 +212,48 @@ export class UploadRepository {
   }
 
   async deleteProductImageWithId(id: string): Promise<void> {
-    await this.productsImageRepository.delete(id);
+    await this.productsImageRepository
+      .createQueryBuilder()
+      .delete()
+      .from(ProductImageEntity, "product_image")
+      .where("id = :id", { id })
+      .execute();
   }
 
   async deleteReviewImageWithId(id: string): Promise<void> {
-    await this.reviewsImageRepository.delete(id);
+    await this.reviewsImageRepository
+      .createQueryBuilder()
+      .delete()
+      .from(ReviewImageEntity, "review_image")
+      .where("id = :id", { id })
+      .execute();
   }
 
   async deleteReviewVideoWithId(id: string): Promise<void> {
-    await this.reviewsVideoRepository.delete(id);
+    await this.reviewsVideoRepository
+      .createQueryBuilder()
+      .delete()
+      .from(ReviewVideoEntity, "review_video")
+      .where("id = :id", { id })
+      .execute();
   }
 
   async deleteInquiryImageWithId(id: string): Promise<void> {
-    await this.inquiryImageRepository.delete(id);
+    await this.inquiryImageRepository
+      .createQueryBuilder()
+      .delete()
+      .from(InquiryImageEntity, "inquiry_image")
+      .where("id = :id", { id })
+      .execute();
   }
 
   async deleteInquiryVideoWithId(id: string): Promise<void> {
-    await this.reviewsVideoRepository.delete(id);
+    await this.reviewsVideoRepository
+      .createQueryBuilder()
+      .delete()
+      .from(InquiryVideoEntity, "inquiry_video")
+      .where("id = :id", { id })
+      .execute();
   }
 
   async insertImageOnReview(id: string, review: ReviewEntity) {

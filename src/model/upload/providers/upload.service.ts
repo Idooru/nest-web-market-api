@@ -1,132 +1,47 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { UserRepository } from "../../user/providers/user.repository";
 import { UploadRepository } from "../providers/upload.repository";
 import { MediaReturnDto } from "../dto/media-return.dto";
 import { JwtAccessTokenPayload } from "../../auth/jwt/jwt-access-token-payload.interface";
-import { MediaUrlCookie } from "src/model/upload/media.url.cookie.interface";
+import { MediaUrlCookieValue } from "../media.url.cookies.interface";
 
 import * as fs from "fs";
 import * as path from "path";
-import { ReviewImageEntity } from "../entities/review.image.entity";
-import { ReviewVideoEntity } from "../entities/review.video.entity";
-import { InquiryImageEntity } from "../../inquiry/entities/inquiry.image.entity";
-import { InquiryVideoEntity } from "../../inquiry/entities/inquiry.video.entity";
 
 @Injectable()
 export class UploadService {
   constructor(
     private readonly uploadRepository: UploadRepository,
     private readonly userRepository: UserRepository,
-    private readonly configService: ConfigService,
   ) {}
 
-  checkExtensionTypeForProductImage(file: Express.Multer.File) {
+  isExistMediaFile(mediaType: string, file: Express.Multer.File) {
     if (!file) {
       throw new BadRequestException(
-        "상품 사진을 업로드 할 수 없습니다. 상품 사진을 제시해 주세요.",
+        `${mediaType}을(를) 업로드 할 수 없습니다. 파일을 제시해주세요.`,
       );
     }
+  }
 
-    if (!file.mimetype.includes("image")) {
+  isExistMediaFiles(mediaType: string, files: Express.Multer.File[]) {
+    if (!files) {
       throw new BadRequestException(
-        "해당 파일의 확장자는 이미지 파일의 확장자가 아닙니다.",
+        `${mediaType}을(를) 업로드 할 수 없습니다. 파일을 제시해주세요.`,
       );
     }
   }
 
-  checkExtensionTypeForImages(files: Array<Express.Multer.File>) {
-    if (!files.length) {
-      throw new BadRequestException(
-        "사진을 업로드 할 수 없습니다. 사진을 제시해 주세요.",
-      );
-    } else if (files.length >= 2) {
-      files.forEach((idx) => {
-        if (!idx.mimetype.includes("image")) {
-          throw new BadRequestException(
-            "해당 파일의 확장자는 이미지 파일의 확장자가 아닙니다.",
-          );
-        }
-      });
-    } else {
-      if (!files[0].mimetype.includes("image")) {
-        throw new BadRequestException(
-          "해당 파일의 확장자는 이미지 파일의 확장자가 아닙니다.",
-        );
-      }
-    }
-  }
-
-  checkExtensionTypeForVideos(files: Array<Express.Multer.File>) {
-    if (!files.length) {
-      throw new BadRequestException(
-        "동영상을 업로드 할 수 없습니다. 동영상을 제시해 주세요.",
-      );
-    } else if (files.length >= 2) {
-      files.forEach((idx) => {
-        if (!idx.mimetype.includes("video")) {
-          throw new BadRequestException(
-            "해당 파일의 확장자는 동영상 파일의 확장자가 아닙니다.",
-          );
-        }
-      });
-    } else {
-      if (!files[0].mimetype.includes("video")) {
-        throw new BadRequestException(
-          "해당 파일의 확장자는 동영상 파일의 확장자가 아닙니다.",
-        );
-      }
-    }
-  }
-
-  deleteProductImageOnServerDisk(imageName: string) {
-    const imageFileName = imageName.replace(
-      `http://${this.configService.get(
-        "APPLICATION_HOST",
-      )}:${this.configService.get("APPLICATION_PORT")}/media/`,
-      "",
+  deleteMediaFilesOnServerDisk(imageName: string, mediaPath: string) {
+    fs.rmSync(
+      path.join(__dirname, `../../../../uploads/${mediaPath}/${imageName}`),
     );
-
-    const deletePath = path.join(
-      __dirname,
-      `../../../../uploads/image/${imageFileName}`,
-    );
-
-    fs.rmSync(deletePath);
-  }
-
-  deleteImageFilesOnServerDisk(imageName: string) {
-    const deletePath = path.join(
-      __dirname,
-      `../../../../uploads/image/${imageName}`,
-    );
-
-    fs.rmSync(deletePath);
-  }
-
-  deleteVideoFilesOnServerDisk(videoName: string) {
-    const deletePath = path.join(
-      __dirname,
-      `../../../../uploads/video/${videoName}`,
-    );
-
-    fs.rmSync(deletePath);
   }
 
   async uploadProductImage(
     file: Express.Multer.File,
     jwtPayload: JwtAccessTokenPayload,
   ): Promise<MediaReturnDto> {
-    if (!file) {
-      throw new BadRequestException(
-        "사진을 업로드 할 수 없습니다. 사진을 제시해 주세요.",
-      );
-    }
-
-    const user = await this.userRepository.findUserWithNickName(
-      jwtPayload.nickname,
-    );
-
+    const user = await this.userRepository.findUserWithId(jwtPayload.userId);
     const image = file.filename;
 
     return await this.uploadRepository.uploadProductImage({
@@ -139,15 +54,11 @@ export class UploadService {
     files: Array<Express.Multer.File>,
     jwtPayload: JwtAccessTokenPayload,
   ): Promise<MediaReturnDto[]> {
-    const imageUrls = [];
     const uploader = jwtPayload.nickname;
     const user = await this.userRepository.findUserWithNickName(uploader);
+    const imageUrls = [];
 
-    if (!files) {
-      throw new BadRequestException(
-        "리뷰 사진을 업로드 할 수 없습니다. 리뷰 사진을 제시해주세요.",
-      );
-    } else if (files.length >= 2) {
+    if (files.length >= 2) {
       for (const index of files) {
         const image = index.filename;
         imageUrls.push(
@@ -174,15 +85,11 @@ export class UploadService {
     files: Array<Express.Multer.File>,
     jwtPayload: JwtAccessTokenPayload,
   ): Promise<MediaReturnDto[]> {
-    const videoUrls = [];
     const uploader = jwtPayload.nickname;
     const user = await this.userRepository.findUserWithNickName(uploader);
+    const videoUrls = [];
 
-    if (!files) {
-      throw new BadRequestException(
-        "리뷰 동영상을 업로드 할 수 없습니다. 리뷰 동영상을 제시해주세요.",
-      );
-    } else if (files.length >= 2) {
+    if (files.length >= 2) {
       for (const index of files) {
         const video = index.filename;
         videoUrls.push(
@@ -213,11 +120,7 @@ export class UploadService {
     const uploader = jwtPayload.nickname;
     const user = await this.userRepository.findUserWithNickName(uploader);
 
-    if (!files) {
-      throw new BadRequestException(
-        "문의 사진을 업로드 할 수 없습니다. 문의 사진을 제시해주세요.",
-      );
-    } else if (files.length >= 2) {
+    if (files.length >= 2) {
       for (const index of files) {
         const image = index.filename;
         imageUrls.push(
@@ -248,11 +151,7 @@ export class UploadService {
     const uploader = jwtPayload.nickname;
     const user = await this.userRepository.findUserWithNickName(uploader);
 
-    if (!files) {
-      throw new BadRequestException(
-        "문의 동영상을 업로드 할 수 없습니다. 문의 동영상을 제시해주세요.",
-      );
-    } else if (files.length >= 2) {
+    if (files.length >= 2) {
       for (const index of files) {
         const video = index.filename;
         videoUrls.push(
@@ -275,92 +174,92 @@ export class UploadService {
     return videoUrls;
   }
 
-  async deleteProductImage(productImgCookie: MediaUrlCookie): Promise<void> {
+  async deleteProductImage(imageCookie: MediaUrlCookieValue): Promise<void> {
     const image = await this.uploadRepository.findProductImageWithUrl(
-      productImgCookie.url,
+      imageCookie.url,
     );
 
     await this.uploadRepository.deleteProductImageWithId(image.id);
-    this.deleteProductImageOnServerDisk(productImgCookie.name);
+    this.deleteMediaFilesOnServerDisk(imageCookie.name, "image/product");
   }
 
-  async deleteReviewImages(imageCookies: MediaUrlCookie[]): Promise<void> {
-    let image: ReviewImageEntity;
-
+  async deleteReviewImages(imageCookies: MediaUrlCookieValue[]): Promise<void> {
     if (imageCookies.length >= 2) {
-      for (const idx of imageCookies) {
-        image = await this.uploadRepository.findReviewImageWithUrl(idx[1]);
+      for (const cookie of imageCookies) {
+        const image = await this.uploadRepository.findReviewImageWithUrl(
+          cookie.url,
+        );
         await this.uploadRepository.deleteReviewImageWithId(image.id);
-        this.deleteImageFilesOnServerDisk(idx[0]);
+        this.deleteMediaFilesOnServerDisk(cookie.name, "image/review");
       }
-      return;
+    } else {
+      const image = await this.uploadRepository.findReviewImageWithUrl(
+        imageCookies[0].url,
+      );
+
+      await this.uploadRepository.deleteReviewImageWithId(image.id);
+      this.deleteMediaFilesOnServerDisk(imageCookies[0].name, "image/review");
     }
-
-    image = await this.uploadRepository.findReviewImageWithUrl(
-      imageCookies[0].url,
-    );
-
-    await this.uploadRepository.deleteReviewImageWithId(image.id);
-    this.deleteImageFilesOnServerDisk(imageCookies[0].name);
   }
 
-  async deleteReviewVideos(videoCookies: MediaUrlCookie[]): Promise<void> {
-    let video: ReviewVideoEntity;
-
+  async deleteReviewVideos(videoCookies: MediaUrlCookieValue[]): Promise<void> {
     if (videoCookies.length >= 2) {
-      for (const idx of videoCookies) {
-        video = await this.uploadRepository.findReviewVideoWithUrl(idx[1]);
+      for (const cookie of videoCookies) {
+        const video = await this.uploadRepository.findReviewVideoWithUrl(
+          cookie.url,
+        );
         await this.uploadRepository.deleteReviewVideoWithId(video.id);
-        this.deleteVideoFilesOnServerDisk(idx[0]);
+        this.deleteMediaFilesOnServerDisk(cookie.name, "video/review");
       }
-      return;
+    } else {
+      const video = await this.uploadRepository.findReviewVideoWithUrl(
+        videoCookies[0].url,
+      );
+
+      await this.uploadRepository.deleteReviewVideoWithId(video.id);
+      this.deleteMediaFilesOnServerDisk(videoCookies[0].name, "video/review");
     }
-
-    video = await this.uploadRepository.findReviewVideoWithUrl(
-      videoCookies[0].url,
-    );
-
-    await this.uploadRepository.deleteReviewVideoWithId(video.id);
-    this.deleteVideoFilesOnServerDisk(videoCookies[0].name);
   }
 
-  async deleteInquiryImages(imageCookies: MediaUrlCookie[]): Promise<void> {
-    let image: InquiryImageEntity;
-
+  async deleteInquiryImages(
+    imageCookies: MediaUrlCookieValue[],
+  ): Promise<void> {
     if (imageCookies.length >= 2) {
-      for (const idx of imageCookies) {
-        image = await this.uploadRepository.findInquiryImageWithUrl(idx[1]);
+      for (const cookie of imageCookies) {
+        const image = await this.uploadRepository.findInquiryImageWithUrl(
+          cookie.url,
+        );
         await this.uploadRepository.deleteInquiryImageWithId(image.id);
-        this.deleteImageFilesOnServerDisk(idx[0]);
+        this.deleteMediaFilesOnServerDisk(cookie.name, "image/inquiry");
       }
-      return;
+    } else {
+      const image = await this.uploadRepository.findInquiryImageWithUrl(
+        imageCookies[0].url,
+      );
+
+      await this.uploadRepository.deleteInquiryImageWithId(image.id);
+      this.deleteMediaFilesOnServerDisk(imageCookies[0].name, "image/inquiry");
     }
-
-    image = await this.uploadRepository.findInquiryImageWithUrl(
-      imageCookies[0].url,
-    );
-
-    await this.uploadRepository.deleteInquiryImageWithId(image.id);
-    this.deleteImageFilesOnServerDisk(imageCookies[0].name);
   }
 
-  async deleteInquiryVideos(videoCookies: MediaUrlCookie[]): Promise<void> {
-    let video: InquiryVideoEntity;
-
+  async deleteInquiryVideos(
+    videoCookies: MediaUrlCookieValue[],
+  ): Promise<void> {
     if (videoCookies.length >= 2) {
-      for (const idx of videoCookies) {
-        video = await this.uploadRepository.findInquiryVideoWithUrl(idx[1]);
+      for (const cookie of videoCookies) {
+        const video = await this.uploadRepository.findInquiryVideoWithUrl(
+          cookie.url,
+        );
         await this.uploadRepository.deleteInquiryVideoWithId(video.id);
-        this.deleteVideoFilesOnServerDisk(idx[0]);
+        this.deleteMediaFilesOnServerDisk(cookie.name, "video/inquiry");
       }
-      return;
+    } else {
+      const video = await this.uploadRepository.findInquiryVideoWithUrl(
+        videoCookies[0].url,
+      );
+
+      await this.uploadRepository.deleteInquiryVideoWithId(video.id);
+      this.deleteMediaFilesOnServerDisk(videoCookies[0].name, "video/inquiry");
     }
-
-    video = await this.uploadRepository.findInquiryVideoWithUrl(
-      videoCookies[0].url,
-    );
-
-    await this.uploadRepository.deleteInquiryVideoWithId(video.id);
-    this.deleteVideoFilesOnServerDisk(videoCookies[0].name);
   }
 }
