@@ -21,6 +21,7 @@ import { JsonSendCookieInterceptor } from "src/common/interceptors/json-send-coo
 import { JsonSendCookieInterface } from "src/common/interceptors/interface/json-send-cookie.interface";
 import { Cookie } from "src/common/decorators/cookie.decorator";
 import { CookieLibrary } from "src/common/lib/cookie.library";
+import { cookieKeys } from "../../../common/config/cookie-key-configs";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
@@ -49,17 +50,15 @@ export class UploadVersionOneOnlyAdminController {
       jwtPayload,
     );
 
-    const cookieKey = "product_image_url_cookie";
-
     const extendedProductImage = this.cookieLibrary.wrapCookieKeyInCookieValue(
       productImage,
-      cookieKey,
+      cookieKeys.product.image_url_cookie,
     );
 
     return {
       statusCode: 201,
       message: "상품 사진을 업로드 하였습니다.",
-      cookieKey,
+      cookieKey: cookieKeys.product.image_url_cookie,
       cookieValue: extendedProductImage,
     };
   }
@@ -67,7 +66,7 @@ export class UploadVersionOneOnlyAdminController {
   @UseInterceptors(JsonClearCookieInterceptor)
   @Delete("/image/product/cancel")
   async cancelImageUploadForProduct(
-    @Cookie("product_image_url_cookie")
+    @Cookie(cookieKeys.product.image_url_cookie)
     productImgCookie: MediaUrlCookieValue,
   ): Promise<JsonClearCookieInterface> {
     await this.uploadService.deleteProductImage(productImgCookie);
