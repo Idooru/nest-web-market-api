@@ -1,6 +1,7 @@
 import {
   Injectable,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
@@ -8,23 +9,21 @@ import { ResetPasswordDto } from "../../user/dtos/reset-password.dto";
 import { FindEmailDto } from "../../user/dtos/find-email.dto";
 import { JwtService } from "@nestjs/jwt";
 import { LoginUserDto } from "../../user/dtos/login-user.dto";
-import { PromiseLibrary } from "src/common/lib/promise.library";
 import { UserEntity } from "src/model/user/entities/user.entity";
 import { SecurityLibrary } from "src/common/lib/security.library";
 import { JwtPayload } from "../jwt/jwt-payload.interface";
 import { JwtRefreshTokenPayload } from "../jwt/jwt-refresh-token-payload.interface";
 import { UserGeneralRepository } from "../../user/providers/user-general.repository";
-import { UserExistRepository } from "../../user/providers/user-exist.repository";
+import { v4 } from "uuid";
+import { AuthExistService } from "./auth-exist.service";
 
 import * as bcrypt from "bcrypt";
-import { v4 } from "uuid";
 
 @Injectable()
-export class AuthService {
+export class AuthGeneralService {
   constructor(
     private readonly userGeneralRepository: UserGeneralRepository,
-    private readonly userExistRepository: UserExistRepository,
-    private readonly promiseLibrary: PromiseLibrary,
+    private readonly authExistService: AuthExistService,
     private readonly securityLibrary: SecurityLibrary,
     private readonly jwtService: JwtService,
   ) {}
@@ -39,13 +38,19 @@ export class AuthService {
 
   async validateUser(loginUserDto: LoginUserDto): Promise<UserEntity> {
     const { email, password } = loginUserDto;
-    const user = await this.userGeneralRepository.findUserWithEmail(email);
+    const isExistEmail = await this.authExistService.verfiyEmail(email);
 
-    if (!(await bcrypt.compare(password, user.Auth.password))) {
+    if (isExistEmail) {
+      const user = await this.userGeneralRepository.findUserWithEmail(email);
+
+      if (
+        await this.authExistService.verfiyPassword(password, user.Auth.password)
+      ) {
+        return user;
+      }
       throw new UnauthorizedException("아이디 혹은 비밀번호가 틀렸습니다.");
     }
-
-    return user;
+    throw new UnauthorizedException("아이디 혹은 비밀번호가 틀렸습니다.");
   }
 
   async signToken(user: UserEntity): Promise<JwtPayload> {
@@ -63,64 +68,66 @@ export class AuthService {
     };
 
     try {
-      const [accessToken, refreshToken] =
-        await this.promiseLibrary.twoPromiseBundle(
-          this.jwtService.signAsync(
-            jwtAccessTokenPayload,
-            this.securityLibrary.getJwtAceessTokenSignOption(),
-          ),
-          this.jwtService.signAsync(
-            jwtRefreshTokenPayload,
-            this.securityLibrary.getJwtRefreshTokenSignOption(),
-          ),
-          "Sign jwt token access and refresh",
-        );
+      const [accessToken, refreshToken] = await Promise.all([
+        this.jwtService.signAsync(
+          jwtAccessTokenPayload,
+          this.securityLibrary.getJwtAceessTokenSignOption(),
+        ),
+        this.jwtService.signAsync(
+          jwtRefreshTokenPayload,
+          this.securityLibrary.getJwtRefreshTokenSignOption(),
+        ),
+      ]);
 
       return { accessToken, refreshToken };
     } catch (err) {
-      throw new InternalServerErrorException(
-        "JWT 토큰을 발행하는데 실패하였습니다.",
-      );
+      new Logger("Error").error(err);
+      throw new InternalServerErrorException(err);
     }
   }
 
   async findEmail(findEmailDto: FindEmailDto): Promise<string> {
     const { realname, phonenumber } = findEmailDto;
 
-    const [isExistRealName, isExistPhoneNumber] = await Promise.all([
-      this.userExistRepository.isExistRealName(realname),
-      this.userExistRepository.isExistPhoneNumber(phonenumber),
-    ]);
-
-    if (!isExistRealName || !isExistPhoneNumber) {
-      throw new NotFoundException(
-        "해당 데이터(실명, 전화번호)는 데이터베이스에 존재하지 않습니다.",
+    const [isExistRealName, isExistPhoneNumber] =
+      await this.authExistService.verfiyRealNameAndPhoneNumber(
+        realname,
+        phonenumber,
       );
-    }
 
-    const [realNameResult, phoneNumberResult] = await Promise.all([
-      this.userGeneralRepository.findUserWithRealName(realname),
-      this.userGeneralRepository.findUserWithPhoneNumber(phonenumber),
-    ]);
+    if (isExistRealName && isExistPhoneNumber) {
+      const [realNameResult, phoneNumberResult] = await Promise.all([
+        this.userGeneralRepository.findUserWithRealName(realname),
+        this.userGeneralRepository.findUserWithPhoneNumber(phonenumber),
+      ]);
 
-    if (!(realNameResult.id === phoneNumberResult.id)) {
+      if (realNameResult.id === phoneNumberResult.id) {
+        return realNameResult.Auth.email;
+      }
       throw new UnauthorizedException(
         "사용자 실명과 전화번호가 서로 일치하지 않습니다.",
       );
     }
-
-    return realNameResult.Auth.email;
+    throw new NotFoundException(
+      "해당 데이터(실명, 전화번호)는 데이터베이스에 존재하지 않습니다.",
+    );
   }
 
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
     const { email, password } = resetPasswordDto;
+    const isExistEmail = await this.authExistService.verfiyEmail(email);
 
-    const [user, hashed] = await this.promiseLibrary.twoPromiseBundle(
-      this.userGeneralRepository.findUserWithEmail(email),
-      bcrypt.hash(password, 10),
-      "Find User And Hash Password",
+    if (isExistEmail) {
+      const user = await this.userGeneralRepository.findUserWithEmail(email);
+
+      const hashed = await bcrypt.hash(password, 10);
+      return await this.userGeneralRepository.resetPassword(
+        user.Auth.id,
+        hashed,
+      );
+    }
+    throw new NotFoundException(
+      "해당 데이터(이메일)은 데이터베이스에 존재하지 않습니다.",
     );
-
-    await this.userGeneralRepository.resetPassword(user.Auth.id, hashed);
   }
 }
