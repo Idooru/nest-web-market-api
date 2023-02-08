@@ -12,7 +12,7 @@ import {
 } from "@nestjs/common";
 import { JwtAccessTokenPayload } from "../../auth/jwt/jwt-access-token-payload.interface";
 import { IsLoginGuard } from "../../../common/guards/is-login.guard";
-import { AuthService } from "../../auth/providers/auth.service";
+import { AuthGeneralService } from "../../auth/providers/auth-general.service";
 import { UserService } from "../providers/user.service";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { LoginUserDto } from "../dtos/login-user.dto";
@@ -29,13 +29,14 @@ import { IsRefreshTokenAvailableGuard } from "src/common/guards/is-refresh-token
 import { JwtRefreshTokenPayload } from "src/model/auth/jwt/jwt-refresh-token-payload.interface";
 import { JsonJwtAuthInterceptor } from "src/common/interceptors/json-jwt-auth.interceptor";
 import { JsonJwtAuthInterface } from "src/common/interceptors/interface/json-jwt-auth.interface";
-import { JsonClearCookiesInterface } from "src/common/interceptors/interface/json-clear-cookies.interface";
+import { JsonJwtLogoutInterface } from "../../../common/interceptors/interface/json-jwt-logout.interface";
+import { JsonJwtLogoutInterceptor } from "../../../common/interceptors/json-jwt-logout.interceptor";
 
 @Controller("/api/v1/free-use/user")
 export class UserVersionOneFreeUseController {
   constructor(
     private readonly userService: UserService,
-    private readonly authService: AuthService,
+    private readonly authGeneralService: AuthGeneralService,
   ) {}
 
   @UseInterceptors(JsonGeneralInterceptor)
@@ -71,11 +72,10 @@ export class UserVersionOneFreeUseController {
   async login(
     @Body() loginUserDto: LoginUserDto,
   ): Promise<JsonJwtAuthInterface> {
-    const user = await this.authService.validateUser(loginUserDto);
+    const user = await this.authGeneralService.validateUser(loginUserDto);
 
-    const { accessToken, refreshToken } = await this.authService.signToken(
-      user,
-    );
+    const { accessToken, refreshToken } =
+      await this.authGeneralService.signToken(user);
 
     return {
       statusCode: 201,
@@ -91,9 +91,8 @@ export class UserVersionOneFreeUseController {
   async refreshToken(
     @GetJWT() jwtPayload: JwtRefreshTokenPayload,
   ): Promise<JsonJwtAuthInterface> {
-    const { accessToken, refreshToken } = await this.authService.refreshToken(
-      jwtPayload,
-    );
+    const { accessToken, refreshToken } =
+      await this.authGeneralService.refreshToken(jwtPayload);
 
     return {
       statusCode: 200,
@@ -103,10 +102,10 @@ export class UserVersionOneFreeUseController {
     };
   }
 
-  @UseInterceptors(JsonClearCookieInterceptor)
+  @UseInterceptors(JsonJwtLogoutInterceptor)
   @UseGuards(IsLoginGuard)
   @Delete("/logout")
-  logout(): JsonClearCookiesInterface {
+  logout(): JsonJwtLogoutInterface {
     return {
       statusCode: 200,
       message: "로그아웃을 완료하였습니다.",
@@ -153,7 +152,7 @@ export class UserVersionOneFreeUseController {
     return {
       statusCode: 200,
       message: "이메일 정보를 가져옵니다.",
-      result: await this.authService.findEmail(findEmailDto),
+      result: await this.authGeneralService.findEmail(findEmailDto),
     };
   }
 
@@ -163,7 +162,7 @@ export class UserVersionOneFreeUseController {
   async resetPassword(
     @Body() resetPasswordDto: ResetPasswordDto,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.authService.resetPassword(resetPasswordDto);
+    await this.authGeneralService.resetPassword(resetPasswordDto);
 
     return {
       statusCode: 200,
