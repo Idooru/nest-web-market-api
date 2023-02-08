@@ -1,19 +1,21 @@
 import {
-  CallHandler,
   ArgumentsHost,
+  CallHandler,
   Injectable,
   NestInterceptor,
 } from "@nestjs/common";
-import { Observable, map } from "rxjs";
+import { map, Observable } from "rxjs";
 import { TimeLoggerLibrary } from "../lib/time-logger.library";
+import { Request, Response } from "express";
 
 @Injectable()
 export class JsonClearCookieInterceptor implements NestInterceptor {
   constructor(private readonly timeLoggerLibrary: TimeLoggerLibrary) {}
+
   intercept(context: ArgumentsHost, next: CallHandler<any>): Observable<any> {
     // controller 도달 전
-    const res = context.switchToHttp().getResponse();
-    const req = context.switchToHttp().getResponse();
+    const req = context.switchToHttp().getRequest<Request>();
+    const res = context.switchToHttp().getResponse<Response>();
 
     this.timeLoggerLibrary.receiveRequest(req);
 
@@ -24,7 +26,7 @@ export class JsonClearCookieInterceptor implements NestInterceptor {
         this.timeLoggerLibrary.sendResponse(req);
 
         res
-          .status(data.statusCode)
+          .status(statusCode)
           .setHeader("X-Powered-By", "")
           .clearCookie(cookieKey);
 
