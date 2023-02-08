@@ -1,19 +1,20 @@
-import { ReviewModule } from "./../review/review.module";
+import { ReviewModule } from "../review/review.module";
 import { UserActivityEntity } from "./entities/user.activity.entity";
 import { UserAuthEntity } from "./entities/user.auth.entity";
 import { UploadService } from "../upload/providers/upload.service";
-import { UploadModule } from "./../upload/upload.module";
-import { AuthModule } from "./../auth/auth.module";
-import { UserRepository } from "../user/providers/user.repository";
+import { UploadModule } from "../upload/upload.module";
+import { AuthModule } from "../auth/auth.module";
+import { UserGeneralRepository } from "./providers/user-general.repository";
 import { UserProfileEntity } from "./entities/user.profile.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { forwardRef, Module } from "@nestjs/common";
-import { UserService } from "../user/providers/user.service";
+import { UserService } from "./providers/user.service";
 import { UserEntity } from "./entities/user.entity";
 import { LibraryModule } from "src/common/lib/library.module";
 import { JwtModule } from "@nestjs/jwt";
 import { UserVersionOneFreeUseController } from "./controllers/user-v1-free-use.controller";
 import { UserVersionOneOnlyAdminController } from "./controllers/user-v1-only-admin.controller";
+import { UserExistRepository } from "./providers/user-exist.repository";
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { UserVersionOneOnlyAdminController } from "./controllers/user-v1-only-ad
     UserVersionOneFreeUseController,
     UserVersionOneOnlyAdminController,
   ],
-  providers: [UserService, UserRepository, UploadService],
-  exports: [UserService, UserRepository],
+  providers: [UserService, UserGeneralRepository, UserExistRepository],
+  exports: [UserService, UserGeneralRepository, UserExistRepository],
 })
 export class UserModule {}

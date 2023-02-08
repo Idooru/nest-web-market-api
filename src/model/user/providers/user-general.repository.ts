@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { UserActivityEntity } from "../entities/user.activity.entity";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
 import { PatchUserDto } from "../dtos/patch-user.dto";
@@ -10,9 +10,10 @@ import { UserEntity } from "../entities/user.entity";
 import { CreateUserDto } from "../dtos/create-user.dto";
 import { userSelectProperty } from "src/common/config/repository-select-configs/user-select";
 import { PromiseLibrary } from "src/common/lib/promise.library";
+import { InternalServerErrorException } from "@nestjs/common/exceptions";
 
 @Injectable()
-export class UserRepository {
+export class UserGeneralRepository {
   constructor(
     private readonly promiseLibrary: PromiseLibrary,
     @InjectRepository(UserEntity)
@@ -26,10 +27,7 @@ export class UserRepository {
   ) {}
 
   private readonly select = userSelectProperty;
-
-  async isExistUser(userId: string): Promise<boolean> {
-    return (await this.userRepository.findOne(userId)) ? true : false;
-  }
+  private readonly logger = new Logger("Error");
 
   async verifyUserEmail(email: string): Promise<void> {
     const found = await this.userRepository
@@ -187,6 +185,50 @@ export class UserRepository {
       .leftJoin("Activity.Inquiry", "Inquiry")
       .where("user.id = :id", { id: userId })
       .getOne();
+  }
+
+  async findUserWithRealName(realname: string): Promise<UserEntity> {
+    try {
+      return await this.userRepository
+        .createQueryBuilder()
+        .select(["user", "Auth"])
+        .from(UserEntity, "user")
+        .innerJoin("user.Profile", "Profile")
+        .innerJoin("user.Auth", "Auth")
+        .innerJoin("user.Activity", "Activity")
+        .where("Profile.realname = :realname", { realname })
+        .getOne();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err);
+    }
+  }
+
+  async findUserWithPhoneNumber(phonenumber: string): Promise<UserEntity> {
+    try {
+      return await this.userRepository
+        .createQueryBuilder()
+        .select(["user", "Auth"])
+        .from(UserEntity, "user")
+        .innerJoin("user.Profile", "Profile")
+        .innerJoin("user.Auth", "Auth")
+        .innerJoin("user.Activity", "Activity")
+        .where("Profile.phonenumber = :phonenumber", { phonenumber })
+        .getOne();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err);
+    }
+  }
+
+  async resetPassword(userAuthId: string, hashed: string) {
+    const password = { password: hashed };
+    await this.userAuthRepository
+      .createQueryBuilder()
+      .update(UserAuthEntity)
+      .set({ ...password })
+      .where("id = :id", { id: userAuthId })
+      .execute();
   }
 
   async createUser(

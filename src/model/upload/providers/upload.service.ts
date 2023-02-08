@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { UserRepository } from "../../user/providers/user.repository";
+import { UserGeneralRepository } from "../../user/providers/user-general.repository";
 import { UploadRepository } from "../providers/upload.repository";
 import { MediaReturnDto } from "../dto/media-return.dto";
 import { JwtAccessTokenPayload } from "../../auth/jwt/jwt-access-token-payload.interface";
@@ -12,7 +12,7 @@ import * as path from "path";
 export class UploadService {
   constructor(
     private readonly uploadRepository: UploadRepository,
-    private readonly userRepository: UserRepository,
+    private readonly userRepository: UserGeneralRepository,
   ) {}
 
   isExistMediaFile(mediaType: string, file: Express.Multer.File) {

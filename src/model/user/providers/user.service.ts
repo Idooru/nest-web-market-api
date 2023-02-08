@@ -1,34 +1,36 @@
 import { PatchUserDto } from "../dtos/patch-user.dto";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { UserRepository } from "../providers/user.repository";
+import { UserGeneralRepository } from "./user-general.repository";
 import { UserEntity } from "../entities/user.entity";
 import { PromiseLibrary } from "src/common/lib/promise.library";
 import * as bcrypt from "bcrypt";
+import { UserExistRepository } from "./user-exist.repository";
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly promiseLibrary: PromiseLibrary,
-    private readonly userRepository: UserRepository,
+    private readonly userGeneralRepository: UserGeneralRepository,
+    private readonly userExistRepository: UserExistRepository,
   ) {}
 
   async register(registerUserDto: RegisterUserDto): Promise<void> {
     const { nickname, email, password, phonenumber } = registerUserDto;
 
     await this.promiseLibrary.threePromiseBundle(
-      this.userRepository.verifyUserEmail(email),
-      this.userRepository.verifyUserNickName(nickname),
-      this.userRepository.verifyUserPhoneNumber(phonenumber),
+      this.userGeneralRepository.verifyUserEmail(email),
+      this.userGeneralRepository.verifyUserNickName(nickname),
+      this.userGeneralRepository.verifyUserPhoneNumber(phonenumber),
       "Check User Column For Register",
     );
 
     const hashed = await bcrypt.hash(password, 10);
-    await this.userRepository.createUser(registerUserDto, hashed);
+    await this.userGeneralRepository.createUser(registerUserDto, hashed);
   }
 
   async findSelfInfoWithId(userId: string): Promise<UserEntity> {
-    return await this.userRepository.findUserProfileInfoWithId(userId);
+    return await this.userGeneralRepository.findUserProfileInfoWithId(userId);
   }
 
   async patchUserInfoMyself(
@@ -36,13 +38,16 @@ export class UserService {
     userId: string,
   ): Promise<void> {
     const { nickname, phonenumber } = patchUserDto;
-    const user = await this.userRepository.findUserWithId(userId);
+    const user = await this.userGeneralRepository.findUserWithId(userId);
     const myNickName = user.Auth.nickname;
     const myPhoneNumber = user.Profile.phonenumber;
 
     await this.promiseLibrary.twoPromiseBundle(
-      this.userRepository.verifyUserNickNameWhenUpdate(myNickName, nickname),
-      this.userRepository.verifyUserPhoneNumberWhenUpdate(
+      this.userGeneralRepository.verifyUserNickNameWhenUpdate(
+        myNickName,
+        nickname,
+      ),
+      this.userGeneralRepository.verifyUserPhoneNumberWhenUpdate(
         myPhoneNumber,
         phonenumber,
       ),
@@ -52,7 +57,7 @@ export class UserService {
     const { password } = patchUserDto;
     const hashed = await bcrypt.hash(password, 10);
 
-    await this.userRepository.patchUser(
+    await this.userGeneralRepository.patchUser(
       patchUserDto,
       hashed,
       user.Profile.id,
@@ -61,24 +66,24 @@ export class UserService {
   }
 
   async deleteUserWithId(userId: string): Promise<void> {
-    const existUser = await this.userRepository.isExistUser(userId);
+    const existUser = await this.userExistRepository.isExistUser(userId);
 
     if (!existUser) {
       throw new NotFoundException("해당 아이디의 사용자를 찾을 수 없습니다.");
     }
 
-    await this.userRepository.deleteUser(userId);
+    await this.userGeneralRepository.deleteUser(userId);
   }
 
   async getUsersAllFromLastest(): Promise<UserEntity[]> {
-    return await this.userRepository.findUsersAllFromLastest();
+    return await this.userGeneralRepository.findUsersAllFromLastest();
   }
 
   async getUsersAllFromOldest(): Promise<UserEntity[]> {
-    return await this.userRepository.findUsersAllFromOldest();
+    return await this.userGeneralRepository.findUsersAllFromOldest();
   }
 
   async getUserById(userId: string): Promise<UserEntity> {
-    return await this.userRepository.findUserProfileInfoWithId(userId);
+    return await this.userGeneralRepository.findUserProfileInfoWithId(userId);
   }
 }
