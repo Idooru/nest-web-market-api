@@ -1,15 +1,15 @@
 import {
-  CallHandler,
   ArgumentsHost,
+  CallHandler,
   Injectable,
   NestInterceptor,
 } from "@nestjs/common";
-import { Observable, map } from "rxjs";
-import { TimeLoggerLibrary } from "../lib/time-logger.library";
-import { SecurityLibrary } from "../lib/security.library";
+import { map, Observable } from "rxjs";
+import { TimeLoggerLibrary } from "../../lib/time-logger.library";
+import { SecurityLibrary } from "../../lib/security.library";
 
 @Injectable()
-export class JsonSendCookieInterceptor implements NestInterceptor {
+export class JsonJwtAuthInterceptor implements NestInterceptor {
   constructor(
     private readonly timeLoggerLibrary: TimeLoggerLibrary,
     private readonly securityLibrary: SecurityLibrary,
@@ -29,11 +29,11 @@ export class JsonSendCookieInterceptor implements NestInterceptor {
         const { cookieKey, cookieValue, statusCode, message, result } = data;
         this.timeLoggerLibrary.sendResponse(req);
 
-        res
-          .status(data.statusCode)
-          .setHeader("X-Powered-By", "")
-          .cookie(cookieKey, cookieValue, cookieOption);
+        for (let i = 0; i < 2; i++) {
+          res.cookie(cookieKey[i], cookieValue[i], cookieOption);
+        }
 
+        res.status(data.statusCode).setHeader("X-Powered-By", "");
         return { success: true, ...{ statusCode, message, result } };
       }),
     );

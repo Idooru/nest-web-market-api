@@ -1,15 +1,16 @@
 import {
-  CallHandler,
   ArgumentsHost,
+  CallHandler,
   Injectable,
   NestInterceptor,
 } from "@nestjs/common";
-import { Observable, map } from "rxjs";
-import { TimeLoggerLibrary } from "../lib/time-logger.library";
+import { map, Observable } from "rxjs";
+import { TimeLoggerLibrary } from "../../lib/time-logger.library";
 
 @Injectable()
 export class JsonGeneralInterceptor implements NestInterceptor {
   constructor(private readonly timeLoggerLibrary: TimeLoggerLibrary) {}
+
   intercept(context: ArgumentsHost, next: CallHandler<any>): Observable<any> {
     // controller 도달 전
     const req = context.switchToHttp().getRequest();
