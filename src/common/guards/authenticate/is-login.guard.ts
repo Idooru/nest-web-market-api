@@ -5,12 +5,12 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { Request } from "express";
-import { JwtRefreshTokenPayload } from "src/model/auth/jwt/jwt-refresh-token-payload.interface";
-import { SecurityLibrary } from "../lib/security.library";
+import { SecurityLibrary } from "../../lib/security.library";
 
 @Injectable()
-export class IsRefreshTokenAvailableGuard implements CanActivate {
+export class IsLoginGuard implements CanActivate {
   constructor(
     private readonly securityLibrary: SecurityLibrary,
     private readonly jwtService: JwtService,
@@ -18,29 +18,29 @@ export class IsRefreshTokenAvailableGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<Request>();
-    const { refresh_token } = req.signedCookies;
+    const { access_token } = req.signedCookies;
 
-    if (!refresh_token) {
+    if (!access_token) {
       throw new UnauthorizedException(
-        "refresh_token이 없으므로 access_token을 재발급 받기 위한 작업을 할 수 없습니다.",
+        "access_token이 없으므로 인증이 필요한 작업을 수행할 수 없습니다.",
       );
     }
 
-    req.user = await this.validateToken(refresh_token);
+    req.user = await this.validateToken(access_token);
 
     return true;
   }
 
-  async validateToken(refresh_token: string): Promise<JwtRefreshTokenPayload> {
+  async validateToken(access_token: string): Promise<JwtAccessTokenPayload> {
     try {
       return await this.jwtService.verifyAsync(
-        refresh_token,
-        this.securityLibrary.getJwtRefreshTokenVerifyOption(),
+        access_token,
+        this.securityLibrary.getJwtAcessTokenVerifyOption(),
       );
     } catch (err) {
       if (err.name.includes("Expired")) {
         throw new UnauthorizedException(
-          "만료된 refresh_token입니다. 다시 로그인 해주세요.",
+          "만료된 access_token입니다. refresh_token을 이용하여 토큰을 재발급 받거나 다시 로그인 해주세요.",
         );
       }
       throw new UnauthorizedException("유효하지 않은 토큰입니다.");
