@@ -1,6 +1,6 @@
-import { UserAuthEntity } from "../entities/user.auth.entity";
 import { RegisterUserProfileDto } from "./register-user.dto";
 import { IntersectionType, PickType } from "@nestjs/swagger";
+import { UserAuthEntity } from "../entities/user.auth.entity";
 
 export class PatchUserProfileDto extends RegisterUserProfileDto {}
 
