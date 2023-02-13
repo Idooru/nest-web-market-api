@@ -9,7 +9,6 @@ import { RegisterUserDto } from "../dtos/register-user.dto";
 import { UserEntity } from "../entities/user.entity";
 import { CreateUserDto } from "../dtos/create-user.dto";
 import { userSelectProperty } from "src/common/config/repository-select-configs/user-select";
-import { PromiseLibrary } from "src/common/lib/promise.library";
 import { InternalServerErrorException } from "@nestjs/common/exceptions";
 
 @Injectable()
@@ -18,7 +17,6 @@ export class UserGeneralRepository {
   private readonly logger = new Logger("Error");
 
   constructor(
-    private readonly promiseLibrary: PromiseLibrary,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(UserProfileEntity)

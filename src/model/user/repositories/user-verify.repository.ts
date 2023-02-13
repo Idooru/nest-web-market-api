@@ -10,7 +10,7 @@ import { UserProfileEntity } from "../entities/user.profile.entity";
 import { UserAuthEntity } from "../entities/user.auth.entity";
 
 @Injectable()
-export class UserExistRepository {
+export class UserVerifyRepository {
   private readonly logger = new Logger("Error");
 
   constructor(

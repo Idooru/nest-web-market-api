@@ -1,4 +1,3 @@
-import { JsonClearCookieInterface } from "../../../common/interceptors/interface/json-clear-cookie.interface";
 import {
   Body,
   Controller,
@@ -7,13 +6,14 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
 import { JwtAccessTokenPayload } from "../../auth/jwt/jwt-access-token-payload.interface";
-import { IsLoginGuard } from "../../../common/guards/is-login.guard";
-import { AuthGeneralService } from "../../auth/providers/auth-general.service";
-import { UserService } from "../providers/user.service";
+import { IsLoginGuard } from "../../../common/guards/authenticate/is-login.guard";
+import { AuthGeneralService } from "../../auth/services/auth-general.service";
+import { UserGeneralService } from "../services/user-general.service";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { LoginUserDto } from "../dtos/login-user.dto";
 import { UserEntity } from "../entities/user.entity";
@@ -21,31 +21,39 @@ import { PatchUserDto } from "../dtos/patch-user.dto";
 import { ResetPasswordDto } from "../dtos/reset-password.dto";
 import { GetJWT } from "../../../common/decorators/get.jwt.decorator";
 import { FindEmailDto } from "../dtos/find-email.dto";
-import { IsNotLoginGuard } from "../../../common/guards/is-not-login.guard";
-import { JsonGeneralInterceptor } from "src/common/interceptors/json-general.interceptor";
-import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
-import { JsonClearCookieInterceptor } from "src/common/interceptors/json-clear-cookie.interceptor";
-import { IsRefreshTokenAvailableGuard } from "src/common/guards/is-refresh-token-available.guard";
+import { IsNotLoginGuard } from "../../../common/guards/authenticate/is-not-login.guard";
+import { IsRefreshTokenAvailableGuard } from "src/common/guards/authenticate/is-refresh-token-available.guard";
 import { JwtRefreshTokenPayload } from "src/model/auth/jwt/jwt-refresh-token-payload.interface";
-import { JsonJwtAuthInterceptor } from "src/common/interceptors/json-jwt-auth.interceptor";
-import { JsonJwtAuthInterface } from "src/common/interceptors/interface/json-jwt-auth.interface";
-import { JsonJwtLogoutInterface } from "../../../common/interceptors/interface/json-jwt-logout.interface";
-import { JsonJwtLogoutInterceptor } from "../../../common/interceptors/json-jwt-logout.interceptor";
+import { verifyCookieKeys } from "src/common/config/cookie-key-configs";
+import { VerifyDataGuard } from "src/common/guards/verfiy/verify-data.guard";
+import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
+import { JsonGeneralInterface } from "src/common/interceptors/general/interface/json-general-interface";
+import { JsonJwtAuthInterface } from "src/common/interceptors/general/interface/json-jwt-auth.interface";
+import { JsonJwtAuthInterceptor } from "src/common/interceptors/general/json-jwt-auth.interceptor";
+import { JsonJwtLogoutInterceptor } from "src/common/interceptors/general/json-jwt-logout.interceptor";
+import { JsonJwtLogoutInterface } from "src/common/interceptors/general/interface/json-jwt-logout.interface";
 
 @Controller("/api/v1/free-use/user")
 export class UserVersionOneFreeUseController {
   constructor(
-    private readonly userService: UserService,
+    private readonly userGeneralService: UserGeneralService,
     private readonly authGeneralService: AuthGeneralService,
   ) {}
 
   @UseInterceptors(JsonGeneralInterceptor)
+  @UseGuards(
+    new VerifyDataGuard(
+      verifyCookieKeys.user.is_not_exist.email_executed,
+      verifyCookieKeys.user.is_not_exist.nickname_executed,
+      verifyCookieKeys.user.is_not_exist.phonenumber_executed,
+    ),
+  )
   @UseGuards(IsNotLoginGuard)
   @Post("/register")
   async register(
     @Body() registerUserDto: RegisterUserDto,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userService.register(registerUserDto);
+    await this.userGeneralService.register(registerUserDto);
 
     return {
       statusCode: 201,
@@ -62,7 +70,9 @@ export class UserVersionOneFreeUseController {
     return {
       statusCode: 200,
       message: "본인 정보를 가져옵니다.",
-      result: await this.userService.findSelfInfoWithId(jwtPayload.userId),
+      result: await this.userGeneralService.findSelfInfoWithId(
+        jwtPayload.userId,
+      ),
     };
   }
 
@@ -114,13 +124,23 @@ export class UserVersionOneFreeUseController {
   }
 
   @UseInterceptors(JsonGeneralInterceptor)
+  @UseGuards(
+    new VerifyDataGuard(
+      verifyCookieKeys.user.is_not_exist.email_executed,
+      verifyCookieKeys.user.is_not_exist.nickname_executed,
+      verifyCookieKeys.user.is_not_exist.phonenumber_executed,
+    ),
+  )
   @UseGuards(IsLoginGuard)
-  @Patch("/set-user")
+  @Put("/set-user")
   async setUser(
     @Body() patchUserDto: PatchUserDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonGeneralInterface<null>> {
-    await this.userService.patchUserInfoMyself(patchUserDto, jwtPayload.userId);
+  ): Promise<JsonGeneralInterface<void>> {
+    await this.userGeneralService.patchUserInfoMyself(
+      patchUserDto,
+      jwtPayload.userId,
+    );
 
     return {
       statusCode: 200,
@@ -128,22 +148,28 @@ export class UserVersionOneFreeUseController {
     };
   }
 
-  @UseInterceptors(JsonClearCookieInterceptor)
+  @UseInterceptors(JsonJwtLogoutInterceptor)
+  @UseGuards(
+    new VerifyDataGuard(verifyCookieKeys.user.is_exist.userid_executed),
+  )
   @UseGuards(IsLoginGuard)
   @Delete("/secession")
   async secession(
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonClearCookieInterface> {
-    await this.userService.deleteUserWithId(jwtPayload.userId);
+  ): Promise<JsonJwtLogoutInterface> {
+    await this.userGeneralService.deleteUserWithId(jwtPayload.userId);
 
     return {
       statusCode: 203,
       message: "사용자 정보를 삭제하였습니다.",
-      cookieKey: "JWT_COOKIE",
+      cookieKey: ["access_token", "refresh_token"],
     };
   }
 
   @UseInterceptors(JsonGeneralInterceptor)
+  @UseGuards(
+    new VerifyDataGuard(verifyCookieKeys.user.is_exist.phonenumber_executed),
+  )
   @UseGuards(IsNotLoginGuard)
   @Get("/find-email/realname/:realname/phonenumber/:phonenumber")
   async findEmail(
@@ -157,6 +183,7 @@ export class UserVersionOneFreeUseController {
   }
 
   @UseInterceptors(JsonGeneralInterceptor)
+  @UseGuards(new VerifyDataGuard(verifyCookieKeys.user.is_exist.email_executed))
   @UseGuards(IsNotLoginGuard)
   @Patch("/reset-password")
   async resetPassword(

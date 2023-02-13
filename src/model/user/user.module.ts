@@ -1,20 +1,21 @@
 import { ReviewModule } from "../review/review.module";
 import { UserActivityEntity } from "./entities/user.activity.entity";
 import { UserAuthEntity } from "./entities/user.auth.entity";
-import { UploadService } from "../upload/providers/upload.service";
 import { UploadModule } from "../upload/upload.module";
 import { AuthModule } from "../auth/auth.module";
-import { UserGeneralRepository } from "./providers/user-general.repository";
 import { UserProfileEntity } from "./entities/user.profile.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { forwardRef, Module } from "@nestjs/common";
-import { UserService } from "./providers/user.service";
+import { UserGeneralService } from "./services/user-general.service";
 import { UserEntity } from "./entities/user.entity";
 import { LibraryModule } from "src/common/lib/library.module";
 import { JwtModule } from "@nestjs/jwt";
 import { UserVersionOneFreeUseController } from "./controllers/user-v1-free-use.controller";
 import { UserVersionOneOnlyAdminController } from "./controllers/user-v1-only-admin.controller";
-import { UserExistRepository } from "./providers/user-exist.repository";
+import { UserGeneralRepository } from "./repositories/user-general.repository";
+import { UserVerifyService } from "./services/user-verify.service";
+import { UserVerifyRepository } from "./repositories/user-verify.repository";
+import { UserVersionOneVerifyController } from "./controllers/user-v1-verfiy.controller";
 
 @Module({
   imports: [
@@ -33,8 +34,19 @@ import { UserExistRepository } from "./providers/user-exist.repository";
   controllers: [
     UserVersionOneFreeUseController,
     UserVersionOneOnlyAdminController,
+    UserVersionOneVerifyController,
   ],
-  providers: [UserService, UserGeneralRepository, UserExistRepository],
-  exports: [UserService, UserGeneralRepository, UserExistRepository],
+  providers: [
+    UserGeneralService,
+    UserGeneralRepository,
+    UserVerifyService,
+    UserVerifyRepository,
+  ],
+  exports: [
+    UserGeneralService,
+    UserGeneralRepository,
+    UserVerifyService,
+    UserVerifyRepository,
+  ],
 })
 export class UserModule {}

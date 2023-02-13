@@ -13,10 +13,9 @@ import { UserEntity } from "src/model/user/entities/user.entity";
 import { SecurityLibrary } from "src/common/lib/security.library";
 import { JwtPayload } from "../jwt/jwt-payload.interface";
 import { JwtRefreshTokenPayload } from "../jwt/jwt-refresh-token-payload.interface";
-import { UserGeneralRepository } from "../../user/providers/user-general.repository";
 import { v4 } from "uuid";
 import { AuthExistService } from "./auth-exist.service";
-
+import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
 import * as bcrypt from "bcrypt";
 
 @Injectable()
@@ -81,8 +80,8 @@ export class AuthGeneralService {
 
       return { accessToken, refreshToken };
     } catch (err) {
-      new Logger("Error").error(err);
-      throw new InternalServerErrorException(err);
+      new Logger("Error").error(err.message);
+      throw new InternalServerErrorException(err.message);
     }
   }
 
