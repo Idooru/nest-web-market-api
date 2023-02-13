@@ -6,14 +6,14 @@ import { verifyCookieKeys } from "src/common/config/cookie-key-configs";
 
 @Controller("/api/v1/verify/user")
 export class UserVersionOneVerifyController {
-  constructor(private readonly userExistService: UserVerifyService) {}
+  constructor(private readonly userVerifyService: UserVerifyService) {}
 
   private readonly userVerifyCookieKey = verifyCookieKeys.user;
 
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/existent/id/:id")
   async isExistUserId(@Param("id") userId: string): Promise<VerifyDataDto> {
-    await this.userExistService.isExistUserId(userId);
+    await this.userVerifyService.isExistUserId(userId);
 
     return {
       message: "해당 사용자가 데이터베이스에 존재하는 것이 확인되었습니다.",
@@ -24,7 +24,7 @@ export class UserVersionOneVerifyController {
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/existent/email/:email")
   async isExistEmail(@Param("email") email: string): Promise<VerifyDataDto> {
-    await this.userExistService.isExistEmail(email);
+    await this.userVerifyService.isExistEmail(email);
 
     return {
       message: "해당 이메일이 데이터베이스에 존재하는 것이 확인되었습니다.",
@@ -35,7 +35,7 @@ export class UserVersionOneVerifyController {
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/none-existent/email/:email")
   async isNotExistEmail(@Param("email") email: string): Promise<VerifyDataDto> {
-    await this.userExistService.isNotExistEmail(email);
+    await this.userVerifyService.isNotExistEmail(email);
 
     return {
       message:
@@ -49,7 +49,7 @@ export class UserVersionOneVerifyController {
   async isNotExistNickName(
     @Param("nickname") nickname: string,
   ): Promise<VerifyDataDto> {
-    await this.userExistService.isNotExistNickName(nickname);
+    await this.userVerifyService.isNotExistNickName(nickname);
 
     return {
       message:
@@ -63,7 +63,7 @@ export class UserVersionOneVerifyController {
   async isExistPhoneNumber(
     @Param("phonenumber") phonenumber: string,
   ): Promise<VerifyDataDto> {
-    await this.userExistService.isExistPhoneNumber(phonenumber);
+    await this.userVerifyService.isExistPhoneNumber(phonenumber);
 
     return {
       message: "해당 전화번호가 데이터베이스에 존재하는 것이 확인되었습니다.",
@@ -76,7 +76,7 @@ export class UserVersionOneVerifyController {
   async isNotExistPhoneNumber(
     @Param("phonenumber") phonenumber: string,
   ): Promise<VerifyDataDto> {
-    await this.userExistService.isNotExistPhoneNumber(phonenumber);
+    await this.userVerifyService.isNotExistPhoneNumber(phonenumber);
 
     return {
       message:
