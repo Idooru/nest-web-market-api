@@ -14,8 +14,15 @@ export const mediaCookieKeys = {
 
 export const verifyCookieKeys = {
   user: {
-    is_not_exist_email_excuted: "is-not-exist-email-executed",
-    is_not_exist_nickname_executed: "is-not-exist-nickname-executed",
-    is_not_exist_phonenumber_executed: "is-not-exist-phonenumber-executed",
+    is_exist: {
+      userid_executed: "is-exist-user-id-executed",
+      email_executed: "is-exist-email-executed",
+      phonenumber_executed: "is-exist-phonenumber-executed",
+    },
+    is_not_exist: {
+      email_executed: "is-not-exist-email-executed",
+      nickname_executed: "is-not-exist-nickname-executed",
+      phonenumber_executed: "is-not-exist-phonenumber-executed",
+    },
   },
 };
