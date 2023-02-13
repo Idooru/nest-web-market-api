@@ -13,8 +13,8 @@ import { VerifyDataGuard } from "src/common/guards/verfiy/verify-data.guard";
 import { JsonGeneralInterface } from "src/common/interceptors/general/interface/json-general-interface";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 
-import { UserEntity } from "../entities/user.entity";
-import { UserGeneralService } from "../services/user-general.service";
+import { UserEntity } from "../../entities/user.entity";
+import { UserGeneralService } from "../../services/user-general.service";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
