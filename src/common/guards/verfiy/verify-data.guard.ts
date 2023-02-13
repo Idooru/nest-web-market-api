@@ -18,7 +18,9 @@ export class VerifyDataGuard implements CanActivate {
     const req = context.switchToHttp().getRequest<Request>();
     const res = context.switchToHttp().getResponse<Response>();
 
-    const importedCookies = Object.keys(req.signedCookies);
+    const importedCookies = Object.keys(req.signedCookies).filter((cookie) =>
+      cookie.includes("is"),
+    );
     const needCookies = this.data;
 
     if (JSON.stringify(importedCookies) !== JSON.stringify(needCookies)) {
