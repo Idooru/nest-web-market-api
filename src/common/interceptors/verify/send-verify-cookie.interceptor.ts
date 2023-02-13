@@ -7,11 +7,11 @@ import {
 import { map, Observable } from "rxjs";
 import { TimeLoggerLibrary } from "../../lib/time-logger.library";
 import { Request, Response } from "express";
-import { VerifyDataDto } from "../../../model/user/types/dtos/verfiy-data.dto";
 import { SecurityLibrary } from "src/common/lib/security.library";
+import { VerifyDataDto } from "./verfiy-data.dto";
 
 @Injectable()
-export class SendExistStatusCookieInterceptor implements NestInterceptor {
+export class SendVerifyCookieInterceptor implements NestInterceptor {
   constructor(
     private readonly timeLoggerLibrary: TimeLoggerLibrary,
     private readonly securityLibrary: SecurityLibrary,
