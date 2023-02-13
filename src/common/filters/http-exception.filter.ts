@@ -14,13 +14,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const err = exception.getResponse() as HttpExceptionType;
 
     if (err.statusCode >= 500) {
-      const warn = err.message.concat(" 서버 로그를 확인하세요.");
       return res.status(err.statusCode).setHeader("X-Powered-By", "").json({
         success: false,
         statusCode: err.statusCode,
         message: "Http Exception이 발생하였습니다.",
         timestamp: new Date().toString(),
-        reason: warn,
+        reason: err.message,
+        info: "서버 로그를 확인하세요",
         error: err.error,
       });
     }
