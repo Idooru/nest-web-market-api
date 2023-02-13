@@ -1,8 +1,8 @@
 import { Controller, Get, UseInterceptors, Param } from "@nestjs/common";
-import { ProductService } from "../providers/product.service";
-import { JsonGeneralInterceptor } from "src/common/interceptors/json-general.interceptor";
-import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
-import { ProductEntity } from "../entities/product.entity";
+import { ProductService } from "../../services/product.service";
+import { ProductEntity } from "../../entities/product.entity";
+import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
+import { JsonGeneralInterface } from "src/common/interceptors/general/interface/json-general-interface";
 
 @Controller("/api/v1/free-use/product")
 export class ProductVersionOneFreeUseController {

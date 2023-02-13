@@ -11,17 +11,17 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { Cookie } from "src/common/decorators/cookie.decorator";
-import { IsAdminGuard } from "src/common/guards/is-admin.guard";
-import { IsLoginGuard } from "src/common/guards/is-login.guard";
-import { JsonClearCookieInterface } from "src/common/interceptors/interface/json-clear-cookie.interface";
-import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
-import { JsonClearCookieInterceptor } from "src/common/interceptors/json-clear-cookie.interceptor";
-import { JsonGeneralInterceptor } from "src/common/interceptors/json-general.interceptor";
+import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
+import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
+import { JsonClearCookieInterface } from "src/common/interceptors/general/interface/json-clear-cookie.interface";
+import { JsonGeneralInterface } from "src/common/interceptors/general/interface/json-general-interface";
+import { JsonClearCookieInterceptor } from "src/common/interceptors/general/json-clear-cookie.interceptor";
+import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { MediaUrlCookieValue } from "src/model/upload/media.url.cookies.interface";
-import { CreateProductDto } from "../dto/create_product.dto";
-import { ModifyProductDto } from "../dto/modify_product.dto";
-import { ProductEntity } from "../entities/product.entity";
-import { ProductService } from "../providers/product.service";
+import { CreateProductDto } from "../../dto/create_product.dto";
+import { ModifyProductDto } from "../../dto/modify_product.dto";
+import { ProductEntity } from "../../entities/product.entity";
+import { ProductService } from "../../services/product.service";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
