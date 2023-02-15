@@ -23,8 +23,10 @@ export class UserVersionOneVerifyController {
 
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/existent/email/:email")
-  async isExistEmail(@Param("email") email: string): Promise<VerifyDataDto> {
-    await this.userVerifyService.isExistEmail(email);
+  async isExistUserEmail(
+    @Param("email") email: string,
+  ): Promise<VerifyDataDto> {
+    await this.userVerifyService.isExistUserEmail(email);
 
     return {
       message: "해당 이메일이 데이터베이스에 존재하는 것이 확인되었습니다.",
@@ -34,8 +36,10 @@ export class UserVersionOneVerifyController {
 
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/none-existent/email/:email")
-  async isNotExistEmail(@Param("email") email: string): Promise<VerifyDataDto> {
-    await this.userVerifyService.isNotExistEmail(email);
+  async isNotExistUserEmail(
+    @Param("email") email: string,
+  ): Promise<VerifyDataDto> {
+    await this.userVerifyService.isNotExistUserEmail(email);
 
     return {
       message:
@@ -46,10 +50,10 @@ export class UserVersionOneVerifyController {
 
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/none-existent/nickname/:nickname")
-  async isNotExistNickName(
+  async isNotExistUserNickName(
     @Param("nickname") nickname: string,
   ): Promise<VerifyDataDto> {
-    await this.userVerifyService.isNotExistNickName(nickname);
+    await this.userVerifyService.isNotExistUserNickName(nickname);
 
     return {
       message:
@@ -60,10 +64,10 @@ export class UserVersionOneVerifyController {
 
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/existent/phonenumber/:phonenumber")
-  async isExistPhoneNumber(
+  async isExistUserPhoneNumber(
     @Param("phonenumber") phonenumber: string,
   ): Promise<VerifyDataDto> {
-    await this.userVerifyService.isExistPhoneNumber(phonenumber);
+    await this.userVerifyService.isExistUserPhoneNumber(phonenumber);
 
     return {
       message: "해당 전화번호가 데이터베이스에 존재하는 것이 확인되었습니다.",
@@ -73,10 +77,10 @@ export class UserVersionOneVerifyController {
 
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/none-existent/phonenumber/:phonenumber")
-  async isNotExistPhoneNumber(
+  async isNotExistUserPhoneNumber(
     @Param("phonenumber") phonenumber: string,
   ): Promise<VerifyDataDto> {
-    await this.userVerifyService.isNotExistPhoneNumber(phonenumber);
+    await this.userVerifyService.isNotExistUserPhoneNumber(phonenumber);
 
     return {
       message:

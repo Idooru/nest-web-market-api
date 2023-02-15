@@ -34,7 +34,7 @@ export class UserVerifyRepository {
     }
   }
 
-  async isExistRealName(realname: string): Promise<boolean> {
+  async isExistUserRealName(realname: string): Promise<boolean> {
     try {
       const result = await this.userProfileRepository.findOne({
         where: { realname },
@@ -46,19 +46,7 @@ export class UserVerifyRepository {
     }
   }
 
-  async isExistPassword(hashed: string): Promise<boolean> {
-    try {
-      const result = await this.userAuthRepository.findOne({
-        where: { password: hashed },
-      });
-      return result ? true : false;
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async isExistEmail(email: string): Promise<boolean> {
+  async isExistUserEmail(email: string): Promise<boolean> {
     try {
       const result = await this.userAuthRepository.findOne({
         where: { email },
@@ -70,7 +58,7 @@ export class UserVerifyRepository {
     }
   }
 
-  async isNotExistEmail(email: string): Promise<boolean> {
+  async isNotExistUserEmail(email: string): Promise<boolean> {
     try {
       const result = await this.userAuthRepository.findOne({
         where: { email },
@@ -82,7 +70,7 @@ export class UserVerifyRepository {
     }
   }
 
-  async isNotExistNickName(nickname: string): Promise<boolean> {
+  async isNotExistUserNickName(nickname: string): Promise<boolean> {
     try {
       const result = await this.userAuthRepository.findOne({
         where: { nickname },
@@ -94,7 +82,7 @@ export class UserVerifyRepository {
     }
   }
 
-  async isExistPhoneNumber(phonenumber: string): Promise<boolean> {
+  async isExistUserPhoneNumber(phonenumber: string): Promise<boolean> {
     try {
       const result = await this.userProfileRepository.findOne({
         where: { phonenumber },
@@ -106,7 +94,7 @@ export class UserVerifyRepository {
     }
   }
 
-  async isNotExistPhoneNumber(phonenumber: string): Promise<boolean> {
+  async isNotExistUserPhoneNumber(phonenumber: string): Promise<boolean> {
     try {
       const result = await this.userProfileRepository.findOne({
         where: { phonenumber },

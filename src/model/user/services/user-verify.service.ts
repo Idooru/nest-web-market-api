@@ -15,8 +15,8 @@ export class UserVerifyService {
     }
   }
 
-  async isExistEmail(email: string): Promise<void> {
-    const result = await this.userVerifyRepository.isExistEmail(email);
+  async isExistUserEmail(email: string): Promise<void> {
+    const result = await this.userVerifyRepository.isExistUserEmail(email);
 
     if (!result) {
       throw new BadRequestException(
@@ -25,24 +25,26 @@ export class UserVerifyService {
     }
   }
 
-  async isNotExistEmail(email: string): Promise<void> {
-    const result = await this.userVerifyRepository.isNotExistEmail(email);
+  async isNotExistUserEmail(email: string): Promise<void> {
+    const result = await this.userVerifyRepository.isNotExistUserEmail(email);
 
     if (!result) {
       throw new BadRequestException("해당 이메일은 데이터베이스에 존재합니다.");
     }
   }
 
-  async isNotExistNickName(nickname: string): Promise<void> {
-    const result = await this.userVerifyRepository.isNotExistNickName(nickname);
+  async isNotExistUserNickName(nickname: string): Promise<void> {
+    const result = await this.userVerifyRepository.isNotExistUserNickName(
+      nickname,
+    );
 
     if (!result) {
       throw new BadRequestException("해당 닉네임은 데이터베이스에 존재합니다.");
     }
   }
 
-  async isExistPhoneNumber(phonenumber: string): Promise<void> {
-    const result = await this.userVerifyRepository.isExistPhoneNumber(
+  async isExistUserPhoneNumber(phonenumber: string): Promise<void> {
+    const result = await this.userVerifyRepository.isExistUserPhoneNumber(
       phonenumber,
     );
 
@@ -53,8 +55,8 @@ export class UserVerifyService {
     }
   }
 
-  async isNotExistPhoneNumber(phonenumber: string): Promise<void> {
-    const result = await this.userVerifyRepository.isNotExistPhoneNumber(
+  async isNotExistUserPhoneNumber(phonenumber: string): Promise<void> {
+    const result = await this.userVerifyRepository.isNotExistUserPhoneNumber(
       phonenumber,
     );
 
