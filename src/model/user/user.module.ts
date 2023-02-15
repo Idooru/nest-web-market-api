@@ -10,12 +10,12 @@ import { UserGeneralService } from "./services/user-general.service";
 import { UserEntity } from "./entities/user.entity";
 import { LibraryModule } from "src/common/lib/library.module";
 import { JwtModule } from "@nestjs/jwt";
-import { UserVersionOneFreeUseController } from "./controllers/user-v1-free-use.controller";
-import { UserVersionOneOnlyAdminController } from "./controllers/user-v1-only-admin.controller";
+import { UserVersionOneFreeUseController } from "./controllers/v1/user-v1-free-use.controller";
+import { UserVersionOneOnlyAdminController } from "./controllers/v1/user-v1-only-admin.controller";
 import { UserGeneralRepository } from "./repositories/user-general.repository";
 import { UserVerifyService } from "./services/user-verify.service";
 import { UserVerifyRepository } from "./repositories/user-verify.repository";
-import { UserVersionOneVerifyController } from "./controllers/user-v1-verfiy.controller";
+import { UserVersionOneVerifyController } from "./controllers/v1/user-v1-verfiy.controller";
 
 @Module({
   imports: [
