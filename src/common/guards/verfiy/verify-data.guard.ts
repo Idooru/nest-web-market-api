@@ -23,7 +23,7 @@ export class VerifyDataGuard implements CanActivate {
     );
     const needCookies = this.data;
 
-    if (JSON.stringify(importedCookies) !== JSON.stringify(needCookies)) {
+    if (importedCookies.sort() === needCookies.sort()) {
       throw new UnauthorizedException(
         "검증에 필요한 쿠키가 일치하지 않았기 때문에 해당 로직을 사용할 수 없습니다. 검증 API를 먼저 실행시켜 주세요.",
       );
