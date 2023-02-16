@@ -3,10 +3,10 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
   Patch,
   Post,
   Put,
+  Query,
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
@@ -20,7 +20,6 @@ import { UserEntity } from "../../entities/user.entity";
 import { PatchUserDto } from "../../dtos/patch-user.dto";
 import { ResetPasswordDto } from "../../dtos/reset-password.dto";
 import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
-import { FindEmailDto } from "../../dtos/find-email.dto";
 import { IsNotLoginGuard } from "../../../../common/guards/authenticate/is-not-login.guard";
 import { IsRefreshTokenAvailableGuard } from "src/common/guards/authenticate/is-refresh-token-available.guard";
 import { JwtRefreshTokenPayload } from "src/model/auth/jwt/jwt-refresh-token-payload.interface";
@@ -149,9 +148,7 @@ export class UserVersionOneFreeUseController {
   }
 
   @UseInterceptors(JsonJwtLogoutInterceptor)
-  @UseGuards(
-    new VerifyDataGuard(verifyCookieKeys.user.is_exist.userid_executed),
-  )
+  @UseGuards(new VerifyDataGuard(verifyCookieKeys.user.is_exist.id_executed))
   @UseGuards(IsLoginGuard)
   @Delete("/secession")
   async secession(
@@ -168,13 +165,19 @@ export class UserVersionOneFreeUseController {
 
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(
-    new VerifyDataGuard(verifyCookieKeys.user.is_exist.phonenumber_executed),
+    new VerifyDataGuard(
+      verifyCookieKeys.user.is_exist.realname_executed,
+      verifyCookieKeys.user.is_exist.phonenumber_executed,
+    ),
   )
   @UseGuards(IsNotLoginGuard)
-  @Get("/find-email/realname/:realname/phonenumber/:phonenumber")
+  @Get("/find-email")
   async findEmail(
-    @Param() findEmailDto: FindEmailDto,
+    @Query("realname") realname: string,
+    @Query("phonenumber") phonenumber: string,
   ): Promise<JsonGeneralInterface<string>> {
+    const findEmailDto = { realname, phonenumber };
+
     return {
       statusCode: 200,
       message: "이메일 정보를 가져옵니다.",
