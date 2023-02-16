@@ -13,16 +13,25 @@ export const mediaCookieKeys = {
 };
 
 export const verifyCookieKeys = {
-  user: {
+  product: {
     is_exist: {
-      userid_executed: "is-exist-user-id-executed",
-      email_executed: "is-exist-email-executed",
-      phonenumber_executed: "is-exist-phonenumber-executed",
+      id_executed: "is-exist-product-id-executed",
     },
     is_not_exist: {
-      email_executed: "is-not-exist-email-executed",
-      nickname_executed: "is-not-exist-nickname-executed",
-      phonenumber_executed: "is-not-exist-phonenumber-executed",
+      name_executed: "is-not-exist-product-name-executed",
+    },
+  },
+  user: {
+    is_exist: {
+      id_executed: "is-exist-user-id-executed",
+      email_executed: "is-exist-user-email-executed",
+      realname_executed: "is-exist-user-realname-executed",
+      phonenumber_executed: "is-exist-user-phonenumber-executed",
+    },
+    is_not_exist: {
+      email_executed: "is-not-exist-user-email-executed",
+      nickname_executed: "is-not-exist-user-nickname-executed",
+      phonenumber_executed: "is-not-exist-user-phonenumber-executed",
     },
   },
 };
