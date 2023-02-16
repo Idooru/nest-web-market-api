@@ -6,18 +6,8 @@ import bcrypt from "bcrypt";
 export class AuthExistService {
   constructor(private readonly userVerifyRepository: UserVerifyRepository) {}
 
-  async verfiyRealNameAndPhoneNumber(
-    realname: string,
-    phonenumber: string,
-  ): Promise<[boolean, boolean]> {
-    return await Promise.all([
-      this.userVerifyRepository.isExistRealName(realname),
-      this.userVerifyRepository.isExistPhoneNumber(phonenumber),
-    ]);
-  }
-
   async verfiyEmail(email: string): Promise<boolean> {
-    return await this.userVerifyRepository.isExistEmail(email);
+    return await this.userVerifyRepository.isExistUserEmail(email);
   }
 
   async verfiyPassword(
