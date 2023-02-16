@@ -55,9 +55,7 @@ export class UserVersionOneOnlyAdminController {
   }
 
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(
-    new VerifyDataGuard(verifyCookieKeys.user.is_exist.userid_executed),
-  )
+  @UseGuards(new VerifyDataGuard(verifyCookieKeys.user.is_exist.id_executed))
   @Delete("/id/:id")
   async kickUser(
     @Param("id") userId: string,
