@@ -17,7 +17,7 @@ export class UserVersionOneVerifyController {
 
     return {
       message: "해당 사용자가 데이터베이스에 존재하는 것이 확인되었습니다.",
-      setCookieKey: this.userVerifyCookieKey.is_exist.userid_executed,
+      setCookieKey: this.userVerifyCookieKey.is_exist.id_executed,
     };
   }
 
@@ -45,6 +45,19 @@ export class UserVersionOneVerifyController {
       message:
         "해당 이메일이 데이터베이스에 존재하지 않는 것이 확인되었습니다.",
       setCookieKey: this.userVerifyCookieKey.is_not_exist.email_executed,
+    };
+  }
+
+  @UseInterceptors(SendVerifyCookieInterceptor)
+  @Get("/existent/realname/:realname")
+  async isExistUserRealName(
+    @Param("realname") realname: string,
+  ): Promise<VerifyDataDto> {
+    await this.userVerifyService.isExistUserRealName(realname);
+
+    return {
+      message: "해당 실명이 데이터베이스에 존재하는 것이 확인되었습니다.",
+      setCookieKey: this.userVerifyCookieKey.is_exist.realname_executed,
     };
   }
 

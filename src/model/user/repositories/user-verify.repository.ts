@@ -11,8 +11,6 @@ import { UserAuthEntity } from "../entities/user.auth.entity";
 
 @Injectable()
 export class UserVerifyRepository {
-  private readonly logger = new Logger("Error");
-
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
@@ -22,6 +20,8 @@ export class UserVerifyRepository {
     private readonly userAuthRepository: Repository<UserAuthEntity>,
   ) {}
 
+  private readonly logger = new Logger("Error");
+
   async isExistUserId(userId: string): Promise<boolean> {
     try {
       const result = await this.userRepository.findOne({
@@ -30,18 +30,6 @@ export class UserVerifyRepository {
       return result ? true : false;
     } catch (err) {
       this.logger.log(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async isExistUserRealName(realname: string): Promise<boolean> {
-    try {
-      const result = await this.userProfileRepository.findOne({
-        where: { realname },
-      });
-      return result ? true : false;
-    } catch (err) {
-      this.logger.error(err);
       throw new InternalServerErrorException(err.message);
     }
   }
@@ -64,6 +52,18 @@ export class UserVerifyRepository {
         where: { email },
       });
       return result ? false : true;
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async isExistUserRealName(realname: string): Promise<boolean> {
+    try {
+      const result = await this.userProfileRepository.findOne({
+        where: { realname },
+      });
+      return result ? true : false;
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException(err.message);
