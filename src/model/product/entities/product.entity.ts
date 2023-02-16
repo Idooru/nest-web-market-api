@@ -33,7 +33,8 @@ export class ProductEntity extends CommonEntity {
   @Column({ type: "text", nullable: true })
   description: string;
 
-  @Column({ type: "int", default: 50 })
+  @IsNumber()
+  @Column({ type: "int", unsigned: true, default: 50 })
   quantity: number;
 
   @OneToOne(() => ProductImageEntity, (image) => image.Product, {
