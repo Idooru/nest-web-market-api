@@ -37,9 +37,9 @@ export class AuthGeneralService {
 
   async validateUser(loginUserDto: LoginUserDto): Promise<UserEntity> {
     const { email, password } = loginUserDto;
-    const isExistEmail = await this.authExistService.verfiyEmail(email);
+    const isExistUserEmail = await this.authExistService.verfiyEmail(email);
 
-    if (isExistEmail) {
+    if (isExistUserEmail) {
       const user = await this.userGeneralRepository.findUserWithEmail(email);
 
       if (
@@ -88,35 +88,24 @@ export class AuthGeneralService {
   async findEmail(findEmailDto: FindEmailDto): Promise<string> {
     const { realname, phonenumber } = findEmailDto;
 
-    const [isExistRealName, isExistPhoneNumber] =
-      await this.authExistService.verfiyRealNameAndPhoneNumber(
-        realname,
-        phonenumber,
-      );
+    const [realNameResult, phoneNumberResult] = await Promise.all([
+      this.userGeneralRepository.findUserWithRealName(realname),
+      this.userGeneralRepository.findUserWithPhoneNumber(phonenumber),
+    ]);
 
-    if (isExistRealName && isExistPhoneNumber) {
-      const [realNameResult, phoneNumberResult] = await Promise.all([
-        this.userGeneralRepository.findUserWithRealName(realname),
-        this.userGeneralRepository.findUserWithPhoneNumber(phonenumber),
-      ]);
-
-      if (realNameResult.id === phoneNumberResult.id) {
-        return realNameResult.Auth.email;
-      }
-      throw new UnauthorizedException(
-        "사용자 실명과 전화번호가 서로 일치하지 않습니다.",
-      );
+    if (realNameResult.id === phoneNumberResult.id) {
+      return realNameResult.Auth.email;
     }
-    throw new NotFoundException(
-      "해당 데이터(실명, 전화번호)는 데이터베이스에 존재하지 않습니다.",
+    throw new UnauthorizedException(
+      "사용자 실명과 전화번호가 서로 일치하지 않습니다.",
     );
   }
 
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
     const { email, password } = resetPasswordDto;
-    const isExistEmail = await this.authExistService.verfiyEmail(email);
+    const isExistUserEmail = await this.authExistService.verfiyEmail(email);
 
-    if (isExistEmail) {
+    if (isExistUserEmail) {
       const user = await this.userGeneralRepository.findUserWithEmail(email);
 
       const hashed = await bcrypt.hash(password, 10);
