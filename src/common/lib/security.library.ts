@@ -23,6 +23,10 @@ export class SecurityLibrary {
     return this.cookieOption;
   }
 
+  public getHashSalt(): number {
+    return +this.configService.get("HASH_SALT");
+  }
+
   private readonly jwtAccessTokenSignOption: JwtSignOptions = {
     secret: this.configService.get("JWT_ACCESSTOKEN_SECRET"),
     expiresIn: this.configService.get("JWT_ACCESSTOKEN_EXPIRES"),
