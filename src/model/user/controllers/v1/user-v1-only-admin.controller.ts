@@ -43,7 +43,7 @@ export class UserVersionOneOnlyAdminController {
   }
 
   @UseInterceptors(JsonGeneralInterceptor)
-  @Get("/id/:id")
+  @Get("/:id")
   async getUserById(
     @Param("id") userId: string,
   ): Promise<JsonGeneralInterface<UserEntity>> {
@@ -56,7 +56,7 @@ export class UserVersionOneOnlyAdminController {
 
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(new VerifyDataGuard(verifyCookieKeys.user.is_exist.id_executed))
-  @Delete("/id/:id")
+  @Delete("/:id")
   async kickUser(
     @Param("id") userId: string,
   ): Promise<JsonGeneralInterface<void>> {
