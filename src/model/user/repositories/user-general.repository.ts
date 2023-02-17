@@ -1,7 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { UserActivityEntity } from "../entities/user.activity.entity";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
-import { PatchUserDto } from "../dtos/patch-user.dto";
+import { ModifyUserDto } from "../dtos/modify-user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserProfileEntity } from "../entities/user.profile.entity";
 import { Repository } from "typeorm";
@@ -27,7 +27,7 @@ export class UserGeneralRepository {
     private readonly userActivityRepository: Repository<UserActivityEntity>,
   ) {}
 
-  async findUserWithId(userId: string): Promise<UserEntity> {
+  async findUserWithId(id: string): Promise<UserEntity> {
     try {
       return await this.userRepository
         .createQueryBuilder()
@@ -38,7 +38,7 @@ export class UserGeneralRepository {
         .innerJoin("user.Activity", "Activity")
         .leftJoin("Activity.Review", "Review")
         .leftJoin("Activity.Inquiry", "Inquiry")
-        .where("user.id = :id", { id: userId })
+        .where("user.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
       this.logger.error(err);
@@ -80,7 +80,7 @@ export class UserGeneralRepository {
     }
   }
 
-  async findUserProfileInfoWithId(userId: string): Promise<any> {
+  async findUserProfileInfoWithId(id: string): Promise<any> {
     try {
       return await this.userRepository
         .createQueryBuilder()
@@ -91,7 +91,7 @@ export class UserGeneralRepository {
         .innerJoin("user.Activity", "Activity")
         .leftJoin("Activity.Review", "Review")
         .leftJoin("Activity.Inquiry", "Inquiry")
-        .where("user.id = :id", { id: userId })
+        .where("user.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
       this.logger.error(err);
@@ -133,14 +133,14 @@ export class UserGeneralRepository {
     }
   }
 
-  async resetPassword(userAuthId: string, hashed: string) {
+  async resetPassword(id: string, hashed: string) {
     try {
       const password = { password: hashed };
       await this.userAuthRepository
         .createQueryBuilder()
         .update(UserAuthEntity)
         .set({ ...password })
-        .where("id = :id", { id: userAuthId })
+        .where("id = :id", { id })
         .execute();
     } catch (err) {
       this.logger.error(err);
@@ -205,30 +205,85 @@ export class UserGeneralRepository {
     }
   }
 
-  async patchUser(
-    patchUserDto: PatchUserDto,
-    hashed: string,
+  async modifyUser(
+    modifyUserDto: ModifyUserDto,
+    password: string,
     userProfileId: string,
     userAuthId: string,
   ): Promise<void> {
     try {
-      const { realname, birth, gender, phonenumber, nickname, email } =
-        patchUserDto;
+      const { phonenumber, nickname, email } = modifyUserDto;
 
       await Promise.all([
         this.userProfileRepository
           .createQueryBuilder()
           .update(UserProfileEntity)
-          .set({ realname, birth, gender, phonenumber })
+          .set({ phonenumber })
           .where("id = :id", { id: userProfileId })
           .execute(),
         this.userAuthRepository
           .createQueryBuilder()
           .update(UserAuthEntity)
-          .set({ email, nickname, password: hashed })
+          .set({ email, nickname, password })
           .where("id = :id", { id: userAuthId })
           .execute(),
       ]);
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async modifyUserEmail(email: string, id: string): Promise<void> {
+    try {
+      await this.userAuthRepository
+        .createQueryBuilder()
+        .update(UserAuthEntity)
+        .set({ email })
+        .where("id = :id", { id })
+        .execute();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async modifyUserNickName(nickname: string, id: string): Promise<void> {
+    try {
+      await this.userAuthRepository
+        .createQueryBuilder()
+        .update(UserAuthEntity)
+        .set({ nickname })
+        .where("id = :id", { id })
+        .execute();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async modifyUserPhoneNumber(phonenumber: string, id: string): Promise<void> {
+    try {
+      await this.userProfileRepository
+        .createQueryBuilder()
+        .update(UserProfileEntity)
+        .set({ phonenumber })
+        .where("id = :id", { id })
+        .execute();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async modifyUserPassword(password: string, id: string): Promise<void> {
+    try {
+      await this.userAuthRepository
+        .createQueryBuilder()
+        .update(UserAuthEntity)
+        .set({ password })
+        .where("id = :id", { id })
+        .execute();
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException(err.message);

@@ -17,7 +17,7 @@ import { UserGeneralService } from "../../services/user-general.service";
 import { RegisterUserDto } from "../../dtos/register-user.dto";
 import { LoginUserDto } from "../../dtos/login-user.dto";
 import { UserEntity } from "../../entities/user.entity";
-import { PatchUserDto } from "../../dtos/patch-user.dto";
+import { ModifyUserDto } from "../../dtos/modify-user.dto";
 import { ResetPasswordDto } from "../../dtos/reset-password.dto";
 import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
 import { IsNotLoginGuard } from "../../../../common/guards/authenticate/is-not-login.guard";
@@ -131,19 +131,93 @@ export class UserVersionOneFreeUseController {
     ),
   )
   @UseGuards(IsLoginGuard)
-  @Put("/set-user")
-  async setUser(
-    @Body() patchUserDto: PatchUserDto,
+  @Put("/me")
+  async modifyUser(
+    @Body() modifyUserDto: ModifyUserDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userGeneralService.patchUserInfoMyself(
-      patchUserDto,
+    await this.userGeneralService.modifyUser(modifyUserDto, jwtPayload.userId);
+
+    return {
+      statusCode: 201,
+      message: "사용자 정보를 수정합니다.",
+    };
+  }
+
+  @UseInterceptors(JsonGeneralInterceptor)
+  @UseGuards(
+    new VerifyDataGuard(verifyCookieKeys.user.is_not_exist.email_executed),
+  )
+  @UseGuards(IsLoginGuard)
+  @Patch("/me/email")
+  async modifyUserEmail(
+    @Body("email") email: string,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
+  ): Promise<JsonGeneralInterface<void>> {
+    await this.userGeneralService.modifyUserEmail(email, jwtPayload.userId);
+
+    return {
+      statusCode: 201,
+      message: "사용자의 이메일을 수정합니다.",
+    };
+  }
+
+  @UseInterceptors(JsonGeneralInterceptor)
+  @UseGuards(
+    new VerifyDataGuard(verifyCookieKeys.user.is_not_exist.nickname_executed),
+  )
+  @Patch("/me/nickname")
+  async modifyUserNickName(
+    @Body("nickname") nickname: string,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
+  ): Promise<JsonGeneralInterface<void>> {
+    await this.userGeneralService.modifyUserNickName(
+      nickname,
       jwtPayload.userId,
     );
 
     return {
-      statusCode: 200,
-      message: "사용자 정보를 수정합니다.",
+      statusCode: 201,
+      message: "사용자의 닉네임을 수정합니다.",
+    };
+  }
+
+  @UseInterceptors(JsonGeneralInterceptor)
+  @UseGuards(
+    new VerifyDataGuard(
+      verifyCookieKeys.user.is_not_exist.phonenumber_executed,
+    ),
+  )
+  @Patch("/me/phonenumber")
+  async modifyUserPhoneNumber(
+    @Body("phonenumber") phonenumber: string,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
+  ): Promise<JsonGeneralInterface<void>> {
+    await this.userGeneralService.modifyUserPhoneNumber(
+      phonenumber,
+      jwtPayload.userId,
+    );
+
+    return {
+      statusCode: 201,
+      message: "사용자의 전화번호를 수정합니다.",
+    };
+  }
+
+  @UseInterceptors(JsonGeneralInterceptor)
+  @Patch("/me/password")
+  async modifyUserPassword(
+    @Body("password") password: string,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
+  ): Promise<JsonGeneralInterface<void>> {
+    await this.userGeneralService.modifyUserPassword(
+      password,
+      jwtPayload.userId,
+    );
+
+    return {
+      statusCode: 201,
+      message: "사용자의 비밀번호를 수정합니다.",
     };
   }
 
