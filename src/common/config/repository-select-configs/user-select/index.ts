@@ -10,10 +10,6 @@ export const userSelectProperty = {
   ],
   userProfileSelect: [
     "user",
-    "Profile.realname",
-    "Profile.birth",
-    "Profile.gender",
-    "Profile.phonenumber",
     "Auth.nickname",
     "Auth.email",
     "Auth.userType",
@@ -27,7 +23,7 @@ export const userSelectProperty = {
   userSimpleSelect: [
     "user",
     "user.id",
-    "Profile.realname",
+    "Auth.nickname",
     "Auth.email",
     "Auth.userType",
   ],
