@@ -22,8 +22,8 @@ export class UserGeneralService {
     return await this.userGeneralRepository.findUsersAllFromOldest();
   }
 
-  async getUserById(userId: string): Promise<UserEntity> {
-    return await this.userGeneralRepository.findUserProfileInfoWithId(userId);
+  async findUserInfoFromAdmin(userId: string): Promise<UserEntity> {
+    return await this.userGeneralRepository.findUserInfoFromAdmin(userId);
   }
 
   async findSelfInfoWithId(userId: string): Promise<UserEntity> {

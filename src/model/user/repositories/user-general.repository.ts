@@ -14,7 +14,7 @@ import { InternalServerErrorException } from "@nestjs/common/exceptions";
 @Injectable()
 export class UserGeneralRepository {
   private readonly select = userSelectProperty;
-  private readonly logger = new Logger("Error");
+  private readonly logger = new Logger("Repository");
 
   constructor(
     @InjectRepository(UserEntity)
@@ -80,7 +80,7 @@ export class UserGeneralRepository {
     }
   }
 
-  async findUserProfileInfoWithId(id: string): Promise<any> {
+  async findUserProfileInfoWithId(id: string): Promise<UserEntity> {
     try {
       return await this.userRepository
         .createQueryBuilder()
@@ -92,6 +92,24 @@ export class UserGeneralRepository {
         .leftJoin("Activity.Review", "Review")
         .leftJoin("Activity.Inquiry", "Inquiry")
         .where("user.id = :id", { id })
+        .getOneOrFail();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async findUserInfoFromAdmin(id: string): Promise<UserEntity> {
+    try {
+      return await this.userRepository
+        .createQueryBuilder()
+        .select(this.select.userSelectWhoAdmin)
+        .from(UserEntity, "user")
+        .innerJoin("user.Auth", "Auth")
+        .innerJoin("user.Activity", "Activity")
+        .leftJoin("Activity.Review", "Review")
+        .leftJoin("Activity.Inquiry", "Inquiry")
+        .where("user.id = : id", { id })
         .getOneOrFail();
     } catch (err) {
       this.logger.error(err);

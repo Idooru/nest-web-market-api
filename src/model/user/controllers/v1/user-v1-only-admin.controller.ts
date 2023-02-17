@@ -50,7 +50,7 @@ export class UserVersionOneOnlyAdminController {
     return {
       statusCode: 200,
       message: `${userId}에 해당하는 사용자 정보를 가져옵니다.`,
-      result: await this.userGeneralService.getUserById(userId),
+      result: await this.userGeneralService.findUserInfoFromAdmin(userId),
     };
   }
 
