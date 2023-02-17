@@ -166,6 +166,7 @@ export class UserVersionOneFreeUseController {
   @UseGuards(
     new VerifyDataGuard(verifyCookieKeys.user.is_not_exist.nickname_executed),
   )
+  @UseGuards(IsLoginGuard)
   @Patch("/me/nickname")
   async modifyUserNickName(
     @Body("nickname") nickname: string,
@@ -188,6 +189,7 @@ export class UserVersionOneFreeUseController {
       verifyCookieKeys.user.is_not_exist.phonenumber_executed,
     ),
   )
+  @UseGuards(IsLoginGuard)
   @Patch("/me/phonenumber")
   async modifyUserPhoneNumber(
     @Body("phonenumber") phonenumber: string,
@@ -205,6 +207,7 @@ export class UserVersionOneFreeUseController {
   }
 
   @UseInterceptors(JsonGeneralInterceptor)
+  @UseGuards(IsLoginGuard)
   @Patch("/me/password")
   async modifyUserPassword(
     @Body("password") password: string,
