@@ -109,7 +109,7 @@ export class UserGeneralRepository {
         .innerJoin("user.Activity", "Activity")
         .leftJoin("Activity.Review", "Review")
         .leftJoin("Activity.Inquiry", "Inquiry")
-        .where("user.id = : id", { id })
+        .where("user.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
       this.logger.error(err);
