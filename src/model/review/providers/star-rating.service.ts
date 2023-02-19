@@ -1,13 +1,16 @@
 import { Injectable } from "@nestjs/common";
-import { ProductGeneralRepository } from "../../product/repositories/product-general.repository";
+import { ProductRepository } from "../../product/providers/product.repository";
 import { StarRatingRepository } from "./star-rating.repository";
 import { StarRatingEntity } from "./../entities/star-rating.entity";
+import { ReviewRepository } from "./review.repository";
+import { ProductEntity } from "src/model/product/entities/product.entity";
 import { ReviewEntity } from "../entities/review.entity";
 
 @Injectable()
 export class StarRatingService {
   constructor(
-    private readonly productRepository: ProductGeneralRepository,
+    private readonly productRepository: ProductRepository,
+    private readonly reviewRepository: ReviewRepository,
     private readonly starRatingRepository: StarRatingRepository,
   ) {}
 
@@ -78,7 +81,7 @@ export class StarRatingService {
       scoreSum += pointSum[i][1];
     }
 
-    const averageScore = +(scoreSum / countSum).toFixed(2);
+    const averageScore = Number((scoreSum / countSum).toFixed(2));
     const starRatingId = starRating.id;
 
     await this.starRatingRepository.insertTotalScoreOnStarRating(

@@ -1,6 +1,6 @@
 import { StarRatingRepository } from "../../review/providers/star-rating.repository";
 import { ProductEntity } from "../entities/product.entity";
-import { UploadRepository } from "../../upload/repositories/upload.repository";
+import { UploadRepository } from "../../upload/providers/upload.repository";
 import { ProductGeneralRepository } from "../repositories/product-general.repository";
 import { Injectable } from "@nestjs/common";
 import { CreateProductDto } from "../dto/create_product.dto";

@@ -1,7 +1,7 @@
 import { PickType } from "@nestjs/swagger";
 import { ReviewEntity } from "../entities/review.entity";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { MediaUrlCookieValue } from "src/model/upload/media.url.cookies.interface";
+import { MediaUrlCookies } from "src/model/upload/media.url.cookies.interface";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { UserEntity } from "src/model/user/entities/user.entity";
 
@@ -16,22 +16,22 @@ export class CreateReviewWithImageAndVideoDto {
   createReviewDto: CreateReviewDto;
   jwtPayload: JwtAccessTokenPayload;
   productId: string;
-  reviewImgCookie: MediaUrlCookieValue[];
-  reviewVdoCookie: MediaUrlCookieValue[];
+  reviewImgCookie: MediaUrlCookies[];
+  reviewVdoCookie: MediaUrlCookies[];
 }
 
 export class CreateReviewWithImageDto {
   createReviewDto: CreateReviewDto;
   jwtPayload: JwtAccessTokenPayload;
   productId: string;
-  reviewImgCookie: MediaUrlCookieValue[];
+  reviewImgCookie: MediaUrlCookies[];
 }
 
 export class CreateReviewWithVideoDto {
   createReviewDto: CreateReviewDto;
   jwtPayload: JwtAccessTokenPayload;
   productId: string;
-  reviewVdoCookie: MediaUrlCookieValue[];
+  reviewVdoCookie: MediaUrlCookies[];
 }
 
 export class CreateReviewWithoutMediaDto {

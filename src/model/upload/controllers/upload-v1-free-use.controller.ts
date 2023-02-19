@@ -6,21 +6,22 @@ import {
   UploadedFiles,
   Delete,
 } from "@nestjs/common";
-import { UploadService } from "../services/upload.service";
+
+import { UploadService } from "../providers/upload.service";
+import { IsLoginGuard } from "../../../common/guards/is-login.guard";
 import { MulterConfig } from "src/common/config/multer.config";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { CookieLibrary } from "src/common/lib/cookie.library";
-import { mediaCookieKeys } from "src/common/config/cookie-key-configs";
-import { JsonSendCookiesInterceptor } from "src/common/interceptors/general/json-send-cookies.interceptor";
-import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { JsonSendCookiesInterface } from "src/common/interceptors/general/interface/json-send-cookies.interface";
-import { MediaUrlCookieValue } from "../media.url.cookies.interface";
-import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
+import { JsonSendCookiesInterface } from "src/common/interceptors/interface/json-send-cookies.interface";
 import { Cookies } from "src/common/decorators/cookies.decorator";
-import { JsonClearCookiesInterface } from "src/common/interceptors/general/interface/json-clear-cookies.interface";
+import { JsonSendCookiesInterceptor } from "src/common/interceptors/json-send-cookies.interceptor";
 import { MeidaLoggerLibrary } from "src/common/lib/media-logger.library";
+import { MediaUrlCookieValue } from "../media.url.cookies.interface";
+import { JsonClearCookiesInterface } from "src/common/interceptors/interface/json-clear-cookies.interface";
+import { JsonClearCookiesInterceptor } from "src/common/interceptors/json-clear-cookies.interceptor";
+import { CookieLibrary } from "src/common/lib/cookie.library";
+import { cookieKeys } from "src/common/config/cookie-key-configs";
 
 @Controller("/api/v1/free-use/upload")
 export class UploadVersionOneFreeUseController {
@@ -37,7 +38,7 @@ export class UploadVersionOneFreeUseController {
     FilesInterceptor("review_image", 3, MulterConfig.upload("/image/review")),
   )
   @UseGuards(IsLoginGuard)
-  @Post("/review/image")
+  @Post("/image/review")
   async uploadReviewImage(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
@@ -53,14 +54,14 @@ export class UploadVersionOneFreeUseController {
     const extendedReviewImages =
       this.cookieLibrary.insertNumberOnContinuousCookies(
         reviewImages,
-        mediaCookieKeys.review.image_url_cookie,
+        cookieKeys.review.image_url_cookie,
       );
 
     return {
       statusCode: 201,
       message: "리뷰 사진을 업로드 하였습니다.",
-      cookieKey: mediaCookieKeys.review.image_url_cookie,
-      cookieValues: extendedReviewImages,
+      cookieKey: cookieKeys.review.image_url_cookie,
+      cookieValue: extendedReviewImages,
     };
   }
 
@@ -85,14 +86,14 @@ export class UploadVersionOneFreeUseController {
     const extendedReviewVideos =
       this.cookieLibrary.insertNumberOnContinuousCookies(
         reviewVideos,
-        mediaCookieKeys.review.video_url_cookie,
+        cookieKeys.review.video_url_cookie,
       );
 
     return {
       statusCode: 201,
       message: "리뷰 동영상을 업로드 하였습니다.",
-      cookieKey: mediaCookieKeys.review.video_url_cookie,
-      cookieValues: extendedReviewVideos,
+      cookieKey: cookieKeys.review.video_url_cookie,
+      cookieValue: extendedReviewVideos,
     };
   }
 
@@ -117,14 +118,14 @@ export class UploadVersionOneFreeUseController {
     const extendedInquiryImages =
       this.cookieLibrary.insertNumberOnContinuousCookies(
         inquiryImages,
-        mediaCookieKeys.inquiry.image_url_cookie,
+        cookieKeys.inquiry.image_url_cookie,
       );
 
     return {
       statusCode: 201,
       message: "문의 사진을 업로드 하였습니다.",
-      cookieKey: mediaCookieKeys.inquiry.image_url_cookie,
-      cookieValues: extendedInquiryImages,
+      cookieKey: cookieKeys.inquiry.image_url_cookie,
+      cookieValue: extendedInquiryImages,
     };
   }
 
@@ -149,14 +150,14 @@ export class UploadVersionOneFreeUseController {
     const extendedInquiryVideos =
       this.cookieLibrary.insertNumberOnContinuousCookies(
         inquiryVideos,
-        mediaCookieKeys.inquiry.video_url_cookie,
+        cookieKeys.inquiry.video_url_cookie,
       );
 
     return {
       statusCode: 201,
       message: "문의 동영상을 업로드 하였습니다.",
-      cookieKey: mediaCookieKeys.inquiry.video_url_cookie,
-      cookieValues: extendedInquiryVideos,
+      cookieKey: cookieKeys.inquiry.video_url_cookie,
+      cookieValue: extendedInquiryVideos,
     };
   }
 
@@ -164,7 +165,7 @@ export class UploadVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Delete("/image/review/cancel")
   async cancelImageUploadForReview(
-    @Cookies(mediaCookieKeys.review.image_url_cookie)
+    @Cookies(cookieKeys.review.image_url_cookie)
     reviewImgCookies: MediaUrlCookieValue[],
   ): Promise<JsonClearCookiesInterface> {
     await this.uploadService.deleteReviewImages(reviewImgCookies);
@@ -180,7 +181,7 @@ export class UploadVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Delete("/video/review/cancel")
   async cancelVideoUploadForReview(
-    @Cookies(mediaCookieKeys.review.video_url_cookie)
+    @Cookies(cookieKeys.review.video_url_cookie)
     reviewVdoCookies: MediaUrlCookieValue[],
   ): Promise<JsonClearCookiesInterface> {
     await this.uploadService.deleteReviewVideos(reviewVdoCookies);
@@ -196,7 +197,7 @@ export class UploadVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Delete("/image/inquiry/cancel")
   async cancelImageUploadForInquiry(
-    @Cookies(mediaCookieKeys.inquiry.image_url_cookie)
+    @Cookies(cookieKeys.inquiry.image_url_cookie)
     inquiryImgCookies: MediaUrlCookieValue[],
   ): Promise<JsonClearCookiesInterface> {
     await this.uploadService.deleteInquiryImages(inquiryImgCookies);
@@ -212,7 +213,7 @@ export class UploadVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Delete("/video/inquiry/cancel")
   async cancelVideoUploadForInquiry(
-    @Cookies(mediaCookieKeys.inquiry.video_url_cookie)
+    @Cookies(cookieKeys.inquiry.video_url_cookie)
     inquiryVdoCookies: MediaUrlCookieValue[],
   ): Promise<JsonClearCookiesInterface> {
     await this.uploadService.deleteInquiryVideos(inquiryVdoCookies);

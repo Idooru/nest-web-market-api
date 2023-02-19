@@ -6,10 +6,11 @@ import {
   CreateReviewWithVideoDto,
   CreateReviewDto,
 } from "../dto/create-review.dto";
-import { ProductGeneralRepository } from "../../product/repositories/product-general.repository";
+import { ProductRepository } from "./../../product/providers/product.repository";
+import { UserRepository } from "../../user/providers/user.repository";
 import { ReviewRepository } from "./review.repository";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { UploadRepository } from "src/model/upload/repositories/upload.repository";
+import { UploadRepository } from "src/model/upload/providers/upload.repository";
 import { StarRatingService } from "src/model/review/providers/star-rating.service";
 import { UserEntity } from "src/model/user/entities/user.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
@@ -21,14 +22,13 @@ import {
 } from "../dto/modify-review.dto";
 import { ReviewEntity } from "../entities/review.entity";
 import { PromiseLibrary } from "src/common/lib/promise.library";
-import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
 
 @Injectable()
 export class ReviewService {
   constructor(
     private readonly reviewRepository: ReviewRepository,
-    private readonly productRepository: ProductGeneralRepository,
-    private readonly userGeneralRepository: UserGeneralRepository,
+    private readonly productRepository: ProductRepository,
+    private readonly userRepository: UserRepository,
     private readonly uploadRepository: UploadRepository,
     private readonly starRatingService: StarRatingService,
     private readonly promiseLibrary: PromiseLibrary,
@@ -66,16 +66,14 @@ export class ReviewService {
     productId: string,
   ): Promise<[UserEntity, ProductEntity]> {
     return await this.promiseLibrary.twoPromiseBundle(
-      this.userGeneralRepository.findUserWithId(userId),
+      this.userRepository.findUserWithId(userId),
       this.productRepository.findProductOneById(productId),
       "Find User And Product",
     );
   }
 
   async distinguishOwnReview(reviewId: string, userId: string) {
-    const { Activity } = await this.userGeneralRepository.findUserWithId(
-      userId,
-    );
+    const { Activity } = await this.userRepository.findUserWithId(userId);
 
     const reviews = await this.reviewRepository.findAllReviewsWithUserActivity(
       Activity,
@@ -175,7 +173,7 @@ export class ReviewService {
       product,
     });
 
-    await this.userGeneralRepository.increaseReviewCount(user);
+    await this.userRepository.increaseReviewCount(user);
   }
 
   async createReviewWithVideo(
@@ -209,7 +207,7 @@ export class ReviewService {
       product,
     });
 
-    await this.userGeneralRepository.increaseReviewCount(user);
+    await this.userRepository.increaseReviewCount(user);
   }
 
   async createReviewWithoutMedia(
@@ -225,7 +223,7 @@ export class ReviewService {
       user,
       product,
     });
-    await this.userGeneralRepository.increaseReviewCount(user);
+    await this.userRepository.increaseReviewCount(user);
   }
 
   async modifyReviewWithImageAndVideo(
@@ -362,7 +360,7 @@ export class ReviewService {
 //     createReviewDao;
 //   const { userId } = jwtPayload;
 
-//   const user = await this.userGeneralRepository.findUserWithId(id);
+//   const user = await this.userRepository.findUserWithId(id);
 //   const product = await this.productRepository.findProductOneByName(
 //     productName,
 //   );
@@ -387,5 +385,5 @@ export class ReviewService {
 //     await this.uploadRepository.insertImageOnReview(image.id, review);
 //   }
 
-//   await this.userGeneralRepository.increaseReviewCount(user);
+//   await this.userRepository.increaseReviewCount(user);
 // }
