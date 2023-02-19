@@ -288,13 +288,13 @@ export class UploadRepository {
       .execute();
   }
 
-  async findProductImageEvenUse(productId: string) {
+  async findProductImageEvenUse(id: string) {
     return await this.productsImageRepository
       .createQueryBuilder()
       .select("products_images")
       .from(ProductImageEntity, "products_images")
       .where("products_images.Product = :Product", {
-        Product: productId,
+        Product: id,
       })
       .getOne();
   }
