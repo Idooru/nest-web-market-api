@@ -109,10 +109,7 @@ export class AuthGeneralService {
       const user = await this.userGeneralRepository.findUserWithEmail(email);
 
       const hashed = await bcrypt.hash(password, 10);
-      return await this.userGeneralRepository.resetPassword(
-        user.Auth.id,
-        hashed,
-      );
+      await this.userGeneralRepository.resetPassword(user.Auth.id, hashed);
     }
     throw new NotFoundException(
       "해당 데이터(이메일)은 데이터베이스에 존재하지 않습니다.",
