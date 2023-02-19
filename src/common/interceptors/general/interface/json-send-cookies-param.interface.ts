@@ -1,4 +1,4 @@
-export class JsonSendCookiesParam {
+export class JsonSendCookiesParamInterface {
   statusCode: number;
   message: string;
   cookieKey: string;
