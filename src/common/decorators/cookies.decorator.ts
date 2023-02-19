@@ -3,7 +3,7 @@ import { BadRequestException } from "@nestjs/common/exceptions";
 import { Request } from "express";
 
 export const Cookies = createParamDecorator(
-  (data: string, context: ArgumentsHost): any => {
+  (data: string, context: ArgumentsHost): Array<unknown> => {
     const req = context.switchToHttp().getRequest() as Request;
 
     const filtering = Object.keys(req.signedCookies).filter((cookie) =>
