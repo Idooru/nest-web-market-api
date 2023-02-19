@@ -1,10 +1,9 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { UserGeneralRepository } from "../../user/providers/user-general.repository";
-import { UploadRepository } from "../providers/upload.repository";
+import { UploadRepository } from "../repositories/upload.repository";
 import { MediaReturnDto } from "../dto/media-return.dto";
 import { JwtAccessTokenPayload } from "../../auth/jwt/jwt-access-token-payload.interface";
 import { MediaUrlCookieValue } from "../media.url.cookies.interface";
-
+import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
 import * as fs from "fs";
 import * as path from "path";
 
