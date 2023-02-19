@@ -7,6 +7,7 @@ import {
 import { map, Observable } from "rxjs";
 import { TimeLoggerLibrary } from "../../lib/time-logger.library";
 import { SecurityLibrary } from "../../lib/security.library";
+import { JsonJwtAuthInterface } from "./interface/json-jwt-auth.interface";
 
 @Injectable()
 export class JsonJwtAuthInterceptor implements NestInterceptor {
@@ -24,9 +25,9 @@ export class JsonJwtAuthInterceptor implements NestInterceptor {
     this.timeLoggerLibrary.receiveRequest(req);
 
     return next.handle().pipe(
-      map((data) => {
+      map((data: JsonJwtAuthInterface) => {
         // controller 도달 후
-        const { cookieKey, cookieValue, statusCode, message, result } = data;
+        const { statusCode, message, cookieKey, cookieValue } = data;
         this.timeLoggerLibrary.sendResponse(req);
 
         for (let i = 0; i < 2; i++) {
@@ -34,7 +35,7 @@ export class JsonJwtAuthInterceptor implements NestInterceptor {
         }
 
         res.status(data.statusCode).setHeader("X-Powered-By", "");
-        return { success: true, ...{ statusCode, message, result } };
+        return { success: true, ...{ statusCode, message } };
       }),
     );
   }

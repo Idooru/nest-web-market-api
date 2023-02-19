@@ -7,7 +7,7 @@ import {
 import { map, Observable } from "rxjs";
 import { TimeLoggerLibrary } from "../../lib/time-logger.library";
 import { SecurityLibrary } from "../../lib/security.library";
-import { JsonSendCookiesParam } from "./interface/json-send-cookies-param.interface";
+import { JsonSendCookiesParamInterface } from "./interface/json-send-cookies-param.interface";
 
 @Injectable()
 export class JsonSendCookiesInterceptor implements NestInterceptor {
@@ -25,7 +25,7 @@ export class JsonSendCookiesInterceptor implements NestInterceptor {
     this.timeLoggerLibrary.receiveRequest(req);
 
     return next.handle().pipe(
-      map((data: JsonSendCookiesParam) => {
+      map((data: JsonSendCookiesParamInterface) => {
         // controller 도달 후
         const { statusCode, message, cookieKey, cookieValues } = data;
         this.timeLoggerLibrary.sendResponse(req);

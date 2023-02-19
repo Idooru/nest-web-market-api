@@ -7,6 +7,7 @@ import {
 import { TimeLoggerLibrary } from "../../lib/time-logger.library";
 import { map, Observable } from "rxjs";
 import { Request, Response } from "express";
+import { JsonJwtLogoutInterface } from "./interface/json-jwt-logout.interface";
 
 @Injectable()
 export class JsonJwtLogoutInterceptor implements NestInterceptor {
@@ -19,7 +20,7 @@ export class JsonJwtLogoutInterceptor implements NestInterceptor {
     this.timeLoggerLibrary.receiveRequest(req);
 
     return next.handle().pipe(
-      map((data) => {
+      map((data: JsonJwtLogoutInterface) => {
         const { cookieKey, statusCode, message } = data;
 
         this.timeLoggerLibrary.sendResponse(req);

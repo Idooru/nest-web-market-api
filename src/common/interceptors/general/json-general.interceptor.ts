@@ -6,6 +6,7 @@ import {
 } from "@nestjs/common";
 import { map, Observable } from "rxjs";
 import { TimeLoggerLibrary } from "../../lib/time-logger.library";
+import { JsonGeneralParamInterface } from "./interface/json-general-param.interface";
 
 @Injectable()
 export class JsonGeneralInterceptor implements NestInterceptor {
@@ -19,7 +20,7 @@ export class JsonGeneralInterceptor implements NestInterceptor {
     this.timeLoggerLibrary.receiveRequest(req);
 
     return next.handle().pipe(
-      map((data) => {
+      map((data: JsonGeneralParamInterface) => {
         // controller 도달 후
         this.timeLoggerLibrary.sendResponse(req);
 

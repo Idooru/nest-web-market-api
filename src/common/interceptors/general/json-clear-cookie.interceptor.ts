@@ -7,6 +7,7 @@ import {
 import { map, Observable } from "rxjs";
 import { TimeLoggerLibrary } from "../../lib/time-logger.library";
 import { Request, Response } from "express";
+import { JsonClearCookieInterface } from "./interface/json-clear-cookie.interface";
 
 @Injectable()
 export class JsonClearCookieInterceptor implements NestInterceptor {
@@ -20,8 +21,8 @@ export class JsonClearCookieInterceptor implements NestInterceptor {
     this.timeLoggerLibrary.receiveRequest(req);
 
     return next.handle().pipe(
-      map((data) => {
-        const { cookieKey, statusCode, message, result } = data;
+      map((data: JsonClearCookieInterface) => {
+        const { statusCode, message, cookieKey } = data;
         // controller 도달 후
         this.timeLoggerLibrary.sendResponse(req);
 
@@ -30,7 +31,7 @@ export class JsonClearCookieInterceptor implements NestInterceptor {
           .setHeader("X-Powered-By", "")
           .clearCookie(cookieKey);
 
-        return { success: true, ...{ statusCode, message, result } };
+        return { success: true, ...{ statusCode, message } };
       }),
     );
   }
