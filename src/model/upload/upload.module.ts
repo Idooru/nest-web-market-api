@@ -1,11 +1,11 @@
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Module, forwardRef } from "@nestjs/common";
-import { UploadService } from "./providers/upload.service";
+import { UploadService } from "./services/upload.service";
 import { UploadVersionOneFreeUseController } from "./controllers/upload-v1-free-use.controller";
 import { ProductImageEntity } from "./entities/product.image.entity";
 import { ReviewImageEntity } from "./entities/review.image.entity";
 import { ReviewVideoEntity } from "./entities/review.video.entity";
-import { UploadRepository } from "./providers/upload.repository";
+import { UploadRepository } from "./repositories/upload.repository";
 import { UserModule } from "../user/user.module";
 import { InquiryImageEntity } from "../inquiry/entities/inquiry.image.entity";
 import { InquiryVideoEntity } from "../inquiry/entities/inquiry.video.entity";
