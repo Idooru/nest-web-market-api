@@ -10,18 +10,18 @@ import { MulterConfig } from "src/common/config/multer.config";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { MediaUrlCookieValue } from "../media.url.cookies.interface";
-import { UploadService } from "../providers/upload.service";
-import { FileInterceptor } from "@nestjs/platform-express";
-import { JsonClearCookieInterceptor } from "src/common/interceptors/json-clear-cookie.interceptor";
-import { IsLoginGuard } from "src/common/guards/is-login.guard";
-import { JsonClearCookieInterface } from "src/common/interceptors/interface/json-clear-cookie.interface";
-import { IsAdminGuard } from "src/common/guards/is-admin.guard";
 import { MeidaLoggerLibrary } from "src/common/lib/media-logger.library";
-import { JsonSendCookieInterceptor } from "src/common/interceptors/json-send-cookie.interceptor";
-import { JsonSendCookieInterface } from "src/common/interceptors/interface/json-send-cookie.interface";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { mediaCookieKeys } from "../../../common/config/cookie-key-configs";
 import { Cookie } from "src/common/decorators/cookie.decorator";
 import { CookieLibrary } from "src/common/lib/cookie.library";
-import { cookieKeys } from "../../../common/config/cookie-key-configs";
+import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
+import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
+import { UploadService } from "../services/upload.service";
+import { JsonSendCookieInterceptor } from "src/common/interceptors/general/json-send-cookie.interceptor";
+import { JsonSendCookieInterface } from "src/common/interceptors/general/interface/json-send-cookie.interface";
+import { JsonClearCookieInterceptor } from "src/common/interceptors/general/json-clear-cookie.interceptor";
+import { JsonClearCookieInterface } from "src/common/interceptors/general/interface/json-clear-cookie.interface";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
@@ -37,7 +37,7 @@ export class UploadVersionOneOnlyAdminController {
   @UseInterceptors(
     FileInterceptor("product_image", MulterConfig.upload("/image/product")),
   )
-  @Post("/image/product")
+  @Post("/product/image")
   async uploadProductImage(
     @UploadedFile() file: Express.Multer.File,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
@@ -52,21 +52,21 @@ export class UploadVersionOneOnlyAdminController {
 
     const extendedProductImage = this.cookieLibrary.wrapCookieKeyInCookieValue(
       productImage,
-      cookieKeys.product.image_url_cookie,
+      mediaCookieKeys.product.image_url_cookie,
     );
 
     return {
       statusCode: 201,
       message: "상품 사진을 업로드 하였습니다.",
-      cookieKey: cookieKeys.product.image_url_cookie,
+      cookieKey: mediaCookieKeys.product.image_url_cookie,
       cookieValue: extendedProductImage,
     };
   }
 
   @UseInterceptors(JsonClearCookieInterceptor)
-  @Delete("/image/product/cancel")
+  @Delete("/product/image")
   async cancelImageUploadForProduct(
-    @Cookie(cookieKeys.product.image_url_cookie)
+    @Cookie(mediaCookieKeys.product.image_url_cookie)
     productImgCookie: MediaUrlCookieValue,
   ): Promise<JsonClearCookieInterface> {
     await this.uploadService.deleteProductImage(productImgCookie);
