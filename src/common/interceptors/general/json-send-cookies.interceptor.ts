@@ -7,6 +7,7 @@ import {
 import { map, Observable } from "rxjs";
 import { TimeLoggerLibrary } from "../../lib/time-logger.library";
 import { SecurityLibrary } from "../../lib/security.library";
+import { JsonSendCookiesParam } from "./interface/json-send-cookies-param.interface";
 
 @Injectable()
 export class JsonSendCookiesInterceptor implements NestInterceptor {
@@ -24,20 +25,21 @@ export class JsonSendCookiesInterceptor implements NestInterceptor {
     this.timeLoggerLibrary.receiveRequest(req);
 
     return next.handle().pipe(
-      map((data) => {
+      map((data: JsonSendCookiesParam) => {
         // controller 도달 후
-        const { cookieKey, cookieValue, statusCode, message, result } = data;
+        const { statusCode, message, cookieKey, cookieValues } = data;
         this.timeLoggerLibrary.sendResponse(req);
 
-        if (cookieValue.length >= 2) {
-          for (let i = 0; i < cookieValue.length; i++) {
-            res.cookie(cookieKey + (i + 1), cookieValue[i], cookieOption);
-          }
+        if (cookieValues.length >= 2) {
+          cookieValues.forEach((cookieValue, idx) => {
+            res.cookie(cookieKey + (idx + 1), cookieValue, cookieOption);
+          });
         } else {
-          res.cookie(cookieKey, cookieValue[0], cookieOption);
+          res.cookie(cookieKey, cookieValues[0], cookieOption);
         }
+
         res.status(data.statusCode).setHeader("X-Powered-By", "");
-        return { success: true, ...{ statusCode, message, result } };
+        return { success: true, ...{ statusCode, message } };
       }),
     );
   }
