@@ -68,3 +68,5 @@ export class MulterConfig {
     storage: this.storage(folder),
   });
 }
+
+export const maxContentsCount = 5;
