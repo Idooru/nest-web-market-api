@@ -1,4 +1,4 @@
-import { StarRatingRepository } from "../../review/providers/star-rating.repository";
+import { StarRatingRepository } from "../../review/repositories/star-rating.repository";
 import { ProductEntity } from "../entities/product.entity";
 import { UploadRepository } from "src/model/upload/repositories/upload.repository";
 import { ProductGeneralRepository } from "../repositories/product-general.repository";
