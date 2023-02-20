@@ -17,7 +17,7 @@ import { Cookie } from "src/common/decorators/cookie.decorator";
 import { CookieLibrary } from "src/common/lib/cookie.library";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { UploadService } from "../services/upload.service";
+import { UploadGeneralService } from "../services/upload-general.service";
 import { JsonSendCookieInterceptor } from "src/common/interceptors/general/json-send-cookie.interceptor";
 import { JsonSendCookieInterface } from "src/common/interceptors/general/interface/json-send-cookie.interface";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/general/json-clear-cookie.interceptor";
@@ -28,7 +28,7 @@ import { JsonClearCookieInterface } from "src/common/interceptors/general/interf
 @Controller("/api/v1/only-admin/upload")
 export class UploadVersionOneOnlyAdminController {
   constructor(
-    private readonly uploadService: UploadService,
+    private readonly uploadGeneralService: UploadGeneralService,
     private readonly mediaLoggerLibrary: MeidaLoggerLibrary,
     private readonly cookieLibrary: CookieLibrary,
   ) {}
@@ -42,10 +42,10 @@ export class UploadVersionOneOnlyAdminController {
     @UploadedFile() file: Express.Multer.File,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookieInterface<MediaUrlCookieValue>> {
-    this.uploadService.isExistMediaFile("product image", file);
+    this.uploadGeneralService.isExistMediaFile("product image", file);
     this.mediaLoggerLibrary.log("product image", file, null);
 
-    const productImage = await this.uploadService.uploadProductImage(
+    const productImage = await this.uploadGeneralService.uploadProductImage(
       file,
       jwtPayload,
     );
@@ -69,7 +69,7 @@ export class UploadVersionOneOnlyAdminController {
     @Cookie(mediaCookieKeys.product.image_url_cookie)
     productImgCookie: MediaUrlCookieValue,
   ): Promise<JsonClearCookieInterface> {
-    await this.uploadService.deleteProductImage(productImgCookie);
+    await this.uploadGeneralService.deleteProductImage(productImgCookie);
 
     return {
       statusCode: 200,

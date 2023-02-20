@@ -19,7 +19,7 @@ import { MeidaLoggerLibrary } from "src/common/lib/media-logger.library";
 import { MediaUrlCookieValue } from "../media.url.cookies.interface";
 import { mediaCookieKeys } from "src/common/config/cookie-key-configs";
 import { CookieLibrary } from "src/common/lib/cookie.library";
-import { UploadService } from "../services/upload.service";
+import { UploadGeneralService } from "../services/upload-general.service";
 import { JsonSendCookiesInterceptor } from "src/common/interceptors/general/json-send-cookies.interceptor";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { JsonSendCookiesInterface } from "src/common/interceptors/general/interface/json-send-cookies.interface";
@@ -29,7 +29,7 @@ import { JsonClearCookiesInterface } from "src/common/interceptors/general/inter
 @Controller("/api/v1/free-use/upload")
 export class UploadVersionOneFreeUseController {
   constructor(
-    private readonly uploadService: UploadService,
+    private readonly uploadGeneralService: UploadGeneralService,
     private readonly mediaLoggerLibrary: MeidaLoggerLibrary,
     private readonly cookieLibrary: CookieLibrary,
   ) {
@@ -50,10 +50,10 @@ export class UploadVersionOneFreeUseController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookiesInterface<MediaUrlCookieValue>> {
-    this.uploadService.isExistMediaFiles("review image", files);
+    this.uploadGeneralService.isExistMediaFiles("review image", files);
     this.mediaLoggerLibrary.log("review images", null, files);
 
-    const reviewImages = await this.uploadService.uploadReviewImage(
+    const reviewImages = await this.uploadGeneralService.uploadReviewImage(
       files,
       jwtPayload,
     );
@@ -86,10 +86,10 @@ export class UploadVersionOneFreeUseController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookiesInterface<MediaUrlCookieValue>> {
-    this.uploadService.isExistMediaFiles("review video", files);
+    this.uploadGeneralService.isExistMediaFiles("review video", files);
     this.mediaLoggerLibrary.log("review videos", null, files);
 
-    const reviewVideos = await this.uploadService.uploadReviewVideo(
+    const reviewVideos = await this.uploadGeneralService.uploadReviewVideo(
       files,
       jwtPayload,
     );
@@ -122,10 +122,10 @@ export class UploadVersionOneFreeUseController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookiesInterface<MediaUrlCookieValue>> {
-    this.uploadService.isExistMediaFiles("inquiry image", files);
+    this.uploadGeneralService.isExistMediaFiles("inquiry image", files);
     this.mediaLoggerLibrary.log("inquiry images", null, files);
 
-    const inquiryImages = await this.uploadService.uploadInquiryImage(
+    const inquiryImages = await this.uploadGeneralService.uploadInquiryImage(
       files,
       jwtPayload,
     );
@@ -158,10 +158,10 @@ export class UploadVersionOneFreeUseController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookiesInterface<MediaUrlCookieValue>> {
-    this.uploadService.isExistMediaFiles("inquiry video", files);
+    this.uploadGeneralService.isExistMediaFiles("inquiry video", files);
     this.mediaLoggerLibrary.log("inquiry videos", null, files);
 
-    const inquiryVideos = await this.uploadService.uploadInquiryVideo(
+    const inquiryVideos = await this.uploadGeneralService.uploadInquiryVideo(
       files,
       jwtPayload,
     );
@@ -187,7 +187,7 @@ export class UploadVersionOneFreeUseController {
     @Cookies(mediaCookieKeys.review.image_url_cookie)
     reviewImgCookies: MediaUrlCookieValue[],
   ): Promise<JsonClearCookiesInterface> {
-    await this.uploadService.deleteReviewImages(reviewImgCookies);
+    await this.uploadGeneralService.deleteReviewImages(reviewImgCookies);
 
     return {
       statusCode: 200,
@@ -203,7 +203,7 @@ export class UploadVersionOneFreeUseController {
     @Cookies(mediaCookieKeys.review.video_url_cookie)
     reviewVdoCookies: MediaUrlCookieValue[],
   ): Promise<JsonClearCookiesInterface> {
-    await this.uploadService.deleteReviewVideos(reviewVdoCookies);
+    await this.uploadGeneralService.deleteReviewVideos(reviewVdoCookies);
 
     return {
       statusCode: 200,
@@ -219,7 +219,7 @@ export class UploadVersionOneFreeUseController {
     @Cookies(mediaCookieKeys.inquiry.image_url_cookie)
     inquiryImgCookies: MediaUrlCookieValue[],
   ): Promise<JsonClearCookiesInterface> {
-    await this.uploadService.deleteInquiryImages(inquiryImgCookies);
+    await this.uploadGeneralService.deleteInquiryImages(inquiryImgCookies);
 
     return {
       statusCode: 200,
@@ -235,7 +235,7 @@ export class UploadVersionOneFreeUseController {
     @Cookies(mediaCookieKeys.inquiry.video_url_cookie)
     inquiryVdoCookies: MediaUrlCookieValue[],
   ): Promise<JsonClearCookiesInterface> {
-    await this.uploadService.deleteInquiryVideos(inquiryVdoCookies);
+    await this.uploadGeneralService.deleteInquiryVideos(inquiryVdoCookies);
 
     return {
       statusCode: 200,
