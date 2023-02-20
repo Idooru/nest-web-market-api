@@ -18,18 +18,18 @@ export class UserGeneralRepository {
 
   constructor(
     @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
+    private readonly userGeneralRepository: Repository<UserEntity>,
     @InjectRepository(UserProfileEntity)
-    private readonly userProfileRepository: Repository<UserProfileEntity>,
+    private readonly userProfileGeneralRepository: Repository<UserProfileEntity>,
     @InjectRepository(UserAuthEntity)
-    private readonly userAuthRepository: Repository<UserAuthEntity>,
+    private readonly userAuthGeneralRepository: Repository<UserAuthEntity>,
     @InjectRepository(UserActivityEntity)
-    private readonly userActivityRepository: Repository<UserActivityEntity>,
+    private readonly userActivityGeneralRepository: Repository<UserActivityEntity>,
   ) {}
 
   async findUserWithId(id: string): Promise<UserEntity> {
     try {
-      return await this.userRepository
+      return await this.userGeneralRepository
         .createQueryBuilder()
         .select(this.select.userSelectWithActivityProperty)
         .from(UserEntity, "user")
@@ -48,7 +48,7 @@ export class UserGeneralRepository {
 
   async findUserWithEmail(email: string): Promise<UserEntity> {
     try {
-      return await this.userRepository
+      return await this.userGeneralRepository
         .createQueryBuilder()
         .select(this.select.userSelect)
         .from(UserEntity, "user")
@@ -65,7 +65,7 @@ export class UserGeneralRepository {
 
   async findUserWithNickName(nickname: string): Promise<UserEntity> {
     try {
-      return await this.userRepository
+      return await this.userGeneralRepository
         .createQueryBuilder()
         .select(this.select.userSelect)
         .from(UserEntity, "user")
@@ -82,7 +82,7 @@ export class UserGeneralRepository {
 
   async findUserProfileInfoWithId(id: string): Promise<UserEntity> {
     try {
-      return await this.userRepository
+      return await this.userGeneralRepository
         .createQueryBuilder()
         .select(this.select.userProfileSelect)
         .from(UserEntity, "user")
@@ -101,7 +101,7 @@ export class UserGeneralRepository {
 
   async findUserInfoFromAdmin(id: string): Promise<UserEntity> {
     try {
-      return await this.userRepository
+      return await this.userGeneralRepository
         .createQueryBuilder()
         .select(this.select.userSelectWhoAdmin)
         .from(UserEntity, "user")
@@ -119,7 +119,7 @@ export class UserGeneralRepository {
 
   async findUserWithRealName(realname: string): Promise<UserEntity> {
     try {
-      return await this.userRepository
+      return await this.userGeneralRepository
         .createQueryBuilder()
         .select(["user", "Auth"])
         .from(UserEntity, "user")
@@ -136,7 +136,7 @@ export class UserGeneralRepository {
 
   async findUserWithPhoneNumber(phonenumber: string): Promise<UserEntity> {
     try {
-      return await this.userRepository
+      return await this.userGeneralRepository
         .createQueryBuilder()
         .select(["user", "Auth"])
         .from(UserEntity, "user")
@@ -154,7 +154,7 @@ export class UserGeneralRepository {
   async resetPassword(id: string, hashed: string) {
     try {
       const password = { password: hashed };
-      await this.userAuthRepository
+      await this.userAuthGeneralRepository
         .createQueryBuilder()
         .update(UserAuthEntity)
         .set({ ...password })
@@ -180,9 +180,9 @@ export class UserGeneralRepository {
       const userActivityColumn = {};
 
       const [userProfile, userAuth, userActivity] = await Promise.all([
-        this.userProfileRepository.save({ ...userProfileColumn }),
-        this.userAuthRepository.save({ ...userAuthColumn }),
-        this.userActivityRepository.save({ ...userActivityColumn }),
+        this.userProfileGeneralRepository.save({ ...userProfileColumn }),
+        this.userAuthGeneralRepository.save({ ...userAuthColumn }),
+        this.userActivityGeneralRepository.save({ ...userActivityColumn }),
       ]);
 
       const profileId = userProfile.id;
@@ -191,19 +191,19 @@ export class UserGeneralRepository {
 
       const [userProfileObject, userAuthObject, userActivityObject] =
         await Promise.all([
-          this.userProfileRepository
+          this.userProfileGeneralRepository
             .createQueryBuilder()
             .select("profile")
             .from(UserProfileEntity, "profile")
             .where("profile.id = :id", { id: profileId })
             .getOne(),
-          this.userAuthRepository
+          this.userAuthGeneralRepository
             .createQueryBuilder()
             .select("auth")
             .from(UserAuthEntity, "auth")
             .where("auth.id = :id", { id: authId })
             .getOne(),
-          this.userActivityRepository
+          this.userActivityGeneralRepository
             .createQueryBuilder()
             .select("activity")
             .from(UserActivityEntity, "activity")
@@ -216,7 +216,7 @@ export class UserGeneralRepository {
         Auth: userAuthObject,
         Activity: userActivityObject,
       };
-      await this.userRepository.save({ ...createUserDto });
+      await this.userGeneralRepository.save({ ...createUserDto });
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException(err.message);
@@ -233,13 +233,13 @@ export class UserGeneralRepository {
       const { phonenumber, nickname, email } = modifyUserDto;
 
       await Promise.all([
-        this.userProfileRepository
+        this.userProfileGeneralRepository
           .createQueryBuilder()
           .update(UserProfileEntity)
           .set({ phonenumber })
           .where("id = :id", { id: userProfileId })
           .execute(),
-        this.userAuthRepository
+        this.userAuthGeneralRepository
           .createQueryBuilder()
           .update(UserAuthEntity)
           .set({ email, nickname, password })
@@ -254,7 +254,7 @@ export class UserGeneralRepository {
 
   async modifyUserEmail(email: string, id: string): Promise<void> {
     try {
-      await this.userAuthRepository
+      await this.userAuthGeneralRepository
         .createQueryBuilder()
         .update(UserAuthEntity)
         .set({ email })
@@ -268,7 +268,7 @@ export class UserGeneralRepository {
 
   async modifyUserNickName(nickname: string, id: string): Promise<void> {
     try {
-      await this.userAuthRepository
+      await this.userAuthGeneralRepository
         .createQueryBuilder()
         .update(UserAuthEntity)
         .set({ nickname })
@@ -282,7 +282,7 @@ export class UserGeneralRepository {
 
   async modifyUserPhoneNumber(phonenumber: string, id: string): Promise<void> {
     try {
-      await this.userProfileRepository
+      await this.userProfileGeneralRepository
         .createQueryBuilder()
         .update(UserProfileEntity)
         .set({ phonenumber })
@@ -296,7 +296,7 @@ export class UserGeneralRepository {
 
   async modifyUserPassword(password: string, id: string): Promise<void> {
     try {
-      await this.userAuthRepository
+      await this.userAuthGeneralRepository
         .createQueryBuilder()
         .update(UserAuthEntity)
         .set({ password })
@@ -310,7 +310,7 @@ export class UserGeneralRepository {
 
   async deleteUser(userId: string): Promise<void> {
     try {
-      await this.userRepository
+      await this.userGeneralRepository
         .createQueryBuilder()
         .delete()
         .from(UserEntity)
@@ -324,7 +324,7 @@ export class UserGeneralRepository {
 
   async findUsersAllFromLastest(): Promise<UserEntity[]> {
     try {
-      return await this.userProfileRepository
+      return await this.userProfileGeneralRepository
         .createQueryBuilder()
         .select(this.select.userSimpleSelect)
         .from(UserEntity, "user")
@@ -341,7 +341,7 @@ export class UserGeneralRepository {
 
   async findUsersAllFromOldest(): Promise<UserEntity[]> {
     try {
-      return await this.userActivityRepository
+      return await this.userActivityGeneralRepository
         .createQueryBuilder()
         .select(this.select.userSimpleSelect)
         .from(UserEntity, "user")
@@ -359,7 +359,7 @@ export class UserGeneralRepository {
   async increaseReviewCount(user: UserEntity) {
     try {
       ++user.Activity.productReviewCount;
-      await this.userRepository.save(user);
+      await this.userGeneralRepository.save(user);
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException(err.message);
@@ -369,7 +369,7 @@ export class UserGeneralRepository {
   async increaseInquiryCount(user: UserEntity) {
     try {
       ++user.Activity.productInquiryCount;
-      await this.userRepository.save(user);
+      await this.userGeneralRepository.save(user);
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException(err.message);
