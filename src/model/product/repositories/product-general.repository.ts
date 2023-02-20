@@ -20,7 +20,7 @@ export class ProductGeneralRepository {
   ) {}
 
   private readonly select = productSelectProperty;
-  private readonly logger = new Logger("Error");
+  private readonly logger = new Logger("Repository");
 
   async findProductsAllFromLatest(): Promise<ProductEntity[]> {
     try {
