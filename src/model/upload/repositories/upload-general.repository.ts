@@ -20,7 +20,7 @@ import { mediaSelectProperty } from "src/common/config/repository-select-configs
 
 @UseFilters(InternalServerErrorException)
 @Injectable()
-export class UploadRepository {
+export class UploadGeneralRepository {
   constructor(
     @InjectRepository(ProductImageEntity)
     private readonly productsImageRepository: Repository<ProductImageEntity>,
