@@ -1,4 +1,4 @@
-import { ModifyReviewWithImageAndVideoDto } from "./../dto/modify-review.dto";
+import { ModifyReviewWithImageAndVideoDto } from "../dto/modify-review.dto";
 import {
   CreateReviewWithImageAndVideoDto,
   CreateReviewWithoutMediaDto,
@@ -6,12 +6,9 @@ import {
   CreateReviewWithVideoDto,
   CreateReviewDto,
 } from "../dto/create-review.dto";
-import { ProductRepository } from "./../../product/providers/product.repository";
-import { UserRepository } from "../../user/providers/user.repository";
-import { ReviewRepository } from "./review.repository";
+import { ReviewRepository } from "../repositories/review.repository";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { UploadRepository } from "src/model/upload/providers/upload.repository";
-import { StarRatingService } from "src/model/review/providers/star-rating.service";
+import { StarRatingService } from "src/model/review/services/star-rating.service";
 import { UserEntity } from "src/model/user/entities/user.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import {
@@ -22,13 +19,16 @@ import {
 } from "../dto/modify-review.dto";
 import { ReviewEntity } from "../entities/review.entity";
 import { PromiseLibrary } from "src/common/lib/promise.library";
+import { ProductGeneralRepository } from "src/model/product/repositories/product-general.repository";
+import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
+import { UploadRepository } from "src/model/upload/repositories/upload.repository";
 
 @Injectable()
 export class ReviewService {
   constructor(
     private readonly reviewRepository: ReviewRepository,
-    private readonly productRepository: ProductRepository,
-    private readonly userRepository: UserRepository,
+    private readonly productGeneralRepository: ProductGeneralRepository,
+    private readonly userGeneralRepository: UserGeneralRepository,
     private readonly uploadRepository: UploadRepository,
     private readonly starRatingService: StarRatingService,
     private readonly promiseLibrary: PromiseLibrary,
@@ -66,14 +66,16 @@ export class ReviewService {
     productId: string,
   ): Promise<[UserEntity, ProductEntity]> {
     return await this.promiseLibrary.twoPromiseBundle(
-      this.userRepository.findUserWithId(userId),
-      this.productRepository.findProductOneById(productId),
+      this.userGeneralRepository.findUserWithId(userId),
+      this.productGeneralRepository.findProductOneById(productId),
       "Find User And Product",
     );
   }
 
   async distinguishOwnReview(reviewId: string, userId: string) {
-    const { Activity } = await this.userRepository.findUserWithId(userId);
+    const { Activity } = await this.userGeneralRepository.findUserWithId(
+      userId,
+    );
 
     const reviews = await this.reviewRepository.findAllReviewsWithUserActivity(
       Activity,
@@ -98,8 +100,8 @@ export class ReviewService {
       createReviewDto,
       jwtPayload,
       productId,
-      reviewImgCookie,
-      reviewVdoCookie,
+      reviewImgCookies,
+      reviewVdoCookies,
     } = createReviewDao;
     const { userId } = jwtPayload;
 
@@ -107,8 +109,8 @@ export class ReviewService {
     createReviewDto.Image = [];
     createReviewDto.Video = [];
 
-    if (reviewImgCookie.length >= 2) {
-      for (const idx of reviewImgCookie) {
+    if (reviewImgCookies.length >= 2) {
+      for (const idx of reviewImgCookies) {
         const image = await this.uploadRepository.findReviewImageWithUrl(
           idx[1],
         );
@@ -116,13 +118,13 @@ export class ReviewService {
       }
     } else {
       const image = await this.uploadRepository.findReviewImageWithUrl(
-        reviewImgCookie[0][1],
+        reviewImgCookies[0][1],
       );
       createReviewDto.Image.push(image);
     }
 
-    if (reviewVdoCookie.length >= 2) {
-      for (const idx of reviewVdoCookie) {
+    if (reviewVdoCookies.length >= 2) {
+      for (const idx of reviewVdoCookies) {
         const video = await this.uploadRepository.findReviewVideoWithUrl(
           idx[1],
         );
@@ -130,7 +132,7 @@ export class ReviewService {
       }
     } else {
       const video = await this.uploadRepository.findReviewVideoWithUrl(
-        reviewVdoCookie[0][1],
+        reviewVdoCookies[0][1],
       );
       createReviewDto.Video.push(video);
     }
@@ -145,15 +147,15 @@ export class ReviewService {
   async createReviewWithImage(
     createReviewDao: CreateReviewWithImageDto,
   ): Promise<void> {
-    const { createReviewDto, jwtPayload, productId, reviewImgCookie } =
+    const { createReviewDto, jwtPayload, productId, reviewImgCookies } =
       createReviewDao;
     const { userId } = jwtPayload;
     createReviewDto.Image = [];
 
     const [user, product] = await this.findUserAndProduct(userId, productId);
 
-    if (reviewImgCookie.length >= 2) {
-      for (const idx of reviewImgCookie) {
+    if (reviewImgCookies.length >= 2) {
+      for (const idx of reviewImgCookies) {
         const image = await this.uploadRepository.findReviewImageWithUrl(
           idx[1],
         );
@@ -161,9 +163,8 @@ export class ReviewService {
       }
     } else {
       const image = await this.uploadRepository.findReviewImageWithUrl(
-        reviewImgCookie[0][1],
+        reviewImgCookies[0][1],
       );
-
       createReviewDto.Image.push(image);
     }
 
@@ -173,31 +174,29 @@ export class ReviewService {
       product,
     });
 
-    await this.userRepository.increaseReviewCount(user);
+    await this.userGeneralRepository.increaseReviewCount(user);
   }
 
   async createReviewWithVideo(
     createReviewDao: CreateReviewWithVideoDto,
   ): Promise<void> {
-    const { createReviewDto, jwtPayload, productId, reviewVdoCookie } =
+    const { createReviewDto, jwtPayload, productId, reviewVdoCookies } =
       createReviewDao;
     const { userId } = jwtPayload;
     const [user, product] = await this.findUserAndProduct(userId, productId);
     createReviewDto.Video = [];
 
-    if (reviewVdoCookie.length >= 2) {
-      for (const idx of reviewVdoCookie) {
+    if (reviewVdoCookies.length >= 2) {
+      for (const idx of reviewVdoCookies) {
         const video = await this.uploadRepository.findReviewVideoWithUrl(
           idx[1],
         );
-
         createReviewDto.Video.push(video);
       }
     } else {
       const video = await this.uploadRepository.findReviewVideoWithUrl(
-        reviewVdoCookie[0][1],
+        reviewVdoCookies[0][1],
       );
-
       createReviewDto.Video.push(video);
     }
 
@@ -207,7 +206,7 @@ export class ReviewService {
       product,
     });
 
-    await this.userRepository.increaseReviewCount(user);
+    await this.userGeneralRepository.increaseReviewCount(user);
   }
 
   async createReviewWithoutMedia(
@@ -223,46 +222,42 @@ export class ReviewService {
       user,
       product,
     });
-    await this.userRepository.increaseReviewCount(user);
+    await this.userGeneralRepository.increaseReviewCount(user);
   }
 
   async modifyReviewWithImageAndVideo(
     modifyReviewWithImageAndVideoDto: ModifyReviewWithImageAndVideoDto,
   ): Promise<void> {
-    const { modifyReviewDto, review, reviewImgCookie, reviewVdoCookie } =
+    const { modifyReviewDto, review, reviewImgCookies, reviewVdoCookies } =
       modifyReviewWithImageAndVideoDto;
     modifyReviewDto.Image = [];
     modifyReviewDto.Video = [];
 
-    if (reviewImgCookie.length >= 2) {
-      for (const idx of reviewImgCookie) {
+    if (reviewImgCookies.length >= 2) {
+      for (const idx of reviewImgCookies) {
         const image = await this.uploadRepository.findReviewImageWithUrl(
           idx[1],
         );
-
         modifyReviewDto.Image.push(image);
       }
     } else {
       const image = await this.uploadRepository.findReviewImageWithUrl(
-        reviewImgCookie[0][1],
+        reviewImgCookies[0][1],
       );
-
       modifyReviewDto.Image.push(image);
     }
 
-    if (reviewVdoCookie.length >= 2) {
-      for (const idx of reviewVdoCookie) {
+    if (reviewVdoCookies.length >= 2) {
+      for (const idx of reviewVdoCookies) {
         const video = await this.uploadRepository.findReviewVideoWithUrl(
           idx[1],
         );
-
         modifyReviewDto.Video.push(video);
       }
     } else {
       const video = await this.uploadRepository.findReviewVideoWithUrl(
-        reviewVdoCookie[0][1],
+        reviewVdoCookies[0][1],
       );
-
       modifyReviewDto.Video.push(video);
     }
 
@@ -275,23 +270,21 @@ export class ReviewService {
   async modifyReviewWithImage(
     modifyReviewWithImageDto: ModifyReviewWithImageDto,
   ): Promise<void> {
-    const { modifyReviewDto, review, reviewImgCookie } =
+    const { modifyReviewDto, review, reviewImgCookies } =
       modifyReviewWithImageDto;
     modifyReviewDto.Image = [];
 
-    if (reviewImgCookie.length >= 2) {
-      for (const idx of reviewImgCookie) {
+    if (reviewImgCookies.length >= 2) {
+      for (const idx of reviewImgCookies) {
         const image = await this.uploadRepository.findReviewImageWithUrl(
           idx[1],
         );
-
         modifyReviewDto.Image.push(image);
       }
     } else {
       const image = await this.uploadRepository.findReviewImageWithUrl(
-        reviewImgCookie[0][1],
+        reviewImgCookies[0][1],
       );
-
       modifyReviewDto.Image.push(image);
     }
 
@@ -304,23 +297,21 @@ export class ReviewService {
   async modifyReviewWithVideo(
     modifyReviewWithVideoDto: ModifyReviewWithVideoDto,
   ): Promise<void> {
-    const { modifyReviewDto, review, reviewVdoCookie } =
+    const { modifyReviewDto, review, reviewVdoCookies } =
       modifyReviewWithVideoDto;
     modifyReviewDto.Video = [];
 
-    if (reviewVdoCookie.length >= 2) {
-      for (const idx of reviewVdoCookie) {
+    if (reviewVdoCookies.length >= 2) {
+      for (const idx of reviewVdoCookies) {
         const video = await this.uploadRepository.findReviewVideoWithUrl(
           idx[1],
         );
-
         modifyReviewDto.Video.push(video);
       }
     } else {
       const video = await this.uploadRepository.findReviewVideoWithUrl(
-        reviewVdoCookie[0][1],
+        reviewVdoCookies[0][1],
       );
-
       modifyReviewDto.Video.push(video);
     }
 
@@ -336,54 +327,3 @@ export class ReviewService {
     await this.reviewRepository.modifyReviewWithoutMedia(modifyReviewDao);
   }
 }
-
-// findAll() {
-//   return `This action returns all review`;
-// }
-
-// findOne(id: number) {
-//   return `This action returns a #${id} review`;
-// }
-
-// update(id: number, updateReviewDto: UpdateReviewDto) {
-//   return `This action updates a #${id} review`;
-// }
-
-// remove(id: number) {
-//   return `This action removes a #${id} review`;
-// }
-
-// async createReviewWithImage(
-//   createReviewDao: CreateReviewWithImageDto,
-// ): Promise<void> {
-//   const { createReviewDto, jwtPayload, productId, reviewImgCookie } =
-//     createReviewDao;
-//   const { userId } = jwtPayload;
-
-//   const user = await this.userRepository.findUserWithId(id);
-//   const product = await this.productRepository.findProductOneByName(
-//     productName,
-//   );
-
-//   const review = await this.reviewRepository.createReviewWithoutMedia(
-//     createReviewDto,
-//     user,
-//     product,
-//   );
-
-//   if (reviewImgCookie.length >= 2) {
-//     for (const idx of reviewImgCookie) {
-//       const image = await this.uploadRepository.findReviewImageWithUrl(
-//         idx[1],
-//       );
-//       await this.uploadRepository.insertImageOnReview(image.id, review);
-//     }
-//   } else {
-//     const image = await this.uploadRepository.findReviewImageWithUrl(
-//       reviewImgCookie[0][1],
-//     );
-//     await this.uploadRepository.insertImageOnReview(image.id, review);
-//   }
-
-//   await this.userRepository.increaseReviewCount(user);
-// }

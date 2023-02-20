@@ -1,16 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import { ProductRepository } from "../../product/providers/product.repository";
-import { StarRatingRepository } from "./star-rating.repository";
-import { StarRatingEntity } from "./../entities/star-rating.entity";
-import { ReviewRepository } from "./review.repository";
-import { ProductEntity } from "src/model/product/entities/product.entity";
+import { StarRatingRepository } from "../repositories/star-rating.repository";
+import { StarRatingEntity } from "../entities/star-rating.entity";
 import { ReviewEntity } from "../entities/review.entity";
+import { ProductGeneralRepository } from "src/model/product/repositories/product-general.repository";
 
 @Injectable()
 export class StarRatingService {
   constructor(
-    private readonly productRepository: ProductRepository,
-    private readonly reviewRepository: ReviewRepository,
+    private readonly productGeneralRepository: ProductGeneralRepository,
     private readonly starRatingRepository: StarRatingRepository,
   ) {}
 
@@ -19,7 +16,7 @@ export class StarRatingService {
     productId: string,
   ): Promise<StarRatingEntity> {
     const product =
-      await this.productRepository.findProductWhenUseStarRatingWithId(
+      await this.productGeneralRepository.findProductWhenUseStarRatingWithId(
         productId,
       );
     const starRatingId = product.StarRating.id;
@@ -39,7 +36,7 @@ export class StarRatingService {
     review: ReviewEntity,
   ): Promise<StarRatingEntity> {
     const product =
-      await this.productRepository.findProductWhenUseStarRatingWithId(
+      await this.productGeneralRepository.findProductWhenUseStarRatingWithId(
         productId,
       );
 
