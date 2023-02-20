@@ -1,18 +1,18 @@
 import { StarRatingRepository } from "../../review/repositories/star-rating.repository";
 import { ProductEntity } from "../entities/product.entity";
-import { UploadRepository } from "src/model/upload/repositories/upload.repository";
 import { ProductGeneralRepository } from "../repositories/product-general.repository";
 import { Injectable } from "@nestjs/common";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
 import { MediaUrlCookieValue } from "src/model/upload/media.url.cookies.interface";
 import { ProductImageEntity } from "src/model/upload/entities/product.image.entity";
+import { UploadGeneralRepository } from "src/model/upload/repositories/upload-general.repository";
 
 @Injectable()
 export class ProductGeneralService {
   constructor(
     private readonly productGeneralRepository: ProductGeneralRepository,
-    private readonly uploadRepository: UploadRepository,
+    private readonly uploadGeneralRepository: UploadGeneralRepository,
     private readonly starRatingRepository: StarRatingRepository,
   ) {}
 
@@ -37,7 +37,7 @@ export class ProductGeneralService {
     imageCookie: MediaUrlCookieValue,
   ): Promise<void> {
     const [image, starRating] = await Promise.all([
-      this.uploadRepository.findProductImageWithUrl(imageCookie.url),
+      this.uploadGeneralRepository.findProductImageWithUrl(imageCookie.url),
       this.starRatingRepository.createStarRatingSample(),
     ]);
 
@@ -46,7 +46,10 @@ export class ProductGeneralService {
       await this.productGeneralRepository.findLastCreatedProduct();
 
     await Promise.all([
-      this.uploadRepository.insertProductIdOnProductImage(image, product),
+      this.uploadGeneralRepository.insertProductIdOnProductImage(
+        image,
+        product,
+      ),
       this.starRatingRepository.insertProductIdOnStarRating(
         starRating,
         product,
@@ -60,8 +63,8 @@ export class ProductGeneralService {
   ): Promise<[ProductEntity, ProductImageEntity, ProductImageEntity]> {
     return await Promise.all([
       this.productGeneralRepository.findProductOneById(id),
-      this.uploadRepository.findProductImageWithUrl(imageCookie.url),
-      this.uploadRepository.findProductImageEvenUse(id),
+      this.uploadGeneralRepository.findProductImageWithUrl(imageCookie.url),
+      this.uploadGeneralRepository.findProductImageEvenUse(id),
     ]);
   }
 
@@ -74,8 +77,11 @@ export class ProductGeneralService {
       await this.findProductAndImageForModify(id, imageCookie);
 
     await Promise.all([
-      this.uploadRepository.deleteProductImageWithId(oldImage.id),
-      this.uploadRepository.insertProductIdOnProductImage(newImage, product),
+      this.uploadGeneralRepository.deleteProductImageWithId(oldImage.id),
+      this.uploadGeneralRepository.insertProductIdOnProductImage(
+        newImage,
+        product,
+      ),
       this.productGeneralRepository.modifyProduct(id, modifyProductDto),
     ]);
   }
@@ -85,8 +91,11 @@ export class ProductGeneralService {
       await this.findProductAndImageForModify(id, imageCookie);
 
     await Promise.all([
-      this.uploadRepository.deleteProductImageWithId(oldImage.id),
-      this.uploadRepository.insertProductIdOnProductImage(newImage, product),
+      this.uploadGeneralRepository.deleteProductImageWithId(oldImage.id),
+      this.uploadGeneralRepository.insertProductIdOnProductImage(
+        newImage,
+        product,
+      ),
     ]);
   }
 
