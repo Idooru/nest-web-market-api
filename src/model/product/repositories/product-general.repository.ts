@@ -85,10 +85,11 @@ export class ProductGeneralRepository {
         .innerJoin("product.Image", "Image")
         .innerJoin("product.StarRate", "StarRate")
         .leftJoin("product.Review", "Review")
-        .leftJoin("product.Inquiry", "Inquiry")
         .leftJoin("Review.Image", "ReviewImage")
         .leftJoin("Review.Video", "ReviewVideo")
-        .leftJoin("Review.UserActivity", "UserActivity")
+        .leftJoin("product.Inquiry", "Inquiry")
+        .leftJoin("Inquiry.Image", "InquiryImage")
+        .leftJoin("Inquiry.Video", "InquiryVideo")
         .where("product.name = :name", { name })
         .getOneOrFail();
     } catch (err) {
@@ -111,10 +112,11 @@ export class ProductGeneralRepository {
         .innerJoin("product.Image", "Image")
         .innerJoin("product.StarRate", "StarRate")
         .leftJoin("product.Review", "Review")
-        .leftJoin("product.Inquiry", "Inquiry")
         .leftJoin("Review.Image", "ReviewImage")
         .leftJoin("Review.Video", "ReviewVideo")
-        .leftJoin("Review.UserActivity", "UserActivity")
+        .leftJoin("product.Inquiry", "Inquiry")
+        .leftJoin("Inquiry.Image", "InquiryImage")
+        .leftJoin("Inquiry.Video", "InquiryVideo")
         .where("product.id = :id", { id })
         .getOneOrFail();
     } catch (err) {

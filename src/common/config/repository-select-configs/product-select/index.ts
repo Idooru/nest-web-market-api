@@ -22,9 +22,11 @@ export const productSelectProperty = {
     "product.createdAt",
     "product.updatedAt",
     "Review",
-    "Inquiry",
     "ReviewImage.url",
     "ReviewVideo.url",
+    "Inquiry",
+    "InquiryImage.url",
+    "InquiryVideo.url",
   ],
   productSelectWithStarRate: [
     "product.id",

@@ -23,6 +23,10 @@ export const userSelectProperty = {
     "Activity.productReviewCount",
     "Review",
     "Inquiry",
+    "ReviewImage.url",
+    "ReviewVideo.url",
+    "InquiryImage.url",
+    "InquiryVideo.url",
   ],
   userSimpleSelect: [
     "user",

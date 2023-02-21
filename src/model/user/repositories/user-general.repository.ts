@@ -91,6 +91,10 @@ export class UserGeneralRepository {
         .innerJoin("user.Activity", "Activity")
         .leftJoin("Activity.Review", "Review")
         .leftJoin("Activity.Inquiry", "Inquiry")
+        .leftJoin("Review.Image", "ReviewImage")
+        .leftJoin("Review.Video", "ReviewVideo")
+        .leftJoin("Inquiry.Image", "InquiryImage")
+        .leftJoin("Inquiry.Video", "InquiryVideo")
         .where("user.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
