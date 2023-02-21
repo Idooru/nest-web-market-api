@@ -70,11 +70,11 @@ export class ProductGeneralService {
     modifyProductDto: ModifyProductDto,
     imageCookie: MediaUrlCookieValue,
   ): Promise<void> {
-    const [product, newImage, oldImage] =
+    const [product, newImage, evenImage] =
       await this.findProductAndImageForModify(id, imageCookie);
 
     await Promise.all([
-      this.uploadGeneralRepository.deleteProductImageWithId(oldImage.id),
+      this.uploadGeneralRepository.deleteProductImageWithId(evenImage.id),
       this.uploadGeneralRepository.insertProductIdOnProductImage(
         newImage,
         product,
@@ -84,11 +84,11 @@ export class ProductGeneralService {
   }
 
   async modifyProductImage(id: string, imageCookie: MediaUrlCookieValue) {
-    const [product, newImage, oldImage] =
+    const [product, newImage, evenImage] =
       await this.findProductAndImageForModify(id, imageCookie);
 
     await Promise.all([
-      this.uploadGeneralRepository.deleteProductImageWithId(oldImage.id),
+      this.uploadGeneralRepository.deleteProductImageWithId(evenImage.id),
       this.uploadGeneralRepository.insertProductIdOnProductImage(
         newImage,
         product,
