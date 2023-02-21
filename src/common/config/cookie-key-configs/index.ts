@@ -34,4 +34,7 @@ export const verifyCookieKeys = {
       phonenumber_executed: "is-not-exist-user-phonenumber-executed",
     },
   },
+  review: {
+    is_exist: { id_executed: "is-exist-review-id-executed" },
+  },
 };
