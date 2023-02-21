@@ -6,7 +6,7 @@ import { UserActivityEntity } from "src/model/user/entities/user.activity.entity
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { ProductImageEntity } from "src/model/upload/entities/product.image.entity";
-import { StarRatingEntity } from "src/model/review/entities/star-rating.entity";
+import { StarRateEntity } from "src/model/review/entities/star-rate.entity";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
 import { ReviewImageEntity } from "src/model/upload/entities/review.image.entity";
 import { ReviewVideoEntity } from "src/model/upload/entities/review.video.entity";
@@ -31,7 +31,7 @@ import { Module } from "@nestjs/common";
         UserActivityEntity,
         ProductEntity,
         ProductImageEntity,
-        StarRatingEntity,
+        StarRateEntity,
         ReviewEntity,
         ReviewImageEntity,
         ReviewVideoEntity,

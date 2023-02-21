@@ -29,7 +29,7 @@ export class ProductGeneralRepository {
         .select(this.select.productsSelect)
         .from(ProductEntity, "product")
         .innerJoin("product.Image", "Image")
-        .innerJoin("product.StarRating", "StarRating")
+        .innerJoin("product.StarRate", "StarRate")
         .leftJoin("product.Review", "Review")
         .leftJoin("product.Inquiry", "Inquiry")
         .leftJoin("Review.Image", "ReviewImage")
@@ -56,7 +56,7 @@ export class ProductGeneralRepository {
         .select(this.select.productsSelect)
         .from(ProductEntity, "product")
         .innerJoin("product.Image", "Image")
-        .innerJoin("product.StarRating", "StarRating")
+        .innerJoin("product.StarRate", "StarRate")
         .leftJoin("product.Review", "Review")
         .leftJoin("product.Inquiry", "Inquiry")
         .leftJoin("Review.Image", "ReviewImage")
@@ -83,7 +83,7 @@ export class ProductGeneralRepository {
         .select(this.select.productSelect)
         .from(ProductEntity, "product")
         .innerJoin("product.Image", "Image")
-        .innerJoin("product.StarRating", "StarRating")
+        .innerJoin("product.StarRate", "StarRate")
         .leftJoin("product.Review", "Review")
         .leftJoin("product.Inquiry", "Inquiry")
         .leftJoin("Review.Image", "ReviewImage")
@@ -109,7 +109,7 @@ export class ProductGeneralRepository {
         .select(this.select.productSelect)
         .from(ProductEntity, "product")
         .innerJoin("product.Image", "Image")
-        .innerJoin("product.StarRating", "StarRating")
+        .innerJoin("product.StarRate", "StarRate")
         .leftJoin("product.Review", "Review")
         .leftJoin("product.Inquiry", "Inquiry")
         .leftJoin("Review.Image", "ReviewImage")
@@ -128,14 +128,14 @@ export class ProductGeneralRepository {
     }
   }
 
-  async findProductWhenUseStarRatingWithId(id: string): Promise<ProductEntity> {
+  async findProductWhenUseStarRateWithId(id: string): Promise<ProductEntity> {
     try {
       return await this.productGeneralRepository
         .createQueryBuilder()
-        .select(this.select.productSelectWithStarRating)
+        .select(this.select.productSelectWithStarRate)
         .from(ProductEntity, "product")
         .innerJoin("product.Image", "Image")
-        .innerJoin("product.StarRating", "StarRating")
+        .innerJoin("product.StarRate", "StarRate")
         .where("product.id = :id", { id })
         .getOneOrFail();
     } catch (err) {

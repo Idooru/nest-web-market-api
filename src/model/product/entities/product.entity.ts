@@ -2,7 +2,7 @@ import { Column, Entity, OneToMany, OneToOne } from "typeorm";
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
-import { StarRatingEntity } from "../../review/entities/star-rating.entity";
+import { StarRateEntity } from "../../review/entities/star-rate.entity";
 import { ProductImageEntity } from "src/model/upload/entities/product.image.entity";
 import { InquiryEntity } from "../../inquiry/entities/inquiry.entity";
 
@@ -42,10 +42,10 @@ export class ProductEntity extends CommonEntity {
   })
   Image: ProductImageEntity;
 
-  @OneToOne(() => StarRatingEntity, (starRating) => starRating.Product, {
+  @OneToOne(() => StarRateEntity, (StarRate) => StarRate.Product, {
     cascade: true,
   })
-  StarRating: StarRatingEntity;
+  StarRate: StarRateEntity;
 
   @OneToMany(() => ReviewEntity, (review) => review.Product, { cascade: true })
   Review: ReviewEntity[];

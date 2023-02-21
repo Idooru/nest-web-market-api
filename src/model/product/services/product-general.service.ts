@@ -1,4 +1,4 @@
-import { StarRatingRepository } from "../../review/repositories/star-rating.repository";
+import { StarRateRepository } from "../../review/repositories/star-rate-general.repository";
 import { ProductEntity } from "../entities/product.entity";
 import { ProductGeneralRepository } from "../repositories/product-general.repository";
 import { Injectable } from "@nestjs/common";
@@ -13,7 +13,7 @@ export class ProductGeneralService {
   constructor(
     private readonly productGeneralRepository: ProductGeneralRepository,
     private readonly uploadGeneralRepository: UploadGeneralRepository,
-    private readonly starRatingRepository: StarRatingRepository,
+    private readonly starRateRepository: StarRateRepository,
   ) {}
 
   async getProductsAllFromLatest(): Promise<ProductEntity[]> {
@@ -36,9 +36,9 @@ export class ProductGeneralService {
     createProductDto: CreateProductDto,
     imageCookie: MediaUrlCookieValue,
   ): Promise<void> {
-    const [image, starRating] = await Promise.all([
+    const [image, StarRate] = await Promise.all([
       this.uploadGeneralRepository.findProductImageWithUrl(imageCookie.url),
-      this.starRatingRepository.createStarRatingSample(),
+      this.starRateRepository.createStarRateSample(),
     ]);
 
     await this.productGeneralRepository.createProduct(createProductDto);
@@ -50,10 +50,7 @@ export class ProductGeneralService {
         image,
         product,
       ),
-      this.starRatingRepository.insertProductIdOnStarRating(
-        starRating,
-        product,
-      ),
+      this.starRateRepository.insertProductIdOnStarRate(StarRate, product),
     ]);
   }
 
