@@ -14,7 +14,7 @@ export class ProductVerifyRepository {
     private readonly productVerifyRepository: Repository<ProductEntity>,
   ) {}
 
-  private readonly logger = new Logger("Error");
+  private readonly logger = new Logger("Repository");
 
   async isExistProductId(id: string): Promise<boolean> {
     try {
