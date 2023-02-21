@@ -74,7 +74,10 @@ export class ProductVersionOneOnlyAdminController {
 
   @UseInterceptors(JsonClearCookieInterceptor)
   @UseGuards(
-    new VerifyDataGuard(verifyCookieKeys.product.is_not_exist.name_executed),
+    new VerifyDataGuard(
+      verifyCookieKeys.product.is_exist.id_executed,
+      verifyCookieKeys.product.is_not_exist.name_executed,
+    ),
   )
   @Put("/:id")
   async modifyProduct(
@@ -97,6 +100,7 @@ export class ProductVersionOneOnlyAdminController {
   }
 
   @UseInterceptors(JsonClearCookieInterceptor)
+  @UseGuards(new VerifyDataGuard(verifyCookieKeys.product.is_exist.id_executed))
   @Patch("/:id/image")
   async modifyProductImage(
     @Param("id") id: string,
@@ -114,7 +118,10 @@ export class ProductVersionOneOnlyAdminController {
 
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(
-    new VerifyDataGuard(verifyCookieKeys.product.is_not_exist.name_executed),
+    new VerifyDataGuard(
+      verifyCookieKeys.product.is_exist.id_executed,
+      verifyCookieKeys.product.is_not_exist.name_executed,
+    ),
   )
   @Patch("/:id/name")
   async modifyProductName(
@@ -130,6 +137,7 @@ export class ProductVersionOneOnlyAdminController {
   }
 
   @UseInterceptors(JsonGeneralInterceptor)
+  @UseGuards(new VerifyDataGuard(verifyCookieKeys.product.is_exist.id_executed))
   @Patch("/:id/price")
   async modifyProductPrice(
     @Param("id") id: string,
@@ -144,6 +152,7 @@ export class ProductVersionOneOnlyAdminController {
   }
 
   @UseInterceptors(JsonGeneralInterceptor)
+  @UseGuards(new VerifyDataGuard(verifyCookieKeys.product.is_exist.id_executed))
   @Patch("/:id/origin")
   async modifyProductOrigin(
     @Param("id") id: string,
@@ -158,6 +167,7 @@ export class ProductVersionOneOnlyAdminController {
   }
 
   @UseInterceptors(JsonGeneralInterceptor)
+  @UseGuards(new VerifyDataGuard(verifyCookieKeys.product.is_exist.id_executed))
   @Patch("/:id/description")
   async modifyProductDescription(
     @Param("id") id: string,
@@ -172,6 +182,7 @@ export class ProductVersionOneOnlyAdminController {
   }
 
   @UseInterceptors(JsonGeneralInterceptor)
+  @UseGuards(new VerifyDataGuard(verifyCookieKeys.product.is_exist.id_executed))
   @Patch("/:id/quantity")
   async modifyProductQuantity(
     @Param("id") id: string,
