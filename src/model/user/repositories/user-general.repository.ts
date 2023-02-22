@@ -360,7 +360,7 @@ export class UserGeneralRepository {
     }
   }
 
-  async increaseReviewCount(user: UserEntity) {
+  async increaseReviewCount(user: UserEntity): Promise<void> {
     try {
       ++user.Activity.productReviewCount;
       await this.userGeneralRepository.save(user);
@@ -370,9 +370,29 @@ export class UserGeneralRepository {
     }
   }
 
-  async increaseInquiryCount(user: UserEntity) {
+  async increaseInquiryCount(user: UserEntity): Promise<void> {
     try {
       ++user.Activity.productInquiryCount;
+      await this.userGeneralRepository.save(user);
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async decreaseReviewCount(user: UserEntity): Promise<void> {
+    try {
+      --user.Activity.productReviewCount;
+      await this.userGeneralRepository.save(user);
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async decreaseInquiryCount(user: UserEntity): Promise<void> {
+    try {
+      --user.Activity.productInquiryCount;
       await this.userGeneralRepository.save(user);
     } catch (err) {
       this.logger.error(err);
