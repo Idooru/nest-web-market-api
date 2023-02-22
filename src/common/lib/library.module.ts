@@ -3,7 +3,6 @@ import { ConfigService } from "@nestjs/config";
 import { DotenvConfigurationModule } from "../config/dotenv.config";
 import { CookieLibrary } from "./cookie.library";
 import { MeidaLoggerLibrary } from "./media-logger.library";
-import { PromiseLibrary } from "./promise.library";
 import { SecurityLibrary } from "./security.library";
 import { TimeLoggerLibrary } from "./time-logger.library";
 
@@ -11,7 +10,6 @@ import { TimeLoggerLibrary } from "./time-logger.library";
   imports: [DotenvConfigurationModule],
   providers: [
     CookieLibrary,
-    PromiseLibrary,
     TimeLoggerLibrary,
     SecurityLibrary,
     ConfigService,
@@ -19,7 +17,6 @@ import { TimeLoggerLibrary } from "./time-logger.library";
   ],
   exports: [
     CookieLibrary,
-    PromiseLibrary,
     TimeLoggerLibrary,
     SecurityLibrary,
     MeidaLoggerLibrary,

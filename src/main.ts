@@ -5,7 +5,6 @@ import { NestExpressApplication } from "@nestjs/platform-express";
 import cookieParser from "cookie-parser";
 import { AppModule } from "./app.module";
 import { HttpExceptionFilter } from "./common/filters/http-exception.filter";
-import { PromiseExcptionFilter } from "./common/filters/promise-exception.filter";
 import { ValidationExceptionFilter } from "./common/filters/validation-exception.filter";
 
 import path from "path";
@@ -25,7 +24,6 @@ class NestCoreConfig {
   private setGlobals() {
     this.app.useGlobalFilters(
       new HttpExceptionFilter(),
-      new PromiseExcptionFilter(),
       new ValidationExceptionFilter(),
     );
     this.app.useGlobalPipes(new ValidationPipe({ errorHttpStatusCode: 418 }));
