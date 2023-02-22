@@ -16,7 +16,7 @@ export class ProductGeneralService {
     private readonly starRateRepository: StarRateRepository,
   ) {}
 
-  async getProductsAllFromLatest(): Promise<ProductEntity[]> {
+  async findProductsAllFromLatest(): Promise<ProductEntity[]> {
     const founds =
       await this.productGeneralRepository.findProductsAllFromLatest();
     if (!founds.length) {
@@ -25,7 +25,7 @@ export class ProductGeneralService {
     return founds;
   }
 
-  async getProductsAllFromOldest(): Promise<ProductEntity[]> {
+  async findProductsAllFromOldest(): Promise<ProductEntity[]> {
     const founds =
       await this.productGeneralRepository.findProductsAllFromOldest();
     if (!founds.length) {
@@ -34,11 +34,11 @@ export class ProductGeneralService {
     return founds;
   }
 
-  async getProductByName(name: string): Promise<ProductEntity> {
+  async findProductByName(name: string): Promise<ProductEntity> {
     return await this.productGeneralRepository.findProductOneByName(name);
   }
 
-  async getProductById(id: string): Promise<ProductEntity> {
+  async findProductById(id: string): Promise<ProductEntity> {
     return await this.productGeneralRepository.findProductOneById(id);
   }
 

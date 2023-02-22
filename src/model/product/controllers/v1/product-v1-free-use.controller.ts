@@ -10,37 +10,37 @@ export class ProductVersionOneFreeUseController {
 
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/")
-  async getProductsAllFromLatest(): Promise<
+  async findProductsAllFromLatest(): Promise<
     JsonGeneralInterface<ProductEntity[]>
   > {
     return {
       statusCode: 200,
       message: "전체 상품 정보를 최신 순서로 가져옵니다.",
-      result: await this.productGeneralService.getProductsAllFromLatest(),
+      result: await this.productGeneralService.findProductsAllFromLatest(),
     };
   }
 
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/oldest")
-  async getProductsAllFromOldest(): Promise<
+  async findProductsAllFromOldest(): Promise<
     JsonGeneralInterface<ProductEntity[]>
   > {
     return {
       statusCode: 200,
       message: "전체 상품 정보를 오래된 순서로 가져옵니다.",
-      result: await this.productGeneralService.getProductsAllFromOldest(),
+      result: await this.productGeneralService.findProductsAllFromOldest(),
     };
   }
 
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/:name")
-  async getProductByName(
+  async findProductByName(
     @Param("name") productName: string,
   ): Promise<JsonGeneralInterface<ProductEntity>> {
     return {
       statusCode: 200,
       message: `${productName}에 해당하는 상품 정보를 가져옵니다.`,
-      result: await this.productGeneralService.getProductByName(productName),
+      result: await this.productGeneralService.findProductByName(productName),
     };
   }
 }

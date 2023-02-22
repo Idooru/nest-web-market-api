@@ -26,7 +26,7 @@ export class ReviewVersionOneOnlyAdminController {
     return {
       statusCode: 200,
       message: `상품아이디(${id})에 해당하는 상품의 리뷰를 가져옵니다.`,
-      result: (await this.productService.getProductById(id)).Review,
+      result: (await this.productService.findProductById(id)).Review,
     };
   }
 }
