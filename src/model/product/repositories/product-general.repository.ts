@@ -24,7 +24,7 @@ export class ProductGeneralRepository {
 
   async findProductsAllFromLatest(): Promise<ProductEntity[]> {
     try {
-      const found = await this.productGeneralRepository
+      return await this.productGeneralRepository
         .createQueryBuilder()
         .select(this.select.productsSelect)
         .from(ProductEntity, "product")
@@ -38,11 +38,6 @@ export class ProductGeneralRepository {
         .leftJoin("UserActivity.User", "User")
         .orderBy("product.createdAt", "DESC")
         .getMany();
-
-      if (!found.length) {
-        throw new NotFoundException("데이터베이스에 상품이 존재하지 않습니다.");
-      }
-      return found;
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException(err.message);
@@ -51,7 +46,7 @@ export class ProductGeneralRepository {
 
   async findProductsAllFromOldest(): Promise<ProductEntity[]> {
     try {
-      const found = await this.productGeneralRepository
+      return await this.productGeneralRepository
         .createQueryBuilder()
         .select(this.select.productsSelect)
         .from(ProductEntity, "product")
@@ -65,11 +60,6 @@ export class ProductGeneralRepository {
         .leftJoin("UserActivity.User", "User")
         .orderBy("product.createdAt", "ASC")
         .getMany();
-
-      if (!found.length) {
-        throw new NotFoundException("데이터베이스에 상품이 존재하지 않습니다.");
-      }
-      return found;
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException(err.message);

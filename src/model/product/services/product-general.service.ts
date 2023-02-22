@@ -1,7 +1,7 @@
 import { StarRateRepository } from "../../review/repositories/star-rate-general.repository";
 import { ProductEntity } from "../entities/product.entity";
 import { ProductGeneralRepository } from "../repositories/product-general.repository";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
 import { MediaUrlCookieValue } from "src/model/upload/media.url.cookies.interface";
@@ -17,11 +17,21 @@ export class ProductGeneralService {
   ) {}
 
   async getProductsAllFromLatest(): Promise<ProductEntity[]> {
-    return await this.productGeneralRepository.findProductsAllFromLatest();
+    const founds =
+      await this.productGeneralRepository.findProductsAllFromLatest();
+    if (!founds.length) {
+      throw new NotFoundException("데이터베이스에 상품이 존재하지 않습니다.");
+    }
+    return founds;
   }
 
   async getProductsAllFromOldest(): Promise<ProductEntity[]> {
-    return await this.productGeneralRepository.findProductsAllFromOldest();
+    const founds =
+      await this.productGeneralRepository.findProductsAllFromOldest();
+    if (!founds.length) {
+      throw new NotFoundException("데이터베이스에 상품이 존재하지 않습니다.");
+    }
+    return founds;
   }
 
   async getProductByName(name: string): Promise<ProductEntity> {
