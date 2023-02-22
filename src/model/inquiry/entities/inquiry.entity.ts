@@ -23,7 +23,7 @@ export class InquiryEntity extends CommonEntity {
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "userActivityId" })
-  Inquirer: UserActivityEntity;
+  UserActivity: UserActivityEntity;
 
   @ManyToOne(() => ProductEntity, (product) => product.Inquiry, {
     onDelete: "CASCADE",
