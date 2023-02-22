@@ -1,4 +1,4 @@
-import { PromiseHandleException } from "../exceptions/promise-handle.exception";
+import { PromiseHandleException } from "src/common/exceptions/promise-handle.exception";
 
 export abstract class PromiseProcessor {
   protected twoPromiseSettled<T, U>(
