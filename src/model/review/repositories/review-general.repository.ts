@@ -29,8 +29,6 @@ export class ReviewGeneralRepository {
         .where("activity.id = :id", { id: activity.id })
         .getMany();
 
-      console.log(reviews[0]);
-
       if (!reviews.length) {
         // 만약 리뷰를 하나도 작성하지 않은 사용자가 다른 사용자의 리뷰를 수정하려고 시도할시 아래 예외가 발생한다.
         throw new NotFoundException(
@@ -103,6 +101,20 @@ export class ReviewGeneralRepository {
         .createQueryBuilder()
         .update(ReviewEntity)
         .set({ UserActivity: userActivity })
+        .where("id = :id", { id: review.id })
+        .execute();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async deleteReview(review: ReviewEntity): Promise<void> {
+    try {
+      await this.reviewRepository
+        .createQueryBuilder()
+        .delete()
+        .from(ReviewEntity)
         .where("id = :id", { id: review.id })
         .execute();
     } catch (err) {

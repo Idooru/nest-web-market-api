@@ -1,5 +1,6 @@
 import { Controller, Get, Param, UseInterceptors } from "@nestjs/common";
 import { verifyCookieKeys } from "src/common/config/cookie-key-configs";
+import { SendVerifyCookieInterceptor } from "src/common/interceptors/verify/send-verify-cookie.interceptor";
 import { VerifyDataDto } from "src/common/interceptors/verify/verfiy-data.dto";
 import { ReviewVerifyService } from "../services/review-verify.service";
 
@@ -9,7 +10,7 @@ export class ReviewVersionOneVerify {
 
   private readonly reviewVerifyCookieKey = verifyCookieKeys.review;
 
-  @UseInterceptors()
+  @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/existent/id/:id")
   async isExistReviewId(@Param("id") id: string): Promise<VerifyDataDto> {
     await this.reviewVerifyService.isExistReviewId(id);
