@@ -26,7 +26,7 @@ export class UserActivityEntity {
   })
   Review: ReviewEntity[];
 
-  @OneToMany(() => InquiryEntity, (inquiry) => inquiry.Inquirer, {
+  @OneToMany(() => InquiryEntity, (inquiry) => inquiry.UserActivity, {
     cascade: true,
   })
   Inquiry: InquiryEntity[];
