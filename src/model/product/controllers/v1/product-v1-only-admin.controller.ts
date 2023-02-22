@@ -38,14 +38,25 @@ export class ProductVersionOneOnlyAdminController {
     mediaCookieKeys.product.image_url_cookie;
 
   @UseInterceptors(JsonGeneralInterceptor)
+  @Get("/all-id")
+  async findProductsAllId(): Promise<JsonGeneralInterface<string[]>> {
+    const products = await this.productGeneralService.findProductsAllId();
+    return {
+      statusCode: 200,
+      message: "데이터베이스에 존재하는 모든 상품 아이디를 가져옵니다.",
+      result: products.map((product) => product.id),
+    };
+  }
+
+  @UseInterceptors(JsonGeneralInterceptor)
   @Get("/:id")
-  async getProductById(
+  async findProductById(
     @Param("id") id: string,
   ): Promise<JsonGeneralInterface<ProductEntity>> {
     return {
       statusCode: 200,
       message: `${id}에 해당하는 상품 정보를 가져옵니다.`,
-      result: await this.productGeneralService.getProductById(id),
+      result: await this.productGeneralService.findProductById(id),
     };
   }
 

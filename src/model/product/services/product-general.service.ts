@@ -16,21 +16,29 @@ export class ProductGeneralService {
     private readonly starRateRepository: StarRateRepository,
   ) {}
 
-  async findProductsAllFromLatest(): Promise<ProductEntity[]> {
-    const founds =
-      await this.productGeneralRepository.findProductsAllFromLatest();
+  isExistProducts(founds: ProductEntity[]): void {
     if (!founds.length) {
       throw new NotFoundException("데이터베이스에 상품이 존재하지 않습니다.");
     }
+  }
+
+  async findProductsAllId(): Promise<ProductEntity[]> {
+    const founds = await this.productGeneralRepository.findProductsAllId();
+    this.isExistProducts(founds);
+    return founds;
+  }
+
+  async findProductsAllFromLatest(): Promise<ProductEntity[]> {
+    const founds =
+      await this.productGeneralRepository.findProductsAllFromLatest();
+    this.isExistProducts(founds);
     return founds;
   }
 
   async findProductsAllFromOldest(): Promise<ProductEntity[]> {
     const founds =
       await this.productGeneralRepository.findProductsAllFromOldest();
-    if (!founds.length) {
-      throw new NotFoundException("데이터베이스에 상품이 존재하지 않습니다.");
-    }
+    this.isExistProducts(founds);
     return founds;
   }
 

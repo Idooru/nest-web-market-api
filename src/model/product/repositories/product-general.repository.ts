@@ -22,6 +22,19 @@ export class ProductGeneralRepository {
   private readonly select = productSelectProperty;
   private readonly logger = new Logger("Repository");
 
+  async findProductsAllId(): Promise<ProductEntity[]> {
+    try {
+      return await this.productGeneralRepository
+        .createQueryBuilder()
+        .select("product.id")
+        .from(ProductEntity, "product")
+        .getMany();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
   async findProductsAllFromLatest(): Promise<ProductEntity[]> {
     try {
       return await this.productGeneralRepository
