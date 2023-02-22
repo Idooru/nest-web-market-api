@@ -1,7 +1,7 @@
-import { CommonEntity } from "src/common/entities/common.entity";
 import { Entity, JoinColumn, ManyToOne, Column } from "typeorm";
-import { InquiryEntity } from "./inquiry.entity";
+import { CommonEntity } from "src/common/entities/common.entity";
 import { UserEntity } from "src/model/user/entities/user.entity";
+import { InquiryEntity } from "src/model/inquiry/entities/inquiry.entity";
 
 @Entity("inquiries_videos")
 export class InquiryVideoEntity extends CommonEntity {
