@@ -11,9 +11,9 @@ import { ReviewEntity } from "src/model/review/entities/review.entity";
 import { ReviewImageEntity } from "src/model/upload/entities/review.image.entity";
 import { ReviewVideoEntity } from "src/model/upload/entities/review.video.entity";
 import { InquiryEntity } from "src/model/inquiry/entities/inquiry.entity";
-import { InquiryImageEntity } from "src/model/inquiry/entities/inquiry.image.entity";
-import { InquiryVideoEntity } from "src/model/inquiry/entities/inquiry.video.entity";
 import { Module } from "@nestjs/common";
+import { InquiryImageEntity } from "src/model/upload/entities/inquiry.image.entity";
+import { InquiryVideoEntity } from "src/model/upload/entities/inquiry.video.entity";
 
 @Module({
   imports: [
