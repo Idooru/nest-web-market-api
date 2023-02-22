@@ -1,5 +1,5 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from "@nestjs/common";
-import { PromiseHandleException } from "../exceptions/promise-handle.exception";
+import { PromiseHandleException } from "../common/exceptions/promise-handle.exception";
 import { Response } from "express";
 
 @Catch(PromiseHandleException)
