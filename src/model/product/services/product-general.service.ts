@@ -4,7 +4,7 @@ import { ProductGeneralRepository } from "../repositories/product-general.reposi
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
-import { MediaUrlCookieValue } from "src/model/upload/media.url.cookies.interface";
+import { MediaReceiveDto } from "src/model/upload/dto/media-receive.dto";
 import { ProductImageEntity } from "src/model/upload/entities/product.image.entity";
 import { UploadGeneralRepository } from "src/model/upload/repositories/upload-general.repository";
 
@@ -52,7 +52,7 @@ export class ProductGeneralService {
 
   async createProduct(
     createProductDto: CreateProductDto,
-    imageCookie: MediaUrlCookieValue,
+    imageCookie: MediaReceiveDto,
   ): Promise<void> {
     const [image, StarRate] = await Promise.all([
       this.uploadGeneralRepository.findProductImageWithUrl(imageCookie.url),
@@ -74,7 +74,7 @@ export class ProductGeneralService {
 
   async findProductAndImageForModify(
     id: string,
-    imageCookie: MediaUrlCookieValue,
+    imageCookie: MediaReceiveDto,
   ): Promise<[ProductEntity, ProductImageEntity, ProductImageEntity]> {
     return await Promise.all([
       this.productGeneralRepository.findProductOneById(id),
@@ -86,7 +86,7 @@ export class ProductGeneralService {
   async modifyProduct(
     id: string,
     modifyProductDto: ModifyProductDto,
-    imageCookie: MediaUrlCookieValue,
+    imageCookie: MediaReceiveDto,
   ): Promise<void> {
     const [product, newImage, evenImage] =
       await this.findProductAndImageForModify(id, imageCookie);
@@ -101,7 +101,7 @@ export class ProductGeneralService {
     ]);
   }
 
-  async modifyProductImage(id: string, imageCookie: MediaUrlCookieValue) {
+  async modifyProductImage(id: string, imageCookie: MediaReceiveDto) {
     const [product, newImage, evenImage] =
       await this.findProductAndImageForModify(id, imageCookie);
 

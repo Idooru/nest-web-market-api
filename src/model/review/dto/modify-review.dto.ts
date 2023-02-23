@@ -1,26 +1,26 @@
 import { CreateReviewDto } from "./create-review.dto";
 import { ReviewEntity } from "../entities/review.entity";
-import { MediaUrlCookieValue } from "src/model/upload/media.url.cookies.interface";
+import { MediaReceiveDto } from "src/model/upload/dto/media-receive.dto";
 
 export class ModifyReviewDto extends CreateReviewDto {}
 
 export class ModifyReviewWithImageAndVideoDto {
   modifyReviewDto: ModifyReviewDto;
   review: ReviewEntity;
-  reviewImgCookies: MediaUrlCookieValue[];
-  reviewVdoCookies: MediaUrlCookieValue[];
+  reviewImgCookies: MediaReceiveDto[];
+  reviewVdoCookies: MediaReceiveDto[];
 }
 
 export class ModifyReviewWithImageDto {
   modifyReviewDto: ModifyReviewDto;
   review: ReviewEntity;
-  reviewImgCookies: MediaUrlCookieValue[];
+  reviewImgCookies: MediaReceiveDto[];
 }
 
 export class ModifyReviewWithVideoDto {
   modifyReviewDto: ModifyReviewDto;
   review: ReviewEntity;
-  reviewVdoCookies: MediaUrlCookieValue[];
+  reviewVdoCookies: MediaReceiveDto[];
 }
 
 export class ModifyReviewDao {

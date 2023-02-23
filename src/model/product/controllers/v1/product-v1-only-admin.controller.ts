@@ -22,7 +22,7 @@ import { JsonClearCookieInterface } from "src/common/interceptors/general/interf
 import { JsonGeneralInterface } from "src/common/interceptors/general/interface/json-general-interface";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/general/json-clear-cookie.interceptor";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
-import { MediaUrlCookieValue } from "src/model/upload/media.url.cookies.interface";
+import { MediaReceiveDto } from "src/model/upload/dto/media-receive.dto";
 import { CreateProductDto } from "../../dto/create_product.dto";
 import { ModifyProductDto } from "../../dto/modify_product.dto";
 import { ProductEntity } from "../../entities/product.entity";
@@ -69,7 +69,7 @@ export class ProductVersionOneOnlyAdminController {
     @Body()
     createProductDto: CreateProductDto,
     @Cookie("product_image_url_cookie")
-    productImgCookie: MediaUrlCookieValue,
+    productImgCookie: MediaReceiveDto,
   ): Promise<JsonClearCookieInterface> {
     await this.productGeneralService.createProduct(
       createProductDto,
@@ -95,7 +95,7 @@ export class ProductVersionOneOnlyAdminController {
     @Param("id") id: string,
     @Body() modifyProductDto: ModifyProductDto,
     @Cookie(mediaCookieKeys.product.image_url_cookie)
-    productImgCookie: MediaUrlCookieValue,
+    productImgCookie: MediaReceiveDto,
   ): Promise<JsonClearCookieInterface> {
     await this.productGeneralService.modifyProduct(
       id,
@@ -116,7 +116,7 @@ export class ProductVersionOneOnlyAdminController {
   async modifyProductImage(
     @Param("id") id: string,
     @Cookie(mediaCookieKeys.product.image_url_cookie)
-    productImgCookie: MediaUrlCookieValue,
+    productImgCookie: MediaReceiveDto,
   ): Promise<JsonClearCookieInterface> {
     await this.productGeneralService.modifyProductImage(id, productImgCookie);
 
