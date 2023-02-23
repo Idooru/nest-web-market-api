@@ -1,4 +1,5 @@
 export class MediaReturnDto {
-  name: string;
+  whatCookie: string;
   url: string;
+  fileName: string;
 }
