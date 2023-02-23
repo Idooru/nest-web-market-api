@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { UploadGeneralRepository } from "../repositories/upload-general.repository";
-import { MediaReturnDto } from "../dto/media-return.dto";
 import { JwtAccessTokenPayload } from "../../auth/jwt/jwt-access-token-payload.interface";
-import { MediaUrlCookieValue } from "../media.url.cookies.interface";
 import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
+import { ConfigService } from "@nestjs/config";
+import { MediaReceiveDto } from "../dto/media-receive.dto";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -12,9 +12,13 @@ export class UploadGeneralService {
   constructor(
     private readonly uploadGeneralRepository: UploadGeneralRepository,
     private readonly userRepository: UserGeneralRepository,
+    private readonly configService: ConfigService,
   ) {}
 
-  isExistMediaFile(mediaType: string, file: Express.Multer.File) {
+  isExistMediaFile(
+    mediaType: string,
+    file: Express.Multer.File | Express.Multer.File[],
+  ) {
     if (!file) {
       throw new BadRequestException(
         `${mediaType}을(를) 업로드 할 수 없습니다. 파일을 제시해주세요.`,
@@ -22,12 +26,12 @@ export class UploadGeneralService {
     }
   }
 
-  isExistMediaFiles(mediaType: string, files: Express.Multer.File[]) {
-    if (!files) {
-      throw new BadRequestException(
-        `${mediaType}을(를) 업로드 할 수 없습니다. 파일을 제시해주세요.`,
-      );
-    }
+  setUrl(mediaFileName: string): string {
+    return `http://${this.configService.get(
+      "APPLICATION_HOST",
+    )}:${this.configService.get(
+      "APPLICATION_PORT",
+    )}/media/${mediaFileName}`.toLowerCase();
   }
 
   deleteMediaFilesOnServerDisk(imageName: string, mediaPath: string) {
@@ -39,12 +43,12 @@ export class UploadGeneralService {
   async uploadProductImage(
     file: Express.Multer.File,
     jwtPayload: JwtAccessTokenPayload,
-  ): Promise<MediaReturnDto> {
+  ): Promise<void> {
     const user = await this.userRepository.findUserWithId(jwtPayload.userId);
-    const image = file.filename;
+    const url = this.setUrl(file.filename);
 
-    return await this.uploadGeneralRepository.uploadProductImage({
-      media: image,
+    await this.uploadGeneralRepository.uploadProductImage({
+      url,
       uploader: user,
     });
   }
@@ -52,144 +56,116 @@ export class UploadGeneralService {
   async uploadReviewImage(
     files: Array<Express.Multer.File>,
     jwtPayload: JwtAccessTokenPayload,
-  ): Promise<MediaReturnDto[]> {
+  ): Promise<void> {
     const uploader = jwtPayload.nickname;
     const user = await this.userRepository.findUserWithNickName(uploader);
-    const imageUrls = [];
 
     if (files.length >= 2) {
-      for (const index of files) {
-        const image = index.filename;
-        imageUrls.push(
-          await this.uploadGeneralRepository.uploadReviewImage({
-            media: image,
-            uploader: user,
-          }),
-        );
+      for (const file of files) {
+        const url = this.setUrl(file.filename);
+        await this.uploadGeneralRepository.uploadReviewImage({
+          url,
+          uploader: user,
+        });
       }
     } else {
-      const image = files[0].filename;
-      imageUrls.push(
-        await this.uploadGeneralRepository.uploadReviewImage({
-          media: image,
-          uploader: user,
-        }),
-      );
+      const url = this.setUrl(files[0].fieldname);
+      await this.uploadGeneralRepository.uploadReviewImage({
+        url,
+        uploader: user,
+      });
     }
-
-    return imageUrls;
   }
 
   async uploadReviewVideo(
     files: Array<Express.Multer.File>,
     jwtPayload: JwtAccessTokenPayload,
-  ): Promise<MediaReturnDto[]> {
+  ): Promise<void> {
     const uploader = jwtPayload.nickname;
     const user = await this.userRepository.findUserWithNickName(uploader);
-    const videoUrls = [];
 
     if (files.length >= 2) {
-      for (const index of files) {
-        const video = index.filename;
-        videoUrls.push(
-          await this.uploadGeneralRepository.uploadReviewVideo({
-            media: video,
-            uploader: user,
-          }),
-        );
+      for (const file of files) {
+        const url = this.setUrl(file.filename);
+        await this.uploadGeneralRepository.uploadReviewVideo({
+          url,
+          uploader: user,
+        });
       }
     } else {
-      const video = files[0].filename;
-      videoUrls.push(
-        await this.uploadGeneralRepository.uploadReviewVideo({
-          media: video,
-          uploader: user,
-        }),
-      );
+      const url = this.setUrl(files[0].filename);
+      await this.uploadGeneralRepository.uploadReviewVideo({
+        url,
+        uploader: user,
+      });
     }
-
-    return videoUrls;
   }
 
   async uploadInquiryImage(
     files: Array<Express.Multer.File>,
     jwtPayload: JwtAccessTokenPayload,
-  ): Promise<MediaReturnDto[]> {
-    const imageUrls = [];
+  ): Promise<void> {
     const uploader = jwtPayload.nickname;
     const user = await this.userRepository.findUserWithNickName(uploader);
 
     if (files.length >= 2) {
-      for (const index of files) {
-        const image = index.filename;
-        imageUrls.push(
-          await this.uploadGeneralRepository.uploadInquiryImage({
-            media: image,
-            uploader: user,
-          }),
-        );
+      for (const file of files) {
+        const url = this.setUrl(file.filename);
+        await this.uploadGeneralRepository.uploadInquiryImage({
+          url,
+          uploader: user,
+        });
       }
     } else {
-      const image = files[0].filename;
-      imageUrls.push(
-        await this.uploadGeneralRepository.uploadInquiryImage({
-          media: image,
-          uploader: user,
-        }),
-      );
+      const url = this.setUrl(files[0].fieldname);
+      await this.uploadGeneralRepository.uploadInquiryImage({
+        url,
+        uploader: user,
+      });
     }
-
-    return imageUrls;
   }
 
   async uploadInquiryVideo(
     files: Array<Express.Multer.File>,
     jwtPayload: JwtAccessTokenPayload,
-  ): Promise<MediaReturnDto[]> {
-    const videoUrls = [];
+  ): Promise<void> {
     const uploader = jwtPayload.nickname;
     const user = await this.userRepository.findUserWithNickName(uploader);
 
     if (files.length >= 2) {
-      for (const index of files) {
-        const video = index.filename;
-        videoUrls.push(
-          await this.uploadGeneralRepository.uploadInquiryVideo({
-            media: video,
-            uploader: user,
-          }),
-        );
+      for (const file of files) {
+        const url = this.setUrl(file.filename);
+        await this.uploadGeneralRepository.uploadInquiryVideo({
+          url,
+          uploader: user,
+        });
       }
     } else {
-      const video = files[0].filename;
-      videoUrls.push(
-        await this.uploadGeneralRepository.uploadInquiryVideo({
-          media: video,
-          uploader: user,
-        }),
-      );
+      const url = this.setUrl(files[0].fieldname);
+      await this.uploadGeneralRepository.uploadInquiryVideo({
+        url,
+        uploader: user,
+      });
     }
-
-    return videoUrls;
   }
 
-  async deleteProductImage(imageCookie: MediaUrlCookieValue): Promise<void> {
+  async deleteProductImage(imageCookie: MediaReceiveDto): Promise<void> {
     const image = await this.uploadGeneralRepository.findProductImageWithUrl(
       imageCookie.url,
     );
 
     await this.uploadGeneralRepository.deleteProductImageWithId(image.id);
-    this.deleteMediaFilesOnServerDisk(imageCookie.name, "image/product");
+    this.deleteMediaFilesOnServerDisk(imageCookie.fileName, "image/product");
   }
 
-  async deleteReviewImages(imageCookies: MediaUrlCookieValue[]): Promise<void> {
+  async deleteReviewImages(imageCookies: MediaReceiveDto[]): Promise<void> {
     if (imageCookies.length >= 2) {
       for (const cookie of imageCookies) {
         const image = await this.uploadGeneralRepository.findReviewImageWithUrl(
           cookie.url,
         );
         await this.uploadGeneralRepository.deleteReviewImageWithId(image.id);
-        this.deleteMediaFilesOnServerDisk(cookie.name, "image/review");
+        this.deleteMediaFilesOnServerDisk(cookie.fileName, "image/review");
       }
     } else {
       const image = await this.uploadGeneralRepository.findReviewImageWithUrl(
@@ -197,18 +173,21 @@ export class UploadGeneralService {
       );
 
       await this.uploadGeneralRepository.deleteReviewImageWithId(image.id);
-      this.deleteMediaFilesOnServerDisk(imageCookies[0].name, "image/review");
+      this.deleteMediaFilesOnServerDisk(
+        imageCookies[0].fileName,
+        "image/review",
+      );
     }
   }
 
-  async deleteReviewVideos(videoCookies: MediaUrlCookieValue[]): Promise<void> {
+  async deleteReviewVideos(videoCookies: MediaReceiveDto[]): Promise<void> {
     if (videoCookies.length >= 2) {
       for (const cookie of videoCookies) {
         const video = await this.uploadGeneralRepository.findReviewVideoWithUrl(
           cookie.url,
         );
         await this.uploadGeneralRepository.deleteReviewVideoWithId(video.id);
-        this.deleteMediaFilesOnServerDisk(cookie.name, "video/review");
+        this.deleteMediaFilesOnServerDisk(cookie.fileName, "video/review");
       }
     } else {
       const video = await this.uploadGeneralRepository.findReviewVideoWithUrl(
@@ -216,13 +195,14 @@ export class UploadGeneralService {
       );
 
       await this.uploadGeneralRepository.deleteReviewVideoWithId(video.id);
-      this.deleteMediaFilesOnServerDisk(videoCookies[0].name, "video/review");
+      this.deleteMediaFilesOnServerDisk(
+        videoCookies[0].fileName,
+        "video/review",
+      );
     }
   }
 
-  async deleteInquiryImages(
-    imageCookies: MediaUrlCookieValue[],
-  ): Promise<void> {
+  async deleteInquiryImages(imageCookies: MediaReceiveDto[]): Promise<void> {
     if (imageCookies.length >= 2) {
       for (const cookie of imageCookies) {
         const image =
@@ -230,7 +210,7 @@ export class UploadGeneralService {
             cookie.url,
           );
         await this.uploadGeneralRepository.deleteInquiryImageWithId(image.id);
-        this.deleteMediaFilesOnServerDisk(cookie.name, "image/inquiry");
+        this.deleteMediaFilesOnServerDisk(cookie.fileName, "image/inquiry");
       }
     } else {
       const image = await this.uploadGeneralRepository.findInquiryImageWithUrl(
@@ -238,13 +218,14 @@ export class UploadGeneralService {
       );
 
       await this.uploadGeneralRepository.deleteInquiryImageWithId(image.id);
-      this.deleteMediaFilesOnServerDisk(imageCookies[0].name, "image/inquiry");
+      this.deleteMediaFilesOnServerDisk(
+        imageCookies[0].fileName,
+        "image/inquiry",
+      );
     }
   }
 
-  async deleteInquiryVideos(
-    videoCookies: MediaUrlCookieValue[],
-  ): Promise<void> {
+  async deleteInquiryVideos(videoCookies: MediaReceiveDto[]): Promise<void> {
     if (videoCookies.length >= 2) {
       for (const cookie of videoCookies) {
         const video =
@@ -252,7 +233,7 @@ export class UploadGeneralService {
             cookie.url,
           );
         await this.uploadGeneralRepository.deleteInquiryVideoWithId(video.id);
-        this.deleteMediaFilesOnServerDisk(cookie.name, "video/inquiry");
+        this.deleteMediaFilesOnServerDisk(cookie.fileName, "video/inquiry");
       }
     } else {
       const video = await this.uploadGeneralRepository.findInquiryVideoWithUrl(
@@ -260,7 +241,10 @@ export class UploadGeneralService {
       );
 
       await this.uploadGeneralRepository.deleteInquiryVideoWithId(video.id);
-      this.deleteMediaFilesOnServerDisk(videoCookies[0].name, "video/inquiry");
+      this.deleteMediaFilesOnServerDisk(
+        videoCookies[0].fileName,
+        "video/inquiry",
+      );
     }
   }
 }

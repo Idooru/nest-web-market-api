@@ -8,7 +8,6 @@ import { ReviewVideoEntity } from "./entities/review.video.entity";
 import { UploadGeneralRepository } from "./repositories/upload-general.repository";
 import { UserModule } from "../user/user.module";
 import { ProductEntity } from "../product/entities/product.entity";
-import { MulterConfig } from "src/common/config/multer.config";
 import { LibraryModule } from "src/common/lib/library.module";
 import { JwtModule } from "@nestjs/jwt";
 import { UploadVersionOneOnlyAdminController } from "./controllers/upload-v1-only-admin.controller";
@@ -35,7 +34,7 @@ import { InquiryVideoEntity } from "./entities/inquiry.video.entity";
     UploadVersionOneFreeUseController,
     UploadVersionOneOnlyAdminController,
   ],
-  providers: [UploadGeneralService, UploadGeneralRepository, MulterConfig],
+  providers: [UploadGeneralService, UploadGeneralRepository],
   exports: [UploadGeneralService, UploadGeneralRepository],
 })
 export class UploadModule {}
