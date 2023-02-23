@@ -1,4 +1,4 @@
-import { MediaUploadDto } from "../dto/media-upload.dto";
+import { MediaUploadDto } from "../dto/upload-media.dto";
 import {
   Injectable,
   InternalServerErrorException,

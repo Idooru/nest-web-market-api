@@ -3,7 +3,7 @@ import { ReviewEntity } from "../entities/review.entity";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { UserEntity } from "src/model/user/entities/user.entity";
-import { MediaReceiveDto } from "src/model/upload/dto/media-receive.dto";
+import { ReceiveMediaDto } from "src/model/upload/dto/receive-media.dto";
 
 export class CreateReviewDto extends PickType(ReviewEntity, [
   "reviews",
@@ -16,22 +16,22 @@ export class CreateReviewWithImageAndVideoDto {
   createReviewDto: CreateReviewDto;
   jwtPayload: JwtAccessTokenPayload;
   productId: string;
-  reviewImgCookies: MediaReceiveDto[];
-  reviewVdoCookies: MediaReceiveDto[];
+  reviewImgCookies: ReceiveMediaDto[];
+  reviewVdoCookies: ReceiveMediaDto[];
 }
 
 export class CreateReviewWithImageDto {
   createReviewDto: CreateReviewDto;
   jwtPayload: JwtAccessTokenPayload;
   productId: string;
-  reviewImgCookies: MediaReceiveDto[];
+  reviewImgCookies: ReceiveMediaDto[];
 }
 
 export class CreateReviewWithVideoDto {
   createReviewDto: CreateReviewDto;
   jwtPayload: JwtAccessTokenPayload;
   productId: string;
-  reviewVdoCookies: MediaReceiveDto[];
+  reviewVdoCookies: ReceiveMediaDto[];
 }
 
 export class CreateReviewWithoutMediaDto {

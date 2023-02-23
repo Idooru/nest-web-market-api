@@ -22,7 +22,7 @@ import { UserGeneralRepository } from "src/model/user/repositories/user-general.
 import { UploadGeneralRepository } from "src/model/upload/repositories/upload-general.repository";
 import { ReviewImageEntity } from "src/model/upload/entities/review.image.entity";
 import { ReviewVideoEntity } from "src/model/upload/entities/review.video.entity";
-import { MediaReceiveDto } from "src/model/upload/dto/media-receive.dto";
+import { ReceiveMediaDto } from "src/model/upload/dto/receive-media.dto";
 
 @Injectable()
 export class ReviewGeneralService {
@@ -69,7 +69,7 @@ export class ReviewGeneralService {
   }
 
   async findReviewImageMore(
-    reviewImgCookies: MediaReceiveDto[],
+    reviewImgCookies: ReceiveMediaDto[],
     reviewDto: CreateReviewDto | ModifyReviewDto,
   ): Promise<void> {
     for (const reviewImgCookie of reviewImgCookies) {
@@ -81,7 +81,7 @@ export class ReviewGeneralService {
   }
 
   async findReviewImageOne(
-    reviewImgCookies: MediaReceiveDto[],
+    reviewImgCookies: ReceiveMediaDto[],
     reviewDto: CreateReviewDto | ModifyReviewDto,
   ): Promise<void> {
     const image = await this.uploadGeneralRepository.findReviewImageWithUrl(
@@ -91,7 +91,7 @@ export class ReviewGeneralService {
   }
 
   async findReviewVideoMore(
-    reviewVdoCookies: MediaReceiveDto[],
+    reviewVdoCookies: ReceiveMediaDto[],
     reviewDto: CreateReviewDto | ModifyReviewDto,
   ): Promise<void> {
     for (const reviewVdoCookie of reviewVdoCookies) {
@@ -103,7 +103,7 @@ export class ReviewGeneralService {
   }
 
   async findReviewVideoOne(
-    reviewVdoCookies: MediaReceiveDto[],
+    reviewVdoCookies: ReceiveMediaDto[],
     reviewDto: CreateReviewDto | ModifyReviewDto,
   ): Promise<void> {
     const video = await this.uploadGeneralRepository.findReviewVideoWithUrl(

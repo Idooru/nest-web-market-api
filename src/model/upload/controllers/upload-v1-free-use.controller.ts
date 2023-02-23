@@ -23,8 +23,8 @@ import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { JsonSendCookiesInterface } from "src/common/interceptors/general/interface/json-send-cookies.interface";
 import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
 import { JsonClearCookiesInterface } from "src/common/interceptors/general/interface/json-clear-cookies.interface";
-import { MediaReturnDto } from "../dto/media-return.dto";
-import { MediaReceiveDto } from "../dto/media-receive.dto";
+import { ReturnMediaDto } from "../dto/return-media.dto";
+import { ReceiveMediaDto } from "../dto/receive-media.dto";
 
 @Controller("/api/v1/free-use/upload")
 export class UploadVersionOneFreeUseController {
@@ -48,7 +48,7 @@ export class UploadVersionOneFreeUseController {
   async uploadReviewImage(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookiesInterface<MediaReturnDto>> {
+  ): Promise<JsonSendCookiesInterface<ReturnMediaDto>> {
     this.uploadGeneralService.isExistMediaFile("review image", files);
     this.mediaLoggerLibrary.log("review images", null, files);
 
@@ -81,7 +81,7 @@ export class UploadVersionOneFreeUseController {
   async uploadReviewVideo(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookiesInterface<MediaReturnDto>> {
+  ): Promise<JsonSendCookiesInterface<ReturnMediaDto>> {
     this.uploadGeneralService.isExistMediaFile("review video", files);
     this.mediaLoggerLibrary.log("review videos", null, files);
 
@@ -114,7 +114,7 @@ export class UploadVersionOneFreeUseController {
   async uploadInquiryImage(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookiesInterface<MediaReturnDto>> {
+  ): Promise<JsonSendCookiesInterface<ReturnMediaDto>> {
     this.uploadGeneralService.isExistMediaFile("inquiry image", files);
     this.mediaLoggerLibrary.log("inquiry images", null, files);
 
@@ -147,7 +147,7 @@ export class UploadVersionOneFreeUseController {
   async uploadInquiryVideo(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookiesInterface<MediaReturnDto>> {
+  ): Promise<JsonSendCookiesInterface<ReturnMediaDto>> {
     this.uploadGeneralService.isExistMediaFile("inquiry video", files);
     this.mediaLoggerLibrary.log("inquiry videos", null, files);
 
@@ -172,7 +172,7 @@ export class UploadVersionOneFreeUseController {
   @Delete("/review/image")
   async cancelImageUploadForReview(
     @Cookies(mediaCookieKeys.review.image_url_cookie)
-    reviewImgCookies: MediaReceiveDto[],
+    reviewImgCookies: ReceiveMediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.uploadGeneralService.deleteReviewImages(reviewImgCookies);
 
@@ -188,7 +188,7 @@ export class UploadVersionOneFreeUseController {
   @Delete("/review/video")
   async cancelVideoUploadForReview(
     @Cookies(mediaCookieKeys.review.video_url_cookie)
-    reviewVdoCookies: MediaReceiveDto[],
+    reviewVdoCookies: ReceiveMediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.uploadGeneralService.deleteReviewVideos(reviewVdoCookies);
 
@@ -204,7 +204,7 @@ export class UploadVersionOneFreeUseController {
   @Delete("/inquiry/image")
   async cancelImageUploadForInquiry(
     @Cookies(mediaCookieKeys.inquiry.image_url_cookie)
-    inquiryImgCookies: MediaReceiveDto[],
+    inquiryImgCookies: ReceiveMediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.uploadGeneralService.deleteInquiryImages(inquiryImgCookies);
 
@@ -220,7 +220,7 @@ export class UploadVersionOneFreeUseController {
   @Delete("/inquiry/video")
   async cancelVideoUploadForInquiry(
     @Cookies(mediaCookieKeys.inquiry.video_url_cookie)
-    inquiryVdoCookies: MediaReceiveDto[],
+    inquiryVdoCookies: ReceiveMediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.uploadGeneralService.deleteInquiryVideos(inquiryVdoCookies);
 

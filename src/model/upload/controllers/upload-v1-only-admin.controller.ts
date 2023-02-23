@@ -9,7 +9,7 @@ import {
 import { MulterConfig } from "src/common/config/multer.config";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { MediaReceiveDto } from "../dto/media-receive.dto";
+import { ReceiveMediaDto } from "../dto/receive-media.dto";
 import { MeidaLoggerLibrary } from "src/common/lib/media-logger.library";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { mediaCookieKeys } from "../../../common/config/cookie-key-configs";
@@ -21,7 +21,7 @@ import { JsonSendCookieInterceptor } from "src/common/interceptors/general/json-
 import { JsonSendCookieInterface } from "src/common/interceptors/general/interface/json-send-cookie.interface";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/general/json-clear-cookie.interceptor";
 import { JsonClearCookieInterface } from "src/common/interceptors/general/interface/json-clear-cookie.interface";
-import { MediaReturnDto } from "../dto/media-return.dto";
+import { ReturnMediaDto } from "../dto/return-media.dto";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
@@ -40,7 +40,7 @@ export class UploadVersionOneOnlyAdminController {
   async uploadOneMedia(
     @UploadedFile() file: Express.Multer.File,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookieInterface<MediaReturnDto>> {
+  ): Promise<JsonSendCookieInterface<ReturnMediaDto>> {
     this.uploadGeneralService.isExistMediaFile("product image", file);
     this.mediaLoggerLibrary.log("product image", file, null);
 
@@ -64,7 +64,7 @@ export class UploadVersionOneOnlyAdminController {
   @Delete("/product/image")
   async cancelImageUploadForProduct(
     @Cookie(mediaCookieKeys.product.image_url_cookie)
-    productImgCookie: MediaReceiveDto,
+    productImgCookie: ReceiveMediaDto,
   ): Promise<JsonClearCookieInterface> {
     await this.uploadGeneralService.deleteProductImage(productImgCookie);
 

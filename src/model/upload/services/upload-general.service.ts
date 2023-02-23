@@ -3,7 +3,7 @@ import { UploadGeneralRepository } from "../repositories/upload-general.reposito
 import { JwtAccessTokenPayload } from "../../auth/jwt/jwt-access-token-payload.interface";
 import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
 import { ConfigService } from "@nestjs/config";
-import { MediaReceiveDto } from "../dto/media-receive.dto";
+import { ReceiveMediaDto } from "../dto/receive-media.dto";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -149,7 +149,7 @@ export class UploadGeneralService {
     }
   }
 
-  async deleteProductImage(imageCookie: MediaReceiveDto): Promise<void> {
+  async deleteProductImage(imageCookie: ReceiveMediaDto): Promise<void> {
     const image = await this.uploadGeneralRepository.findProductImageWithUrl(
       imageCookie.url,
     );
@@ -158,7 +158,7 @@ export class UploadGeneralService {
     this.deleteMediaFilesOnServerDisk(imageCookie.fileName, "image/product");
   }
 
-  async deleteReviewImages(imageCookies: MediaReceiveDto[]): Promise<void> {
+  async deleteReviewImages(imageCookies: ReceiveMediaDto[]): Promise<void> {
     if (imageCookies.length >= 2) {
       for (const cookie of imageCookies) {
         const image = await this.uploadGeneralRepository.findReviewImageWithUrl(
@@ -180,7 +180,7 @@ export class UploadGeneralService {
     }
   }
 
-  async deleteReviewVideos(videoCookies: MediaReceiveDto[]): Promise<void> {
+  async deleteReviewVideos(videoCookies: ReceiveMediaDto[]): Promise<void> {
     if (videoCookies.length >= 2) {
       for (const cookie of videoCookies) {
         const video = await this.uploadGeneralRepository.findReviewVideoWithUrl(
@@ -202,7 +202,7 @@ export class UploadGeneralService {
     }
   }
 
-  async deleteInquiryImages(imageCookies: MediaReceiveDto[]): Promise<void> {
+  async deleteInquiryImages(imageCookies: ReceiveMediaDto[]): Promise<void> {
     if (imageCookies.length >= 2) {
       for (const cookie of imageCookies) {
         const image =
@@ -225,7 +225,7 @@ export class UploadGeneralService {
     }
   }
 
-  async deleteInquiryVideos(videoCookies: MediaReceiveDto[]): Promise<void> {
+  async deleteInquiryVideos(videoCookies: ReceiveMediaDto[]): Promise<void> {
     if (videoCookies.length >= 2) {
       for (const cookie of videoCookies) {
         const video =
