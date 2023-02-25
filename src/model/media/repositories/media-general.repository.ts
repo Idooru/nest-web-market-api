@@ -1,4 +1,4 @@
-import { MediaUploadDto } from "../dto/upload-media.dto";
+import { UploadMediaDto } from "../dto/upload-media.dto";
 import {
   Injectable,
   InternalServerErrorException,
@@ -17,7 +17,7 @@ import { InquiryImageEntity } from "../entities/inquiry.image.entity";
 import { InquiryVideoEntity } from "../entities/inquiry.video.entity";
 
 @Injectable()
-export class UploadGeneralRepository {
+export class MediaGeneralRepository {
   constructor(
     @InjectRepository(ProductImageEntity)
     private readonly productsImageRepository: Repository<ProductImageEntity>,
@@ -34,7 +34,7 @@ export class UploadGeneralRepository {
   private readonly logger = new Logger("Repository");
   private readonly select = mediaSelectProperty;
 
-  async uploadProductImage(mediaUploadDto: MediaUploadDto): Promise<void> {
+  async uploadProductImage(mediaUploadDto: UploadMediaDto): Promise<void> {
     try {
       await this.productsImageRepository
         .createQueryBuilder()
@@ -48,7 +48,7 @@ export class UploadGeneralRepository {
     }
   }
 
-  async uploadReviewImage(mediaUploadDto: MediaUploadDto): Promise<void> {
+  async uploadReviewImage(mediaUploadDto: UploadMediaDto): Promise<void> {
     try {
       await this.reviewsImageRepository
         .createQueryBuilder()
@@ -62,7 +62,7 @@ export class UploadGeneralRepository {
     }
   }
 
-  async uploadReviewVideo(mediaUploadDto: MediaUploadDto): Promise<void> {
+  async uploadReviewVideo(mediaUploadDto: UploadMediaDto): Promise<void> {
     try {
       await this.reviewsVideoRepository
         .createQueryBuilder()
@@ -76,7 +76,7 @@ export class UploadGeneralRepository {
     }
   }
 
-  async uploadInquiryImage(mediaUploadDto: MediaUploadDto): Promise<void> {
+  async uploadInquiryImage(mediaUploadDto: UploadMediaDto): Promise<void> {
     try {
       await this.inquiryImageRepository
         .createQueryBuilder()
@@ -90,7 +90,7 @@ export class UploadGeneralRepository {
     }
   }
 
-  async uploadInquiryVideo(mediaUploadDto: MediaUploadDto): Promise<void> {
+  async uploadInquiryVideo(mediaUploadDto: UploadMediaDto): Promise<void> {
     try {
       await this.inquiryVideoRepository
         .createQueryBuilder()

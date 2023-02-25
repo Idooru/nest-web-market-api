@@ -1,19 +1,19 @@
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Module, forwardRef } from "@nestjs/common";
-import { UploadGeneralService } from "./services/upload-general.service";
-import { UploadVersionOneFreeUseController } from "./controllers/upload-v1-free-use.controller";
 import { ProductImageEntity } from "./entities/product.image.entity";
 import { ReviewImageEntity } from "./entities/review.image.entity";
 import { ReviewVideoEntity } from "./entities/review.video.entity";
-import { UploadGeneralRepository } from "./repositories/upload-general.repository";
 import { UserModule } from "../user/user.module";
 import { ProductEntity } from "../product/entities/product.entity";
 import { LibraryModule } from "src/common/lib/library.module";
 import { JwtModule } from "@nestjs/jwt";
-import { UploadVersionOneOnlyAdminController } from "./controllers/upload-v1-only-admin.controller";
 import { DotenvConfigurationModule } from "src/common/config/dotenv.config";
 import { InquiryImageEntity } from "./entities/inquiry.image.entity";
 import { InquiryVideoEntity } from "./entities/inquiry.video.entity";
+import { MediaVersionOneFreeUseController } from "./controllers/media-v1-free-use.controller";
+import { MediaVersionOneOnlyAdminController } from "./controllers/media-v1-only-admin.controller";
+import { MediaGeneralService } from "./services/media-general.service";
+import { MediaGeneralRepository } from "./repositories/media-general.repository";
 
 @Module({
   imports: [
@@ -31,10 +31,10 @@ import { InquiryVideoEntity } from "./entities/inquiry.video.entity";
     DotenvConfigurationModule,
   ],
   controllers: [
-    UploadVersionOneFreeUseController,
-    UploadVersionOneOnlyAdminController,
+    MediaVersionOneFreeUseController,
+    MediaVersionOneOnlyAdminController,
   ],
-  providers: [UploadGeneralService, UploadGeneralRepository],
-  exports: [UploadGeneralService, UploadGeneralRepository],
+  providers: [MediaGeneralService, MediaGeneralRepository],
+  exports: [MediaGeneralService, MediaGeneralRepository],
 })
-export class UploadModule {}
+export class MediaModule {}

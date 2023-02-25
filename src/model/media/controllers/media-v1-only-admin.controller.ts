@@ -16,19 +16,19 @@ import { mediaCookieKeys } from "../../../common/config/cookie-key-configs";
 import { Cookie } from "src/common/decorators/cookie.decorator";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { UploadGeneralService } from "../services/upload-general.service";
 import { JsonSendCookieInterceptor } from "src/common/interceptors/general/json-send-cookie.interceptor";
 import { JsonSendCookieInterface } from "src/common/interceptors/general/interface/json-send-cookie.interface";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/general/json-clear-cookie.interceptor";
 import { JsonClearCookieInterface } from "src/common/interceptors/general/interface/json-clear-cookie.interface";
 import { ReturnMediaDto } from "../dto/return-media.dto";
+import { MediaGeneralService } from "../services/media-general.service";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
-@Controller("/api/v1/only-admin/upload")
-export class UploadVersionOneOnlyAdminController {
+@Controller("/api/v1/only-admin/media")
+export class MediaVersionOneOnlyAdminController {
   constructor(
-    private readonly uploadGeneralService: UploadGeneralService,
+    private readonly mediaGeneralService: MediaGeneralService,
     private readonly mediaLoggerLibrary: MeidaLoggerLibrary,
   ) {}
 
@@ -37,20 +37,19 @@ export class UploadVersionOneOnlyAdminController {
     FileInterceptor("product_image", MulterConfig.upload("/image/product")),
   )
   @Post("/product/image")
-  async uploadOneMedia(
+  async uploadProductImage(
     @UploadedFile() file: Express.Multer.File,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookieInterface<ReturnMediaDto>> {
-    this.uploadGeneralService.isExistMediaFile("product image", file);
+    this.mediaGeneralService.isExistMediaFile("product image", file);
     this.mediaLoggerLibrary.log("product image", file, null);
 
-    await this.uploadGeneralService.uploadProductImage(file, jwtPayload);
+    await this.mediaGeneralService.uploadProductImage(file, jwtPayload);
 
-    const cookieValue = {
-      whatCookie: mediaCookieKeys.product.image_url_cookie,
-      url: this.uploadGeneralService.setUrl(file.filename),
-      fileName: file.filename,
-    };
+    const cookieValue = this.mediaGeneralService.createMediaCookieValue(
+      mediaCookieKeys.product.image_url_cookie,
+      file,
+    );
 
     return {
       statusCode: 201,
@@ -66,7 +65,7 @@ export class UploadVersionOneOnlyAdminController {
     @Cookie(mediaCookieKeys.product.image_url_cookie)
     productImgCookie: ReceiveMediaDto,
   ): Promise<JsonClearCookieInterface> {
-    await this.uploadGeneralService.deleteProductImage(productImgCookie);
+    await this.mediaGeneralService.deleteProductImage(productImgCookie);
 
     return {
       statusCode: 200,
