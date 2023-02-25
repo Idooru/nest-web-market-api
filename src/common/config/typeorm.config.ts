@@ -5,15 +5,15 @@ import { UserProfileEntity } from "src/model/user/entities/user.profile.entity";
 import { UserActivityEntity } from "src/model/user/entities/user.activity.entity";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
-import { ProductImageEntity } from "src/model/upload/entities/product.image.entity";
 import { StarRateEntity } from "src/model/review/entities/star-rate.entity";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
-import { ReviewImageEntity } from "src/model/upload/entities/review.image.entity";
-import { ReviewVideoEntity } from "src/model/upload/entities/review.video.entity";
 import { InquiryEntity } from "src/model/inquiry/entities/inquiry.entity";
 import { Module } from "@nestjs/common";
-import { InquiryImageEntity } from "src/model/upload/entities/inquiry.image.entity";
-import { InquiryVideoEntity } from "src/model/upload/entities/inquiry.video.entity";
+import { ProductImageEntity } from "src/model/media/entities/product.image.entity";
+import { ReviewImageEntity } from "src/model/media/entities/review.image.entity";
+import { ReviewVideoEntity } from "src/model/media/entities/review.video.entity";
+import { InquiryImageEntity } from "src/model/media/entities/inquiry.image.entity";
+import { InquiryVideoEntity } from "src/model/media/entities/inquiry.video.entity";
 
 @Module({
   imports: [

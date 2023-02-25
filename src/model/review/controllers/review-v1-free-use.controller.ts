@@ -14,7 +14,6 @@ import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { Cookies } from "src/common/decorators/cookies.decorator";
 import { UseInterceptors } from "@nestjs/common";
-import { ReceiveMediaDto } from "src/model/upload/dto/receive-media.dto";
 import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import {
@@ -26,6 +25,7 @@ import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-gen
 import { JsonGeneralInterface } from "src/common/interceptors/general/interface/json-general-interface";
 import { StarRateService } from "../services/star-rate-general.service";
 import { VerifyDataGuard } from "src/common/guards/verfiy/verify-data.guard";
+import { ReceiveMediaDto } from "src/model/media/dto/receive-media.dto";
 
 @Controller("/api/v1/free-use/review")
 export class ReviewVersionOneFreeUseController {

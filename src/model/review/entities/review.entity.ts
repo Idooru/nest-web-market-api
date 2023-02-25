@@ -2,9 +2,9 @@ import { Column, Entity, OneToMany, ManyToOne, JoinColumn } from "typeorm";
 import { ProductEntity } from "./../../product/entities/product.entity";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { IsNotEmpty, IsString, IsEnum } from "class-validator";
-import { ReviewImageEntity } from "src/model/upload/entities/review.image.entity";
-import { ReviewVideoEntity } from "src/model/upload/entities/review.video.entity";
 import { UserActivityEntity } from "../../user/entities/user.activity.entity";
+import { ReviewImageEntity } from "src/model/media/entities/review.image.entity";
+import { ReviewVideoEntity } from "src/model/media/entities/review.video.entity";
 
 @Entity("reviews")
 export class ReviewEntity extends CommonEntity {

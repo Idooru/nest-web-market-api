@@ -19,10 +19,10 @@ import {
 import { ReviewEntity } from "../entities/review.entity";
 import { ProductGeneralRepository } from "src/model/product/repositories/product-general.repository";
 import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
-import { UploadGeneralRepository } from "src/model/upload/repositories/upload-general.repository";
-import { ReviewImageEntity } from "src/model/upload/entities/review.image.entity";
-import { ReviewVideoEntity } from "src/model/upload/entities/review.video.entity";
-import { ReceiveMediaDto } from "src/model/upload/dto/receive-media.dto";
+import { MediaGeneralRepository } from "src/model/media/repositories/media-general.repository";
+import { ReceiveMediaDto } from "src/model/media/dto/receive-media.dto";
+import { ReviewImageEntity } from "src/model/media/entities/review.image.entity";
+import { ReviewVideoEntity } from "src/model/media/entities/review.video.entity";
 
 @Injectable()
 export class ReviewGeneralService {
@@ -30,7 +30,7 @@ export class ReviewGeneralService {
     private readonly reviewGeneralRepository: ReviewGeneralRepository,
     private readonly productGeneralRepository: ProductGeneralRepository,
     private readonly userGeneralRepository: UserGeneralRepository,
-    private readonly uploadGeneralRepository: UploadGeneralRepository,
+    private readonly mediaGeneralRepository: MediaGeneralRepository,
   ) {}
 
   async findUserAndProduct(
@@ -73,7 +73,7 @@ export class ReviewGeneralService {
     reviewDto: CreateReviewDto | ModifyReviewDto,
   ): Promise<void> {
     for (const reviewImgCookie of reviewImgCookies) {
-      const image = await this.uploadGeneralRepository.findReviewImageWithUrl(
+      const image = await this.mediaGeneralRepository.findReviewImageWithUrl(
         reviewImgCookie.url,
       );
       reviewDto.Image.push(image);
@@ -84,7 +84,7 @@ export class ReviewGeneralService {
     reviewImgCookies: ReceiveMediaDto[],
     reviewDto: CreateReviewDto | ModifyReviewDto,
   ): Promise<void> {
-    const image = await this.uploadGeneralRepository.findReviewImageWithUrl(
+    const image = await this.mediaGeneralRepository.findReviewImageWithUrl(
       reviewImgCookies[0].url,
     );
     reviewDto.Image.push(image);
@@ -95,7 +95,7 @@ export class ReviewGeneralService {
     reviewDto: CreateReviewDto | ModifyReviewDto,
   ): Promise<void> {
     for (const reviewVdoCookie of reviewVdoCookies) {
-      const video = await this.uploadGeneralRepository.findReviewVideoWithUrl(
+      const video = await this.mediaGeneralRepository.findReviewVideoWithUrl(
         reviewVdoCookie.url,
       );
       reviewDto.Video.push(video);
@@ -106,7 +106,7 @@ export class ReviewGeneralService {
     reviewVdoCookies: ReceiveMediaDto[],
     reviewDto: CreateReviewDto | ModifyReviewDto,
   ): Promise<void> {
-    const video = await this.uploadGeneralRepository.findReviewVideoWithUrl(
+    const video = await this.mediaGeneralRepository.findReviewVideoWithUrl(
       reviewVdoCookies[0].url,
     );
     reviewDto.Video.push(video);
@@ -117,7 +117,7 @@ export class ReviewGeneralService {
     review: ReviewEntity,
   ): Promise<void> {
     for (const image of images) {
-      await this.uploadGeneralRepository.insertReviewIdOnReviewImage(
+      await this.mediaGeneralRepository.insertReviewIdOnReviewImage(
         image,
         review,
       );
@@ -128,7 +128,7 @@ export class ReviewGeneralService {
     image: ReviewImageEntity,
     review: ReviewEntity,
   ): Promise<void> {
-    await this.uploadGeneralRepository.insertReviewIdOnReviewImage(
+    await this.mediaGeneralRepository.insertReviewIdOnReviewImage(
       image,
       review,
     );
@@ -139,7 +139,7 @@ export class ReviewGeneralService {
     review: ReviewEntity,
   ): Promise<void> {
     for (const video of videos) {
-      await this.uploadGeneralRepository.insertReviewIdOnReviewVideo(
+      await this.mediaGeneralRepository.insertReviewIdOnReviewVideo(
         video,
         review,
       );
@@ -150,7 +150,7 @@ export class ReviewGeneralService {
     video: ReviewVideoEntity,
     review: ReviewEntity,
   ): Promise<void> {
-    await this.uploadGeneralRepository.insertReviewIdOnReviewVideo(
+    await this.mediaGeneralRepository.insertReviewIdOnReviewVideo(
       video,
       review,
     );
@@ -158,26 +158,22 @@ export class ReviewGeneralService {
 
   async deleteReviewImageMore(beforeImages: ReviewImageEntity[]) {
     for (const beforeImage of beforeImages) {
-      await this.uploadGeneralRepository.deleteReviewImageWithId(
-        beforeImage.id,
-      );
+      await this.mediaGeneralRepository.deleteReviewImageWithId(beforeImage.id);
     }
   }
 
   async deleteReviewImageOne(beforeImage: ReviewImageEntity) {
-    await this.uploadGeneralRepository.deleteReviewImageWithId(beforeImage.id);
+    await this.mediaGeneralRepository.deleteReviewImageWithId(beforeImage.id);
   }
 
   async deleteReviewVideoMore(beforeVideos: ReviewVideoEntity[]) {
     for (const beforeVideo of beforeVideos) {
-      await this.uploadGeneralRepository.deleteReviewVideoWithId(
-        beforeVideo.id,
-      );
+      await this.mediaGeneralRepository.deleteReviewVideoWithId(beforeVideo.id);
     }
   }
 
   async deleteReviewVideoOne(beforeVideo: ReviewVideoEntity) {
-    await this.uploadGeneralRepository.deleteReviewVideoWithId(beforeVideo.id);
+    await this.mediaGeneralRepository.deleteReviewVideoWithId(beforeVideo.id);
   }
 
   async createReviewWithImageAndVideo(
@@ -361,7 +357,7 @@ export class ReviewGeneralService {
 
     if (reviewImgCookies.length >= 2) {
       const beforeImages =
-        await this.uploadGeneralRepository.findBeforeReviewImages(review.id);
+        await this.mediaGeneralRepository.findBeforeReviewImages(review.id);
       await this.findReviewImageMore(reviewImgCookies, modifyReviewDto);
       await Promise.all([
         this.insertReviewIdOnReviewImageMore(modifyReviewDto.Image, review),
@@ -369,7 +365,7 @@ export class ReviewGeneralService {
       ]);
     } else {
       const beforeImage =
-        await this.uploadGeneralRepository.findBeforeReviewImage(review.id);
+        await this.mediaGeneralRepository.findBeforeReviewImage(review.id);
       await this.findReviewImageOne(reviewImgCookies, modifyReviewDto);
       await Promise.all([
         this.insertReviewIdOnReviewImageOne(modifyReviewDto.Image[0], review),
@@ -379,7 +375,7 @@ export class ReviewGeneralService {
 
     if (reviewVdoCookies.length >= 2) {
       const beforeVideos =
-        await this.uploadGeneralRepository.findBeforeReviewVideos(review.id);
+        await this.mediaGeneralRepository.findBeforeReviewVideos(review.id);
 
       await this.findReviewVideoMore(reviewVdoCookies, modifyReviewDto);
       await Promise.all([
@@ -388,7 +384,7 @@ export class ReviewGeneralService {
       ]);
     } else {
       const beforeVideo =
-        await this.uploadGeneralRepository.findBeforeReviewVideo(review.id);
+        await this.mediaGeneralRepository.findBeforeReviewVideo(review.id);
       await this.findReviewVideoOne(reviewVdoCookies, modifyReviewDto);
       await Promise.all([
         this.insertReviewIdOnReviewVideoOne(modifyReviewDto.Video[0], review),
@@ -412,7 +408,7 @@ export class ReviewGeneralService {
 
     if (reviewImgCookies.length >= 2) {
       const beforeImages =
-        await this.uploadGeneralRepository.findBeforeReviewImages(review.id);
+        await this.mediaGeneralRepository.findBeforeReviewImages(review.id);
       await this.findReviewImageMore(reviewImgCookies, modifyReviewDto);
       await Promise.all([
         this.insertReviewIdOnReviewImageMore(modifyReviewDto.Image, review),
@@ -420,7 +416,7 @@ export class ReviewGeneralService {
       ]);
     } else {
       const beforeImage =
-        await this.uploadGeneralRepository.findBeforeReviewImage(review.id);
+        await this.mediaGeneralRepository.findBeforeReviewImage(review.id);
       await this.findReviewImageOne(reviewImgCookies, modifyReviewDto);
       await Promise.all([
         this.insertReviewIdOnReviewImageOne(modifyReviewDto.Image[0], review),
@@ -444,7 +440,7 @@ export class ReviewGeneralService {
 
     if (reviewVdoCookies.length >= 2) {
       const beforeVideos =
-        await this.uploadGeneralRepository.findBeforeReviewVideos(review.id);
+        await this.mediaGeneralRepository.findBeforeReviewVideos(review.id);
       await this.findReviewVideoMore(reviewVdoCookies, modifyReviewDto);
       await Promise.all([
         this.insertReviewIdOnReviewVideoMore(modifyReviewDto.Video, review),
@@ -452,7 +448,7 @@ export class ReviewGeneralService {
       ]);
     } else {
       const beforeVideo =
-        await this.uploadGeneralRepository.findBeforeReviewVideo(review.id);
+        await this.mediaGeneralRepository.findBeforeReviewVideo(review.id);
       await this.findReviewVideoOne(reviewVdoCookies, modifyReviewDto);
       await Promise.all([
         this.insertReviewIdOnReviewVideoOne(modifyReviewDto.Video[0], review),

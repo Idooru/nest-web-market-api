@@ -1,4 +1,3 @@
-import { UploadModule } from "./../upload/upload.module";
 import { ProductGeneralRepository } from "./repositories/product-general.repository";
 import { ProductEntity } from "../product/entities/product.entity";
 import { Module, forwardRef } from "@nestjs/common";
@@ -8,19 +7,20 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserModule } from "../user/user.module";
 import { ReviewModule } from "../review/review.module";
 import { InquiryModule } from "../inquiry/inquiry.module";
-import { ProductImageEntity } from "../upload/entities/product.image.entity";
 import { LibraryModule } from "src/common/lib/library.module";
 import { ProductVersionOneOnlyAdminController } from "./controllers/v1/product-v1-only-admin.controller";
 import { JwtModule } from "@nestjs/jwt";
 import { ProductVersionOneVerfiyController } from "./controllers/v1/product-v1-verify.controller";
 import { ProductVerifyService } from "./services/product-verify.service";
 import { ProductVerifyRepository } from "./repositories/product-verify.repository";
+import { ProductImageEntity } from "../media/entities/product.image.entity";
+import { MediaModule } from "../media/media.module";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ProductEntity, ProductImageEntity]),
     forwardRef(() => UserModule),
-    forwardRef(() => UploadModule),
+    forwardRef(() => MediaModule),
     forwardRef(() => ReviewModule),
     forwardRef(() => InquiryModule),
     JwtModule,

@@ -9,18 +9,18 @@ import { ReviewGeneralRepository } from "./repositories/review-general.repositor
 import { StarRateEntity } from "./entities/star-rate.entity";
 import { StarRateRepository } from "./repositories/star-rate-general.repository";
 import { StarRateService } from "./services/star-rate-general.service";
-import { UploadModule } from "../upload/upload.module";
 import { LibraryModule } from "src/common/lib/library.module";
 import { JwtModule } from "@nestjs/jwt";
 import { ReviewVersionOneOnlyAdminController } from "./controllers/review-v1-only-admin.controller";
 import { ReviewVersionOneVerify } from "./controllers/review-v1-verify.controller";
 import { ReviewVerifyService } from "./services/review-verify.service";
 import { ReviewVerifyRepository } from "./repositories/review-verify.repository";
+import { MediaModule } from "../media/media.module";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ReviewEntity, StarRateEntity]),
-    forwardRef(() => UploadModule),
+    forwardRef(() => MediaModule),
     forwardRef(() => UserModule),
     forwardRef(() => ProductModule),
     JwtModule,
