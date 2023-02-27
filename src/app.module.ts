@@ -3,10 +3,10 @@ import { AuthModule } from "./model/auth/auth.module";
 import { UserModule } from "./model/user/user.module";
 import { ProductModule } from "./model/product/product.module";
 import { ResponseLoggerMiddleware } from "./common/middlewares/response-logger.middleware";
+import { UploadModule } from "./model/upload/upload.module";
 import { ReviewModule } from "./model/review/review.module";
 import { DotenvConfigurationModule } from "./common/config/dotenv.config";
 import { TypeormConfigurationModule } from "./common/config/typeorm.config";
-import { MediaModule } from "./model/media/media.module";
 
 @Module({
   imports: [
@@ -15,7 +15,7 @@ import { MediaModule } from "./model/media/media.module";
     AuthModule,
     UserModule,
     ProductModule,
-    MediaModule,
+    UploadModule,
     ReviewModule,
   ],
   controllers: [],

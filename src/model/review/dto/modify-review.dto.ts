@@ -1,6 +1,6 @@
 import { CreateReviewDto } from "./create-review.dto";
-import { ReceiveMediaDto } from "src/model/media/dto/receive-media.dto";
 import { ReviewEntity } from "../entities/review.entity";
+import { ReceiveMediaDto } from "src/model/upload/dto/receive-media.dto";
 
 export class ModifyReviewDto extends CreateReviewDto {}
 

@@ -4,15 +4,15 @@ import { ProductGeneralRepository } from "../repositories/product-general.reposi
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
-import { ReceiveMediaDto } from "src/model/media/dto/receive-media.dto";
-import { MediaGeneralRepository } from "src/model/media/repositories/media-general.repository";
-import { ProductImageEntity } from "src/model/media/entities/product.image.entity";
+import { ReceiveMediaDto } from "src/model/upload/dto/receive-media.dto";
+import { ProductImageEntity } from "src/model/upload/entities/product.image.entity";
+import { UploadGeneralRepository } from "src/model/upload/repositories/upload-general.repository";
 
 @Injectable()
 export class ProductGeneralService {
   constructor(
     private readonly productGeneralRepository: ProductGeneralRepository,
-    private readonly mediaGeneralRepository: MediaGeneralRepository,
+    private readonly uploadGeneralRepository: UploadGeneralRepository,
     private readonly starRateRepository: StarRateRepository,
   ) {}
 
@@ -55,7 +55,7 @@ export class ProductGeneralService {
     imageCookie: ReceiveMediaDto,
   ): Promise<void> {
     const [image, StarRate] = await Promise.all([
-      this.mediaGeneralRepository.findProductImageWithUrl(imageCookie.url),
+      this.uploadGeneralRepository.findProductImageWithUrl(imageCookie.url),
       this.starRateRepository.createStarRateSample(),
     ]);
 
@@ -64,7 +64,10 @@ export class ProductGeneralService {
       await this.productGeneralRepository.findLastCreatedProduct();
 
     await Promise.all([
-      this.mediaGeneralRepository.insertProductIdOnProductImage(image, product),
+      this.uploadGeneralRepository.insertProductIdOnProductImage(
+        image,
+        product,
+      ),
       this.starRateRepository.insertProductIdOnStarRate(StarRate, product),
     ]);
   }
@@ -75,8 +78,8 @@ export class ProductGeneralService {
   ): Promise<[ProductEntity, ProductImageEntity, ProductImageEntity]> {
     return await Promise.all([
       this.productGeneralRepository.findProductOneById(id),
-      this.mediaGeneralRepository.findProductImageWithUrl(imageCookie.url),
-      this.mediaGeneralRepository.findProductImageEvenUse(id),
+      this.uploadGeneralRepository.findProductImageWithUrl(imageCookie.url),
+      this.uploadGeneralRepository.findProductImageEvenUse(id),
     ]);
   }
 
@@ -89,8 +92,8 @@ export class ProductGeneralService {
       await this.findProductAndImageForModify(id, imageCookie);
 
     await Promise.all([
-      this.mediaGeneralRepository.deleteProductImageWithId(evenImage.id),
-      this.mediaGeneralRepository.insertProductIdOnProductImage(
+      this.uploadGeneralRepository.deleteProductImageWithId(evenImage.id),
+      this.uploadGeneralRepository.insertProductIdOnProductImage(
         newImage,
         product,
       ),
@@ -103,8 +106,8 @@ export class ProductGeneralService {
       await this.findProductAndImageForModify(id, imageCookie);
 
     await Promise.all([
-      this.mediaGeneralRepository.deleteProductImageWithId(evenImage.id),
-      this.mediaGeneralRepository.insertProductIdOnProductImage(
+      this.uploadGeneralRepository.deleteProductImageWithId(evenImage.id),
+      this.uploadGeneralRepository.insertProductIdOnProductImage(
         newImage,
         product,
       ),

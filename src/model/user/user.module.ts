@@ -1,6 +1,7 @@
 import { ReviewModule } from "../review/review.module";
 import { UserActivityEntity } from "./entities/user.activity.entity";
 import { UserAuthEntity } from "./entities/user.auth.entity";
+import { UploadModule } from "../upload/upload.module";
 import { AuthModule } from "../auth/auth.module";
 import { UserProfileEntity } from "./entities/user.profile.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -15,7 +16,6 @@ import { UserGeneralRepository } from "./repositories/user-general.repository";
 import { UserVerifyService } from "./services/user-verify.service";
 import { UserVerifyRepository } from "./repositories/user-verify.repository";
 import { UserVersionOneVerifyController } from "./controllers/v1/user-v1-verfiy.controller";
-import { MediaModule } from "../media/media.module";
 
 @Module({
   imports: [
@@ -26,7 +26,7 @@ import { MediaModule } from "../media/media.module";
       UserActivityEntity,
     ]),
     forwardRef(() => AuthModule),
-    forwardRef(() => MediaModule),
+    forwardRef(() => UploadModule),
     forwardRef(() => ReviewModule),
     JwtModule,
     LibraryModule,

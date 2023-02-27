@@ -3,7 +3,7 @@ import { ReviewEntity } from "../entities/review.entity";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { UserEntity } from "src/model/user/entities/user.entity";
-import { ReceiveMediaDto } from "src/model/media/dto/receive-media.dto";
+import { ReceiveMediaDto } from "src/model/upload/dto/receive-media.dto";
 
 export class CreateReviewDto extends PickType(ReviewEntity, [
   "reviews",
