@@ -15,6 +15,11 @@ import { ReviewVideoEntity } from "src/model/media/entities/review.video.entity"
 import { InquiryImageEntity } from "src/model/media/entities/inquiry.image.entity";
 import { InquiryVideoEntity } from "src/model/media/entities/inquiry.video.entity";
 
+const isNodeEnvDev = (): boolean =>
+  process.env.NODE_ENV === "dev" ? true : false;
+const isNodeEnvProd = (): boolean =>
+  process.env.NODE_ENV === "prod" ? true : false;
+
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -22,11 +27,11 @@ import { InquiryVideoEntity } from "src/model/media/entities/inquiry.video.entit
         configService: ConfigService,
       ): Promise<TypeOrmModuleOptions> => ({
         type: "mysql",
-        host: configService.get("MYSQL_HOST"),
-        port: 3306,
-        username: configService.get("MYSQL_USERNAME"),
-        password: configService.get("MYSQL_PASSWORD"),
-        database: "nestwebmarket_api",
+        host: configService.get("DB_HOST"),
+        port: configService.get("DB_PORT"),
+        username: configService.get("DB_USERNAME"),
+        password: configService.get("DB_PASSWORD"),
+        database: configService.get("DB_SCHEMA"),
         entities: [
           UserEntity,
           UserProfileEntity,
@@ -42,9 +47,8 @@ import { InquiryVideoEntity } from "src/model/media/entities/inquiry.video.entit
           InquiryImageEntity,
           InquiryVideoEntity,
         ],
-        autoLoadEntities: true,
-        synchronize: (() => (process.env.NODE_ENV === "dev" ? true : false))(),
-        migrationsRun: false,
+        synchronize: isNodeEnvDev(),
+        migrationsRun: isNodeEnvProd(),
         logging: false,
         dropSchema: false,
         keepConnectionAlive: true,
