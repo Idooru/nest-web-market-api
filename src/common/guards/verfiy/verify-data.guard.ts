@@ -24,7 +24,7 @@ export class VerifyDataGuard implements CanActivate {
     );
 
     const sortedNeedCookies = needCookies.sort();
-    const sortedImportedCookies = needCookies.sort();
+    const sortedImportedCookies = importedCookies.sort();
 
     const isEqual =
       needCookies.length === importedCookies.length &&
