@@ -39,7 +39,4 @@ export class ReviewEntity extends CommonEntity {
     cascade: true,
   })
   Video?: ReviewVideoEntity[];
-
-  @Column()
-  test: string;
 }
