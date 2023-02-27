@@ -22,7 +22,7 @@ import { JsonClearCookieInterface } from "src/common/interceptors/general/interf
 import { JsonGeneralInterface } from "src/common/interceptors/general/interface/json-general-interface";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/general/json-clear-cookie.interceptor";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
-import { ReceiveMediaDto } from "src/model/upload/dto/receive-media.dto";
+import { ReceiveMediaDto } from "src/model/media/dto/receive-media.dto";
 import { CreateProductDto } from "../../dto/create_product.dto";
 import { ModifyProductDto } from "../../dto/modify_product.dto";
 import { ProductEntity } from "../../entities/product.entity";

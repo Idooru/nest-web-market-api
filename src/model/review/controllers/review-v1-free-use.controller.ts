@@ -14,7 +14,7 @@ import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { Cookies } from "src/common/decorators/cookies.decorator";
 import { UseInterceptors } from "@nestjs/common";
-import { ReceiveMediaDto } from "src/model/upload/dto/receive-media.dto";
+import { ReceiveMediaDto } from "src/model/media/dto/receive-media.dto";
 import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import {

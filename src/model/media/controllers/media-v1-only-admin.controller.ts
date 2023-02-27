@@ -25,7 +25,7 @@ import { MediaGeneralService } from "../services/media-general.service";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
-@Controller("/api/v1/only-admin/media")
+@Controller()
 export class MediaVersionOneOnlyAdminController {
   constructor(
     private readonly mediaGeneralService: MediaGeneralService,
