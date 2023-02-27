@@ -3,7 +3,7 @@ import { CommonEntity } from "src/common/entities/common.entity";
 import { UserEntity } from "src/model/user/entities/user.entity";
 import { InquiryEntity } from "src/model/inquiry/entities/inquiry.entity";
 
-@Entity("inquiries_videos")
+@Entity({ name: "inquiries_videos", synchronize: true })
 export class InquiryVideoEntity extends CommonEntity {
   @Column({ type: "varchar", nullable: false, unique: true })
   url: string;

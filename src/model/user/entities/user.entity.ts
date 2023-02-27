@@ -4,7 +4,7 @@ import { UserAuthEntity } from "./user.auth.entity";
 import { UserActivityEntity } from "./user.activity.entity";
 import { UserProfileEntity } from "./user.profile.entity";
 
-@Entity("users")
+@Entity({ name: "users", synchronize: true })
 export class UserEntity extends CommonEntity {
   @OneToOne(() => UserProfileEntity, (profile) => profile.User, {
     cascade: true,

@@ -6,7 +6,7 @@ import { StarRateEntity } from "../../review/entities/star-rate.entity";
 import { ProductImageEntity } from "src/model/media/entities/product.image.entity";
 import { InquiryEntity } from "../../inquiry/entities/inquiry.entity";
 
-@Entity("products")
+@Entity({ name: "products", synchronize: true })
 export class ProductEntity extends CommonEntity {
   @IsString()
   @IsNotEmpty()
@@ -54,4 +54,7 @@ export class ProductEntity extends CommonEntity {
     cascade: true,
   })
   Inquiry: InquiryEntity[];
+
+  @Column()
+  a: string;
 }

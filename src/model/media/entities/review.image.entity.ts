@@ -3,7 +3,7 @@ import { CommonEntity } from "src/common/entities/common.entity";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
 import { UserEntity } from "src/model/user/entities/user.entity";
 
-@Entity("reviews_images")
+@Entity({ name: "reviews_images", synchronize: true })
 export class ReviewImageEntity extends CommonEntity {
   @Column({ type: "varchar", nullable: false, unique: true })
   url: string;

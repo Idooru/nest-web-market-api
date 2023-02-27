@@ -10,7 +10,7 @@ import { UserEntity } from "./user.entity";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
 import { InquiryEntity } from "src/model/inquiry/entities/inquiry.entity";
 
-@Entity("users_activity")
+@Entity({ name: "users_activity", synchronize: true })
 export class UserActivityEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;

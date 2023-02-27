@@ -1,4 +1,4 @@
-import { TypeOrmModule } from "@nestjs/typeorm";
+import { TypeOrmModule, TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { ConfigService } from "@nestjs/config";
 import { UserEntity } from "src/model/user/entities/user.entity";
 import { UserProfileEntity } from "src/model/user/entities/user.profile.entity";
@@ -17,33 +17,39 @@ import { InquiryVideoEntity } from "src/model/media/entities/inquiry.video.entit
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: "mysql",
-      host: new ConfigService().get("MYSQL_HOST"),
-      port: 3306,
-      username: new ConfigService().get("MYSQL_USERNAME"),
-      password: new ConfigService().get("MYSQL_PASSWORD"),
-      database: "nestWebMarket_API",
-      entities: [
-        UserEntity,
-        UserProfileEntity,
-        UserAuthEntity,
-        UserActivityEntity,
-        ProductEntity,
-        ProductImageEntity,
-        StarRateEntity,
-        ReviewEntity,
-        ReviewImageEntity,
-        ReviewVideoEntity,
-        InquiryEntity,
-        InquiryImageEntity,
-        InquiryVideoEntity,
-      ],
-      migrations: [__dirname, "/src/migrations/*.ts"],
-      cli: { migrationsDir: "src/migrations" },
-      synchronize: false,
-      logging: false,
-      keepConnectionAlive: true,
+    TypeOrmModule.forRootAsync({
+      useFactory: async (
+        configService: ConfigService,
+      ): Promise<TypeOrmModuleOptions> => ({
+        type: "mysql",
+        host: configService.get("MYSQL_HOST"),
+        port: 3306,
+        username: configService.get("MYSQL_USERNAME"),
+        password: configService.get("MYSQL_PASSWORD"),
+        database: "nestwebmarket_api",
+        entities: [
+          UserEntity,
+          UserProfileEntity,
+          UserAuthEntity,
+          UserActivityEntity,
+          ProductEntity,
+          ProductImageEntity,
+          StarRateEntity,
+          ReviewEntity,
+          ReviewImageEntity,
+          ReviewVideoEntity,
+          InquiryEntity,
+          InquiryImageEntity,
+          InquiryVideoEntity,
+        ],
+        autoLoadEntities: true,
+        synchronize: (() => (process.env.NODE_ENV === "dev" ? true : false))(),
+        migrationsRun: false,
+        logging: false,
+        dropSchema: false,
+        keepConnectionAlive: true,
+      }),
+      inject: [ConfigService],
     }),
   ],
 })

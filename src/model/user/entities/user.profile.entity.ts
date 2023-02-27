@@ -14,7 +14,7 @@ import {
 } from "typeorm";
 import { UserEntity } from "./user.entity";
 
-@Entity("users_profile")
+@Entity({ name: "users_profile", synchronize: true })
 export class UserProfileEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;

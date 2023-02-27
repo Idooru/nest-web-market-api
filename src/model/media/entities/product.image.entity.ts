@@ -3,7 +3,7 @@ import { CommonEntity } from "src/common/entities/common.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { UserEntity } from "src/model/user/entities/user.entity";
 
-@Entity("products_images")
+@Entity({ name: "products_images", synchronize: true })
 export class ProductImageEntity extends CommonEntity {
   @OneToOne(() => ProductEntity, (product) => product.Image, {
     onDelete: "CASCADE",
