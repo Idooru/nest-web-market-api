@@ -4,7 +4,7 @@ import { InquiryEntity } from "src/model/inquiry/entities/inquiry.entity";
 import { Repository } from "typeorm";
 
 @Injectable()
-export class InquiryRepository {
+export class InquiryGeneralRepository {
   constructor(
     @InjectRepository(InquiryEntity)
     private readonly inquiryRepository: Repository<InquiryEntity>,
