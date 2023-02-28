@@ -176,6 +176,106 @@ export class ReviewGeneralService {
     await this.mediaGeneralRepository.deleteReviewVideoWithId(beforeVideo.id);
   }
 
+  async conditionForFindReviewImages(
+    reviewImgCookies: ReceiveMediaDto[],
+    createReviewDto: CreateReviewDto,
+  ): Promise<void> {
+    if (reviewImgCookies.length >= 2) {
+      await this.findReviewImageMore(reviewImgCookies, createReviewDto);
+    } else {
+      await this.findReviewImageOne(reviewImgCookies, createReviewDto);
+    }
+  }
+
+  async conditionForFindReviewVideos(
+    reviewVdoCookies: ReceiveMediaDto[],
+    createReviewDto: CreateReviewDto,
+  ): Promise<void> {
+    if (reviewVdoCookies.length >= 2) {
+      await this.findReviewVideoMore(reviewVdoCookies, createReviewDto);
+    } else {
+      await this.findReviewVideoOne(reviewVdoCookies, createReviewDto);
+    }
+  }
+
+  async conditionForInsertReviewIdForReviewImage(
+    reviewImgCookies: ReceiveMediaDto[],
+    createReviewDto: CreateReviewDto,
+    review: ReviewEntity,
+  ): Promise<void> {
+    if (reviewImgCookies.length >= 2) {
+      await this.insertReviewIdOnReviewImageMore(createReviewDto.Image, review);
+    } else {
+      await this.insertReviewIdOnReviewImageOne(
+        createReviewDto.Image[0],
+        review,
+      );
+    }
+  }
+
+  async conditionForInsertReviewIdForReviewVideo(
+    reviewVdoCookies: ReceiveMediaDto[],
+    createReviewDto: CreateReviewDto,
+    review: ReviewEntity,
+  ): Promise<void> {
+    if (reviewVdoCookies.length >= 2) {
+      await this.insertReviewIdOnReviewVideoMore(createReviewDto.Video, review);
+    } else {
+      await this.insertReviewIdOnReviewVideoOne(
+        createReviewDto.Video[0],
+        review,
+      );
+    }
+  }
+
+  async conditionForModifyReviewWithImage(
+    reviewImgCookies: ReceiveMediaDto[],
+    modifyReviewDto: ModifyReviewDto,
+    review: ReviewEntity,
+  ): Promise<void> {
+    if (reviewImgCookies.length >= 2) {
+      const beforeImages =
+        await this.mediaGeneralRepository.findBeforeReviewImages(review.id);
+      await this.findReviewImageMore(reviewImgCookies, modifyReviewDto);
+      await Promise.all([
+        this.insertReviewIdOnReviewImageMore(modifyReviewDto.Image, review),
+        this.deleteReviewImageMore(beforeImages),
+      ]);
+    } else {
+      const beforeImage =
+        await this.mediaGeneralRepository.findBeforeReviewImage(review.id);
+      await this.findReviewImageOne(reviewImgCookies, modifyReviewDto);
+      await Promise.all([
+        this.insertReviewIdOnReviewImageOne(modifyReviewDto.Image[0], review),
+        this.deleteReviewImageOne(beforeImage),
+      ]);
+    }
+  }
+
+  async conditionForModifyReviewWithVideo(
+    reviewVdoCookies: ReceiveMediaDto[],
+    modifyReviewDto: ModifyReviewDto,
+    review: ReviewEntity,
+  ): Promise<void> {
+    if (reviewVdoCookies.length >= 2) {
+      const beforeVideos =
+        await this.mediaGeneralRepository.findBeforeReviewVideos(review.id);
+      await this.findReviewVideoMore(reviewVdoCookies, modifyReviewDto);
+      await Promise.all([
+        this.insertReviewIdOnReviewVideoMore(modifyReviewDto.Video, review),
+        this.deleteReviewVideoMore(beforeVideos),
+      ]);
+    } else {
+      const beforeVideo =
+        await this.mediaGeneralRepository.findBeforeReviewVideo(review.id);
+      await this.findReviewVideoOne(reviewVdoCookies, modifyReviewDto);
+      await Promise.all([
+        this.insertReviewIdOnReviewVideoOne(modifyReviewDto.Video[0], review),
+        this.deleteReviewVideoOne(beforeVideo),
+      ]);
+    }
+  }
+
   async createReviewWithImageAndVideo(
     createReviewWithImageAndVideoDto: CreateReviewWithImageAndVideoDto,
   ): Promise<void> {
@@ -191,18 +291,8 @@ export class ReviewGeneralService {
     createReviewDto.Image = [];
     createReviewDto.Video = [];
 
-    if (reviewImgCookies.length >= 2) {
-      await this.findReviewImageMore(reviewImgCookies, createReviewDto);
-    } else {
-      await this.findReviewImageOne(reviewImgCookies, createReviewDto);
-    }
-
-    if (reviewVdoCookies.length >= 2) {
-      await this.findReviewVideoMore(reviewVdoCookies, createReviewDto);
-    } else {
-      await this.findReviewVideoOne(reviewVdoCookies, createReviewDto);
-    }
-
+    this.conditionForFindReviewImages(reviewImgCookies, createReviewDto);
+    this.conditionForFindReviewVideos(reviewVdoCookies, createReviewDto);
     await this.reviewGeneralRepository.createReview({
       createReviewDto,
       user,
@@ -210,31 +300,22 @@ export class ReviewGeneralService {
     });
 
     await this.userGeneralRepository.increaseReviewCount(user);
-
     const review = await this.reviewGeneralRepository.findLastCreatedReview();
-
     await this.reviewGeneralRepository.insertReviewIdOnUserActivity(
       user.Activity,
       review,
     );
 
-    if (reviewImgCookies.length >= 2) {
-      await this.insertReviewIdOnReviewImageMore(createReviewDto.Image, review);
-    } else {
-      await this.insertReviewIdOnReviewImageOne(
-        createReviewDto.Image[0],
-        review,
-      );
-    }
-
-    if (reviewVdoCookies.length >= 2) {
-      await this.insertReviewIdOnReviewVideoMore(createReviewDto.Video, review);
-    } else {
-      await this.insertReviewIdOnReviewVideoOne(
-        createReviewDto.Video[0],
-        review,
-      );
-    }
+    this.conditionForInsertReviewIdForReviewImage(
+      reviewImgCookies,
+      createReviewDto,
+      review,
+    );
+    this.conditionForInsertReviewIdForReviewVideo(
+      reviewVdoCookies,
+      createReviewDto,
+      review,
+    );
   }
 
   async createReviewWithImage(
@@ -246,12 +327,7 @@ export class ReviewGeneralService {
     const [user, product] = await this.findUserAndProduct(userId, productId);
     createReviewDto.Image = [];
 
-    if (reviewImgCookies.length >= 2) {
-      await this.findReviewImageMore(reviewImgCookies, createReviewDto);
-    } else {
-      await this.findReviewImageOne(reviewImgCookies, createReviewDto);
-    }
-
+    this.conditionForFindReviewImages(reviewImgCookies, createReviewDto);
     await this.reviewGeneralRepository.createReview({
       createReviewDto,
       user,
@@ -259,22 +335,17 @@ export class ReviewGeneralService {
     });
 
     await this.userGeneralRepository.increaseReviewCount(user);
-
     const review = await this.reviewGeneralRepository.findLastCreatedReview();
-
     await this.reviewGeneralRepository.insertReviewIdOnUserActivity(
       user.Activity,
       review,
     );
 
-    if (reviewImgCookies.length >= 2) {
-      await this.insertReviewIdOnReviewImageMore(createReviewDto.Image, review);
-    } else {
-      await this.insertReviewIdOnReviewImageOne(
-        createReviewDto.Image[0],
-        review,
-      );
-    }
+    this.conditionForInsertReviewIdForReviewImage(
+      reviewImgCookies,
+      createReviewDto,
+      review,
+    );
   }
 
   async createReviewWithVideo(
@@ -286,12 +357,7 @@ export class ReviewGeneralService {
     const [user, product] = await this.findUserAndProduct(userId, productId);
     createReviewDto.Video = [];
 
-    if (reviewVdoCookies.length >= 2) {
-      await this.findReviewVideoMore(reviewVdoCookies, createReviewDto);
-    } else {
-      await this.findReviewVideoOne(reviewVdoCookies, createReviewDto);
-    }
-
+    this.conditionForFindReviewVideos(reviewVdoCookies, createReviewDto);
     await this.reviewGeneralRepository.createReview({
       createReviewDto,
       user,
@@ -299,22 +365,17 @@ export class ReviewGeneralService {
     });
 
     await this.userGeneralRepository.increaseReviewCount(user);
-
     const review = await this.reviewGeneralRepository.findLastCreatedReview();
-
     await this.reviewGeneralRepository.insertReviewIdOnUserActivity(
       user.Activity,
       review,
     );
 
-    if (reviewVdoCookies.length >= 2) {
-      await this.insertReviewIdOnReviewVideoMore(createReviewDto.Video, review);
-    } else {
-      await this.insertReviewIdOnReviewVideoOne(
-        createReviewDto.Video[0],
-        review,
-      );
-    }
+    this.conditionForInsertReviewIdForReviewVideo(
+      reviewVdoCookies,
+      createReviewDto,
+      review,
+    );
   }
 
   async createReviewWithoutMedia(
@@ -332,9 +393,7 @@ export class ReviewGeneralService {
     });
 
     await this.userGeneralRepository.increaseReviewCount(user);
-
     const review = await this.reviewGeneralRepository.findLastCreatedReview();
-
     await this.reviewGeneralRepository.insertReviewIdOnUserActivity(
       user.Activity,
       review,
@@ -355,42 +414,17 @@ export class ReviewGeneralService {
     modifyReviewDto.Image = [];
     modifyReviewDto.Video = [];
 
-    if (reviewImgCookies.length >= 2) {
-      const beforeImages =
-        await this.mediaGeneralRepository.findBeforeReviewImages(review.id);
-      await this.findReviewImageMore(reviewImgCookies, modifyReviewDto);
-      await Promise.all([
-        this.insertReviewIdOnReviewImageMore(modifyReviewDto.Image, review),
-        this.deleteReviewImageMore(beforeImages),
-      ]);
-    } else {
-      const beforeImage =
-        await this.mediaGeneralRepository.findBeforeReviewImage(review.id);
-      await this.findReviewImageOne(reviewImgCookies, modifyReviewDto);
-      await Promise.all([
-        this.insertReviewIdOnReviewImageOne(modifyReviewDto.Image[0], review),
-        this.deleteReviewImageOne(beforeImage),
-      ]);
-    }
+    this.conditionForModifyReviewWithImage(
+      reviewImgCookies,
+      modifyReviewDto,
+      review,
+    );
 
-    if (reviewVdoCookies.length >= 2) {
-      const beforeVideos =
-        await this.mediaGeneralRepository.findBeforeReviewVideos(review.id);
-
-      await this.findReviewVideoMore(reviewVdoCookies, modifyReviewDto);
-      await Promise.all([
-        this.insertReviewIdOnReviewVideoMore(modifyReviewDto.Video, review),
-        this.deleteReviewVideoMore(beforeVideos),
-      ]);
-    } else {
-      const beforeVideo =
-        await this.mediaGeneralRepository.findBeforeReviewVideo(review.id);
-      await this.findReviewVideoOne(reviewVdoCookies, modifyReviewDto);
-      await Promise.all([
-        this.insertReviewIdOnReviewVideoOne(modifyReviewDto.Video[0], review),
-        this.deleteReviewVideoOne(beforeVideo),
-      ]);
-    }
+    this.conditionForModifyReviewWithVideo(
+      reviewVdoCookies,
+      modifyReviewDto,
+      review,
+    );
   }
 
   async modifyReviewWithImage(
@@ -406,23 +440,11 @@ export class ReviewGeneralService {
 
     modifyReviewDto.Image = [];
 
-    if (reviewImgCookies.length >= 2) {
-      const beforeImages =
-        await this.mediaGeneralRepository.findBeforeReviewImages(review.id);
-      await this.findReviewImageMore(reviewImgCookies, modifyReviewDto);
-      await Promise.all([
-        this.insertReviewIdOnReviewImageMore(modifyReviewDto.Image, review),
-        this.deleteReviewImageMore(beforeImages),
-      ]);
-    } else {
-      const beforeImage =
-        await this.mediaGeneralRepository.findBeforeReviewImage(review.id);
-      await this.findReviewImageOne(reviewImgCookies, modifyReviewDto);
-      await Promise.all([
-        this.insertReviewIdOnReviewImageOne(modifyReviewDto.Image[0], review),
-        this.deleteReviewImageOne(beforeImage),
-      ]);
-    }
+    this.conditionForModifyReviewWithImage(
+      reviewImgCookies,
+      modifyReviewDto,
+      review,
+    );
   }
 
   async modifyReviewWithVideo(
@@ -438,23 +460,11 @@ export class ReviewGeneralService {
 
     modifyReviewDto.Video = [];
 
-    if (reviewVdoCookies.length >= 2) {
-      const beforeVideos =
-        await this.mediaGeneralRepository.findBeforeReviewVideos(review.id);
-      await this.findReviewVideoMore(reviewVdoCookies, modifyReviewDto);
-      await Promise.all([
-        this.insertReviewIdOnReviewVideoMore(modifyReviewDto.Video, review),
-        this.deleteReviewVideoMore(beforeVideos),
-      ]);
-    } else {
-      const beforeVideo =
-        await this.mediaGeneralRepository.findBeforeReviewVideo(review.id);
-      await this.findReviewVideoOne(reviewVdoCookies, modifyReviewDto);
-      await Promise.all([
-        this.insertReviewIdOnReviewVideoOne(modifyReviewDto.Video[0], review),
-        this.deleteReviewVideoOne(beforeVideo),
-      ]);
-    }
+    this.conditionForModifyReviewWithVideo(
+      reviewVdoCookies,
+      modifyReviewDto,
+      review,
+    );
   }
 
   async modifyReviewWithoutMedia(
