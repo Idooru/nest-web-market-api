@@ -1,15 +1,7 @@
 export const userSelectProperty = {
-  userSelect: ["user", "Profile", "Auth", "Activity"],
-  userSelectWithActivityProperty: [
-    "user",
-    "Profile",
-    "Auth",
-    "Activity",
-    "Review",
-    "Inquiry",
-  ],
-  userProfileSelect: [
-    "user",
+  clientUserSelect: ["client", "Profile", "Auth"],
+  clientUserProfileSelect: [
+    "client",
     "Profile.realname",
     "Profile.birth",
     "Profile.gender",
@@ -17,10 +9,6 @@ export const userSelectProperty = {
     "Auth.nickname",
     "Auth.email",
     "Auth.userType",
-    "Activity.bonusPoint",
-    "Activity.purchaseCount",
-    "Activity.productInquiryCount",
-    "Activity.productReviewCount",
     "Review",
     "Inquiry",
     "ReviewImage.url",
@@ -28,15 +16,15 @@ export const userSelectProperty = {
     "InquiryImage.url",
     "InquiryVideo.url",
   ],
-  userSimpleSelect: [
-    "user",
-    "user.id",
+  clientUserSimpleSelect: [
+    "client",
+    "client.id",
     "Auth.nickname",
     "Auth.email",
     "Auth.userType",
   ],
-  userSelectWhoAdmin: [
-    "user",
+  whenAdminSelectUser: [
+    "client",
     "Auth.nickname",
     "Auth.email",
     "Auth.userType",
