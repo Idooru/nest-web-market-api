@@ -37,4 +37,7 @@ export const verifyCookieKeys = {
   review: {
     is_exist: { id_executed: "is-exist-review-id-executed" },
   },
+  inquiry: {
+    is_exist: { id_executed: "is-exist-inquiry-id-executed" },
+  },
 };
