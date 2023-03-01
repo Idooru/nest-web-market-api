@@ -1,15 +1,14 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { UserActivityEntity } from "../entities/user.activity.entity";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
 import { ModifyUserDto } from "../dtos/modify-user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserProfileEntity } from "../entities/user.profile.entity";
 import { Repository } from "typeorm";
 import { RegisterUserDto } from "../dtos/register-user.dto";
-import { UserEntity } from "../entities/user.entity";
 import { CreateUserDto } from "../dtos/create-user.dto";
 import { userSelectProperty } from "src/common/config/repository-select-configs/user-select";
 import { InternalServerErrorException } from "@nestjs/common/exceptions";
+import { ClientUserEntity } from "../entities/client-user.entity";
 
 @Injectable()
 export class UserGeneralRepository {
@@ -17,28 +16,26 @@ export class UserGeneralRepository {
   private readonly logger = new Logger("Repository");
 
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly userGeneralRepository: Repository<UserEntity>,
+    @InjectRepository(ClientUserEntity)
+    private readonly clientUserGeneralRepository: Repository<ClientUserEntity>,
     @InjectRepository(UserProfileEntity)
     private readonly userProfileGeneralRepository: Repository<UserProfileEntity>,
     @InjectRepository(UserAuthEntity)
     private readonly userAuthGeneralRepository: Repository<UserAuthEntity>,
-    @InjectRepository(UserActivityEntity)
-    private readonly userActivityGeneralRepository: Repository<UserActivityEntity>,
   ) {}
 
-  async findUserWithId(id: string): Promise<UserEntity> {
+  async findClientUserWithId(id: string): Promise<ClientUserEntity> {
     try {
-      return await this.userGeneralRepository
+      return await this.clientUserGeneralRepository
         .createQueryBuilder()
-        .select(this.select.userSelectWithActivityProperty)
-        .from(UserEntity, "user")
-        .innerJoin("user.Profile", "Profile")
-        .innerJoin("user.Auth", "Auth")
-        .innerJoin("user.Activity", "Activity")
-        .leftJoin("Activity.Review", "Review")
-        .leftJoin("Activity.Inquiry", "Inquiry")
-        .where("user.id = :id", { id })
+        .select(this.select.clientUserSelect)
+        .from(ClientUserEntity, "client")
+        .innerJoin("client.Profile", "Profile")
+        .innerJoin("client.Auth", "Auth")
+        .leftJoin("client.Product", "Product")
+        .leftJoin("client.Review", "Review")
+        .leftJoin("client.Inquiry", "Inquiry")
+        .where("client.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
       this.logger.error(err);
@@ -46,15 +43,17 @@ export class UserGeneralRepository {
     }
   }
 
-  async findUserWithEmail(email: string): Promise<UserEntity> {
+  async findClientUserWithEmail(email: string): Promise<ClientUserEntity> {
     try {
-      return await this.userGeneralRepository
+      return await this.clientUserGeneralRepository
         .createQueryBuilder()
-        .select(this.select.userSelect)
-        .from(UserEntity, "user")
-        .innerJoin("user.Profile", "Profile")
-        .innerJoin("user.Auth", "Auth")
-        .innerJoin("user.Activity", "Activity")
+        .select(this.select.clientUserSelect)
+        .from(ClientUserEntity, "client")
+        .innerJoin("client.Profile", "Profile")
+        .innerJoin("client.Auth", "Auth")
+        .leftJoin("client.Product", "Product")
+        .leftJoin("client.Review", "Review")
+        .leftJoin("client.Inquiry", "Inquiry")
         .where("Auth.email = :email", { email })
         .getOneOrFail();
     } catch (err) {
@@ -63,15 +62,16 @@ export class UserGeneralRepository {
     }
   }
 
-  async findUserWithNickName(nickname: string): Promise<UserEntity> {
+  async findClientUserWithNickName(
+    nickname: string,
+  ): Promise<ClientUserEntity> {
     try {
-      return await this.userGeneralRepository
+      return await this.clientUserGeneralRepository
         .createQueryBuilder()
-        .select(this.select.userSelect)
-        .from(UserEntity, "user")
-        .innerJoin("user.Profile", "Profile")
-        .innerJoin("user.Auth", "Auth")
-        .innerJoin("user.Activity", "Activity")
+        .select(this.select.clientUserSelect)
+        .from(ClientUserEntity, "client")
+        .innerJoin("client.Profile", "Profile")
+        .innerJoin("client.Auth", "Auth")
         .where("Auth.nickname = :nickname", { nickname })
         .getOneOrFail();
     } catch (err) {
@@ -80,56 +80,16 @@ export class UserGeneralRepository {
     }
   }
 
-  async findUserProfileInfoWithId(id: string): Promise<UserEntity> {
+  async findClientUserWithRealName(
+    realname: string,
+  ): Promise<ClientUserEntity> {
     try {
-      return await this.userGeneralRepository
+      return await this.clientUserGeneralRepository
         .createQueryBuilder()
-        .select(this.select.userProfileSelect)
-        .from(UserEntity, "user")
+        .select(this.select.clientUserSelect)
+        .from(ClientUserEntity, "user")
         .innerJoin("user.Profile", "Profile")
         .innerJoin("user.Auth", "Auth")
-        .innerJoin("user.Activity", "Activity")
-        .leftJoin("Activity.Review", "Review")
-        .leftJoin("Activity.Inquiry", "Inquiry")
-        .leftJoin("Review.Image", "ReviewImage")
-        .leftJoin("Review.Video", "ReviewVideo")
-        .leftJoin("Inquiry.Image", "InquiryImage")
-        .leftJoin("Inquiry.Video", "InquiryVideo")
-        .where("user.id = :id", { id })
-        .getOneOrFail();
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async findUserInfoFromAdmin(id: string): Promise<UserEntity> {
-    try {
-      return await this.userGeneralRepository
-        .createQueryBuilder()
-        .select(this.select.userSelectWhoAdmin)
-        .from(UserEntity, "user")
-        .innerJoin("user.Auth", "Auth")
-        .innerJoin("user.Activity", "Activity")
-        .leftJoin("Activity.Review", "Review")
-        .leftJoin("Activity.Inquiry", "Inquiry")
-        .where("user.id = :id", { id })
-        .getOneOrFail();
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async findUserWithRealName(realname: string): Promise<UserEntity> {
-    try {
-      return await this.userGeneralRepository
-        .createQueryBuilder()
-        .select(["user", "Auth"])
-        .from(UserEntity, "user")
-        .innerJoin("user.Profile", "Profile")
-        .innerJoin("user.Auth", "Auth")
-        .innerJoin("user.Activity", "Activity")
         .where("Profile.realname = :realname", { realname })
         .getOneOrFail();
     } catch (err) {
@@ -138,16 +98,64 @@ export class UserGeneralRepository {
     }
   }
 
-  async findUserWithPhoneNumber(phonenumber: string): Promise<UserEntity> {
+  async findClientUserWithPhoneNumber(
+    phonenumber: string,
+  ): Promise<ClientUserEntity> {
     try {
-      return await this.userGeneralRepository
+      return await this.clientUserGeneralRepository
         .createQueryBuilder()
-        .select(["user", "Auth"])
-        .from(UserEntity, "user")
-        .innerJoin("user.Profile", "Profile")
-        .innerJoin("user.Auth", "Auth")
-        .innerJoin("user.Activity", "Activity")
+        .select(this.select.clientUserSelect)
+        .from(ClientUserEntity, "client")
+        .innerJoin("client.Profile", "Profile")
+        .innerJoin("client.Auth", "Auth")
         .where("Profile.phonenumber = :phonenumber", { phonenumber })
+        .getOneOrFail();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async findUserProfileInfoWithId(id: string): Promise<ClientUserEntity> {
+    try {
+      return await this.clientUserGeneralRepository
+        .createQueryBuilder()
+        .select(this.select.clientUserProfileSelect)
+        .from(ClientUserEntity, "client")
+        .innerJoin("client.Profile", "Profile")
+        .innerJoin("client.Auth", "Auth")
+        .leftJoin("client.Product", "Product")
+        .leftJoin("client.Review", "Review")
+        .leftJoin("client.Inquiry", "Inquiry")
+        .leftJoin("Product.Image", "ProductImage")
+        .leftJoin("Review.Image", "ReviewImage")
+        .leftJoin("Review.Video", "ReviewVideo")
+        .leftJoin("Inquiry.Image", "InquiryImage")
+        .leftJoin("Inquiry.Video", "InquiryVideo")
+        .where("client.id = :id", { id })
+        .getOneOrFail();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async findUserInfoFromAdmin(id: string): Promise<ClientUserEntity> {
+    try {
+      return await this.clientUserGeneralRepository
+        .createQueryBuilder()
+        .select(this.select.whenAdminSelectUser)
+        .from(ClientUserEntity, "client")
+        .innerJoin("client.Auth", "Auth")
+        .leftJoin("client.Product", "Product")
+        .leftJoin("client.Review", "Review")
+        .leftJoin("client.Inquiry", "Inquiry")
+        .leftJoin("Product.Image", "ProductImage")
+        .leftJoin("Review.Image", "ReviewImage")
+        .leftJoin("Review.Video", "ReviewVideo")
+        .leftJoin("Inquiry.Image", "InquiryImage")
+        .leftJoin("Inquiry.Video", "InquiryVideo")
+        .where("user.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
       this.logger.error(err);
@@ -170,7 +178,7 @@ export class UserGeneralRepository {
     }
   }
 
-  async createUser(
+  async createClientUser(
     registerUserDto: RegisterUserDto,
     hashed: string,
   ): Promise<void> {
@@ -181,53 +189,39 @@ export class UserGeneralRepository {
 
       const userProfileColumn = { realname, birth, gender, phonenumber };
       const userAuthColumn = { nickname, email, password };
-      const userActivityColumn = {};
 
-      const [userProfile, userAuth, userActivity] = await Promise.all([
+      const [userProfile, userAuth] = await Promise.all([
         this.userProfileGeneralRepository.save({ ...userProfileColumn }),
         this.userAuthGeneralRepository.save({ ...userAuthColumn }),
-        this.userActivityGeneralRepository.save({ ...userActivityColumn }),
       ]);
 
-      const profileId = userProfile.id;
-      const authId = userAuth.id;
-      const activityId = userActivity.id;
-
-      const [userProfileObject, userAuthObject, userActivityObject] =
-        await Promise.all([
-          this.userProfileGeneralRepository
-            .createQueryBuilder()
-            .select("profile")
-            .from(UserProfileEntity, "profile")
-            .where("profile.id = :id", { id: profileId })
-            .getOne(),
-          this.userAuthGeneralRepository
-            .createQueryBuilder()
-            .select("auth")
-            .from(UserAuthEntity, "auth")
-            .where("auth.id = :id", { id: authId })
-            .getOne(),
-          this.userActivityGeneralRepository
-            .createQueryBuilder()
-            .select("activity")
-            .from(UserActivityEntity, "activity")
-            .where("activity.id = :id", { id: activityId })
-            .getOne(),
-        ]);
+      const [userProfileObject, userAuthObject] = await Promise.all([
+        this.userProfileGeneralRepository
+          .createQueryBuilder()
+          .select("profile")
+          .from(UserProfileEntity, "profile")
+          .where("profile.id = :id", { id: userProfile.id })
+          .getOne(),
+        this.userAuthGeneralRepository
+          .createQueryBuilder()
+          .select("auth")
+          .from(UserAuthEntity, "auth")
+          .where("auth.id = :id", { id: userAuth.id })
+          .getOne(),
+      ]);
 
       const createUserDto: CreateUserDto = {
         Profile: userProfileObject,
         Auth: userAuthObject,
-        Activity: userActivityObject,
       };
-      await this.userGeneralRepository.save({ ...createUserDto });
+      await this.clientUserGeneralRepository.save({ ...createUserDto });
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException(err.message);
     }
   }
 
-  async modifyUser(
+  async modifyClientUser(
     modifyUserDto: ModifyUserDto,
     password: string,
     userProfileId: string,
@@ -256,7 +250,7 @@ export class UserGeneralRepository {
     }
   }
 
-  async modifyUserEmail(email: string, id: string): Promise<void> {
+  async modifyClientUserEmail(email: string, id: string): Promise<void> {
     try {
       await this.userAuthGeneralRepository
         .createQueryBuilder()
@@ -270,7 +264,7 @@ export class UserGeneralRepository {
     }
   }
 
-  async modifyUserNickName(nickname: string, id: string): Promise<void> {
+  async modifyClientUserNickName(nickname: string, id: string): Promise<void> {
     try {
       await this.userAuthGeneralRepository
         .createQueryBuilder()
@@ -284,7 +278,10 @@ export class UserGeneralRepository {
     }
   }
 
-  async modifyUserPhoneNumber(phonenumber: string, id: string): Promise<void> {
+  async modifyClientUserPhoneNumber(
+    phonenumber: string,
+    id: string,
+  ): Promise<void> {
     try {
       await this.userProfileGeneralRepository
         .createQueryBuilder()
@@ -298,7 +295,7 @@ export class UserGeneralRepository {
     }
   }
 
-  async modifyUserPassword(password: string, id: string): Promise<void> {
+  async modifyClientUserPassword(password: string, id: string): Promise<void> {
     try {
       await this.userAuthGeneralRepository
         .createQueryBuilder()
@@ -312,13 +309,13 @@ export class UserGeneralRepository {
     }
   }
 
-  async deleteUser(userId: string): Promise<void> {
+  async deleteClientUser(id: string): Promise<void> {
     try {
-      await this.userGeneralRepository
+      await this.clientUserGeneralRepository
         .createQueryBuilder()
         .delete()
-        .from(UserEntity)
-        .where("id = :id", { id: userId })
+        .from(ClientUserEntity)
+        .where("id = :id", { id })
         .execute();
     } catch (err) {
       this.logger.error(err);
@@ -326,15 +323,13 @@ export class UserGeneralRepository {
     }
   }
 
-  async findUsersAllFromLastest(): Promise<UserEntity[]> {
+  async findClientUsersAllFromLastest(): Promise<ClientUserEntity[]> {
     try {
       return await this.userProfileGeneralRepository
         .createQueryBuilder()
-        .select(this.select.userSimpleSelect)
-        .from(UserEntity, "user")
-        .innerJoin("user.Profile", "Profile")
+        .select(this.select.clientUserSimpleSelect)
+        .from(ClientUserEntity, "user")
         .innerJoin("user.Auth", "Auth")
-        .innerJoin("user.Activity", "Activity")
         .orderBy("user.createdAt", "DESC")
         .getMany();
     } catch (err) {
@@ -343,57 +338,15 @@ export class UserGeneralRepository {
     }
   }
 
-  async findUsersAllFromOldest(): Promise<UserEntity[]> {
+  async findClientUsersAllFromOldest(): Promise<ClientUserEntity[]> {
     try {
-      return await this.userActivityGeneralRepository
+      return await this.clientUserGeneralRepository
         .createQueryBuilder()
-        .select(this.select.userSimpleSelect)
-        .from(UserEntity, "user")
-        .innerJoin("user.Profile", "Profile")
+        .select(this.select.clientUserSimpleSelect)
+        .from(ClientUserEntity, "user")
         .innerJoin("user.Auth", "Auth")
-        .innerJoin("user.Activity", "Activity")
         .orderBy("user.createdAt", "ASC")
         .getMany();
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async increaseReviewCount(user: UserEntity): Promise<void> {
-    try {
-      ++user.Activity.productReviewCount;
-      await this.userGeneralRepository.save(user);
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async increaseInquiryCount(user: UserEntity): Promise<void> {
-    try {
-      ++user.Activity.productInquiryCount;
-      await this.userGeneralRepository.save(user);
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async decreaseReviewCount(user: UserEntity): Promise<void> {
-    try {
-      --user.Activity.productReviewCount;
-      await this.userGeneralRepository.save(user);
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async decreaseInquiryCount(user: UserEntity): Promise<void> {
-    try {
-      --user.Activity.productInquiryCount;
-      await this.userGeneralRepository.save(user);
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException(err.message);
