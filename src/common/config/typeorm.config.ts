@@ -1,8 +1,6 @@
 import { TypeOrmModule, TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { ConfigService } from "@nestjs/config";
-import { UserEntity } from "src/model/user/entities/user.entity";
 import { UserProfileEntity } from "src/model/user/entities/user.profile.entity";
-import { UserActivityEntity } from "src/model/user/entities/user.activity.entity";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { StarRateEntity } from "src/model/review/entities/star-rate.entity";
@@ -14,6 +12,9 @@ import { ReviewImageEntity } from "src/model/media/entities/review.image.entity"
 import { ReviewVideoEntity } from "src/model/media/entities/review.video.entity";
 import { InquiryImageEntity } from "src/model/media/entities/inquiry.image.entity";
 import { InquiryVideoEntity } from "src/model/media/entities/inquiry.video.entity";
+import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
+import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
+import { UserPrototypeEntity } from "../entities/user-prototype.entity";
 
 const isNodeEnvDev = (): boolean =>
   process.env.NODE_ENV === "dev" ? true : false;
@@ -33,10 +34,11 @@ const isNodeEnvProd = (): boolean =>
         password: configService.get("DB_PASSWORD"),
         database: configService.get("DB_SCHEMA"),
         entities: [
-          UserEntity,
+          UserPrototypeEntity,
           UserProfileEntity,
           UserAuthEntity,
-          UserActivityEntity,
+          ClientUserEntity,
+          AdminUserEntity,
           ProductEntity,
           ProductImageEntity,
           StarRateEntity,
