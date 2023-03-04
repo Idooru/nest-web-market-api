@@ -1,18 +1,10 @@
-import {
-  Column,
-  Entity,
-  OneToOne,
-  PrimaryGeneratedColumn,
-  JoinColumn,
-} from "typeorm";
+import { Column, Entity, OneToOne, JoinColumn } from "typeorm";
 import { IsEmail, IsNotEmpty, IsString, Matches } from "class-validator";
+import { CommonEntity } from "src/common/entities/common.entity";
 import { UserEntity } from "./user.entity";
 
 @Entity({ name: "users_auth", synchronize: true })
-export class UserAuthEntity {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
-
+export class UserAuthEntity extends CommonEntity {
   @OneToOne(() => UserEntity, (user) => user.Auth, {
     onDelete: "CASCADE",
   })
@@ -34,11 +26,4 @@ export class UserAuthEntity {
   @Matches(/^[A-Za-z\d!@#$%^&*()]{8,30}$/)
   @Column({ type: "varchar", nullable: false })
   password: string;
-
-  @Column({
-    type: "enum",
-    enum: ["general", "special", "admin"],
-    default: "general",
-  })
-  userType: "general" | "special" | "admin";
 }
