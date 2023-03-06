@@ -18,7 +18,7 @@ export class IsLoginGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<Request>();
-    const { access_token } = req.signedCookies;
+    const { access_token }: { access_token: string } = req.signedCookies;
 
     if (!access_token) {
       throw new UnauthorizedException(
