@@ -1,20 +1,11 @@
-import { Entity, JoinColumn, ManyToOne, Column } from "typeorm";
-import { CommonEntity } from "src/common/entities/common.entity";
-import { UserEntity } from "src/model/user/entities/user.entity";
+import { Entity, ManyToOne } from "typeorm";
 import { InquiryEntity } from "src/model/inquiry/entities/inquiry.entity";
+import { MediaEntity } from "./media.entity";
 
 @Entity({ name: "inquiries_videos", synchronize: true })
-export class InquiryVideoEntity extends CommonEntity {
-  @Column({ type: "varchar", nullable: false, unique: true })
-  url: string;
-
+export class InquiryVideoEntity extends MediaEntity {
   @ManyToOne(() => InquiryEntity, (inquiry) => inquiry.Image, {
     onDelete: "CASCADE",
   })
-  @JoinColumn({ name: "inquiryId" })
   Inquiry: InquiryEntity;
-
-  @ManyToOne(() => UserEntity, (user) => user)
-  @JoinColumn({ name: "userId" })
-  uploader: UserEntity;
 }
