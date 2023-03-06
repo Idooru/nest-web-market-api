@@ -28,16 +28,16 @@ export class ProductGeneralService {
     return founds;
   }
 
-  async findProductsAllFromLatest(): Promise<ProductEntity[]> {
+  async findAllProductsFromLatest(): Promise<ProductEntity[]> {
     const founds =
-      await this.productGeneralRepository.findProductsAllFromLatest();
+      await this.productGeneralRepository.findAllProductsFromLatest();
     this.isExistProducts(founds);
     return founds;
   }
 
-  async findProductsAllFromOldest(): Promise<ProductEntity[]> {
+  async findAllProductsFromOldest(): Promise<ProductEntity[]> {
     const founds =
-      await this.productGeneralRepository.findProductsAllFromOldest();
+      await this.productGeneralRepository.findAllProductsFromOldest();
     this.isExistProducts(founds);
     return founds;
   }

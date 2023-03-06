@@ -35,7 +35,7 @@ export class ProductGeneralRepository {
     }
   }
 
-  async findProductsAllFromLatest(): Promise<ProductEntity[]> {
+  async findAllProductsFromLatest(): Promise<ProductEntity[]> {
     try {
       return await this.productGeneralRepository
         .createQueryBuilder()
@@ -57,7 +57,7 @@ export class ProductGeneralRepository {
     }
   }
 
-  async findProductsAllFromOldest(): Promise<ProductEntity[]> {
+  async findAllProductsFromOldest(): Promise<ProductEntity[]> {
     try {
       return await this.productGeneralRepository
         .createQueryBuilder()
