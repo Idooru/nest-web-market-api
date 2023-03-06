@@ -1,5 +1,6 @@
 export const userSelectProperty = {
   userBaseSelect: ["user", "Profile", "Auth"],
+  clientUserSelect: ["user", "Profile", "Auth", "Client"],
   clientUserSimpleSelect: ["user", "Auth.nickname", "Auth.email"],
   clientUserProfileSelect: [
     "user",
@@ -22,6 +23,7 @@ export const userSelectProperty = {
     "InquiryImage.url",
     "InquiryVideo.url",
   ],
+  adminUserSelect: ["user", "Profile", "Auth", "Admin"],
   adminUserProfileSelect: [
     "user",
     "Profile.realname",
@@ -35,6 +37,8 @@ export const userSelectProperty = {
     "Inquiry",
     "InquiryImage.url",
     "InquiryVideo.url",
+    "Product",
+    "ProductImage.url",
   ],
   whenAdminSelectClientUser: [
     "user",
