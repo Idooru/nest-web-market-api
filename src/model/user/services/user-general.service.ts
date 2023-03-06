@@ -1,10 +1,9 @@
 import { ModifyUserDto } from "../dtos/modify-user.dto";
-import { RegisterUserDto } from "../dtos/register-user.dto";
 import { Injectable } from "@nestjs/common";
-import { UserEntity } from "../entities/user.entity";
 import { UserGeneralRepository } from "../repositories/user-general.repository";
 import { SecurityLibrary } from "src/common/lib/security.library";
-
+import { RegisterUserDto } from "../dtos/register-user.dto";
+import { UserEntity } from "../entities/user.entity";
 import * as bcrypt from "bcrypt";
 
 @Injectable()
@@ -14,23 +13,27 @@ export class UserGeneralService {
     private readonly securityLibrary: SecurityLibrary,
   ) {}
 
-  async getUsersAllFromLastest(): Promise<UserEntity[]> {
-    return await this.userGeneralRepository.findUsersAllFromLastest();
+  async findAllUsersFromLatest(): Promise<UserEntity[]> {
+    return await this.userGeneralRepository.findAllUsersFromLatest();
   }
 
-  async getUsersAllFromOldest(): Promise<UserEntity[]> {
-    return await this.userGeneralRepository.findUsersAllFromOldest();
+  async findAllUsersFromOldest(): Promise<UserEntity[]> {
+    return await this.userGeneralRepository.findAllUsersFromOldest();
   }
 
-  async findUserInfoFromAdmin(userId: string): Promise<UserEntity> {
-    return await this.userGeneralRepository.findUserInfoFromAdmin(userId);
+  async findClientUserInfoFromAdmin(id: string): Promise<UserEntity> {
+    return await this.userGeneralRepository.findClientUserInfoFromAdmin(id);
   }
 
-  async findSelfInfoWithId(userId: string): Promise<UserEntity> {
-    return await this.userGeneralRepository.findUserProfileInfoWithId(userId);
+  async findClientUserProfileInfoWithId(id: string): Promise<UserEntity> {
+    return await this.userGeneralRepository.findClientUserProfileInfoWithId(id);
   }
 
-  async register(registerUserDto: RegisterUserDto): Promise<void> {
+  async findAdminUserProfileInfoWithId(id: string): Promise<UserEntity> {
+    return await this.userGeneralRepository.findAdminUserProfileInfoWithId(id);
+  }
+
+  async createUserBase(registerUserDto: RegisterUserDto): Promise<UserEntity> {
     const { password } = registerUserDto;
 
     const hashed = await bcrypt.hash(
@@ -38,7 +41,46 @@ export class UserGeneralService {
       this.securityLibrary.getHashSalt(),
     );
 
-    await this.userGeneralRepository.createUser(registerUserDto, hashed);
+    await this.userGeneralRepository.createUserBase(registerUserDto, hashed);
+
+    const [userProfile, userAuth, userBase] = await Promise.all([
+      this.userGeneralRepository.findLastCreatedUserProfile(),
+      this.userGeneralRepository.findLastCreatedUserAuth(),
+      this.userGeneralRepository.findLastCreatedUserBase(),
+    ]);
+
+    await Promise.all([
+      this.userGeneralRepository.insertUserBaseIdOnUserProfile(
+        userBase,
+        userProfile,
+      ),
+      this.userGeneralRepository.insertUserBaseIdOnUserAuth(userBase, userAuth),
+    ]);
+
+    return userBase;
+  }
+
+  async createClientOrAdmin(
+    registerUserDto: RegisterUserDto,
+    userBase: UserEntity,
+  ) {
+    if (registerUserDto.type.toString() === "client") {
+      await this.userGeneralRepository.createClientUser(userBase);
+      const clientUser =
+        await this.userGeneralRepository.findLastCreatedClientUser();
+      await this.userGeneralRepository.insertUserBaseIdOnClientUser(
+        userBase,
+        clientUser,
+      );
+    } else {
+      await this.userGeneralRepository.createAdminUser(userBase);
+      const adminUser =
+        await this.userGeneralRepository.findLastCreatedAdminUser();
+      await this.userGeneralRepository.insertUserBaseIdOnAdminUser(
+        userBase,
+        adminUser,
+      );
+    }
   }
 
   async modifyUser(
@@ -96,7 +138,7 @@ export class UserGeneralService {
     await this.userGeneralRepository.modifyUserPassword(hashed, user.Auth.id);
   }
 
-  async deleteUserWithId(userId: string): Promise<void> {
+  async deleteUser(userId: string): Promise<void> {
     await this.userGeneralRepository.deleteUser(userId);
   }
 }
