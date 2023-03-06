@@ -2,21 +2,21 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
-  NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
 import { ResetPasswordDto } from "../../user/dtos/reset-password.dto";
 import { FindEmailDto } from "../../user/dtos/find-email.dto";
 import { JwtService } from "@nestjs/jwt";
 import { LoginUserDto } from "../../user/dtos/login-user.dto";
-import { UserEntity } from "src/model/user/entities/user.entity";
 import { SecurityLibrary } from "src/common/lib/security.library";
 import { JwtPayload } from "../jwt/jwt-payload.interface";
 import { JwtRefreshTokenPayload } from "../jwt/jwt-refresh-token-payload.interface";
 import { v4 } from "uuid";
 import { AuthExistService } from "./auth-exist.service";
 import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
+import { UserEntity } from "src/model/user/entities/user.entity";
 import * as bcrypt from "bcrypt";
+import { JwtAccessTokenPayload } from "../jwt/jwt-access-token-payload.interface";
 
 @Injectable()
 export class AuthGeneralService {
@@ -53,14 +53,14 @@ export class AuthGeneralService {
   }
 
   async signToken(user: UserEntity): Promise<JwtPayload> {
-    const jwtAccessTokenPayload = {
+    const jwtAccessTokenPayload: JwtAccessTokenPayload = {
       userId: user.id,
       email: user.Auth.email,
       nickname: user.Auth.nickname,
-      userType: user.Auth.userType,
+      userType: user.type,
     };
 
-    const jwtRefreshTokenPayload = {
+    const jwtRefreshTokenPayload: JwtRefreshTokenPayload = {
       ...jwtAccessTokenPayload,
       isRefreshToken: true,
       randomToken: v4(),
@@ -103,16 +103,10 @@ export class AuthGeneralService {
 
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
     const { email, password } = resetPasswordDto;
-    const isExistUserEmail = await this.authExistService.verfiyEmail(email);
 
-    if (isExistUserEmail) {
-      const user = await this.userGeneralRepository.findUserWithEmail(email);
+    const user = await this.userGeneralRepository.findUserWithEmail(email);
 
-      const hashed = await bcrypt.hash(password, 10);
-      await this.userGeneralRepository.resetPassword(user.Auth.id, hashed);
-    }
-    throw new NotFoundException(
-      "해당 데이터(이메일)은 데이터베이스에 존재하지 않습니다.",
-    );
+    const hashed = await bcrypt.hash(password, 10);
+    await this.userGeneralRepository.resetPassword(user.Auth.id, hashed);
   }
 }
