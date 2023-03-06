@@ -13,18 +13,12 @@ export class ClientUserEntity extends CommonEntity {
   @JoinColumn({ name: "userId", referencedColumnName: "id" })
   User: UserEntity;
 
-  @ManyToOne(() => ProductEntity, (product) => product.Client, {
-    onDelete: "CASCADE",
-  })
+  @ManyToOne(() => ProductEntity, (product) => product.purchaser)
   purchasedProduct: ProductEntity;
 
-  @ManyToOne(() => ReviewEntity, (review) => review.Client, {
-    onDelete: "CASCADE",
-  })
+  @ManyToOne(() => ReviewEntity, (review) => review.Client)
   writtenReview: ReviewEntity;
 
-  @ManyToOne(() => InquiryEntity, (inquiry) => inquiry.Client, {
-    onDelete: "CASCADE",
-  })
+  @ManyToOne(() => InquiryEntity, (inquiry) => inquiry.Client)
   writtenInquiry: InquiryEntity;
 }

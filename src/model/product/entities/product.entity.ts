@@ -5,6 +5,8 @@ import { ReviewEntity } from "src/model/review/entities/review.entity";
 import { StarRateEntity } from "../../review/entities/star-rate.entity";
 import { ProductImageEntity } from "src/model/media/entities/product.image.entity";
 import { InquiryEntity } from "../../inquiry/entities/inquiry.entity";
+import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
+import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
 
 @Entity({ name: "products", synchronize: true })
 export class ProductEntity extends CommonEntity {
@@ -42,10 +44,16 @@ export class ProductEntity extends CommonEntity {
   })
   Image: ProductImageEntity;
 
-  @OneToOne(() => StarRateEntity, (StarRate) => StarRate.Product, {
+  @OneToOne(() => StarRateEntity, (starRate) => starRate.Product, {
     cascade: true,
   })
   StarRate: StarRateEntity;
+
+  @OneToMany(() => AdminUserEntity, (admin) => admin.createdProduct)
+  creater: AdminUserEntity[];
+
+  @OneToMany(() => ClientUserEntity, (client) => client.purchasedProduct)
+  purchaser: ClientUserEntity[];
 
   @OneToMany(() => ReviewEntity, (review) => review.Product, { cascade: true })
   Review: ReviewEntity[];
@@ -54,7 +62,4 @@ export class ProductEntity extends CommonEntity {
     cascade: true,
   })
   Inquiry: InquiryEntity[];
-
-  @Column()
-  a: string;
 }
