@@ -5,20 +5,12 @@ import {
   IsDateString,
   IsMobilePhone,
 } from "class-validator";
-import {
-  Column,
-  Entity,
-  OneToOne,
-  PrimaryGeneratedColumn,
-  JoinColumn,
-} from "typeorm";
+import { CommonEntity } from "src/common/entities/common.entity";
+import { Column, Entity, OneToOne, JoinColumn } from "typeorm";
 import { UserEntity } from "./user.entity";
 
 @Entity({ name: "users_profile", synchronize: true })
-export class UserProfileEntity {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
-
+export class UserProfileEntity extends CommonEntity {
   @OneToOne(() => UserEntity, (user) => user.Profile, {
     onDelete: "CASCADE",
   })

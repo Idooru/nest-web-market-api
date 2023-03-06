@@ -1,9 +1,16 @@
-import { UserPrototypeEntity } from "src/common/entities/user-prototype.entity";
+import { CommonEntity } from "src/common/entities/common.entity";
 import { InquiryEntity } from "src/model/inquiry/entities/inquiry.entity";
-import { Entity, OneToMany } from "typeorm";
+import { Entity, JoinColumn, ManyToOne, OneToOne } from "typeorm";
+import { UserEntity } from "./user.entity";
 
-@Entity({ name: "admin-users", synchronize: true })
-export class AdminUserEntity extends UserPrototypeEntity {
-  @OneToMany(() => InquiryEntity, (inquiry) => inquiry.Admin)
-  Inquiry: InquiryEntity[]; // 관리자 사용자가 문의를
+@Entity({ name: "admin_users", synchronize: true })
+export class AdminUserEntity extends CommonEntity {
+  @OneToOne(() => UserEntity, (user) => user.adminActions, {
+    onDelete: "CASCADE",
+  })
+  @JoinColumn({ name: "userId", referencedColumnName: "id" })
+  User: UserEntity;
+
+  @ManyToOne(() => InquiryEntity, (inquiry) => inquiry.Admin)
+  receivedInquiry: InquiryEntity;
 }

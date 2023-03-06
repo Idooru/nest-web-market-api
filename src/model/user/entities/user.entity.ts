@@ -25,10 +25,10 @@ export class UserEntity extends CommonEntity {
   @OneToOne(() => ClientUserEntity, (client) => client.User, {
     cascade: true,
   })
-  Client: ClientUserEntity;
+  clientActions: ClientUserEntity;
 
   @OneToOne(() => AdminUserEntity, (admin) => admin.User, {
     cascade: true,
   })
-  Admin: AdminUserEntity;
+  adminActions: AdminUserEntity;
 }
