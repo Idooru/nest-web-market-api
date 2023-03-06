@@ -14,9 +14,7 @@ import { JwtAccessTokenPayload } from "../../../auth/jwt/jwt-access-token-payloa
 import { IsLoginGuard } from "../../../../common/guards/authenticate/is-login.guard";
 import { AuthGeneralService } from "../../../auth/services/auth-general.service";
 import { UserGeneralService } from "../../services/user-general.service";
-import { RegisterUserDto } from "../../dtos/register-user.dto";
 import { LoginUserDto } from "../../dtos/login-user.dto";
-import { UserEntity } from "../../entities/user.entity";
 import { ModifyUserDto } from "../../dtos/modify-user.dto";
 import { ResetPasswordDto } from "../../dtos/reset-password.dto";
 import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
@@ -31,6 +29,8 @@ import { JsonJwtAuthInterface } from "src/common/interceptors/general/interface/
 import { JsonJwtAuthInterceptor } from "src/common/interceptors/general/json-jwt-auth.interceptor";
 import { JsonJwtLogoutInterceptor } from "src/common/interceptors/general/json-jwt-logout.interceptor";
 import { JsonJwtLogoutInterface } from "src/common/interceptors/general/interface/json-jwt-logout.interface";
+import { RegisterUserDto } from "../../dtos/register-user.dto";
+import { UserEntity } from "../../entities/user.entity";
 
 @Controller("/api/v1/free-use/user")
 export class UserVersionOneFreeUseController {
@@ -52,11 +52,18 @@ export class UserVersionOneFreeUseController {
   async register(
     @Body() registerUserDto: RegisterUserDto,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userGeneralService.register(registerUserDto);
+    const userBase = await this.userGeneralService.createUserBase(
+      registerUserDto,
+    );
+
+    await this.userGeneralService.createClientOrAdmin(
+      registerUserDto,
+      userBase,
+    );
 
     return {
       statusCode: 201,
-      message: "회원가입을 완료하였습니다.",
+      message: "사용자 회원가입을 완료하였습니다.",
     };
   }
 
@@ -66,10 +73,20 @@ export class UserVersionOneFreeUseController {
   async whoAmI(
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<UserEntity>> {
+    if (jwtPayload.userType.toString() === "admin") {
+      return {
+        statusCode: 200,
+        message: "관리자 사용자의 정보를 가져옵니다.",
+        result: await this.userGeneralService.findAdminUserProfileInfoWithId(
+          jwtPayload.userId,
+        ),
+      };
+    }
+
     return {
       statusCode: 200,
-      message: "본인 정보를 가져옵니다.",
-      result: await this.userGeneralService.findSelfInfoWithId(
+      message: "고객 사용자의 정보를 가져옵니다.",
+      result: await this.userGeneralService.findClientUserProfileInfoWithId(
         jwtPayload.userId,
       ),
     };
@@ -231,7 +248,7 @@ export class UserVersionOneFreeUseController {
   async secession(
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonJwtLogoutInterface> {
-    await this.userGeneralService.deleteUserWithId(jwtPayload.userId);
+    await this.userGeneralService.deleteUser(jwtPayload.userId);
 
     return {
       statusCode: 203,
