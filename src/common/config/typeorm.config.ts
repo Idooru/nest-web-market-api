@@ -14,7 +14,7 @@ import { InquiryImageEntity } from "src/model/media/entities/inquiry.image.entit
 import { InquiryVideoEntity } from "src/model/media/entities/inquiry.video.entity";
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
-import { UserPrototypeEntity } from "../entities/user-prototype.entity";
+import { UserEntity } from "../../model/user/entities/user.entity";
 
 const isNodeEnvDev = (): boolean =>
   process.env.NODE_ENV === "dev" ? true : false;
@@ -34,7 +34,7 @@ const isNodeEnvProd = (): boolean =>
         password: configService.get("DB_PASSWORD"),
         database: configService.get("DB_SCHEMA"),
         entities: [
-          UserPrototypeEntity,
+          UserEntity,
           UserProfileEntity,
           UserAuthEntity,
           ClientUserEntity,
