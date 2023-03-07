@@ -12,7 +12,6 @@ import { ReviewGeneralService } from "../services/review-general.service";
 import { ModifyReviewDto } from "../dto/modify-review.dto";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { Cookies } from "src/common/decorators/cookies.decorator";
 import { UseInterceptors } from "@nestjs/common";
 import { ReceiveMediaDto } from "src/model/media/dto/receive-media.dto";
 import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
@@ -26,6 +25,7 @@ import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-gen
 import { JsonGeneralInterface } from "src/common/interceptors/general/interface/json-general-interface";
 import { StarRateService } from "../services/star-rate-general.service";
 import { VerifyDataGuard } from "src/common/guards/verfiy/verify-data.guard";
+import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 
 @Controller("/api/v1/free-use/review")
 export class ReviewVersionOneFreeUseController {
@@ -40,9 +40,9 @@ export class ReviewVersionOneFreeUseController {
   @Post("/product/:productId/image&video")
   async createReviewWithImageAndVideo(
     @Param("productId") productId: string,
-    @Cookies(mediaCookieKeys.review.image_url_cookie)
+    @MediaCookiesParser(mediaCookieKeys.review.image_url_cookie)
     reviewImgCookies: ReceiveMediaDto[],
-    @Cookies(mediaCookieKeys.review.video_url_cookie)
+    @MediaCookiesParser(mediaCookieKeys.review.video_url_cookie)
     reviewVdoCookies: ReceiveMediaDto[],
     @Body() createReviewDto: CreateReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
@@ -74,7 +74,7 @@ export class ReviewVersionOneFreeUseController {
   @Post("/product/:productId/image")
   async createReviewWithImage(
     @Param("productId") productId: string,
-    @Cookies(mediaCookieKeys.review.image_url_cookie)
+    @MediaCookiesParser(mediaCookieKeys.review.image_url_cookie)
     reviewImgCookies: ReceiveMediaDto[],
     @Body() createReviewDto: CreateReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
@@ -102,7 +102,7 @@ export class ReviewVersionOneFreeUseController {
   @Post("/product/:productId/video")
   async createReviewWithVideo(
     @Param("productId") productId: string,
-    @Cookies(mediaCookieKeys.review.video_url_cookie)
+    @MediaCookiesParser(mediaCookieKeys.review.video_url_cookie)
     reviewVdoCookies: ReceiveMediaDto[],
     @Body() createReviewDto: CreateReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
@@ -160,9 +160,9 @@ export class ReviewVersionOneFreeUseController {
   async modifyReviewWithImageAndVideo(
     @Param("productId") productId: string,
     @Param("reviewId") reviewId: string,
-    @Cookies(mediaCookieKeys.review.image_url_cookie)
+    @MediaCookiesParser(mediaCookieKeys.review.image_url_cookie)
     reviewImgCookies: ReceiveMediaDto[],
-    @Cookies(mediaCookieKeys.review.video_url_cookie)
+    @MediaCookiesParser(mediaCookieKeys.review.video_url_cookie)
     reviewVdoCookies: ReceiveMediaDto[],
     @Body() modifyReviewDto: ModifyReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
@@ -204,7 +204,7 @@ export class ReviewVersionOneFreeUseController {
   async modifyReviewWithImage(
     @Param("productId") productId: string,
     @Param("reviewId") reviewId: string,
-    @Cookies(mediaCookieKeys.review.image_url_cookie)
+    @MediaCookiesParser(mediaCookieKeys.review.image_url_cookie)
     reviewImgCookies: ReceiveMediaDto[],
     @Body() modifyReviewDto: ModifyReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
@@ -242,7 +242,7 @@ export class ReviewVersionOneFreeUseController {
   async modifyReviewWithVideo(
     @Param("productId") productId: string,
     @Param("reviewId") reviewId: string,
-    @Cookies(mediaCookieKeys.review.video_url_cookie)
+    @MediaCookiesParser(mediaCookieKeys.review.video_url_cookie)
     reviewVdoCookies: ReceiveMediaDto[],
     @Body() modifyReviewDto: ModifyReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
@@ -315,7 +315,7 @@ export class ReviewVersionOneFreeUseController {
       jwtPayload.userId,
     );
 
-    await this.reviewGeneralService.deleteReview(review, jwtPayload.userId);
+    await this.reviewGeneralService.deleteReview(review);
 
     return {
       statusCode: 200,

@@ -14,7 +14,7 @@ import {
   mediaCookieKeys,
   verifyCookieKeys,
 } from "src/common/config/cookie-key-configs";
-import { Cookie } from "src/common/decorators/cookie.decorator";
+import { MediaCookieParser } from "src/common/decorators/media-cookie-parser.decorator";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { VerifyDataGuard } from "src/common/guards/verfiy/verify-data.guard";
@@ -68,7 +68,7 @@ export class ProductVersionOneOnlyAdminController {
   async createProduct(
     @Body()
     createProductDto: CreateProductDto,
-    @Cookie("product_image_url_cookie")
+    @MediaCookieParser("product_image_url_cookie")
     productImgCookie: ReceiveMediaDto,
   ): Promise<JsonClearCookieInterface> {
     await this.productGeneralService.createProduct(
@@ -94,7 +94,7 @@ export class ProductVersionOneOnlyAdminController {
   async modifyProduct(
     @Param("id") id: string,
     @Body() modifyProductDto: ModifyProductDto,
-    @Cookie(mediaCookieKeys.product.image_url_cookie)
+    @MediaCookieParser(mediaCookieKeys.product.image_url_cookie)
     productImgCookie: ReceiveMediaDto,
   ): Promise<JsonClearCookieInterface> {
     await this.productGeneralService.modifyProduct(
@@ -115,7 +115,7 @@ export class ProductVersionOneOnlyAdminController {
   @Patch("/:id/image")
   async modifyProductImage(
     @Param("id") id: string,
-    @Cookie(mediaCookieKeys.product.image_url_cookie)
+    @MediaCookieParser(mediaCookieKeys.product.image_url_cookie)
     productImgCookie: ReceiveMediaDto,
   ): Promise<JsonClearCookieInterface> {
     await this.productGeneralService.modifyProductImage(id, productImgCookie);

@@ -25,6 +25,7 @@ import { JsonClearCookiesInterface } from "src/common/interceptors/general/inter
 import { ReturnMediaDto } from "../dto/return-media.dto";
 import { ReceiveMediaDto } from "../dto/receive-media.dto";
 import { MediaGeneralService } from "../services/media-general.service";
+import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 
 @Controller("/api/v1/free-use/media")
 export class MediaVersionOneFreeUseController {
@@ -167,15 +168,16 @@ export class MediaVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Delete("/review/image")
   async cancelImageUploadForReview(
-    @Cookies(mediaCookieKeys.review.image_url_cookie)
+    @MediaCookiesParser(mediaCookieKeys.review.image_url_cookie)
     reviewImgCookies: ReceiveMediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteReviewImages(reviewImgCookies);
+    const cookieKey = reviewImgCookies.map((cookie) => cookie.whatCookie);
 
     return {
       statusCode: 200,
       message: "리뷰 사진 업로드를 취소하였습니다.",
-      cookieKey: reviewImgCookies.map((cookie) => cookie.whatCookie),
+      cookieKey,
     };
   }
 
@@ -183,7 +185,7 @@ export class MediaVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Delete("/review/video")
   async cancelVideoUploadForReview(
-    @Cookies(mediaCookieKeys.review.video_url_cookie)
+    @MediaCookiesParser(mediaCookieKeys.review.video_url_cookie)
     reviewVdoCookies: ReceiveMediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteReviewVideos(reviewVdoCookies);
@@ -199,7 +201,7 @@ export class MediaVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Delete("/inquiry/image")
   async cancelImageUploadForInquiry(
-    @Cookies(mediaCookieKeys.inquiry.image_url_cookie)
+    @MediaCookiesParser(mediaCookieKeys.inquiry.image_url_cookie)
     inquiryImgCookies: ReceiveMediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteInquiryImages(inquiryImgCookies);
@@ -215,7 +217,7 @@ export class MediaVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Delete("/inquiry/video")
   async cancelVideoUploadForInquiry(
-    @Cookies(mediaCookieKeys.inquiry.video_url_cookie)
+    @MediaCookiesParser(mediaCookieKeys.inquiry.video_url_cookie)
     inquiryVdoCookies: ReceiveMediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteInquiryVideos(inquiryVdoCookies);

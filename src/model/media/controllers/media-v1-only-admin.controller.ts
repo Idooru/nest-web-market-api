@@ -13,7 +13,6 @@ import { ReceiveMediaDto } from "../dto/receive-media.dto";
 import { MeidaLoggerLibrary } from "src/common/lib/media-logger.library";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { mediaCookieKeys } from "../../../common/config/cookie-key-configs";
-import { Cookie } from "src/common/decorators/cookie.decorator";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { JsonSendCookieInterceptor } from "src/common/interceptors/general/json-send-cookie.interceptor";
@@ -22,10 +21,11 @@ import { JsonClearCookieInterceptor } from "src/common/interceptors/general/json
 import { JsonClearCookieInterface } from "src/common/interceptors/general/interface/json-clear-cookie.interface";
 import { ReturnMediaDto } from "../dto/return-media.dto";
 import { MediaGeneralService } from "../services/media-general.service";
+import { MediaCookieParser } from "src/common/decorators/media-cookie-parser.decorator";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
-@Controller()
+@Controller("/api/v1/only-admin/media")
 export class MediaVersionOneOnlyAdminController {
   constructor(
     private readonly mediaGeneralService: MediaGeneralService,
@@ -62,7 +62,7 @@ export class MediaVersionOneOnlyAdminController {
   @UseInterceptors(JsonClearCookieInterceptor)
   @Delete("/product/image")
   async cancelImageUploadForProduct(
-    @Cookie(mediaCookieKeys.product.image_url_cookie)
+    @MediaCookieParser(mediaCookieKeys.product.image_url_cookie)
     productImgCookie: ReceiveMediaDto,
   ): Promise<JsonClearCookieInterface> {
     await this.mediaGeneralService.deleteProductImage(productImgCookie);
