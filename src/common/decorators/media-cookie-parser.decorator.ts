@@ -1,13 +1,13 @@
 import { ArgumentsHost, createParamDecorator } from "@nestjs/common";
 import { Request } from "express";
 import { MediaCookie } from "../types/media-cookies";
-import { filtering } from "./filtering";
+import { cookieFilter } from "./cookie-filter";
 
 export const MediaCookieParser = createParamDecorator(
   (data: string, context: ArgumentsHost): MediaCookie => {
     const req = context.switchToHttp().getRequest() as Request;
 
-    filtering(req, data);
+    cookieFilter(req, data);
 
     return {
       whatCookie: req.signedCookies[data].whatCookie,
