@@ -1,7 +1,12 @@
-import { UserEntity } from "src/model/user/entities/user.entity";
+import { IsEmail, IsString, IsUrl } from "class-validator";
 
 export class UploadMediaDto {
   // 모든 종류의 이미지, 동영상 파일 url
+  @IsUrl()
+  @IsString()
   url: string;
-  uploader: UserEntity;
+
+  @IsEmail()
+  @IsString()
+  uploader: string;
 }
