@@ -14,7 +14,6 @@ import {
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { Cookies } from "src/common/decorators/cookies.decorator";
 import { MeidaLoggerLibrary } from "src/common/lib/media-logger.library";
 import { mediaCookieKeys } from "src/common/config/cookie-key-configs";
 import { JsonSendCookiesInterceptor } from "src/common/interceptors/general/json-send-cookies.interceptor";
