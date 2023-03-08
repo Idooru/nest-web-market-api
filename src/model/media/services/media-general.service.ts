@@ -67,12 +67,14 @@ export class MediaGeneralService {
     file: Express.Multer.File,
     jwtPayload: JwtAccessTokenPayload,
   ): Promise<void> {
-    const user = await this.userRepository.findUserWithId(jwtPayload.userId);
+    const user = await this.userRepository.findAdminUserProfileInfoWithId(
+      jwtPayload.userId,
+    );
     const url = this.setUrl(file.filename);
 
     await this.mediaGeneralRepository.uploadProductImage({
       url,
-      uploader: user,
+      uploader: user.Auth.email,
     });
   }
 
@@ -80,22 +82,23 @@ export class MediaGeneralService {
     files: Array<Express.Multer.File>,
     jwtPayload: JwtAccessTokenPayload,
   ): Promise<void> {
-    const uploader = jwtPayload.nickname;
-    const user = await this.userRepository.findUserWithNickName(uploader);
+    const user = await this.userRepository.findUserWithNickName(
+      jwtPayload.nickname,
+    );
 
     if (files.length >= 2) {
       for (const file of files) {
         const url = this.setUrl(file.filename);
         await this.mediaGeneralRepository.uploadReviewImage({
           url,
-          uploader: user,
+          uploader: user.Auth.email,
         });
       }
     } else {
       const url = this.setUrl(files[0].fieldname);
       await this.mediaGeneralRepository.uploadReviewImage({
         url,
-        uploader: user,
+        uploader: user.Auth.email,
       });
     }
   }
@@ -104,22 +107,23 @@ export class MediaGeneralService {
     files: Array<Express.Multer.File>,
     jwtPayload: JwtAccessTokenPayload,
   ): Promise<void> {
-    const uploader = jwtPayload.nickname;
-    const user = await this.userRepository.findUserWithNickName(uploader);
+    const user = await this.userRepository.findUserWithNickName(
+      jwtPayload.nickname,
+    );
 
     if (files.length >= 2) {
       for (const file of files) {
         const url = this.setUrl(file.filename);
         await this.mediaGeneralRepository.uploadReviewVideo({
           url,
-          uploader: user,
+          uploader: user.Auth.email,
         });
       }
     } else {
       const url = this.setUrl(files[0].filename);
       await this.mediaGeneralRepository.uploadReviewVideo({
         url,
-        uploader: user,
+        uploader: user.Auth.email,
       });
     }
   }
@@ -128,22 +132,23 @@ export class MediaGeneralService {
     files: Array<Express.Multer.File>,
     jwtPayload: JwtAccessTokenPayload,
   ): Promise<void> {
-    const uploader = jwtPayload.nickname;
-    const user = await this.userRepository.findUserWithNickName(uploader);
+    const user = await this.userRepository.findUserWithNickName(
+      jwtPayload.nickname,
+    );
 
     if (files.length >= 2) {
       for (const file of files) {
         const url = this.setUrl(file.filename);
         await this.mediaGeneralRepository.uploadInquiryImage({
           url,
-          uploader: user,
+          uploader: user.Auth.email,
         });
       }
     } else {
       const url = this.setUrl(files[0].fieldname);
       await this.mediaGeneralRepository.uploadInquiryImage({
         url,
-        uploader: user,
+        uploader: user.Auth.email,
       });
     }
   }
@@ -152,22 +157,23 @@ export class MediaGeneralService {
     files: Array<Express.Multer.File>,
     jwtPayload: JwtAccessTokenPayload,
   ): Promise<void> {
-    const uploader = jwtPayload.nickname;
-    const user = await this.userRepository.findUserWithNickName(uploader);
+    const user = await this.userRepository.findUserWithNickName(
+      jwtPayload.nickname,
+    );
 
     if (files.length >= 2) {
       for (const file of files) {
         const url = this.setUrl(file.filename);
         await this.mediaGeneralRepository.uploadInquiryVideo({
           url,
-          uploader: user,
+          uploader: user.Auth.email,
         });
       }
     } else {
       const url = this.setUrl(files[0].fieldname);
       await this.mediaGeneralRepository.uploadInquiryVideo({
         url,
-        uploader: user,
+        uploader: user.Auth.email,
       });
     }
   }
