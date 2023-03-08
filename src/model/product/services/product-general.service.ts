@@ -7,6 +7,8 @@ import { ModifyProductDto } from "../dto/modify_product.dto";
 import { ReceiveMediaDto } from "src/model/media/dto/receive-media.dto";
 import { ProductImageEntity } from "src/model/media/entities/product.image.entity";
 import { MediaGeneralRepository } from "src/model/media/repositories/media-general.repository";
+import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
+import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
 
 @Injectable()
 export class ProductGeneralService {
@@ -14,6 +16,7 @@ export class ProductGeneralService {
     private readonly productGeneralRepository: ProductGeneralRepository,
     private readonly mediaGeneralRepository: MediaGeneralRepository,
     private readonly starRateRepository: StarRateRepository,
+    private readonly userGeneralRepository: UserGeneralRepository,
   ) {}
 
   isExistProducts(founds: ProductEntity[]): void {
@@ -53,13 +56,16 @@ export class ProductGeneralService {
   async createProduct(
     createProductDto: CreateProductDto,
     imageCookie: ReceiveMediaDto,
+    jwtPayload: JwtAccessTokenPayload,
   ): Promise<void> {
-    const [image, StarRate] = await Promise.all([
+    const [image, StarRate, admin] = await Promise.all([
       this.mediaGeneralRepository.findProductImageWithUrl(imageCookie.url),
       this.starRateRepository.createStarRateSample(),
+      this.userGeneralRepository.findAdminUserObject(jwtPayload.userId),
     ]);
 
-    await this.productGeneralRepository.createProduct(createProductDto);
+    await this.productGeneralRepository.createProduct(createProductDto, admin);
+
     const product =
       await this.productGeneralRepository.findLastCreatedProduct();
 

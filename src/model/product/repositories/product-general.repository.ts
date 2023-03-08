@@ -11,6 +11,7 @@ import { Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
 import { productSelectProperty } from "src/common/config/repository-select-configs/product-select";
 import { BadRequestException } from "@nestjs/common/exceptions";
+import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
 
 @Injectable()
 export class ProductGeneralRepository {
@@ -47,8 +48,6 @@ export class ProductGeneralRepository {
         .leftJoin("product.Inquiry", "Inquiry")
         .leftJoin("Review.Image", "ReviewImage")
         .leftJoin("Review.Video", "ReviewVideo")
-        .leftJoin("Review.UserActivity", "UserActivity")
-        .leftJoin("UserActivity.User", "User")
         .orderBy("product.createdAt", "DESC")
         .getMany();
     } catch (err) {
@@ -69,8 +68,6 @@ export class ProductGeneralRepository {
         .leftJoin("product.Inquiry", "Inquiry")
         .leftJoin("Review.Image", "ReviewImage")
         .leftJoin("Review.Video", "ReviewVideo")
-        .leftJoin("Review.UserActivity", "UserActivity")
-        .leftJoin("UserActivity.User", "User")
         .orderBy("product.createdAt", "ASC")
         .getMany();
     } catch (err) {
@@ -170,13 +167,16 @@ export class ProductGeneralRepository {
     }
   }
 
-  async createProduct(createProductDto: CreateProductDto): Promise<void> {
+  async createProduct(
+    createProductDto: CreateProductDto,
+    admin: AdminUserEntity,
+  ): Promise<void> {
     try {
       await this.productGeneralRepository
         .createQueryBuilder()
         .insert()
         .into(ProductEntity)
-        .values({ ...createProductDto })
+        .values({ creater: admin, ...createProductDto })
         .execute();
     } catch (err) {
       this.logger.error(err);

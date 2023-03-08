@@ -14,6 +14,7 @@ import {
   mediaCookieKeys,
   verifyCookieKeys,
 } from "src/common/config/cookie-key-configs";
+import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { MediaCookieParser } from "src/common/decorators/media-cookie-parser.decorator";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
@@ -22,6 +23,7 @@ import { JsonClearCookieInterface } from "src/common/interceptors/general/interf
 import { JsonGeneralInterface } from "src/common/interceptors/general/interface/json-general-interface";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/general/json-clear-cookie.interceptor";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
+import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ReceiveMediaDto } from "src/model/media/dto/receive-media.dto";
 import { CreateProductDto } from "../../dto/create_product.dto";
 import { ModifyProductDto } from "../../dto/modify_product.dto";
@@ -70,10 +72,12 @@ export class ProductVersionOneOnlyAdminController {
     createProductDto: CreateProductDto,
     @MediaCookieParser("product_image_url_cookie")
     productImgCookie: ReceiveMediaDto,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookieInterface> {
     await this.productGeneralService.createProduct(
       createProductDto,
       productImgCookie,
+      jwtPayload,
     );
 
     return {
