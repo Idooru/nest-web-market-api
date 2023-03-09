@@ -6,7 +6,6 @@ import {
   UploadedFiles,
   Delete,
 } from "@nestjs/common";
-
 import {
   maxContentsCount,
   MulterConfig,
@@ -25,9 +24,12 @@ import { ReturnMediaDto } from "../dto/return-media.dto";
 import { ReceiveMediaDto } from "../dto/receive-media.dto";
 import { MediaGeneralService } from "../services/media-general.service";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
+import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
 
-@Controller("/api/v1/free-use/media")
-export class MediaVersionOneFreeUseController {
+@UseGuards(IsClientGuard)
+@UseGuards(IsLoginGuard)
+@Controller("/api/v1/only-client/media")
+export class MediaVersionOneOnlyClientController {
   constructor(
     private readonly mediaGeneralService: MediaGeneralService,
     private readonly mediaLoggerLibrary: MeidaLoggerLibrary,
@@ -43,7 +45,6 @@ export class MediaVersionOneFreeUseController {
       MulterConfig.upload("/image/review"),
     ),
   )
-  @UseGuards(IsLoginGuard)
   @Post("/review/image")
   async uploadReviewImage(
     @UploadedFiles() files: Array<Express.Multer.File>,
@@ -75,7 +76,6 @@ export class MediaVersionOneFreeUseController {
       MulterConfig.upload("video/review"),
     ),
   )
-  @UseGuards(IsLoginGuard)
   @Post("/review/video")
   async uploadReviewVideo(
     @UploadedFiles() files: Array<Express.Multer.File>,
@@ -107,7 +107,6 @@ export class MediaVersionOneFreeUseController {
       MulterConfig.upload("image/inquiry"),
     ),
   )
-  @UseGuards(IsLoginGuard)
   @Post("/inquiry/image")
   async uploadInquiryImage(
     @UploadedFiles() files: Array<Express.Multer.File>,
@@ -139,7 +138,6 @@ export class MediaVersionOneFreeUseController {
       MulterConfig.upload("video/inquiry"),
     ),
   )
-  @UseGuards(IsLoginGuard)
   @Post("/inquiry/video")
   async uploadInquiryVideo(
     @UploadedFiles() files: Array<Express.Multer.File>,
@@ -164,7 +162,6 @@ export class MediaVersionOneFreeUseController {
   }
 
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @UseGuards(IsLoginGuard)
   @Delete("/review/image")
   async cancelImageUploadForReview(
     @MediaCookiesParser(mediaCookieKeys.review.image_url_cookie)
@@ -181,50 +178,50 @@ export class MediaVersionOneFreeUseController {
   }
 
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @UseGuards(IsLoginGuard)
   @Delete("/review/video")
   async cancelVideoUploadForReview(
     @MediaCookiesParser(mediaCookieKeys.review.video_url_cookie)
     reviewVdoCookies: ReceiveMediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteReviewVideos(reviewVdoCookies);
+    const cookieKey = reviewVdoCookies.map((cookie) => cookie.whatCookie);
 
     return {
       statusCode: 200,
       message: "리뷰 동영상 업로드를 취소하였습니다.",
-      cookieKey: reviewVdoCookies.map((cookie) => cookie.whatCookie),
+      cookieKey,
     };
   }
 
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @UseGuards(IsLoginGuard)
   @Delete("/inquiry/image")
   async cancelImageUploadForInquiry(
     @MediaCookiesParser(mediaCookieKeys.inquiry.image_url_cookie)
     inquiryImgCookies: ReceiveMediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteInquiryImages(inquiryImgCookies);
+    const cookieKey = inquiryImgCookies.map((cookie) => cookie.whatCookie);
 
     return {
       statusCode: 200,
       message: "문의 사진 업로드를 취소하였습니다.",
-      cookieKey: inquiryImgCookies.map((cookie) => cookie.whatCookie),
+      cookieKey,
     };
   }
 
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @UseGuards(IsLoginGuard)
   @Delete("/inquiry/video")
   async cancelVideoUploadForInquiry(
     @MediaCookiesParser(mediaCookieKeys.inquiry.video_url_cookie)
     inquiryVdoCookies: ReceiveMediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteInquiryVideos(inquiryVdoCookies);
+    const cookieKey = inquiryVdoCookies.map((cookie) => cookie.whatCookie);
 
     return {
       statusCode: 200,
       message: "문의 동영상 업로드를 취소하였습니다.",
-      cookieKey: inquiryVdoCookies.map((cookie) => cookie.whatCookie),
+      cookieKey,
     };
   }
 }

@@ -10,7 +10,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { DotenvConfigurationModule } from "src/common/config/dotenv.config";
 import { InquiryImageEntity } from "./entities/inquiry.image.entity";
 import { InquiryVideoEntity } from "./entities/inquiry.video.entity";
-import { MediaVersionOneFreeUseController } from "./controllers/media-v1-free-use.controller";
+import { MediaVersionOneOnlyClientController } from "./controllers/media-v1-only-client.controller";
 import { MediaVersionOneOnlyAdminController } from "./controllers/media-v1-only-admin.controller";
 import { MediaGeneralService } from "./services/media-general.service";
 import { MediaGeneralRepository } from "./repositories/media-general.repository";
@@ -31,7 +31,7 @@ import { MediaGeneralRepository } from "./repositories/media-general.repository"
     DotenvConfigurationModule,
   ],
   controllers: [
-    MediaVersionOneFreeUseController,
+    MediaVersionOneOnlyClientController,
     MediaVersionOneOnlyAdminController,
   ],
   providers: [MediaGeneralService, MediaGeneralRepository],
