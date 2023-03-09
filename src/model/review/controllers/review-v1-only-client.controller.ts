@@ -26,9 +26,12 @@ import { JsonGeneralInterface } from "src/common/interceptors/general/interface/
 import { StarRateService } from "../services/star-rate-general.service";
 import { VerifyDataGuard } from "src/common/guards/verfiy/verify-data.guard";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
+import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
 
-@Controller("/api/v1/free-use/review")
-export class ReviewVersionOneFreeUseController {
+@UseGuards(IsClientGuard)
+@UseGuards(IsLoginGuard)
+@Controller("/api/v1/only-client/review")
+export class ReviewVersionOneOnlyAdminController {
   constructor(
     private readonly reviewGeneralService: ReviewGeneralService,
     private readonly starRateService: StarRateService,
@@ -36,7 +39,6 @@ export class ReviewVersionOneFreeUseController {
 
   @UseInterceptors(JsonClearCookiesInterceptor)
   @UseGuards(new VerifyDataGuard(verifyCookieKeys.product.is_exist.id_executed))
-  @UseGuards(IsLoginGuard)
   @Post("/product/:productId/image&video")
   async createReviewWithImageAndVideo(
     @Param("productId") productId: string,
@@ -70,7 +72,6 @@ export class ReviewVersionOneFreeUseController {
 
   @UseInterceptors(JsonClearCookiesInterceptor)
   @UseGuards(new VerifyDataGuard(verifyCookieKeys.product.is_exist.id_executed))
-  @UseGuards(IsLoginGuard)
   @Post("/product/:productId/image")
   async createReviewWithImage(
     @Param("productId") productId: string,
@@ -98,7 +99,6 @@ export class ReviewVersionOneFreeUseController {
 
   @UseInterceptors(JsonClearCookiesInterceptor)
   @UseGuards(new VerifyDataGuard(verifyCookieKeys.product.is_exist.id_executed))
-  @UseGuards(IsLoginGuard)
   @Post("/product/:productId/video")
   async createReviewWithVideo(
     @Param("productId") productId: string,
@@ -126,7 +126,6 @@ export class ReviewVersionOneFreeUseController {
 
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(new VerifyDataGuard(verifyCookieKeys.product.is_exist.id_executed))
-  @UseGuards(IsLoginGuard)
   @Post("/product/:productId")
   async createReviewWithoutMedia(
     @Param("productId") productId: string,
@@ -155,7 +154,6 @@ export class ReviewVersionOneFreeUseController {
       verifyCookieKeys.product.is_exist.id_executed,
     ),
   )
-  @UseGuards(IsLoginGuard)
   @Put("/:reviewId/product/:productId/image&video")
   async modifyReviewWithImageAndVideo(
     @Param("productId") productId: string,
@@ -199,7 +197,6 @@ export class ReviewVersionOneFreeUseController {
       verifyCookieKeys.review.is_exist.id_executed,
     ),
   )
-  @UseGuards(IsLoginGuard)
   @Put("/:reviewId/product/:productId/image")
   async modifyReviewWithImage(
     @Param("productId") productId: string,
@@ -237,7 +234,6 @@ export class ReviewVersionOneFreeUseController {
       verifyCookieKeys.review.is_exist.id_executed,
     ),
   )
-  @UseGuards(IsLoginGuard)
   @Put("/:reviewId/product/:productId/video")
   async modifyReviewWithVideo(
     @Param("productId") productId: string,
@@ -275,7 +271,6 @@ export class ReviewVersionOneFreeUseController {
       verifyCookieKeys.review.is_exist.id_executed,
     ),
   )
-  @UseGuards(IsLoginGuard)
   @Put("/:reviewId/product/:productId")
   async modifyReviewWithoutMedia(
     @Param("productId") productId: string,
@@ -304,7 +299,6 @@ export class ReviewVersionOneFreeUseController {
 
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(new VerifyDataGuard(verifyCookieKeys.review.is_exist.id_executed))
-  @UseGuards(IsLoginGuard)
   @Delete("/:reviewId")
   async deleteReview(
     @Param("reviewId") id: string,
