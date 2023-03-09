@@ -3,10 +3,11 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from "@nestjs/common";
+import { Request } from "express";
 
 export class IsAdminGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
-    const req = context.switchToHttp().getRequest();
+    const req = context.switchToHttp().getRequest() as Request;
     const { user } = req;
 
     if (user.userType !== "admin") {
