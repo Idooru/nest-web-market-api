@@ -95,7 +95,7 @@ export class MediaGeneralService {
         });
       }
     } else {
-      const url = this.setUrl(files[0].fieldname);
+      const url = this.setUrl(files[0].filename);
       await this.mediaGeneralRepository.uploadReviewImage({
         url,
         uploader: user.Auth.email,
@@ -145,7 +145,7 @@ export class MediaGeneralService {
         });
       }
     } else {
-      const url = this.setUrl(files[0].fieldname);
+      const url = this.setUrl(files[0].filename);
       await this.mediaGeneralRepository.uploadInquiryImage({
         url,
         uploader: user.Auth.email,
@@ -170,7 +170,7 @@ export class MediaGeneralService {
         });
       }
     } else {
-      const url = this.setUrl(files[0].fieldname);
+      const url = this.setUrl(files[0].filename);
       await this.mediaGeneralRepository.uploadInquiryVideo({
         url,
         uploader: user.Auth.email,
