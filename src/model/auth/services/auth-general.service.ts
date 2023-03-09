@@ -93,12 +93,17 @@ export class AuthGeneralService {
       this.userGeneralRepository.findUserWithPhoneNumber(phonenumber),
     ]);
 
-    if (realNameResult.id === phoneNumberResult.id) {
-      return realNameResult.Auth.email;
+    if (realNameResult === null || phoneNumberResult === null) {
+      throw new UnauthorizedException(
+        "사용자 실명과 전화번호가 서로 일치하지 않습니다.",
+      );
+    } else if (realNameResult.id !== phoneNumberResult.id) {
+      throw new UnauthorizedException(
+        "사용자 실명과 전화번호가 서로 일치하지 않습니다.",
+      );
     }
-    throw new UnauthorizedException(
-      "사용자 실명과 전화번호가 서로 일치하지 않습니다.",
-    );
+
+    return realNameResult.Auth.email;
   }
 
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
