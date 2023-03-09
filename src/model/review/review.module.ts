@@ -2,7 +2,6 @@ import { ProductModule } from "../product/product.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Module, forwardRef } from "@nestjs/common";
 import { ReviewGeneralService } from "./services/review-general.service";
-import { ReviewVersionOneOnlyAdminController } from "./controllers/review-v1-only-client.controller";
 import { ReviewEntity } from "./entities/review.entity";
 import { UserModule } from "../user/user.module";
 import { ReviewGeneralRepository } from "./repositories/review-general.repository";
@@ -15,6 +14,8 @@ import { ReviewVersionOneVerify } from "./controllers/review-v1-verify.controlle
 import { ReviewVerifyService } from "./services/review-verify.service";
 import { ReviewVerifyRepository } from "./repositories/review-verify.repository";
 import { MediaModule } from "../media/media.module";
+import { ReviewVersionOneOnlyAdminController } from "./controllers/review-v1-only-admin.controller";
+import { ReviewVersionOneOnlyClientController } from "./controllers/review-v1-only-client.controller";
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { MediaModule } from "../media/media.module";
   ],
   controllers: [
     ReviewVersionOneOnlyAdminController,
-    ReviewVersionOneOnlyAdminController,
+    ReviewVersionOneOnlyClientController,
     ReviewVersionOneVerify,
   ],
   providers: [

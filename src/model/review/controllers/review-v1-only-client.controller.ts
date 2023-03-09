@@ -31,7 +31,7 @@ import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)
 @Controller("/api/v1/only-client/review")
-export class ReviewVersionOneOnlyAdminController {
+export class ReviewVersionOneOnlyClientController {
   constructor(
     private readonly reviewGeneralService: ReviewGeneralService,
     private readonly starRateService: StarRateService,
