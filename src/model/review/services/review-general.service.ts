@@ -8,7 +8,6 @@ import {
 } from "../dto/create-review.dto";
 import { ReviewGeneralRepository } from "../repositories/review-general.repository";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { UserEntity } from "src/model/user/entities/user.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import {
   ModifyReviewDto,
@@ -23,6 +22,7 @@ import { MediaGeneralRepository } from "src/model/media/repositories/media-gener
 import { ReviewImageEntity } from "src/model/media/entities/review.image.entity";
 import { ReviewVideoEntity } from "src/model/media/entities/review.video.entity";
 import { ReceiveMediaDto } from "src/model/media/dto/receive-media.dto";
+import { UserEntity } from "src/model/user/entities/user.entity";
 
 @Injectable()
 export class ReviewGeneralService {
@@ -47,21 +47,20 @@ export class ReviewGeneralService {
     reviewId: string,
     userId: string,
   ): Promise<ReviewEntity> {
-    const { Activity } = await this.userGeneralRepository.findUserWithId(
+    const client = await this.userGeneralRepository.findClientUserObject(
       userId,
     );
 
-    const reviews =
-      await this.reviewGeneralRepository.findAllReviewsWithUserActivity(
-        Activity,
-      );
+    const reviews = await this.reviewGeneralRepository.findAllClientsReviews(
+      client.id,
+    );
 
     const review = reviews.find((idx) => idx.id === reviewId);
 
     if (!review) {
       // 만약 리뷰를 하나도 작성하지 않은 사용자가 다른 사용자의 리뷰를 수정하려고 시도할시 아래 예외가 발생한다.
       throw new NotFoundException(
-        `해당 activityId(${Activity.id})로 작성된 리뷰중에 reviewId(${reviewId})와 같은 리뷰를 찾을 수 없습니다.`,
+        `고객 사용자의 아이디(${client.id})로 작성된 리뷰중에 reviewId(${reviewId})와 같은 리뷰를 찾을 수 없습니다.`,
       );
     }
 
@@ -276,6 +275,36 @@ export class ReviewGeneralService {
     }
   }
 
+  async conditionForDeleteReviewImage(
+    reviewImages: ReviewImageEntity[],
+    review: ReviewEntity,
+  ): Promise<void> {
+    if (reviewImages.length >= 2) {
+      const beforeImages =
+        await this.mediaGeneralRepository.findBeforeReviewImages(review.id);
+      await this.deleteReviewImageMore(beforeImages);
+    } else {
+      const beforeImage =
+        await this.mediaGeneralRepository.findBeforeReviewImage(review.id);
+      await this.deleteReviewImageOne(beforeImage);
+    }
+  }
+
+  async conditionForDeleteReviewVideo(
+    reviewVideos: ReviewVideoEntity[],
+    review: ReviewEntity,
+  ): Promise<void> {
+    if (reviewVideos.length >= 2) {
+      const beforeVideos =
+        await this.mediaGeneralRepository.findBeforeReviewVideos(review.id);
+      await this.deleteReviewVideoMore(beforeVideos);
+    } else {
+      const beforeVideo =
+        await this.mediaGeneralRepository.findBeforeReviewVideo(review.id);
+      await this.deleteReviewVideoOne(beforeVideo);
+    }
+  }
+
   async createReviewWithImageAndVideo(
     createReviewWithImageAndVideoDto: CreateReviewWithImageAndVideoDto,
   ): Promise<void> {
@@ -286,8 +315,12 @@ export class ReviewGeneralService {
       reviewImgCookies,
       reviewVdoCookies,
     } = createReviewWithImageAndVideoDto;
-    const { userId } = jwtPayload;
-    const [user, product] = await this.findUserAndProduct(userId, productId);
+
+    const [product, client] = await Promise.all([
+      this.productGeneralRepository.findProductOneById(productId),
+      this.userGeneralRepository.findClientUserObject(jwtPayload.userId),
+    ]);
+
     createReviewDto.Image = [];
     createReviewDto.Video = [];
 
@@ -295,14 +328,13 @@ export class ReviewGeneralService {
     this.conditionForFindReviewVideos(reviewVdoCookies, createReviewDto);
     await this.reviewGeneralRepository.createReview({
       createReviewDto,
-      user,
+      client,
       product,
     });
 
-    await this.userGeneralRepository.increaseReviewCount(user);
     const review = await this.reviewGeneralRepository.findLastCreatedReview();
-    await this.reviewGeneralRepository.insertReviewIdOnUserActivity(
-      user.Activity,
+    await this.reviewGeneralRepository.insertReviewIdOnClientUser(
+      client,
       review,
     );
 
@@ -323,21 +355,23 @@ export class ReviewGeneralService {
   ): Promise<void> {
     const { createReviewDto, jwtPayload, productId, reviewImgCookies } =
       createRevieWithImageDto;
-    const { userId } = jwtPayload;
-    const [user, product] = await this.findUserAndProduct(userId, productId);
+
+    const [product, client] = await Promise.all([
+      this.productGeneralRepository.findProductOneById(productId),
+      this.userGeneralRepository.findClientUserObject(jwtPayload.userId),
+    ]);
     createReviewDto.Image = [];
 
     this.conditionForFindReviewImages(reviewImgCookies, createReviewDto);
     await this.reviewGeneralRepository.createReview({
       createReviewDto,
-      user,
+      client,
       product,
     });
 
-    await this.userGeneralRepository.increaseReviewCount(user);
     const review = await this.reviewGeneralRepository.findLastCreatedReview();
-    await this.reviewGeneralRepository.insertReviewIdOnUserActivity(
-      user.Activity,
+    await this.reviewGeneralRepository.insertReviewIdOnClientUser(
+      client,
       review,
     );
 
@@ -353,21 +387,23 @@ export class ReviewGeneralService {
   ): Promise<void> {
     const { createReviewDto, jwtPayload, productId, reviewVdoCookies } =
       createReviewWithVideoDto;
-    const { userId } = jwtPayload;
-    const [user, product] = await this.findUserAndProduct(userId, productId);
+
+    const [product, client] = await Promise.all([
+      this.productGeneralRepository.findProductOneById(productId),
+      this.userGeneralRepository.findClientUserObject(jwtPayload.userId),
+    ]);
     createReviewDto.Video = [];
 
     this.conditionForFindReviewVideos(reviewVdoCookies, createReviewDto);
     await this.reviewGeneralRepository.createReview({
       createReviewDto,
-      user,
+      client,
       product,
     });
 
-    await this.userGeneralRepository.increaseReviewCount(user);
     const review = await this.reviewGeneralRepository.findLastCreatedReview();
-    await this.reviewGeneralRepository.insertReviewIdOnUserActivity(
-      user.Activity,
+    await this.reviewGeneralRepository.insertReviewIdOnClientUser(
+      client,
       review,
     );
 
@@ -383,19 +419,21 @@ export class ReviewGeneralService {
   ): Promise<void> {
     const { createReviewDto, jwtPayload, productId } =
       createReviewWithOutMediaDto;
-    const { userId } = jwtPayload;
-    const [user, product] = await this.findUserAndProduct(userId, productId);
+
+    const [product, client] = await Promise.all([
+      this.productGeneralRepository.findProductOneById(productId),
+      this.userGeneralRepository.findClientUserObject(jwtPayload.userId),
+    ]);
 
     await this.reviewGeneralRepository.createReview({
       createReviewDto,
-      user,
+      client,
       product,
     });
 
-    await this.userGeneralRepository.increaseReviewCount(user);
     const review = await this.reviewGeneralRepository.findLastCreatedReview();
-    await this.reviewGeneralRepository.insertReviewIdOnUserActivity(
-      user.Activity,
+    await this.reviewGeneralRepository.insertReviewIdOnClientUser(
+      client,
       review,
     );
   }
@@ -470,15 +508,18 @@ export class ReviewGeneralService {
   async modifyReviewWithoutMedia(
     modifyReviewDao: ModifyReviewDao,
   ): Promise<void> {
+    const { review } = modifyReviewDao;
+
+    if (review.Image.length >= 1) {
+      await this.conditionForDeleteReviewImage(review.Image, review);
+    } else if (review.Video.length >= 1) {
+      await this.conditionForDeleteReviewVideo(review.Video, review);
+    }
+
     await this.reviewGeneralRepository.modifyReview(modifyReviewDao);
   }
 
-  async deleteReview(review: ReviewEntity, userId: string): Promise<void> {
-    const user = await this.userGeneralRepository.findUserWithId(userId);
-
-    await Promise.all([
-      this.reviewGeneralRepository.deleteReview(review),
-      this.userGeneralRepository.decreaseReviewCount(user),
-    ]);
+  async deleteReview(review: ReviewEntity): Promise<void> {
+    await this.reviewGeneralRepository.deleteReview(review);
   }
 }
