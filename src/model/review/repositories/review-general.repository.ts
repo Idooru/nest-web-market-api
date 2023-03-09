@@ -2,10 +2,11 @@ import { ReviewEntity } from "../entities/review.entity";
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { UserActivityEntity } from "src/model/user/entities/user.activity.entity";
 import { ModifyReviewDao } from "../dto/modify-review.dto";
 import { CreateReviewDao } from "../dto/create-review.dto";
 import { InternalServerErrorException } from "@nestjs/common/exceptions";
+import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
+import { reviewSelectProperty } from "src/common/config/repository-select-configs/review-select";
 
 @Injectable()
 export class ReviewGeneralRepository {
@@ -14,25 +15,26 @@ export class ReviewGeneralRepository {
     private readonly reviewRepository: Repository<ReviewEntity>,
   ) {}
 
+  private readonly select = reviewSelectProperty;
   private readonly logger = new Logger("Repository");
 
-  async findAllReviewsWithUserActivity(
-    activity: UserActivityEntity,
-  ): Promise<ReviewEntity[]> {
+  async findAllClientsReviews(id: string): Promise<ReviewEntity[]> {
     try {
       const reviews = await this.reviewRepository
         .createQueryBuilder()
-        .select("review")
+        .select(this.select.reviewsSelect)
         .from(ReviewEntity, "review")
         .innerJoin("review.Product", "Product")
-        .innerJoin("review.UserActivity", "Activity")
-        .where("activity.id = :id", { id: activity.id })
+        .innerJoin("review.reviewer", "Client")
+        .leftJoin("review.Image", "Image")
+        .leftJoin("review.Video", "Video")
+        .where("Client.id = :id", { id })
         .getMany();
 
       if (!reviews.length) {
         // 만약 리뷰를 하나도 작성하지 않은 사용자가 다른 사용자의 리뷰를 수정하려고 시도할시 아래 예외가 발생한다.
         throw new NotFoundException(
-          `activityId(${activity.id})로 작성된 리뷰가 없습니다.`,
+          `고객 사용자의 아이디(${id})로 작성된 리뷰가 없습니다.`,
         );
       }
 
@@ -60,7 +62,7 @@ export class ReviewGeneralRepository {
 
   async createReview(createReviewDao: CreateReviewDao): Promise<void> {
     try {
-      const { createReviewDto, user, product } = createReviewDao;
+      const { createReviewDto, client, product } = createReviewDao;
       await this.reviewRepository
         .createQueryBuilder()
         .insert()
@@ -68,7 +70,7 @@ export class ReviewGeneralRepository {
         .values({
           ...createReviewDto,
           Product: product,
-          UserActivity: user.Activity,
+          reviewer: client,
         })
         .execute();
     } catch (err) {
@@ -92,15 +94,15 @@ export class ReviewGeneralRepository {
     }
   }
 
-  async insertReviewIdOnUserActivity(
-    userActivity: UserActivityEntity,
+  async insertReviewIdOnClientUser(
+    clientUser: ClientUserEntity,
     review: ReviewEntity,
   ): Promise<void> {
     try {
       await this.reviewRepository
         .createQueryBuilder()
         .update(ReviewEntity)
-        .set({ UserActivity: userActivity })
+        .set({ reviewer: clientUser })
         .where("id = :id", { id: review.id })
         .execute();
     } catch (err) {
