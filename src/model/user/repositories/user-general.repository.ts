@@ -76,6 +76,72 @@ export class UserGeneralRepository {
     }
   }
 
+  async findClientUserWithId(id: string): Promise<UserEntity> {
+    try {
+      return await this.userGeneralRepository
+        .createQueryBuilder()
+        .select(this.select.clientUserSelect)
+        .from(UserEntity, "user")
+        .innerJoin("user.Profile", "Profile")
+        .innerJoin("user.Auth", "Auth")
+        .innerJoin("user.clientActions", "Client")
+        .where("user.id = :id", { id })
+        .getOneOrFail();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async findAdminUserWithId(id: string): Promise<UserEntity> {
+    try {
+      return await this.userGeneralRepository
+        .createQueryBuilder()
+        .select(this.select.adminUserSelect)
+        .from(UserEntity, "user")
+        .innerJoin("user.Profile", "Profile")
+        .innerJoin("user.Auth", "Auth")
+        .innerJoin("user.adminActions", "Admin")
+        .where("user.id = :id", { id })
+        .getOneOrFail();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async findClientUserObject(userId: string): Promise<ClientUserEntity> {
+    try {
+      const user = await this.findClientUserWithId(userId);
+
+      return await this.clientUserGeneralRepository
+        .createQueryBuilder()
+        .select(["client"])
+        .from(ClientUserEntity, "client")
+        .where("client.id = :id", { id: user.clientActions.id })
+        .getOneOrFail();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async findAdminUserObject(userId: string): Promise<AdminUserEntity> {
+    try {
+      const user = await this.findAdminUserWithId(userId);
+
+      return await this.adminUserGeneralRepository
+        .createQueryBuilder()
+        .select(["admin"])
+        .from(AdminUserEntity, "admin")
+        .where("admin.id = :id", { id: user.adminActions.id })
+        .getOneOrFail();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
   async findUserWithEmail(email: string): Promise<UserEntity> {
     try {
       return await this.userGeneralRepository
@@ -108,7 +174,7 @@ export class UserGeneralRepository {
     }
   }
 
-  async findUserWithRealName(realname: string): Promise<UserEntity> {
+  async findUserWithRealName(realname: string): Promise<UserEntity | null> {
     try {
       return await this.userGeneralRepository
         .createQueryBuilder()
@@ -117,14 +183,16 @@ export class UserGeneralRepository {
         .leftJoin("user.Profile", "Profile")
         .leftJoin("user.Auth", "Auth")
         .where("Profile.realname = :realname", { realname })
-        .getOneOrFail();
+        .getOne();
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException(err.message);
     }
   }
 
-  async findUserWithPhoneNumber(phonenumber: string): Promise<UserEntity> {
+  async findUserWithPhoneNumber(
+    phonenumber: string,
+  ): Promise<UserEntity | null> {
     try {
       return await this.clientUserGeneralRepository
         .createQueryBuilder()
@@ -133,7 +201,7 @@ export class UserGeneralRepository {
         .leftJoin("user.Profile", "Profile")
         .leftJoin("user.Auth", "Auth")
         .where("Profile.phonenumber = :phonenumber", { phonenumber })
-        .getOneOrFail();
+        .getOne();
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException(err.message);
@@ -174,7 +242,13 @@ export class UserGeneralRepository {
         .innerJoin("user.Profile", "Profile")
         .innerJoin("user.Auth", "Auth")
         .innerJoin("user.adminActions", "Admin")
-        .leftJoin("Admin.receivedInquiry", "Inquiry")
+        .leftJoin("Admin.createdProduct", "Product")
+        .leftJoin("Product.Image", "ProductImage")
+        .leftJoin("Product.StarRate", "StarRate")
+        .leftJoin("Product.Review", "Review")
+        .leftJoin("Review.Image", "ReviewImage")
+        .leftJoin("Review.Video", "ReviewVideo")
+        .leftJoin("Product.Inquiry", "Inquiry")
         .leftJoin("Inquiry.Image", "InquiryImage")
         .leftJoin("Inquiry.Video", "InquiryVideo")
         .where("user.id = :id", { id })
