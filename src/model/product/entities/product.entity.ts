@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, OneToOne } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, OneToOne } from "typeorm";
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
@@ -49,11 +49,11 @@ export class ProductEntity extends CommonEntity {
   })
   StarRate: StarRateEntity;
 
-  @OneToMany(() => AdminUserEntity, (admin) => admin.createdProduct)
-  creater: AdminUserEntity[];
+  @ManyToOne(() => AdminUserEntity, (admin) => admin.createdProduct)
+  creater: AdminUserEntity;
 
-  @OneToMany(() => ClientUserEntity, (client) => client.purchasedProduct)
-  purchaser: ClientUserEntity[];
+  @ManyToOne(() => ClientUserEntity, (client) => client.purchasedProduct)
+  purchaser: ClientUserEntity;
 
   @OneToMany(() => ReviewEntity, (review) => review.Product, { cascade: true })
   Review: ReviewEntity[];
