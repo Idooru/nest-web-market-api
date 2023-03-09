@@ -2,12 +2,12 @@ import { PickType } from "@nestjs/swagger";
 import { ReviewEntity } from "../entities/review.entity";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ProductEntity } from "src/model/product/entities/product.entity";
-import { UserEntity } from "src/model/user/entities/user.entity";
 import { ReceiveMediaDto } from "src/model/media/dto/receive-media.dto";
+import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 
 export class CreateReviewDto extends PickType(ReviewEntity, [
   "reviews",
-  "userSelectScore",
+  "scoreChosenByClient",
   "Image",
   "Video",
 ] as const) {}
@@ -42,6 +42,6 @@ export class CreateReviewWithoutMediaDto {
 
 export class CreateReviewDao {
   createReviewDto: CreateReviewDto;
-  user: UserEntity;
+  clientUser: ClientUserEntity;
   product: ProductEntity;
 }
