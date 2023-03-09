@@ -42,6 +42,6 @@ export class CreateReviewWithoutMediaDto {
 
 export class CreateReviewDao {
   createReviewDto: CreateReviewDto;
-  clientUser: ClientUserEntity;
+  client: ClientUserEntity;
   product: ProductEntity;
 }
