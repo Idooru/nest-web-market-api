@@ -130,27 +130,6 @@ export class ProductGeneralRepository {
     }
   }
 
-  async findProductWhenUseStarRateWithId(id: string): Promise<ProductEntity> {
-    try {
-      return await this.productGeneralRepository
-        .createQueryBuilder()
-        .select(this.select.productSelectWithStarRate)
-        .from(ProductEntity, "product")
-        .innerJoin("product.Image", "Image")
-        .innerJoin("product.StarRate", "StarRate")
-        .where("product.id = :id", { id })
-        .getOneOrFail();
-    } catch (err) {
-      this.logger.error(err);
-      if (err.message.includes("Could not find any entity of type")) {
-        throw new NotFoundException(
-          `해당 아이디(${id})의 상품을 찾을 수 없습니다.`,
-        );
-      }
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
   // 웬만해선 상품 생성 서비스 로직에서만 호출하도록 한다.
   async findLastCreatedProduct(): Promise<ProductEntity> {
     try {
