@@ -17,16 +17,18 @@ export class StarRateService {
     createReviewDto: CreateReviewDto,
     productId: string,
   ): Promise<void> {
-    const { userSelectScore } = createReviewDto;
-    const product =
-      await this.productGeneralRepository.findProductWhenUseStarRateWithId(
-        productId,
-      );
+    const { scoreChosenByClient } = createReviewDto;
+    const product = await this.productGeneralRepository.findProductOneById(
+      productId,
+    );
     const StarRate = await this.starRateRepository.findStarRateWithId(
       product.StarRate.id,
     );
 
-    this.starRateRepository.starRatingAndSum(StarRate, userSelectScore);
+    await this.starRateRepository.starRatingAndSum(
+      StarRate,
+      scoreChosenByClient,
+    );
     await this.calculateRating(StarRate);
   }
 
@@ -35,16 +37,19 @@ export class StarRateService {
     productId: string,
     review: ReviewEntity,
   ): Promise<void> {
-    const { userSelectScore } = modifyReviewDto;
-    const product =
-      await this.productGeneralRepository.findProductWhenUseStarRateWithId(
-        productId,
-      );
+    const { scoreChosenByClient } = modifyReviewDto;
+    const product = await this.productGeneralRepository.findProductOneById(
+      productId,
+    );
     const StarRate = await this.starRateRepository.findStarRateWithId(
       product.StarRate.id,
     );
 
-    this.starRateRepository.modifyStarRateng(StarRate, userSelectScore, review);
+    this.starRateRepository.modifyStarRateng(
+      StarRate,
+      scoreChosenByClient,
+      review,
+    );
     await this.calculateRating(StarRate);
   }
 
