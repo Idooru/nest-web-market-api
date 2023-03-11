@@ -19,20 +19,20 @@ export class UserGeneralRepository {
 
   constructor(
     @InjectRepository(UserEntity)
-    private readonly userGeneralRepository: Repository<UserEntity>,
+    private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(UserAuthEntity)
-    private readonly userAuthGeneralRepository: Repository<UserAuthEntity>,
+    private readonly userAuthRepository: Repository<UserAuthEntity>,
     @InjectRepository(UserProfileEntity)
-    private readonly userProfileGeneralRepository: Repository<UserProfileEntity>,
+    private readonly userProfileRepository: Repository<UserProfileEntity>,
     @InjectRepository(ClientUserEntity)
-    private readonly clientUserGeneralRepository: Repository<ClientUserEntity>,
+    private readonly clientUserRepository: Repository<ClientUserEntity>,
     @InjectRepository(AdminUserEntity)
-    private readonly adminUserGeneralRepository: Repository<AdminUserEntity>,
+    private readonly adminUserRepository: Repository<AdminUserEntity>,
   ) {}
 
   async findAllUsersFromLatest(): Promise<UserEntity[]> {
     try {
-      return await this.userGeneralRepository
+      return await this.userRepository
         .createQueryBuilder()
         .select(this.select.clientUserSimpleSelect)
         .from(UserEntity, "user")
@@ -47,7 +47,7 @@ export class UserGeneralRepository {
 
   async findAllUsersFromOldest(): Promise<UserEntity[]> {
     try {
-      return await this.userGeneralRepository
+      return await this.userRepository
         .createQueryBuilder()
         .select(this.select.clientUserSimpleSelect)
         .from(UserEntity, "user")
@@ -62,7 +62,7 @@ export class UserGeneralRepository {
 
   async findUserWithId(id: string): Promise<UserEntity> {
     try {
-      return await this.userGeneralRepository
+      return await this.userRepository
         .createQueryBuilder()
         .select(this.select.userBaseSelect)
         .from(UserEntity, "user")
@@ -78,7 +78,7 @@ export class UserGeneralRepository {
 
   async findClientUserWithId(id: string): Promise<UserEntity> {
     try {
-      return await this.userGeneralRepository
+      return await this.userRepository
         .createQueryBuilder()
         .select(this.select.clientUserSelect)
         .from(UserEntity, "user")
@@ -95,7 +95,7 @@ export class UserGeneralRepository {
 
   async findAdminUserWithId(id: string): Promise<UserEntity> {
     try {
-      return await this.userGeneralRepository
+      return await this.userRepository
         .createQueryBuilder()
         .select(this.select.adminUserSelect)
         .from(UserEntity, "user")
@@ -114,7 +114,7 @@ export class UserGeneralRepository {
     try {
       const user = await this.findClientUserWithId(userId);
 
-      return await this.clientUserGeneralRepository
+      return await this.clientUserRepository
         .createQueryBuilder()
         .select(["client"])
         .from(ClientUserEntity, "client")
@@ -130,7 +130,7 @@ export class UserGeneralRepository {
     try {
       const user = await this.findAdminUserWithId(userId);
 
-      return await this.adminUserGeneralRepository
+      return await this.adminUserRepository
         .createQueryBuilder()
         .select(["admin"])
         .from(AdminUserEntity, "admin")
@@ -144,7 +144,7 @@ export class UserGeneralRepository {
 
   async findUserWithEmail(email: string): Promise<UserEntity> {
     try {
-      return await this.userGeneralRepository
+      return await this.userRepository
         .createQueryBuilder()
         .select(this.select.userBaseSelect)
         .from(UserEntity, "user")
@@ -160,7 +160,7 @@ export class UserGeneralRepository {
 
   async findUserWithNickName(nickname: string): Promise<UserEntity> {
     try {
-      return await this.userGeneralRepository
+      return await this.userRepository
         .createQueryBuilder()
         .select(this.select.userBaseSelect)
         .from(UserEntity, "user")
@@ -176,7 +176,7 @@ export class UserGeneralRepository {
 
   async findUserWithRealName(realname: string): Promise<UserEntity | null> {
     try {
-      return await this.userGeneralRepository
+      return await this.userRepository
         .createQueryBuilder()
         .select(this.select.userBaseSelect)
         .from(UserEntity, "user")
@@ -194,7 +194,7 @@ export class UserGeneralRepository {
     phonenumber: string,
   ): Promise<UserEntity | null> {
     try {
-      return await this.clientUserGeneralRepository
+      return await this.clientUserRepository
         .createQueryBuilder()
         .select(this.select.userBaseSelect)
         .from(UserEntity, "user")
@@ -210,7 +210,7 @@ export class UserGeneralRepository {
 
   async findClientUserProfileInfoWithId(id: string): Promise<UserEntity> {
     try {
-      return await this.userGeneralRepository
+      return await this.userRepository
         .createQueryBuilder()
         .select(this.select.clientUserProfileSelect)
         .from(UserEntity, "user")
@@ -235,7 +235,7 @@ export class UserGeneralRepository {
 
   async findAdminUserProfileInfoWithId(id: string): Promise<UserEntity> {
     try {
-      return await this.userGeneralRepository
+      return await this.userRepository
         .createQueryBuilder()
         .select(this.select.adminUserProfileSelect)
         .from(UserEntity, "user")
@@ -261,7 +261,7 @@ export class UserGeneralRepository {
 
   async findClientUserInfoFromAdmin(id: string): Promise<UserEntity> {
     try {
-      return await this.userGeneralRepository
+      return await this.userRepository
         .createQueryBuilder()
         .select(this.select.whenAdminSelectClientUser)
         .from(UserEntity, "user")
@@ -285,7 +285,7 @@ export class UserGeneralRepository {
 
   async findLastCreatedUserProfile(): Promise<UserProfileEntity> {
     try {
-      return await this.userProfileGeneralRepository
+      return await this.userProfileRepository
         .createQueryBuilder()
         .select("profile")
         .from(UserProfileEntity, "profile")
@@ -300,7 +300,7 @@ export class UserGeneralRepository {
 
   async findLastCreatedUserAuth(): Promise<UserAuthEntity> {
     try {
-      return await this.userAuthGeneralRepository
+      return await this.userAuthRepository
         .createQueryBuilder()
         .select("auth")
         .from(UserAuthEntity, "auth")
@@ -315,7 +315,7 @@ export class UserGeneralRepository {
 
   async findLastCreatedUserBase(): Promise<UserEntity> {
     try {
-      return await this.userGeneralRepository
+      return await this.userRepository
         .createQueryBuilder()
         .select("userBase")
         .from(UserEntity, "userBase")
@@ -330,7 +330,7 @@ export class UserGeneralRepository {
 
   async findLastCreatedClientUser(): Promise<ClientUserEntity> {
     try {
-      return await this.clientUserGeneralRepository
+      return await this.clientUserRepository
         .createQueryBuilder()
         .select("clientUser")
         .from(ClientUserEntity, "clientUser")
@@ -345,7 +345,7 @@ export class UserGeneralRepository {
 
   async findLastCreatedAdminUser(): Promise<AdminUserEntity> {
     try {
-      return await this.adminUserGeneralRepository
+      return await this.adminUserRepository
         .createQueryBuilder()
         .select("adminUser")
         .from(AdminUserEntity, "adminUser")
@@ -361,7 +361,7 @@ export class UserGeneralRepository {
   async resetPassword(id: string, hashed: string) {
     try {
       const password = { password: hashed };
-      await this.userAuthGeneralRepository
+      await this.userAuthRepository
         .createQueryBuilder()
         .update(UserAuthEntity)
         .set({ ...password })
@@ -386,18 +386,18 @@ export class UserGeneralRepository {
       const userAuthColumn = { nickname, email, password };
 
       const [userProfile, userAuth] = await Promise.all([
-        this.userProfileGeneralRepository.save({ ...userProfileColumn }),
-        this.userAuthGeneralRepository.save({ ...userAuthColumn }),
+        this.userProfileRepository.save({ ...userProfileColumn }),
+        this.userAuthRepository.save({ ...userAuthColumn }),
       ]);
 
       const [userProfileObject, userAuthObject] = await Promise.all([
-        this.userProfileGeneralRepository
+        this.userProfileRepository
           .createQueryBuilder()
           .select("profile")
           .from(UserProfileEntity, "profile")
           .where("profile.id = :id", { id: userProfile.id })
           .getOne(),
-        this.userAuthGeneralRepository
+        this.userAuthRepository
           .createQueryBuilder()
           .select("auth")
           .from(UserAuthEntity, "auth")
@@ -411,7 +411,7 @@ export class UserGeneralRepository {
         type,
       };
 
-      await this.userGeneralRepository
+      await this.userRepository
         .createQueryBuilder()
         .insert()
         .into(UserEntity)
@@ -425,7 +425,7 @@ export class UserGeneralRepository {
 
   async createClientUser(user: UserEntity): Promise<void> {
     try {
-      await this.clientUserGeneralRepository
+      await this.clientUserRepository
         .createQueryBuilder()
         .insert()
         .into(ClientUserEntity)
@@ -439,7 +439,7 @@ export class UserGeneralRepository {
 
   async createAdminUser(user: UserEntity): Promise<void> {
     try {
-      await this.adminUserGeneralRepository
+      await this.adminUserRepository
         .createQueryBuilder()
         .insert()
         .into(AdminUserEntity)
@@ -461,13 +461,13 @@ export class UserGeneralRepository {
       const { phonenumber, nickname, email } = modifyUserDto;
 
       await Promise.all([
-        this.userProfileGeneralRepository
+        this.userProfileRepository
           .createQueryBuilder()
           .update(UserProfileEntity)
           .set({ phonenumber })
           .where("id = :id", { id: userProfileId })
           .execute(),
-        this.userAuthGeneralRepository
+        this.userAuthRepository
           .createQueryBuilder()
           .update(UserAuthEntity)
           .set({ email, nickname, password })
@@ -482,7 +482,7 @@ export class UserGeneralRepository {
 
   async modifyUserEmail(email: string, id: string): Promise<void> {
     try {
-      await this.userAuthGeneralRepository
+      await this.userAuthRepository
         .createQueryBuilder()
         .update(UserAuthEntity)
         .set({ email })
@@ -496,7 +496,7 @@ export class UserGeneralRepository {
 
   async modifyUserNickName(nickname: string, id: string): Promise<void> {
     try {
-      await this.userAuthGeneralRepository
+      await this.userAuthRepository
         .createQueryBuilder()
         .update(UserAuthEntity)
         .set({ nickname })
@@ -510,7 +510,7 @@ export class UserGeneralRepository {
 
   async modifyUserPhoneNumber(phonenumber: string, id: string): Promise<void> {
     try {
-      await this.userProfileGeneralRepository
+      await this.userProfileRepository
         .createQueryBuilder()
         .update(UserProfileEntity)
         .set({ phonenumber })
@@ -524,7 +524,7 @@ export class UserGeneralRepository {
 
   async modifyUserPassword(password: string, id: string): Promise<void> {
     try {
-      await this.userAuthGeneralRepository
+      await this.userAuthRepository
         .createQueryBuilder()
         .update(UserAuthEntity)
         .set({ password })
@@ -538,7 +538,7 @@ export class UserGeneralRepository {
 
   async deleteUser(id: string): Promise<void> {
     try {
-      await this.userGeneralRepository
+      await this.userRepository
         .createQueryBuilder()
         .delete()
         .from(UserEntity)
@@ -555,7 +555,7 @@ export class UserGeneralRepository {
     userProfile: UserProfileEntity,
   ): Promise<void> {
     try {
-      await this.userProfileGeneralRepository
+      await this.userProfileRepository
         .createQueryBuilder()
         .update(UserProfileEntity)
         .set({ User: userBase })
@@ -572,7 +572,7 @@ export class UserGeneralRepository {
     userAuth: UserAuthEntity,
   ): Promise<void> {
     try {
-      await this.userAuthGeneralRepository
+      await this.userAuthRepository
         .createQueryBuilder()
         .update(UserAuthEntity)
         .set({ User: userBase })
@@ -589,7 +589,7 @@ export class UserGeneralRepository {
     clientUser: ClientUserEntity,
   ): Promise<void> {
     try {
-      await this.clientUserGeneralRepository
+      await this.clientUserRepository
         .createQueryBuilder()
         .update(ClientUserEntity)
         .set({ User: userBase })
@@ -606,7 +606,7 @@ export class UserGeneralRepository {
     adminUser: AdminUserEntity,
   ): Promise<void> {
     try {
-      await this.adminUserGeneralRepository
+      await this.adminUserRepository
         .createQueryBuilder()
         .update(AdminUserEntity)
         .set({ User: userBase })

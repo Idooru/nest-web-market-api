@@ -11,14 +11,14 @@ import { ReviewEntity } from "../entities/review.entity";
 export class ReviewVerifyRepository {
   constructor(
     @InjectRepository(ReviewEntity)
-    private readonly reviewVerifyRepository: Repository<ReviewEntity>,
+    private readonly reviewRepository: Repository<ReviewEntity>,
   ) {}
 
   private readonly logger = new Logger("Repository");
 
   async isExistReviewId(id: string): Promise<boolean> {
     try {
-      const result = await this.reviewVerifyRepository.findOne({
+      const result = await this.reviewRepository.findOne({
         where: { id },
       });
       return result ? true : false;

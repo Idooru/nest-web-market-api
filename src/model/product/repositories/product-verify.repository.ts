@@ -11,14 +11,14 @@ import { ProductEntity } from "../entities/product.entity";
 export class ProductVerifyRepository {
   constructor(
     @InjectRepository(ProductEntity)
-    private readonly productVerifyRepository: Repository<ProductEntity>,
+    private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
   private readonly logger = new Logger("Repository");
 
   async isExistProductId(id: string): Promise<boolean> {
     try {
-      const result = await this.productVerifyRepository.findOne({
+      const result = await this.productRepository.findOne({
         where: { id },
       });
       return result ? true : false;
@@ -30,7 +30,7 @@ export class ProductVerifyRepository {
 
   async isNotExistProductName(name: string): Promise<boolean> {
     try {
-      const result = await this.productVerifyRepository.findOne({
+      const result = await this.productRepository.findOne({
         where: { name },
       });
       return result ? false : true;

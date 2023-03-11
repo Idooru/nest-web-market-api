@@ -20,11 +20,11 @@ import { InquiryVideoEntity } from "../entities/inquiry.video.entity";
 export class MediaGeneralRepository {
   constructor(
     @InjectRepository(ProductImageEntity)
-    private readonly productsImageRepository: Repository<ProductImageEntity>,
+    private readonly productImageRepository: Repository<ProductImageEntity>,
     @InjectRepository(ReviewImageEntity)
-    private readonly reviewsImageRepository: Repository<ReviewImageEntity>,
+    private readonly reviewImageRepository: Repository<ReviewImageEntity>,
     @InjectRepository(ReviewVideoEntity)
-    private readonly reviewsVideoRepository: Repository<ReviewVideoEntity>,
+    private readonly reviewVideoRepository: Repository<ReviewVideoEntity>,
     @InjectRepository(InquiryImageEntity)
     private readonly inquiryImageRepository: Repository<InquiryImageEntity>,
     @InjectRepository(InquiryVideoEntity)
@@ -36,7 +36,7 @@ export class MediaGeneralRepository {
 
   async uploadProductImage(uploadMediaDto: UploadMediaDto): Promise<void> {
     try {
-      await this.productsImageRepository
+      await this.productImageRepository
         .createQueryBuilder()
         .insert()
         .into(ProductImageEntity)
@@ -50,7 +50,7 @@ export class MediaGeneralRepository {
 
   async uploadReviewImage(uploadMediaDto: UploadMediaDto): Promise<void> {
     try {
-      await this.reviewsImageRepository
+      await this.reviewImageRepository
         .createQueryBuilder()
         .insert()
         .into(ReviewImageEntity)
@@ -64,7 +64,7 @@ export class MediaGeneralRepository {
 
   async uploadReviewVideo(uploadMediaDto: UploadMediaDto): Promise<void> {
     try {
-      await this.reviewsVideoRepository
+      await this.reviewVideoRepository
         .createQueryBuilder()
         .insert()
         .into(ReviewVideoEntity)
@@ -106,7 +106,7 @@ export class MediaGeneralRepository {
 
   async findProductImageWithUrl(url: string): Promise<ProductImageEntity> {
     try {
-      return await this.productsImageRepository
+      return await this.productImageRepository
         .createQueryBuilder()
         .select(this.select.productImagesSelect)
         .from(ProductImageEntity, "product_image")
@@ -125,7 +125,7 @@ export class MediaGeneralRepository {
 
   async findReviewImageWithUrl(url: string): Promise<ReviewImageEntity> {
     try {
-      return await this.reviewsImageRepository
+      return await this.reviewImageRepository
         .createQueryBuilder()
         .select(this.select.reviewImagesSelect)
         .from(ReviewImageEntity, "review_image")
@@ -145,7 +145,7 @@ export class MediaGeneralRepository {
 
   async findReviewVideoWithUrl(url: string): Promise<ReviewVideoEntity> {
     try {
-      return await this.reviewsVideoRepository
+      return await this.reviewVideoRepository
         .createQueryBuilder()
         .select(this.select.reviewVideosSelect)
         .from(ReviewVideoEntity, "review_video")
@@ -205,7 +205,7 @@ export class MediaGeneralRepository {
 
   async deleteProductImageWithId(id: string): Promise<void> {
     try {
-      await this.productsImageRepository
+      await this.productImageRepository
         .createQueryBuilder()
         .delete()
         .from(ProductImageEntity, "product_image")
@@ -219,7 +219,7 @@ export class MediaGeneralRepository {
 
   async deleteReviewImageWithId(id: string): Promise<void> {
     try {
-      await this.reviewsImageRepository
+      await this.reviewImageRepository
         .createQueryBuilder()
         .delete()
         .from(ReviewImageEntity, "review_image")
@@ -233,7 +233,7 @@ export class MediaGeneralRepository {
 
   async deleteReviewVideoWithId(id: string): Promise<void> {
     try {
-      await this.reviewsVideoRepository
+      await this.reviewVideoRepository
         .createQueryBuilder()
         .delete()
         .from(ReviewVideoEntity, "review_video")
@@ -261,7 +261,7 @@ export class MediaGeneralRepository {
 
   async deleteInquiryVideoWithId(id: string): Promise<void> {
     try {
-      await this.reviewsVideoRepository
+      await this.reviewVideoRepository
         .createQueryBuilder()
         .delete()
         .from(InquiryVideoEntity, "inquiry_video")
@@ -278,7 +278,7 @@ export class MediaGeneralRepository {
     product: ProductEntity,
   ): Promise<void> {
     try {
-      await this.productsImageRepository
+      await this.productImageRepository
         .createQueryBuilder()
         .update(ProductImageEntity)
         .set({ Product: product })
@@ -295,7 +295,7 @@ export class MediaGeneralRepository {
     review: ReviewEntity,
   ): Promise<void> {
     try {
-      await this.reviewsImageRepository
+      await this.reviewImageRepository
         .createQueryBuilder()
         .update(ReviewImageEntity)
         .set({ Review: review })
@@ -312,7 +312,7 @@ export class MediaGeneralRepository {
     review: ReviewEntity,
   ): Promise<void> {
     try {
-      await this.reviewsVideoRepository
+      await this.reviewVideoRepository
         .createQueryBuilder()
         .update(ReviewVideoEntity)
         .set({ Review: review })
@@ -326,7 +326,7 @@ export class MediaGeneralRepository {
 
   async findProductImageEvenUse(id: string): Promise<ProductImageEntity> {
     try {
-      return await this.productsImageRepository
+      return await this.productImageRepository
         .createQueryBuilder()
         .select("products_images.id")
         .from(ProductImageEntity, "products_images")
@@ -342,7 +342,7 @@ export class MediaGeneralRepository {
 
   async findBeforeReviewImages(id: string): Promise<ReviewImageEntity[]> {
     try {
-      return await this.reviewsImageRepository
+      return await this.reviewImageRepository
         .createQueryBuilder()
         .select("reviews_images.id")
         .from(ReviewImageEntity, "reviews_images")
@@ -357,7 +357,7 @@ export class MediaGeneralRepository {
 
   async findBeforeReviewImage(id: string): Promise<ReviewImageEntity> {
     try {
-      return await this.reviewsImageRepository
+      return await this.reviewImageRepository
         .createQueryBuilder()
         .select("reviews_image.id")
         .from(ReviewImageEntity, "reviews_image")
@@ -372,7 +372,7 @@ export class MediaGeneralRepository {
 
   async findBeforeReviewVideos(id: string): Promise<ReviewVideoEntity[]> {
     try {
-      return await this.reviewsVideoRepository
+      return await this.reviewVideoRepository
         .createQueryBuilder()
         .select("reviews_videos.id")
         .from(ReviewVideoEntity, "reviews_videos")
@@ -387,7 +387,7 @@ export class MediaGeneralRepository {
 
   async findBeforeReviewVideo(id: string): Promise<ReviewVideoEntity> {
     try {
-      return await this.reviewsVideoRepository
+      return await this.reviewVideoRepository
         .createQueryBuilder()
         .select("reviews_video.id")
         .from(ReviewVideoEntity, "reviews_video")

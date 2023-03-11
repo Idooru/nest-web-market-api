@@ -17,7 +17,7 @@ import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
 export class ProductGeneralRepository {
   constructor(
     @InjectRepository(ProductEntity)
-    private readonly productGeneralRepository: Repository<ProductEntity>,
+    private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
   private readonly select = productSelectProperty;
@@ -25,7 +25,7 @@ export class ProductGeneralRepository {
 
   async findProductsAllId(): Promise<ProductEntity[]> {
     try {
-      return await this.productGeneralRepository
+      return await this.productRepository
         .createQueryBuilder()
         .select("product.id")
         .from(ProductEntity, "product")
@@ -38,7 +38,7 @@ export class ProductGeneralRepository {
 
   async findAllProductsFromLatest(): Promise<ProductEntity[]> {
     try {
-      return await this.productGeneralRepository
+      return await this.productRepository
         .createQueryBuilder()
         .select(this.select.productsSelect)
         .from(ProductEntity, "product")
@@ -58,7 +58,7 @@ export class ProductGeneralRepository {
 
   async findAllProductsFromOldest(): Promise<ProductEntity[]> {
     try {
-      return await this.productGeneralRepository
+      return await this.productRepository
         .createQueryBuilder()
         .select(this.select.productsSelect)
         .from(ProductEntity, "product")
@@ -78,7 +78,7 @@ export class ProductGeneralRepository {
 
   async findProductOneByName(name: string): Promise<ProductEntity> {
     try {
-      return await this.productGeneralRepository
+      return await this.productRepository
         .createQueryBuilder()
         .select(this.select.productSelect)
         .from(ProductEntity, "product")
@@ -105,7 +105,7 @@ export class ProductGeneralRepository {
 
   async findProductOneById(id: string): Promise<ProductEntity> {
     try {
-      return await this.productGeneralRepository
+      return await this.productRepository
         .createQueryBuilder()
         .select(this.select.productSelect)
         .from(ProductEntity, "product")
@@ -133,7 +133,7 @@ export class ProductGeneralRepository {
   // 웬만해선 상품 생성 서비스 로직에서만 호출하도록 한다.
   async findLastCreatedProduct(): Promise<ProductEntity> {
     try {
-      return await this.productGeneralRepository
+      return await this.productRepository
         .createQueryBuilder()
         .select("product")
         .from(ProductEntity, "product")
@@ -151,7 +151,7 @@ export class ProductGeneralRepository {
     admin: AdminUserEntity,
   ): Promise<void> {
     try {
-      await this.productGeneralRepository
+      await this.productRepository
         .createQueryBuilder()
         .insert()
         .into(ProductEntity)
@@ -168,7 +168,7 @@ export class ProductGeneralRepository {
     modifyProductDto: ModifyProductDto,
   ): Promise<void> {
     try {
-      await this.productGeneralRepository
+      await this.productRepository
         .createQueryBuilder()
         .update(ProductEntity)
         .set({ ...modifyProductDto })
@@ -187,7 +187,7 @@ export class ProductGeneralRepository {
 
   async modifyProductName(id: string, name: string): Promise<void> {
     try {
-      await this.productGeneralRepository
+      await this.productRepository
         .createQueryBuilder()
         .update(ProductEntity)
         .set({ name })
@@ -201,7 +201,7 @@ export class ProductGeneralRepository {
 
   async modifyProductPrice(id: string, price: string): Promise<void> {
     try {
-      await this.productGeneralRepository
+      await this.productRepository
         .createQueryBuilder()
         .update(ProductEntity)
         .set({ price: +price })
@@ -218,7 +218,7 @@ export class ProductGeneralRepository {
 
   async modifyProductOrigin(id: string, origin: string): Promise<void> {
     try {
-      await this.productGeneralRepository
+      await this.productRepository
         .createQueryBuilder()
         .update(ProductEntity)
         .set({ origin })
@@ -232,7 +232,7 @@ export class ProductGeneralRepository {
 
   async modifyProductType(id: string, type: string): Promise<void> {
     try {
-      await this.productGeneralRepository
+      await this.productRepository
         .createQueryBuilder()
         .update(ProductEntity)
         .set({ type })
@@ -249,7 +249,7 @@ export class ProductGeneralRepository {
     description: string,
   ): Promise<void> {
     try {
-      await this.productGeneralRepository
+      await this.productRepository
         .createQueryBuilder()
         .update(ProductEntity)
         .set({ description })
@@ -263,7 +263,7 @@ export class ProductGeneralRepository {
 
   async modifyProductQuantity(id: string, quantity: string): Promise<void> {
     try {
-      await this.productGeneralRepository
+      await this.productRepository
         .createQueryBuilder()
         .update(ProductEntity)
         .set({ quantity: +quantity })
@@ -280,7 +280,7 @@ export class ProductGeneralRepository {
 
   async removeProduct(productId: string): Promise<void> {
     try {
-      await this.productGeneralRepository
+      await this.productRepository
         .createQueryBuilder()
         .delete()
         .from(ProductEntity)
