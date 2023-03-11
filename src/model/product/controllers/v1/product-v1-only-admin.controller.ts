@@ -27,6 +27,7 @@ import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-paylo
 import { ReceiveMediaDto } from "src/model/media/dto/receive-media.dto";
 import { CreateProductDto } from "../../dto/create_product.dto";
 import { ModifyProductDto } from "../../dto/modify_product.dto";
+import { ReturnProductsDto } from "../../dto/return_product.dto";
 import { ProductEntity } from "../../entities/product.entity";
 import { ProductGeneralService } from "../../services/product-general.service";
 
@@ -41,12 +42,19 @@ export class ProductVersionOneOnlyAdminController {
 
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/all-id")
-  async findProductsAllId(): Promise<JsonGeneralInterface<string[]>> {
+  async findProductsAllId(): Promise<
+    JsonGeneralInterface<ReturnProductsDto[]>
+  > {
     const products = await this.productGeneralService.findProductsAllId();
+
     return {
       statusCode: 200,
       message: "데이터베이스에 존재하는 모든 상품 아이디를 가져옵니다.",
-      result: products.map((product) => product.id),
+      result: products.map((product) => ({
+        id: product.id,
+        name: product.name,
+        type: product.type,
+      })),
     };
   }
 

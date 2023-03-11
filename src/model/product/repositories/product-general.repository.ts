@@ -27,7 +27,7 @@ export class ProductGeneralRepository {
     try {
       return await this.productRepository
         .createQueryBuilder()
-        .select("product.id")
+        .select(this.select.productsIdSelect)
         .from(ProductEntity, "product")
         .getMany();
     } catch (err) {
