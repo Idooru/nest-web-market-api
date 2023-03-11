@@ -1,4 +1,5 @@
 export const productSelectProperty = {
+  productsIdSelect: ["product.id", "product.name", "product.type"],
   productsSelect: [
     "product.name",
     "product.price",
