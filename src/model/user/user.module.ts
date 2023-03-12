@@ -17,6 +17,7 @@ import { UserVersionOneVerifyController } from "./controllers/v1/user-v1-verfiy.
 import { ClientUserEntity } from "./entities/client-user.entity";
 import { AdminUserEntity } from "./entities/admin-user.entity";
 import { UserEntity } from "./entities/user.entity";
+import { UserInsertRepository } from "./repositories/user-insert.repository";
 
 @Module({
   imports: [
@@ -43,12 +44,14 @@ import { UserEntity } from "./entities/user.entity";
     UserGeneralRepository,
     UserVerifyService,
     UserVerifyRepository,
+    UserInsertRepository,
   ],
   exports: [
     UserGeneralService,
     UserGeneralRepository,
     UserVerifyService,
     UserVerifyRepository,
+    UserInsertRepository,
   ],
 })
 export class UserModule {}

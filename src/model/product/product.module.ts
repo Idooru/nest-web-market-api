@@ -15,6 +15,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { ProductVersionOneVerfiyController } from "./controllers/v1/product-v1-verify.controller";
 import { ProductVerifyService } from "./services/product-verify.service";
 import { ProductVerifyRepository } from "./repositories/product-verify.repository";
+import { ProductInsertRepository } from "./repositories/product-insert.repository";
 
 @Module({
   imports: [
@@ -36,12 +37,14 @@ import { ProductVerifyRepository } from "./repositories/product-verify.repositor
     ProductGeneralRepository,
     ProductVerifyService,
     ProductVerifyRepository,
+    ProductInsertRepository,
   ],
   exports: [
     ProductGeneralService,
     ProductGeneralRepository,
     ProductVerifyService,
     ProductVerifyRepository,
+    ProductInsertRepository,
   ],
 })
 export class ProductModule {}

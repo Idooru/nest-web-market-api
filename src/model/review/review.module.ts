@@ -16,6 +16,8 @@ import { ReviewVerifyRepository } from "./repositories/review-verify.repository"
 import { MediaModule } from "../media/media.module";
 import { ReviewVersionOneOnlyAdminController } from "./controllers/review-v1-only-admin.controller";
 import { ReviewVersionOneOnlyClientController } from "./controllers/review-v1-only-client.controller";
+import { StarRateInsertRepository } from "./repositories/star-rate-insert.repository";
+import { ReviewInsertRepository } from "./repositories/review-insert.repository";
 
 @Module({
   imports: [
@@ -38,6 +40,8 @@ import { ReviewVersionOneOnlyClientController } from "./controllers/review-v1-on
     ReviewVerifyRepository,
     StarRateService,
     StarRateRepository,
+    ReviewInsertRepository,
+    StarRateInsertRepository,
   ],
   exports: [
     ReviewGeneralService,
@@ -46,6 +50,8 @@ import { ReviewVersionOneOnlyClientController } from "./controllers/review-v1-on
     ReviewVerifyRepository,
     StarRateService,
     StarRateRepository,
+    ReviewInsertRepository,
+    StarRateInsertRepository,
   ],
 })
 export class ReviewModule {}

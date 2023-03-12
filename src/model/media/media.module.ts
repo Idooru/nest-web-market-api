@@ -14,6 +14,7 @@ import { MediaVersionOneOnlyClientController } from "./controllers/media-v1-only
 import { MediaVersionOneOnlyAdminController } from "./controllers/media-v1-only-admin.controller";
 import { MediaGeneralService } from "./services/media-general.service";
 import { MediaGeneralRepository } from "./repositories/media-general.repository";
+import { MediaInsertRepository } from "./repositories/media-insert.repository";
 
 @Module({
   imports: [
@@ -34,7 +35,11 @@ import { MediaGeneralRepository } from "./repositories/media-general.repository"
     MediaVersionOneOnlyClientController,
     MediaVersionOneOnlyAdminController,
   ],
-  providers: [MediaGeneralService, MediaGeneralRepository],
-  exports: [MediaGeneralService, MediaGeneralRepository],
+  providers: [
+    MediaGeneralService,
+    MediaGeneralRepository,
+    MediaInsertRepository,
+  ],
+  exports: [MediaGeneralService, MediaGeneralRepository, MediaInsertRepository],
 })
 export class MediaModule {}
