@@ -25,7 +25,7 @@ export class StarRateService {
       product.StarRate.id,
     );
 
-    await this.starRateRepository.starRatingAndSum(
+    await this.starRateRepository.increaseStarRate(
       StarRate,
       scoreChosenByClient,
     );
@@ -45,11 +45,16 @@ export class StarRateService {
       product.StarRate.id,
     );
 
-    this.starRateRepository.modifyStarRateng(
-      StarRate,
-      scoreChosenByClient,
-      review,
-    );
+    const beforeScore = review.scoreChosenByClient;
+    if (beforeScore === scoreChosenByClient) {
+      return;
+    }
+
+    await Promise.all([
+      this.starRateRepository.decreaseStarRate(StarRate, beforeScore),
+      this.starRateRepository.increaseStarRate(StarRate, scoreChosenByClient),
+    ]);
+
     await this.calculateRating(StarRate);
   }
 
