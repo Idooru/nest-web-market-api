@@ -13,7 +13,7 @@ import { UserVersionOneOnlyAdminController } from "./controllers/v1/user-v1-only
 import { UserGeneralRepository } from "./repositories/user-general.repository";
 import { UserVerifyService } from "./services/user-verify.service";
 import { UserVerifyRepository } from "./repositories/user-verify.repository";
-import { UserVersionOneVerifyController } from "./controllers/v1/user-v1-verfiy.controller";
+import { UserVersionOneVerifyController } from "./controllers/v1/user-v1-verify.controller";
 import { ClientUserEntity } from "./entities/client-user.entity";
 import { AdminUserEntity } from "./entities/admin-user.entity";
 import { UserEntity } from "./entities/user.entity";
