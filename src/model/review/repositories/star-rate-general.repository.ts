@@ -1,21 +1,17 @@
 import { Repository } from "typeorm";
 import { StarRateEntity } from "../entities/star-rate.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { ProductEntity } from "src/model/product/entities/product.entity";
-import {
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-} from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { RepositoryLogger } from "src/common/classes/repository.logger";
 
 @Injectable()
-export class StarRateRepository {
+export class StarRateRepository extends RepositoryLogger {
   constructor(
     @InjectRepository(StarRateEntity)
     private readonly starRateRepository: Repository<StarRateEntity>,
-  ) {}
-
-  private readonly logger = new Logger("Repositroy");
+  ) {
+    super();
+  }
 
   async createStarRateSample(): Promise<StarRateEntity> {
     try {
@@ -127,22 +123,6 @@ export class StarRateRepository {
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async insertProductIdOnStarRate(
-    starRate: StarRateEntity,
-    product: ProductEntity,
-  ) {
-    try {
-      await this.starRateRepository
-        .createQueryBuilder()
-        .update(StarRateEntity)
-        .set({ Product: product })
-        .where("id = :id", { id: starRate.id })
-        .execute();
-    } catch (err) {
-      console.error(err);
     }
   }
 }

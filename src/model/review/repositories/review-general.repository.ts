@@ -1,5 +1,5 @@
 import { ReviewEntity } from "../entities/review.entity";
-import { Injectable, Logger, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ModifyReviewDao } from "../dto/modify-review.dto";
@@ -7,16 +7,18 @@ import { CreateReviewDao } from "../dto/create-review.dto";
 import { InternalServerErrorException } from "@nestjs/common/exceptions";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { reviewSelectProperty } from "src/common/config/repository-select-configs/review-select";
+import { RepositoryLogger } from "src/common/classes/repository.logger";
 
 @Injectable()
-export class ReviewGeneralRepository {
+export class ReviewGeneralRepository extends RepositoryLogger {
   constructor(
     @InjectRepository(ReviewEntity)
     private readonly reviewRepository: Repository<ReviewEntity>,
-  ) {}
+  ) {
+    super();
+  }
 
   private readonly select = reviewSelectProperty;
-  private readonly logger = new Logger("Repository");
 
   async findAllClientsReviews(id: string): Promise<ReviewEntity[]> {
     try {
@@ -39,21 +41,6 @@ export class ReviewGeneralRepository {
       }
 
       return reviews;
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async findLastCreatedReview(): Promise<ReviewEntity> {
-    try {
-      return await this.reviewRepository
-        .createQueryBuilder()
-        .select("review")
-        .from(ReviewEntity, "review")
-        .orderBy("review.createdAt", "DESC")
-        .limit(1)
-        .getOne();
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException(err.message);

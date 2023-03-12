@@ -1,20 +1,17 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-} from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { RepositoryLogger } from "src/common/classes/repository.logger";
 import { Repository } from "typeorm";
 import { ReviewEntity } from "../entities/review.entity";
 
 @Injectable()
-export class ReviewVerifyRepository {
+export class ReviewVerifyRepository extends RepositoryLogger {
   constructor(
     @InjectRepository(ReviewEntity)
     private readonly reviewRepository: Repository<ReviewEntity>,
-  ) {}
-
-  private readonly logger = new Logger("Repository");
+  ) {
+    super();
+  }
 
   async isExistReviewId(id: string): Promise<boolean> {
     try {

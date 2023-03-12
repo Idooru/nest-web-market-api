@@ -2,7 +2,6 @@ import { UploadMediaDto } from "../dto/upload-media.dto";
 import {
   Injectable,
   InternalServerErrorException,
-  Logger,
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -10,14 +9,13 @@ import { ProductImageEntity } from "../entities/product.image.entity";
 import { ReviewImageEntity } from "../entities/review.image.entity";
 import { ReviewVideoEntity } from "../entities/review.video.entity";
 import { Repository } from "typeorm";
-import { ReviewEntity } from "src/model/review/entities/review.entity";
-import { ProductEntity } from "src/model/product/entities/product.entity";
 import { mediaSelectProperty } from "src/common/config/repository-select-configs/media-select";
 import { InquiryImageEntity } from "../entities/inquiry.image.entity";
 import { InquiryVideoEntity } from "../entities/inquiry.video.entity";
+import { RepositoryLogger } from "src/common/classes/repository.logger";
 
 @Injectable()
-export class MediaGeneralRepository {
+export class MediaGeneralRepository extends RepositoryLogger {
   constructor(
     @InjectRepository(ProductImageEntity)
     private readonly productImageRepository: Repository<ProductImageEntity>,
@@ -29,9 +27,10 @@ export class MediaGeneralRepository {
     private readonly inquiryImageRepository: Repository<InquiryImageEntity>,
     @InjectRepository(InquiryVideoEntity)
     private readonly inquiryVideoRepository: Repository<InquiryVideoEntity>,
-  ) {}
+  ) {
+    super();
+  }
 
-  private readonly logger = new Logger("Repository");
   private readonly select = mediaSelectProperty;
 
   async uploadProductImage(uploadMediaDto: UploadMediaDto): Promise<void> {
@@ -266,57 +265,6 @@ export class MediaGeneralRepository {
         .delete()
         .from(InquiryVideoEntity, "inquiry_video")
         .where("id = :id", { id })
-        .execute();
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async insertProductIdOnProductImage(
-    image: ProductImageEntity,
-    product: ProductEntity,
-  ): Promise<void> {
-    try {
-      await this.productImageRepository
-        .createQueryBuilder()
-        .update(ProductImageEntity)
-        .set({ Product: product })
-        .where("id = :id", { id: image.id })
-        .execute();
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async insertReviewIdOnReviewImage(
-    image: ReviewImageEntity,
-    review: ReviewEntity,
-  ): Promise<void> {
-    try {
-      await this.reviewImageRepository
-        .createQueryBuilder()
-        .update(ReviewImageEntity)
-        .set({ Review: review })
-        .where("id = :id", { id: image.id })
-        .execute();
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async insertReviewIdOnReviewVideo(
-    video: ReviewVideoEntity,
-    review: ReviewEntity,
-  ): Promise<void> {
-    try {
-      await this.reviewVideoRepository
-        .createQueryBuilder()
-        .update(ReviewVideoEntity)
-        .set({ Review: review })
-        .where("id = :id", { id: video.id })
         .execute();
     } catch (err) {
       this.logger.error(err);

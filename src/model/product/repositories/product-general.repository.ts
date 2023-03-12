@@ -1,7 +1,6 @@
 import {
   Injectable,
   InternalServerErrorException,
-  Logger,
   NotFoundException,
 } from "@nestjs/common";
 import { ModifyProductDto } from "../dto/modify_product.dto";
@@ -12,16 +11,18 @@ import { ProductEntity } from "../entities/product.entity";
 import { productSelectProperty } from "src/common/config/repository-select-configs/product-select";
 import { BadRequestException } from "@nestjs/common/exceptions";
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
+import { RepositoryLogger } from "src/common/classes/repository.logger";
 
 @Injectable()
-export class ProductGeneralRepository {
+export class ProductGeneralRepository extends RepositoryLogger {
   constructor(
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
-  ) {}
+  ) {
+    super();
+  }
 
   private readonly select = productSelectProperty;
-  private readonly logger = new Logger("Repository");
 
   async findProductsAllId(): Promise<ProductEntity[]> {
     try {
@@ -126,22 +127,6 @@ export class ProductGeneralRepository {
           `해당 아이디(${id})의 상품을 찾을 수 없습니다.`,
         );
       }
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  // 웬만해선 상품 생성 서비스 로직에서만 호출하도록 한다.
-  async findLastCreatedProduct(): Promise<ProductEntity> {
-    try {
-      return await this.productRepository
-        .createQueryBuilder()
-        .select("product")
-        .from(ProductEntity, "product")
-        .orderBy("product.createdAt", "DESC")
-        .limit(1)
-        .getOne();
-    } catch (err) {
-      this.logger.error(err);
       throw new InternalServerErrorException(err.message);
     }
   }

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
 import { ModifyUserDto } from "../dtos/modify-user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -11,12 +11,10 @@ import { RegisterUserDto } from "../dtos/register-user.dto";
 import { AdminUserEntity } from "../entities/admin-user.entity";
 import { UserEntity } from "../entities/user.entity";
 import { CreateUserBaseDto } from "../dtos/create-user-base.dto";
+import { RepositoryLogger } from "src/common/classes/repository.logger";
 
 @Injectable()
-export class UserGeneralRepository {
-  private readonly select = userSelectProperty;
-  private readonly logger = new Logger("Repository");
-
+export class UserGeneralRepository extends RepositoryLogger {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
@@ -28,7 +26,11 @@ export class UserGeneralRepository {
     private readonly clientUserRepository: Repository<ClientUserEntity>,
     @InjectRepository(AdminUserEntity)
     private readonly adminUserRepository: Repository<AdminUserEntity>,
-  ) {}
+  ) {
+    super();
+  }
+
+  private readonly select = userSelectProperty;
 
   async findAllUsersFromLatest(): Promise<UserEntity[]> {
     try {
@@ -283,81 +285,6 @@ export class UserGeneralRepository {
     }
   }
 
-  async findLastCreatedUserProfile(): Promise<UserProfileEntity> {
-    try {
-      return await this.userProfileRepository
-        .createQueryBuilder()
-        .select("profile")
-        .from(UserProfileEntity, "profile")
-        .orderBy("profile.createdAt", "DESC")
-        .limit(1)
-        .getOne();
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async findLastCreatedUserAuth(): Promise<UserAuthEntity> {
-    try {
-      return await this.userAuthRepository
-        .createQueryBuilder()
-        .select("auth")
-        .from(UserAuthEntity, "auth")
-        .orderBy("auth.createdAt", "DESC")
-        .limit(1)
-        .getOne();
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async findLastCreatedUserBase(): Promise<UserEntity> {
-    try {
-      return await this.userRepository
-        .createQueryBuilder()
-        .select("userBase")
-        .from(UserEntity, "userBase")
-        .orderBy("userBase.createdAt", "DESC")
-        .limit(1)
-        .getOne();
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async findLastCreatedClientUser(): Promise<ClientUserEntity> {
-    try {
-      return await this.clientUserRepository
-        .createQueryBuilder()
-        .select("clientUser")
-        .from(ClientUserEntity, "clientUser")
-        .orderBy("clientUser.createdAt", "DESC")
-        .limit(1)
-        .getOne();
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async findLastCreatedAdminUser(): Promise<AdminUserEntity> {
-    try {
-      return await this.adminUserRepository
-        .createQueryBuilder()
-        .select("adminUser")
-        .from(AdminUserEntity, "adminUser")
-        .orderBy("adminUser.createdAt", "DESC")
-        .limit(1)
-        .getOne();
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
   async resetPassword(id: string, hashed: string) {
     try {
       const password = { password: hashed };
@@ -543,74 +470,6 @@ export class UserGeneralRepository {
         .delete()
         .from(UserEntity)
         .where("id = :id", { id })
-        .execute();
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async insertUserBaseIdOnUserProfile(
-    userBase: UserEntity,
-    userProfile: UserProfileEntity,
-  ): Promise<void> {
-    try {
-      await this.userProfileRepository
-        .createQueryBuilder()
-        .update(UserProfileEntity)
-        .set({ User: userBase })
-        .where("id = :id", { id: userProfile.id })
-        .execute();
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async insertUserBaseIdOnUserAuth(
-    userBase: UserEntity,
-    userAuth: UserAuthEntity,
-  ): Promise<void> {
-    try {
-      await this.userAuthRepository
-        .createQueryBuilder()
-        .update(UserAuthEntity)
-        .set({ User: userBase })
-        .where("id = :id", { id: userAuth.id })
-        .execute();
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async insertUserBaseIdOnClientUser(
-    userBase: UserEntity,
-    clientUser: ClientUserEntity,
-  ): Promise<void> {
-    try {
-      await this.clientUserRepository
-        .createQueryBuilder()
-        .update(ClientUserEntity)
-        .set({ User: userBase })
-        .where("id = :id", { id: clientUser.id })
-        .execute();
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async insertUserBaseIdOnAdminUser(
-    userBase: UserEntity,
-    adminUser: AdminUserEntity,
-  ): Promise<void> {
-    try {
-      await this.adminUserRepository
-        .createQueryBuilder()
-        .update(AdminUserEntity)
-        .set({ User: userBase })
-        .where("id = :id", { id: adminUser.id })
         .execute();
     } catch (err) {
       this.logger.error(err);

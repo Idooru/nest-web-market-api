@@ -1,16 +1,13 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-} from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "../entities/user.entity";
 import { Repository } from "typeorm";
 import { UserProfileEntity } from "../entities/user.profile.entity";
 import { UserAuthEntity } from "../entities/user.auth.entity";
+import { RepositoryLogger } from "src/common/classes/repository.logger";
 
 @Injectable()
-export class UserVerifyRepository {
+export class UserVerifyRepository extends RepositoryLogger {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
@@ -18,9 +15,9 @@ export class UserVerifyRepository {
     private readonly userProfileRepository: Repository<UserProfileEntity>,
     @InjectRepository(UserAuthEntity)
     private readonly userAuthRepository: Repository<UserAuthEntity>,
-  ) {}
-
-  private readonly logger = new Logger("Error");
+  ) {
+    super();
+  }
 
   async isExistUserId(userId: string): Promise<boolean> {
     try {
