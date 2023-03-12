@@ -8,7 +8,7 @@ import { map, Observable } from "rxjs";
 import { TimeLoggerLibrary } from "../../lib/time-logger.library";
 import { Request, Response } from "express";
 import { SecurityLibrary } from "src/common/lib/security.library";
-import { VerifyDataDto } from "./verfiy-data.dto";
+import { VerifyDataDto } from "./verify-data.dto";
 
 @Injectable()
 export class SendVerifyCookieInterceptor implements NestInterceptor {

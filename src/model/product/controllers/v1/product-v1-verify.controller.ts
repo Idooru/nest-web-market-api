@@ -1,7 +1,7 @@
 import { Controller, Get, Param, UseInterceptors } from "@nestjs/common";
 import { verifyCookieKeys } from "src/common/config/cookie-key-configs";
 import { SendVerifyCookieInterceptor } from "src/common/interceptors/verify/send-verify-cookie.interceptor";
-import { VerifyDataDto } from "src/common/interceptors/verify/verfiy-data.dto";
+import { VerifyDataDto } from "src/common/interceptors/verify/verify-data.dto";
 import { ProductVerifyService } from "../../services/product-verify.service";
 
 @Controller("/api/v1/verify/product")
