@@ -23,6 +23,8 @@ import { ReviewImageEntity } from "src/model/media/entities/review.image.entity"
 import { ReviewVideoEntity } from "src/model/media/entities/review.video.entity";
 import { ReceiveMediaDto } from "src/model/media/dto/receive-media.dto";
 import { UserEntity } from "src/model/user/entities/user.entity";
+import { MediaInsertRepository } from "src/model/media/repositories/media-insert.repository";
+import { ReviewInsertRepository } from "../repositories/review-insert.repository";
 
 @Injectable()
 export class ReviewGeneralService {
@@ -31,6 +33,8 @@ export class ReviewGeneralService {
     private readonly productGeneralRepository: ProductGeneralRepository,
     private readonly userGeneralRepository: UserGeneralRepository,
     private readonly mediaGeneralRepository: MediaGeneralRepository,
+    private readonly reviewInsertRepository: ReviewInsertRepository,
+    private readonly mediaInsertRepository: MediaInsertRepository,
   ) {}
 
   async findUserAndProduct(
@@ -116,7 +120,7 @@ export class ReviewGeneralService {
     review: ReviewEntity,
   ): Promise<void> {
     for (const image of images) {
-      await this.mediaGeneralRepository.insertReviewIdOnReviewImage(
+      await this.mediaInsertRepository.insertReviewIdOnReviewImage(
         image,
         review,
       );
@@ -127,10 +131,7 @@ export class ReviewGeneralService {
     image: ReviewImageEntity,
     review: ReviewEntity,
   ): Promise<void> {
-    await this.mediaGeneralRepository.insertReviewIdOnReviewImage(
-      image,
-      review,
-    );
+    await this.mediaInsertRepository.insertReviewIdOnReviewImage(image, review);
   }
 
   async insertReviewIdOnReviewVideoMore(
@@ -138,7 +139,7 @@ export class ReviewGeneralService {
     review: ReviewEntity,
   ): Promise<void> {
     for (const video of videos) {
-      await this.mediaGeneralRepository.insertReviewIdOnReviewVideo(
+      await this.mediaInsertRepository.insertReviewIdOnReviewVideo(
         video,
         review,
       );
@@ -149,10 +150,7 @@ export class ReviewGeneralService {
     video: ReviewVideoEntity,
     review: ReviewEntity,
   ): Promise<void> {
-    await this.mediaGeneralRepository.insertReviewIdOnReviewVideo(
-      video,
-      review,
-    );
+    await this.mediaInsertRepository.insertReviewIdOnReviewVideo(video, review);
   }
 
   async deleteReviewImageMore(beforeImages: ReviewImageEntity[]) {
@@ -332,7 +330,7 @@ export class ReviewGeneralService {
       product,
     });
 
-    const review = await this.reviewGeneralRepository.findLastCreatedReview();
+    const review = await this.reviewInsertRepository.findLastCreatedReview();
     await this.reviewGeneralRepository.insertReviewIdOnClientUser(
       client,
       review,
@@ -369,7 +367,7 @@ export class ReviewGeneralService {
       product,
     });
 
-    const review = await this.reviewGeneralRepository.findLastCreatedReview();
+    const review = await this.reviewInsertRepository.findLastCreatedReview();
     await this.reviewGeneralRepository.insertReviewIdOnClientUser(
       client,
       review,
@@ -401,7 +399,7 @@ export class ReviewGeneralService {
       product,
     });
 
-    const review = await this.reviewGeneralRepository.findLastCreatedReview();
+    const review = await this.reviewInsertRepository.findLastCreatedReview();
     await this.reviewGeneralRepository.insertReviewIdOnClientUser(
       client,
       review,
@@ -431,7 +429,7 @@ export class ReviewGeneralService {
       product,
     });
 
-    const review = await this.reviewGeneralRepository.findLastCreatedReview();
+    const review = await this.reviewInsertRepository.findLastCreatedReview();
     await this.reviewGeneralRepository.insertReviewIdOnClientUser(
       client,
       review,

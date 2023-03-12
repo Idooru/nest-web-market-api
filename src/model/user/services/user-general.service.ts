@@ -5,11 +5,13 @@ import { SecurityLibrary } from "src/common/lib/security.library";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { UserEntity } from "../entities/user.entity";
 import * as bcrypt from "bcrypt";
+import { UserInsertRepository } from "../repositories/user-insert.repository";
 
 @Injectable()
 export class UserGeneralService {
   constructor(
     private readonly userGeneralRepository: UserGeneralRepository,
+    private readonly userInsertRepository: UserInsertRepository,
     private readonly securityLibrary: SecurityLibrary,
   ) {}
 
@@ -44,17 +46,17 @@ export class UserGeneralService {
     await this.userGeneralRepository.createUserBase(registerUserDto, hashed);
 
     const [userProfile, userAuth, userBase] = await Promise.all([
-      this.userGeneralRepository.findLastCreatedUserProfile(),
-      this.userGeneralRepository.findLastCreatedUserAuth(),
-      this.userGeneralRepository.findLastCreatedUserBase(),
+      this.userInsertRepository.findLastCreatedUserProfile(),
+      this.userInsertRepository.findLastCreatedUserAuth(),
+      this.userInsertRepository.findLastCreatedUserBase(),
     ]);
 
     await Promise.all([
-      this.userGeneralRepository.insertUserBaseIdOnUserProfile(
+      this.userInsertRepository.insertUserBaseIdOnUserProfile(
         userBase,
         userProfile,
       ),
-      this.userGeneralRepository.insertUserBaseIdOnUserAuth(userBase, userAuth),
+      this.userInsertRepository.insertUserBaseIdOnUserAuth(userBase, userAuth),
     ]);
 
     return userBase;
@@ -67,16 +69,16 @@ export class UserGeneralService {
     if (registerUserDto.type.toString() === "client") {
       await this.userGeneralRepository.createClientUser(userBase);
       const clientUser =
-        await this.userGeneralRepository.findLastCreatedClientUser();
-      await this.userGeneralRepository.insertUserBaseIdOnClientUser(
+        await this.userInsertRepository.findLastCreatedClientUser();
+      await this.userInsertRepository.insertUserBaseIdOnClientUser(
         userBase,
         clientUser,
       );
     } else {
       await this.userGeneralRepository.createAdminUser(userBase);
       const adminUser =
-        await this.userGeneralRepository.findLastCreatedAdminUser();
-      await this.userGeneralRepository.insertUserBaseIdOnAdminUser(
+        await this.userInsertRepository.findLastCreatedAdminUser();
+      await this.userInsertRepository.insertUserBaseIdOnAdminUser(
         userBase,
         adminUser,
       );

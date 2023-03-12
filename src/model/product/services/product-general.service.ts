@@ -9,6 +9,9 @@ import { ProductImageEntity } from "src/model/media/entities/product.image.entit
 import { MediaGeneralRepository } from "src/model/media/repositories/media-general.repository";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
+import { MediaInsertRepository } from "src/model/media/repositories/media-insert.repository";
+import { StarRateInsertRepository } from "src/model/review/repositories/star-rate-insert.repository";
+import { ProductInsertRepository } from "../repositories/product-insert.repository";
 
 @Injectable()
 export class ProductGeneralService {
@@ -17,6 +20,9 @@ export class ProductGeneralService {
     private readonly mediaGeneralRepository: MediaGeneralRepository,
     private readonly starRateRepository: StarRateRepository,
     private readonly userGeneralRepository: UserGeneralRepository,
+    private readonly productInsertRepository: ProductInsertRepository,
+    private readonly mediaInsertRepository: MediaInsertRepository,
+    private readonly starRateInsertRepository: StarRateInsertRepository,
   ) {}
 
   isExistProducts(founds: ProductEntity[]): void {
@@ -66,12 +72,14 @@ export class ProductGeneralService {
 
     await this.productGeneralRepository.createProduct(createProductDto, admin);
 
-    const product =
-      await this.productGeneralRepository.findLastCreatedProduct();
+    const product = await this.productInsertRepository.findLastCreatedProduct();
 
     await Promise.all([
-      this.mediaGeneralRepository.insertProductIdOnProductImage(image, product),
-      this.starRateRepository.insertProductIdOnStarRate(StarRate, product),
+      this.mediaInsertRepository.insertProductIdOnProductImage(image, product),
+      this.starRateInsertRepository.insertProductIdOnStarRate(
+        StarRate,
+        product,
+      ),
     ]);
   }
 
@@ -96,7 +104,7 @@ export class ProductGeneralService {
 
     await Promise.all([
       this.mediaGeneralRepository.deleteProductImageWithId(evenImage.id),
-      this.mediaGeneralRepository.insertProductIdOnProductImage(
+      this.mediaInsertRepository.insertProductIdOnProductImage(
         newImage,
         product,
       ),
@@ -110,7 +118,7 @@ export class ProductGeneralService {
 
     await Promise.all([
       this.mediaGeneralRepository.deleteProductImageWithId(evenImage.id),
-      this.mediaGeneralRepository.insertProductIdOnProductImage(
+      this.mediaInsertRepository.insertProductIdOnProductImage(
         newImage,
         product,
       ),
