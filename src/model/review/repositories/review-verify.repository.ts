@@ -15,9 +15,7 @@ export class ReviewVerifyRepository extends RepositoryLogger {
 
   async isExistReviewId(id: string): Promise<boolean> {
     try {
-      const result = await this.reviewRepository.findOne({
-        where: { id },
-      });
+      const result = await this.reviewRepository.exist({ where: { id } });
       return result ? true : false;
     } catch (err) {
       this.logger.error(err);

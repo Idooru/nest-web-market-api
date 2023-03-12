@@ -15,9 +15,7 @@ export class ProductVerifyRepository extends RepositoryLogger {
 
   async isExistProductId(id: string): Promise<boolean> {
     try {
-      const result = await this.productRepository.findOne({
-        where: { id },
-      });
+      const result = await this.productRepository.exist({ where: { id } });
       return result ? true : false;
     } catch (err) {
       this.logger.error(err);
@@ -27,9 +25,7 @@ export class ProductVerifyRepository extends RepositoryLogger {
 
   async isNotExistProductName(name: string): Promise<boolean> {
     try {
-      const result = await this.productRepository.findOne({
-        where: { name },
-      });
+      const result = await this.productRepository.exist({ where: { name } });
       return result ? false : true;
     } catch (err) {
       this.logger.log(err);

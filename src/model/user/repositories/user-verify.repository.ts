@@ -21,9 +21,7 @@ export class UserVerifyRepository extends RepositoryLogger {
 
   async isExistUserId(userId: string): Promise<boolean> {
     try {
-      const result = await this.userRepository.findOne({
-        where: { id: userId },
-      });
+      const result = await this.userRepository.exist({ where: { id: userId } });
       return result ? true : false;
     } catch (err) {
       this.logger.log(err);
@@ -33,9 +31,7 @@ export class UserVerifyRepository extends RepositoryLogger {
 
   async isExistUserEmail(email: string): Promise<boolean> {
     try {
-      const result = await this.userAuthRepository.findOne({
-        where: { email },
-      });
+      const result = await this.userAuthRepository.exist({ where: { email } });
       return result ? true : false;
     } catch (err) {
       this.logger.error(err);
@@ -45,9 +41,7 @@ export class UserVerifyRepository extends RepositoryLogger {
 
   async isNotExistUserEmail(email: string): Promise<boolean> {
     try {
-      const result = await this.userAuthRepository.findOne({
-        where: { email },
-      });
+      const result = await this.userAuthRepository.exist({ where: { email } });
       return result ? false : true;
     } catch (err) {
       this.logger.error(err);
@@ -57,7 +51,7 @@ export class UserVerifyRepository extends RepositoryLogger {
 
   async isExistUserRealName(realname: string): Promise<boolean> {
     try {
-      const result = await this.userProfileRepository.findOne({
+      const result = await this.userProfileRepository.exist({
         where: { realname },
       });
       return result ? true : false;
@@ -69,7 +63,7 @@ export class UserVerifyRepository extends RepositoryLogger {
 
   async isNotExistUserNickName(nickname: string): Promise<boolean> {
     try {
-      const result = await this.userAuthRepository.findOne({
+      const result = await this.userAuthRepository.exist({
         where: { nickname },
       });
       return result ? false : true;
@@ -81,7 +75,7 @@ export class UserVerifyRepository extends RepositoryLogger {
 
   async isExistUserPhoneNumber(phonenumber: string): Promise<boolean> {
     try {
-      const result = await this.userProfileRepository.findOne({
+      const result = await this.userProfileRepository.exist({
         where: { phonenumber },
       });
       return result ? true : false;
@@ -93,7 +87,7 @@ export class UserVerifyRepository extends RepositoryLogger {
 
   async isNotExistUserPhoneNumber(phonenumber: string): Promise<boolean> {
     try {
-      const result = await this.userProfileRepository.findOne({
+      const result = await this.userProfileRepository.exist({
         where: { phonenumber },
       });
       return result ? false : true;
