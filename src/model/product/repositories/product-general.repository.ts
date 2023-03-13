@@ -131,6 +131,21 @@ export class ProductGeneralRepository extends RepositoryLogger {
     }
   }
 
+  async findProductOneJustNeedStarRate(id: string): Promise<ProductEntity> {
+    try {
+      return await this.productRepository
+        .createQueryBuilder()
+        .select(this.select.productSelectWhenNeedStarRate)
+        .from(ProductEntity, "product")
+        .innerJoin("product.StarRate", "StarRate")
+        .where("product.id = :id", { id })
+        .getOneOrFail();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
   async createProduct(
     createProductDto: CreateProductDto,
     admin: AdminUserEntity,
