@@ -18,18 +18,19 @@ export class StarRateService {
     productId: string,
   ): Promise<void> {
     const { scoreChosenByClient } = createReviewDto;
-    const product = await this.productGeneralRepository.findProductOneById(
-      productId,
-    );
-    const StarRate = await this.starRateRepository.findStarRateWithId(
+    const product =
+      await this.productGeneralRepository.findProductOneJustNeedStarRate(
+        productId,
+      );
+    const starRate = await this.starRateRepository.findStarRateWithId(
       product.StarRate.id,
     );
 
     await this.starRateRepository.increaseStarRate(
-      StarRate,
+      starRate,
       scoreChosenByClient,
     );
-    await this.calculateRating(StarRate);
+    await this.calculateRating(starRate);
   }
 
   async modifyStarRate(
