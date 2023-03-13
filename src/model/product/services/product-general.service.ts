@@ -1,17 +1,17 @@
 import { StarRateRepository } from "../../review/repositories/star-rate-general.repository";
 import { ProductEntity } from "../entities/product.entity";
 import { ProductGeneralRepository } from "../repositories/product-general.repository";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { CreateProductDto } from "../dto/create_product.dto";
 import { ModifyProductDto } from "../dto/modify_product.dto";
 import { ReceiveMediaDto } from "src/model/media/dto/receive-media.dto";
-import { ProductImageEntity } from "src/model/media/entities/product.image.entity";
 import { MediaGeneralRepository } from "src/model/media/repositories/media-general.repository";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
 import { MediaInsertRepository } from "src/model/media/repositories/media-insert.repository";
 import { StarRateInsertRepository } from "src/model/review/repositories/star-rate-insert.repository";
 import { ProductInsertRepository } from "../repositories/product-insert.repository";
+import { ProductRedundantService } from "./product-redundant.service";
 
 @Injectable()
 export class ProductGeneralService {
@@ -23,31 +23,26 @@ export class ProductGeneralService {
     private readonly productInsertRepository: ProductInsertRepository,
     private readonly mediaInsertRepository: MediaInsertRepository,
     private readonly starRateInsertRepository: StarRateInsertRepository,
+    private readonly productRedundantService: ProductRedundantService,
   ) {}
-
-  isExistProducts(founds: ProductEntity[]): void {
-    if (!founds.length) {
-      throw new NotFoundException("데이터베이스에 상품이 존재하지 않습니다.");
-    }
-  }
 
   async findProductsAllId(): Promise<ProductEntity[]> {
     const founds = await this.productGeneralRepository.findProductsAllId();
-    this.isExistProducts(founds);
+    this.productRedundantService.isExistProducts(founds);
     return founds;
   }
 
   async findAllProductsFromLatest(): Promise<ProductEntity[]> {
     const founds =
       await this.productGeneralRepository.findAllProductsFromLatest();
-    this.isExistProducts(founds);
+    this.productRedundantService.isExistProducts(founds);
     return founds;
   }
 
   async findAllProductsFromOldest(): Promise<ProductEntity[]> {
     const founds =
       await this.productGeneralRepository.findAllProductsFromOldest();
-    this.isExistProducts(founds);
+    this.productRedundantService.isExistProducts(founds);
     return founds;
   }
 
@@ -83,24 +78,16 @@ export class ProductGeneralService {
     ]);
   }
 
-  async findProductAndImageForModify(
-    id: string,
-    imageCookie: ReceiveMediaDto,
-  ): Promise<[ProductEntity, ProductImageEntity, ProductImageEntity]> {
-    return await Promise.all([
-      this.productGeneralRepository.findProductOneById(id),
-      this.mediaGeneralRepository.findProductImageWithUrl(imageCookie.url),
-      this.mediaGeneralRepository.findProductImageEvenUse(id),
-    ]);
-  }
-
   async modifyProduct(
     id: string,
     modifyProductDto: ModifyProductDto,
     imageCookie: ReceiveMediaDto,
   ): Promise<void> {
     const [product, newImage, evenImage] =
-      await this.findProductAndImageForModify(id, imageCookie);
+      await this.productRedundantService.findProductAndImageForModify(
+        id,
+        imageCookie,
+      );
 
     await Promise.all([
       this.mediaGeneralRepository.deleteProductImageWithId(evenImage.id),
@@ -114,7 +101,10 @@ export class ProductGeneralService {
 
   async modifyProductImage(id: string, imageCookie: ReceiveMediaDto) {
     const [product, newImage, evenImage] =
-      await this.findProductAndImageForModify(id, imageCookie);
+      await this.productRedundantService.findProductAndImageForModify(
+        id,
+        imageCookie,
+      );
 
     await Promise.all([
       this.mediaGeneralRepository.deleteProductImageWithId(evenImage.id),

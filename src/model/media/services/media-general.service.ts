@@ -1,39 +1,18 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { JwtAccessTokenPayload } from "../../auth/jwt/jwt-access-token-payload.interface";
 import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
-import { ConfigService } from "@nestjs/config";
 import { ReceiveMediaDto } from "../dto/receive-media.dto";
 import { ReturnMediaDto } from "../dto/return-media.dto";
 import { MediaGeneralRepository } from "../repositories/media-general.repository";
-import * as fs from "fs";
-import * as path from "path";
+import { MediaRedundantService } from "./media-redundant.service";
 
 @Injectable()
 export class MediaGeneralService {
   constructor(
     private readonly mediaGeneralRepository: MediaGeneralRepository,
     private readonly userRepository: UserGeneralRepository,
-    private readonly configService: ConfigService,
+    private readonly mediaRedundantService: MediaRedundantService,
   ) {}
-
-  isExistMediaFile(
-    mediaType: string,
-    file: Express.Multer.File | Express.Multer.File[],
-  ) {
-    if (!file) {
-      throw new BadRequestException(
-        `${mediaType}을(를) 업로드 할 수 없습니다. 파일을 제시해주세요.`,
-      );
-    }
-  }
-
-  setUrl(mediaFileName: string): string {
-    return `http://${this.configService.get(
-      "APPLICATION_HOST",
-    )}:${this.configService.get(
-      "APPLICATION_PORT",
-    )}/media/${mediaFileName}`.toLowerCase();
-  }
 
   createMediaCookieValue(
     cookieKey: string,
@@ -41,7 +20,7 @@ export class MediaGeneralService {
   ): ReturnMediaDto {
     return {
       whatCookie: cookieKey,
-      url: this.setUrl(file.filename),
+      url: this.mediaRedundantService.setUrl(file.filename),
       fileName: file.filename,
     };
   }
@@ -52,15 +31,9 @@ export class MediaGeneralService {
   ): ReturnMediaDto[] {
     return files.map((file) => ({
       whatCookie: cookieKey,
-      url: this.setUrl(file.filename),
+      url: this.mediaRedundantService.setUrl(file.filename),
       fileName: file.filename,
     }));
-  }
-
-  deleteMediaFilesOnServerDisk(imageName: string, mediaPath: string) {
-    fs.rmSync(
-      path.join(__dirname, `../../../../uploads/${mediaPath}/${imageName}`),
-    );
   }
 
   async uploadProductImage(
@@ -70,7 +43,7 @@ export class MediaGeneralService {
     const user = await this.userRepository.findAdminUserProfileInfoWithId(
       jwtPayload.userId,
     );
-    const url = this.setUrl(file.filename);
+    const url = this.mediaRedundantService.setUrl(file.filename);
 
     await this.mediaGeneralRepository.uploadProductImage({
       url,
@@ -88,14 +61,14 @@ export class MediaGeneralService {
 
     if (files.length >= 2) {
       for (const file of files) {
-        const url = this.setUrl(file.filename);
+        const url = this.mediaRedundantService.setUrl(file.filename);
         await this.mediaGeneralRepository.uploadReviewImage({
           url,
           uploader: user.Auth.email,
         });
       }
     } else {
-      const url = this.setUrl(files[0].filename);
+      const url = this.mediaRedundantService.setUrl(files[0].filename);
       await this.mediaGeneralRepository.uploadReviewImage({
         url,
         uploader: user.Auth.email,
@@ -113,14 +86,14 @@ export class MediaGeneralService {
 
     if (files.length >= 2) {
       for (const file of files) {
-        const url = this.setUrl(file.filename);
+        const url = this.mediaRedundantService.setUrl(file.filename);
         await this.mediaGeneralRepository.uploadReviewVideo({
           url,
           uploader: user.Auth.email,
         });
       }
     } else {
-      const url = this.setUrl(files[0].filename);
+      const url = this.mediaRedundantService.setUrl(files[0].filename);
       await this.mediaGeneralRepository.uploadReviewVideo({
         url,
         uploader: user.Auth.email,
@@ -138,14 +111,14 @@ export class MediaGeneralService {
 
     if (files.length >= 2) {
       for (const file of files) {
-        const url = this.setUrl(file.filename);
+        const url = this.mediaRedundantService.setUrl(file.filename);
         await this.mediaGeneralRepository.uploadInquiryImage({
           url,
           uploader: user.Auth.email,
         });
       }
     } else {
-      const url = this.setUrl(files[0].filename);
+      const url = this.mediaRedundantService.setUrl(files[0].filename);
       await this.mediaGeneralRepository.uploadInquiryImage({
         url,
         uploader: user.Auth.email,
@@ -163,14 +136,14 @@ export class MediaGeneralService {
 
     if (files.length >= 2) {
       for (const file of files) {
-        const url = this.setUrl(file.filename);
+        const url = this.mediaRedundantService.setUrl(file.filename);
         await this.mediaGeneralRepository.uploadInquiryVideo({
           url,
           uploader: user.Auth.email,
         });
       }
     } else {
-      const url = this.setUrl(files[0].filename);
+      const url = this.mediaRedundantService.setUrl(files[0].filename);
       await this.mediaGeneralRepository.uploadInquiryVideo({
         url,
         uploader: user.Auth.email,
@@ -184,7 +157,10 @@ export class MediaGeneralService {
     );
 
     await this.mediaGeneralRepository.deleteProductImageWithId(image.id);
-    this.deleteMediaFilesOnServerDisk(imageCookie.fileName, "image/product");
+    this.mediaRedundantService.deleteMediaFilesOnServerDisk(
+      imageCookie.fileName,
+      "image/product",
+    );
   }
 
   async deleteReviewImages(imageCookies: ReceiveMediaDto[]): Promise<void> {
@@ -194,7 +170,10 @@ export class MediaGeneralService {
           cookie.url,
         );
         await this.mediaGeneralRepository.deleteReviewImageWithId(image.id);
-        this.deleteMediaFilesOnServerDisk(cookie.fileName, "image/review");
+        this.mediaRedundantService.deleteMediaFilesOnServerDisk(
+          cookie.fileName,
+          "image/review",
+        );
       }
     } else {
       const image = await this.mediaGeneralRepository.findReviewImageWithUrl(
@@ -202,7 +181,7 @@ export class MediaGeneralService {
       );
 
       await this.mediaGeneralRepository.deleteReviewImageWithId(image.id);
-      this.deleteMediaFilesOnServerDisk(
+      this.mediaRedundantService.deleteMediaFilesOnServerDisk(
         imageCookies[0].fileName,
         "image/review",
       );
@@ -216,7 +195,10 @@ export class MediaGeneralService {
           cookie.url,
         );
         await this.mediaGeneralRepository.deleteReviewVideoWithId(video.id);
-        this.deleteMediaFilesOnServerDisk(cookie.fileName, "video/review");
+        this.mediaRedundantService.deleteMediaFilesOnServerDisk(
+          cookie.fileName,
+          "video/review",
+        );
       }
     } else {
       const video = await this.mediaGeneralRepository.findReviewVideoWithUrl(
@@ -224,7 +206,7 @@ export class MediaGeneralService {
       );
 
       await this.mediaGeneralRepository.deleteReviewVideoWithId(video.id);
-      this.deleteMediaFilesOnServerDisk(
+      this.mediaRedundantService.deleteMediaFilesOnServerDisk(
         videoCookies[0].fileName,
         "video/review",
       );
@@ -238,7 +220,10 @@ export class MediaGeneralService {
           cookie.url,
         );
         await this.mediaGeneralRepository.deleteInquiryImageWithId(image.id);
-        this.deleteMediaFilesOnServerDisk(cookie.fileName, "image/inquiry");
+        this.mediaRedundantService.deleteMediaFilesOnServerDisk(
+          cookie.fileName,
+          "image/inquiry",
+        );
       }
     } else {
       const image = await this.mediaGeneralRepository.findInquiryImageWithUrl(
@@ -246,7 +231,7 @@ export class MediaGeneralService {
       );
 
       await this.mediaGeneralRepository.deleteInquiryImageWithId(image.id);
-      this.deleteMediaFilesOnServerDisk(
+      this.mediaRedundantService.deleteMediaFilesOnServerDisk(
         imageCookies[0].fileName,
         "image/inquiry",
       );
@@ -260,7 +245,10 @@ export class MediaGeneralService {
           cookie.url,
         );
         await this.mediaGeneralRepository.deleteInquiryVideoWithId(video.id);
-        this.deleteMediaFilesOnServerDisk(cookie.fileName, "video/inquiry");
+        this.mediaRedundantService.deleteMediaFilesOnServerDisk(
+          cookie.fileName,
+          "video/inquiry",
+        );
       }
     } else {
       const video = await this.mediaGeneralRepository.findInquiryVideoWithUrl(
@@ -268,7 +256,7 @@ export class MediaGeneralService {
       );
 
       await this.mediaGeneralRepository.deleteInquiryVideoWithId(video.id);
-      this.deleteMediaFilesOnServerDisk(
+      this.mediaRedundantService.deleteMediaFilesOnServerDisk(
         videoCookies[0].fileName,
         "video/inquiry",
       );
