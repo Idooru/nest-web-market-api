@@ -26,4 +26,5 @@ export const productSelectProperty = {
     "InquiryImage.url",
     "InquiryVideo.url",
   ],
+  productSelectWhenNeedStarRate: ["product", "StarRate.id"],
 };
