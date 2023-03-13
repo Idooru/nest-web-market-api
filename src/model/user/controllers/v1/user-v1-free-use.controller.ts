@@ -22,7 +22,6 @@ import { IsNotLoginGuard } from "../../../../common/guards/authenticate/is-not-l
 import { IsRefreshTokenAvailableGuard } from "src/common/guards/authenticate/is-refresh-token-available.guard";
 import { JwtRefreshTokenPayload } from "src/model/auth/jwt/jwt-refresh-token-payload.interface";
 import { verifyCookieKeys } from "src/common/config/cookie-key-configs";
-import { VerifyDataGuard } from "src/common/guards/verfiy/verify-data.guard";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JsonGeneralInterface } from "src/common/interceptors/general/interface/json-general-interface";
 import { JsonJwtAuthInterface } from "src/common/interceptors/general/interface/json-jwt-auth.interface";
@@ -31,6 +30,7 @@ import { JsonJwtLogoutInterceptor } from "src/common/interceptors/general/json-j
 import { JsonJwtLogoutInterface } from "src/common/interceptors/general/interface/json-jwt-logout.interface";
 import { RegisterUserDto } from "../../dtos/register-user.dto";
 import { UserEntity } from "../../entities/user.entity";
+import { VerifyDataGuard } from "src/common/guards/verify/verify-data.guard";
 
 @Controller("/api/v1/free-use/user")
 export class UserVersionOneFreeUseController {

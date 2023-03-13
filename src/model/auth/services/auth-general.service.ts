@@ -37,13 +37,13 @@ export class AuthGeneralService {
 
   async validateUser(loginUserDto: LoginUserDto): Promise<UserEntity> {
     const { email, password } = loginUserDto;
-    const isExistUserEmail = await this.authExistService.verfiyEmail(email);
+    const isExistUserEmail = await this.authExistService.verifyEmail(email);
 
     if (isExistUserEmail) {
       const user = await this.userGeneralRepository.findUserWithEmail(email);
 
       if (
-        await this.authExistService.verfiyPassword(password, user.Auth.password)
+        await this.authExistService.verifyPassword(password, user.Auth.password)
       ) {
         return user;
       }

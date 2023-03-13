@@ -6,11 +6,11 @@ import bcrypt from "bcrypt";
 export class AuthExistService {
   constructor(private readonly userVerifyRepository: UserVerifyRepository) {}
 
-  async verfiyEmail(email: string): Promise<boolean> {
+  async verifyEmail(email: string): Promise<boolean> {
     return await this.userVerifyRepository.isExistUserEmail(email);
   }
 
-  async verfiyPassword(
+  async verifyPassword(
     password: string,
     existPassword: string,
   ): Promise<boolean> {

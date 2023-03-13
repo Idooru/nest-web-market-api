@@ -24,9 +24,10 @@ import { JsonClearCookiesInterface } from "src/common/interceptors/general/inter
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JsonGeneralInterface } from "src/common/interceptors/general/interface/json-general-interface";
 import { StarRateService } from "../services/star-rate-general.service";
-import { VerifyDataGuard } from "src/common/guards/verfiy/verify-data.guard";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
+import { ReviewRedundantService } from "../services/review-redundant.service";
+import { VerifyDataGuard } from "src/common/guards/verify/verify-data.guard";
 
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)
@@ -34,6 +35,7 @@ import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
 export class ReviewVersionOneOnlyClientController {
   constructor(
     private readonly reviewGeneralService: ReviewGeneralService,
+    private readonly reviewRedundantService: ReviewRedundantService,
     private readonly starRateService: StarRateService,
   ) {}
 
@@ -51,11 +53,16 @@ export class ReviewVersionOneOnlyClientController {
   ): Promise<JsonClearCookiesInterface> {
     await Promise.all([
       this.starRateService.starRating(createReviewDto, productId),
-      this.reviewGeneralService.createReviewWithImageAndVideo({
+      this.reviewGeneralService.createReviewWithImage({
         createReviewDto,
         jwtPayload,
         productId,
         reviewImgCookies,
+      }),
+      this.reviewGeneralService.createReviewWithVideo({
+        createReviewDto,
+        jwtPayload,
+        productId,
         reviewVdoCookies,
       }),
     ]);
@@ -165,7 +172,7 @@ export class ReviewVersionOneOnlyClientController {
     @Body() modifyReviewDto: ModifyReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
-    const review = await this.reviewGeneralService.distinguishOwnReview(
+    const review = await this.reviewRedundantService.distinguishOwnReview(
       reviewId,
       jwtPayload.userId,
     );
@@ -206,7 +213,7 @@ export class ReviewVersionOneOnlyClientController {
     @Body() modifyReviewDto: ModifyReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
-    const review = await this.reviewGeneralService.distinguishOwnReview(
+    const review = await this.reviewRedundantService.distinguishOwnReview(
       reviewId,
       jwtPayload.userId,
     );
@@ -243,7 +250,7 @@ export class ReviewVersionOneOnlyClientController {
     @Body() modifyReviewDto: ModifyReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
-    const review = await this.reviewGeneralService.distinguishOwnReview(
+    const review = await this.reviewRedundantService.distinguishOwnReview(
       reviewId,
       jwtPayload.userId,
     );
@@ -278,7 +285,7 @@ export class ReviewVersionOneOnlyClientController {
     @Body() modifyReviewDto: ModifyReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    const review = await this.reviewGeneralService.distinguishOwnReview(
+    const review = await this.reviewRedundantService.distinguishOwnReview(
       reviewId,
       jwtPayload.userId,
     );
@@ -304,7 +311,7 @@ export class ReviewVersionOneOnlyClientController {
     @Param("reviewId") id: string,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    const review = await this.reviewGeneralService.distinguishOwnReview(
+    const review = await this.reviewRedundantService.distinguishOwnReview(
       id,
       jwtPayload.userId,
     );
