@@ -11,12 +11,12 @@ export abstract class CommonEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @CreateDateColumn({ type: "timestamp" })
+  @CreateDateColumn({ type: "timestamp", select: false })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: "timestamp" })
+  @UpdateDateColumn({ type: "timestamp", select: false })
   updatedAt: Date;
 
-  @DeleteDateColumn({ type: "timestamp" })
+  @DeleteDateColumn({ type: "timestamp", select: false })
   deletedAt: Date | null;
 }
