@@ -22,6 +22,7 @@ import { JsonClearCookieInterface } from "src/common/interceptors/general/interf
 import { ReturnMediaDto } from "../dto/return-media.dto";
 import { MediaGeneralService } from "../services/media-general.service";
 import { MediaCookieParser } from "src/common/decorators/media-cookie-parser.decorator";
+import { MediaRedundantService } from "../services/media-redundant.service";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
@@ -29,6 +30,7 @@ import { MediaCookieParser } from "src/common/decorators/media-cookie-parser.dec
 export class MediaVersionOneOnlyAdminController {
   constructor(
     private readonly mediaGeneralService: MediaGeneralService,
+    private readonly mediaRedundantService: MediaRedundantService,
     private readonly mediaLoggerLibrary: MeidaLoggerLibrary,
   ) {}
 
@@ -41,7 +43,7 @@ export class MediaVersionOneOnlyAdminController {
     @UploadedFile() file: Express.Multer.File,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookieInterface<ReturnMediaDto>> {
-    this.mediaGeneralService.isExistMediaFile("product image", file);
+    this.mediaRedundantService.isExistMediaFile("product image", file);
     this.mediaLoggerLibrary.log("product image", file, null);
 
     await this.mediaGeneralService.uploadProductImage(file, jwtPayload);

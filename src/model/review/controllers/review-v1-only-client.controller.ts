@@ -179,10 +179,14 @@ export class ReviewVersionOneOnlyClientController {
 
     await Promise.all([
       this.starRateService.modifyStarRate(modifyReviewDto, productId, review),
-      this.reviewGeneralService.modifyReviewWithImageAndVideo({
+      this.reviewGeneralService.modifyReviewWithImage({
         modifyReviewDto,
         review,
         reviewImgCookies,
+      }),
+      this.reviewGeneralService.modifyReviewWithVideo({
+        modifyReviewDto,
+        review,
         reviewVdoCookies,
       }),
     ]);

@@ -25,6 +25,7 @@ import { ReceiveMediaDto } from "../dto/receive-media.dto";
 import { MediaGeneralService } from "../services/media-general.service";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
+import { MediaRedundantService } from "../services/media-redundant.service";
 
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)
@@ -32,6 +33,7 @@ import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
 export class MediaVersionOneOnlyClientController {
   constructor(
     private readonly mediaGeneralService: MediaGeneralService,
+    private readonly mediaRedundantService: MediaRedundantService,
     private readonly mediaLoggerLibrary: MeidaLoggerLibrary,
   ) {
     MulterConfig.createFolder("image", "video");
@@ -50,7 +52,7 @@ export class MediaVersionOneOnlyClientController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookiesInterface<ReturnMediaDto>> {
-    this.mediaGeneralService.isExistMediaFile("review image", files);
+    this.mediaRedundantService.isExistMediaFile("review image", files);
     this.mediaLoggerLibrary.log("review images", null, files);
 
     await this.mediaGeneralService.uploadReviewImage(files, jwtPayload);
@@ -81,7 +83,7 @@ export class MediaVersionOneOnlyClientController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookiesInterface<ReturnMediaDto>> {
-    this.mediaGeneralService.isExistMediaFile("review video", files);
+    this.mediaRedundantService.isExistMediaFile("review video", files);
     this.mediaLoggerLibrary.log("review videos", null, files);
 
     await this.mediaGeneralService.uploadReviewVideo(files, jwtPayload);
@@ -112,7 +114,7 @@ export class MediaVersionOneOnlyClientController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookiesInterface<ReturnMediaDto>> {
-    this.mediaGeneralService.isExistMediaFile("inquiry image", files);
+    this.mediaRedundantService.isExistMediaFile("inquiry image", files);
     this.mediaLoggerLibrary.log("inquiry images", null, files);
 
     await this.mediaGeneralService.uploadInquiryImage(files, jwtPayload);
@@ -143,7 +145,7 @@ export class MediaVersionOneOnlyClientController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookiesInterface<ReturnMediaDto>> {
-    this.mediaGeneralService.isExistMediaFile("inquiry video", files);
+    this.mediaRedundantService.isExistMediaFile("inquiry video", files);
     this.mediaLoggerLibrary.log("inquiry videos", null, files);
 
     await this.mediaGeneralService.uploadInquiryVideo(files, jwtPayload);
