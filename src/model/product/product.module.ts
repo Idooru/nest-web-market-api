@@ -16,6 +16,7 @@ import { ProductVersionOneVerfiyController } from "./controllers/v1/product-v1-v
 import { ProductVerifyService } from "./services/product-verify.service";
 import { ProductVerifyRepository } from "./repositories/product-verify.repository";
 import { ProductInsertRepository } from "./repositories/product-insert.repository";
+import { ProductRedundantService } from "./services/product-redundant.service";
 
 @Module({
   imports: [
@@ -34,15 +35,17 @@ import { ProductInsertRepository } from "./repositories/product-insert.repositor
   ],
   providers: [
     ProductGeneralService,
-    ProductGeneralRepository,
     ProductVerifyService,
+    ProductRedundantService,
+    ProductGeneralRepository,
     ProductVerifyRepository,
     ProductInsertRepository,
   ],
   exports: [
     ProductGeneralService,
-    ProductGeneralRepository,
     ProductVerifyService,
+    ProductRedundantService,
+    ProductGeneralRepository,
     ProductVerifyRepository,
     ProductInsertRepository,
   ],

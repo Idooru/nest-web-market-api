@@ -15,6 +15,7 @@ import { MediaVersionOneOnlyAdminController } from "./controllers/media-v1-only-
 import { MediaGeneralService } from "./services/media-general.service";
 import { MediaGeneralRepository } from "./repositories/media-general.repository";
 import { MediaInsertRepository } from "./repositories/media-insert.repository";
+import { MediaRedundantService } from "./services/media-redundant.service";
 
 @Module({
   imports: [
@@ -39,7 +40,13 @@ import { MediaInsertRepository } from "./repositories/media-insert.repository";
     MediaGeneralService,
     MediaGeneralRepository,
     MediaInsertRepository,
+    MediaRedundantService,
   ],
-  exports: [MediaGeneralService, MediaGeneralRepository, MediaInsertRepository],
+  exports: [
+    MediaGeneralService,
+    MediaGeneralRepository,
+    MediaInsertRepository,
+    MediaRedundantService,
+  ],
 })
 export class MediaModule {}

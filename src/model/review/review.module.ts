@@ -18,6 +18,7 @@ import { ReviewVersionOneOnlyAdminController } from "./controllers/review-v1-onl
 import { ReviewVersionOneOnlyClientController } from "./controllers/review-v1-only-client.controller";
 import { StarRateInsertRepository } from "./repositories/star-rate-insert.repository";
 import { ReviewInsertRepository } from "./repositories/review-insert.repository";
+import { ReviewRedundantService } from "./services/review-redundant.service";
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { ReviewInsertRepository } from "./repositories/review-insert.repository"
     ReviewGeneralService,
     ReviewGeneralRepository,
     ReviewVerifyService,
+    ReviewRedundantService,
     ReviewVerifyRepository,
     StarRateService,
     StarRateRepository,
