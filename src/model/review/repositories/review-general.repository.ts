@@ -5,7 +5,6 @@ import { Repository } from "typeorm";
 import { ModifyReviewDao } from "../dto/modify-review.dto";
 import { CreateReviewDao } from "../dto/create-review.dto";
 import { InternalServerErrorException } from "@nestjs/common/exceptions";
-import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { reviewSelectProperty } from "src/common/config/repository-select-configs/review-select";
 import { RepositoryLogger } from "src/common/classes/repository.logger";
 
