@@ -81,23 +81,6 @@ export class ReviewGeneralRepository extends RepositoryLogger {
     }
   }
 
-  async insertReviewIdOnClientUser(
-    clientUser: ClientUserEntity,
-    review: ReviewEntity,
-  ): Promise<void> {
-    try {
-      await this.reviewRepository
-        .createQueryBuilder()
-        .update(ReviewEntity)
-        .set({ reviewer: clientUser })
-        .where("id = :id", { id: review.id })
-        .execute();
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
   async deleteReview(review: ReviewEntity): Promise<void> {
     try {
       await this.reviewRepository
