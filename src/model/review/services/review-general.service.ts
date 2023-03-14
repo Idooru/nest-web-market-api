@@ -49,7 +49,7 @@ export class ReviewGeneralService {
     });
 
     const review = await this.reviewInsertRepository.findLastCreatedReview();
-    await this.reviewGeneralRepository.insertReviewIdOnClientUser(
+    await this.reviewInsertRepository.insertReviewIdOnClientUser(
       client,
       review,
     );
@@ -84,7 +84,7 @@ export class ReviewGeneralService {
     });
 
     const review = await this.reviewInsertRepository.findLastCreatedReview();
-    await this.reviewGeneralRepository.insertReviewIdOnClientUser(
+    await this.reviewInsertRepository.insertReviewIdOnClientUser(
       client,
       review,
     );
@@ -114,7 +114,7 @@ export class ReviewGeneralService {
     });
 
     const review = await this.reviewInsertRepository.findLastCreatedReview();
-    await this.reviewGeneralRepository.insertReviewIdOnClientUser(
+    await this.reviewInsertRepository.insertReviewIdOnClientUser(
       client,
       review,
     );
