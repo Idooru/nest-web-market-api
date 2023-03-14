@@ -12,14 +12,6 @@ export class CreateReviewDto extends PickType(ReviewEntity, [
   "Video",
 ] as const) {}
 
-export class CreateReviewWithImageAndVideoDto {
-  createReviewDto: CreateReviewDto;
-  jwtPayload: JwtAccessTokenPayload;
-  productId: string;
-  reviewImgCookies: ReceiveMediaDto[];
-  reviewVdoCookies: ReceiveMediaDto[];
-}
-
 export class CreateReviewWithImageDto {
   createReviewDto: CreateReviewDto;
   jwtPayload: JwtAccessTokenPayload;
