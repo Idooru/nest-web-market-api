@@ -1,6 +1,6 @@
 import { Module, forwardRef } from "@nestjs/common";
 import { InquiryGeneralService } from "./services/inquiry-general.service";
-import { InquiryVersionOneFreeUseController } from "./controllers/inquiry-v1-free-use.controller";
+import { InquiryVersionOneOnlyClientController } from "./controllers/inquiry-v1-only-client.controller";
 import { InquiryGeneralRepository } from "./repositories/inquiry-general.repository";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { InquiryEntity } from "src/model/inquiry/entities/inquiry.entity";
@@ -24,7 +24,7 @@ import { InquiryVerifyRepository } from "./repositories/inquiry-verify.repositor
     LibraryModule,
   ],
   controllers: [
-    InquiryVersionOneFreeUseController,
+    InquiryVersionOneOnlyClientController,
     InquiryVersionOneOnlyAdminController,
     InquiryVersionOneVerifyController,
   ],
