@@ -1,39 +1,16 @@
-import { PickType } from "@nestjs/swagger";
-import { ReviewEntity } from "../entities/review.entity";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ProductEntity } from "src/model/product/entities/product.entity";
-import { ReceiveMediaDto } from "src/model/media/dto/receive-media.dto";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
+import { ReviewBody } from "./review-body";
 
-export class CreateReviewDto extends PickType(ReviewEntity, [
-  "reviews",
-  "scoreChosenByClient",
-  "Image",
-  "Video",
-] as const) {}
-
-export class CreateReviewWithImageDto {
-  createReviewDto: CreateReviewDto;
-  jwtPayload: JwtAccessTokenPayload;
-  productId: string;
-  reviewImgCookies: ReceiveMediaDto[];
-}
-
-export class CreateReviewWithVideoDto {
-  createReviewDto: CreateReviewDto;
-  jwtPayload: JwtAccessTokenPayload;
-  productId: string;
-  reviewVdoCookies: ReceiveMediaDto[];
-}
-
-export class CreateReviewWithoutMediaDto {
-  createReviewDto: CreateReviewDto;
+export class CreateReviewDto {
+  reviewBody: ReviewBody;
   jwtPayload: JwtAccessTokenPayload;
   productId: string;
 }
 
 export class CreateReviewDao {
-  createReviewDto: CreateReviewDto;
+  reviewBody: ReviewBody;
   client: ClientUserEntity;
   product: ProductEntity;
 }
