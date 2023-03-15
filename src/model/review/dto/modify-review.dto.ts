@@ -1,22 +1,9 @@
-import { CreateReviewDto } from "./create-review.dto";
+import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ReviewEntity } from "../entities/review.entity";
-import { ReceiveMediaDto } from "src/model/media/dto/receive-media.dto";
+import { ReviewBody } from "./review-body";
 
-export class ModifyReviewDto extends CreateReviewDto {}
-
-export class ModifyReviewWithImageDto {
-  modifyReviewDto: ModifyReviewDto;
-  review: ReviewEntity;
-  reviewImgCookies: ReceiveMediaDto[];
-}
-
-export class ModifyReviewWithVideoDto {
-  modifyReviewDto: ModifyReviewDto;
-  review: ReviewEntity;
-  reviewVdoCookies: ReceiveMediaDto[];
-}
-
-export class ModifyReviewDao {
-  modifyReviewDto: ModifyReviewDto;
-  review: ReviewEntity;
+export class ModifyReviewDto {
+  reviewBody: ReviewBody;
+  jwtPayload: JwtAccessTokenPayload;
+  beforeReview: ReviewEntity;
 }
