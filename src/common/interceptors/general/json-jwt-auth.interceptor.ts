@@ -8,6 +8,7 @@ import { map, Observable } from "rxjs";
 import { TimeLoggerLibrary } from "../../lib/time-logger.library";
 import { SecurityLibrary } from "../../lib/security.library";
 import { JsonJwtAuthInterface } from "./interface/json-jwt-auth.interface";
+import { Request, Response } from "express";
 
 @Injectable()
 export class JsonJwtAuthInterceptor implements NestInterceptor {
@@ -17,16 +18,14 @@ export class JsonJwtAuthInterceptor implements NestInterceptor {
   ) {}
 
   intercept(context: ArgumentsHost, next: CallHandler<any>): Observable<any> {
-    // controller 도달 전
-    const req = context.switchToHttp().getRequest();
-    const res = context.switchToHttp().getResponse();
+    const req = context.switchToHttp().getRequest<Request>();
+    const res = context.switchToHttp().getResponse<Response>();
     const cookieOption = this.securityLibrary.getCookieOption();
 
     this.timeLoggerLibrary.receiveRequest(req);
 
     return next.handle().pipe(
       map((data: JsonJwtAuthInterface) => {
-        // controller 도달 후
         const { statusCode, message, cookieKey, cookieValue } = data;
         this.timeLoggerLibrary.sendResponse(req);
 
