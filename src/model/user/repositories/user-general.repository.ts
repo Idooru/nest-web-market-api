@@ -27,7 +27,7 @@ export class UserGeneralRepository extends RepositoryLogger {
     @InjectRepository(AdminUserEntity)
     private readonly adminUserRepository: Repository<AdminUserEntity>,
   ) {
-    super();
+    super("User General");
   }
 
   private readonly select = userSelectProperty;
@@ -278,6 +278,21 @@ export class UserGeneralRepository extends RepositoryLogger {
         .leftJoin("Inquiry.Image", "InquiryImage")
         .leftJoin("Inquiry.Video", "InquiryVideo")
         .where("user.id = :id", { id })
+        .getOneOrFail();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async findCurrentAdminUser(): Promise<AdminUserEntity> {
+    try {
+      return await this.userRepository
+        .createQueryBuilder()
+        .select(["admin", "User", "Auth"])
+        .from(AdminUserEntity, "admin")
+        .innerJoin("admin.User", "User")
+        .innerJoin("User.Auth", "Auth")
         .getOneOrFail();
     } catch (err) {
       this.logger.error(err);

@@ -22,7 +22,7 @@ export class UserInsertRepository extends RepositoryLogger {
     @InjectRepository(AdminUserEntity)
     private readonly adminUserRepository: Repository<AdminUserEntity>,
   ) {
-    super();
+    super("User Insert");
   }
 
   async findLastCreatedUserProfile(): Promise<UserProfileEntity> {

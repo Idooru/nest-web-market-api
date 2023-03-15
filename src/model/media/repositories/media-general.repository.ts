@@ -28,7 +28,7 @@ export class MediaGeneralRepository extends RepositoryLogger {
     @InjectRepository(InquiryVideoEntity)
     private readonly inquiryVideoRepository: Repository<InquiryVideoEntity>,
   ) {
-    super();
+    super("Media General");
   }
 
   private readonly select = mediaSelectProperty;

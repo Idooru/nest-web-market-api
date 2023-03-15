@@ -2,7 +2,7 @@ import { ReviewEntity } from "../entities/review.entity";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { ModifyReviewDao } from "../dto/modify-review.dto";
+import { ModifyReviewDto } from "../dto/modify-review.dto";
 import { CreateReviewDao } from "../dto/create-review.dto";
 import { InternalServerErrorException } from "@nestjs/common/exceptions";
 import { reviewSelectProperty } from "src/common/config/repository-select-configs/review-select";
@@ -14,7 +14,7 @@ export class ReviewGeneralRepository extends RepositoryLogger {
     @InjectRepository(ReviewEntity)
     private readonly reviewRepository: Repository<ReviewEntity>,
   ) {
-    super();
+    super("Review General");
   }
 
   private readonly select = reviewSelectProperty;
@@ -48,13 +48,13 @@ export class ReviewGeneralRepository extends RepositoryLogger {
 
   async createReview(createReviewDao: CreateReviewDao): Promise<void> {
     try {
-      const { createReviewDto, client, product } = createReviewDao;
+      const { reviewBody, client, product } = createReviewDao;
       await this.reviewRepository
         .createQueryBuilder()
         .insert()
         .into(ReviewEntity)
         .values({
-          ...createReviewDto,
+          ...reviewBody,
           Product: product,
           reviewer: client,
         })
@@ -65,13 +65,13 @@ export class ReviewGeneralRepository extends RepositoryLogger {
     }
   }
 
-  async modifyReview(modifyReviewDao: ModifyReviewDao): Promise<void> {
+  async modifyReview(modifyReviewDto: ModifyReviewDto): Promise<void> {
     try {
-      const { modifyReviewDto, review } = modifyReviewDao;
+      const { review } = modifyReviewDto;
       await this.reviewRepository
         .createQueryBuilder()
         .update(ReviewEntity)
-        .set({ ...modifyReviewDto })
+        .set({ ...modifyReviewDto.reviewBody })
         .where("id = :id", { id: review.id })
         .execute();
     } catch (err) {

@@ -10,7 +10,7 @@ export class ProductVerifyRepository extends RepositoryLogger {
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
   ) {
-    super();
+    super("Product Verify");
   }
 
   async isExistProductId(id: string): Promise<boolean> {

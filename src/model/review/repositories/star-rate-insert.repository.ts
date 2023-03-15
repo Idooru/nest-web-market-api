@@ -4,16 +4,16 @@ import { RepositoryLogger } from "src/common/classes/repository.logger";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { Repository } from "typeorm";
 import { StarRateEntity } from "../entities/star-rate.entity";
-import { StarRateRepository } from "./star-rate-general.repository";
+import { StarRateGeneralRepository } from "./star-rate-general.repository";
 
 @Injectable()
 export class StarRateInsertRepository extends RepositoryLogger {
   constructor(
     @InjectRepository(StarRateEntity)
     private readonly starRateRepository: Repository<StarRateEntity>,
-    private readonly starRateGeneralRepository: StarRateRepository,
+    private readonly starRateGeneralRepository: StarRateGeneralRepository,
   ) {
-    super();
+    super("Star Rate Insert");
   }
 
   async insertTotalScoreOnStarRate(averageScore: number, starRateId: string) {

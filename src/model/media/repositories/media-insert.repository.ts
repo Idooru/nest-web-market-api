@@ -25,7 +25,7 @@ export class MediaInsertRepository extends RepositoryLogger {
     @InjectRepository(InquiryVideoEntity)
     private readonly inquiryVideoRepository: Repository<InquiryVideoEntity>,
   ) {
-    super();
+    super("Media Insert");
   }
 
   async insertProductIdOnProductImage(

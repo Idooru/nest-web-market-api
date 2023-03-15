@@ -16,7 +16,7 @@ export class UserVerifyRepository extends RepositoryLogger {
     @InjectRepository(UserAuthEntity)
     private readonly userAuthRepository: Repository<UserAuthEntity>,
   ) {
-    super();
+    super("User Verify");
   }
 
   async isExistUserId(userId: string): Promise<boolean> {

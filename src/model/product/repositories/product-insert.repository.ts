@@ -10,7 +10,7 @@ export class ProductInsertRepository extends RepositoryLogger {
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
   ) {
-    super();
+    super("Product Insert");
   }
 
   async findLastCreatedProduct(): Promise<ProductEntity> {

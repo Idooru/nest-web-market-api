@@ -10,7 +10,7 @@ export class ReviewVerifyRepository extends RepositoryLogger {
     @InjectRepository(ReviewEntity)
     private readonly reviewRepository: Repository<ReviewEntity>,
   ) {
-    super();
+    super("Review Verify");
   }
 
   async isExistReviewId(id: string): Promise<boolean> {

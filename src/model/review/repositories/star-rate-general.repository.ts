@@ -5,12 +5,12 @@ import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { RepositoryLogger } from "src/common/classes/repository.logger";
 
 @Injectable()
-export class StarRateRepository extends RepositoryLogger {
+export class StarRateGeneralRepository extends RepositoryLogger {
   constructor(
     @InjectRepository(StarRateEntity)
     private readonly starRateRepository: Repository<StarRateEntity>,
   ) {
-    super();
+    super("Star Rate");
   }
 
   async createStarRateSample(): Promise<StarRateEntity> {

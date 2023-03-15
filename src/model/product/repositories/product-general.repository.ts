@@ -19,7 +19,7 @@ export class ProductGeneralRepository extends RepositoryLogger {
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
   ) {
-    super();
+    super("Product General");
   }
 
   private readonly select = productSelectProperty;

@@ -11,7 +11,7 @@ export class ReviewInsertRepository extends RepositoryLogger {
     @InjectRepository(ReviewEntity)
     private readonly reviewRepository: Repository<ReviewEntity>,
   ) {
-    super();
+    super("Review Insert");
   }
 
   async findLastCreatedReview(): Promise<ReviewEntity> {
