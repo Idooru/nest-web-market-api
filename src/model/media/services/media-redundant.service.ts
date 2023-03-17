@@ -27,9 +27,9 @@ export class MediaRedundantService {
     )}/media/${mediaFileName}`.toLowerCase();
   }
 
-  deleteMediaFilesOnServerDisk(imageName: string, mediaPath: string) {
+  deleteMediaFilesOnServerDisk(mediaFileName: string, mediaPath: string) {
     fs.rmSync(
-      path.join(__dirname, `../../../../uploads/${mediaPath}/${imageName}`),
+      path.join(__dirname, `../../../../uploads/${mediaPath}/${mediaFileName}`),
     );
   }
 }
