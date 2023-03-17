@@ -11,6 +11,7 @@ import path from "path";
 import helmet from "helmet";
 
 class NestCoreConfig {
+  private readonly scheme = new ConfigService().get("APPLICATION_SCHEME");
   private readonly host = new ConfigService().get("APPLICATION_HOST");
   private readonly port = new ConfigService().get("APPLICATION_PORT");
   private readonly cookieSecret = new ConfigService().get("COOKIE_SECRET");
@@ -74,7 +75,7 @@ class NestCoreConfig {
   public async run() {
     await this.app.listen(this.port, () =>
       new Logger("NestApplication").log(
-        `Server is running at http://${this.host}:${this.port}`,
+        `Server is running at ${this.scheme}://${this.host}:${this.port}`,
       ),
     );
   }
