@@ -15,8 +15,8 @@ export class StarRateGeneralRepository extends RepositoryLogger {
 
   async createStarRateSample(): Promise<StarRateEntity> {
     try {
-      const StarRate = this.starRateRepository.create({});
-      return await this.starRateRepository.save(StarRate);
+      const starRate = this.starRateRepository.create({});
+      return await this.starRateRepository.save(starRate);
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException(err.message);
@@ -24,35 +24,35 @@ export class StarRateGeneralRepository extends RepositoryLogger {
   }
 
   async increaseStarRate(
-    StarRate: StarRateEntity,
+    starRate: StarRateEntity,
     scoreChosenByClient: number,
   ): Promise<void> {
     try {
       switch (scoreChosenByClient) {
         case 1:
-          ++StarRate.onePointCount;
-          StarRate.onePointSum += scoreChosenByClient;
-          await this.starRateRepository.save(StarRate);
+          ++starRate.onePointCount;
+          starRate.onePointSum += scoreChosenByClient;
+          await this.starRateRepository.save(starRate);
           break;
         case 2:
-          ++StarRate.twoPointCount;
-          StarRate.twoPointSum += scoreChosenByClient;
-          await this.starRateRepository.save(StarRate);
+          ++starRate.twoPointCount;
+          starRate.twoPointSum += scoreChosenByClient;
+          await this.starRateRepository.save(starRate);
           break;
         case 3:
-          ++StarRate.threePointCount;
-          StarRate.threePointSum += scoreChosenByClient;
-          await this.starRateRepository.save(StarRate);
+          ++starRate.threePointCount;
+          starRate.threePointSum += scoreChosenByClient;
+          await this.starRateRepository.save(starRate);
           break;
         case 4:
-          ++StarRate.fourPointCount;
-          StarRate.fourPointSum += scoreChosenByClient;
-          await this.starRateRepository.save(StarRate);
+          ++starRate.fourPointCount;
+          starRate.fourPointSum += scoreChosenByClient;
+          await this.starRateRepository.save(starRate);
           break;
         case 5:
-          ++StarRate.fivePointCount;
-          StarRate.fivePointSum += scoreChosenByClient;
-          await this.starRateRepository.save(StarRate);
+          ++starRate.fivePointCount;
+          starRate.fivePointSum += scoreChosenByClient;
+          await this.starRateRepository.save(starRate);
           break;
       }
     } catch (err) {
@@ -62,35 +62,35 @@ export class StarRateGeneralRepository extends RepositoryLogger {
   }
 
   async decreaseStarRate(
-    StarRate: StarRateEntity,
+    starRate: StarRateEntity,
     beforeScore: number,
   ): Promise<void> {
     try {
       switch (beforeScore) {
         case 1:
-          --StarRate.onePointCount;
-          StarRate.onePointSum -= beforeScore;
-          await this.starRateRepository.save(StarRate);
+          --starRate.onePointCount;
+          starRate.onePointSum -= beforeScore;
+          await this.starRateRepository.save(starRate);
           break;
         case 2:
-          --StarRate.twoPointCount;
-          StarRate.twoPointSum -= beforeScore;
-          await this.starRateRepository.save(StarRate);
+          --starRate.twoPointCount;
+          starRate.twoPointSum -= beforeScore;
+          await this.starRateRepository.save(starRate);
           break;
         case 3:
-          --StarRate.threePointCount;
-          StarRate.threePointSum -= beforeScore;
-          await this.starRateRepository.save(StarRate);
+          --starRate.threePointCount;
+          starRate.threePointSum -= beforeScore;
+          await this.starRateRepository.save(starRate);
           break;
         case 4:
-          --StarRate.fourPointCount;
-          StarRate.fourPointSum -= beforeScore;
-          await this.starRateRepository.save(StarRate);
+          --starRate.fourPointCount;
+          starRate.fourPointSum -= beforeScore;
+          await this.starRateRepository.save(starRate);
           break;
         case 5:
-          --StarRate.fivePointCount;
-          StarRate.fivePointSum -= beforeScore;
-          await this.starRateRepository.save(StarRate);
+          --starRate.fivePointCount;
+          starRate.fivePointSum -= beforeScore;
+          await this.starRateRepository.save(starRate);
           1;
           break;
       }
@@ -116,10 +116,10 @@ export class StarRateGeneralRepository extends RepositoryLogger {
 
   async insertTotalScoreOnStarRate(averageScore: number, starRateId: string) {
     try {
-      const StarRate = await this.findStarRateWithId(starRateId);
+      const starRate = await this.findStarRateWithId(starRateId);
 
-      StarRate.averageScore = averageScore;
-      await this.starRateRepository.save(StarRate);
+      starRate.averageScore = averageScore;
+      await this.starRateRepository.save(starRate);
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException(err.message);
