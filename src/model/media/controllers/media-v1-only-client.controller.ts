@@ -20,12 +20,13 @@ import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { JsonSendCookiesInterface } from "src/common/interceptors/general/interface/json-send-cookies.interface";
 import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
 import { JsonClearCookiesInterface } from "src/common/interceptors/general/interface/json-clear-cookies.interface";
-import { ReturnMediaDto } from "../dto/return-media.dto";
-import { ReceiveMediaDto } from "../dto/receive-media.dto";
+import { ResponseMediaDto } from "../dto/response-media.dto";
+import { RequestMediaDto } from "../dto/request-media.dto";
 import { MediaGeneralService } from "../services/media-general.service";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
-import { MediaRedundantService } from "../services/media-redundant.service";
+import { MediaAccessoryService } from "../services/media-accessory.service";
+import { MediaBundleService } from "../services/media-bundle.service";
 
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)
@@ -33,7 +34,8 @@ import { MediaRedundantService } from "../services/media-redundant.service";
 export class MediaVersionOneOnlyClientController {
   constructor(
     private readonly mediaGeneralService: MediaGeneralService,
-    private readonly mediaRedundantService: MediaRedundantService,
+    private readonly mediaAccessoryService: MediaAccessoryService,
+    private readonly mediaBundleService: MediaBundleService,
     private readonly mediaLoggerLibrary: MeidaLoggerLibrary,
   ) {
     MulterConfig.createFolder("image", "video");
@@ -51,15 +53,20 @@ export class MediaVersionOneOnlyClientController {
   async uploadReviewImage(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookiesInterface<ReturnMediaDto>> {
-    this.mediaRedundantService.isExistMediaFile("review image", files);
+  ): Promise<JsonSendCookiesInterface<ResponseMediaDto>> {
+    this.mediaAccessoryService.isExistMediaFile("review image", files);
     this.mediaLoggerLibrary.log("review images", null, files);
+
+    const urls = files.map((file) =>
+      this.mediaAccessoryService.setUrl(file.filename),
+    );
 
     await this.mediaGeneralService.uploadReviewImage(files, jwtPayload);
 
-    const cookieValues = this.mediaGeneralService.createMediaCookieValues(
+    const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
       mediaCookieKeys.review.image_url_cookie,
       files,
+      urls,
     );
 
     return {
@@ -82,15 +89,20 @@ export class MediaVersionOneOnlyClientController {
   async uploadReviewVideo(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookiesInterface<ReturnMediaDto>> {
-    this.mediaRedundantService.isExistMediaFile("review video", files);
+  ): Promise<JsonSendCookiesInterface<ResponseMediaDto>> {
+    this.mediaAccessoryService.isExistMediaFile("review video", files);
     this.mediaLoggerLibrary.log("review videos", null, files);
 
     await this.mediaGeneralService.uploadReviewVideo(files, jwtPayload);
 
-    const cookieValues = this.mediaGeneralService.createMediaCookieValues(
+    const urls = files.map((file) =>
+      this.mediaAccessoryService.setUrl(file.filename),
+    );
+
+    const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
       mediaCookieKeys.review.video_url_cookie,
       files,
+      urls,
     );
 
     return {
@@ -113,15 +125,20 @@ export class MediaVersionOneOnlyClientController {
   async uploadInquiryImage(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookiesInterface<ReturnMediaDto>> {
-    this.mediaRedundantService.isExistMediaFile("inquiry image", files);
+  ): Promise<JsonSendCookiesInterface<ResponseMediaDto>> {
+    this.mediaAccessoryService.isExistMediaFile("inquiry image", files);
     this.mediaLoggerLibrary.log("inquiry images", null, files);
 
     await this.mediaGeneralService.uploadInquiryImage(files, jwtPayload);
 
-    const cookieValues = this.mediaGeneralService.createMediaCookieValues(
+    const urls = files.map((file) =>
+      this.mediaAccessoryService.setUrl(file.filename),
+    );
+
+    const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
       mediaCookieKeys.inquiry.image_url_cookie,
       files,
+      urls,
     );
 
     return {
@@ -144,15 +161,20 @@ export class MediaVersionOneOnlyClientController {
   async uploadInquiryVideo(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookiesInterface<ReturnMediaDto>> {
-    this.mediaRedundantService.isExistMediaFile("inquiry video", files);
+  ): Promise<JsonSendCookiesInterface<ResponseMediaDto>> {
+    this.mediaAccessoryService.isExistMediaFile("inquiry video", files);
     this.mediaLoggerLibrary.log("inquiry videos", null, files);
 
     await this.mediaGeneralService.uploadInquiryVideo(files, jwtPayload);
 
-    const cookieValues = this.mediaGeneralService.createMediaCookieValues(
+    const urls = files.map((file) =>
+      this.mediaAccessoryService.setUrl(file.filename),
+    );
+
+    const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
       mediaCookieKeys.inquiry.video_url_cookie,
       files,
+      urls,
     );
 
     return {
@@ -167,9 +189,17 @@ export class MediaVersionOneOnlyClientController {
   @Delete("/review/image")
   async cancelImageUploadForReview(
     @MediaCookiesParser(mediaCookieKeys.review.image_url_cookie)
-    reviewImgCookies: ReceiveMediaDto[],
+    reviewImgCookies: RequestMediaDto[],
   ): Promise<JsonClearCookiesInterface> {
-    await this.mediaGeneralService.deleteReviewImages(reviewImgCookies);
+    await this.mediaGeneralService.deleteReviewImagesWithCookies(
+      reviewImgCookies,
+    );
+
+    await this.mediaBundleService.deleteMediaFile(
+      reviewImgCookies,
+      "image/review",
+    );
+
     const cookieKey = reviewImgCookies.map((cookie) => cookie.whatCookie);
 
     return {
@@ -183,9 +213,17 @@ export class MediaVersionOneOnlyClientController {
   @Delete("/review/video")
   async cancelVideoUploadForReview(
     @MediaCookiesParser(mediaCookieKeys.review.video_url_cookie)
-    reviewVdoCookies: ReceiveMediaDto[],
+    reviewVdoCookies: RequestMediaDto[],
   ): Promise<JsonClearCookiesInterface> {
-    await this.mediaGeneralService.deleteReviewVideos(reviewVdoCookies);
+    await this.mediaGeneralService.deleteReviewVideosWithCookies(
+      reviewVdoCookies,
+    );
+
+    await this.mediaBundleService.deleteMediaFile(
+      reviewVdoCookies,
+      "video/review",
+    );
+
     const cookieKey = reviewVdoCookies.map((cookie) => cookie.whatCookie);
 
     return {
@@ -199,9 +237,17 @@ export class MediaVersionOneOnlyClientController {
   @Delete("/inquiry/image")
   async cancelImageUploadForInquiry(
     @MediaCookiesParser(mediaCookieKeys.inquiry.image_url_cookie)
-    inquiryImgCookies: ReceiveMediaDto[],
+    inquiryImgCookies: RequestMediaDto[],
   ): Promise<JsonClearCookiesInterface> {
-    await this.mediaGeneralService.deleteInquiryImages(inquiryImgCookies);
+    await this.mediaGeneralService.deleteInquiryImagesWithCookies(
+      inquiryImgCookies,
+    );
+
+    await this.mediaBundleService.deleteMediaFile(
+      inquiryImgCookies,
+      "image/inquiry",
+    );
+
     const cookieKey = inquiryImgCookies.map((cookie) => cookie.whatCookie);
 
     return {
@@ -215,9 +261,17 @@ export class MediaVersionOneOnlyClientController {
   @Delete("/inquiry/video")
   async cancelVideoUploadForInquiry(
     @MediaCookiesParser(mediaCookieKeys.inquiry.video_url_cookie)
-    inquiryVdoCookies: ReceiveMediaDto[],
+    inquiryVdoCookies: RequestMediaDto[],
   ): Promise<JsonClearCookiesInterface> {
-    await this.mediaGeneralService.deleteInquiryVideos(inquiryVdoCookies);
+    await this.mediaGeneralService.deleteInquiryVideosWithCookies(
+      inquiryVdoCookies,
+    );
+
+    await this.mediaBundleService.deleteMediaFile(
+      inquiryVdoCookies,
+      "video/inquiry",
+    );
+
     const cookieKey = inquiryVdoCookies.map((cookie) => cookie.whatCookie);
 
     return {

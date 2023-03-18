@@ -9,7 +9,7 @@ import {
 import { MulterConfig } from "src/common/config/multer.config";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { ReceiveMediaDto } from "../dto/receive-media.dto";
+import { RequestMediaDto } from "../dto/request-media.dto";
 import { MeidaLoggerLibrary } from "src/common/lib/media-logger.library";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { mediaCookieKeys } from "../../../common/config/cookie-key-configs";
@@ -19,10 +19,10 @@ import { JsonSendCookieInterceptor } from "src/common/interceptors/general/json-
 import { JsonSendCookieInterface } from "src/common/interceptors/general/interface/json-send-cookie.interface";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/general/json-clear-cookie.interceptor";
 import { JsonClearCookieInterface } from "src/common/interceptors/general/interface/json-clear-cookie.interface";
-import { ReturnMediaDto } from "../dto/return-media.dto";
+import { ResponseMediaDto } from "../dto/response-media.dto";
 import { MediaGeneralService } from "../services/media-general.service";
 import { MediaCookieParser } from "src/common/decorators/media-cookie-parser.decorator";
-import { MediaRedundantService } from "../services/media-redundant.service";
+import { MediaAccessoryService } from "../services/media-accessory.service";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
@@ -30,7 +30,7 @@ import { MediaRedundantService } from "../services/media-redundant.service";
 export class MediaVersionOneOnlyAdminController {
   constructor(
     private readonly mediaGeneralService: MediaGeneralService,
-    private readonly mediaRedundantService: MediaRedundantService,
+    private readonly mediaAccessoryService: MediaAccessoryService,
     private readonly mediaLoggerLibrary: MeidaLoggerLibrary,
   ) {}
 
@@ -42,13 +42,13 @@ export class MediaVersionOneOnlyAdminController {
   async uploadProductImage(
     @UploadedFile() file: Express.Multer.File,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookieInterface<ReturnMediaDto>> {
-    this.mediaRedundantService.isExistMediaFile("product image", file);
+  ): Promise<JsonSendCookieInterface<ResponseMediaDto>> {
+    this.mediaAccessoryService.isExistMediaFile("product image", file);
     this.mediaLoggerLibrary.log("product image", file, null);
 
     await this.mediaGeneralService.uploadProductImage(file, jwtPayload);
 
-    const cookieValue = this.mediaGeneralService.createMediaCookieValue(
+    const cookieValue = this.mediaAccessoryService.createMediaCookieValue(
       mediaCookieKeys.product.image_url_cookie,
       file,
     );
@@ -65,9 +65,16 @@ export class MediaVersionOneOnlyAdminController {
   @Delete("/product/image")
   async cancelImageUploadForProduct(
     @MediaCookieParser(mediaCookieKeys.product.image_url_cookie)
-    productImgCookie: ReceiveMediaDto,
+    productImgCookie: RequestMediaDto,
   ): Promise<JsonClearCookieInterface> {
-    await this.mediaGeneralService.deleteProductImage(productImgCookie);
+    await this.mediaGeneralService.deleteProductImageWithCookies(
+      productImgCookie,
+    );
+
+    this.mediaAccessoryService.deleteMediaFilesOnServerDisk(
+      productImgCookie.fileName,
+      "image/product",
+    );
 
     return {
       statusCode: 200,
