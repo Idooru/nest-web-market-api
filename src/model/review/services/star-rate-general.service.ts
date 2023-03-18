@@ -1,48 +1,45 @@
 import { Injectable } from "@nestjs/common";
-import { StarRateRepository } from "../repositories/star-rate-general.repository";
+import { StarRateGeneralRepository } from "../repositories/star-rate-general.repository";
 import { StarRateEntity } from "../entities/star-rate.entity";
 import { ReviewEntity } from "../entities/review.entity";
 import { ProductGeneralRepository } from "src/model/product/repositories/product-general.repository";
-import { CreateReviewDto } from "../dto/create-review.dto";
-import { ModifyReviewDto } from "../dto/modify-review.dto";
+import { ReviewBody } from "../dto/review-body";
 
 @Injectable()
-export class StarRateService {
+export class StarRateGeneralService {
   constructor(
     private readonly productGeneralRepository: ProductGeneralRepository,
-    private readonly starRateRepository: StarRateRepository,
+    private readonly starRateGeneralRepository: StarRateGeneralRepository,
   ) {}
 
-  async starRating(
-    createReviewDto: CreateReviewDto,
-    productId: string,
-  ): Promise<void> {
-    const { scoreChosenByClient } = createReviewDto;
+  async starRating(reviewBody: ReviewBody, productId: string): Promise<void> {
+    const { scoreChosenByClient } = reviewBody;
     const product =
       await this.productGeneralRepository.findProductOneJustNeedStarRate(
         productId,
       );
-    const starRate = await this.starRateRepository.findStarRateWithId(
+    const starRate = await this.starRateGeneralRepository.findStarRateWithId(
       product.StarRate.id,
     );
 
-    await this.starRateRepository.increaseStarRate(
+    await this.starRateGeneralRepository.increaseStarRate(
       starRate,
       scoreChosenByClient,
     );
-    await this.calculateRating(starRate);
+    await this.calculateStarRate(starRate);
   }
 
   async modifyStarRate(
-    modifyReviewDto: ModifyReviewDto,
+    reviewBody: ReviewBody,
     productId: string,
     review: ReviewEntity,
   ): Promise<void> {
-    const { scoreChosenByClient } = modifyReviewDto;
-    const product = await this.productGeneralRepository.findProductOneById(
-      productId,
-    );
-    const StarRate = await this.starRateRepository.findStarRateWithId(
+    const { scoreChosenByClient } = reviewBody;
+    const product =
+      await this.productGeneralRepository.findProductOneJustNeedStarRate(
+        productId,
+      );
+    const starRate = await this.starRateGeneralRepository.findStarRateWithId(
       product.StarRate.id,
     );
 
@@ -52,44 +49,53 @@ export class StarRateService {
     }
 
     await Promise.all([
-      this.starRateRepository.decreaseStarRate(StarRate, beforeScore),
-      this.starRateRepository.increaseStarRate(StarRate, scoreChosenByClient),
+      this.starRateGeneralRepository.decreaseStarRate(starRate, beforeScore),
+      this.starRateGeneralRepository.increaseStarRate(
+        starRate,
+        scoreChosenByClient,
+      ),
     ]);
 
-    await this.calculateRating(StarRate);
+    await this.calculateStarRate(starRate);
   }
 
-  async calculateRating(StarRate: StarRateEntity): Promise<void> {
-    const StarRateProperty = Object.entries(StarRate);
-    const pointSum = [];
-    const pointCount = [];
-
-    for (const idx of StarRateProperty) {
-      if (idx[0].includes("PointSum")) {
-        pointSum.push(idx);
-      }
-
-      if (idx[0].includes("PointCount")) {
-        pointCount.push(idx);
-      }
-
-      continue;
-    }
-
-    let countSum = 0;
-    let scoreSum = 0;
-
-    for (let i = 0; i < pointSum.length; i++) {
-      countSum += pointCount[i][1];
-      scoreSum += pointSum[i][1];
-    }
-
-    const averageScore = Number((scoreSum / countSum).toFixed(2));
-    const StarRateId = StarRate.id;
-
-    await this.starRateRepository.insertTotalScoreOnStarRate(
-      averageScore,
-      StarRateId,
+  async decreaseStarRate(review: ReviewEntity): Promise<void> {
+    const product =
+      await this.productGeneralRepository.findProductOneJustNeedStarRate(
+        review.Product.id,
+      );
+    const starRate = await this.starRateGeneralRepository.findStarRateWithId(
+      product.StarRate.id,
     );
+
+    const beforeScore = review.scoreChosenByClient;
+
+    await this.starRateGeneralRepository.decreaseStarRate(
+      starRate,
+      beforeScore,
+    );
+
+    await this.calculateStarRate(starRate);
+  }
+
+  async calculateStarRate(starRate: StarRateEntity): Promise<void> {
+    const starRateProperty = Object.entries(starRate);
+
+    const sum: number = starRateProperty
+      .filter((prop) => prop[0].includes("PointSum"))
+      .map((arr) => arr[1])
+      .reduce((acc, cur) => acc + cur, 0);
+
+    const count: number = starRateProperty
+      .filter((prop) => prop[0].includes("PointCount"))
+      .map((arr) => arr[1])
+      .reduce((acc, cur) => acc + cur, 0);
+
+    const number = Number((sum / count).toFixed(2));
+    const averageScore = isNaN(number) ? 0 : number;
+
+    starRate.averageScore = averageScore;
+
+    await this.starRateGeneralRepository.renewTotalScore(starRate);
   }
 }

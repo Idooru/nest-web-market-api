@@ -16,7 +16,7 @@ export class StarRateInsertRepository extends RepositoryLogger {
     super("Star Rate Insert");
   }
 
-  async insertTotalScoreOnStarRate(averageScore: number, starRateId: string) {
+  async renewTotalScore(averageScore: number, starRateId: string) {
     try {
       const StarRate = await this.starRateGeneralRepository.findStarRateWithId(
         starRateId,

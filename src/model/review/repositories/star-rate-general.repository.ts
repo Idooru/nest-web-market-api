@@ -114,12 +114,14 @@ export class StarRateGeneralRepository extends RepositoryLogger {
     }
   }
 
-  async insertTotalScoreOnStarRate(averageScore: number, starRateId: string) {
+  async renewTotalScore(starRate: StarRateEntity): Promise<void> {
     try {
-      const starRate = await this.findStarRateWithId(starRateId);
-
-      starRate.averageScore = averageScore;
-      await this.starRateRepository.save(starRate);
+      await this.starRateRepository
+        .createQueryBuilder()
+        .update()
+        .set({ ...starRate })
+        .where("id = :id", { id: starRate.id })
+        .execute();
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException(err.message);
