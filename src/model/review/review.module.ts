@@ -6,8 +6,8 @@ import { ReviewEntity } from "./entities/review.entity";
 import { UserModule } from "../user/user.module";
 import { ReviewGeneralRepository } from "./repositories/review-general.repository";
 import { StarRateEntity } from "./entities/star-rate.entity";
-import { StarRateRepository } from "./repositories/star-rate-general.repository";
-import { StarRateService } from "./services/star-rate-general.service";
+import { StarRateGeneralRepository } from "./repositories/star-rate-general.repository";
+import { StarRateGeneralService } from "./services/star-rate-general.service";
 import { LibraryModule } from "src/common/lib/library.module";
 import { JwtModule } from "@nestjs/jwt";
 import { ReviewVersionOneVerify } from "./controllers/review-v1-verify.controller";
@@ -18,7 +18,8 @@ import { ReviewVersionOneOnlyAdminController } from "./controllers/review-v1-onl
 import { ReviewVersionOneOnlyClientController } from "./controllers/review-v1-only-client.controller";
 import { StarRateInsertRepository } from "./repositories/star-rate-insert.repository";
 import { ReviewInsertRepository } from "./repositories/review-insert.repository";
-import { ReviewRedundantService } from "./services/review-redundant.service";
+import { ReviewAccessoryService } from "./services/review-accessory.service";
+import { ReviewBundleService } from "./services/review-bundle.service";
 
 @Module({
   imports: [
@@ -38,10 +39,11 @@ import { ReviewRedundantService } from "./services/review-redundant.service";
     ReviewGeneralService,
     ReviewGeneralRepository,
     ReviewVerifyService,
-    ReviewRedundantService,
+    ReviewBundleService,
+    ReviewAccessoryService,
     ReviewVerifyRepository,
-    StarRateService,
-    StarRateRepository,
+    StarRateGeneralService,
+    StarRateGeneralRepository,
     ReviewInsertRepository,
     StarRateInsertRepository,
   ],
@@ -49,9 +51,10 @@ import { ReviewRedundantService } from "./services/review-redundant.service";
     ReviewGeneralService,
     ReviewGeneralRepository,
     ReviewVerifyService,
+    ReviewBundleService,
     ReviewVerifyRepository,
-    StarRateService,
-    StarRateRepository,
+    StarRateGeneralService,
+    StarRateGeneralRepository,
     ReviewInsertRepository,
     StarRateInsertRepository,
   ],
