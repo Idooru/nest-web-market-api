@@ -25,9 +25,9 @@ import { JsonClearCookieInterceptor } from "src/common/interceptors/general/json
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ReceiveMediaDto } from "src/model/media/dto/receive-media.dto";
-import { CreateProductDto } from "../../dto/create_product.dto";
-import { ModifyProductDto } from "../../dto/modify_product.dto";
-import { ReturnProductsDto } from "../../dto/return_product.dto";
+import { CreateProductDto } from "../../dto/create-product.dto";
+import { ModifyProductDto } from "../../dto/modify-product.dto";
+import { RequestProductForAdminDto } from "../../dto/request-product-for-admin.dto";
 import { ProductEntity } from "../../entities/product.entity";
 import { ProductGeneralService } from "../../services/product-general.service";
 
@@ -43,7 +43,7 @@ export class ProductVersionOneOnlyAdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/all-id")
   async findProductsAllId(): Promise<
-    JsonGeneralInterface<ReturnProductsDto[]>
+    JsonGeneralInterface<RequestProductForAdminDto[]>
   > {
     const products = await this.productGeneralService.findProductsAllId();
 
