@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-
+import { ResponseMediaDto } from "../dto/response-media.dto";
 import * as fs from "fs";
 import * as path from "path";
 
 @Injectable()
-export class MediaRedundantService {
+export class MediaAccessoryService {
   constructor(private readonly configService: ConfigService) {}
 
   isExistMediaFile(
@@ -20,11 +20,34 @@ export class MediaRedundantService {
   }
 
   setUrl(mediaFileName: string): string {
-    return `http://${this.configService.get(
-      "APPLICATION_HOST",
-    )}:${this.configService.get(
+    return `${this.configService.get(
+      "APPLICATION_SCHEME",
+    )}://${this.configService.get("APPLICATION_HOST")}:${this.configService.get(
       "APPLICATION_PORT",
     )}/media/${mediaFileName}`.toLowerCase();
+  }
+
+  createMediaCookieValue(
+    cookieKey: string,
+    file: Express.Multer.File,
+  ): ResponseMediaDto {
+    return {
+      whatCookie: cookieKey,
+      url: this.setUrl(file.filename),
+      fileName: file.filename,
+    };
+  }
+
+  createMediaCookieValues(
+    cookieKey: string,
+    files: Express.Multer.File[],
+    urls: string[],
+  ): ResponseMediaDto[] {
+    return files.map((file, idx) => ({
+      whatCookie: cookieKey,
+      url: urls[idx],
+      fileName: file.filename,
+    }));
   }
 
   deleteMediaFilesOnServerDisk(mediaFileName: string, mediaPath: string) {

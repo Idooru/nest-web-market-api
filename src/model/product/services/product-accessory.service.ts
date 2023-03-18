@@ -1,12 +1,12 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { ReceiveMediaDto } from "src/model/media/dto/receive-media.dto";
+import { RequestMediaDto } from "src/model/media/dto/request-media.dto";
 import { ProductImageEntity } from "src/model/media/entities/product.image.entity";
 import { MediaGeneralRepository } from "src/model/media/repositories/media-general.repository";
 import { ProductEntity } from "../entities/product.entity";
 import { ProductGeneralRepository } from "../repositories/product-general.repository";
 
 @Injectable()
-export class ProductRedundantService {
+export class ProductAccessoryService {
   constructor(
     private readonly productGeneralRepository: ProductGeneralRepository,
     private readonly mediaGeneralRepository: MediaGeneralRepository,
@@ -20,7 +20,7 @@ export class ProductRedundantService {
 
   async findProductAndImageForModify(
     id: string,
-    imageCookie: ReceiveMediaDto,
+    imageCookie: RequestMediaDto,
   ): Promise<[ProductEntity, ProductImageEntity, ProductImageEntity]> {
     return await Promise.all([
       this.productGeneralRepository.findProductOneById(id),
