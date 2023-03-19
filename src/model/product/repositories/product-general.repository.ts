@@ -3,8 +3,8 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from "@nestjs/common";
-import { ModifyProductDto } from "../dto/modify_product.dto";
-import { CreateProductDto } from "../dto/create_product.dto";
+import { ModifyProductDto } from "../dto/modify-product.dto";
+import { CreateProductDto } from "../dto/create-product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
