@@ -1,48 +1,48 @@
-import { StarRateRepository } from "../../review/repositories/star-rate-general.repository";
+import { StarRateGeneralRepository } from "../../review/repositories/star-rate-general.repository";
 import { ProductEntity } from "../entities/product.entity";
 import { ProductGeneralRepository } from "../repositories/product-general.repository";
 import { Injectable } from "@nestjs/common";
-import { CreateProductDto } from "../dto/create_product.dto";
-import { ModifyProductDto } from "../dto/modify_product.dto";
-import { ReceiveMediaDto } from "src/model/media/dto/receive-media.dto";
+import { CreateProductDto } from "../dto/create-product.dto";
+import { ModifyProductDto } from "../dto/modify-product.dto";
+import { RequestMediaDto } from "src/model/media/dto/request-media.dto";
 import { MediaGeneralRepository } from "src/model/media/repositories/media-general.repository";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
 import { MediaInsertRepository } from "src/model/media/repositories/media-insert.repository";
 import { StarRateInsertRepository } from "src/model/review/repositories/star-rate-insert.repository";
 import { ProductInsertRepository } from "../repositories/product-insert.repository";
-import { ProductRedundantService } from "./product-redundant.service";
+import { ProductAccessoryService } from "./product-accessory.service";
 
 @Injectable()
 export class ProductGeneralService {
   constructor(
     private readonly productGeneralRepository: ProductGeneralRepository,
     private readonly mediaGeneralRepository: MediaGeneralRepository,
-    private readonly starRateRepository: StarRateRepository,
+    private readonly starRateRepository: StarRateGeneralRepository,
     private readonly userGeneralRepository: UserGeneralRepository,
     private readonly productInsertRepository: ProductInsertRepository,
     private readonly mediaInsertRepository: MediaInsertRepository,
     private readonly starRateInsertRepository: StarRateInsertRepository,
-    private readonly productRedundantService: ProductRedundantService,
+    private readonly productAccessoryService: ProductAccessoryService,
   ) {}
 
   async findProductsAllId(): Promise<ProductEntity[]> {
     const founds = await this.productGeneralRepository.findProductsAllId();
-    this.productRedundantService.isExistProducts(founds);
+    this.productAccessoryService.isExistProducts(founds);
     return founds;
   }
 
   async findAllProductsFromLatest(): Promise<ProductEntity[]> {
     const founds =
       await this.productGeneralRepository.findAllProductsFromLatest();
-    this.productRedundantService.isExistProducts(founds);
+    this.productAccessoryService.isExistProducts(founds);
     return founds;
   }
 
   async findAllProductsFromOldest(): Promise<ProductEntity[]> {
     const founds =
       await this.productGeneralRepository.findAllProductsFromOldest();
-    this.productRedundantService.isExistProducts(founds);
+    this.productAccessoryService.isExistProducts(founds);
     return founds;
   }
 
@@ -56,7 +56,7 @@ export class ProductGeneralService {
 
   async createProduct(
     createProductDto: CreateProductDto,
-    imageCookie: ReceiveMediaDto,
+    imageCookie: RequestMediaDto,
     jwtPayload: JwtAccessTokenPayload,
   ): Promise<void> {
     const [image, StarRate, admin] = await Promise.all([
@@ -81,10 +81,10 @@ export class ProductGeneralService {
   async modifyProduct(
     id: string,
     modifyProductDto: ModifyProductDto,
-    imageCookie: ReceiveMediaDto,
+    imageCookie: RequestMediaDto,
   ): Promise<void> {
     const [product, newImage, evenImage] =
-      await this.productRedundantService.findProductAndImageForModify(
+      await this.productAccessoryService.findProductAndImageForModify(
         id,
         imageCookie,
       );
@@ -99,9 +99,9 @@ export class ProductGeneralService {
     ]);
   }
 
-  async modifyProductImage(id: string, imageCookie: ReceiveMediaDto) {
+  async modifyProductImage(id: string, imageCookie: RequestMediaDto) {
     const [product, newImage, evenImage] =
-      await this.productRedundantService.findProductAndImageForModify(
+      await this.productAccessoryService.findProductAndImageForModify(
         id,
         imageCookie,
       );
