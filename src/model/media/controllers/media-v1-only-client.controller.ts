@@ -61,7 +61,7 @@ export class MediaVersionOneOnlyClientController {
       this.mediaAccessoryService.setUrl(file.filename),
     );
 
-    await this.mediaGeneralService.uploadReviewImage(files, jwtPayload);
+    await this.mediaGeneralService.uploadReviewImage(files, jwtPayload, urls);
 
     const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
       mediaCookieKeys.review.image_url_cookie,
@@ -93,11 +93,11 @@ export class MediaVersionOneOnlyClientController {
     this.mediaAccessoryService.isExistMediaFile("review video", files);
     this.mediaLoggerLibrary.log("review videos", null, files);
 
-    await this.mediaGeneralService.uploadReviewVideo(files, jwtPayload);
-
     const urls = files.map((file) =>
       this.mediaAccessoryService.setUrl(file.filename),
     );
+
+    await this.mediaGeneralService.uploadReviewVideo(files, jwtPayload, urls);
 
     const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
       mediaCookieKeys.review.video_url_cookie,
@@ -129,11 +129,11 @@ export class MediaVersionOneOnlyClientController {
     this.mediaAccessoryService.isExistMediaFile("inquiry image", files);
     this.mediaLoggerLibrary.log("inquiry images", null, files);
 
-    await this.mediaGeneralService.uploadInquiryImage(files, jwtPayload);
-
     const urls = files.map((file) =>
       this.mediaAccessoryService.setUrl(file.filename),
     );
+
+    await this.mediaGeneralService.uploadInquiryImage(files, jwtPayload, urls);
 
     const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
       mediaCookieKeys.inquiry.image_url_cookie,
@@ -165,11 +165,11 @@ export class MediaVersionOneOnlyClientController {
     this.mediaAccessoryService.isExistMediaFile("inquiry video", files);
     this.mediaLoggerLibrary.log("inquiry videos", null, files);
 
-    await this.mediaGeneralService.uploadInquiryVideo(files, jwtPayload);
-
     const urls = files.map((file) =>
       this.mediaAccessoryService.setUrl(file.filename),
     );
+
+    await this.mediaGeneralService.uploadInquiryVideo(files, jwtPayload, urls);
 
     const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
       mediaCookieKeys.inquiry.video_url_cookie,
