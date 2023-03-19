@@ -48,13 +48,13 @@ export class ReviewGeneralRepository extends RepositoryLogger {
 
   async createReview(createReviewDao: CreateReviewDao): Promise<void> {
     try {
-      const { reviewBody, client, product } = createReviewDao;
+      const { reviewRequestDto, client, product } = createReviewDao;
       await this.reviewRepository
         .createQueryBuilder()
         .insert()
         .into(ReviewEntity)
         .values({
-          ...reviewBody,
+          ...reviewRequestDto,
           Product: product,
           reviewer: client,
         })
@@ -67,12 +67,15 @@ export class ReviewGeneralRepository extends RepositoryLogger {
 
   async modifyReview(modifyReviewDto: ModifyReviewDto): Promise<void> {
     try {
-      const { review } = modifyReviewDto;
+      const { beforeReview, reviewRequestDto } = modifyReviewDto;
       await this.reviewRepository
         .createQueryBuilder()
         .update(ReviewEntity)
-        .set({ ...modifyReviewDto.reviewBody })
-        .where("id = :id", { id: review.id })
+        .set({
+          reviews: reviewRequestDto.reviews,
+          scoreChosenByClient: reviewRequestDto.scoreChosenByClient,
+        })
+        .where("id = :id", { id: beforeReview.id })
         .execute();
     } catch (err) {
       this.logger.error(err);
