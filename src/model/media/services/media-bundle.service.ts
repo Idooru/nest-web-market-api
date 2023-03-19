@@ -8,12 +8,12 @@ export class MediaBundleService {
 
   async deleteMediaFile(mediaCookies: RequestMediaDto[], mediaPath: string) {
     if (mediaCookies.length >= 2) {
-      for (const cookie of mediaCookies) {
+      mediaCookies.forEach((cookie) => {
         this.mediaAccessoryService.deleteMediaFilesOnServerDisk(
           cookie.fileName,
           mediaPath,
         );
-      }
+      });
     } else {
       this.mediaAccessoryService.deleteMediaFilesOnServerDisk(
         mediaCookies[0].fileName,

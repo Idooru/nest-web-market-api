@@ -46,177 +46,209 @@ export class ReviewAccessoryService {
 
   async pushMoreThenTwoReviewImageInDto(
     reviewImgCookies: RequestMediaDto[],
-    reviewBody: ReviewRequestDto,
+    reviewRequestDto: ReviewRequestDto,
   ): Promise<void> {
-    for (const reviewImgCookie of reviewImgCookies) {
+    reviewImgCookies.forEach(async (reviewImgCookie) => {
       const image = await this.mediaGeneralRepository.findReviewImageWithUrl(
         reviewImgCookie.url,
       );
-      reviewBody.Image.push(image);
-    }
+      reviewRequestDto.Image = [...reviewRequestDto.Image, image];
+    });
   }
 
   async pushOneReviewImageInDto(
     reviewImgCookies: RequestMediaDto[],
-    reviewDto: ReviewRequestDto,
+    reviewRequestDto: ReviewRequestDto,
   ): Promise<void> {
     const image = await this.mediaGeneralRepository.findReviewImageWithUrl(
       reviewImgCookies[0].url,
     );
-    reviewDto.Image.push(image);
+    reviewRequestDto.Image = [...reviewRequestDto.Image, image];
   }
 
   async pushMoreThenTwoReviewVideoInDto(
     reviewVdoCookies: RequestMediaDto[],
-    reviewDto: ReviewRequestDto,
+    reviewRequestDto: ReviewRequestDto,
   ): Promise<void> {
-    for (const reviewVdoCookie of reviewVdoCookies) {
+    reviewVdoCookies.forEach(async (reviewVdoCookie) => {
       const video = await this.mediaGeneralRepository.findReviewVideoWithUrl(
         reviewVdoCookie.url,
       );
-      reviewDto.Video.push(video);
-    }
+      reviewRequestDto.Video = [...reviewRequestDto.Video, video];
+    });
   }
 
   async pushOneReviewVideoInDto(
     reviewVdoCookies: RequestMediaDto[],
-    reviewDto: ReviewRequestDto,
+    reviewRequestDto: ReviewRequestDto,
   ): Promise<void> {
     const video = await this.mediaGeneralRepository.findReviewVideoWithUrl(
       reviewVdoCookies[0].url,
     );
-    reviewDto.Video.push(video);
+    reviewRequestDto.Video = [...reviewRequestDto.Video, video];
   }
 
   async insertReviewIdOnMoreThenTwoReviewImage(
-    images: ReviewImageEntity[],
+    reviewImages: ReviewImageEntity[],
     review: ReviewEntity,
   ): Promise<void> {
-    for (const image of images) {
+    reviewImages.forEach(async (reviewImage) => {
       await this.mediaInsertRepository.insertReviewIdOnReviewImage(
-        image,
+        reviewImage,
         review,
       );
-    }
+    });
   }
 
   async insertReviewIdOnOneReviewImage(
-    image: ReviewImageEntity,
+    reviewImage: ReviewImageEntity,
     review: ReviewEntity,
   ): Promise<void> {
-    await this.mediaInsertRepository.insertReviewIdOnReviewImage(image, review);
+    await this.mediaInsertRepository.insertReviewIdOnReviewImage(
+      reviewImage,
+      review,
+    );
   }
 
   async insertReviewIdOnMoreThenTwoReviewVideo(
-    videos: ReviewVideoEntity[],
+    reviewVideos: ReviewVideoEntity[],
     review: ReviewEntity,
   ): Promise<void> {
-    for (const video of videos) {
+    reviewVideos.forEach(async (reviewVideo) => {
       await this.mediaInsertRepository.insertReviewIdOnReviewVideo(
-        video,
+        reviewVideo,
         review,
       );
-    }
+    });
   }
 
   async insertReviewIdOnOneReviewVideo(
-    video: ReviewVideoEntity,
+    reviewVideo: ReviewVideoEntity,
     review: ReviewEntity,
   ): Promise<void> {
-    await this.mediaInsertRepository.insertReviewIdOnReviewVideo(video, review);
+    await this.mediaInsertRepository.insertReviewIdOnReviewVideo(
+      reviewVideo,
+      review,
+    );
   }
 
-  async deleteMoreThenTwoReviewImage(beforeImages: ReviewImageEntity[]) {
-    for (const beforeImage of beforeImages) {
-      await this.mediaGeneralRepository.deleteReviewImageWithId(beforeImage.id);
-    }
+  async deleteMoreThenTwoReviewImage(beforeReviewImages: ReviewImageEntity[]) {
+    beforeReviewImages.forEach(async (beforeReviewImage) => {
+      await this.mediaGeneralRepository.deleteReviewImageWithId(
+        beforeReviewImage.id,
+      );
+    });
   }
 
-  async deleteOneReviewImage(beforeImage: ReviewImageEntity) {
-    await this.mediaGeneralRepository.deleteReviewImageWithId(beforeImage.id);
+  async deleteOneReviewImage(beforeReviewImage: ReviewImageEntity) {
+    await this.mediaGeneralRepository.deleteReviewImageWithId(
+      beforeReviewImage.id,
+    );
   }
 
-  async deleteMoreThenTwoReviewVideo(beforeVideos: ReviewVideoEntity[]) {
-    for (const beforeVideo of beforeVideos) {
-      await this.mediaGeneralRepository.deleteReviewVideoWithId(beforeVideo.id);
-    }
+  async deleteMoreThenTwoReviewVideo(beforeReviewVideos: ReviewVideoEntity[]) {
+    beforeReviewVideos.forEach(async (beforeReviewVideo) => {
+      await this.mediaGeneralRepository.deleteReviewVideoWithId(
+        beforeReviewVideo.id,
+      );
+    });
   }
 
-  async deleteOneReviewVideo(beforeVideo: ReviewVideoEntity) {
-    await this.mediaGeneralRepository.deleteReviewVideoWithId(beforeVideo.id);
+  async deleteOneReviewVideo(beforeReviewVideo: ReviewVideoEntity) {
+    await this.mediaGeneralRepository.deleteReviewVideoWithId(
+      beforeReviewVideo.id,
+    );
   }
 
   async distinguishReviewImagesCountForPush(
     reviewImgCookies: RequestMediaDto[],
-    reviewBody: ReviewRequestDto,
+    reviewRequestDto: ReviewRequestDto,
   ): Promise<void> {
     if (reviewImgCookies.length >= 2) {
-      await this.pushMoreThenTwoReviewImageInDto(reviewImgCookies, reviewBody);
+      await this.pushMoreThenTwoReviewImageInDto(
+        reviewImgCookies,
+        reviewRequestDto,
+      );
     } else {
-      await this.pushOneReviewImageInDto(reviewImgCookies, reviewBody);
+      await this.pushOneReviewImageInDto(reviewImgCookies, reviewRequestDto);
     }
   }
 
   async distinguishReviewVideosCountForPush(
     reviewVdoCookies: RequestMediaDto[],
-    reviewBody: ReviewRequestDto,
+    reviewRequestDto: ReviewRequestDto,
   ): Promise<void> {
     if (reviewVdoCookies.length >= 2) {
-      await this.pushMoreThenTwoReviewVideoInDto(reviewVdoCookies, reviewBody);
+      await this.pushMoreThenTwoReviewVideoInDto(
+        reviewVdoCookies,
+        reviewRequestDto,
+      );
     } else {
-      await this.pushOneReviewVideoInDto(reviewVdoCookies, reviewBody);
+      await this.pushOneReviewVideoInDto(reviewVdoCookies, reviewRequestDto);
     }
   }
 
   async distinguishReviewImagesCountForInsert(
     reviewImgCookies: RequestMediaDto[],
-    reviewBody: ReviewRequestDto,
+    reviewRequestDto: ReviewRequestDto,
     review: ReviewEntity,
   ): Promise<void> {
     if (reviewImgCookies.length >= 2) {
       await this.insertReviewIdOnMoreThenTwoReviewImage(
-        reviewBody.Image,
+        reviewRequestDto.Image,
         review,
       );
     } else {
-      await this.insertReviewIdOnOneReviewImage(reviewBody.Image[0], review);
+      await this.insertReviewIdOnOneReviewImage(
+        reviewRequestDto.Image[0],
+        review,
+      );
     }
   }
 
   async distinguishReviewVideosCountForInsert(
     reviewVdoCookies: RequestMediaDto[],
-    reviewBody: ReviewRequestDto,
+    reviewRequestDto: ReviewRequestDto,
     review: ReviewEntity,
   ): Promise<void> {
     if (reviewVdoCookies.length >= 2) {
       await this.insertReviewIdOnMoreThenTwoReviewVideo(
-        reviewBody.Video,
+        reviewRequestDto.Video,
         review,
       );
     } else {
-      await this.insertReviewIdOnOneReviewVideo(reviewBody.Video[0], review);
+      await this.insertReviewIdOnOneReviewVideo(
+        reviewRequestDto.Video[0],
+        review,
+      );
     }
   }
 
   async distinguishReviewImagesCountForModify(
     reviewImgCookies: RequestMediaDto[],
-    reviewBody: ReviewRequestDto,
+    reviewRequestDto: ReviewRequestDto,
     review: ReviewEntity,
   ): Promise<void> {
     if (reviewImgCookies.length >= 2) {
       const beforeImages =
         await this.mediaGeneralRepository.findBeforeReviewImages(review.id);
-      await this.pushMoreThenTwoReviewImageInDto(reviewImgCookies, reviewBody);
+      await this.pushMoreThenTwoReviewImageInDto(
+        reviewImgCookies,
+        reviewRequestDto,
+      );
       await Promise.all([
-        this.insertReviewIdOnMoreThenTwoReviewImage(reviewBody.Image, review),
+        this.insertReviewIdOnMoreThenTwoReviewImage(
+          reviewRequestDto.Image,
+          review,
+        ),
         this.deleteMoreThenTwoReviewImage(beforeImages),
       ]);
     } else {
       const beforeImage =
         await this.mediaGeneralRepository.findBeforeReviewImage(review.id);
-      await this.pushOneReviewImageInDto(reviewImgCookies, reviewBody);
+      await this.pushOneReviewImageInDto(reviewImgCookies, reviewRequestDto);
       await Promise.all([
-        this.insertReviewIdOnOneReviewImage(reviewBody.Image[0], review),
+        this.insertReviewIdOnOneReviewImage(reviewRequestDto.Image[0], review),
         this.deleteOneReviewImage(beforeImage),
       ]);
     }
@@ -224,23 +256,29 @@ export class ReviewAccessoryService {
 
   async distinguishReviewVideosCountForModify(
     reviewVdoCookies: RequestMediaDto[],
-    reviewBody: ReviewRequestDto,
+    reviewRequestDto: ReviewRequestDto,
     review: ReviewEntity,
   ): Promise<void> {
     if (reviewVdoCookies.length >= 2) {
       const beforeVideos =
         await this.mediaGeneralRepository.findBeforeReviewVideos(review.id);
-      await this.pushMoreThenTwoReviewVideoInDto(reviewVdoCookies, reviewBody);
+      await this.pushMoreThenTwoReviewVideoInDto(
+        reviewVdoCookies,
+        reviewRequestDto,
+      );
       await Promise.all([
-        this.insertReviewIdOnMoreThenTwoReviewVideo(reviewBody.Video, review),
+        this.insertReviewIdOnMoreThenTwoReviewVideo(
+          reviewRequestDto.Video,
+          review,
+        ),
         this.deleteMoreThenTwoReviewVideo(beforeVideos),
       ]);
     } else {
       const beforeVideo =
         await this.mediaGeneralRepository.findBeforeReviewVideo(review.id);
-      await this.pushOneReviewVideoInDto(reviewVdoCookies, reviewBody);
+      await this.pushOneReviewVideoInDto(reviewVdoCookies, reviewRequestDto);
       await Promise.all([
-        this.insertReviewIdOnOneReviewVideo(reviewBody.Video[0], review),
+        this.insertReviewIdOnOneReviewVideo(reviewRequestDto.Video[0], review),
         this.deleteOneReviewVideo(beforeVideo),
       ]);
     }
