@@ -10,11 +10,11 @@ export class ReviewRequestDto extends PickType(ReviewEntity, [
 ] as const) {}
 
 export class PushReviewImageDto {
-  reviewBody: ReviewRequestDto;
+  reviewRequestDto: ReviewRequestDto;
   reviewImgCookies: RequestMediaDto[];
 }
 
 export class PushReviewVideoDto {
-  reviewBody: ReviewRequestDto;
+  reviewRequestDto: ReviewRequestDto;
   reviewVdoCookies: RequestMediaDto[];
 }

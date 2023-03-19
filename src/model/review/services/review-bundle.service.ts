@@ -43,30 +43,31 @@ export class ReviewBundleService {
   }
 
   async pushMedia(pushMediaDto: PushMediaDto) {
-    const { reviewBody, reviewImgCookies, reviewVdoCookies } = pushMediaDto;
+    const { reviewRequestDto, reviewImgCookies, reviewVdoCookies } =
+      pushMediaDto;
 
     if (reviewImgCookies) {
       await this.reviewAccessoryService.pushReviewImageInDto({
-        reviewBody,
+        reviewRequestDto,
         reviewImgCookies,
       });
     }
     if (reviewVdoCookies) {
       await this.reviewAccessoryService.pushReviewVideoInDto({
-        reviewBody,
+        reviewRequestDto,
         reviewVdoCookies,
       });
     }
   }
 
   async insertMedia(insertMediaDto: InsertMediaDto) {
-    const { reviewImgCookies, reviewVdoCookies, reviewBody, review } =
+    const { reviewImgCookies, reviewVdoCookies, reviewRequestDto, review } =
       insertMediaDto;
 
     if (reviewImgCookies) {
       await this.reviewAccessoryService.distinguishReviewImagesCountForInsert(
         reviewImgCookies,
-        reviewBody,
+        reviewRequestDto,
         review,
       );
     }
@@ -74,20 +75,20 @@ export class ReviewBundleService {
     if (reviewVdoCookies) {
       await this.reviewAccessoryService.distinguishReviewVideosCountForInsert(
         reviewVdoCookies,
-        reviewBody,
+        reviewRequestDto,
         review,
       );
     }
   }
 
   async modifyMedia(modifyMediaDto: ModifyMediaDto) {
-    const { reviewBody, review, reviewImgCookies, reviewVdoCookies } =
+    const { reviewRequestDto, review, reviewImgCookies, reviewVdoCookies } =
       modifyMediaDto;
 
     if (reviewImgCookies) {
       this.reviewAccessoryService.distinguishReviewImagesCountForModify(
         reviewImgCookies,
-        reviewBody,
+        reviewRequestDto,
         review,
       );
     }
@@ -95,7 +96,7 @@ export class ReviewBundleService {
     if (reviewVdoCookies) {
       this.reviewAccessoryService.distinguishReviewVideosCountForModify(
         reviewVdoCookies,
-        reviewBody,
+        reviewRequestDto,
         review,
       );
     }

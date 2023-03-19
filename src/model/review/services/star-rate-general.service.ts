@@ -3,7 +3,7 @@ import { StarRateGeneralRepository } from "../repositories/star-rate-general.rep
 import { StarRateEntity } from "../entities/star-rate.entity";
 import { ReviewEntity } from "../entities/review.entity";
 import { ProductGeneralRepository } from "src/model/product/repositories/product-general.repository";
-import { ReviewBody } from "../dto/review-body";
+import { ReviewRequestDto } from "../dto/review-request.dto";
 
 @Injectable()
 export class StarRateGeneralService {
@@ -12,8 +12,11 @@ export class StarRateGeneralService {
     private readonly starRateGeneralRepository: StarRateGeneralRepository,
   ) {}
 
-  async starRating(reviewBody: ReviewBody, productId: string): Promise<void> {
-    const { scoreChosenByClient } = reviewBody;
+  async starRating(
+    reviewRequestDto: ReviewRequestDto,
+    productId: string,
+  ): Promise<void> {
+    const { scoreChosenByClient } = reviewRequestDto;
     const product =
       await this.productGeneralRepository.findProductOneJustNeedStarRate(
         productId,
@@ -30,11 +33,11 @@ export class StarRateGeneralService {
   }
 
   async modifyStarRate(
-    reviewBody: ReviewBody,
+    reviewRequestDto: ReviewRequestDto,
     productId: string,
     review: ReviewEntity,
   ): Promise<void> {
-    const { scoreChosenByClient } = reviewBody;
+    const { scoreChosenByClient } = reviewRequestDto;
     const product =
       await this.productGeneralRepository.findProductOneJustNeedStarRate(
         productId,

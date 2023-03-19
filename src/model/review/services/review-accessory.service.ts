@@ -21,26 +21,26 @@ export class ReviewAccessoryService {
   async pushReviewImageInDto(
     pushReviewImageDto: PushReviewImageDto,
   ): Promise<void> {
-    const { reviewBody, reviewImgCookies } = pushReviewImageDto;
+    const { reviewRequestDto, reviewImgCookies } = pushReviewImageDto;
 
-    reviewBody.Image = [];
+    reviewRequestDto.Image = [];
 
     await this.distinguishReviewImagesCountForPush(
       reviewImgCookies,
-      reviewBody,
+      reviewRequestDto,
     );
   }
 
   async pushReviewVideoInDto(
     pushReviewVideoDto: PushReviewVideoDto,
   ): Promise<void> {
-    const { reviewBody, reviewVdoCookies } = pushReviewVideoDto;
+    const { reviewRequestDto, reviewVdoCookies } = pushReviewVideoDto;
 
-    reviewBody.Video = [];
+    reviewRequestDto.Video = [];
 
     await this.distinguishReviewVideosCountForPush(
       reviewVdoCookies,
-      reviewBody,
+      reviewRequestDto,
     );
   }
 
