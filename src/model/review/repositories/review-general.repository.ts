@@ -74,6 +74,7 @@ export class ReviewGeneralRepository extends RepositoryLogger {
         .set({
           reviews: reviewRequestDto.reviews,
           scoreChosenByClient: reviewRequestDto.scoreChosenByClient,
+          countForModify: --beforeReview.countForModify,
         })
         .where("id = :id", { id: beforeReview.id })
         .execute();
