@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, ManyToOne } from "typeorm";
 import { ProductEntity } from "./../../product/entities/product.entity";
 import { CommonEntity } from "src/common/entities/common.entity";
-import { IsNotEmpty, IsString, IsEnum } from "class-validator";
+import { IsNotEmpty, IsString, IsEnum, IsNumber } from "class-validator";
 import { ReviewImageEntity } from "src/model/media/entities/review.image.entity";
 import { ReviewVideoEntity } from "src/model/media/entities/review.video.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
@@ -17,6 +17,10 @@ export class ReviewEntity extends CommonEntity {
   @IsNotEmpty()
   @Column({ type: "text", nullable: false })
   reviews: string;
+
+  @IsNumber()
+  @Column({ type: "int", unsigned: true, default: 2 })
+  countForModify: number;
 
   @ManyToOne(() => ClientUserEntity, (clientUser) => clientUser.writtenReview)
   reviewer: ClientUserEntity;
