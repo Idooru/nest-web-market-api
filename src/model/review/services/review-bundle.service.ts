@@ -4,9 +4,9 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
-import { InsertMediaDto } from "../dto/insert-media.dto";
-import { ModifyMediaDto } from "../dto/modify-media.dto";
-import { PushMediaDto } from "../dto/push-media.dto";
+import { InsertReviewMediaDto } from "../dto/insert-review-media.dto";
+import { ModifyReviewMediaDto } from "../dto/modify-review-media.dto";
+import { PushReviewMediaDto } from "../dto/push-review-media.dto";
 import { ReviewEntity } from "../entities/review.entity";
 import { ReviewGeneralRepository } from "../repositories/review-general.repository";
 import { ReviewAccessoryService } from "./review-accessory.service";
@@ -52,7 +52,7 @@ export class ReviewBundleService {
     return review;
   }
 
-  async pushMedia(pushMediaDto: PushMediaDto) {
+  async pushMedia(pushMediaDto: PushReviewMediaDto) {
     const { reviewRequestDto, reviewImgCookies, reviewVdoCookies } =
       pushMediaDto;
 
@@ -70,7 +70,7 @@ export class ReviewBundleService {
     }
   }
 
-  async insertMedia(insertMediaDto: InsertMediaDto) {
+  async insertMedia(insertMediaDto: InsertReviewMediaDto) {
     const { reviewImgCookies, reviewVdoCookies, reviewRequestDto, review } =
       insertMediaDto;
 
@@ -91,7 +91,7 @@ export class ReviewBundleService {
     }
   }
 
-  async modifyMedia(modifyMediaDto: ModifyMediaDto) {
+  async modifyMedia(modifyMediaDto: ModifyReviewMediaDto) {
     const { reviewRequestDto, review, reviewImgCookies, reviewVdoCookies } =
       modifyMediaDto;
 
