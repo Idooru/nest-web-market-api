@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
 import { InsertMediaDto } from "../dto/insert-media.dto";
 import { ModifyMediaDto } from "../dto/modify-media.dto";
@@ -17,6 +21,12 @@ export class ReviewBundleService {
     private readonly reviewAccessoryService: ReviewAccessoryService,
     private readonly mediaAccessoryService: MediaAccessoryService,
   ) {}
+
+  checkModifyCount(review: ReviewEntity): void {
+    if (review.countForModify === 0) {
+      throw new UnauthorizedException("해당 리뷰는 더이상 수정할 수 없습니다.");
+    }
+  }
 
   async distinguishOwnReview(
     reviewId: string,
@@ -116,7 +126,6 @@ export class ReviewBundleService {
         review,
       );
     }
-
     if (review.Video.length >= 1) {
       review.Video.map(brieflyFileName).forEach((name) =>
         this.mediaAccessoryService.deleteMediaFilesOnServerDisk(
