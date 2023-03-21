@@ -3,7 +3,8 @@ import { StarRateGeneralRepository } from "../repositories/star-rate-general.rep
 import { StarRateEntity } from "../entities/star-rate.entity";
 import { ReviewEntity } from "../entities/review.entity";
 import { ProductGeneralRepository } from "src/model/product/repositories/product-general.repository";
-import { ReviewRequestDto } from "../dto/review-request.dto";
+import { StarRatingDto } from "../dto/star-rating.dto";
+import { ModifyStarRateDto } from "../dto/modify-star-rate.dto";
 
 @Injectable()
 export class StarRateGeneralService {
@@ -12,15 +13,17 @@ export class StarRateGeneralService {
     private readonly starRateGeneralRepository: StarRateGeneralRepository,
   ) {}
 
-  async starRating(
-    reviewRequestDto: ReviewRequestDto,
-    productId: string,
-  ): Promise<void> {
-    const { scoreChosenByClient } = reviewRequestDto;
+  async starRating(starRatingDto: StarRatingDto): Promise<void> {
+    const {
+      reviewRequestDto: { scoreChosenByClient },
+      productId,
+    } = starRatingDto;
+
     const product =
       await this.productGeneralRepository.findProductOneJustNeedStarRate(
         productId,
       );
+
     const starRate = await this.starRateGeneralRepository.findStarRateWithId(
       product.StarRate.id,
     );
@@ -32,16 +35,18 @@ export class StarRateGeneralService {
     await this.calculateStarRate(starRate);
   }
 
-  async modifyStarRate(
-    reviewRequestDto: ReviewRequestDto,
-    productId: string,
-    review: ReviewEntity,
-  ): Promise<void> {
-    const { scoreChosenByClient } = reviewRequestDto;
+  async modifyStarRate(modifyStarRate: ModifyStarRateDto): Promise<void> {
+    const {
+      reviewRequestDto: { scoreChosenByClient },
+      productId,
+      review,
+    } = modifyStarRate;
+
     const product =
       await this.productGeneralRepository.findProductOneJustNeedStarRate(
         productId,
       );
+
     const starRate = await this.starRateGeneralRepository.findStarRateWithId(
       product.StarRate.id,
     );
@@ -67,6 +72,7 @@ export class StarRateGeneralService {
       await this.productGeneralRepository.findProductOneJustNeedStarRate(
         review.Product.id,
       );
+
     const starRate = await this.starRateGeneralRepository.findStarRateWithId(
       product.StarRate.id,
     );
