@@ -29,7 +29,7 @@ export class MediaInsertRepository extends RepositoryLogger {
   }
 
   async insertProductIdOnProductImage(
-    image: ProductImageEntity,
+    productImage: ProductImageEntity,
     product: ProductEntity,
   ): Promise<void> {
     try {
@@ -37,7 +37,7 @@ export class MediaInsertRepository extends RepositoryLogger {
         .createQueryBuilder()
         .update(ProductImageEntity)
         .set({ Product: product })
-        .where("id = :id", { id: image.id })
+        .where("id = :id", { id: productImage.id })
         .execute();
     } catch (err) {
       this.logger.error(err);
@@ -46,7 +46,7 @@ export class MediaInsertRepository extends RepositoryLogger {
   }
 
   async insertReviewIdOnReviewImage(
-    image: ReviewImageEntity,
+    reviewImage: ReviewImageEntity,
     review: ReviewEntity,
   ): Promise<void> {
     try {
@@ -54,7 +54,7 @@ export class MediaInsertRepository extends RepositoryLogger {
         .createQueryBuilder()
         .update(ReviewImageEntity)
         .set({ Review: review })
-        .where("id = :id", { id: image.id })
+        .where("id = :id", { id: reviewImage.id })
         .execute();
     } catch (err) {
       this.logger.error(err);
@@ -63,7 +63,7 @@ export class MediaInsertRepository extends RepositoryLogger {
   }
 
   async insertReviewIdOnReviewVideo(
-    video: ReviewVideoEntity,
+    reviewVideo: ReviewVideoEntity,
     review: ReviewEntity,
   ): Promise<void> {
     try {
@@ -71,7 +71,7 @@ export class MediaInsertRepository extends RepositoryLogger {
         .createQueryBuilder()
         .update(ReviewVideoEntity)
         .set({ Review: review })
-        .where("id = :id", { id: video.id })
+        .where("id = :id", { id: reviewVideo.id })
         .execute();
     } catch (err) {
       this.logger.error(err);
@@ -80,7 +80,7 @@ export class MediaInsertRepository extends RepositoryLogger {
   }
 
   async insertInquiryIdOnInquiryImage(
-    image: InquiryImageEntity,
+    inquiryImage: InquiryImageEntity,
     inquiry: InquiryEntity,
   ): Promise<void> {
     try {
@@ -88,7 +88,7 @@ export class MediaInsertRepository extends RepositoryLogger {
         .createQueryBuilder()
         .update(InquiryImageEntity)
         .set({ Inquiry: inquiry })
-        .where("id = :id", { id: image.id })
+        .where("id = :id", { id: inquiryImage.id })
         .execute();
     } catch (err) {
       this.logger.error(err);
