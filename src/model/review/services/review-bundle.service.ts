@@ -52,9 +52,9 @@ export class ReviewBundleService {
     return review;
   }
 
-  async pushReviewMedia(pushMediaDto: PushReviewMediaDto) {
+  async pushReviewMedia(pushReviewMediaDto: PushReviewMediaDto) {
     const { reviewRequestDto, reviewImgCookies, reviewVdoCookies } =
-      pushMediaDto;
+      pushReviewMediaDto;
 
     if (reviewImgCookies) {
       await this.reviewAccessoryService.pushReviewImageInDto({
@@ -70,9 +70,9 @@ export class ReviewBundleService {
     }
   }
 
-  async insertReviewMedia(insertMediaDto: InsertReviewMediaDto) {
+  async insertReviewMedia(insertReviewMediaDto: InsertReviewMediaDto) {
     const { reviewImgCookies, reviewVdoCookies, reviewRequestDto, review } =
-      insertMediaDto;
+      insertReviewMediaDto;
 
     if (reviewImgCookies) {
       await this.reviewAccessoryService.distinguishReviewImagesCountForInsert(
@@ -91,9 +91,9 @@ export class ReviewBundleService {
     }
   }
 
-  async modifyReviewMedia(modifyMediaDto: ModifyReviewMediaDto) {
+  async modifyReviewMedia(modifyReviewMediaDto: ModifyReviewMediaDto) {
     const { reviewRequestDto, review, reviewImgCookies, reviewVdoCookies } =
-      modifyMediaDto;
+      modifyReviewMediaDto;
 
     if (reviewImgCookies) {
       this.reviewAccessoryService.distinguishReviewImagesCountForModify(
