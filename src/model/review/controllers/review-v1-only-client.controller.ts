@@ -52,7 +52,7 @@ export class ReviewVersionOneOnlyClientController {
   ): Promise<JsonClearCookiesInterface> {
     await Promise.all([
       this.starRateGeneralService.starRating({ reviewRequestDto, productId }),
-      this.reviewBundleService.pushMedia({
+      this.reviewBundleService.pushReviewMedia({
         reviewRequestDto,
         reviewImgCookies,
         reviewVdoCookies,
@@ -65,7 +65,7 @@ export class ReviewVersionOneOnlyClientController {
       jwtPayload,
     });
 
-    await this.reviewBundleService.insertMedia({
+    await this.reviewBundleService.insertReviewMedia({
       reviewImgCookies,
       reviewVdoCookies,
       reviewRequestDto,
@@ -94,7 +94,7 @@ export class ReviewVersionOneOnlyClientController {
   ): Promise<JsonClearCookiesInterface> {
     await Promise.all([
       this.starRateGeneralService.starRating({ reviewRequestDto, productId }),
-      this.reviewBundleService.pushMedia({
+      this.reviewBundleService.pushReviewMedia({
         reviewRequestDto,
         reviewImgCookies,
       }),
@@ -106,7 +106,7 @@ export class ReviewVersionOneOnlyClientController {
       jwtPayload,
     });
 
-    await this.reviewBundleService.insertMedia({
+    await this.reviewBundleService.insertReviewMedia({
       reviewImgCookies,
       reviewRequestDto,
       review,
@@ -131,7 +131,7 @@ export class ReviewVersionOneOnlyClientController {
   ): Promise<JsonClearCookiesInterface> {
     await Promise.all([
       this.starRateGeneralService.starRating({ reviewRequestDto, productId }),
-      this.reviewBundleService.pushMedia({
+      this.reviewBundleService.pushReviewMedia({
         reviewRequestDto,
         reviewVdoCookies,
       }),
@@ -143,7 +143,7 @@ export class ReviewVersionOneOnlyClientController {
       jwtPayload,
     });
 
-    await this.reviewBundleService.insertMedia({
+    await this.reviewBundleService.insertReviewMedia({
       reviewVdoCookies,
       reviewRequestDto,
       review,
@@ -205,18 +205,18 @@ export class ReviewVersionOneOnlyClientController {
     this.reviewBundleService.checkModifyCount(review);
 
     const mediaWork = async () => {
-      await this.reviewBundleService.pushMedia({
+      await this.reviewBundleService.pushReviewMedia({
         reviewRequestDto,
         reviewImgCookies,
         reviewVdoCookies,
       });
-      await this.reviewBundleService.modifyMedia({
+      await this.reviewBundleService.modifyReviewMedia({
         review,
         reviewRequestDto,
         reviewImgCookies,
         reviewVdoCookies,
       });
-      await this.reviewBundleService.deleteMediaIfItHad(review);
+      await this.reviewBundleService.deleteReviewMediaIfItHad(review);
     };
 
     await Promise.all([
@@ -267,16 +267,16 @@ export class ReviewVersionOneOnlyClientController {
     this.reviewBundleService.checkModifyCount(review);
 
     const mediaWork = async () => {
-      await this.reviewBundleService.pushMedia({
+      await this.reviewBundleService.pushReviewMedia({
         reviewRequestDto,
         reviewImgCookies,
       });
-      await this.reviewBundleService.modifyMedia({
+      await this.reviewBundleService.modifyReviewMedia({
         reviewImgCookies,
         reviewRequestDto,
         review,
       });
-      await this.reviewBundleService.deleteMediaIfItHad(review);
+      await this.reviewBundleService.deleteReviewMediaIfItHad(review);
     };
 
     await Promise.all([
@@ -324,16 +324,16 @@ export class ReviewVersionOneOnlyClientController {
     this.reviewBundleService.checkModifyCount(review);
 
     const mediaWork = async () => {
-      await this.reviewBundleService.pushMedia({
+      await this.reviewBundleService.pushReviewMedia({
         reviewRequestDto,
         reviewVdoCookies,
       });
-      await this.reviewBundleService.modifyMedia({
+      await this.reviewBundleService.modifyReviewMedia({
         reviewVdoCookies,
         reviewRequestDto,
         review,
       });
-      await this.reviewBundleService.deleteMediaIfItHad(review);
+      await this.reviewBundleService.deleteReviewMediaIfItHad(review);
     };
 
     await Promise.all([
@@ -389,7 +389,7 @@ export class ReviewVersionOneOnlyClientController {
         jwtPayload,
         beforeReview: review,
       }),
-      this.reviewBundleService.deleteMediaIfItHad(review),
+      this.reviewBundleService.deleteReviewMediaIfItHad(review),
     ]);
 
     return {
@@ -412,7 +412,7 @@ export class ReviewVersionOneOnlyClientController {
 
     await Promise.all([
       this.reviewGeneralService.deleteReview(review),
-      this.reviewBundleService.deleteMediaIfItHad(review),
+      this.reviewBundleService.deleteReviewMediaIfItHad(review),
       this.starRateGeneralService.decreaseStarRate(review),
     ]);
 
