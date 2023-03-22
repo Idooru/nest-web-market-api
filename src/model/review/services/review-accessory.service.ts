@@ -1,8 +1,4 @@
-import {
-  PushReviewImageDto,
-  PushReviewVideoDto,
-  ReviewRequestDto,
-} from "../dto/review-request.dto";
+import { ReviewRequestDto } from "../dto/review-request.dto";
 import { Injectable } from "@nestjs/common";
 import { RequestMediaDto } from "src/model/media/dto/request-media.dto";
 import { ReviewImageEntity } from "src/model/media/entities/review.image.entity";
@@ -10,6 +6,8 @@ import { ReviewVideoEntity } from "src/model/media/entities/review.video.entity"
 import { MediaGeneralRepository } from "src/model/media/repositories/media-general.repository";
 import { MediaInsertRepository } from "src/model/media/repositories/media-insert.repository";
 import { ReviewEntity } from "../entities/review.entity";
+import { PushReviewImageDto } from "../dto/push-review-image.dto";
+import { PushReviewVideoDto } from "../dto/push-review-video.dto";
 
 @Injectable()
 export class ReviewAccessoryService {
