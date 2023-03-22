@@ -97,7 +97,7 @@ export class MediaInsertRepository extends RepositoryLogger {
   }
 
   async insertInquiryIdOnInquiryVideo(
-    video: InquiryVideoEntity,
+    inquiryVideo: InquiryVideoEntity,
     inquiry: InquiryEntity,
   ): Promise<void> {
     try {
@@ -105,7 +105,7 @@ export class MediaInsertRepository extends RepositoryLogger {
         .createQueryBuilder()
         .update(InquiryVideoEntity)
         .set({ Inquiry: inquiry })
-        .where("id = :id", { id: video })
+        .where("id = :id", { id: inquiryVideo.id })
         .execute();
     } catch (err) {
       this.logger.error(err);
