@@ -1,5 +1,4 @@
 import { PickType } from "@nestjs/swagger";
-import { RequestMediaDto } from "src/model/media/dto/request-media.dto";
 import { ReviewEntity } from "../entities/review.entity";
 
 export class ReviewRequestDto extends PickType(ReviewEntity, [
@@ -8,13 +7,3 @@ export class ReviewRequestDto extends PickType(ReviewEntity, [
   "Image",
   "Video",
 ] as const) {}
-
-export class PushReviewImageDto {
-  reviewRequestDto: ReviewRequestDto;
-  reviewImgCookies: RequestMediaDto[];
-}
-
-export class PushReviewVideoDto {
-  reviewRequestDto: ReviewRequestDto;
-  reviewVdoCookies: RequestMediaDto[];
-}
