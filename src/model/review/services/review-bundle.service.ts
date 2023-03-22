@@ -52,7 +52,7 @@ export class ReviewBundleService {
     return review;
   }
 
-  async pushReviewMedia(pushReviewMediaDto: PushReviewMediaDto) {
+  async pushReviewMedia(pushReviewMediaDto: PushReviewMediaDto): Promise<void> {
     const { reviewRequestDto, reviewImgCookies, reviewVdoCookies } =
       pushReviewMediaDto;
 
@@ -70,7 +70,9 @@ export class ReviewBundleService {
     }
   }
 
-  async insertReviewMedia(insertReviewMediaDto: InsertReviewMediaDto) {
+  async insertReviewMedia(
+    insertReviewMediaDto: InsertReviewMediaDto,
+  ): Promise<void> {
     const { reviewImgCookies, reviewVdoCookies, reviewRequestDto, review } =
       insertReviewMediaDto;
 
@@ -91,7 +93,9 @@ export class ReviewBundleService {
     }
   }
 
-  async modifyReviewMedia(modifyReviewMediaDto: ModifyReviewMediaDto) {
+  async modifyReviewMedia(
+    modifyReviewMediaDto: ModifyReviewMediaDto,
+  ): Promise<void> {
     const { reviewRequestDto, review, reviewImgCookies, reviewVdoCookies } =
       modifyReviewMediaDto;
 
@@ -112,7 +116,7 @@ export class ReviewBundleService {
     }
   }
 
-  async deleteReviewMediaIfItHad(review: ReviewEntity) {
+  async deleteReviewMediaIfItHad(review: ReviewEntity): Promise<void> {
     if (review.Image.length >= 1) {
       review.Image.map(brieflyFileName).forEach((name) =>
         this.mediaAccessoryService.deleteMediaFilesOnServerDisk(
