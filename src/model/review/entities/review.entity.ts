@@ -18,8 +18,9 @@ export class ReviewEntity extends CommonEntity {
   @Column({ type: "text", nullable: false })
   reviews: string;
 
+  @IsEnum([0, 1, 2])
   @IsNumber()
-  @Column({ type: "int", unsigned: true, default: 2 })
+  @Column({ type: "enum", enum: [0, 1, 2], default: 2 })
   countForModify: number;
 
   @ManyToOne(() => ClientUserEntity, (clientUser) => clientUser.writtenReview)
