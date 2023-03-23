@@ -16,13 +16,31 @@ export class InquiryGeneralRepository extends RepositoryLogger {
 
   async createInquiry(createInquiryDao: CreateInquiryDao): Promise<void> {
     try {
-      const { createInquiryDto, client, product } = createInquiryDao;
+      const { inquiryRequestDto, client, product } = createInquiryDao;
       await this.inquiryRepository
         .createQueryBuilder()
         .insert()
         .into(InquiryEntity)
-        .values({ ...createInquiryDto, Product: product, inquirer: client })
+        .values({ ...inquiryRequestDto, Product: product, inquirer: client })
         .execute();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async findLastCreatedOneInquiryWithUserId(
+    clientUserId: string,
+  ): Promise<InquiryEntity> {
+    try {
+      return await this.inquiryRepository
+        .createQueryBuilder()
+        .select("inquiry")
+        .from(InquiryEntity, "inquiry")
+        .where("inquiry.inquirer = :id", { id: clientUserId })
+        .orderBy("inquiry.createdAt", "DESC")
+        .limit(1)
+        .getOneOrFail();
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException(err.message);
