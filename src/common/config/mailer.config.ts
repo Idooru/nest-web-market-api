@@ -11,6 +11,10 @@ import { ConfigService } from "@nestjs/config";
         transport: {
           host: configService.get("MAIL_HOST"),
           port: configService.get("MAIL_PORT"),
+          auth: {
+            user: configService.get("MAIL_USER"),
+            pass: configService.get("MAIL_PASSWORD"),
+          },
         },
       }),
       inject: [ConfigService],
