@@ -16,32 +16,6 @@ export class ReviewAccessoryService {
     private readonly mediaInsertRepository: MediaInsertRepository,
   ) {}
 
-  async pushReviewImageInDto(
-    pushReviewImageDto: PushReviewImageDto,
-  ): Promise<void> {
-    const { reviewRequestDto, reviewImgCookies } = pushReviewImageDto;
-
-    reviewRequestDto.Image = [];
-
-    await this.distinguishReviewImagesCountForPush(
-      reviewImgCookies,
-      reviewRequestDto,
-    );
-  }
-
-  async pushReviewVideoInDto(
-    pushReviewVideoDto: PushReviewVideoDto,
-  ): Promise<void> {
-    const { reviewRequestDto, reviewVdoCookies } = pushReviewVideoDto;
-
-    reviewRequestDto.Video = [];
-
-    await this.distinguishReviewVideosCountForPush(
-      reviewVdoCookies,
-      reviewRequestDto,
-    );
-  }
-
   async pushMoreThenTwoReviewImageInDto(
     reviewImgCookies: RequestMediaDto[],
     reviewRequestDto: ReviewRequestDto,
@@ -175,9 +149,12 @@ export class ReviewAccessoryService {
   }
 
   async distinguishReviewImagesCountForPush(
-    reviewImgCookies: RequestMediaDto[],
-    reviewRequestDto: ReviewRequestDto,
+    pushReviewImageDto: PushReviewImageDto,
   ): Promise<void> {
+    const { reviewImgCookies, reviewRequestDto } = pushReviewImageDto;
+
+    reviewRequestDto.Image = [];
+
     if (reviewImgCookies.length >= 2) {
       await this.pushMoreThenTwoReviewImageInDto(
         reviewImgCookies,
@@ -189,9 +166,12 @@ export class ReviewAccessoryService {
   }
 
   async distinguishReviewVideosCountForPush(
-    reviewVdoCookies: RequestMediaDto[],
-    reviewRequestDto: ReviewRequestDto,
+    pushReviewVideoDto: PushReviewVideoDto,
   ): Promise<void> {
+    const { reviewVdoCookies, reviewRequestDto } = pushReviewVideoDto;
+
+    reviewRequestDto.Video = [];
+
     if (reviewVdoCookies.length >= 2) {
       await this.pushMoreThenTwoReviewVideoInDto(
         reviewVdoCookies,
