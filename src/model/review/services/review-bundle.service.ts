@@ -57,13 +57,14 @@ export class ReviewBundleService {
       pushReviewMediaDto;
 
     if (reviewImgCookies) {
-      await this.reviewAccessoryService.pushReviewImageInDto({
+      await this.reviewAccessoryService.distinguishReviewImagesCountForPush({
         reviewRequestDto,
         reviewImgCookies,
       });
     }
+
     if (reviewVdoCookies) {
-      await this.reviewAccessoryService.pushReviewVideoInDto({
+      await this.reviewAccessoryService.distinguishReviewVideosCountForPush({
         reviewRequestDto,
         reviewVdoCookies,
       });
@@ -130,6 +131,7 @@ export class ReviewBundleService {
         review,
       );
     }
+
     if (review.Video.length >= 1) {
       review.Video.map(brieflyFileName).forEach((name) =>
         this.mediaAccessoryService.deleteMediaFilesOnServerDisk(
