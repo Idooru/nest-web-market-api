@@ -20,7 +20,7 @@ export class InquiryGeneralService {
   async createInquiryRequest(
     createInquiryDto: CreateInquiryRequestDto,
   ): Promise<InquiryRequestEntity> {
-    const { createInquiryRequestDto, jwtPayload, productId } = createInquiryDto;
+    const { inquiryRequestDto, jwtPayload, productId } = createInquiryDto;
 
     const [product, client] = await Promise.all([
       this.productGenralRepository.findProductOneById(productId),
@@ -28,7 +28,7 @@ export class InquiryGeneralService {
     ]);
 
     await this.inquiryGeneralRepository.createInquiryRequest({
-      createInquiryRequestDto,
+      inquiryRequestDto,
       client,
       product,
     });

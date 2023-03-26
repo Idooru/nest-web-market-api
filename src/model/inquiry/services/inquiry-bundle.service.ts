@@ -13,7 +13,7 @@ export class InquiryBundleService {
     pushInquiryRequestMediaDto: PushInquiryRequestMediaDto,
   ): Promise<void> {
     const {
-      createInquiryRequestDto,
+      inquiryRequestDto,
       inquiryRequestImgCookies,
       inquiryRequestVdoCookies,
     } = pushInquiryRequestMediaDto;
@@ -21,7 +21,7 @@ export class InquiryBundleService {
     if (inquiryRequestImgCookies) {
       await this.inquiryAccessoryService.distinguishInquiryRequestImagesCountForPush(
         {
-          createInquiryRequestDto,
+          inquiryRequestDto,
           inquiryRequestImgCookies,
         },
       );
@@ -30,7 +30,7 @@ export class InquiryBundleService {
     if (inquiryRequestVdoCookies) {
       await this.inquiryAccessoryService.distinguishInquiryRequestVideosCountForPush(
         {
-          createInquiryRequestDto,
+          inquiryRequestDto,
           inquiryRequestVdoCookies,
         },
       );
@@ -44,13 +44,13 @@ export class InquiryBundleService {
       inquiryRequestImgCookies,
       inquiryRequestVdoCookies,
       inquiryRequest,
-      createInquiryRequestDto,
+      inquiryRequestDto,
     } = insertInquiryRequestMediaDto;
 
     if (inquiryRequestImgCookies) {
       await this.inquiryAccessoryService.distinguishInquiryRequestImagesCountForInsert(
         inquiryRequestImgCookies,
-        createInquiryRequestDto,
+        inquiryRequestDto,
         inquiryRequest,
       );
     }
@@ -58,7 +58,7 @@ export class InquiryBundleService {
     if (inquiryRequestVdoCookies) {
       await this.inquiryAccessoryService.distinguishInquiryRequestVideosCountForInsert(
         inquiryRequestVdoCookies,
-        createInquiryRequestDto,
+        inquiryRequestDto,
         inquiryRequest,
       );
     }

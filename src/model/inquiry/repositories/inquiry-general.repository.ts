@@ -18,13 +18,13 @@ export class InquiryGeneralRepository extends RepositoryLogger {
     createInquiryDao: CreateInquiryRequestDao,
   ): Promise<void> {
     try {
-      const { createInquiryRequestDto, client, product } = createInquiryDao;
+      const { inquiryRequestDto, client, product } = createInquiryDao;
       await this.inquiryRepository
         .createQueryBuilder()
         .insert()
         .into(InquiryRequestEntity)
         .values({
-          ...createInquiryRequestDto,
+          ...inquiryRequestDto,
           Product: product,
           inquirer: client,
         })

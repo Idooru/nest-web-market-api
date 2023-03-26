@@ -45,19 +45,19 @@ export class InquiryVersionOneOnlyClientController {
     inquiryRequestImgCookies: RequestMediaDto[],
     @MediaCookiesParser(mediaCookieKeys.inquiry.video_url_cookie)
     inquiryRequestVdoCookies: RequestMediaDto[],
-    @Body() createInquiryRequestDto: InquiryRequestDto,
+    @Body() inquiryRequestDto: InquiryRequestDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
     const inquiryRequest =
       await this.inquiryGeneralService.createInquiryRequest({
         productId,
-        createInquiryRequestDto,
+        inquiryRequestDto,
         jwtPayload,
       });
 
     const mediaWork = async () => {
       await this.inquiryBundleService.pushInquiryRequestMedia({
-        createInquiryRequestDto,
+        inquiryRequestDto,
         inquiryRequestImgCookies,
         inquiryRequestVdoCookies,
       });
@@ -65,7 +65,7 @@ export class InquiryVersionOneOnlyClientController {
       await this.inquiryBundleService.insertInquiryRequestMedia({
         inquiryRequestImgCookies,
         inquiryRequestVdoCookies,
-        createInquiryRequestDto,
+        inquiryRequestDto,
         inquiryRequest,
       });
     };
@@ -96,24 +96,24 @@ export class InquiryVersionOneOnlyClientController {
     @Param("productId") productId: string,
     @MediaCookiesParser(mediaCookieKeys.inquiry.image_url_cookie)
     inquiryRequestImgCookies: RequestMediaDto[],
-    @Body() createInquiryRequestDto: InquiryRequestDto,
+    @Body() inquiryRequestDto: InquiryRequestDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
     const inquiryRequest =
       await this.inquiryGeneralService.createInquiryRequest({
         productId,
-        createInquiryRequestDto,
+        inquiryRequestDto,
         jwtPayload,
       });
 
     const mediaWork = async () => {
       await this.inquiryBundleService.pushInquiryRequestMedia({
-        createInquiryRequestDto,
+        inquiryRequestDto,
         inquiryRequestImgCookies,
       });
 
       await this.inquiryBundleService.insertInquiryRequestMedia({
-        createInquiryRequestDto,
+        inquiryRequestDto,
         inquiryRequest,
         inquiryRequestImgCookies,
       });
@@ -144,25 +144,25 @@ export class InquiryVersionOneOnlyClientController {
     @Param("productId") productId: string,
     @MediaCookiesParser(mediaCookieKeys.inquiry.video_url_cookie)
     inquiryRequestVdoCookies: RequestMediaDto[],
-    @Body() createInquiryRequestDto: InquiryRequestDto,
+    @Body() inquiryRequestDto: InquiryRequestDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
     const inquiryRequest =
       await this.inquiryGeneralService.createInquiryRequest({
         productId,
-        createInquiryRequestDto,
+        inquiryRequestDto,
         jwtPayload,
       });
 
     const mediaWork = async () => {
       await this.inquiryBundleService.pushInquiryRequestMedia({
-        createInquiryRequestDto,
+        inquiryRequestDto,
         inquiryRequestVdoCookies,
       });
 
       await this.inquiryBundleService.insertInquiryRequestMedia({
         inquiryRequestVdoCookies,
-        createInquiryRequestDto,
+        inquiryRequestDto,
         inquiryRequest,
       });
     };
@@ -190,12 +190,12 @@ export class InquiryVersionOneOnlyClientController {
   @Post("/product/:productId")
   async createInquiryWithoutMedia(
     @Param("productId") productId: string,
-    @Body() createInquiryRequestDto: InquiryRequestDto,
+    @Body() inquiryRequestDto: InquiryRequestDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
     await this.inquiryGeneralService.createInquiryRequest({
       productId,
-      createInquiryRequestDto,
+      inquiryRequestDto,
       jwtPayload,
     });
 

@@ -18,7 +18,7 @@ export class InquiryAccessoryService {
 
   async pushMoreThenTwoInquiryRequestImageInDto(
     inquiryRequestImgCookies: RequestMediaDto[],
-    createInquiryRequestDto: InquiryRequestDto,
+    inquiryRequestDto: InquiryRequestDto,
   ): Promise<void> {
     const promises = inquiryRequestImgCookies.map(
       async (inquiryRequestImgCookie) => {
@@ -27,7 +27,7 @@ export class InquiryAccessoryService {
             inquiryRequestImgCookie.url,
           );
 
-        createInquiryRequestDto.Image.push(image);
+        inquiryRequestDto.Image.push(image);
       },
     );
 
@@ -36,18 +36,18 @@ export class InquiryAccessoryService {
 
   async pushOneInquiryRequestImageInDto(
     inquiryRequestImgCookies: RequestMediaDto[],
-    createInquiryRequestDto: InquiryRequestDto,
+    inquiryRequestDto: InquiryRequestDto,
   ): Promise<void> {
     const image =
       await this.mediaGeneralRepository.findInquiryRequestImageWithUrl(
         inquiryRequestImgCookies[0].url,
       );
-    createInquiryRequestDto.Image.push(image);
+    inquiryRequestDto.Image.push(image);
   }
 
   async pushMoreThenTwoInquiryRequestVideoInDto(
     inquiryRequestVdoCookies: RequestMediaDto[],
-    createInquiryRequestDto: InquiryRequestDto,
+    inquiryRequestDto: InquiryRequestDto,
   ): Promise<void> {
     const promises = inquiryRequestVdoCookies.map(
       async (inquiryRequestVdoCookie) => {
@@ -56,7 +56,7 @@ export class InquiryAccessoryService {
             inquiryRequestVdoCookie.url,
           );
 
-        createInquiryRequestDto.Video.push(video);
+        inquiryRequestDto.Video.push(video);
       },
     );
 
@@ -65,14 +65,14 @@ export class InquiryAccessoryService {
 
   async pushOneInquiryRequestVideoInDto(
     inquiryRequestVdoCookies: RequestMediaDto[],
-    createInquiryRequestDto: InquiryRequestDto,
+    inquiryRequestDto: InquiryRequestDto,
   ): Promise<void> {
     const video =
       await this.mediaGeneralRepository.findInquiryReuqestVideoWithUrl(
         inquiryRequestVdoCookies[0].url,
       );
 
-    createInquiryRequestDto.Video.push(video);
+    inquiryRequestDto.Video.push(video);
   }
 
   async insertInquiryRequestIdOneMoreThenTwoInquiryRequestImage(
@@ -126,20 +126,20 @@ export class InquiryAccessoryService {
   async distinguishInquiryRequestImagesCountForPush(
     pushInquiryRequestImageDto: PushInquiryRequestImageDto,
   ): Promise<void> {
-    const { inquiryRequestImgCookies, createInquiryRequestDto } =
+    const { inquiryRequestImgCookies, inquiryRequestDto } =
       pushInquiryRequestImageDto;
 
-    createInquiryRequestDto.Image = [];
+    inquiryRequestDto.Image = [];
 
     if (inquiryRequestImgCookies.length >= 2) {
       await this.pushMoreThenTwoInquiryRequestImageInDto(
         inquiryRequestImgCookies,
-        createInquiryRequestDto,
+        inquiryRequestDto,
       );
     } else {
       await this.pushOneInquiryRequestImageInDto(
         inquiryRequestImgCookies,
-        createInquiryRequestDto,
+        inquiryRequestDto,
       );
     }
   }
@@ -147,37 +147,37 @@ export class InquiryAccessoryService {
   async distinguishInquiryRequestVideosCountForPush(
     pushInquiryRequestVideoDto: PushInquiryRequestVideoDto,
   ): Promise<void> {
-    const { inquiryRequestVdoCookies, createInquiryRequestDto } =
+    const { inquiryRequestVdoCookies, inquiryRequestDto } =
       pushInquiryRequestVideoDto;
 
-    createInquiryRequestDto.Video = [];
+    inquiryRequestDto.Video = [];
 
     if (inquiryRequestVdoCookies.length >= 2) {
       await this.pushMoreThenTwoInquiryRequestVideoInDto(
         inquiryRequestVdoCookies,
-        createInquiryRequestDto,
+        inquiryRequestDto,
       );
     } else {
       await this.pushOneInquiryRequestVideoInDto(
         inquiryRequestVdoCookies,
-        createInquiryRequestDto,
+        inquiryRequestDto,
       );
     }
   }
 
   async distinguishInquiryRequestImagesCountForInsert(
     inquiryRequestImgCookies: RequestMediaDto[],
-    createInquiryRequestDto: InquiryRequestDto,
+    inquiryRequestDto: InquiryRequestDto,
     inquiryRequest: InquiryRequestEntity,
   ): Promise<void> {
     if (inquiryRequestImgCookies.length >= 2) {
       await this.insertInquiryRequestIdOneMoreThenTwoInquiryRequestImage(
-        createInquiryRequestDto.Image,
+        inquiryRequestDto.Image,
         inquiryRequest,
       );
     } else {
       await this.insertInquiryRequestIdOnOneInquiryRequestImage(
-        createInquiryRequestDto.Image[0],
+        inquiryRequestDto.Image[0],
         inquiryRequest,
       );
     }
@@ -185,17 +185,17 @@ export class InquiryAccessoryService {
 
   async distinguishInquiryRequestVideosCountForInsert(
     inquiryRequestVdoCookies: RequestMediaDto[],
-    createInquiryRequestDto: InquiryRequestDto,
+    inquiryRequestDto: InquiryRequestDto,
     inquiryRequest: InquiryRequestEntity,
   ): Promise<void> {
     if (inquiryRequestVdoCookies.length >= 2) {
       await this.insertInquiryRequestIdOneMoreThenTwoInquiryVideo(
-        createInquiryRequestDto.Video,
+        inquiryRequestDto.Video,
         inquiryRequest,
       );
     } else {
       await this.insertInquiryRequestIdOnOneInquiryRequestImage(
-        createInquiryRequestDto.Image[0],
+        inquiryRequestDto.Image[0],
         inquiryRequest,
       );
     }

@@ -3,7 +3,7 @@ import { InquiryRequestEntity } from "../../entities/inquiry-request.entity";
 import { InquiryRequestDto } from "./inquiry-request.dto";
 
 export class InsertInquiryRequestMediaDto {
-  createInquiryRequestDto: InquiryRequestDto;
+  inquiryRequestDto: InquiryRequestDto;
   inquiryRequest: InquiryRequestEntity;
   inquiryRequestImgCookies?: RequestMediaDto[];
   inquiryRequestVdoCookies?: RequestMediaDto[];

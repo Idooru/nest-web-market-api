@@ -4,13 +4,13 @@ import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { InquiryRequestDto } from "./inquiry-request.dto";
 
 export class CreateInquiryRequestDto {
-  createInquiryRequestDto: InquiryRequestDto;
+  inquiryRequestDto: InquiryRequestDto;
   jwtPayload: JwtAccessTokenPayload;
   productId: string;
 }
 
 export class CreateInquiryRequestDao {
-  createInquiryRequestDto: InquiryRequestDto;
+  inquiryRequestDto: InquiryRequestDto;
   client: ClientUserEntity;
   product: ProductEntity;
 }
