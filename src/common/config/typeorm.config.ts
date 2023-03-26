@@ -5,13 +5,13 @@ import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { StarRateEntity } from "src/model/review/entities/star-rate.entity";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
-import { InquiryEntity } from "src/model/inquiry/entities/inquiry.entity";
+import { InquiryRequestEntity } from "src/model/inquiry/entities/inquiry-request.entity";
 import { Module } from "@nestjs/common";
 import { ProductImageEntity } from "src/model/media/entities/product.image.entity";
 import { ReviewImageEntity } from "src/model/media/entities/review.image.entity";
 import { ReviewVideoEntity } from "src/model/media/entities/review.video.entity";
-import { InquiryImageEntity } from "src/model/media/entities/inquiry.image.entity";
-import { InquiryVideoEntity } from "src/model/media/entities/inquiry.video.entity";
+import { InquiryRequestImageEntity } from "src/model/media/entities/inquiry-request-image.entity";
+import { InquiryRequestVideoEntity } from "src/model/media/entities/inquiry-request-video.entity";
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { UserEntity } from "../../model/user/entities/user.entity";
@@ -45,9 +45,9 @@ const isNodeEnvProd = (): boolean =>
           ReviewEntity,
           ReviewImageEntity,
           ReviewVideoEntity,
-          InquiryEntity,
-          InquiryImageEntity,
-          InquiryVideoEntity,
+          InquiryRequestEntity,
+          InquiryRequestImageEntity,
+          InquiryRequestVideoEntity,
         ],
         synchronize: isNodeEnvDev(),
         migrationsRun: isNodeEnvProd(),
