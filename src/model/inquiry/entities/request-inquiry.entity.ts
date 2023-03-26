@@ -1,22 +1,17 @@
-import { IsEnum, IsNotEmpty, IsString } from "class-validator";
-import { CommonEntity } from "src/common/entities/common.entity";
+import { IsEnum, IsNotEmpty } from "class-validator";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
 import { InquiryImageEntity } from "src/model/media/entities/inquiry.image.entity";
 import { InquiryVideoEntity } from "src/model/media/entities/inquiry.video.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
+import { PostEntity } from "src/common/entities/post.entity";
 
-@Entity({ name: "inquiries", synchronize: true })
-export class InquiryEntity extends CommonEntity {
+@Entity({ name: "request_inquiries", synchronize: true })
+export class RequestInquiryEntity extends PostEntity {
   @IsEnum(["product status", "delivery status", ""])
   @IsNotEmpty()
   @Column({ type: "enum", enum: ["product status", "delivery status"] })
   categories: "product status" | "delivery status";
-
-  @IsString()
-  @IsNotEmpty()
-  @Column({ type: "text", nullable: false })
-  inquiries: string;
 
   @ManyToOne(() => ClientUserEntity, (client) => client.writtenInquiry)
   inquirer: ClientUserEntity;
