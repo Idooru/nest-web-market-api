@@ -1,27 +1,33 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { RepositoryLogger } from "src/common/classes/repository.logger";
-import { RequestInquiryEntity } from "src/model/inquiry/entities/request-inquiry.entity";
+import { InquiryRequestEntity } from "src/model/inquiry/entities/inquiry-request.entity";
 import { Repository } from "typeorm";
-import { CreateInquiryDao } from "../dto/create-inquiry.dto";
+import { CreateInquiryRequestDao } from "../dto/request/create-inquiry-request.dto";
 
 @Injectable()
 export class InquiryGeneralRepository extends RepositoryLogger {
   constructor(
-    @InjectRepository(RequestInquiryEntity)
-    private readonly inquiryRepository: Repository<RequestInquiryEntity>,
+    @InjectRepository(InquiryRequestEntity)
+    private readonly inquiryRepository: Repository<InquiryRequestEntity>,
   ) {
     super("Inquiry General");
   }
 
-  async createInquiry(createInquiryDao: CreateInquiryDao): Promise<void> {
+  async createInquiryRequest(
+    createInquiryDao: CreateInquiryRequestDao,
+  ): Promise<void> {
     try {
-      const { inquiryRequestDto, client, product } = createInquiryDao;
+      const { createInquiryRequestDto, client, product } = createInquiryDao;
       await this.inquiryRepository
         .createQueryBuilder()
         .insert()
-        .into(RequestInquiryEntity)
-        .values({ ...inquiryRequestDto, Product: product, inquirer: client })
+        .into(InquiryRequestEntity)
+        .values({
+          ...createInquiryRequestDto,
+          Product: product,
+          inquirer: client,
+        })
         .execute();
     } catch (err) {
       this.logger.error(err);
@@ -29,16 +35,16 @@ export class InquiryGeneralRepository extends RepositoryLogger {
     }
   }
 
-  async findLastCreatedOneInquiryWithUserId(
+  async findLastCreatedOneInquiryRequestWithUserId(
     clientUserId: string,
-  ): Promise<RequestInquiryEntity> {
+  ): Promise<InquiryRequestEntity> {
     try {
       return await this.inquiryRepository
         .createQueryBuilder()
-        .select("inquiry")
-        .from(RequestInquiryEntity, "inquiry")
-        .where("inquiry.inquirer = :id", { id: clientUserId })
-        .orderBy("inquiry.createdAt", "DESC")
+        .select("inquiryRequest")
+        .from(InquiryRequestEntity, "inquiryRequest")
+        .where("inquiryRequest.inquirer = :id", { id: clientUserId })
+        .orderBy("inquiryRequest.createdAt", "DESC")
         .limit(1)
         .getOneOrFail();
     } catch (err) {

@@ -1,13 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import { PushInquiryImageDto } from "src/model/inquiry/dto/push-inquiry-image.dto";
+import { PushInquiryRequestImageDto } from "src/model/inquiry/dto/request/push-inquiry-request-image.dto";
 import { RequestMediaDto } from "src/model/media/dto/request-media.dto";
-import { RequestInquiryImageEntity } from "src/model/media/entities/inquiry.image.entity";
-import { RequestInquiryVideoEntity } from "src/model/media/entities/inquiry.video.entity";
+import { InquiryRequestImageEntity } from "src/model/media/entities/inquiry-request-image.entity";
+import { InquiryRequestVideoEntity } from "src/model/media/entities/inquiry-request-video.entity";
 import { MediaGeneralRepository } from "src/model/media/repositories/media-general.repository";
 import { MediaInsertRepository } from "src/model/media/repositories/media-insert.repository";
-import { InquiryRequestDto } from "../dto/inquiry-request.dto";
-import { PushInquiryVideoDto } from "../dto/push-inquiry-video.dto";
-import { RequestInquiryEntity } from "../entities/request-inquiry.entity";
+import { PushInquiryRequestVideoDto } from "../dto/request/push-inquiry-request-video.dto";
+import { InquiryRequestDto } from "../dto/request/inquiry-request.dto";
+import { InquiryRequestEntity } from "../entities/inquiry-request.entity";
 
 @Injectable()
 export class InquiryAccessoryService {
@@ -16,171 +16,187 @@ export class InquiryAccessoryService {
     private readonly mediaGeneralRepository: MediaGeneralRepository,
   ) {}
 
-  async pushMoreThenTwoInquiryImageInDto(
-    inquiryImgCookies: RequestMediaDto[],
-    inquiryRequestDto: InquiryRequestDto,
+  async pushMoreThenTwoInquiryRequestImageInDto(
+    inquiryRequestImgCookies: RequestMediaDto[],
+    createInquiryRequestDto: InquiryRequestDto,
   ): Promise<void> {
-    const promises = inquiryImgCookies.map(async (inquiryImgCookie) => {
-      const image = await this.mediaGeneralRepository.findInquiryImageWithUrl(
-        inquiryImgCookie.url,
-      );
+    const promises = inquiryRequestImgCookies.map(
+      async (inquiryRequestImgCookie) => {
+        const image =
+          await this.mediaGeneralRepository.findInquiryRequestImageWithUrl(
+            inquiryRequestImgCookie.url,
+          );
 
-      inquiryRequestDto.Image.push(image);
-    });
+        createInquiryRequestDto.Image.push(image);
+      },
+    );
 
     await Promise.all(promises);
   }
 
-  async pushOneInquiryImageInDto(
-    inquiryImgCookies: RequestMediaDto[],
-    inquiryRequestDto: InquiryRequestDto,
-  ) {
-    const image = await this.mediaGeneralRepository.findInquiryImageWithUrl(
-      inquiryImgCookies[0].url,
-    );
-    inquiryRequestDto.Image.push(image);
+  async pushOneInquiryRequestImageInDto(
+    inquiryRequestImgCookies: RequestMediaDto[],
+    createInquiryRequestDto: InquiryRequestDto,
+  ): Promise<void> {
+    const image =
+      await this.mediaGeneralRepository.findInquiryRequestImageWithUrl(
+        inquiryRequestImgCookies[0].url,
+      );
+    createInquiryRequestDto.Image.push(image);
   }
 
-  async pushMoreThenTwoInquiryVideoInDto(
-    inquiryVdoCookies: RequestMediaDto[],
-    inquiryRequestDto: InquiryRequestDto,
+  async pushMoreThenTwoInquiryRequestVideoInDto(
+    inquiryRequestVdoCookies: RequestMediaDto[],
+    createInquiryRequestDto: InquiryRequestDto,
   ): Promise<void> {
-    const promises = inquiryVdoCookies.map(async (inquiryVdoCookie) => {
-      const video = await this.mediaGeneralRepository.findInquiryVideoWithUrl(
-        inquiryVdoCookie.url,
-      );
+    const promises = inquiryRequestVdoCookies.map(
+      async (inquiryRequestVdoCookie) => {
+        const video =
+          await this.mediaGeneralRepository.findInquiryReuqestVideoWithUrl(
+            inquiryRequestVdoCookie.url,
+          );
 
-      inquiryRequestDto.Video.push(video);
-    });
+        createInquiryRequestDto.Video.push(video);
+      },
+    );
 
     await Promise.all(promises);
   }
 
-  async pushOneInquiryVideoInDto(
-    inquiryVdoCookies: RequestMediaDto[],
-    inquiryRequestDto: InquiryRequestDto,
+  async pushOneInquiryRequestVideoInDto(
+    inquiryRequestVdoCookies: RequestMediaDto[],
+    createInquiryRequestDto: InquiryRequestDto,
   ): Promise<void> {
-    const video = await this.mediaGeneralRepository.findInquiryVideoWithUrl(
-      inquiryVdoCookies[0].url,
-    );
-
-    inquiryRequestDto.Video.push(video);
-  }
-
-  async insertInquiryIdOneMoreThenTwoInquiryImage(
-    inquiryImages: RequestInquiryImageEntity[],
-    inquiry: RequestInquiryEntity,
-  ): Promise<void> {
-    const promises = inquiryImages.map(async (inquiryImage) => {
-      await this.mediaInsertRepository.insertInquiryIdOnInquiryImage(
-        inquiryImage,
-        inquiry,
+    const video =
+      await this.mediaGeneralRepository.findInquiryReuqestVideoWithUrl(
+        inquiryRequestVdoCookies[0].url,
       );
-    });
 
-    await Promise.all(promises);
+    createInquiryRequestDto.Video.push(video);
   }
 
-  async insertInquiryIdOnOneInquiryImage(
-    inquiryImage: RequestInquiryImageEntity,
-    inquiry: RequestInquiryEntity,
+  async insertInquiryRequestIdOneMoreThenTwoInquiryRequestImage(
+    inquiryRequestImages: InquiryRequestImageEntity[],
+    inquiryRequest: InquiryRequestEntity,
   ): Promise<void> {
-    await this.mediaInsertRepository.insertInquiryIdOnInquiryImage(
-      inquiryImage,
-      inquiry,
-    );
-  }
-
-  async insertInquiryIdOneMoreThenTwoInquiryVideo(
-    inquiryVideos: RequestInquiryVideoEntity[],
-    inquiry: RequestInquiryEntity,
-  ): Promise<void> {
-    const promises = inquiryVideos.map(async (inquiryVideo) => {
-      await this.mediaInsertRepository.insertInquiryIdOnInquiryVideo(
-        inquiryVideo,
-        inquiry,
+    const promises = inquiryRequestImages.map(async (inquiryRequestImage) => {
+      await this.mediaInsertRepository.insertInquiryRequestIdOnInquiryRequestImage(
+        inquiryRequestImage,
+        inquiryRequest,
       );
     });
 
     await Promise.all(promises);
   }
 
-  async insertInquiryIdOneOneInquiryVideo(
-    inquiryVideo: RequestInquiryVideoEntity,
-    inquiry: RequestInquiryEntity,
+  async insertInquiryRequestIdOnOneInquiryRequestImage(
+    inquiryRequestImage: InquiryRequestImageEntity,
+    inquiryRequest: InquiryRequestEntity,
   ): Promise<void> {
-    await this.mediaInsertRepository.insertInquiryIdOnInquiryVideo(
-      inquiryVideo,
-      inquiry,
+    await this.mediaInsertRepository.insertInquiryRequestIdOnInquiryRequestImage(
+      inquiryRequestImage,
+      inquiryRequest,
     );
   }
 
-  async distinguishInquiryImagesCountForPush(
-    pushInquiryImageDto: PushInquiryImageDto,
+  async insertInquiryRequestIdOneMoreThenTwoInquiryVideo(
+    inquiryRequestVideos: InquiryRequestVideoEntity[],
+    inquiryRequest: InquiryRequestEntity,
   ): Promise<void> {
-    const { inquiryImgCookies, inquiryRequestDto } = pushInquiryImageDto;
+    const promises = inquiryRequestVideos.map(async (inquiryRequestVideo) => {
+      await this.mediaInsertRepository.insertInquiryRequestIdOnInquiryRequestVideo(
+        inquiryRequestVideo,
+        inquiryRequest,
+      );
+    });
 
-    inquiryRequestDto.Image = [];
+    await Promise.all(promises);
+  }
 
-    if (inquiryImgCookies.length >= 2) {
-      await this.pushMoreThenTwoInquiryImageInDto(
-        inquiryImgCookies,
-        inquiryRequestDto,
+  async insertInquiryRequestIdOneOneInquiryRequestVideo(
+    inquiryRequestVideo: InquiryRequestVideoEntity,
+    inquiryRequest: InquiryRequestEntity,
+  ): Promise<void> {
+    await this.mediaInsertRepository.insertInquiryRequestIdOnInquiryRequestVideo(
+      inquiryRequestVideo,
+      inquiryRequest,
+    );
+  }
+
+  async distinguishInquiryRequestImagesCountForPush(
+    pushInquiryRequestImageDto: PushInquiryRequestImageDto,
+  ): Promise<void> {
+    const { inquiryRequestImgCookies, createInquiryRequestDto } =
+      pushInquiryRequestImageDto;
+
+    createInquiryRequestDto.Image = [];
+
+    if (inquiryRequestImgCookies.length >= 2) {
+      await this.pushMoreThenTwoInquiryRequestImageInDto(
+        inquiryRequestImgCookies,
+        createInquiryRequestDto,
       );
     } else {
-      await this.pushOneInquiryImageInDto(inquiryImgCookies, inquiryRequestDto);
-    }
-  }
-
-  async distinguishInquiryVideosCountForPush(
-    pushInquiryVideoDto: PushInquiryVideoDto,
-  ): Promise<void> {
-    const { inquiryVdoCookies, inquiryRequestDto } = pushInquiryVideoDto;
-
-    inquiryRequestDto.Video = [];
-
-    if (inquiryVdoCookies.length >= 2) {
-      await this.pushMoreThenTwoInquiryVideoInDto(
-        inquiryVdoCookies,
-        inquiryRequestDto,
-      );
-    } else {
-      await this.pushOneInquiryVideoInDto(inquiryVdoCookies, inquiryRequestDto);
-    }
-  }
-
-  async distinguishInquiryImagesCountForInsert(
-    inquiryImgCookies: RequestMediaDto[],
-    inquiryRequestDto: InquiryRequestDto,
-    inquiry: RequestInquiryEntity,
-  ): Promise<void> {
-    if (inquiryImgCookies.length >= 2) {
-      await this.insertInquiryIdOneMoreThenTwoInquiryImage(
-        inquiryRequestDto.Image,
-        inquiry,
-      );
-    } else {
-      await this.insertInquiryIdOnOneInquiryImage(
-        inquiryRequestDto.Image[0],
-        inquiry,
+      await this.pushOneInquiryRequestImageInDto(
+        inquiryRequestImgCookies,
+        createInquiryRequestDto,
       );
     }
   }
 
-  async distinguishInquiryVideosCountForInsert(
-    inquiryVdoCookies: RequestMediaDto[],
-    inquiryRequestDto: InquiryRequestDto,
-    inquiry: RequestInquiryEntity,
+  async distinguishInquiryRequestVideosCountForPush(
+    pushInquiryRequestVideoDto: PushInquiryRequestVideoDto,
   ): Promise<void> {
-    if (inquiryVdoCookies.length >= 2) {
-      await this.insertInquiryIdOneMoreThenTwoInquiryVideo(
-        inquiryRequestDto.Video,
-        inquiry,
+    const { inquiryRequestVdoCookies, createInquiryRequestDto } =
+      pushInquiryRequestVideoDto;
+
+    createInquiryRequestDto.Video = [];
+
+    if (inquiryRequestVdoCookies.length >= 2) {
+      await this.pushMoreThenTwoInquiryRequestVideoInDto(
+        inquiryRequestVdoCookies,
+        createInquiryRequestDto,
       );
     } else {
-      await this.insertInquiryIdOnOneInquiryImage(
-        inquiryRequestDto.Image[0],
-        inquiry,
+      await this.pushOneInquiryRequestVideoInDto(
+        inquiryRequestVdoCookies,
+        createInquiryRequestDto,
+      );
+    }
+  }
+
+  async distinguishInquiryRequestImagesCountForInsert(
+    inquiryRequestImgCookies: RequestMediaDto[],
+    createInquiryRequestDto: InquiryRequestDto,
+    inquiryRequest: InquiryRequestEntity,
+  ): Promise<void> {
+    if (inquiryRequestImgCookies.length >= 2) {
+      await this.insertInquiryRequestIdOneMoreThenTwoInquiryRequestImage(
+        createInquiryRequestDto.Image,
+        inquiryRequest,
+      );
+    } else {
+      await this.insertInquiryRequestIdOnOneInquiryRequestImage(
+        createInquiryRequestDto.Image[0],
+        inquiryRequest,
+      );
+    }
+  }
+
+  async distinguishInquiryRequestVideosCountForInsert(
+    inquiryRequestVdoCookies: RequestMediaDto[],
+    createInquiryRequestDto: InquiryRequestDto,
+    inquiryRequest: InquiryRequestEntity,
+  ): Promise<void> {
+    if (inquiryRequestVdoCookies.length >= 2) {
+      await this.insertInquiryRequestIdOneMoreThenTwoInquiryVideo(
+        createInquiryRequestDto.Video,
+        inquiryRequest,
+      );
+    } else {
+      await this.insertInquiryRequestIdOnOneInquiryRequestImage(
+        createInquiryRequestDto.Image[0],
+        inquiryRequest,
       );
     }
   }

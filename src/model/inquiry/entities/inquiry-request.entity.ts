@@ -1,13 +1,13 @@
 import { IsEnum, IsNotEmpty } from "class-validator";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
-import { RequestInquiryImageEntity } from "src/model/media/entities/inquiry.image.entity";
-import { RequestInquiryVideoEntity } from "src/model/media/entities/inquiry.video.entity";
+import { InquiryRequestImageEntity } from "src/model/media/entities/inquiry-request-image.entity";
+import { InquiryRequestVideoEntity } from "src/model/media/entities/inquiry-request-video.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { PostEntity } from "src/common/entities/post.entity";
 
-@Entity({ name: "request_inquiries", synchronize: true })
-export class RequestInquiryEntity extends PostEntity {
+@Entity({ name: "inquiry_requests", synchronize: true })
+export class InquiryRequestEntity extends PostEntity {
   @IsEnum(["product status", "delivery status", ""])
   @IsNotEmpty()
   @Column({ type: "enum", enum: ["product status", "delivery status"] })
@@ -21,13 +21,13 @@ export class RequestInquiryEntity extends PostEntity {
   })
   Product: ProductEntity;
 
-  @OneToMany(() => RequestInquiryImageEntity, (image) => image.Inquiry, {
+  @OneToMany(() => InquiryRequestImageEntity, (image) => image.Inquiry, {
     cascade: true,
   })
-  Image: RequestInquiryImageEntity[];
+  Image: InquiryRequestImageEntity[];
 
-  @OneToMany(() => RequestInquiryVideoEntity, (video) => video.Inquiry, {
+  @OneToMany(() => InquiryRequestVideoEntity, (video) => video.Inquiry, {
     cascade: true,
   })
-  Video: RequestInquiryVideoEntity[];
+  Video: InquiryRequestVideoEntity[];
 }

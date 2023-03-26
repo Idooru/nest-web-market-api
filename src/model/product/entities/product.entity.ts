@@ -4,7 +4,7 @@ import { CommonEntity } from "src/common/entities/common.entity";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
 import { StarRateEntity } from "../../review/entities/star-rate.entity";
 import { ProductImageEntity } from "src/model/media/entities/product.image.entity";
-import { RequestInquiryEntity } from "../../inquiry/entities/request-inquiry.entity";
+import { InquiryRequestEntity } from "../../inquiry/entities/inquiry-request.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
 
@@ -58,8 +58,8 @@ export class ProductEntity extends CommonEntity {
   @OneToMany(() => ReviewEntity, (review) => review.Product, { cascade: true })
   Review: ReviewEntity[];
 
-  @OneToMany(() => RequestInquiryEntity, (inquiry) => inquiry.Product, {
+  @OneToMany(() => InquiryRequestEntity, (inquiry) => inquiry.Product, {
     cascade: true,
   })
-  Inquiry: RequestInquiryEntity[];
+  Inquiry: InquiryRequestEntity[];
 }

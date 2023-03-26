@@ -85,7 +85,7 @@ export class MediaGeneralService {
     }
   }
 
-  async uploadInquiryImage(
+  async uploadInquiryRequestImage(
     files: Array<Express.Multer.File>,
     jwtPayload: JwtAccessTokenPayload,
     urls: string[],
@@ -96,7 +96,7 @@ export class MediaGeneralService {
 
     if (files.length >= 2) {
       const promises = urls.map(async (url) => {
-        await this.mediaGeneralRepository.uploadInquiryImage({
+        await this.mediaGeneralRepository.uploadInquiryRequestImage({
           url,
           uploader: user.Auth.email,
         });
@@ -106,14 +106,14 @@ export class MediaGeneralService {
     } else {
       const url = this.mediaAccessoryService.setUrl(files[0].filename);
 
-      await this.mediaGeneralRepository.uploadInquiryImage({
+      await this.mediaGeneralRepository.uploadInquiryRequestImage({
         url,
         uploader: user.Auth.email,
       });
     }
   }
 
-  async uploadInquiryVideo(
+  async uploadInquiryRequestVideo(
     files: Array<Express.Multer.File>,
     jwtPayload: JwtAccessTokenPayload,
     urls: string[],
@@ -124,7 +124,7 @@ export class MediaGeneralService {
 
     if (files.length >= 2) {
       const promises = urls.map(async (url) => {
-        await this.mediaGeneralRepository.uploadInquiryVideo({
+        await this.mediaGeneralRepository.uploadInquiryRequestVideo({
           url,
           uploader: user.Auth.email,
         });
@@ -134,7 +134,7 @@ export class MediaGeneralService {
     } else {
       const url = this.mediaAccessoryService.setUrl(files[0].filename);
 
-      await this.mediaGeneralRepository.uploadInquiryVideo({
+      await this.mediaGeneralRepository.uploadInquiryRequestVideo({
         url,
         uploader: user.Auth.email,
       });
@@ -194,42 +194,46 @@ export class MediaGeneralService {
   }
 
   async deleteInquiryImagesWithCookies(
-    inquiryImgCookies: RequestMediaDto[],
+    inquiryRequestImgCookies: RequestMediaDto[],
   ): Promise<void> {
-    if (inquiryImgCookies.length >= 2) {
-      const promises = inquiryImgCookies.map(async (cookie) => {
-        const image = await this.mediaGeneralRepository.findInquiryImageWithUrl(
-          cookie.url,
-        );
+    if (inquiryRequestImgCookies.length >= 2) {
+      const promises = inquiryRequestImgCookies.map(async (cookie) => {
+        const image =
+          await this.mediaGeneralRepository.findInquiryRequestImageWithUrl(
+            cookie.url,
+          );
         await this.mediaGeneralRepository.deleteInquiryImageWithId(image.id);
       });
 
       await Promise.all(promises);
     } else {
-      const image = await this.mediaGeneralRepository.findInquiryImageWithUrl(
-        inquiryImgCookies[0].url,
-      );
+      const image =
+        await this.mediaGeneralRepository.findInquiryRequestImageWithUrl(
+          inquiryRequestImgCookies[0].url,
+        );
 
       await this.mediaGeneralRepository.deleteInquiryImageWithId(image.id);
     }
   }
 
   async deleteInquiryVideosWithCookies(
-    inquiryVdoCookies: RequestMediaDto[],
+    inquiryRequestVdoCookies: RequestMediaDto[],
   ): Promise<void> {
-    if (inquiryVdoCookies.length >= 2) {
-      const promises = inquiryVdoCookies.map(async (cookie) => {
-        const video = await this.mediaGeneralRepository.findInquiryVideoWithUrl(
-          cookie.url,
-        );
+    if (inquiryRequestVdoCookies.length >= 2) {
+      const promises = inquiryRequestVdoCookies.map(async (cookie) => {
+        const video =
+          await this.mediaGeneralRepository.findInquiryReuqestVideoWithUrl(
+            cookie.url,
+          );
         await this.mediaGeneralRepository.deleteInquiryVideoWithId(video.id);
       });
 
       await Promise.all(promises);
     } else {
-      const video = await this.mediaGeneralRepository.findInquiryVideoWithUrl(
-        inquiryVdoCookies[0].url,
-      );
+      const video =
+        await this.mediaGeneralRepository.findInquiryReuqestVideoWithUrl(
+          inquiryRequestVdoCookies[0].url,
+        );
 
       await this.mediaGeneralRepository.deleteInquiryVideoWithId(video.id);
     }

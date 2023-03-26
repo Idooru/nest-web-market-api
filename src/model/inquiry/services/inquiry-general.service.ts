@@ -1,9 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { ProductGeneralRepository } from "src/model/product/repositories/product-general.repository";
 import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
-import { CreateInquiryDto } from "../dto/create-inquiry.dto";
-import {} from "../dto/inquiry-request.dto";
-import { RequestInquiryEntity } from "../entities/request-inquiry.entity";
+import { CreateInquiryRequestDto } from "../dto/request/create-inquiry-request.dto";
+import { InquiryRequestEntity } from "../entities/inquiry-request.entity";
 import { InquiryGeneralRepository } from "../repositories/inquiry-general.repository";
 import { InquiryInsertRepository } from "../repositories/inquiry-insert.repository";
 import { InquiryAccessoryService } from "./inquiry-accessory.service";
@@ -18,24 +17,25 @@ export class InquiryGeneralService {
     private readonly inquiryAccessoryService: InquiryAccessoryService,
   ) {}
 
-  async createInquiry(
-    createInquiryDto: CreateInquiryDto,
-  ): Promise<RequestInquiryEntity> {
-    const { inquiryRequestDto, jwtPayload, productId } = createInquiryDto;
+  async createInquiryRequest(
+    createInquiryDto: CreateInquiryRequestDto,
+  ): Promise<InquiryRequestEntity> {
+    const { createInquiryRequestDto, jwtPayload, productId } = createInquiryDto;
 
     const [product, client] = await Promise.all([
       this.productGenralRepository.findProductOneById(productId),
       this.userGenralRepository.findClientUserObject(jwtPayload.userId),
     ]);
 
-    await this.inquiryGeneralRepository.createInquiry({
-      inquiryRequestDto,
+    await this.inquiryGeneralRepository.createInquiryRequest({
+      createInquiryRequestDto,
       client,
       product,
     });
 
-    const inquiry = await this.inquiryInsertRepository.findLastCreatedInquiry();
-    await this.inquiryInsertRepository.insertInquiryIdOnClientUser(
+    const inquiry =
+      await this.inquiryInsertRepository.findLastCreatedInquiryRequest();
+    await this.inquiryInsertRepository.insertInquiryRequestIdOnClientUser(
       client,
       inquiry,
     );

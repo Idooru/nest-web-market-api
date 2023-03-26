@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { InsertInquiryMediaDto } from "../dto/insert-inquiry-media.dto";
-import { PushInquiryMediaDto } from "../dto/push-inquiry-media.dto";
+import { InsertInquiryRequestMediaDto } from "../dto/request/insert-inquiry-request-media.dto";
+import { PushInquiryRequestMediaDto } from "../dto/request/push-inquiry-request-media.dto";
 import { InquiryAccessoryService } from "./inquiry-accessory.service";
 
 @Injectable()
@@ -9,46 +9,57 @@ export class InquiryBundleService {
     private readonly inquiryAccessoryService: InquiryAccessoryService,
   ) {}
 
-  async pushInquiryMedia(
-    pushInquiryMediaDto: PushInquiryMediaDto,
+  async pushInquiryRequestMedia(
+    pushInquiryRequestMediaDto: PushInquiryRequestMediaDto,
   ): Promise<void> {
-    const { inquiryRequestDto, inquiryImgCookies, inquiryVdoCookies } =
-      pushInquiryMediaDto;
+    const {
+      createInquiryRequestDto,
+      inquiryRequestImgCookies,
+      inquiryRequestVdoCookies,
+    } = pushInquiryRequestMediaDto;
 
-    if (inquiryImgCookies) {
-      await this.inquiryAccessoryService.distinguishInquiryImagesCountForPush({
-        inquiryRequestDto,
-        inquiryImgCookies,
-      });
-    }
-
-    if (inquiryVdoCookies) {
-      await this.inquiryAccessoryService.distinguishInquiryVideosCountForPush({
-        inquiryRequestDto,
-        inquiryVdoCookies,
-      });
-    }
-  }
-
-  async insertInquiryMedia(
-    insertInquiryMediaDto: InsertInquiryMediaDto,
-  ): Promise<void> {
-    const { inquiryImgCookies, inquiryVdoCookies, inquiry, inquiryRequestDto } =
-      insertInquiryMediaDto;
-
-    if (inquiryImgCookies) {
-      await this.inquiryAccessoryService.distinguishInquiryImagesCountForInsert(
-        inquiryImgCookies,
-        inquiryRequestDto,
-        inquiry,
+    if (inquiryRequestImgCookies) {
+      await this.inquiryAccessoryService.distinguishInquiryRequestImagesCountForPush(
+        {
+          createInquiryRequestDto,
+          inquiryRequestImgCookies,
+        },
       );
     }
 
-    if (inquiryVdoCookies) {
-      await this.inquiryAccessoryService.distinguishInquiryVideosCountForInsert(
-        inquiryVdoCookies,
-        inquiryRequestDto,
-        inquiry,
+    if (inquiryRequestVdoCookies) {
+      await this.inquiryAccessoryService.distinguishInquiryRequestVideosCountForPush(
+        {
+          createInquiryRequestDto,
+          inquiryRequestVdoCookies,
+        },
+      );
+    }
+  }
+
+  async insertInquiryRequestMedia(
+    insertInquiryRequestMediaDto: InsertInquiryRequestMediaDto,
+  ): Promise<void> {
+    const {
+      inquiryRequestImgCookies,
+      inquiryRequestVdoCookies,
+      inquiryRequest,
+      createInquiryRequestDto,
+    } = insertInquiryRequestMediaDto;
+
+    if (inquiryRequestImgCookies) {
+      await this.inquiryAccessoryService.distinguishInquiryRequestImagesCountForInsert(
+        inquiryRequestImgCookies,
+        createInquiryRequestDto,
+        inquiryRequest,
+      );
+    }
+
+    if (inquiryRequestVdoCookies) {
+      await this.inquiryAccessoryService.distinguishInquiryRequestVideosCountForInsert(
+        inquiryRequestVdoCookies,
+        createInquiryRequestDto,
+        inquiryRequest,
       );
     }
   }

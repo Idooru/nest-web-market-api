@@ -10,8 +10,8 @@ import { ReviewImageEntity } from "../entities/review.image.entity";
 import { ReviewVideoEntity } from "../entities/review.video.entity";
 import { Repository } from "typeorm";
 import { mediaSelectProperty } from "src/common/config/repository-select-configs/media-select";
-import { RequestInquiryImageEntity } from "../entities/inquiry.image.entity";
-import { RequestInquiryVideoEntity } from "../entities/inquiry.video.entity";
+import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.entity";
+import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
 import { RepositoryLogger } from "src/common/classes/repository.logger";
 
 @Injectable()
@@ -23,10 +23,10 @@ export class MediaGeneralRepository extends RepositoryLogger {
     private readonly reviewImageRepository: Repository<ReviewImageEntity>,
     @InjectRepository(ReviewVideoEntity)
     private readonly reviewVideoRepository: Repository<ReviewVideoEntity>,
-    @InjectRepository(RequestInquiryImageEntity)
-    private readonly inquiryImageRepository: Repository<RequestInquiryImageEntity>,
-    @InjectRepository(RequestInquiryVideoEntity)
-    private readonly inquiryVideoRepository: Repository<RequestInquiryVideoEntity>,
+    @InjectRepository(InquiryRequestImageEntity)
+    private readonly inquiryRequestImageRepository: Repository<InquiryRequestImageEntity>,
+    @InjectRepository(InquiryRequestVideoEntity)
+    private readonly inquiryRequestVideoRepository: Repository<InquiryRequestVideoEntity>,
   ) {
     super("Media General");
   }
@@ -75,12 +75,14 @@ export class MediaGeneralRepository extends RepositoryLogger {
     }
   }
 
-  async uploadInquiryImage(uploadMediaDto: UploadMediaDto): Promise<void> {
+  async uploadInquiryRequestImage(
+    uploadMediaDto: UploadMediaDto,
+  ): Promise<void> {
     try {
-      await this.inquiryImageRepository
+      await this.inquiryRequestImageRepository
         .createQueryBuilder()
         .insert()
-        .into(RequestInquiryImageEntity)
+        .into(InquiryRequestImageEntity)
         .values({ ...uploadMediaDto })
         .execute();
     } catch (err) {
@@ -89,12 +91,14 @@ export class MediaGeneralRepository extends RepositoryLogger {
     }
   }
 
-  async uploadInquiryVideo(uploadMediaDto: UploadMediaDto): Promise<void> {
+  async uploadInquiryRequestVideo(
+    uploadMediaDto: UploadMediaDto,
+  ): Promise<void> {
     try {
-      await this.inquiryVideoRepository
+      await this.inquiryRequestVideoRepository
         .createQueryBuilder()
         .insert()
-        .into(RequestInquiryVideoEntity)
+        .into(InquiryRequestVideoEntity)
         .values({ ...uploadMediaDto })
         .execute();
     } catch (err) {
@@ -108,8 +112,8 @@ export class MediaGeneralRepository extends RepositoryLogger {
       return await this.productImageRepository
         .createQueryBuilder()
         .select(this.select.productImagesSelect)
-        .from(ProductImageEntity, "product_image")
-        .where("product_image.url = :url", { url })
+        .from(ProductImageEntity, "productImage")
+        .where("productImage.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
       this.logger.error(err);
@@ -127,9 +131,9 @@ export class MediaGeneralRepository extends RepositoryLogger {
       return await this.reviewImageRepository
         .createQueryBuilder()
         .select(this.select.reviewImagesSelect)
-        .from(ReviewImageEntity, "review_image")
-        .leftJoin("review_image.Review", "Review")
-        .where("review_image.url = :url", { url })
+        .from(ReviewImageEntity, "reviewImage")
+        .leftJoin("reviewImage.Review", "Review")
+        .where("reviewImage.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
       this.logger.error(err);
@@ -147,9 +151,9 @@ export class MediaGeneralRepository extends RepositoryLogger {
       return await this.reviewVideoRepository
         .createQueryBuilder()
         .select(this.select.reviewVideosSelect)
-        .from(ReviewVideoEntity, "review_video")
-        .leftJoin("review_video.Review", "Review")
-        .where("review_video.url = :url", { url })
+        .from(ReviewVideoEntity, "reviewVideo")
+        .leftJoin("reviewVideo.Review", "Review")
+        .where("reviewVideo.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
       this.logger.error(err);
@@ -162,16 +166,16 @@ export class MediaGeneralRepository extends RepositoryLogger {
     }
   }
 
-  async findInquiryImageWithUrl(
+  async findInquiryRequestImageWithUrl(
     url: string,
-  ): Promise<RequestInquiryImageEntity> {
+  ): Promise<InquiryRequestImageEntity> {
     try {
-      return await this.inquiryImageRepository
+      return await this.inquiryRequestImageRepository
         .createQueryBuilder()
         .select(this.select.inquiryImagesSelect)
-        .from(RequestInquiryImageEntity, "inquiry_image")
-        .leftJoin("inquiry_image.Inquiry", "Inquiry")
-        .where("inquiry_image.url = :url", { url })
+        .from(InquiryRequestImageEntity, "inquiryRequestImage")
+        .leftJoin("inquiryRequestImage.Inquiry", "Inquiry")
+        .where("inquiryRequestImage.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
       this.logger.error(err);
@@ -184,16 +188,16 @@ export class MediaGeneralRepository extends RepositoryLogger {
     }
   }
 
-  async findInquiryVideoWithUrl(
+  async findInquiryReuqestVideoWithUrl(
     url: string,
-  ): Promise<RequestInquiryVideoEntity> {
+  ): Promise<InquiryRequestVideoEntity> {
     try {
-      return await this.inquiryVideoRepository
+      return await this.inquiryRequestVideoRepository
         .createQueryBuilder()
         .select(this.select.inquiryVideosSelect)
-        .from(RequestInquiryVideoEntity, "inquiry_video")
-        .leftJoin("inquiry_video.Inquiry", "Inquiry")
-        .where("inquiry_video.url = :url", { url })
+        .from(InquiryRequestVideoEntity, "inquiryRequestVideo")
+        .leftJoin("inquiryRequestVideo.Inquiry", "Inquiry")
+        .where("inquiryRequestVideo.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
       this.logger.error(err);
@@ -211,7 +215,7 @@ export class MediaGeneralRepository extends RepositoryLogger {
       await this.productImageRepository
         .createQueryBuilder()
         .delete()
-        .from(ProductImageEntity, "product_image")
+        .from(ProductImageEntity, "productImage")
         .where("id = :id", { id })
         .execute();
     } catch (err) {
@@ -225,7 +229,7 @@ export class MediaGeneralRepository extends RepositoryLogger {
       await this.reviewImageRepository
         .createQueryBuilder()
         .delete()
-        .from(ReviewImageEntity, "review_image")
+        .from(ReviewImageEntity, "reviewImage")
         .where("id = :id", { id })
         .execute();
     } catch (err) {
@@ -239,7 +243,7 @@ export class MediaGeneralRepository extends RepositoryLogger {
       await this.reviewVideoRepository
         .createQueryBuilder()
         .delete()
-        .from(ReviewVideoEntity, "review_video")
+        .from(ReviewVideoEntity, "reviewVideo")
         .where("id = :id", { id })
         .execute();
     } catch (err) {
@@ -250,10 +254,10 @@ export class MediaGeneralRepository extends RepositoryLogger {
 
   async deleteInquiryImageWithId(id: string): Promise<void> {
     try {
-      await this.inquiryImageRepository
+      await this.inquiryRequestImageRepository
         .createQueryBuilder()
         .delete()
-        .from(RequestInquiryImageEntity, "inquiry_image")
+        .from(InquiryRequestImageEntity, "inquiryRequestImage")
         .where("id = :id", { id })
         .execute();
     } catch (err) {
@@ -267,7 +271,7 @@ export class MediaGeneralRepository extends RepositoryLogger {
       await this.reviewVideoRepository
         .createQueryBuilder()
         .delete()
-        .from(RequestInquiryVideoEntity, "inquiry_video")
+        .from(InquiryRequestVideoEntity, "inquiryRequestVideo")
         .where("id = :id", { id })
         .execute();
     } catch (err) {
@@ -280,9 +284,9 @@ export class MediaGeneralRepository extends RepositoryLogger {
     try {
       return await this.productImageRepository
         .createQueryBuilder()
-        .select("products_images.id")
-        .from(ProductImageEntity, "products_images")
-        .where("products_images.Product = :Product", {
+        .select("productImages.id")
+        .from(ProductImageEntity, "productImages")
+        .where("productImages.Product = :Product", {
           Product: id,
         })
         .getOne();
@@ -296,10 +300,10 @@ export class MediaGeneralRepository extends RepositoryLogger {
     try {
       return await this.reviewImageRepository
         .createQueryBuilder()
-        .select("reviews_images.id")
-        .from(ReviewImageEntity, "reviews_images")
-        .where("reviews_images.Review = :Review", { Review: id })
-        .orderBy("reviews_images.createdAt", "DESC")
+        .select("reviewImages.id")
+        .from(ReviewImageEntity, "reviewImages")
+        .where("reviewImages.Review = :Review", { Review: id })
+        .orderBy("reviewImages.createdAt", "DESC")
         .getMany();
     } catch (err) {
       this.logger.error(err);
@@ -311,10 +315,10 @@ export class MediaGeneralRepository extends RepositoryLogger {
     try {
       return await this.reviewImageRepository
         .createQueryBuilder()
-        .select("reviews_image.id")
-        .from(ReviewImageEntity, "reviews_image")
-        .where("reviews_image.Review = :Review", { Review: id })
-        .orderBy("reviews_image.createdAt", "DESC")
+        .select("reviewImage.id")
+        .from(ReviewImageEntity, "reviewImage")
+        .where("reviewImage.Review = :Review", { Review: id })
+        .orderBy("reviewImage.createdAt", "DESC")
         .getOne();
     } catch (err) {
       this.logger.error(err);
@@ -326,10 +330,10 @@ export class MediaGeneralRepository extends RepositoryLogger {
     try {
       return await this.reviewVideoRepository
         .createQueryBuilder()
-        .select("reviews_videos.id")
-        .from(ReviewVideoEntity, "reviews_videos")
-        .where("reviews_videos.Review = :Review", { Review: id })
-        .orderBy("reviews_videos.createdAt", "DESC")
+        .select("reviewVideos.id")
+        .from(ReviewVideoEntity, "reviewVideos")
+        .where("reviewVideos.Review = :Review", { Review: id })
+        .orderBy("reviewVideos.createdAt", "DESC")
         .getMany();
     } catch (err) {
       this.logger.error(err);
@@ -341,10 +345,10 @@ export class MediaGeneralRepository extends RepositoryLogger {
     try {
       return await this.reviewVideoRepository
         .createQueryBuilder()
-        .select("reviews_video.id")
-        .from(ReviewVideoEntity, "reviews_video")
-        .where("reviews_video.Review = :Review", { Review: id })
-        .orderBy("reviews_video.createdAt", "DESC")
+        .select("reviewVideo.id")
+        .from(ReviewVideoEntity, "reviewVideo")
+        .where("reviewVideo.Review = :Review", { Review: id })
+        .orderBy("reviewVideo.createdAt", "DESC")
         .getOne();
     } catch (err) {
       this.logger.error(err);

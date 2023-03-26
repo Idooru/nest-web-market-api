@@ -21,7 +21,7 @@ import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/jso
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { RequestMediaDto } from "src/model/media/dto/request-media.dto";
-import { InquiryRequestDto } from "../dto/inquiry-request.dto";
+import { InquiryRequestDto } from "../dto/request/inquiry-request.dto";
 import { InquiryBundleService } from "../services/inquiry-bundle.service";
 import { InquiryGeneralService } from "../services/inquiry-general.service";
 import { InquirySendMailService } from "../services/inquiry-send-mail.service";
@@ -39,33 +39,34 @@ export class InquiryVersionOneOnlyClientController {
   @UseInterceptors(JsonClearCookiesInterceptor)
   @UseGuards(new VerifyDataGuard(verifyCookieKeys.product.is_exist.id_executed))
   @Post("/product/:productId/image&video")
-  async createInquiryWithImageAndVideo(
+  async createInquiryRequestWithImageAndVideo(
     @Param("productId") productId: string,
     @MediaCookiesParser(mediaCookieKeys.inquiry.image_url_cookie)
-    inquiryImgCookies: RequestMediaDto[],
+    inquiryRequestImgCookies: RequestMediaDto[],
     @MediaCookiesParser(mediaCookieKeys.inquiry.video_url_cookie)
-    inquiryVdoCookies: RequestMediaDto[],
-    @Body() inquiryRequestDto: InquiryRequestDto,
+    inquiryRequestVdoCookies: RequestMediaDto[],
+    @Body() createInquiryRequestDto: InquiryRequestDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
-    const inquiry = await this.inquiryGeneralService.createInquiry({
-      productId,
-      inquiryRequestDto,
-      jwtPayload,
-    });
-
-    const mediaWork = async () => {
-      await this.inquiryBundleService.pushInquiryMedia({
-        inquiryRequestDto,
-        inquiryImgCookies,
-        inquiryVdoCookies,
+    const inquiryRequest =
+      await this.inquiryGeneralService.createInquiryRequest({
+        productId,
+        createInquiryRequestDto,
+        jwtPayload,
       });
 
-      await this.inquiryBundleService.insertInquiryMedia({
-        inquiryImgCookies,
-        inquiryVdoCookies,
-        inquiryRequestDto,
-        inquiry,
+    const mediaWork = async () => {
+      await this.inquiryBundleService.pushInquiryRequestMedia({
+        createInquiryRequestDto,
+        inquiryRequestImgCookies,
+        inquiryRequestVdoCookies,
+      });
+
+      await this.inquiryBundleService.insertInquiryRequestMedia({
+        inquiryRequestImgCookies,
+        inquiryRequestVdoCookies,
+        createInquiryRequestDto,
+        inquiryRequest,
       });
     };
 
@@ -82,8 +83,8 @@ export class InquiryVersionOneOnlyClientController {
       message:
         "문의를 생성하였습니다. 문의는 한번 작성되면 수정 할 수 없으므로 신중히 작성해주세요.",
       cookieKey: [
-        ...inquiryImgCookies.map((cookie) => cookie.whatCookie),
-        ...inquiryVdoCookies.map((cookie) => cookie.whatCookie),
+        ...inquiryRequestImgCookies.map((cookie) => cookie.whatCookie),
+        ...inquiryRequestVdoCookies.map((cookie) => cookie.whatCookie),
       ],
     };
   }
@@ -94,26 +95,27 @@ export class InquiryVersionOneOnlyClientController {
   async createInquiryWithImage(
     @Param("productId") productId: string,
     @MediaCookiesParser(mediaCookieKeys.inquiry.image_url_cookie)
-    inquiryImgCookies: RequestMediaDto[],
-    @Body() inquiryRequestDto: InquiryRequestDto,
+    inquiryRequestImgCookies: RequestMediaDto[],
+    @Body() createInquiryRequestDto: InquiryRequestDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
-    const inquiry = await this.inquiryGeneralService.createInquiry({
-      productId,
-      inquiryRequestDto,
-      jwtPayload,
-    });
-
-    const mediaWork = async () => {
-      await this.inquiryBundleService.pushInquiryMedia({
-        inquiryRequestDto,
-        inquiryImgCookies,
+    const inquiryRequest =
+      await this.inquiryGeneralService.createInquiryRequest({
+        productId,
+        createInquiryRequestDto,
+        jwtPayload,
       });
 
-      await this.inquiryBundleService.insertInquiryMedia({
-        inquiryRequestDto,
-        inquiry,
-        inquiryImgCookies,
+    const mediaWork = async () => {
+      await this.inquiryBundleService.pushInquiryRequestMedia({
+        createInquiryRequestDto,
+        inquiryRequestImgCookies,
+      });
+
+      await this.inquiryBundleService.insertInquiryRequestMedia({
+        createInquiryRequestDto,
+        inquiryRequest,
+        inquiryRequestImgCookies,
       });
     };
 
@@ -129,7 +131,9 @@ export class InquiryVersionOneOnlyClientController {
       statusCode: 201,
       message:
         "문의를 생성하였습니다. 문의는 한번 작성되면 수정 할 수 없으므로 신중히 작성해주세요.",
-      cookieKey: [...inquiryImgCookies.map((cookie) => cookie.whatCookie)],
+      cookieKey: [
+        ...inquiryRequestImgCookies.map((cookie) => cookie.whatCookie),
+      ],
     };
   }
 
@@ -139,26 +143,27 @@ export class InquiryVersionOneOnlyClientController {
   async createInquiryWithVideo(
     @Param("productId") productId: string,
     @MediaCookiesParser(mediaCookieKeys.inquiry.video_url_cookie)
-    inquiryVdoCookies: RequestMediaDto[],
-    @Body() inquiryRequestDto: InquiryRequestDto,
+    inquiryRequestVdoCookies: RequestMediaDto[],
+    @Body() createInquiryRequestDto: InquiryRequestDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
-    const inquiry = await this.inquiryGeneralService.createInquiry({
-      productId,
-      inquiryRequestDto,
-      jwtPayload,
-    });
-
-    const mediaWork = async () => {
-      await this.inquiryBundleService.pushInquiryMedia({
-        inquiryRequestDto,
-        inquiryVdoCookies,
+    const inquiryRequest =
+      await this.inquiryGeneralService.createInquiryRequest({
+        productId,
+        createInquiryRequestDto,
+        jwtPayload,
       });
 
-      await this.inquiryBundleService.insertInquiryMedia({
-        inquiryVdoCookies,
-        inquiryRequestDto,
-        inquiry,
+    const mediaWork = async () => {
+      await this.inquiryBundleService.pushInquiryRequestMedia({
+        createInquiryRequestDto,
+        inquiryRequestVdoCookies,
+      });
+
+      await this.inquiryBundleService.insertInquiryRequestMedia({
+        inquiryRequestVdoCookies,
+        createInquiryRequestDto,
+        inquiryRequest,
       });
     };
 
@@ -174,7 +179,9 @@ export class InquiryVersionOneOnlyClientController {
       statusCode: 201,
       message:
         "문의를 생성하였습니다. 문의는 한번 작성되면 수정 할 수 없으므로 신중히 작성해주세요.",
-      cookieKey: [...inquiryVdoCookies.map((cookie) => cookie.whatCookie)],
+      cookieKey: [
+        ...inquiryRequestVdoCookies.map((cookie) => cookie.whatCookie),
+      ],
     };
   }
 
@@ -183,12 +190,12 @@ export class InquiryVersionOneOnlyClientController {
   @Post("/product/:productId")
   async createInquiryWithoutMedia(
     @Param("productId") productId: string,
-    @Body() inquiryRequestDto: InquiryRequestDto,
+    @Body() createInquiryRequestDto: InquiryRequestDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.inquiryGeneralService.createInquiry({
+    await this.inquiryGeneralService.createInquiryRequest({
       productId,
-      inquiryRequestDto,
+      createInquiryRequestDto,
       jwtPayload,
     });
 
