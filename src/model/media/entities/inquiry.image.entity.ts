@@ -1,6 +1,6 @@
 import { Entity, ManyToOne } from "typeorm";
 import { InquiryEntity } from "src/model/inquiry/entities/inquiry.entity";
-import { MediaEntity } from "./media.entity";
+import { MediaEntity } from "../../../common/entities/media.entity";
 
 @Entity({ name: "inquiries_images", synchronize: true })
 export class InquiryImageEntity extends MediaEntity {

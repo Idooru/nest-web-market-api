@@ -1,4 +1,4 @@
-import { MediaEntity } from "src/model/media/entities/media.entity";
+import { MediaEntity } from "src/common/entities/media.entity";
 
 export const brieflyFileName = (media: MediaEntity) =>
   media.url.replace(

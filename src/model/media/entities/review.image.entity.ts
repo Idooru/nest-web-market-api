@@ -1,6 +1,6 @@
 import { Entity, ManyToOne } from "typeorm";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
-import { MediaEntity } from "./media.entity";
+import { MediaEntity } from "../../../common/entities/media.entity";
 
 @Entity({ name: "reviews_images", synchronize: true })
 export class ReviewImageEntity extends MediaEntity {
