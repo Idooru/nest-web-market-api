@@ -46,7 +46,13 @@ export class ProductGeneralRepository extends RepositoryLogger {
         .innerJoin("product.Image", "Image")
         .innerJoin("product.StarRate", "StarRate")
         .leftJoin("product.Review", "Review")
+        .leftJoin("Review.reviewer", "Reviewer")
+        .leftJoin("Reviewer.User", "ReviewUser")
+        .leftJoin("ReviewUser.Auth", "ReviewAuth")
         .leftJoin("product.Inquiry", "Inquiry")
+        .leftJoin("Inquiry.inquirer", "Inquirier")
+        .leftJoin("Inquirier.User", "InquiryUser")
+        .leftJoin("InquiryUser.Auth", "InquiryAuth")
         .leftJoin("Review.Image", "ReviewImage")
         .leftJoin("Review.Video", "ReviewVideo")
         .orderBy("product.createdAt", "DESC")
@@ -66,7 +72,13 @@ export class ProductGeneralRepository extends RepositoryLogger {
         .innerJoin("product.Image", "Image")
         .innerJoin("product.StarRate", "StarRate")
         .leftJoin("product.Review", "Review")
+        .leftJoin("Review.reviewer", "Reviewer")
+        .leftJoin("Reviewer.User", "ReviewUser")
+        .leftJoin("ReviewUser.Auth", "ReviewAuth")
         .leftJoin("product.Inquiry", "Inquiry")
+        .leftJoin("Inquiry.inquirer", "Inquirier")
+        .leftJoin("Inquirier.User", "InquiryUser")
+        .leftJoin("InquiryUser.Auth", "InquiryAuth")
         .leftJoin("Review.Image", "ReviewImage")
         .leftJoin("Review.Video", "ReviewVideo")
         .orderBy("product.createdAt", "ASC")
@@ -79,20 +91,27 @@ export class ProductGeneralRepository extends RepositoryLogger {
 
   async findProductOneByName(name: string): Promise<ProductEntity> {
     try {
-      return await this.productRepository
+      const product = await this.productRepository
         .createQueryBuilder()
         .select(this.select.productSelect)
         .from(ProductEntity, "product")
         .innerJoin("product.Image", "Image")
         .innerJoin("product.StarRate", "StarRate")
         .leftJoin("product.Review", "Review")
+        .leftJoin("Review.reviewer", "Reviewer")
+        .leftJoin("Reviewer.User", "ReviewUser")
+        .leftJoin("ReviewUser.Auth", "ReviewAuth")
         .leftJoin("Review.Image", "ReviewImage")
         .leftJoin("Review.Video", "ReviewVideo")
         .leftJoin("product.Inquiry", "Inquiry")
+        .leftJoin("Inquiry.inquirer", "Inquirier")
+        .leftJoin("Inquirier.User", "InquiryUser")
+        .leftJoin("InquiryUser.Auth", "InquiryAuth")
         .leftJoin("Inquiry.Image", "InquiryImage")
         .leftJoin("Inquiry.Video", "InquiryVideo")
         .where("product.name = :name", { name })
         .getOneOrFail();
+      return product;
     } catch (err) {
       this.logger.error(err);
       if (err.message.includes("Could not find any entity of type")) {
