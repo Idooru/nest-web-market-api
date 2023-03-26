@@ -1,15 +1,15 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { RepositoryLogger } from "src/common/classes/repository.logger";
-import { InquiryEntity } from "src/model/inquiry/entities/inquiry.entity";
+import { RequestInquiryEntity } from "src/model/inquiry/entities/request-inquiry.entity";
 import { Repository } from "typeorm";
 import { CreateInquiryDao } from "../dto/create-inquiry.dto";
 
 @Injectable()
 export class InquiryGeneralRepository extends RepositoryLogger {
   constructor(
-    @InjectRepository(InquiryEntity)
-    private readonly inquiryRepository: Repository<InquiryEntity>,
+    @InjectRepository(RequestInquiryEntity)
+    private readonly inquiryRepository: Repository<RequestInquiryEntity>,
   ) {
     super("Inquiry General");
   }
@@ -20,7 +20,7 @@ export class InquiryGeneralRepository extends RepositoryLogger {
       await this.inquiryRepository
         .createQueryBuilder()
         .insert()
-        .into(InquiryEntity)
+        .into(RequestInquiryEntity)
         .values({ ...inquiryRequestDto, Product: product, inquirer: client })
         .execute();
     } catch (err) {
@@ -31,12 +31,12 @@ export class InquiryGeneralRepository extends RepositoryLogger {
 
   async findLastCreatedOneInquiryWithUserId(
     clientUserId: string,
-  ): Promise<InquiryEntity> {
+  ): Promise<RequestInquiryEntity> {
     try {
       return await this.inquiryRepository
         .createQueryBuilder()
         .select("inquiry")
-        .from(InquiryEntity, "inquiry")
+        .from(RequestInquiryEntity, "inquiry")
         .where("inquiry.inquirer = :id", { id: clientUserId })
         .orderBy("inquiry.createdAt", "DESC")
         .limit(1)

@@ -3,7 +3,7 @@ import { ProductGeneralRepository } from "src/model/product/repositories/product
 import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
 import { CreateInquiryDto } from "../dto/create-inquiry.dto";
 import {} from "../dto/inquiry-request.dto";
-import { InquiryEntity } from "../entities/inquiry.entity";
+import { RequestInquiryEntity } from "../entities/request-inquiry.entity";
 import { InquiryGeneralRepository } from "../repositories/inquiry-general.repository";
 import { InquiryInsertRepository } from "../repositories/inquiry-insert.repository";
 import { InquiryAccessoryService } from "./inquiry-accessory.service";
@@ -20,7 +20,7 @@ export class InquiryGeneralService {
 
   async createInquiry(
     createInquiryDto: CreateInquiryDto,
-  ): Promise<InquiryEntity> {
+  ): Promise<RequestInquiryEntity> {
     const { inquiryRequestDto, jwtPayload, productId } = createInquiryDto;
 
     const [product, client] = await Promise.all([

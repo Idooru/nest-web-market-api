@@ -1,13 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { PushInquiryImageDto } from "src/model/inquiry/dto/push-inquiry-image.dto";
 import { RequestMediaDto } from "src/model/media/dto/request-media.dto";
-import { InquiryImageEntity } from "src/model/media/entities/inquiry.image.entity";
-import { InquiryVideoEntity } from "src/model/media/entities/inquiry.video.entity";
+import { RequestInquiryImageEntity } from "src/model/media/entities/inquiry.image.entity";
+import { RequestInquiryVideoEntity } from "src/model/media/entities/inquiry.video.entity";
 import { MediaGeneralRepository } from "src/model/media/repositories/media-general.repository";
 import { MediaInsertRepository } from "src/model/media/repositories/media-insert.repository";
 import { InquiryRequestDto } from "../dto/inquiry-request.dto";
 import { PushInquiryVideoDto } from "../dto/push-inquiry-video.dto";
-import { InquiryEntity } from "../entities/inquiry.entity";
+import { RequestInquiryEntity } from "../entities/request-inquiry.entity";
 
 @Injectable()
 export class InquiryAccessoryService {
@@ -68,8 +68,8 @@ export class InquiryAccessoryService {
   }
 
   async insertInquiryIdOneMoreThenTwoInquiryImage(
-    inquiryImages: InquiryImageEntity[],
-    inquiry: InquiryEntity,
+    inquiryImages: RequestInquiryImageEntity[],
+    inquiry: RequestInquiryEntity,
   ): Promise<void> {
     const promises = inquiryImages.map(async (inquiryImage) => {
       await this.mediaInsertRepository.insertInquiryIdOnInquiryImage(
@@ -82,8 +82,8 @@ export class InquiryAccessoryService {
   }
 
   async insertInquiryIdOnOneInquiryImage(
-    inquiryImage: InquiryImageEntity,
-    inquiry: InquiryEntity,
+    inquiryImage: RequestInquiryImageEntity,
+    inquiry: RequestInquiryEntity,
   ): Promise<void> {
     await this.mediaInsertRepository.insertInquiryIdOnInquiryImage(
       inquiryImage,
@@ -92,8 +92,8 @@ export class InquiryAccessoryService {
   }
 
   async insertInquiryIdOneMoreThenTwoInquiryVideo(
-    inquiryVideos: InquiryVideoEntity[],
-    inquiry: InquiryEntity,
+    inquiryVideos: RequestInquiryVideoEntity[],
+    inquiry: RequestInquiryEntity,
   ): Promise<void> {
     const promises = inquiryVideos.map(async (inquiryVideo) => {
       await this.mediaInsertRepository.insertInquiryIdOnInquiryVideo(
@@ -106,8 +106,8 @@ export class InquiryAccessoryService {
   }
 
   async insertInquiryIdOneOneInquiryVideo(
-    inquiryVideo: InquiryVideoEntity,
-    inquiry: InquiryEntity,
+    inquiryVideo: RequestInquiryVideoEntity,
+    inquiry: RequestInquiryEntity,
   ): Promise<void> {
     await this.mediaInsertRepository.insertInquiryIdOnInquiryVideo(
       inquiryVideo,
@@ -152,7 +152,7 @@ export class InquiryAccessoryService {
   async distinguishInquiryImagesCountForInsert(
     inquiryImgCookies: RequestMediaDto[],
     inquiryRequestDto: InquiryRequestDto,
-    inquiry: InquiryEntity,
+    inquiry: RequestInquiryEntity,
   ): Promise<void> {
     if (inquiryImgCookies.length >= 2) {
       await this.insertInquiryIdOneMoreThenTwoInquiryImage(
@@ -170,7 +170,7 @@ export class InquiryAccessoryService {
   async distinguishInquiryVideosCountForInsert(
     inquiryVdoCookies: RequestMediaDto[],
     inquiryRequestDto: InquiryRequestDto,
-    inquiry: InquiryEntity,
+    inquiry: RequestInquiryEntity,
   ): Promise<void> {
     if (inquiryVdoCookies.length >= 2) {
       await this.insertInquiryIdOneMoreThenTwoInquiryVideo(

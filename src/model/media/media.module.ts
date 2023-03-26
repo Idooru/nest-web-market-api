@@ -8,8 +8,8 @@ import { ProductEntity } from "../product/entities/product.entity";
 import { LibraryModule } from "src/common/lib/library.module";
 import { JwtModule } from "@nestjs/jwt";
 import { DotenvConfigurationModule } from "src/common/config/dotenv.config";
-import { InquiryImageEntity } from "./entities/inquiry.image.entity";
-import { InquiryVideoEntity } from "./entities/inquiry.video.entity";
+import { RequestInquiryImageEntity } from "./entities/inquiry.image.entity";
+import { RequestInquiryVideoEntity } from "./entities/inquiry.video.entity";
 import { MediaVersionOneOnlyClientController } from "./controllers/media-v1-only-client.controller";
 import { MediaVersionOneOnlyAdminController } from "./controllers/media-v1-only-admin.controller";
 import { MediaGeneralService } from "./services/media-general.service";
@@ -25,8 +25,8 @@ import { MediaBundleService } from "./services/media-bundle.service";
       ProductImageEntity,
       ReviewImageEntity,
       ReviewVideoEntity,
-      InquiryImageEntity,
-      InquiryVideoEntity,
+      RequestInquiryImageEntity,
+      RequestInquiryVideoEntity,
     ]),
     forwardRef(() => UserModule),
     JwtModule,

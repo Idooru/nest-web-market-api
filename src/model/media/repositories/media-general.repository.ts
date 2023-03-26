@@ -10,8 +10,8 @@ import { ReviewImageEntity } from "../entities/review.image.entity";
 import { ReviewVideoEntity } from "../entities/review.video.entity";
 import { Repository } from "typeorm";
 import { mediaSelectProperty } from "src/common/config/repository-select-configs/media-select";
-import { InquiryImageEntity } from "../entities/inquiry.image.entity";
-import { InquiryVideoEntity } from "../entities/inquiry.video.entity";
+import { RequestInquiryImageEntity } from "../entities/inquiry.image.entity";
+import { RequestInquiryVideoEntity } from "../entities/inquiry.video.entity";
 import { RepositoryLogger } from "src/common/classes/repository.logger";
 
 @Injectable()
@@ -23,10 +23,10 @@ export class MediaGeneralRepository extends RepositoryLogger {
     private readonly reviewImageRepository: Repository<ReviewImageEntity>,
     @InjectRepository(ReviewVideoEntity)
     private readonly reviewVideoRepository: Repository<ReviewVideoEntity>,
-    @InjectRepository(InquiryImageEntity)
-    private readonly inquiryImageRepository: Repository<InquiryImageEntity>,
-    @InjectRepository(InquiryVideoEntity)
-    private readonly inquiryVideoRepository: Repository<InquiryVideoEntity>,
+    @InjectRepository(RequestInquiryImageEntity)
+    private readonly inquiryImageRepository: Repository<RequestInquiryImageEntity>,
+    @InjectRepository(RequestInquiryVideoEntity)
+    private readonly inquiryVideoRepository: Repository<RequestInquiryVideoEntity>,
   ) {
     super("Media General");
   }
@@ -80,7 +80,7 @@ export class MediaGeneralRepository extends RepositoryLogger {
       await this.inquiryImageRepository
         .createQueryBuilder()
         .insert()
-        .into(InquiryImageEntity)
+        .into(RequestInquiryImageEntity)
         .values({ ...uploadMediaDto })
         .execute();
     } catch (err) {
@@ -94,7 +94,7 @@ export class MediaGeneralRepository extends RepositoryLogger {
       await this.inquiryVideoRepository
         .createQueryBuilder()
         .insert()
-        .into(InquiryVideoEntity)
+        .into(RequestInquiryVideoEntity)
         .values({ ...uploadMediaDto })
         .execute();
     } catch (err) {
@@ -162,12 +162,14 @@ export class MediaGeneralRepository extends RepositoryLogger {
     }
   }
 
-  async findInquiryImageWithUrl(url: string): Promise<InquiryImageEntity> {
+  async findInquiryImageWithUrl(
+    url: string,
+  ): Promise<RequestInquiryImageEntity> {
     try {
       return await this.inquiryImageRepository
         .createQueryBuilder()
         .select(this.select.inquiryImagesSelect)
-        .from(InquiryImageEntity, "inquiry_image")
+        .from(RequestInquiryImageEntity, "inquiry_image")
         .leftJoin("inquiry_image.Inquiry", "Inquiry")
         .where("inquiry_image.url = :url", { url })
         .getOneOrFail();
@@ -182,12 +184,14 @@ export class MediaGeneralRepository extends RepositoryLogger {
     }
   }
 
-  async findInquiryVideoWithUrl(url: string): Promise<InquiryVideoEntity> {
+  async findInquiryVideoWithUrl(
+    url: string,
+  ): Promise<RequestInquiryVideoEntity> {
     try {
       return await this.inquiryVideoRepository
         .createQueryBuilder()
         .select(this.select.inquiryVideosSelect)
-        .from(InquiryVideoEntity, "inquiry_video")
+        .from(RequestInquiryVideoEntity, "inquiry_video")
         .leftJoin("inquiry_video.Inquiry", "Inquiry")
         .where("inquiry_video.url = :url", { url })
         .getOneOrFail();
@@ -249,7 +253,7 @@ export class MediaGeneralRepository extends RepositoryLogger {
       await this.inquiryImageRepository
         .createQueryBuilder()
         .delete()
-        .from(InquiryImageEntity, "inquiry_image")
+        .from(RequestInquiryImageEntity, "inquiry_image")
         .where("id = :id", { id })
         .execute();
     } catch (err) {
@@ -263,7 +267,7 @@ export class MediaGeneralRepository extends RepositoryLogger {
       await this.reviewVideoRepository
         .createQueryBuilder()
         .delete()
-        .from(InquiryVideoEntity, "inquiry_video")
+        .from(RequestInquiryVideoEntity, "inquiry_video")
         .where("id = :id", { id })
         .execute();
     } catch (err) {

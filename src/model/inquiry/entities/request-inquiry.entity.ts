@@ -1,8 +1,8 @@
 import { IsEnum, IsNotEmpty } from "class-validator";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
-import { InquiryImageEntity } from "src/model/media/entities/inquiry.image.entity";
-import { InquiryVideoEntity } from "src/model/media/entities/inquiry.video.entity";
+import { RequestInquiryImageEntity } from "src/model/media/entities/inquiry.image.entity";
+import { RequestInquiryVideoEntity } from "src/model/media/entities/inquiry.video.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { PostEntity } from "src/common/entities/post.entity";
 
@@ -21,13 +21,13 @@ export class RequestInquiryEntity extends PostEntity {
   })
   Product: ProductEntity;
 
-  @OneToMany(() => InquiryImageEntity, (image) => image.Inquiry, {
+  @OneToMany(() => RequestInquiryImageEntity, (image) => image.Inquiry, {
     cascade: true,
   })
-  Image: InquiryImageEntity[];
+  Image: RequestInquiryImageEntity[];
 
-  @OneToMany(() => InquiryVideoEntity, (video) => video.Inquiry, {
+  @OneToMany(() => RequestInquiryVideoEntity, (video) => video.Inquiry, {
     cascade: true,
   })
-  Video: InquiryVideoEntity[];
+  Video: RequestInquiryVideoEntity[];
 }

@@ -1,5 +1,5 @@
 import { CommonEntity } from "src/common/entities/common.entity";
-import { InquiryEntity } from "src/model/inquiry/entities/inquiry.entity";
+import { RequestInquiryEntity } from "src/model/inquiry/entities/request-inquiry.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
 import { Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
@@ -19,6 +19,6 @@ export class ClientUserEntity extends CommonEntity {
   @OneToMany(() => ReviewEntity, (review) => review.reviewer)
   writtenReview: ReviewEntity[];
 
-  @OneToMany(() => InquiryEntity, (inquiry) => inquiry.inquirer)
-  writtenInquiry: InquiryEntity[];
+  @OneToMany(() => RequestInquiryEntity, (inquiry) => inquiry.inquirer)
+  writtenInquiry: RequestInquiryEntity[];
 }

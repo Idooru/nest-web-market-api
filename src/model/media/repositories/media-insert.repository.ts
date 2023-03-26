@@ -1,12 +1,12 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { RepositoryLogger } from "src/common/classes/repository.logger";
-import { InquiryEntity } from "src/model/inquiry/entities/inquiry.entity";
+import { RequestInquiryEntity } from "src/model/inquiry/entities/request-inquiry.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
 import { Repository } from "typeorm";
-import { InquiryImageEntity } from "../entities/inquiry.image.entity";
-import { InquiryVideoEntity } from "../entities/inquiry.video.entity";
+import { RequestInquiryImageEntity } from "../entities/inquiry.image.entity";
+import { RequestInquiryVideoEntity } from "../entities/inquiry.video.entity";
 import { ProductImageEntity } from "../entities/product.image.entity";
 import { ReviewImageEntity } from "../entities/review.image.entity";
 import { ReviewVideoEntity } from "../entities/review.video.entity";
@@ -20,10 +20,10 @@ export class MediaInsertRepository extends RepositoryLogger {
     private readonly reviewImageRepository: Repository<ReviewImageEntity>,
     @InjectRepository(ReviewVideoEntity)
     private readonly reviewVideoRepository: Repository<ReviewVideoEntity>,
-    @InjectRepository(InquiryImageEntity)
-    private readonly inquiryImageRepository: Repository<InquiryImageEntity>,
-    @InjectRepository(InquiryVideoEntity)
-    private readonly inquiryVideoRepository: Repository<InquiryVideoEntity>,
+    @InjectRepository(RequestInquiryImageEntity)
+    private readonly inquiryImageRepository: Repository<RequestInquiryImageEntity>,
+    @InjectRepository(RequestInquiryVideoEntity)
+    private readonly inquiryVideoRepository: Repository<RequestInquiryVideoEntity>,
   ) {
     super("Media Insert");
   }
@@ -80,13 +80,13 @@ export class MediaInsertRepository extends RepositoryLogger {
   }
 
   async insertInquiryIdOnInquiryImage(
-    inquiryImage: InquiryImageEntity,
-    inquiry: InquiryEntity,
+    inquiryImage: RequestInquiryImageEntity,
+    inquiry: RequestInquiryEntity,
   ): Promise<void> {
     try {
       await this.inquiryImageRepository
         .createQueryBuilder()
-        .update(InquiryImageEntity)
+        .update(RequestInquiryImageEntity)
         .set({ Inquiry: inquiry })
         .where("id = :id", { id: inquiryImage.id })
         .execute();
@@ -97,13 +97,13 @@ export class MediaInsertRepository extends RepositoryLogger {
   }
 
   async insertInquiryIdOnInquiryVideo(
-    inquiryVideo: InquiryVideoEntity,
-    inquiry: InquiryEntity,
+    inquiryVideo: RequestInquiryVideoEntity,
+    inquiry: RequestInquiryEntity,
   ): Promise<void> {
     try {
       await this.inquiryVideoRepository
         .createQueryBuilder()
-        .update(InquiryVideoEntity)
+        .update(RequestInquiryVideoEntity)
         .set({ Inquiry: inquiry })
         .where("id = :id", { id: inquiryVideo.id })
         .execute();
