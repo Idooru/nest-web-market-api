@@ -5,7 +5,7 @@ import { VerifyDataDto } from "src/common/interceptors/verify/verify-data.dto";
 import { ReviewVerifyService } from "../services/review-verify.service";
 
 @Controller("/api/v1/verify/review")
-export class ReviewVersionOneVerify {
+export class ReviewVersionOneVerifyController {
   constructor(private readonly reviewVerifyService: ReviewVerifyService) {}
 
   private readonly reviewVerifyCookieKey = verifyCookieKeys.review;

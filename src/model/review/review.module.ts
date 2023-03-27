@@ -10,7 +10,7 @@ import { StarRateGeneralRepository } from "./repositories/star-rate-general.repo
 import { StarRateGeneralService } from "./services/star-rate-general.service";
 import { LibraryModule } from "src/common/lib/library.module";
 import { JwtModule } from "@nestjs/jwt";
-import { ReviewVersionOneVerify } from "./controllers/review-v1-verify.controller";
+import { ReviewVersionOneVerifyController } from "./controllers/review-v1-verify.controller";
 import { ReviewVerifyService } from "./services/review-verify.service";
 import { ReviewVerifyRepository } from "./repositories/review-verify.repository";
 import { MediaModule } from "../media/media.module";
@@ -33,7 +33,7 @@ import { ReviewBundleService } from "./services/review-bundle.service";
   controllers: [
     ReviewVersionOneOnlyAdminController,
     ReviewVersionOneOnlyClientController,
-    ReviewVersionOneVerify,
+    ReviewVersionOneVerifyController,
   ],
   providers: [
     ReviewGeneralService,
