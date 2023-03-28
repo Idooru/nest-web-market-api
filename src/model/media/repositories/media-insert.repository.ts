@@ -2,11 +2,14 @@ import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { RepositoryLogger } from "src/common/classes/repository.logger";
 import { InquiryRequestEntity } from "src/model/inquiry/entities/inquiry-request.entity";
+import { InquiryResponseEntity } from "src/model/inquiry/entities/inquiry-response.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
 import { Repository } from "typeorm";
 import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
+import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
+import { InquiryResponseVideoEntity } from "../entities/inquiry-response-video.entity";
 import { ProductImageEntity } from "../entities/product.image.entity";
 import { ReviewImageEntity } from "../entities/review.image.entity";
 import { ReviewVideoEntity } from "../entities/review.video.entity";
@@ -21,9 +24,13 @@ export class MediaInsertRepository extends RepositoryLogger {
     @InjectRepository(ReviewVideoEntity)
     private readonly reviewVideoRepository: Repository<ReviewVideoEntity>,
     @InjectRepository(InquiryRequestImageEntity)
-    private readonly inquiryImageRepository: Repository<InquiryRequestImageEntity>,
+    private readonly inquiryRequestImageRepository: Repository<InquiryRequestImageEntity>,
     @InjectRepository(InquiryRequestVideoEntity)
-    private readonly inquiryVideoRepository: Repository<InquiryRequestVideoEntity>,
+    private readonly inquiryRequestVideoRepository: Repository<InquiryRequestVideoEntity>,
+    @InjectRepository(InquiryResponseImageEntity)
+    private readonly inquiryResponseImageRepository: Repository<InquiryResponseImageEntity>,
+    @InjectRepository(InquiryResponseVideoEntity)
+    private readonly inquiryResponseVideoRepository: Repository<InquiryResponseVideoEntity>,
   ) {
     super("Media Insert");
   }
@@ -80,15 +87,32 @@ export class MediaInsertRepository extends RepositoryLogger {
   }
 
   async insertInquiryRequestIdOnInquiryRequestImage(
-    inquiryImage: InquiryRequestImageEntity,
-    inquiry: InquiryRequestEntity,
+    inquiryRequestImage: InquiryRequestImageEntity,
+    inquiryRequest: InquiryRequestEntity,
   ): Promise<void> {
     try {
-      await this.inquiryImageRepository
+      await this.inquiryRequestImageRepository
         .createQueryBuilder()
         .update(InquiryRequestImageEntity)
-        .set({ Inquiry: inquiry })
-        .where("id = :id", { id: inquiryImage.id })
+        .set({ InquiryRequest: inquiryRequest })
+        .where("id = :id", { id: inquiryRequestImage.id })
+        .execute();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async insertInquiryResponseIdOnInquiryResponseImage(
+    inquiryResponseImage: InquiryResponseImageEntity,
+    inquiryResponse: InquiryResponseEntity,
+  ): Promise<void> {
+    try {
+      await this.inquiryResponseImageRepository
+        .createQueryBuilder()
+        .update(InquiryResponseImageEntity)
+        .set({ InquiryResponse: inquiryResponse })
+        .where("id = :id", { id: inquiryResponseImage.id })
         .execute();
     } catch (err) {
       this.logger.error(err);
@@ -97,15 +121,32 @@ export class MediaInsertRepository extends RepositoryLogger {
   }
 
   async insertInquiryRequestIdOnInquiryRequestVideo(
-    inquiryVideo: InquiryRequestVideoEntity,
-    inquiry: InquiryRequestEntity,
+    inquiryRequestVideo: InquiryRequestVideoEntity,
+    inquiryRequest: InquiryRequestEntity,
   ): Promise<void> {
     try {
-      await this.inquiryVideoRepository
+      await this.inquiryRequestVideoRepository
         .createQueryBuilder()
         .update(InquiryRequestVideoEntity)
-        .set({ Inquiry: inquiry })
-        .where("id = :id", { id: inquiryVideo.id })
+        .set({ InquiryRequest: inquiryRequest })
+        .where("id = :id", { id: inquiryRequestVideo.id })
+        .execute();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async insertInquiryResponseIdOnInquiryResponseVideo(
+    inquiryResponseVideo: InquiryResponseVideoEntity,
+    inquiryResponse: InquiryResponseEntity,
+  ): Promise<void> {
+    try {
+      await this.inquiryResponseVideoRepository
+        .createQueryBuilder()
+        .update(InquiryResponseVideoEntity)
+        .set({ InquiryResponse: inquiryResponse })
+        .where("id = :id", { id: inquiryResponseVideo.id })
         .execute();
     } catch (err) {
       this.logger.error(err);

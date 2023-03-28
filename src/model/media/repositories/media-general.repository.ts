@@ -13,6 +13,8 @@ import { mediaSelectProperty } from "src/common/config/repository-select-configs
 import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
 import { RepositoryLogger } from "src/common/classes/repository.logger";
+import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
+import { InquiryResponseVideoEntity } from "../entities/inquiry-response-video.entity";
 
 @Injectable()
 export class MediaGeneralRepository extends RepositoryLogger {
@@ -27,6 +29,10 @@ export class MediaGeneralRepository extends RepositoryLogger {
     private readonly inquiryRequestImageRepository: Repository<InquiryRequestImageEntity>,
     @InjectRepository(InquiryRequestVideoEntity)
     private readonly inquiryRequestVideoRepository: Repository<InquiryRequestVideoEntity>,
+    @InjectRepository(InquiryResponseImageEntity)
+    private readonly inquiryResponseImageRepository: Repository<InquiryResponseImageEntity>,
+    @InjectRepository(InquiryResponseVideoEntity)
+    private readonly inquiryResponseVideoRepository: Repository<InquiryResponseVideoEntity>,
   ) {
     super("Media General");
   }
@@ -173,15 +179,37 @@ export class MediaGeneralRepository extends RepositoryLogger {
       return await this.inquiryRequestImageRepository
         .createQueryBuilder()
         .select(this.select.inquiryImagesSelect)
-        .from(InquiryRequestImageEntity, "inquiryRequestImage")
-        .leftJoin("inquiryRequestImage.Inquiry", "Inquiry")
-        .where("inquiryRequestImage.url = :url", { url })
+        .from(InquiryRequestImageEntity, "inquiryImage")
+        .leftJoin("inquiryImage.Inquiry", "Inquiry")
+        .where("inquiryImage.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
       this.logger.error(err);
       if (err.message.includes("Could not find any entity of type")) {
         throw new NotFoundException(
-          `해당 url(${url})을 가진 문의 이미지를 찾을 수 없습니다.`,
+          `해당 url(${url})을 가진 문의 요청 이미지를 찾을 수 없습니다.`,
+        );
+      }
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async findInquiryResponseImageWithUrl(
+    url: string,
+  ): Promise<InquiryResponseImageEntity> {
+    try {
+      return await this.inquiryResponseImageRepository
+        .createQueryBuilder()
+        .select(this.select.inquiryImagesSelect)
+        .from(InquiryResponseImageEntity, "inquiryImage")
+        .leftJoin("inquiryImage.Inquiry", "Inquiry")
+        .where("inquiryImage.url = :url", { url })
+        .getOneOrFail();
+    } catch (err) {
+      this.logger.error(err);
+      if (err.message.includes("Could not find any entity of type")) {
+        throw new NotFoundException(
+          `해당 url(${url})을 가진 문의 응답 이미지를 찾을 수 없습니다.`,
         );
       }
       throw new InternalServerErrorException(err.message);
@@ -195,15 +223,37 @@ export class MediaGeneralRepository extends RepositoryLogger {
       return await this.inquiryRequestVideoRepository
         .createQueryBuilder()
         .select(this.select.inquiryVideosSelect)
-        .from(InquiryRequestVideoEntity, "inquiryRequestVideo")
-        .leftJoin("inquiryRequestVideo.Inquiry", "Inquiry")
-        .where("inquiryRequestVideo.url = :url", { url })
+        .from(InquiryRequestVideoEntity, "inquiryVideo")
+        .leftJoin("inquiryVideo.Inquiry", "Inquiry")
+        .where("inquiryVideo.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
       this.logger.error(err);
       if (err.message.includes("Could not find any entity of type")) {
         throw new NotFoundException(
-          `해당 url(${url})을 가진 문의 동영상을 찾을 수 없습니다.`,
+          `해당 url(${url})을 가진 문의 요청 동영상을 찾을 수 없습니다.`,
+        );
+      }
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async findInquiryResponseVideoWithUrl(
+    url: string,
+  ): Promise<InquiryResponseVideoEntity> {
+    try {
+      return await this.inquiryResponseVideoRepository
+        .createQueryBuilder()
+        .select(this.select.inquiryVideosSelect)
+        .from(InquiryResponseVideoEntity, "inquiryVideo")
+        .leftJoin("inquiryVideo.Inquiry", "Inquiry")
+        .where("inquiryVideo.url = :url", { url })
+        .getOneOrFail();
+    } catch (err) {
+      this.logger.error(err);
+      if (err.message.includes("Could not find any entity of type")) {
+        throw new NotFoundException(
+          `해당 url(${url})을 가진 문의 응답 동영상을 찾을 수 없습니다.`,
         );
       }
       throw new InternalServerErrorException(err.message);
@@ -271,7 +321,7 @@ export class MediaGeneralRepository extends RepositoryLogger {
       await this.reviewVideoRepository
         .createQueryBuilder()
         .delete()
-        .from(InquiryRequestVideoEntity, "inquiryRequestVideo")
+        .from(InquiryRequestVideoEntity, "inquiryVideo")
         .where("id = :id", { id })
         .execute();
     } catch (err) {
