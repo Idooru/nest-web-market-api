@@ -7,37 +7,48 @@ export const mediaCookieKeys = {
     video_url_cookie: "review_video_url_cookie",
   },
   inquiry: {
-    image_url_cookie: "inquiry_image_url_cookie",
-    video_url_cookie: "inquiry_video_url_cookie",
+    request: {
+      image_url_cookie: "inquiry_request_image_url_cookie",
+      video_url_cookie: "inquiry_request_video_url_cookie",
+    },
+    response: {
+      image_url_cookie: "inquiry_response_image_url_cookie",
+      video_url_cookie: "inquiry_response_video_url_cookie",
+    },
   },
 };
 
 export const verifyCookieKeys = {
   product: {
     is_exist: {
-      id_executed: "is-exist-product-id-executed",
+      id_executed: "is_exist_product_id_executed",
     },
     is_not_exist: {
-      name_executed: "is-not-exist-product-name-executed",
+      name_executed: "is_not_exist_product_name_executed",
     },
   },
   user: {
     is_exist: {
-      id_executed: "is-exist-user-id-executed",
-      email_executed: "is-exist-user-email-executed",
-      realname_executed: "is-exist-user-realname-executed",
-      phonenumber_executed: "is-exist-user-phonenumber-executed",
+      id_executed: "is_exist_user_id_executed",
+      email_executed: "is_exist_user_email_executed",
+      realname_executed: "is_exist_user_realname_executed",
+      phonenumber_executed: "is_exist_user_phonenumber_executed",
     },
     is_not_exist: {
-      email_executed: "is-not-exist-user-email-executed",
-      nickname_executed: "is-not-exist-user-nickname-executed",
-      phonenumber_executed: "is-not-exist-user-phonenumber-executed",
+      email_executed: "is_not_exist_user_email_executed",
+      nickname_executed: "is_not_exist_user_nickname_executed",
+      phonenumber_executed: "is_not_exist_user_phonenumber_executed",
     },
   },
   review: {
-    is_exist: { id_executed: "is-exist-review-id-executed" },
+    is_exist: { id_executed: "is_exist_review_id_executed" },
   },
   inquiry: {
-    is_exist: { id_executed: "is-exist-inquiry-id-executed" },
+    request: {
+      is_exist: { id_executed: "is_exist_inquiry_request_id_executed" },
+    },
+    response: {
+      is_exist: { id_executed: "is_exist_inquiry_response_id_executed" },
+    },
   },
 };
