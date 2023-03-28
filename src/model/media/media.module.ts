@@ -17,6 +17,9 @@ import { MediaGeneralRepository } from "./repositories/media-general.repository"
 import { MediaInsertRepository } from "./repositories/media-insert.repository";
 import { MediaAccessoryService } from "./services/media-accessory.service";
 import { MediaBundleService } from "./services/media-bundle.service";
+import { InquiryModule } from "../inquiry/inquiry.module";
+import { InquiryResponseImageEntity } from "./entities/inquiry-response-image.entity";
+import { InquiryResponseVideoEntity } from "./entities/inquiry-response-video.entity";
 
 @Module({
   imports: [
@@ -27,8 +30,11 @@ import { MediaBundleService } from "./services/media-bundle.service";
       ReviewVideoEntity,
       InquiryRequestImageEntity,
       InquiryRequestVideoEntity,
+      InquiryResponseImageEntity,
+      InquiryResponseVideoEntity,
     ]),
     forwardRef(() => UserModule),
+    forwardRef(() => InquiryModule),
     JwtModule,
     LibraryModule,
     DotenvConfigurationModule,
