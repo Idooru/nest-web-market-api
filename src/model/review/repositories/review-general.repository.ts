@@ -72,7 +72,8 @@ export class ReviewGeneralRepository extends RepositoryLogger {
         .createQueryBuilder()
         .update(ReviewEntity)
         .set({
-          reviews: reviewRequestDto.reviews,
+          title: reviewRequestDto.title,
+          content: reviewRequestDto.content,
           scoreChosenByClient: reviewRequestDto.scoreChosenByClient,
           countForModify: --beforeReview.countForModify,
         })
