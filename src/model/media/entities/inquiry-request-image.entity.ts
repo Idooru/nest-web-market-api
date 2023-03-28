@@ -4,8 +4,10 @@ import { MediaEntity } from "../../../common/entities/media.entity";
 
 @Entity({ name: "inquiry_request_images", synchronize: true })
 export class InquiryRequestImageEntity extends MediaEntity {
-  @ManyToOne(() => InquiryRequestEntity, (inquiry) => inquiry.Image, {
-    onDelete: "CASCADE",
-  })
-  Inquiry: InquiryRequestEntity;
+  @ManyToOne(
+    () => InquiryRequestEntity,
+    (inquiryRequest) => inquiryRequest.Image,
+    { onDelete: "CASCADE" },
+  )
+  InquiryRequest: InquiryRequestEntity;
 }
