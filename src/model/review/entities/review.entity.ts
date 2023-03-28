@@ -1,22 +1,17 @@
 import { Column, Entity, OneToMany, ManyToOne } from "typeorm";
 import { ProductEntity } from "./../../product/entities/product.entity";
-import { CommonEntity } from "src/common/entities/common.entity";
-import { IsNotEmpty, IsString, IsEnum, IsNumber } from "class-validator";
+import { IsNotEmpty, IsEnum, IsNumber } from "class-validator";
 import { ReviewImageEntity } from "src/model/media/entities/review.image.entity";
 import { ReviewVideoEntity } from "src/model/media/entities/review.video.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
+import { PostEntity } from "src/common/entities/post.entity";
 
 @Entity({ name: "reviews", synchronize: true })
-export class ReviewEntity extends CommonEntity {
+export class ReviewEntity extends PostEntity {
   @IsEnum([1, 2, 3, 4, 5])
   @IsNotEmpty()
   @Column({ type: "enum", enum: [1, 2, 3, 4, 5] })
   scoreChosenByClient: 1 | 2 | 3 | 4 | 5;
-
-  @IsString()
-  @IsNotEmpty()
-  @Column({ type: "text", nullable: false })
-  reviews: string;
 
   @IsEnum([0, 1, 2])
   @IsNumber()
