@@ -140,7 +140,7 @@ export class MediaVersionOneOnlyClientController {
     );
 
     const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
-      mediaCookieKeys.inquiry.image_url_cookie,
+      mediaCookieKeys.inquiry.request.image_url_cookie,
       files,
       urls,
     );
@@ -148,7 +148,7 @@ export class MediaVersionOneOnlyClientController {
     return {
       statusCode: 201,
       message: "문의 사진을 업로드 하였습니다.",
-      cookieKey: mediaCookieKeys.inquiry.image_url_cookie,
+      cookieKey: mediaCookieKeys.inquiry.request.image_url_cookie,
       cookieValues,
     };
   }
@@ -180,7 +180,7 @@ export class MediaVersionOneOnlyClientController {
     );
 
     const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
-      mediaCookieKeys.inquiry.video_url_cookie,
+      mediaCookieKeys.inquiry.request.video_url_cookie,
       files,
       urls,
     );
@@ -188,7 +188,7 @@ export class MediaVersionOneOnlyClientController {
     return {
       statusCode: 201,
       message: "문의 동영상을 업로드 하였습니다.",
-      cookieKey: mediaCookieKeys.inquiry.video_url_cookie,
+      cookieKey: mediaCookieKeys.inquiry.request.video_url_cookie,
       cookieValues,
     };
   }
@@ -244,7 +244,7 @@ export class MediaVersionOneOnlyClientController {
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/inquiry/image")
   async cancelImageUploadForInquiry(
-    @MediaCookiesParser(mediaCookieKeys.inquiry.image_url_cookie)
+    @MediaCookiesParser(mediaCookieKeys.inquiry.request.image_url_cookie)
     inquiryRequestImgCookies: RequestMediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteInquiryImagesWithCookies(
@@ -270,7 +270,7 @@ export class MediaVersionOneOnlyClientController {
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/inquiry/video")
   async cancelVideoUploadForInquiry(
-    @MediaCookiesParser(mediaCookieKeys.inquiry.video_url_cookie)
+    @MediaCookiesParser(mediaCookieKeys.inquiry.request.video_url_cookie)
     inquiryRequestVdoCookies: RequestMediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteInquiryVideosWithCookies(
