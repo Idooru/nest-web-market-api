@@ -30,6 +30,18 @@ export class MulterConfig {
       });
 
       fs.mkdirSync(path.join(__dirname, `../../../uploads/${folder1}/product`));
+      fs.mkdirSync(
+        path.join(__dirname, "../../../uploads/image/inquiry/request"),
+      );
+      fs.mkdirSync(
+        path.join(__dirname, "../../../uploads/image/inquiry/response"),
+      );
+      fs.mkdirSync(
+        path.join(__dirname, "../../../uploads/video/inquiry/request"),
+      );
+      fs.mkdirSync(
+        path.join(__dirname, "../../../uploads/video/inquiry/response"),
+      );
     } catch (err) {
       logger.log(`${folder1} is already exist`);
       logger.log(`${folder2} is already exist`);
