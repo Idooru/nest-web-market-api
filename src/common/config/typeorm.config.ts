@@ -15,6 +15,9 @@ import { InquiryRequestVideoEntity } from "src/model/media/entities/inquiry-requ
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { UserEntity } from "../../model/user/entities/user.entity";
+import { InquiryResponseEntity } from "src/model/inquiry/entities/inquiry-response.entity";
+import { InquiryResponseImageEntity } from "src/model/media/entities/inquiry-response-image.entity";
+import { InquiryResponseVideoEntity } from "src/model/media/entities/inquiry-response-video.entity";
 
 const isNodeEnvDev = (): boolean =>
   process.env.NODE_ENV === "dev" ? true : false;
@@ -48,6 +51,9 @@ const isNodeEnvProd = (): boolean =>
           InquiryRequestEntity,
           InquiryRequestImageEntity,
           InquiryRequestVideoEntity,
+          InquiryResponseEntity,
+          InquiryResponseImageEntity,
+          InquiryResponseVideoEntity,
         ],
         synchronize: isNodeEnvDev(),
         migrationsRun: isNodeEnvProd(),
