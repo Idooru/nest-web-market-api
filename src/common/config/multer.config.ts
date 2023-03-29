@@ -6,7 +6,7 @@ import * as multer from "multer";
 
 export class MulterConfig {
   static createFolder(folder1: string, folder2: string) {
-    const logger = new Logger("Multer");
+    const logger = new Logger("MulterConfiguration");
 
     try {
       logger.log("Create uploads folder");
