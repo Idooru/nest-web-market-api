@@ -118,7 +118,7 @@ export class MediaVersionOneOnlyClientController {
     FilesInterceptor(
       "inquiry_image",
       maxContentsCount,
-      MulterConfig.upload("image/inquiry"),
+      MulterConfig.upload("image/inquiry/request"),
     ),
   )
   @Post("/inquiry/image")
@@ -158,7 +158,7 @@ export class MediaVersionOneOnlyClientController {
     FilesInterceptor(
       "inquiry_video",
       maxContentsCount,
-      MulterConfig.upload("video/inquiry"),
+      MulterConfig.upload("video/inquiry/request"),
     ),
   )
   @Post("/inquiry/video")
@@ -253,7 +253,7 @@ export class MediaVersionOneOnlyClientController {
 
     await this.mediaBundleService.deleteMediaFile(
       inquiryRequestImgCookies,
-      "image/inquiry",
+      "image/inquiry/request",
     );
 
     const cookieKey = inquiryRequestImgCookies.map(
@@ -279,7 +279,7 @@ export class MediaVersionOneOnlyClientController {
 
     await this.mediaBundleService.deleteMediaFile(
       inquiryRequestVdoCookies,
-      "video/inquiry",
+      "video/inquiry/request",
     );
 
     const cookieKey = inquiryRequestVdoCookies.map(
