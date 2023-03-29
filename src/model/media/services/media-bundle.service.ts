@@ -6,7 +6,7 @@ import { MediaAccessoryService } from "./media-accessory.service";
 export class MediaBundleService {
   constructor(private readonly mediaAccessoryService: MediaAccessoryService) {}
 
-  async deleteMediaFile(mediaCookies: RequestMediaDto[], mediaPath: string) {
+  deleteMediaFile(mediaCookies: RequestMediaDto[], mediaPath: string) {
     if (mediaCookies.length >= 2) {
       mediaCookies.forEach((cookie) => {
         this.mediaAccessoryService.deleteMediaFilesOnServerDisk(
