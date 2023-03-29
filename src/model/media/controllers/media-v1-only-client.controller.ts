@@ -116,18 +116,18 @@ export class MediaVersionOneOnlyClientController {
   @UseInterceptors(JsonSendCookiesInterceptor)
   @UseInterceptors(
     FilesInterceptor(
-      "inquiry_image",
+      "inquiry_request_image",
       maxContentsCount,
       MulterConfig.upload("image/inquiry/request"),
     ),
   )
-  @Post("/inquiry/image")
+  @Post("/inquiry/request/image")
   async uploadInquiryRequestImage(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookiesInterface<ResponseMediaDto>> {
-    this.mediaAccessoryService.isExistMediaFile("inquiry image", files);
-    this.mediaLoggerLibrary.log("inquiry images", null, files);
+    this.mediaAccessoryService.isExistMediaFile("inquiry request image", files);
+    this.mediaLoggerLibrary.log("inquiry request images", null, files);
 
     const urls = files.map((file) =>
       this.mediaAccessoryService.setUrl(file.filename),
@@ -147,7 +147,7 @@ export class MediaVersionOneOnlyClientController {
 
     return {
       statusCode: 201,
-      message: "문의 사진을 업로드 하였습니다.",
+      message: "문의 요청 사진을 업로드 하였습니다.",
       cookieKey: mediaCookieKeys.inquiry.request.image_url_cookie,
       cookieValues,
     };
@@ -156,18 +156,18 @@ export class MediaVersionOneOnlyClientController {
   @UseInterceptors(JsonSendCookiesInterceptor)
   @UseInterceptors(
     FilesInterceptor(
-      "inquiry_video",
+      "inquiry_request_video",
       maxContentsCount,
       MulterConfig.upload("video/inquiry/request"),
     ),
   )
-  @Post("/inquiry/video")
+  @Post("/inquiry/request/video")
   async uploadInquiryRequestVideo(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookiesInterface<ResponseMediaDto>> {
-    this.mediaAccessoryService.isExistMediaFile("inquiry video", files);
-    this.mediaLoggerLibrary.log("inquiry videos", null, files);
+    this.mediaAccessoryService.isExistMediaFile("inquiry request video", files);
+    this.mediaLoggerLibrary.log("inquiry request videos", null, files);
 
     const urls = files.map((file) =>
       this.mediaAccessoryService.setUrl(file.filename),
@@ -187,7 +187,7 @@ export class MediaVersionOneOnlyClientController {
 
     return {
       statusCode: 201,
-      message: "문의 동영상을 업로드 하였습니다.",
+      message: "문의 요청 동영상을 업로드 하였습니다.",
       cookieKey: mediaCookieKeys.inquiry.request.video_url_cookie,
       cookieValues,
     };
@@ -195,7 +195,7 @@ export class MediaVersionOneOnlyClientController {
 
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/review/image")
-  async cancelImageUploadForReview(
+  async cancelReviewImageUpload(
     @MediaCookiesParser(mediaCookieKeys.review.image_url_cookie)
     reviewImgCookies: RequestMediaDto[],
   ): Promise<JsonClearCookiesInterface> {
@@ -203,10 +203,7 @@ export class MediaVersionOneOnlyClientController {
       reviewImgCookies,
     );
 
-    await this.mediaBundleService.deleteMediaFile(
-      reviewImgCookies,
-      "image/review",
-    );
+    this.mediaBundleService.deleteMediaFile(reviewImgCookies, "image/review");
 
     const cookieKey = reviewImgCookies.map((cookie) => cookie.whatCookie);
 
@@ -219,7 +216,7 @@ export class MediaVersionOneOnlyClientController {
 
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/review/video")
-  async cancelVideoUploadForReview(
+  async cancelReviewVideoUpload(
     @MediaCookiesParser(mediaCookieKeys.review.video_url_cookie)
     reviewVdoCookies: RequestMediaDto[],
   ): Promise<JsonClearCookiesInterface> {
@@ -227,10 +224,7 @@ export class MediaVersionOneOnlyClientController {
       reviewVdoCookies,
     );
 
-    await this.mediaBundleService.deleteMediaFile(
-      reviewVdoCookies,
-      "video/review",
-    );
+    this.mediaBundleService.deleteMediaFile(reviewVdoCookies, "video/review");
 
     const cookieKey = reviewVdoCookies.map((cookie) => cookie.whatCookie);
 
@@ -242,16 +236,16 @@ export class MediaVersionOneOnlyClientController {
   }
 
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @Delete("/inquiry/image")
-  async cancelImageUploadForInquiry(
+  @Delete("/inquiry/request/image")
+  async cancelInquiryRequestImageUpload(
     @MediaCookiesParser(mediaCookieKeys.inquiry.request.image_url_cookie)
     inquiryRequestImgCookies: RequestMediaDto[],
   ): Promise<JsonClearCookiesInterface> {
-    await this.mediaGeneralService.deleteInquiryImagesWithCookies(
+    await this.mediaGeneralService.deleteInquiryRequestImagesWithCookies(
       inquiryRequestImgCookies,
     );
 
-    await this.mediaBundleService.deleteMediaFile(
+    this.mediaBundleService.deleteMediaFile(
       inquiryRequestImgCookies,
       "image/inquiry/request",
     );
@@ -262,22 +256,22 @@ export class MediaVersionOneOnlyClientController {
 
     return {
       statusCode: 200,
-      message: "문의 사진 업로드를 취소하였습니다.",
+      message: "문의 요청 사진 업로드를 취소하였습니다.",
       cookieKey,
     };
   }
 
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @Delete("/inquiry/video")
-  async cancelVideoUploadForInquiry(
+  @Delete("/inquiry/request/video")
+  async cancelInquiryRequestVideoUpload(
     @MediaCookiesParser(mediaCookieKeys.inquiry.request.video_url_cookie)
     inquiryRequestVdoCookies: RequestMediaDto[],
   ): Promise<JsonClearCookiesInterface> {
-    await this.mediaGeneralService.deleteInquiryVideosWithCookies(
+    await this.mediaGeneralService.deleteInquiryRequestVideosWithCookies(
       inquiryRequestVdoCookies,
     );
 
-    await this.mediaBundleService.deleteMediaFile(
+    this.mediaBundleService.deleteMediaFile(
       inquiryRequestVdoCookies,
       "video/inquiry/request",
     );
@@ -288,7 +282,7 @@ export class MediaVersionOneOnlyClientController {
 
     return {
       statusCode: 200,
-      message: "문의 동영상 업로드를 취소하였습니다.",
+      message: "문의 요청 동영상 업로드를 취소하였습니다.",
       cookieKey,
     };
   }

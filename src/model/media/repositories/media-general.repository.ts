@@ -113,6 +113,38 @@ export class MediaGeneralRepository extends RepositoryLogger {
     }
   }
 
+  async uploadInquiryResponseImage(
+    uploadMediaDto: UploadMediaDto,
+  ): Promise<void> {
+    try {
+      await this.inquiryResponseImageRepository
+        .createQueryBuilder()
+        .insert()
+        .into(InquiryResponseImageEntity)
+        .values({ ...uploadMediaDto })
+        .execute();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async uploadInquiryResponseVideo(
+    uploadMediaDto: UploadMediaDto,
+  ): Promise<void> {
+    try {
+      await this.inquiryResponseImageRepository
+        .createQueryBuilder()
+        .insert()
+        .into(InquiryResponseVideoEntity)
+        .values({ ...uploadMediaDto })
+        .execute();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
   async findProductImageWithUrl(url: string): Promise<ProductImageEntity> {
     try {
       return await this.productImageRepository
@@ -302,7 +334,7 @@ export class MediaGeneralRepository extends RepositoryLogger {
     }
   }
 
-  async deleteInquiryImageWithId(id: string): Promise<void> {
+  async deleteInquiryRequestImageWithId(id: string): Promise<void> {
     try {
       await this.inquiryRequestImageRepository
         .createQueryBuilder()
@@ -316,12 +348,40 @@ export class MediaGeneralRepository extends RepositoryLogger {
     }
   }
 
-  async deleteInquiryVideoWithId(id: string): Promise<void> {
+  async deleteInquiryRequestVideoWIthId(id: string): Promise<void> {
     try {
       await this.reviewVideoRepository
         .createQueryBuilder()
         .delete()
-        .from(InquiryRequestVideoEntity, "inquiryVideo")
+        .from(InquiryRequestVideoEntity, "inquiryRequestVideo")
+        .where("id = :id", { id })
+        .execute();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async deleteInquiryResponseImageWithId(id: string): Promise<void> {
+    try {
+      await this.inquiryResponseImageRepository
+        .createQueryBuilder()
+        .delete()
+        .from(InquiryResponseImageEntity, "inquiryResponseImage")
+        .where("id = :id", { id })
+        .execute();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async deleteInquiryResponseVideoWithId(id: string): Promise<void> {
+    try {
+      await this.inquiryResponseVideoRepository
+        .createQueryBuilder()
+        .delete()
+        .from(InquiryResponseVideoEntity, "inquiryResponseVideo")
         .where("id = :id", { id })
         .execute();
     } catch (err) {

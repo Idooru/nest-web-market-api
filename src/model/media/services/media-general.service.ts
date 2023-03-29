@@ -9,7 +9,7 @@ import { MediaAccessoryService } from "./media-accessory.service";
 export class MediaGeneralService {
   constructor(
     private readonly mediaGeneralRepository: MediaGeneralRepository,
-    private readonly userRepository: UserGeneralRepository,
+    private readonly userGeneralRepository: UserGeneralRepository,
     private readonly mediaAccessoryService: MediaAccessoryService,
   ) {}
 
@@ -17,9 +17,10 @@ export class MediaGeneralService {
     file: Express.Multer.File,
     jwtPayload: JwtAccessTokenPayload,
   ): Promise<void> {
-    const user = await this.userRepository.findAdminUserProfileInfoWithId(
-      jwtPayload.userId,
-    );
+    const user =
+      await this.userGeneralRepository.findAdminUserProfileInfoWithId(
+        jwtPayload.userId,
+      );
 
     const url = this.mediaAccessoryService.setUrl(file.filename);
 
@@ -34,7 +35,7 @@ export class MediaGeneralService {
     jwtPayload: JwtAccessTokenPayload,
     urls: string[],
   ): Promise<void> {
-    const user = await this.userRepository.findUserWithNickName(
+    const user = await this.userGeneralRepository.findUserWithNickName(
       jwtPayload.nickname,
     );
 
@@ -62,7 +63,7 @@ export class MediaGeneralService {
     jwtPayload: JwtAccessTokenPayload,
     urls: string[],
   ): Promise<void> {
-    const user = await this.userRepository.findUserWithNickName(
+    const user = await this.userGeneralRepository.findUserWithNickName(
       jwtPayload.nickname,
     );
 
@@ -90,7 +91,7 @@ export class MediaGeneralService {
     jwtPayload: JwtAccessTokenPayload,
     urls: string[],
   ): Promise<void> {
-    const user = await this.userRepository.findUserWithNickName(
+    const user = await this.userGeneralRepository.findUserWithNickName(
       jwtPayload.nickname,
     );
 
@@ -118,7 +119,7 @@ export class MediaGeneralService {
     jwtPayload: JwtAccessTokenPayload,
     urls: string[],
   ): Promise<void> {
-    const user = await this.userRepository.findUserWithNickName(
+    const user = await this.userGeneralRepository.findUserWithNickName(
       jwtPayload.nickname,
     );
 
@@ -135,6 +136,62 @@ export class MediaGeneralService {
       const url = this.mediaAccessoryService.setUrl(files[0].filename);
 
       await this.mediaGeneralRepository.uploadInquiryRequestVideo({
+        url,
+        uploader: user.Auth.email,
+      });
+    }
+  }
+
+  async uploadInquiryResponseImage(
+    files: Array<Express.Multer.File>,
+    jwtPayload: JwtAccessTokenPayload,
+    urls: string[],
+  ): Promise<void> {
+    const user = await this.userGeneralRepository.findUserWithNickName(
+      jwtPayload.nickname,
+    );
+
+    if (files.length >= 2) {
+      const promises = urls.map(async (url) => {
+        await this.mediaGeneralRepository.uploadInquiryResponseImage({
+          url,
+          uploader: user.Auth.email,
+        });
+      });
+
+      await Promise.all(promises);
+    } else {
+      const url = this.mediaAccessoryService.setUrl(files[0].filename);
+
+      await this.mediaGeneralRepository.uploadInquiryResponseImage({
+        url,
+        uploader: user.Auth.email,
+      });
+    }
+  }
+
+  async uploadInquiryResponseVideo(
+    files: Array<Express.Multer.File>,
+    jwtPayload: JwtAccessTokenPayload,
+    urls: string[],
+  ): Promise<void> {
+    const user = await this.userGeneralRepository.findUserWithNickName(
+      jwtPayload.nickname,
+    );
+
+    if (files.length >= 2) {
+      const promises = urls.map(async (url) => {
+        await this.mediaGeneralRepository.uploadInquiryResponseVideo({
+          url,
+          uploader: user.Auth.email,
+        });
+
+        await Promise.all(promises);
+      });
+    } else {
+      const url = this.mediaAccessoryService.setUrl(files[0].filename);
+
+      await this.mediaGeneralRepository.uploadInquiryResponseVideo({
         url,
         uploader: user.Auth.email,
       });
@@ -193,7 +250,7 @@ export class MediaGeneralService {
     }
   }
 
-  async deleteInquiryImagesWithCookies(
+  async deleteInquiryRequestImagesWithCookies(
     inquiryRequestImgCookies: RequestMediaDto[],
   ): Promise<void> {
     if (inquiryRequestImgCookies.length >= 2) {
@@ -202,7 +259,9 @@ export class MediaGeneralService {
           await this.mediaGeneralRepository.findInquiryRequestImageWithUrl(
             cookie.url,
           );
-        await this.mediaGeneralRepository.deleteInquiryImageWithId(image.id);
+        await this.mediaGeneralRepository.deleteInquiryRequestImageWithId(
+          image.id,
+        );
       });
 
       await Promise.all(promises);
@@ -212,11 +271,13 @@ export class MediaGeneralService {
           inquiryRequestImgCookies[0].url,
         );
 
-      await this.mediaGeneralRepository.deleteInquiryImageWithId(image.id);
+      await this.mediaGeneralRepository.deleteInquiryRequestImageWithId(
+        image.id,
+      );
     }
   }
 
-  async deleteInquiryVideosWithCookies(
+  async deleteInquiryRequestVideosWithCookies(
     inquiryRequestVdoCookies: RequestMediaDto[],
   ): Promise<void> {
     if (inquiryRequestVdoCookies.length >= 2) {
@@ -225,7 +286,9 @@ export class MediaGeneralService {
           await this.mediaGeneralRepository.findInquiryReuqestVideoWithUrl(
             cookie.url,
           );
-        await this.mediaGeneralRepository.deleteInquiryVideoWithId(video.id);
+        await this.mediaGeneralRepository.deleteInquiryRequestVideoWIthId(
+          video.id,
+        );
       });
 
       await Promise.all(promises);
@@ -235,7 +298,63 @@ export class MediaGeneralService {
           inquiryRequestVdoCookies[0].url,
         );
 
-      await this.mediaGeneralRepository.deleteInquiryVideoWithId(video.id);
+      await this.mediaGeneralRepository.deleteInquiryRequestVideoWIthId(
+        video.id,
+      );
+    }
+  }
+
+  async deleteInquiryResponseImagesWithCookies(
+    inquiryResponseImgCookies: RequestMediaDto[],
+  ): Promise<void> {
+    if (inquiryResponseImgCookies.length >= 2) {
+      const promises = inquiryResponseImgCookies.map(async (cookie) => {
+        const image =
+          await this.mediaGeneralRepository.findInquiryResponseImageWithUrl(
+            cookie.url,
+          );
+        await this.mediaGeneralRepository.deleteInquiryResponseImageWithId(
+          image.id,
+        );
+      });
+
+      await Promise.all(promises);
+    } else {
+      const image =
+        await this.mediaGeneralRepository.findInquiryResponseImageWithUrl(
+          inquiryResponseImgCookies[0].url,
+        );
+
+      await this.mediaGeneralRepository.deleteInquiryResponseImageWithId(
+        image.id,
+      );
+    }
+  }
+
+  async deleteInquiryResponseVideosWithCookies(
+    inquiryResponseVdoCookies: RequestMediaDto[],
+  ): Promise<void> {
+    if (inquiryResponseVdoCookies.length >= 2) {
+      const promises = inquiryResponseVdoCookies.map(async (cookie) => {
+        const video =
+          await this.mediaGeneralRepository.findInquiryResponseVideoWithUrl(
+            cookie.url,
+          );
+        await this.mediaGeneralRepository.deleteInquiryResponseVideoWithId(
+          video.id,
+        );
+      });
+
+      await Promise.all(promises);
+    } else {
+      const video =
+        await this.mediaGeneralRepository.findInquiryResponseVideoWithUrl(
+          inquiryResponseVdoCookies[0].url,
+        );
+
+      await this.mediaGeneralRepository.deleteInquiryResponseVideoWithId(
+        video.id,
+      );
     }
   }
 }
