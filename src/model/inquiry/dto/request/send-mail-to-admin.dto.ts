@@ -1,4 +1,4 @@
-export class SendMailDto {
+export class SendMailToAdminDto {
   userId: string;
   productId: string;
 }
