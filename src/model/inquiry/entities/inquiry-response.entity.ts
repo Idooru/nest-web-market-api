@@ -2,6 +2,7 @@ import { IsEnum, IsNotEmpty } from "class-validator";
 import { PostEntity } from "src/common/entities/post.entity";
 import { InquiryResponseImageEntity } from "src/model/media/entities/inquiry-response-image.entity";
 import { InquiryResponseVideoEntity } from "src/model/media/entities/inquiry-response-video.entity";
+import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import {
   Column,
@@ -20,8 +21,11 @@ export class InquiryResponseEntity extends PostEntity {
   @Column({ type: "enum", enum: ["product status", "delivery status"] })
   categories: "product status" | "delivery status";
 
-  @ManyToOne(() => ClientUserEntity, (client) => client.receiveInquiry)
-  receiver: ClientUserEntity;
+  @ManyToOne(() => ClientUserEntity, (client) => client.writtenInquiryRequest)
+  inquiryRequestWritter: ClientUserEntity;
+
+  @ManyToOne(() => AdminUserEntity, (admin) => admin.writtenInquiryResponse)
+  inquiryResponseWritter: AdminUserEntity;
 
   @OneToMany(
     () => InquiryResponseImageEntity,

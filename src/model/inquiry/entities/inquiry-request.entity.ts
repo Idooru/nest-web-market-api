@@ -6,6 +6,7 @@ import { InquiryRequestVideoEntity } from "src/model/media/entities/inquiry-requ
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { PostEntity } from "src/common/entities/post.entity";
 import { InquiryResponseEntity } from "./inquiry-response.entity";
+import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
 
 @Entity({ name: "inquiry_requests", synchronize: true })
 export class InquiryRequestEntity extends PostEntity {
@@ -14,10 +15,13 @@ export class InquiryRequestEntity extends PostEntity {
   @Column({ type: "enum", enum: ["product status", "delivery status"] })
   categories: "product status" | "delivery status";
 
-  @ManyToOne(() => ClientUserEntity, (client) => client.writtenInquiry)
-  inquirer: ClientUserEntity;
+  @ManyToOne(() => ClientUserEntity, (client) => client.writtenInquiryRequest)
+  inquiryRequestWritter: ClientUserEntity;
 
-  @ManyToOne(() => ProductEntity, (product) => product.Inquiry, {
+  @ManyToOne(() => AdminUserEntity, (admin) => admin.writtenInquiryResponse)
+  inquiryResponseWritter: AdminUserEntity;
+
+  @ManyToOne(() => ProductEntity, (product) => product.InquiryRequest, {
     onDelete: "CASCADE",
   })
   Product: ProductEntity;
