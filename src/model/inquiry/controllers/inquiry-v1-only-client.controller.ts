@@ -22,18 +22,18 @@ import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-gen
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { RequestMediaDto } from "src/model/media/dto/request-media.dto";
 import { InquiryRequestDto } from "../dto/request/inquiry-request.dto";
-import { InquiryBundleService } from "../services/inquiry-bundle.service";
-import { InquiryGeneralService } from "../services/inquiry-general.service";
-import { InquirySendMailService } from "../services/inquiry-send-mail.service";
+import { InquiryRequestBundleService } from "../services/request/inquiry-request-bundle.service";
+import { InquiryRequestGeneralService } from "../services/request/inquiry-request-general.service";
+import { InquiryRequestSendMailService } from "../services/request/inquiry-request-send-mail.service";
 
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)
 @Controller("/api/v1/only-client/inquiry")
 export class InquiryVersionOneOnlyClientController {
   constructor(
-    private readonly inquiryGeneralService: InquiryGeneralService,
-    private readonly inquiryBundleService: InquiryBundleService,
-    private readonly inquirySendMailService: InquirySendMailService,
+    private readonly inquiryRequestGeneralService: InquiryRequestGeneralService,
+    private readonly inquiryRequestBundleService: InquiryRequestBundleService,
+    private readonly inquiryRequestSendMailService: InquiryRequestSendMailService,
   ) {}
 
   @UseInterceptors(JsonClearCookiesInterceptor)
@@ -41,28 +41,28 @@ export class InquiryVersionOneOnlyClientController {
   @Post("/product/:productId/image&video")
   async createInquiryRequestWithImageAndVideo(
     @Param("productId") productId: string,
-    @MediaCookiesParser(mediaCookieKeys.inquiry.image_url_cookie)
+    @MediaCookiesParser(mediaCookieKeys.inquiry.request.image_url_cookie)
     inquiryRequestImgCookies: RequestMediaDto[],
-    @MediaCookiesParser(mediaCookieKeys.inquiry.video_url_cookie)
+    @MediaCookiesParser(mediaCookieKeys.inquiry.request.video_url_cookie)
     inquiryRequestVdoCookies: RequestMediaDto[],
     @Body() inquiryRequestDto: InquiryRequestDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
     const inquiryRequest =
-      await this.inquiryGeneralService.createInquiryRequest({
+      await this.inquiryRequestGeneralService.createInquiry({
         productId,
         inquiryRequestDto,
         jwtPayload,
       });
 
     const mediaWork = async () => {
-      await this.inquiryBundleService.pushInquiryRequestMedia({
+      await this.inquiryRequestBundleService.pushInquiryMedia({
         inquiryRequestDto,
         inquiryRequestImgCookies,
         inquiryRequestVdoCookies,
       });
 
-      await this.inquiryBundleService.insertInquiryRequestMedia({
+      await this.inquiryRequestBundleService.insertInquiryMedia({
         inquiryRequestImgCookies,
         inquiryRequestVdoCookies,
         inquiryRequestDto,
@@ -72,16 +72,13 @@ export class InquiryVersionOneOnlyClientController {
 
     await Promise.all([
       mediaWork(),
-      this.inquirySendMailService.sendMailToAdmin({
-        userId: jwtPayload.userId,
-        productId,
-      }),
+      this.inquiryRequestSendMailService.sendMailToAdmin(productId),
     ]);
 
     return {
       statusCode: 201,
       message:
-        "문의를 생성하였습니다. 문의는 한번 작성되면 수정 할 수 없으므로 신중히 작성해주세요.",
+        "문의 요청을 생성하였습니다. 문의 요청은 한번 작성되면 수정 할 수 없으므로 신중히 작성해주세요.",
       cookieKey: [
         ...inquiryRequestImgCookies.map((cookie) => cookie.whatCookie),
         ...inquiryRequestVdoCookies.map((cookie) => cookie.whatCookie),
@@ -94,25 +91,25 @@ export class InquiryVersionOneOnlyClientController {
   @Post("/product/:productId/image")
   async createInquiryWithImage(
     @Param("productId") productId: string,
-    @MediaCookiesParser(mediaCookieKeys.inquiry.image_url_cookie)
+    @MediaCookiesParser(mediaCookieKeys.inquiry.request.image_url_cookie)
     inquiryRequestImgCookies: RequestMediaDto[],
     @Body() inquiryRequestDto: InquiryRequestDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
     const inquiryRequest =
-      await this.inquiryGeneralService.createInquiryRequest({
+      await this.inquiryRequestGeneralService.createInquiry({
         productId,
         inquiryRequestDto,
         jwtPayload,
       });
 
     const mediaWork = async () => {
-      await this.inquiryBundleService.pushInquiryRequestMedia({
+      await this.inquiryRequestBundleService.pushInquiryMedia({
         inquiryRequestDto,
         inquiryRequestImgCookies,
       });
 
-      await this.inquiryBundleService.insertInquiryRequestMedia({
+      await this.inquiryRequestBundleService.insertInquiryMedia({
         inquiryRequestDto,
         inquiryRequest,
         inquiryRequestImgCookies,
@@ -121,16 +118,13 @@ export class InquiryVersionOneOnlyClientController {
 
     await Promise.all([
       mediaWork(),
-      this.inquirySendMailService.sendMailToAdmin({
-        userId: jwtPayload.userId,
-        productId,
-      }),
+      this.inquiryRequestSendMailService.sendMailToAdmin(productId),
     ]);
 
     return {
       statusCode: 201,
       message:
-        "문의를 생성하였습니다. 문의는 한번 작성되면 수정 할 수 없으므로 신중히 작성해주세요.",
+        "문의 요청을 생성하였습니다. 문의 요청은 한번 작성되면 수정 할 수 없으므로 신중히 작성해주세요.",
       cookieKey: [
         ...inquiryRequestImgCookies.map((cookie) => cookie.whatCookie),
       ],
@@ -142,25 +136,25 @@ export class InquiryVersionOneOnlyClientController {
   @Post("/product/:productId/video")
   async createInquiryWithVideo(
     @Param("productId") productId: string,
-    @MediaCookiesParser(mediaCookieKeys.inquiry.video_url_cookie)
+    @MediaCookiesParser(mediaCookieKeys.inquiry.request.video_url_cookie)
     inquiryRequestVdoCookies: RequestMediaDto[],
     @Body() inquiryRequestDto: InquiryRequestDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
     const inquiryRequest =
-      await this.inquiryGeneralService.createInquiryRequest({
+      await this.inquiryRequestGeneralService.createInquiry({
         productId,
         inquiryRequestDto,
         jwtPayload,
       });
 
     const mediaWork = async () => {
-      await this.inquiryBundleService.pushInquiryRequestMedia({
+      await this.inquiryRequestBundleService.pushInquiryMedia({
         inquiryRequestDto,
         inquiryRequestVdoCookies,
       });
 
-      await this.inquiryBundleService.insertInquiryRequestMedia({
+      await this.inquiryRequestBundleService.insertInquiryMedia({
         inquiryRequestVdoCookies,
         inquiryRequestDto,
         inquiryRequest,
@@ -169,16 +163,13 @@ export class InquiryVersionOneOnlyClientController {
 
     await Promise.all([
       mediaWork(),
-      this.inquirySendMailService.sendMailToAdmin({
-        productId,
-        userId: jwtPayload.userId,
-      }),
+      this.inquiryRequestSendMailService.sendMailToAdmin(productId),
     ]);
 
     return {
       statusCode: 201,
       message:
-        "문의를 생성하였습니다. 문의는 한번 작성되면 수정 할 수 없으므로 신중히 작성해주세요.",
+        "문의 요청을 생성하였습니다. 문의 요청은 한번 작성되면 수정 할 수 없으므로 신중히 작성해주세요.",
       cookieKey: [
         ...inquiryRequestVdoCookies.map((cookie) => cookie.whatCookie),
       ],
@@ -193,21 +184,18 @@ export class InquiryVersionOneOnlyClientController {
     @Body() inquiryRequestDto: InquiryRequestDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.inquiryGeneralService.createInquiryRequest({
+    await this.inquiryRequestGeneralService.createInquiry({
       productId,
       inquiryRequestDto,
       jwtPayload,
     });
 
-    await this.inquirySendMailService.sendMailToAdmin({
-      productId,
-      userId: jwtPayload.userId,
-    });
+    await this.inquiryRequestSendMailService.sendMailToAdmin(productId);
 
     return {
       statusCode: 201,
       message:
-        "문의를 생성하였습니다. 문의는 한번 작성되면 수정 할 수 없으므로 신중히 작성해주세요.",
+        "문의 요청을 생성하였습니다. 문의 요청은 한번 작성되면 수정 할 수 없으므로 신중히 작성해주세요.",
     };
   }
 }
