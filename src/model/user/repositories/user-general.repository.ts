@@ -144,6 +144,20 @@ export class UserGeneralRepository extends RepositoryLogger {
     }
   }
 
+  async findAdminUserObjectWithoutId(): Promise<AdminUserEntity> {
+    try {
+      return await this.adminUserRepository
+        .createQueryBuilder()
+        .select(["admin"])
+        .from(AdminUserEntity, "admin")
+        .orderBy("admin.createdAt", "DESC")
+        .getOneOrFail();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
   async findUserWithEmail(email: string): Promise<UserEntity> {
     try {
       return await this.userRepository
