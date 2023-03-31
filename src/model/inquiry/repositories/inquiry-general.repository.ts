@@ -4,12 +4,16 @@ import { RepositoryLogger } from "src/common/classes/repository.logger";
 import { InquiryRequestEntity } from "src/model/inquiry/entities/inquiry-request.entity";
 import { Repository } from "typeorm";
 import { CreateInquiryRequestDao } from "../dto/request/create-inquiry-request.dto";
+import { CreateInquiryResponseDao } from "../dto/response/create-inquiry-response.dto";
+import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
 
 @Injectable()
 export class InquiryGeneralRepository extends RepositoryLogger {
   constructor(
     @InjectRepository(InquiryRequestEntity)
-    private readonly inquiryRepository: Repository<InquiryRequestEntity>,
+    private readonly inquiryRequestRepository: Repository<InquiryRequestEntity>,
+    @InjectRepository(InquiryResponseEntity)
+    private readonly inquiryResponseRepository: Repository<InquiryResponseEntity>,
   ) {
     super("Inquiry General");
   }
@@ -19,14 +23,14 @@ export class InquiryGeneralRepository extends RepositoryLogger {
   ): Promise<void> {
     try {
       const { inquiryRequestDto, client, product } = createInquiryDao;
-      await this.inquiryRepository
+      await this.inquiryRequestRepository
         .createQueryBuilder()
         .insert()
         .into(InquiryRequestEntity)
         .values({
           ...inquiryRequestDto,
           Product: product,
-          inquirer: client,
+          inquiryRequestWritter: client,
         })
         .execute();
     } catch (err) {
@@ -35,17 +39,36 @@ export class InquiryGeneralRepository extends RepositoryLogger {
     }
   }
 
-  async findLastCreatedOneInquiryRequestWithUserId(
-    clientUserId: string,
+  async createInquiryResponse(
+    createInquiryResponseDto: CreateInquiryResponseDao,
+  ): Promise<void> {
+    try {
+      const { inquiryResponseDto, inquiryRequest } = createInquiryResponseDto;
+      await this.inquiryResponseRepository
+        .createQueryBuilder()
+        .insert()
+        .into(InquiryResponseEntity)
+        .values({
+          ...inquiryResponseDto,
+          InquiryRequest: inquiryRequest,
+        })
+        .execute();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
+  async findInquiryRequestWithId(
+    inquiryRequestId: string,
   ): Promise<InquiryRequestEntity> {
     try {
-      return await this.inquiryRepository
+      return await this.inquiryRequestRepository
         .createQueryBuilder()
-        .select("inquiryRequest")
+        .select(["inquiryRequest", "Product"])
         .from(InquiryRequestEntity, "inquiryRequest")
-        .where("inquiryRequest.inquirer = :id", { id: clientUserId })
-        .orderBy("inquiryRequest.createdAt", "DESC")
-        .limit(1)
+        .innerJoin("inquiryRequest.Product", "Product")
+        .where("inquiryRequest.id = :id", { id: inquiryRequestId })
         .getOneOrFail();
     } catch (err) {
       this.logger.error(err);
