@@ -308,21 +308,6 @@ export class UserGeneralRepository extends RepositoryLogger {
     }
   }
 
-  async findCurrentAdminUser(): Promise<AdminUserEntity> {
-    try {
-      return await this.userRepository
-        .createQueryBuilder()
-        .select(["admin", "User", "Auth"])
-        .from(AdminUserEntity, "admin")
-        .innerJoin("admin.User", "User")
-        .innerJoin("User.Auth", "Auth")
-        .getOneOrFail();
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
   async resetPassword(id: string, hashed: string) {
     try {
       const password = { password: hashed };
