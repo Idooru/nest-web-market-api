@@ -61,5 +61,5 @@ export class ProductEntity extends CommonEntity {
   @OneToMany(() => InquiryRequestEntity, (inquiry) => inquiry.Product, {
     cascade: true,
   })
-  Inquiry: InquiryRequestEntity[];
+  InquiryRequest: InquiryRequestEntity[];
 }
