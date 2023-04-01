@@ -39,13 +39,6 @@ export class InquiryRequestGeneralService {
       lastCreatedInquiryRequest,
     );
 
-    const admin =
-      await this.userGeneralRepository.findAdminUserObjectWithoutId();
-    await this.inquiryInsertRepository.insertAdminUserIdOnInquiryRequest(
-      admin,
-      lastCreatedInquiryRequest,
-    );
-
     return lastCreatedInquiryRequest;
   }
 }
