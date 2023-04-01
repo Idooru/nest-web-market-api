@@ -71,4 +71,18 @@ export class InquiryGeneralRepository extends RepositoryLogger {
       throw new InternalServerErrorException(err.message);
     }
   }
+
+  async setIsAnsweredTrue(inquiryRequest: InquiryRequestEntity): Promise<void> {
+    try {
+      await this.inquiryRequestRepository
+        .createQueryBuilder()
+        .update()
+        .set({ isAnswerd: true })
+        .where("id = :id", { id: inquiryRequest.id })
+        .execute();
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(err.message);
+    }
+  }
 }
