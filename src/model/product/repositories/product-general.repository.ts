@@ -49,12 +49,17 @@ export class ProductGeneralRepository extends RepositoryLogger {
         .leftJoin("Review.reviewer", "Reviewer")
         .leftJoin("Reviewer.User", "ReviewUser")
         .leftJoin("ReviewUser.Auth", "ReviewAuth")
-        .leftJoin("product.Inquiry", "Inquiry")
-        .leftJoin("Inquiry.inquirer", "Inquirier")
-        .leftJoin("Inquirier.User", "InquiryUser")
-        .leftJoin("InquiryUser.Auth", "InquiryAuth")
         .leftJoin("Review.Image", "ReviewImage")
         .leftJoin("Review.Video", "ReviewVideo")
+        .leftJoin("product.InquiryRequest", "InquiryRequest")
+        .leftJoin(
+          "InquiryRequest.inquiryRequestWritter",
+          "InquiryRequestWritter",
+        )
+        .leftJoin("InquiryRequestWritter.User", "InquiryUser")
+        .leftJoin("InquiryUser.Auth", "InquiryAuth")
+        .leftJoin("InquiryRequest.Image", "InquiryRequestImage")
+        .leftJoin("InquiryRequest.Video", "InquiryRequsetVideo")
         .orderBy("product.createdAt", "DESC")
         .getMany();
     } catch (err) {
@@ -75,12 +80,17 @@ export class ProductGeneralRepository extends RepositoryLogger {
         .leftJoin("Review.reviewer", "Reviewer")
         .leftJoin("Reviewer.User", "ReviewUser")
         .leftJoin("ReviewUser.Auth", "ReviewAuth")
-        .leftJoin("product.Inquiry", "Inquiry")
-        .leftJoin("Inquiry.inquirer", "Inquirier")
-        .leftJoin("Inquirier.User", "InquiryUser")
-        .leftJoin("InquiryUser.Auth", "InquiryAuth")
         .leftJoin("Review.Image", "ReviewImage")
         .leftJoin("Review.Video", "ReviewVideo")
+        .leftJoin("product.InquiryRequest", "InquiryRequest")
+        .leftJoin(
+          "InquiryRequest.inquiryRequestWritter",
+          "InquiryRequestWritter",
+        )
+        .leftJoin("InquiryRequestWritter.User", "InquiryUser")
+        .leftJoin("InquiryUser.Auth", "InquiryAuth")
+        .leftJoin("InquiryRequest.Image", "InquiryRequestImage")
+        .leftJoin("InquiryRequest.Video", "InquiryRequsetVideo")
         .orderBy("product.createdAt", "ASC")
         .getMany();
     } catch (err) {
@@ -103,12 +113,15 @@ export class ProductGeneralRepository extends RepositoryLogger {
         .leftJoin("ReviewUser.Auth", "ReviewAuth")
         .leftJoin("Review.Image", "ReviewImage")
         .leftJoin("Review.Video", "ReviewVideo")
-        .leftJoin("product.Inquiry", "Inquiry")
-        .leftJoin("Inquiry.inquirer", "Inquirier")
-        .leftJoin("Inquirier.User", "InquiryUser")
+        .leftJoin("product.InquiryRequest", "InquiryRequest")
+        .leftJoin(
+          "InquiryRequest.inquiryRequestWritter",
+          "InquiryRequestWritter",
+        )
+        .leftJoin("InquiryRequestWritter.User", "InquiryUser")
         .leftJoin("InquiryUser.Auth", "InquiryAuth")
-        .leftJoin("Inquiry.Image", "InquiryImage")
-        .leftJoin("Inquiry.Video", "InquiryVideo")
+        .leftJoin("InquiryRequest.Image", "InquiryRequestImage")
+        .leftJoin("InquiryRequest.Video", "InquiryRequestVideo")
         .where("product.name = :name", { name })
         .getOneOrFail();
       return product;
@@ -137,12 +150,15 @@ export class ProductGeneralRepository extends RepositoryLogger {
         .leftJoin("ReviewUser.Auth", "ReviewAuth")
         .leftJoin("Review.Image", "ReviewImage")
         .leftJoin("Review.Video", "ReviewVideo")
-        .leftJoin("product.Inquiry", "Inquiry")
-        .leftJoin("Inquiry.inquirer", "Inquirier")
-        .leftJoin("Inquirier.User", "InquiryUser")
+        .leftJoin("product.InquiryRequest", "InquiryRequest")
+        .leftJoin(
+          "InquiryRequest.inquiryRequestWritter",
+          "InquiryRequestWritter",
+        )
+        .leftJoin("InquiryRequestWritter.User", "InquiryUser")
         .leftJoin("InquiryUser.Auth", "InquiryAuth")
-        .leftJoin("Inquiry.Image", "InquiryImage")
-        .leftJoin("Inquiry.Video", "InquiryVideo")
+        .leftJoin("InquiryRequest.Image", "InquiryRequestImage")
+        .leftJoin("InquiryRequest.Video", "InquiryRequestVideo")
         .where("product.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
