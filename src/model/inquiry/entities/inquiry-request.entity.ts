@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty } from "class-validator";
+import { IsBoolean, IsEnum, IsNotEmpty } from "class-validator";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { Column, Entity, ManyToOne, OneToMany, OneToOne } from "typeorm";
 import { InquiryRequestImageEntity } from "src/model/media/entities/inquiry-request-image.entity";
@@ -16,6 +16,10 @@ export class InquiryRequestEntity extends PostEntity {
 
   @ManyToOne(() => ClientUserEntity, (client) => client.writtenInquiryRequest)
   inquiryRequestWritter: ClientUserEntity;
+
+  @IsBoolean()
+  @Column({ type: "boolean", default: false })
+  isAnswerd: boolean;
 
   @ManyToOne(() => ProductEntity, (product) => product.InquiryRequest, {
     onDelete: "CASCADE",
