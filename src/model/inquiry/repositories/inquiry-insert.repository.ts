@@ -65,40 +65,6 @@ export class InquiryInsertRepository extends RepositoryLogger {
     }
   }
 
-  async insertClientUserIdOnInquiryResponse(
-    clientUser: ClientUserEntity,
-    inquiryResponse: InquiryResponseEntity,
-  ): Promise<void> {
-    try {
-      await this.inquiryResponseRepository
-        .createQueryBuilder()
-        .update(InquiryResponseEntity)
-        .set({ inquiryRequestWritter: clientUser })
-        .where("id = :id", { id: inquiryResponse.id })
-        .execute();
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
-  async insertAdminUserIdOnInquiryRequest(
-    adminUser: AdminUserEntity,
-    inquiryRequest: InquiryRequestEntity,
-  ): Promise<void> {
-    try {
-      await this.inquiryRequestRepository
-        .createQueryBuilder()
-        .update(InquiryRequestEntity)
-        .set({ inquiryResponseWritter: adminUser })
-        .where("id = :id", { id: inquiryRequest.id })
-        .execute();
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
-    }
-  }
-
   async insertAdminUserIdOnInquiryResponse(
     adminUser: AdminUserEntity,
     inquiryResponse: InquiryResponseEntity,
