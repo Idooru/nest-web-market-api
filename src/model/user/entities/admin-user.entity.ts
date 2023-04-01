@@ -1,4 +1,5 @@
 import { CommonEntity } from "src/common/entities/common.entity";
+import { InquiryResponseEntity } from "src/model/inquiry/entities/inquiry-response.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
 import { UserEntity } from "./user.entity";
@@ -13,4 +14,10 @@ export class AdminUserEntity extends CommonEntity {
 
   @OneToMany(() => ProductEntity, (product) => product.creater)
   createdProduct: ProductEntity;
+
+  @OneToMany(
+    () => InquiryResponseEntity,
+    (inquiryResponse) => inquiryResponse.inquiryResponseWritter,
+  )
+  writtenInquiryResponse: InquiryResponseEntity[];
 }
