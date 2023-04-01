@@ -35,6 +35,8 @@ export class InquiryResponseGeneralService {
       lastCreatedInquiryResponse,
     );
 
+    await this.inquiryGeneralRepository.setIsAnsweredTrue(inquiryRequest);
+
     return lastCreatedInquiryResponse;
   }
 }
