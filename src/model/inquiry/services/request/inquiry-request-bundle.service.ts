@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InsertInquiryRequestMediaDto } from "../../dto/request/insert-inquiry-request-media.dto";
-import { PushInquiryRequestMediaDto } from "../../dto/request/push-inquiry-request-media.dto";
+import { PushInquiryMediaDto } from "../../dto/request/push-inquiry-request-media.dto";
 import { InquiryRequestAccessoryService } from "./inquiry-request-accessory.service";
 
 @Injectable()
@@ -10,13 +10,13 @@ export class InquiryRequestBundleService {
   ) {}
 
   async pushInquiryMedia(
-    pushInquiryRequestMediaDto: PushInquiryRequestMediaDto,
+    pushInquiryMediaDto: PushInquiryMediaDto,
   ): Promise<void> {
     const {
       inquiryRequestDto,
       inquiryRequestImgCookies,
       inquiryRequestVdoCookies,
-    } = pushInquiryRequestMediaDto;
+    } = pushInquiryMediaDto;
 
     if (inquiryRequestImgCookies) {
       await this.inquiryRequestAccessoryService.distinguishInquiryImagesCountForPush(
@@ -38,14 +38,14 @@ export class InquiryRequestBundleService {
   }
 
   async insertInquiryMedia(
-    insertInquiryRequestMediaDto: InsertInquiryRequestMediaDto,
+    insertInquiryMediaDto: InsertInquiryRequestMediaDto,
   ): Promise<void> {
     const {
       inquiryRequestImgCookies,
       inquiryRequestVdoCookies,
       inquiryRequest,
       inquiryRequestDto,
-    } = insertInquiryRequestMediaDto;
+    } = insertInquiryMediaDto;
 
     if (inquiryRequestImgCookies) {
       await this.inquiryRequestAccessoryService.distinguishInquiryImagesCountForInsert(

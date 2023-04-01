@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { RequestMediaDto } from "src/model/media/dto/request-media.dto";
 import { ProductImageEntity } from "src/model/media/entities/product.image.entity";
 import { MediaGeneralRepository } from "src/model/media/repositories/media-general.repository";
 import { ProductEntity } from "../entities/product.entity";
 import { ProductGeneralRepository } from "../repositories/product-general.repository";
+import { MediaDto } from "src/model/media/dto/media.dto";
 
 @Injectable()
 export class ProductAccessoryService {
@@ -20,7 +20,7 @@ export class ProductAccessoryService {
 
   async findProductAndImageForModify(
     id: string,
-    imageCookie: RequestMediaDto,
+    imageCookie: MediaDto,
   ): Promise<[ProductEntity, ProductImageEntity, ProductImageEntity]> {
     return await Promise.all([
       this.productGeneralRepository.findProductOneById(id),

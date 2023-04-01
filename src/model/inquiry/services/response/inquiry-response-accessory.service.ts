@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { RequestMediaDto } from "src/model/media/dto/request-media.dto";
 import { InquiryResponseImageEntity } from "src/model/media/entities/inquiry-response-image.entity";
 import { InquiryResponseVideoEntity } from "src/model/media/entities/inquiry-response-video.entity";
 import { MediaGeneralRepository } from "src/model/media/repositories/media-general.repository";
@@ -8,6 +7,7 @@ import { InquiryResponseDto } from "../../dto/response/inquiry-response.dto";
 import { PushInquiryResponseImageDto } from "../../dto/response/push-inquiry-reponse-image.dto";
 import { PushInquiryResponseVideoDto } from "../../dto/response/push-inquiry-response-video.dto";
 import { InquiryResponseEntity } from "../../entities/inquiry-response.entity";
+import { MediaDto } from "src/model/media/dto/media.dto";
 
 @Injectable()
 export class InquiryResponseAccessoryService {
@@ -17,7 +17,7 @@ export class InquiryResponseAccessoryService {
   ) {}
 
   async pushMoreThenTwoInquiryImageInDto(
-    inquiryResponseImgCookies: RequestMediaDto[],
+    inquiryResponseImgCookies: MediaDto[],
     inquiryResponseDto: InquiryResponseDto,
   ): Promise<void> {
     const promises = inquiryResponseImgCookies.map(
@@ -35,7 +35,7 @@ export class InquiryResponseAccessoryService {
   }
 
   async pushOneInquiryImageInDto(
-    inquiryResponseImgCookies: RequestMediaDto[],
+    inquiryResponseImgCookies: MediaDto[],
     inquiryResponseDto: InquiryResponseDto,
   ): Promise<void> {
     const image =
@@ -47,7 +47,7 @@ export class InquiryResponseAccessoryService {
   }
 
   async pushMoreThenTwoInquiryVideoInDto(
-    inquiryResponseVdoCookies: RequestMediaDto[],
+    inquiryResponseVdoCookies: MediaDto[],
     inquiryResponseDto: InquiryResponseDto,
   ): Promise<void> {
     const promises = inquiryResponseVdoCookies.map(
@@ -65,7 +65,7 @@ export class InquiryResponseAccessoryService {
   }
 
   async pushOneInquiryVideoInDto(
-    inquiryResponseVdoCookies: RequestMediaDto[],
+    inquiryResponseVdoCookies: MediaDto[],
     inquiryResponseDto: InquiryResponseDto,
   ): Promise<void> {
     const video =
@@ -167,7 +167,7 @@ export class InquiryResponseAccessoryService {
   }
 
   async distinguishInquiryImagesCountForInsert(
-    inquiryResponseImgCookies: RequestMediaDto[],
+    inquiryResponseImgCookies: MediaDto[],
     inquiryResponseDto: InquiryResponseDto,
     inquiryResponse: InquiryResponseEntity,
   ): Promise<void> {
@@ -185,7 +185,7 @@ export class InquiryResponseAccessoryService {
   }
 
   async distinguishInquiryVideosCountForInsert(
-    inquiryResponseVdoCookies: RequestMediaDto[],
+    inquiryResponseVdoCookies: MediaDto[],
     inquiryResponseDto: InquiryResponseDto,
     inquiryResponse: InquiryResponseEntity,
   ): Promise<void> {

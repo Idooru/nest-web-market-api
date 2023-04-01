@@ -13,7 +13,6 @@ import {
 } from "src/common/config/multer.config";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { RequestMediaDto } from "../dto/request-media.dto";
 import { MeidaLoggerLibrary } from "src/common/lib/media-logger.library";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { mediaCookieKeys } from "../../../common/config/cookie-key-configs";
@@ -23,7 +22,6 @@ import { JsonSendCookieInterceptor } from "src/common/interceptors/general/json-
 import { JsonSendCookieInterface } from "src/common/interceptors/general/interface/json-send-cookie.interface";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/general/json-clear-cookie.interceptor";
 import { JsonClearCookieInterface } from "src/common/interceptors/general/interface/json-clear-cookie.interface";
-import { ResponseMediaDto } from "../dto/response-media.dto";
 import { MediaGeneralService } from "../services/media-general.service";
 import { MediaCookieParser } from "src/common/decorators/media-cookie-parser.decorator";
 import { MediaAccessoryService } from "../services/media-accessory.service";
@@ -33,6 +31,7 @@ import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.d
 import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
 import { MediaBundleService } from "../services/media-bundle.service";
 import { JsonClearCookiesInterface } from "src/common/interceptors/general/interface/json-clear-cookies.interface";
+import { MediaDto } from "../dto/media.dto";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
@@ -53,7 +52,7 @@ export class MediaVersionOneOnlyAdminController {
   async uploadProductImage(
     @UploadedFile() file: Express.Multer.File,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookieInterface<ResponseMediaDto>> {
+  ): Promise<JsonSendCookieInterface<MediaDto>> {
     this.mediaAccessoryService.isExistMediaFile("product image", file);
     this.mediaLoggerLibrary.log("product image", file, null);
 
@@ -84,7 +83,7 @@ export class MediaVersionOneOnlyAdminController {
   async uploadInquiryResponseImage(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookiesInterface<ResponseMediaDto>> {
+  ): Promise<JsonSendCookiesInterface<MediaDto>> {
     this.mediaAccessoryService.isExistMediaFile(
       "inquiry response image",
       files,
@@ -127,7 +126,7 @@ export class MediaVersionOneOnlyAdminController {
   async uploadInquiryResponseVideo(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookiesInterface<ResponseMediaDto>> {
+  ): Promise<JsonSendCookiesInterface<MediaDto>> {
     this.mediaAccessoryService.isExistMediaFile(
       "inquiry response video",
       files,
@@ -163,7 +162,7 @@ export class MediaVersionOneOnlyAdminController {
   @Delete("/product/image")
   async cancelImageUploadForProduct(
     @MediaCookieParser(mediaCookieKeys.product.image_url_cookie)
-    productImgCookie: RequestMediaDto,
+    productImgCookie: MediaDto,
   ): Promise<JsonClearCookieInterface> {
     await this.mediaGeneralService.deleteProductImageWithCookies(
       productImgCookie,
@@ -185,7 +184,7 @@ export class MediaVersionOneOnlyAdminController {
   @Delete("/inquiry/response/image")
   async cancelInquiryResponseImageUpload(
     @MediaCookiesParser(mediaCookieKeys.inquiry.response.image_url_cookie)
-    inquiryResponseImgCookies: RequestMediaDto[],
+    inquiryResponseImgCookies: MediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteInquiryResponseImagesWithCookies(
       inquiryResponseImgCookies,
@@ -211,7 +210,7 @@ export class MediaVersionOneOnlyAdminController {
   @Delete("/inquiry/response/video")
   async cancelInquiryResponseVideoUpload(
     @MediaCookiesParser(mediaCookieKeys.inquiry.response.video_url_cookie)
-    inquiryResponseVdoCookies: RequestMediaDto[],
+    inquiryResponseVdoCookies: MediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteInquiryResponseVideosWithCookies(
       inquiryResponseVdoCookies,

@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { ResponseMediaDto } from "../dto/response-media.dto";
 import * as fs from "fs";
 import * as path from "path";
+import { MediaDto } from "../dto/media.dto";
 
 @Injectable()
 export class MediaAccessoryService {
@@ -30,7 +30,7 @@ export class MediaAccessoryService {
   createMediaCookieValue(
     cookieKey: string,
     file: Express.Multer.File,
-  ): ResponseMediaDto {
+  ): MediaDto {
     return {
       whatCookie: cookieKey,
       url: this.setUrl(file.filename),
@@ -42,7 +42,7 @@ export class MediaAccessoryService {
     cookieKey: string,
     files: Express.Multer.File[],
     urls: string[],
-  ): ResponseMediaDto[] {
+  ): MediaDto[] {
     return files.map((file, idx) => ({
       whatCookie: cookieKey,
       url: urls[idx],

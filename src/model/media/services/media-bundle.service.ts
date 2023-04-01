@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { RequestMediaDto } from "../dto/request-media.dto";
 import { MediaAccessoryService } from "./media-accessory.service";
+import { MediaDto } from "../dto/media.dto";
 
 @Injectable()
 export class MediaBundleService {
   constructor(private readonly mediaAccessoryService: MediaAccessoryService) {}
 
-  deleteMediaFile(mediaCookies: RequestMediaDto[], mediaPath: string) {
+  deleteMediaFile(mediaCookies: MediaDto[], mediaPath: string) {
     if (mediaCookies.length >= 2) {
       mediaCookies.forEach((cookie) => {
         this.mediaAccessoryService.deleteMediaFilesOnServerDisk(

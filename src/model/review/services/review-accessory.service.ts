@@ -1,6 +1,5 @@
 import { ReviewRequestDto } from "../dto/review-request.dto";
 import { Injectable } from "@nestjs/common";
-import { RequestMediaDto } from "src/model/media/dto/request-media.dto";
 import { ReviewImageEntity } from "src/model/media/entities/review.image.entity";
 import { ReviewVideoEntity } from "src/model/media/entities/review.video.entity";
 import { MediaGeneralRepository } from "src/model/media/repositories/media-general.repository";
@@ -8,6 +7,7 @@ import { MediaInsertRepository } from "src/model/media/repositories/media-insert
 import { ReviewEntity } from "../entities/review.entity";
 import { PushReviewImageDto } from "../dto/push-review-image.dto";
 import { PushReviewVideoDto } from "../dto/push-review-video.dto";
+import { MediaDto } from "src/model/media/dto/media.dto";
 
 @Injectable()
 export class ReviewAccessoryService {
@@ -17,7 +17,7 @@ export class ReviewAccessoryService {
   ) {}
 
   async pushMoreThenTwoReviewImageInDto(
-    reviewImgCookies: RequestMediaDto[],
+    reviewImgCookies: MediaDto[],
     reviewRequestDto: ReviewRequestDto,
   ): Promise<void> {
     const promises = reviewImgCookies.map(async (reviewImgCookie) => {
@@ -32,7 +32,7 @@ export class ReviewAccessoryService {
   }
 
   async pushOneReviewImageInDto(
-    reviewImgCookies: RequestMediaDto[],
+    reviewImgCookies: MediaDto[],
     reviewRequestDto: ReviewRequestDto,
   ): Promise<void> {
     const image = await this.mediaGeneralRepository.findReviewImageWithUrl(
@@ -43,7 +43,7 @@ export class ReviewAccessoryService {
   }
 
   async pushMoreThenTwoReviewVideoInDto(
-    reviewVdoCookies: RequestMediaDto[],
+    reviewVdoCookies: MediaDto[],
     reviewRequestDto: ReviewRequestDto,
   ): Promise<void> {
     const promises = reviewVdoCookies.map(async (reviewVdoCookie) => {
@@ -58,7 +58,7 @@ export class ReviewAccessoryService {
   }
 
   async pushOneReviewVideoInDto(
-    reviewVdoCookies: RequestMediaDto[],
+    reviewVdoCookies: MediaDto[],
     reviewRequestDto: ReviewRequestDto,
   ): Promise<void> {
     const video = await this.mediaGeneralRepository.findReviewVideoWithUrl(
@@ -183,7 +183,7 @@ export class ReviewAccessoryService {
   }
 
   async distinguishReviewImagesCountForInsert(
-    reviewImgCookies: RequestMediaDto[],
+    reviewImgCookies: MediaDto[],
     reviewRequestDto: ReviewRequestDto,
     review: ReviewEntity,
   ): Promise<void> {
@@ -201,7 +201,7 @@ export class ReviewAccessoryService {
   }
 
   async distinguishReviewVideosCountForInsert(
-    reviewVdoCookies: RequestMediaDto[],
+    reviewVdoCookies: MediaDto[],
     reviewRequestDto: ReviewRequestDto,
     review: ReviewEntity,
   ): Promise<void> {
@@ -219,7 +219,7 @@ export class ReviewAccessoryService {
   }
 
   async distinguishReviewImagesCountForModify(
-    reviewImgCookies: RequestMediaDto[],
+    reviewImgCookies: MediaDto[],
     reviewRequestDto: ReviewRequestDto,
     review: ReviewEntity,
   ): Promise<void> {
@@ -244,7 +244,7 @@ export class ReviewAccessoryService {
   }
 
   async distinguishReviewVideosCountForModify(
-    reviewVdoCookies: RequestMediaDto[],
+    reviewVdoCookies: MediaDto[],
     reviewRequestDto: ReviewRequestDto,
     review: ReviewEntity,
   ): Promise<void> {

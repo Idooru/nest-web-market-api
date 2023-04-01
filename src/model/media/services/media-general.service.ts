@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { JwtAccessTokenPayload } from "../../auth/jwt/jwt-access-token-payload.interface";
 import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
-import { RequestMediaDto } from "../dto/request-media.dto";
 import { MediaGeneralRepository } from "../repositories/media-general.repository";
 import { MediaAccessoryService } from "./media-accessory.service";
+import { MediaDto } from "../dto/media.dto";
 
 @Injectable()
 export class MediaGeneralService {
@@ -198,9 +198,7 @@ export class MediaGeneralService {
     }
   }
 
-  async deleteProductImageWithCookies(
-    imageCookie: RequestMediaDto,
-  ): Promise<void> {
+  async deleteProductImageWithCookies(imageCookie: MediaDto): Promise<void> {
     const image = await this.mediaGeneralRepository.findProductImageWithUrl(
       imageCookie.url,
     );
@@ -209,7 +207,7 @@ export class MediaGeneralService {
   }
 
   async deleteReviewImagesWithCookies(
-    reviewImgCookies: RequestMediaDto[],
+    reviewImgCookies: MediaDto[],
   ): Promise<void> {
     if (reviewImgCookies.length >= 2) {
       const promises = reviewImgCookies.map(async (cookie) => {
@@ -230,7 +228,7 @@ export class MediaGeneralService {
   }
 
   async deleteReviewVideosWithCookies(
-    reviewVdoCookies: RequestMediaDto[],
+    reviewVdoCookies: MediaDto[],
   ): Promise<void> {
     if (reviewVdoCookies.length >= 2) {
       const promises = reviewVdoCookies.map(async (cookie) => {
@@ -251,7 +249,7 @@ export class MediaGeneralService {
   }
 
   async deleteInquiryRequestImagesWithCookies(
-    inquiryRequestImgCookies: RequestMediaDto[],
+    inquiryRequestImgCookies: MediaDto[],
   ): Promise<void> {
     if (inquiryRequestImgCookies.length >= 2) {
       const promises = inquiryRequestImgCookies.map(async (cookie) => {
@@ -278,7 +276,7 @@ export class MediaGeneralService {
   }
 
   async deleteInquiryRequestVideosWithCookies(
-    inquiryRequestVdoCookies: RequestMediaDto[],
+    inquiryRequestVdoCookies: MediaDto[],
   ): Promise<void> {
     if (inquiryRequestVdoCookies.length >= 2) {
       const promises = inquiryRequestVdoCookies.map(async (cookie) => {
@@ -305,7 +303,7 @@ export class MediaGeneralService {
   }
 
   async deleteInquiryResponseImagesWithCookies(
-    inquiryResponseImgCookies: RequestMediaDto[],
+    inquiryResponseImgCookies: MediaDto[],
   ): Promise<void> {
     if (inquiryResponseImgCookies.length >= 2) {
       const promises = inquiryResponseImgCookies.map(async (cookie) => {
@@ -332,7 +330,7 @@ export class MediaGeneralService {
   }
 
   async deleteInquiryResponseVideosWithCookies(
-    inquiryResponseVdoCookies: RequestMediaDto[],
+    inquiryResponseVdoCookies: MediaDto[],
   ): Promise<void> {
     if (inquiryResponseVdoCookies.length >= 2) {
       const promises = inquiryResponseVdoCookies.map(async (cookie) => {

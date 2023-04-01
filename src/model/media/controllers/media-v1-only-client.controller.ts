@@ -20,13 +20,12 @@ import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { JsonSendCookiesInterface } from "src/common/interceptors/general/interface/json-send-cookies.interface";
 import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
 import { JsonClearCookiesInterface } from "src/common/interceptors/general/interface/json-clear-cookies.interface";
-import { ResponseMediaDto } from "../dto/response-media.dto";
-import { RequestMediaDto } from "../dto/request-media.dto";
 import { MediaGeneralService } from "../services/media-general.service";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
 import { MediaAccessoryService } from "../services/media-accessory.service";
 import { MediaBundleService } from "../services/media-bundle.service";
+import { MediaDto } from "../dto/media.dto";
 
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)
@@ -53,7 +52,7 @@ export class MediaVersionOneOnlyClientController {
   async uploadReviewImage(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookiesInterface<ResponseMediaDto>> {
+  ): Promise<JsonSendCookiesInterface<MediaDto>> {
     this.mediaAccessoryService.isExistMediaFile("review image", files);
     this.mediaLoggerLibrary.log("review images", null, files);
 
@@ -89,7 +88,7 @@ export class MediaVersionOneOnlyClientController {
   async uploadReviewVideo(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookiesInterface<ResponseMediaDto>> {
+  ): Promise<JsonSendCookiesInterface<MediaDto>> {
     this.mediaAccessoryService.isExistMediaFile("review video", files);
     this.mediaLoggerLibrary.log("review videos", null, files);
 
@@ -125,7 +124,7 @@ export class MediaVersionOneOnlyClientController {
   async uploadInquiryRequestImage(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookiesInterface<ResponseMediaDto>> {
+  ): Promise<JsonSendCookiesInterface<MediaDto>> {
     this.mediaAccessoryService.isExistMediaFile("inquiry request image", files);
     this.mediaLoggerLibrary.log("inquiry request images", null, files);
 
@@ -165,7 +164,7 @@ export class MediaVersionOneOnlyClientController {
   async uploadInquiryRequestVideo(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookiesInterface<ResponseMediaDto>> {
+  ): Promise<JsonSendCookiesInterface<MediaDto>> {
     this.mediaAccessoryService.isExistMediaFile("inquiry request video", files);
     this.mediaLoggerLibrary.log("inquiry request videos", null, files);
 
@@ -197,7 +196,7 @@ export class MediaVersionOneOnlyClientController {
   @Delete("/review/image")
   async cancelReviewImageUpload(
     @MediaCookiesParser(mediaCookieKeys.review.image_url_cookie)
-    reviewImgCookies: RequestMediaDto[],
+    reviewImgCookies: MediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteReviewImagesWithCookies(
       reviewImgCookies,
@@ -218,7 +217,7 @@ export class MediaVersionOneOnlyClientController {
   @Delete("/review/video")
   async cancelReviewVideoUpload(
     @MediaCookiesParser(mediaCookieKeys.review.video_url_cookie)
-    reviewVdoCookies: RequestMediaDto[],
+    reviewVdoCookies: MediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteReviewVideosWithCookies(
       reviewVdoCookies,
@@ -239,7 +238,7 @@ export class MediaVersionOneOnlyClientController {
   @Delete("/inquiry/request/image")
   async cancelInquiryRequestImageUpload(
     @MediaCookiesParser(mediaCookieKeys.inquiry.request.image_url_cookie)
-    inquiryRequestImgCookies: RequestMediaDto[],
+    inquiryRequestImgCookies: MediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteInquiryRequestImagesWithCookies(
       inquiryRequestImgCookies,
@@ -265,7 +264,7 @@ export class MediaVersionOneOnlyClientController {
   @Delete("/inquiry/request/video")
   async cancelInquiryRequestVideoUpload(
     @MediaCookiesParser(mediaCookieKeys.inquiry.request.video_url_cookie)
-    inquiryRequestVdoCookies: RequestMediaDto[],
+    inquiryRequestVdoCookies: MediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteInquiryRequestVideosWithCookies(
       inquiryRequestVdoCookies,

@@ -20,7 +20,7 @@ import { JsonGeneralInterface } from "src/common/interceptors/general/interface/
 import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { RequestMediaDto } from "src/model/media/dto/request-media.dto";
+import { MediaDto } from "src/model/media/dto/media.dto";
 import { InquiryResponseDto } from "../dto/response/inquiry-response.dto";
 import { InquiryResponseBundleService } from "../services/response/inquiry-response-bundle.service";
 import { InquiryResponseGeneralService } from "../services/response/inquiry-response-general.service";
@@ -47,9 +47,9 @@ export class InquiryVersionOneOnlyAdminController {
     @Param("inquiryRequestId") inquiryRequestId: string,
     @Param("clientUserId") clientUserId: string,
     @MediaCookiesParser(mediaCookieKeys.inquiry.response.image_url_cookie)
-    inquiryResponseImgCookies: RequestMediaDto[],
+    inquiryResponseImgCookies: MediaDto[],
     @MediaCookiesParser(mediaCookieKeys.inquiry.response.video_url_cookie)
-    inquiryResponseVdoCookies: RequestMediaDto[],
+    inquiryResponseVdoCookies: MediaDto[],
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
     @Body() inquiryResponseDto: InquiryResponseDto,
   ): Promise<JsonClearCookiesInterface> {
@@ -103,7 +103,7 @@ export class InquiryVersionOneOnlyAdminController {
     @Param("inquiryRequestId") inquiryRequestId: string,
     @Param("clientUserId") clientUserId: string,
     @MediaCookiesParser(mediaCookieKeys.inquiry.response.image_url_cookie)
-    inquiryResponseImgCookies: RequestMediaDto[],
+    inquiryResponseImgCookies: MediaDto[],
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
     @Body() inquiryResponseDto: InquiryResponseDto,
   ): Promise<JsonClearCookiesInterface> {
@@ -154,7 +154,7 @@ export class InquiryVersionOneOnlyAdminController {
     @Param("inquiryRequestId") inquiryRequestId: string,
     @Param("clientUserId") clientUserId: string,
     @MediaCookiesParser(mediaCookieKeys.inquiry.response.video_url_cookie)
-    inquiryResponseVdoCookies: RequestMediaDto[],
+    inquiryResponseVdoCookies: MediaDto[],
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
     @Body() inquiryResponseDto: InquiryResponseDto,
   ): Promise<JsonClearCookiesInterface> {

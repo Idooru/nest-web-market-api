@@ -1,8 +1,8 @@
-import { RequestMediaDto } from "src/model/media/dto/request-media.dto";
+import { MediaDto } from "src/model/media/dto/media.dto";
 import { InquiryRequestDto } from "./inquiry-request.dto";
 
-export class PushInquiryRequestMediaDto {
+export class PushInquiryMediaDto {
   inquiryRequestDto: InquiryRequestDto;
-  inquiryRequestImgCookies?: RequestMediaDto[];
-  inquiryRequestVdoCookies?: RequestMediaDto[];
+  inquiryRequestImgCookies?: MediaDto[];
+  inquiryRequestVdoCookies?: MediaDto[];
 }

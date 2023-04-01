@@ -24,12 +24,12 @@ import { JsonGeneralInterface } from "src/common/interceptors/general/interface/
 import { JsonClearCookieInterceptor } from "src/common/interceptors/general/json-clear-cookie.interceptor";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { RequestMediaDto } from "src/model/media/dto/request-media.dto";
 import { CreateProductDto } from "../../dto/create-product.dto";
 import { ModifyProductDto } from "../../dto/modify-product.dto";
 import { RequestProductForAdminDto } from "../../dto/request-product-for-admin.dto";
 import { ProductEntity } from "../../entities/product.entity";
 import { ProductGeneralService } from "../../services/product-general.service";
+import { MediaDto } from "src/model/media/dto/media.dto";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
@@ -79,7 +79,7 @@ export class ProductVersionOneOnlyAdminController {
     @Body()
     createProductDto: CreateProductDto,
     @MediaCookieParser("product_image_url_cookie")
-    productImgCookie: RequestMediaDto,
+    productImgCookie: MediaDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookieInterface> {
     await this.productGeneralService.createProduct(
@@ -107,7 +107,7 @@ export class ProductVersionOneOnlyAdminController {
     @Param("id") id: string,
     @Body() modifyProductDto: ModifyProductDto,
     @MediaCookieParser(mediaCookieKeys.product.image_url_cookie)
-    productImgCookie: RequestMediaDto,
+    productImgCookie: MediaDto,
   ): Promise<JsonClearCookieInterface> {
     await this.productGeneralService.modifyProduct(
       id,
@@ -128,7 +128,7 @@ export class ProductVersionOneOnlyAdminController {
   async modifyProductImage(
     @Param("id") id: string,
     @MediaCookieParser(mediaCookieKeys.product.image_url_cookie)
-    productImgCookie: RequestMediaDto,
+    productImgCookie: MediaDto,
   ): Promise<JsonClearCookieInterface> {
     await this.productGeneralService.modifyProductImage(id, productImgCookie);
 

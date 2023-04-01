@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { InsertInquiryResponseMediaDto } from "../../dto/response/insert-inquiry-response-media.dto";
-import { PushInquiryResponseMediaDto } from "../../dto/response/push-inquiry-response-media.dto";
+import { PushInquiryMediaDto } from "../../dto/response/push-inquiry-response-media.dto";
 import { InquiryResponseAccessoryService } from "./inquiry-response-accessory.service";
+import { InsertInquiryResponseMediaDto } from "../../dto/response/insert-inquiry-response-media.dto";
 
 @Injectable()
 export class InquiryResponseBundleService {
@@ -10,13 +10,13 @@ export class InquiryResponseBundleService {
   ) {}
 
   async pushInquiryMedia(
-    pushInquiryResponseMediaDto: PushInquiryResponseMediaDto,
+    pushInquiryMediaDto: PushInquiryMediaDto,
   ): Promise<void> {
     const {
       inquiryResponseDto,
       inquiryResponseImgCookies,
       inquiryResponseVdoCookies,
-    } = pushInquiryResponseMediaDto;
+    } = pushInquiryMediaDto;
 
     if (inquiryResponseImgCookies) {
       await this.inquiryResponseAccessoryService.distinguishInquiryImagesCountForPush(
@@ -38,14 +38,14 @@ export class InquiryResponseBundleService {
   }
 
   async insertInquiryMedia(
-    insertInquiryResponseMediaDto: InsertInquiryResponseMediaDto,
+    insertInquiryMediaDto: InsertInquiryResponseMediaDto,
   ): Promise<void> {
     const {
       inquiryResponseImgCookies,
       inquiryResponseVdoCookies,
       inquiryResponse,
       inquiryResponseDto,
-    } = insertInquiryResponseMediaDto;
+    } = insertInquiryMediaDto;
 
     if (inquiryResponseImgCookies) {
       await this.inquiryResponseAccessoryService.distinguishInquiryImagesCountForInsert(

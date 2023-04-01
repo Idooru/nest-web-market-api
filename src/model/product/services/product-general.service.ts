@@ -4,7 +4,6 @@ import { ProductGeneralRepository } from "../repositories/product-general.reposi
 import { Injectable } from "@nestjs/common";
 import { CreateProductDto } from "../dto/create-product.dto";
 import { ModifyProductDto } from "../dto/modify-product.dto";
-import { RequestMediaDto } from "src/model/media/dto/request-media.dto";
 import { MediaGeneralRepository } from "src/model/media/repositories/media-general.repository";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
@@ -12,6 +11,7 @@ import { MediaInsertRepository } from "src/model/media/repositories/media-insert
 import { StarRateInsertRepository } from "src/model/review/repositories/star-rate-insert.repository";
 import { ProductInsertRepository } from "../repositories/product-insert.repository";
 import { ProductAccessoryService } from "./product-accessory.service";
+import { MediaDto } from "src/model/media/dto/media.dto";
 
 @Injectable()
 export class ProductGeneralService {
@@ -56,7 +56,7 @@ export class ProductGeneralService {
 
   async createProduct(
     createProductDto: CreateProductDto,
-    imageCookie: RequestMediaDto,
+    imageCookie: MediaDto,
     jwtPayload: JwtAccessTokenPayload,
   ): Promise<void> {
     const [image, StarRate, admin] = await Promise.all([
@@ -81,7 +81,7 @@ export class ProductGeneralService {
   async modifyProduct(
     id: string,
     modifyProductDto: ModifyProductDto,
-    imageCookie: RequestMediaDto,
+    imageCookie: MediaDto,
   ): Promise<void> {
     const [product, newImage, evenImage] =
       await this.productAccessoryService.findProductAndImageForModify(
@@ -99,7 +99,7 @@ export class ProductGeneralService {
     ]);
   }
 
-  async modifyProductImage(id: string, imageCookie: RequestMediaDto) {
+  async modifyProductImage(id: string, imageCookie: MediaDto) {
     const [product, newImage, evenImage] =
       await this.productAccessoryService.findProductAndImageForModify(
         id,
