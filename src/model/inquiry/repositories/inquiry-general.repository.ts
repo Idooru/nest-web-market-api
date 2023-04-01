@@ -4,8 +4,8 @@ import { RepositoryLogger } from "src/common/classes/repository.logger";
 import { InquiryRequestEntity } from "src/model/inquiry/entities/inquiry-request.entity";
 import { Repository } from "typeorm";
 import { CreateInquiryRequestDao } from "../dto/request/create-inquiry-request.dto";
-import { CreateInquiryResponseDao } from "../dto/response/create-inquiry-response.dto";
 import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
+import { InquiryResponseDto } from "../dto/response/inquiry-response.dto";
 
 @Injectable()
 export class InquiryGeneralRepository extends RepositoryLogger {
@@ -40,18 +40,14 @@ export class InquiryGeneralRepository extends RepositoryLogger {
   }
 
   async createInquiryResponse(
-    createInquiryResponseDto: CreateInquiryResponseDao,
+    inquiryResponseDto: InquiryResponseDto,
   ): Promise<void> {
     try {
-      const { inquiryResponseDto, inquiryRequest } = createInquiryResponseDto;
       await this.inquiryResponseRepository
         .createQueryBuilder()
         .insert()
         .into(InquiryResponseEntity)
-        .values({
-          ...inquiryResponseDto,
-          InquiryRequest: inquiryRequest,
-        })
+        .values({ ...inquiryResponseDto })
         .execute();
     } catch (err) {
       this.logger.error(err);
