@@ -16,29 +16,20 @@ export class InquiryResponseGeneralService {
   async createInquiry(
     createInquiryResponseDto: CreateInquiryResponseDto,
   ): Promise<InquiryResponseEntity> {
-    const { inquiryResponseDto, inquiryRequestId, clientUserId, jwtPayload } =
+    const { inquiryResponseDto, inquiryRequestId, jwtPayload } =
       createInquiryResponseDto;
 
-    const [inquiryRequest, client] = await Promise.all([
+    const [inquiryRequest, admin] = await Promise.all([
       this.inquiryGeneralRepository.findInquiryRequestWithId(inquiryRequestId),
-      this.userGenralRepository.findClientUserObject(clientUserId),
+      this.userGenralRepository.findAdminUserObject(jwtPayload.userId),
     ]);
 
-    await this.inquiryGeneralRepository.createInquiryResponse({
+    await this.inquiryGeneralRepository.createInquiryResponse(
       inquiryResponseDto,
-      inquiryRequest,
-    });
+    );
 
     const lastCreatedInquiryResponse =
       await this.inquiryInsertRepository.findLastCreatedInquiryResponse();
-    await this.inquiryInsertRepository.insertClientUserIdOnInquiryResponse(
-      client,
-      lastCreatedInquiryResponse,
-    );
-
-    const admin = await this.userGenralRepository.findAdminUserObject(
-      jwtPayload.userId,
-    );
     await this.inquiryInsertRepository.insertAdminUserIdOnInquiryResponse(
       admin,
       lastCreatedInquiryResponse,
