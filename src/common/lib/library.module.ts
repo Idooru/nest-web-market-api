@@ -5,6 +5,7 @@ import { CookieLibrary } from "./cookie.library";
 import { MeidaLoggerLibrary } from "./media-logger.library";
 import { SecurityLibrary } from "./security.library";
 import { TimeLoggerLibrary } from "./time-logger.library";
+import { RepositoryErrorHandleLibrary } from "./repository-error-handler.library";
 
 @Module({
   imports: [DotenvConfigurationModule],
@@ -14,12 +15,14 @@ import { TimeLoggerLibrary } from "./time-logger.library";
     SecurityLibrary,
     ConfigService,
     MeidaLoggerLibrary,
+    RepositoryErrorHandleLibrary,
   ],
   exports: [
     CookieLibrary,
     TimeLoggerLibrary,
     SecurityLibrary,
     MeidaLoggerLibrary,
+    RepositoryErrorHandleLibrary,
   ],
 })
 export class LibraryModule {}
