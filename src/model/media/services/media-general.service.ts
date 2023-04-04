@@ -40,7 +40,7 @@ export class MediaGeneralService {
     );
 
     if (files.length >= 2) {
-      const promises = urls.map(async (url) => {
+      const promises = urls.map(async (url: string) => {
         await this.mediaGeneralRepository.uploadReviewImage({
           url,
           uploader: user.Auth.email,
@@ -68,7 +68,7 @@ export class MediaGeneralService {
     );
 
     if (files.length >= 2) {
-      const promoises = urls.map(async (url) => {
+      const promoises = urls.map(async (url: string) => {
         await this.mediaGeneralRepository.uploadReviewVideo({
           url,
           uploader: user.Auth.email,
@@ -96,7 +96,7 @@ export class MediaGeneralService {
     );
 
     if (files.length >= 2) {
-      const promises = urls.map(async (url) => {
+      const promises = urls.map(async (url: string) => {
         await this.mediaGeneralRepository.uploadInquiryRequestImage({
           url,
           uploader: user.Auth.email,
@@ -124,7 +124,7 @@ export class MediaGeneralService {
     );
 
     if (files.length >= 2) {
-      const promises = urls.map(async (url) => {
+      const promises = urls.map(async (url: string) => {
         await this.mediaGeneralRepository.uploadInquiryRequestVideo({
           url,
           uploader: user.Auth.email,
@@ -152,7 +152,7 @@ export class MediaGeneralService {
     );
 
     if (files.length >= 2) {
-      const promises = urls.map(async (url) => {
+      const promises = urls.map(async (url: string) => {
         await this.mediaGeneralRepository.uploadInquiryResponseImage({
           url,
           uploader: user.Auth.email,
@@ -180,7 +180,7 @@ export class MediaGeneralService {
     );
 
     if (files.length >= 2) {
-      const promises = urls.map(async (url) => {
+      const promises = urls.map(async (url: string) => {
         await this.mediaGeneralRepository.uploadInquiryResponseVideo({
           url,
           uploader: user.Auth.email,
