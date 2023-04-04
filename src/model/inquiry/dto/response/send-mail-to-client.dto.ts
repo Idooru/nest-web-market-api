@@ -1,4 +1,4 @@
 export class SendMailToClientDto {
-  clientUserId: string;
+  userId: string;
   inquiryRequestId: string;
 }

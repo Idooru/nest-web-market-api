@@ -40,12 +40,10 @@ export class InquiryVersionOneOnlyAdminController {
   @UseGuards(
     new VerifyDataGuard(verifyCookieKeys.inquiry.response.is_exist.id_executed),
   )
-  @Post(
-    "/inquiry-request/:inquiryRequestId/client-user/:clientUserId/image&video",
-  )
+  @Post("/inquiry-request/:inquiryRequestId/user/:userId/image&video")
   async createInquiryResponseWithImageAndVideo(
     @Param("inquiryRequestId") inquiryRequestId: string,
-    @Param("clientUserId") clientUserId: string,
+    @Param("userId") userId: string,
     @MediaCookiesParser(mediaCookieKeys.inquiry.response.image_url_cookie)
     inquiryResponseImgCookies: MediaDto[],
     @MediaCookiesParser(mediaCookieKeys.inquiry.response.video_url_cookie)
@@ -55,7 +53,7 @@ export class InquiryVersionOneOnlyAdminController {
   ): Promise<JsonClearCookiesInterface> {
     const inquiryResponse =
       await this.inquiryResponseGeneralService.createInquiry({
-        clientUserId,
+        userId,
         inquiryRequestId,
         inquiryResponseDto,
         jwtPayload,
@@ -79,7 +77,7 @@ export class InquiryVersionOneOnlyAdminController {
     await Promise.all([
       mediaWork(),
       this.inquiryResponseSendMailService.sendMailToClient({
-        clientUserId,
+        userId,
         inquiryRequestId,
       }),
     ]);
@@ -98,10 +96,10 @@ export class InquiryVersionOneOnlyAdminController {
   @UseGuards(
     new VerifyDataGuard(verifyCookieKeys.inquiry.response.is_exist.id_executed),
   )
-  @Post("/inquiry-request/:inquiryRequestId/client-user/:clientUserId/image")
+  @Post("/inquiry-request/:inquiryRequestId/user/:userId/image")
   async createInquiryWithImage(
     @Param("inquiryRequestId") inquiryRequestId: string,
-    @Param("clientUserId") clientUserId: string,
+    @Param("userId") userId: string,
     @MediaCookiesParser(mediaCookieKeys.inquiry.response.image_url_cookie)
     inquiryResponseImgCookies: MediaDto[],
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
@@ -109,7 +107,7 @@ export class InquiryVersionOneOnlyAdminController {
   ): Promise<JsonClearCookiesInterface> {
     const inquiryResponse =
       await this.inquiryResponseGeneralService.createInquiry({
-        clientUserId,
+        userId,
         inquiryRequestId,
         inquiryResponseDto,
         jwtPayload,
@@ -131,7 +129,7 @@ export class InquiryVersionOneOnlyAdminController {
     await Promise.all([
       mediaWork(),
       this.inquiryResponseSendMailService.sendMailToClient({
-        clientUserId,
+        userId,
         inquiryRequestId,
       }),
     ]);
@@ -149,10 +147,10 @@ export class InquiryVersionOneOnlyAdminController {
   @UseGuards(
     new VerifyDataGuard(verifyCookieKeys.inquiry.response.is_exist.id_executed),
   )
-  @Post("/inquiry-request/:inquiryRequestId/client-user/:clientUserId/video")
+  @Post("/inquiry-request/:inquiryRequestId/user/:userId/video")
   async createInquiryWithVideo(
     @Param("inquiryRequestId") inquiryRequestId: string,
-    @Param("clientUserId") clientUserId: string,
+    @Param("userId") userId: string,
     @MediaCookiesParser(mediaCookieKeys.inquiry.response.video_url_cookie)
     inquiryResponseVdoCookies: MediaDto[],
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
@@ -160,7 +158,7 @@ export class InquiryVersionOneOnlyAdminController {
   ): Promise<JsonClearCookiesInterface> {
     const inquiryResponse =
       await this.inquiryResponseGeneralService.createInquiry({
-        clientUserId,
+        userId,
         inquiryRequestId,
         inquiryResponseDto,
         jwtPayload,
@@ -182,7 +180,7 @@ export class InquiryVersionOneOnlyAdminController {
     await Promise.all([
       mediaWork(),
       this.inquiryResponseSendMailService.sendMailToClient({
-        clientUserId,
+        userId,
         inquiryRequestId,
       }),
     ]);
@@ -200,22 +198,22 @@ export class InquiryVersionOneOnlyAdminController {
   @UseGuards(
     new VerifyDataGuard(verifyCookieKeys.inquiry.response.is_exist.id_executed),
   )
-  @Post("/inquiry-request/:inquiryRequestId/client-user/:clientUserId")
+  @Post("/inquiry-request/:inquiryRequestId/user/:userId")
   async createInquiryWithoutMedia(
     @Param("inquiryRequestId") inquiryRequestId: string,
-    @Param("clientUserId") clientUserId: string,
+    @Param("userId") userId: string,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
     @Body() inquiryResponseDto: InquiryResponseDto,
   ): Promise<JsonGeneralInterface<void>> {
     await this.inquiryResponseGeneralService.createInquiry({
-      clientUserId,
+      userId,
       inquiryRequestId,
       inquiryResponseDto,
       jwtPayload,
     });
 
     await this.inquiryResponseSendMailService.sendMailToClient({
-      clientUserId,
+      userId,
       inquiryRequestId,
     });
 

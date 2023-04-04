@@ -3,7 +3,7 @@ import { InquiryResponseDto } from "./inquiry-response.dto";
 
 export class CreateInquiryResponseDto {
   inquiryRequestId: string;
-  clientUserId: string;
+  userId: string;
   inquiryResponseDto: InquiryResponseDto;
   jwtPayload: JwtAccessTokenPayload;
 }
