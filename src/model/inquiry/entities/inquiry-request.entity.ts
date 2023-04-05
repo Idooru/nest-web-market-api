@@ -39,6 +39,7 @@ export class InquiryRequestEntity extends PostEntity {
   @OneToOne(
     () => InquiryResponseEntity,
     (inquiryResponse) => inquiryResponse.InquiryRequest,
+    { cascade: true },
   )
   InquiryResponse: InquiryResponseEntity;
 }

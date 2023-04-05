@@ -40,6 +40,7 @@ export class InquiryResponseEntity extends PostEntity {
   @OneToOne(
     () => InquiryRequestEntity,
     (inquiryRequest) => inquiryRequest.InquiryResponse,
+    { onDelete: "CASCADE" },
   )
   @JoinColumn({ name: "inquiryRequestId", referencedColumnName: "id" })
   InquiryRequest: InquiryRequestEntity;
