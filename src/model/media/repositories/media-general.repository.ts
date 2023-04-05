@@ -1,9 +1,5 @@
 import { UploadMediaDto } from "../dto/upload-media.dto";
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ProductImageEntity } from "../entities/product.image.entity";
 import { ReviewImageEntity } from "../entities/review.image.entity";
@@ -12,12 +8,13 @@ import { Repository } from "typeorm";
 import { mediaSelectProperty } from "src/common/config/repository-select-configs/media-select";
 import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
-import { RepositoryLogger } from "src/common/classes/repository.logger";
+import { RepositoryErrorHandleLibrary } from "src/common/lib/repository-error-handler.library";
 import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
 import { InquiryResponseVideoEntity } from "../entities/inquiry-response-video.entity";
+import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 
 @Injectable()
-export class MediaGeneralRepository extends RepositoryLogger {
+export class MediaGeneralRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(ProductImageEntity)
     private readonly productImageRepository: Repository<ProductImageEntity>,
@@ -33,8 +30,9 @@ export class MediaGeneralRepository extends RepositoryLogger {
     private readonly inquiryResponseImageRepository: Repository<InquiryResponseImageEntity>,
     @InjectRepository(InquiryResponseVideoEntity)
     private readonly inquiryResponseVideoRepository: Repository<InquiryResponseVideoEntity>,
+    private readonly repositoryErrorHandler: RepositoryErrorHandleLibrary,
   ) {
-    super("Media General");
+    super();
   }
 
   private readonly select = mediaSelectProperty;
@@ -48,8 +46,13 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .values({ ...uploadMediaDto })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.uploadProductImage.name;
+      this.repositoryErrorHandler.init<ProductImageEntity>(
+        new ProductImageEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -62,8 +65,13 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .values({ ...uploadMediaDto })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.uploadReviewImage.name;
+      this.repositoryErrorHandler.init<ReviewImageEntity>(
+        new ReviewImageEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -76,8 +84,13 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .values({ ...uploadMediaDto })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.uploadReviewVideo.name;
+      this.repositoryErrorHandler.init<ReviewVideoEntity>(
+        new ReviewVideoEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -92,8 +105,13 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .values({ ...uploadMediaDto })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.uploadInquiryRequestImage.name;
+      this.repositoryErrorHandler.init<InquiryRequestImageEntity>(
+        new InquiryRequestImageEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -108,8 +126,13 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .values({ ...uploadMediaDto })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.uploadInquiryRequestVideo.name;
+      this.repositoryErrorHandler.init<InquiryRequestVideoEntity>(
+        new InquiryRequestVideoEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -124,8 +147,13 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .values({ ...uploadMediaDto })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.uploadInquiryResponseImage.name;
+      this.repositoryErrorHandler.init<InquiryResponseImageEntity>(
+        new InquiryResponseImageEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -140,8 +168,13 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .values({ ...uploadMediaDto })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.uploadInquiryResponseVideo.name;
+      this.repositoryErrorHandler.init<InquiryResponseImageEntity>(
+        new InquiryResponseImageEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -154,13 +187,14 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .where("productImage.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
-      this.logger.error(err);
-      if (err.message.includes("Could not find any entity of type")) {
-        throw new NotFoundException(
-          "해당 url을 가진 상품 이미지를 찾을 수 없습니다.",
-        );
-      }
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findProductImageWithUrl.name;
+      this.repositoryErrorHandler.init<ProductImageEntity>(
+        new ProductImageEntity(),
+        this.className,
+        this.methodName,
+        err,
+        { stuff: url, stuffMean: "url" },
+      );
     }
   }
 
@@ -174,13 +208,14 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .where("reviewImage.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
-      this.logger.error(err);
-      if (err.message.includes("Could not find any entity of type")) {
-        throw new NotFoundException(
-          `해당 url(${url})을 가진 리뷰 이미지를 찾을 수 없습니다.`,
-        );
-      }
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findReviewImageWithUrl.name;
+      this.repositoryErrorHandler.init<ReviewImageEntity>(
+        new ReviewImageEntity(),
+        this.className,
+        this.methodName,
+        err,
+        { stuff: url, stuffMean: "url" },
+      );
     }
   }
 
@@ -194,13 +229,14 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .where("reviewVideo.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
-      this.logger.error(err);
-      if (err.message.includes("Could not find any entity of type")) {
-        throw new NotFoundException(
-          `해당 url(${url})을 가진 리뷰 동영상을 찾을 수 없습니다.`,
-        );
-      }
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findReviewVideoWithUrl.name;
+      this.repositoryErrorHandler.init<ReviewVideoEntity>(
+        new ReviewVideoEntity(),
+        this.className,
+        this.methodName,
+        err,
+        { stuff: url, stuffMean: "url" },
+      );
     }
   }
 
@@ -216,13 +252,14 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .where("inquiryRequestImage.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
-      this.logger.error(err);
-      if (err.message.includes("Could not find any entity of type")) {
-        throw new NotFoundException(
-          `해당 url(${url})을 가진 문의 요청 이미지를 찾을 수 없습니다.`,
-        );
-      }
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findInquiryRequestImageWithUrl.name;
+      this.repositoryErrorHandler.init<InquiryRequestImageEntity>(
+        new InquiryRequestImageEntity(),
+        this.className,
+        this.methodName,
+        err,
+        { stuff: url, stuffMean: "url" },
+      );
     }
   }
 
@@ -238,13 +275,14 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .where("inquiryRequestVideo.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
-      this.logger.error(err);
-      if (err.message.includes("Could not find any entity of type")) {
-        throw new NotFoundException(
-          `해당 url(${url})을 가진 문의 요청 동영상을 찾을 수 없습니다.`,
-        );
-      }
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findInquiryReuqestVideoWithUrl.name;
+      this.repositoryErrorHandler.init<InquiryRequestVideoEntity>(
+        new InquiryRequestVideoEntity(),
+        this.className,
+        this.methodName,
+        err,
+        { stuff: url, stuffMean: "url" },
+      );
     }
   }
 
@@ -260,13 +298,14 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .where("inquiryImage.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
-      this.logger.error(err);
-      if (err.message.includes("Could not find any entity of type")) {
-        throw new NotFoundException(
-          `해당 url(${url})을 가진 문의 응답 이미지를 찾을 수 없습니다.`,
-        );
-      }
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findInquiryResponseImageWithUrl.name;
+      this.repositoryErrorHandler.init<InquiryResponseImageEntity>(
+        new InquiryResponseImageEntity(),
+        this.className,
+        this.methodName,
+        err,
+        { stuff: url, stuffMean: "url" },
+      );
     }
   }
 
@@ -282,13 +321,14 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .where("inquiryVideo.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
-      this.logger.error(err);
-      if (err.message.includes("Could not find any entity of type")) {
-        throw new NotFoundException(
-          `해당 url(${url})을 가진 문의 응답 동영상을 찾을 수 없습니다.`,
-        );
-      }
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findInquiryResponseVideoWithUrl.name;
+      this.repositoryErrorHandler.init<InquiryResponseVideoEntity>(
+        new InquiryResponseVideoEntity(),
+        this.className,
+        this.methodName,
+        err,
+        { stuff: url, stuffMean: "url" },
+      );
     }
   }
 
@@ -301,8 +341,13 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.deleteProductImageWithId.name;
+      this.repositoryErrorHandler.init<ProductImageEntity>(
+        new ProductImageEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -315,8 +360,13 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.deleteReviewImageWithId.name;
+      this.repositoryErrorHandler.init<ReviewImageEntity>(
+        new ReviewImageEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -329,8 +379,13 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.deleteReviewVideoWithId.name;
+      this.repositoryErrorHandler.init<ReviewVideoEntity>(
+        new ReviewVideoEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -343,8 +398,13 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.deleteInquiryRequestImageWithId.name;
+      this.repositoryErrorHandler.init<InquiryRequestImageEntity>(
+        new InquiryRequestImageEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -357,8 +417,13 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.deleteInquiryRequestVideoWIthId.name;
+      this.repositoryErrorHandler.init<InquiryRequestVideoEntity>(
+        new InquiryRequestVideoEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -371,8 +436,13 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.deleteInquiryResponseImageWithId.name;
+      this.repositoryErrorHandler.init<InquiryResponseImageEntity>(
+        new InquiryResponseImageEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -385,8 +455,13 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.deleteInquiryResponseVideoWithId.name;
+      this.repositoryErrorHandler.init<InquiryResponseVideoEntity>(
+        new InquiryResponseVideoEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -401,8 +476,13 @@ export class MediaGeneralRepository extends RepositoryLogger {
         })
         .getOne();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findProductImageEvenUse.name;
+      this.repositoryErrorHandler.init<ProductImageEntity>(
+        new ProductImageEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -416,8 +496,13 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .orderBy("reviewImages.createdAt", "DESC")
         .getMany();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findBeforeReviewImages.name;
+      this.repositoryErrorHandler.init<ReviewImageEntity>(
+        new ReviewImageEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -431,8 +516,13 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .orderBy("reviewImage.createdAt", "DESC")
         .getOne();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findBeforeReviewImage.name;
+      this.repositoryErrorHandler.init<ReviewImageEntity>(
+        new ReviewImageEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -446,8 +536,13 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .orderBy("reviewVideos.createdAt", "DESC")
         .getMany();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findBeforeReviewVideos.name;
+      this.repositoryErrorHandler.init<ReviewVideoEntity>(
+        new ReviewVideoEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -461,8 +556,13 @@ export class MediaGeneralRepository extends RepositoryLogger {
         .orderBy("reviewVideo.createdAt", "DESC")
         .getOne();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findBeforeReviewVideo.name;
+      this.repositoryErrorHandler.init<ReviewVideoEntity>(
+        new ReviewVideoEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 }

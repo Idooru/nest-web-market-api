@@ -1,19 +1,21 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { RepositoryLogger } from "src/common/classes/repository.logger";
+import { RepositoryErrorHandleLibrary } from "src/common/lib/repository-error-handler.library";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { Repository } from "typeorm";
 import { StarRateEntity } from "../entities/star-rate.entity";
 import { StarRateGeneralRepository } from "./star-rate-general.repository";
+import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 
 @Injectable()
-export class StarRateInsertRepository extends RepositoryLogger {
+export class StarRateInsertRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(StarRateEntity)
     private readonly starRateRepository: Repository<StarRateEntity>,
     private readonly starRateGeneralRepository: StarRateGeneralRepository,
+    private readonly repositoryErrorHandler: RepositoryErrorHandleLibrary,
   ) {
-    super("Star Rate Insert");
+    super();
   }
 
   async renewTotalScore(averageScore: number, starRateId: string) {
@@ -25,8 +27,13 @@ export class StarRateInsertRepository extends RepositoryLogger {
       StarRate.averageScore = averageScore;
       await this.starRateRepository.save(StarRate);
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.renewTotalScore.name;
+      this.repositoryErrorHandler.init<StarRateEntity>(
+        new StarRateEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -42,8 +49,13 @@ export class StarRateInsertRepository extends RepositoryLogger {
         .where("id = :id", { id: starRate.id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.insertProductIdOnStarRate.name;
+      this.repositoryErrorHandler.init<StarRateEntity>(
+        new StarRateEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 }

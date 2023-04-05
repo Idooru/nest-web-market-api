@@ -1,20 +1,22 @@
 import { Injectable } from "@nestjs/common";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
-import { ModifyUserDto } from "../dtos/modify-user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserProfileEntity } from "../entities/user.profile.entity";
 import { Repository } from "typeorm";
 import { userSelectProperty } from "src/common/config/repository-select-configs/user-select";
-import { InternalServerErrorException } from "@nestjs/common/exceptions";
 import { ClientUserEntity } from "../entities/client-user.entity";
-import { RegisterUserDto } from "../dtos/register-user.dto";
+import { RegisterUserProfileDto } from "../dtos/register-user.dto";
 import { AdminUserEntity } from "../entities/admin-user.entity";
 import { UserEntity } from "../entities/user.entity";
 import { CreateUserBaseDto } from "../dtos/create-user-base.dto";
-import { RepositoryLogger } from "src/common/classes/repository.logger";
+import { RepositoryErrorHandleLibrary } from "src/common/lib/repository-error-handler.library";
+import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
+import { RegisterUserAuthDto } from "../dtos/register-user.dto";
+import { ModifyUserProfileDto } from "../dtos/modify-user.dto";
+import { ModifyUserAuthDto } from "../dtos/modify-user.dto";
 
 @Injectable()
-export class UserGeneralRepository extends RepositoryLogger {
+export class UserGeneralRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
@@ -26,8 +28,9 @@ export class UserGeneralRepository extends RepositoryLogger {
     private readonly clientUserRepository: Repository<ClientUserEntity>,
     @InjectRepository(AdminUserEntity)
     private readonly adminUserRepository: Repository<AdminUserEntity>,
+    private readonly repositoryErrorHandler: RepositoryErrorHandleLibrary,
   ) {
-    super("User General");
+    super();
   }
 
   private readonly select = userSelectProperty;
@@ -42,8 +45,13 @@ export class UserGeneralRepository extends RepositoryLogger {
         .orderBy("user.createdAt", "DESC")
         .getMany();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findAllUsersFromLatest.name;
+      this.repositoryErrorHandler.init<UserEntity>(
+        new UserEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -57,8 +65,13 @@ export class UserGeneralRepository extends RepositoryLogger {
         .orderBy("user.createdAt", "ASC")
         .getMany();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findAllUsersFromOldest.name;
+      this.repositoryErrorHandler.init<UserEntity>(
+        new UserEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -73,8 +86,14 @@ export class UserGeneralRepository extends RepositoryLogger {
         .where("user.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findUserWithId.name;
+      this.repositoryErrorHandler.init<UserEntity>(
+        new UserEntity(),
+        this.className,
+        this.methodName,
+        err,
+        { stuff: id, stuffMean: "아이디" },
+      );
     }
   }
 
@@ -90,8 +109,14 @@ export class UserGeneralRepository extends RepositoryLogger {
         .where("user.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findClientUserWithId.name;
+      this.repositoryErrorHandler.init<UserEntity>(
+        new UserEntity(),
+        this.className,
+        this.methodName,
+        err,
+        { stuff: id, stuffMean: "아이디" },
+      );
     }
   }
 
@@ -107,14 +132,20 @@ export class UserGeneralRepository extends RepositoryLogger {
         .where("user.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findAdminUserWithId.name;
+      this.repositoryErrorHandler.init<UserEntity>(
+        new UserEntity(),
+        this.className,
+        this.methodName,
+        err,
+        { stuff: id, stuffMean: "아이디" },
+      );
     }
   }
 
-  async findClientUserObject(userId: string): Promise<ClientUserEntity> {
+  async findClientUserObject(id: string): Promise<ClientUserEntity> {
     try {
-      const user = await this.findClientUserWithId(userId);
+      const user = await this.findClientUserWithId(id);
 
       return await this.clientUserRepository
         .createQueryBuilder()
@@ -123,14 +154,20 @@ export class UserGeneralRepository extends RepositoryLogger {
         .where("client.id = :id", { id: user.clientActions.id })
         .getOneOrFail();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findClientUserObject.name;
+      this.repositoryErrorHandler.init<ClientUserEntity>(
+        new ClientUserEntity(),
+        this.className,
+        this.methodName,
+        err,
+        { stuff: id, stuffMean: "아이디" },
+      );
     }
   }
 
-  async findAdminUserObject(userId: string): Promise<AdminUserEntity> {
+  async findAdminUserObject(id: string): Promise<AdminUserEntity> {
     try {
-      const user = await this.findAdminUserWithId(userId);
+      const user = await this.findAdminUserWithId(id);
 
       return await this.adminUserRepository
         .createQueryBuilder()
@@ -139,8 +176,14 @@ export class UserGeneralRepository extends RepositoryLogger {
         .where("admin.id = :id", { id: user.adminActions.id })
         .getOneOrFail();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findAdminUserObject.name;
+      this.repositoryErrorHandler.init<AdminUserEntity>(
+        new AdminUserEntity(),
+        this.className,
+        this.methodName,
+        err,
+        { stuff: id, stuffMean: "아이디" },
+      );
     }
   }
 
@@ -153,8 +196,13 @@ export class UserGeneralRepository extends RepositoryLogger {
         .orderBy("admin.createdAt", "DESC")
         .getOneOrFail();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findAdminUserObjectWithoutId.name;
+      this.repositoryErrorHandler.init<AdminUserEntity>(
+        new AdminUserEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -169,8 +217,14 @@ export class UserGeneralRepository extends RepositoryLogger {
         .where("Auth.email = :email", { email })
         .getOneOrFail();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findUserWithEmail.name;
+      this.repositoryErrorHandler.init<UserEntity>(
+        new UserEntity(),
+        this.className,
+        this.methodName,
+        err,
+        { stuff: email, stuffMean: "이메일" },
+      );
     }
   }
 
@@ -185,8 +239,14 @@ export class UserGeneralRepository extends RepositoryLogger {
         .where("Auth.nickname = :nickname", { nickname })
         .getOneOrFail();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findUserWithNickName.name;
+      this.repositoryErrorHandler.init<UserEntity>(
+        new UserEntity(),
+        this.className,
+        this.methodName,
+        err,
+        { stuff: nickname, stuffMean: "닉네임" },
+      );
     }
   }
 
@@ -201,8 +261,13 @@ export class UserGeneralRepository extends RepositoryLogger {
         .where("Profile.realname = :realname", { realname })
         .getOne();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findUserWithRealName.name;
+      this.repositoryErrorHandler.init<UserEntity>(
+        new UserEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -219,8 +284,13 @@ export class UserGeneralRepository extends RepositoryLogger {
         .where("Profile.phonenumber = :phonenumber", { phonenumber })
         .getOne();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findUserWithPhoneNumber.name;
+      this.repositoryErrorHandler.init<ClientUserEntity>(
+        new ClientUserEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -247,8 +317,14 @@ export class UserGeneralRepository extends RepositoryLogger {
         .where("user.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findClientUserProfileInfoWithId.name;
+      this.repositoryErrorHandler.init<UserEntity>(
+        new UserEntity(),
+        this.className,
+        this.methodName,
+        err,
+        { stuff: id, stuffMean: "아이디" },
+      );
     }
   }
 
@@ -279,8 +355,14 @@ export class UserGeneralRepository extends RepositoryLogger {
         .where("user.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findAdminUserProfileInfoWithId.name;
+      this.repositoryErrorHandler.init<UserEntity>(
+        new UserEntity(),
+        this.className,
+        this.methodName,
+        err,
+        { stuff: id, stuffMean: "아이디" },
+      );
     }
   }
 
@@ -303,8 +385,14 @@ export class UserGeneralRepository extends RepositoryLogger {
         .where("user.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findClientUserInfoFromAdmin.name;
+      this.repositoryErrorHandler.init<UserEntity>(
+        new UserEntity(),
+        this.className,
+        this.methodName,
+        err,
+        { stuff: id, stuffMean: "아이디" },
+      );
     }
   }
 
@@ -318,49 +406,92 @@ export class UserGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.resetPassword.name;
+      this.repositoryErrorHandler.init<UserAuthEntity>(
+        new UserAuthEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
-  async createUserBase(
-    registerUserDto: RegisterUserDto,
-    hashed: string,
-  ): Promise<void> {
+  async createUserProfile(
+    registerUserProfileDto: RegisterUserProfileDto,
+  ): Promise<UserProfileEntity> {
     try {
-      const password = hashed;
-      const { realname, nickname, birth, gender, email, phonenumber, type } =
-        registerUserDto;
+      return await this.userProfileRepository.save({
+        ...registerUserProfileDto,
+      });
+    } catch (err) {
+      this.methodName = this.createUserProfile.name;
+      this.repositoryErrorHandler.init<UserProfileEntity>(
+        new UserProfileEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
+    }
+  }
 
-      const userProfileColumn = { realname, birth, gender, phonenumber };
-      const userAuthColumn = { nickname, email, password };
+  async createUserAuth(
+    registerUserAuthDto: RegisterUserAuthDto,
+  ): Promise<UserAuthEntity> {
+    try {
+      return await this.userAuthRepository.save({ ...registerUserAuthDto });
+    } catch (err) {
+      this.methodName = this.createUserAuth.name;
+      this.repositoryErrorHandler.init<UserAuthEntity>(
+        new UserAuthEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
+    }
+  }
 
-      const [userProfile, userAuth] = await Promise.all([
-        this.userProfileRepository.save({ ...userProfileColumn }),
-        this.userAuthRepository.save({ ...userAuthColumn }),
-      ]);
+  async findUserProfile(
+    userProfileDummy: UserProfileEntity,
+  ): Promise<UserProfileEntity> {
+    try {
+      return this.userProfileRepository
+        .createQueryBuilder()
+        .select("profile")
+        .from(UserProfileEntity, "profile")
+        .where("profile.id = :id", { id: userProfileDummy.id })
+        .getOne();
+    } catch (err) {
+      this.methodName = this.findUserProfile.name;
+      this.repositoryErrorHandler.init<UserProfileEntity>(
+        new UserProfileEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
+    }
+  }
 
-      const [userProfileObject, userAuthObject] = await Promise.all([
-        this.userProfileRepository
-          .createQueryBuilder()
-          .select("profile")
-          .from(UserProfileEntity, "profile")
-          .where("profile.id = :id", { id: userProfile.id })
-          .getOne(),
-        this.userAuthRepository
-          .createQueryBuilder()
-          .select("auth")
-          .from(UserAuthEntity, "auth")
-          .where("auth.id = :id", { id: userAuth.id })
-          .getOne(),
-      ]);
+  async findUserAuth(userAuthDummy: UserAuthEntity): Promise<UserAuthEntity> {
+    try {
+      return this.userAuthRepository
+        .createQueryBuilder()
+        .select("auth")
+        .from(UserAuthEntity, "auth")
+        .where("auth.id = :id", { id: userAuthDummy.id })
+        .getOne();
+    } catch (err) {
+      this.methodName = this.findUserAuth.name;
+      this.repositoryErrorHandler.init<UserAuthEntity>(
+        new UserAuthEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
+    }
+  }
 
-      const createUserBaseDto: CreateUserBaseDto = {
-        Profile: userProfileObject,
-        Auth: userAuthObject,
-        type,
-      };
-
+  async createUserBase(createUserBaseDto: CreateUserBaseDto): Promise<void> {
+    try {
       await this.userRepository
         .createQueryBuilder()
         .insert()
@@ -368,8 +499,13 @@ export class UserGeneralRepository extends RepositoryLogger {
         .values({ ...createUserBaseDto })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.createUserBase.name;
+      this.repositoryErrorHandler.init<UserEntity>(
+        new UserEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -382,8 +518,13 @@ export class UserGeneralRepository extends RepositoryLogger {
         .values({ User: user })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.createClientUser.name;
+      this.repositoryErrorHandler.init<ClientUserEntity>(
+        new ClientUserEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -396,37 +537,57 @@ export class UserGeneralRepository extends RepositoryLogger {
         .values({ User: user })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.createAdminUser.name;
+      this.repositoryErrorHandler.init<AdminUserEntity>(
+        new AdminUserEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
-  async modifyUser(
-    modifyUserDto: ModifyUserDto,
-    password: string,
-    userProfileId: string,
-    userAuthId: string,
+  async modifyUserProfile(
+    modifyUserProfileDto: ModifyUserProfileDto,
+    id: string,
   ): Promise<void> {
     try {
-      const { phonenumber, nickname, email } = modifyUserDto;
-
-      await Promise.all([
-        this.userProfileRepository
-          .createQueryBuilder()
-          .update(UserProfileEntity)
-          .set({ phonenumber })
-          .where("id = :id", { id: userProfileId })
-          .execute(),
-        this.userAuthRepository
-          .createQueryBuilder()
-          .update(UserAuthEntity)
-          .set({ email, nickname, password })
-          .where("id = :id", { id: userAuthId })
-          .execute(),
-      ]);
+      await this.userProfileRepository
+        .createQueryBuilder()
+        .update(UserProfileEntity)
+        .set({ ...modifyUserProfileDto })
+        .where("id = :id", { id })
+        .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.modifyUserProfile.name;
+      this.repositoryErrorHandler.init<UserProfileEntity>(
+        new UserProfileEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
+    }
+  }
+
+  async modifyUserAuth(
+    modifyUserAuthDto: ModifyUserAuthDto,
+    id: string,
+  ): Promise<void> {
+    try {
+      await this.userAuthRepository
+        .createQueryBuilder()
+        .update(UserAuthEntity)
+        .set({ ...modifyUserAuthDto })
+        .where("id = :id", { id })
+        .execute();
+    } catch (err) {
+      this.methodName = this.modifyUserAuth.name;
+      this.repositoryErrorHandler.init<UserAuthEntity>(
+        new UserAuthEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -439,8 +600,13 @@ export class UserGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.modifyUserEmail.name;
+      this.repositoryErrorHandler.init<UserAuthEntity>(
+        new UserAuthEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -453,8 +619,13 @@ export class UserGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.modifyUserNickName.name;
+      this.repositoryErrorHandler.init<UserAuthEntity>(
+        new UserAuthEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -467,8 +638,13 @@ export class UserGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.modifyUserPhoneNumber.name;
+      this.repositoryErrorHandler.init<UserProfileEntity>(
+        new UserProfileEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -481,8 +657,13 @@ export class UserGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.modifyUserPassword.name;
+      this.repositoryErrorHandler.init<UserAuthEntity>(
+        new UserAuthEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -495,8 +676,13 @@ export class UserGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.deleteUser.name;
+      this.repositoryErrorHandler.init<UserEntity>(
+        new UserEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 }

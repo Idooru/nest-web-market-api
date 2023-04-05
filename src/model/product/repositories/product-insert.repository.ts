@@ -1,16 +1,18 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { RepositoryLogger } from "src/common/classes/repository.logger";
+import { RepositoryErrorHandleLibrary } from "src/common/lib/repository-error-handler.library";
 import { Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
+import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 
 @Injectable()
-export class ProductInsertRepository extends RepositoryLogger {
+export class ProductInsertRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
+    private readonly repositoryErrorHandler: RepositoryErrorHandleLibrary,
   ) {
-    super("Product Insert");
+    super();
   }
 
   async findLastCreatedProduct(): Promise<ProductEntity> {
@@ -23,8 +25,13 @@ export class ProductInsertRepository extends RepositoryLogger {
         .limit(1)
         .getOne();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findLastCreatedProduct.name;
+      this.repositoryErrorHandler.init<ProductEntity>(
+        new ProductEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 }

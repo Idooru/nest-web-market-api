@@ -1,17 +1,19 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { RepositoryLogger } from "src/common/classes/repository.logger";
+import { RepositoryErrorHandleLibrary } from "src/common/lib/repository-error-handler.library";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { Repository } from "typeorm";
 import { ReviewEntity } from "../entities/review.entity";
+import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 
 @Injectable()
-export class ReviewInsertRepository extends RepositoryLogger {
+export class ReviewInsertRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(ReviewEntity)
     private readonly reviewRepository: Repository<ReviewEntity>,
+    private readonly repositoryErrorHandler: RepositoryErrorHandleLibrary,
   ) {
-    super("Review Insert");
+    super();
   }
 
   async findLastCreatedReview(): Promise<ReviewEntity> {
@@ -24,8 +26,13 @@ export class ReviewInsertRepository extends RepositoryLogger {
         .limit(1)
         .getOne();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findLastCreatedReview.name;
+      this.repositoryErrorHandler.init<ReviewEntity>(
+        new ReviewEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -41,8 +48,13 @@ export class ReviewInsertRepository extends RepositoryLogger {
         .where("id = :id", { id: review.id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.insertReviewIdOnClientUser.name;
+      this.repositoryErrorHandler.init<ReviewEntity>(
+        new ReviewEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 }

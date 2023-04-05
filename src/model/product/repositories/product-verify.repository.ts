@@ -1,16 +1,18 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { RepositoryLogger } from "src/common/classes/repository.logger";
+import { RepositoryErrorHandleLibrary } from "src/common/lib/repository-error-handler.library";
 import { Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
+import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 
 @Injectable()
-export class ProductVerifyRepository extends RepositoryLogger {
+export class ProductVerifyRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
+    private readonly repositoryErrorHandler: RepositoryErrorHandleLibrary,
   ) {
-    super("Product Verify");
+    super();
   }
 
   async isExistProductId(id: string): Promise<boolean> {
@@ -18,8 +20,13 @@ export class ProductVerifyRepository extends RepositoryLogger {
       const result = await this.productRepository.exist({ where: { id } });
       return result ? true : false;
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.isExistProductId.name;
+      this.repositoryErrorHandler.init<ProductEntity>(
+        new ProductEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -28,8 +35,13 @@ export class ProductVerifyRepository extends RepositoryLogger {
       const result = await this.productRepository.exist({ where: { name } });
       return result ? false : true;
     } catch (err) {
-      this.logger.log(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.isNotExistProductName.name;
+      this.repositoryErrorHandler.init<ProductEntity>(
+        new ProductEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 }

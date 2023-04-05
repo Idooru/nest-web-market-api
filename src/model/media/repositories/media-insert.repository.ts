@@ -1,6 +1,6 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { RepositoryLogger } from "src/common/classes/repository.logger";
+import { RepositoryErrorHandleLibrary } from "src/common/lib/repository-error-handler.library";
 import { InquiryRequestEntity } from "src/model/inquiry/entities/inquiry-request.entity";
 import { InquiryResponseEntity } from "src/model/inquiry/entities/inquiry-response.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
@@ -13,9 +13,10 @@ import { InquiryResponseVideoEntity } from "../entities/inquiry-response-video.e
 import { ProductImageEntity } from "../entities/product.image.entity";
 import { ReviewImageEntity } from "../entities/review.image.entity";
 import { ReviewVideoEntity } from "../entities/review.video.entity";
+import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 
 @Injectable()
-export class MediaInsertRepository extends RepositoryLogger {
+export class MediaInsertRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(ProductImageEntity)
     private readonly productImageRepository: Repository<ProductImageEntity>,
@@ -31,8 +32,9 @@ export class MediaInsertRepository extends RepositoryLogger {
     private readonly inquiryResponseImageRepository: Repository<InquiryResponseImageEntity>,
     @InjectRepository(InquiryResponseVideoEntity)
     private readonly inquiryResponseVideoRepository: Repository<InquiryResponseVideoEntity>,
+    private readonly repositoryErrorHandler: RepositoryErrorHandleLibrary,
   ) {
-    super("Media Insert");
+    super();
   }
 
   async insertProductIdOnProductImage(
@@ -47,8 +49,13 @@ export class MediaInsertRepository extends RepositoryLogger {
         .where("id = :id", { id: productImage.id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.insertProductIdOnProductImage.name;
+      this.repositoryErrorHandler.init<ProductImageEntity>(
+        new ProductImageEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -64,8 +71,13 @@ export class MediaInsertRepository extends RepositoryLogger {
         .where("id = :id", { id: reviewImage.id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.insertReviewIdOnReviewImage.name;
+      this.repositoryErrorHandler.init<ReviewImageEntity>(
+        new ReviewImageEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -81,8 +93,13 @@ export class MediaInsertRepository extends RepositoryLogger {
         .where("id = :id", { id: reviewVideo.id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.insertReviewIdOnReviewVideo.name;
+      this.repositoryErrorHandler.init<ReviewVideoEntity>(
+        new ReviewVideoEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -98,8 +115,13 @@ export class MediaInsertRepository extends RepositoryLogger {
         .where("id = :id", { id: inquiryRequestImage.id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.insertInquiryRequestIdOnInquiryRequestImage.name;
+      this.repositoryErrorHandler.init<InquiryRequestImageEntity>(
+        new InquiryRequestImageEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -115,8 +137,13 @@ export class MediaInsertRepository extends RepositoryLogger {
         .where("id = :id", { id: inquiryResponseImage.id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.insertInquiryResponseIdOnInquiryResponseImage.name;
+      this.repositoryErrorHandler.init<InquiryResponseImageEntity>(
+        new InquiryResponseImageEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -132,8 +159,13 @@ export class MediaInsertRepository extends RepositoryLogger {
         .where("id = :id", { id: inquiryRequestVideo.id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.insertInquiryRequestIdOnInquiryRequestVideo.name;
+      this.repositoryErrorHandler.init<InquiryRequestVideoEntity>(
+        new InquiryRequestVideoEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -149,8 +181,13 @@ export class MediaInsertRepository extends RepositoryLogger {
         .where("id = :id", { id: inquiryResponseVideo.id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.insertInquiryResponseIdOnInquiryResponseVideo.name;
+      this.repositoryErrorHandler.init<InquiryResponseVideoEntity>(
+        new InquiryResponseVideoEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 }

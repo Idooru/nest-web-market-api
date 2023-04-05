@@ -4,17 +4,18 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ModifyReviewDto } from "../dto/modify-review.dto";
 import { CreateReviewDao } from "../dto/create-review.dto";
-import { InternalServerErrorException } from "@nestjs/common/exceptions";
 import { reviewSelectProperty } from "src/common/config/repository-select-configs/review-select";
-import { RepositoryLogger } from "src/common/classes/repository.logger";
+import { RepositoryErrorHandleLibrary } from "src/common/lib/repository-error-handler.library";
+import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 
 @Injectable()
-export class ReviewGeneralRepository extends RepositoryLogger {
+export class ReviewGeneralRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(ReviewEntity)
     private readonly reviewRepository: Repository<ReviewEntity>,
+    private readonly repositoryErrorHandler: RepositoryErrorHandleLibrary,
   ) {
-    super("Review General");
+    super();
   }
 
   private readonly select = reviewSelectProperty;
@@ -41,8 +42,14 @@ export class ReviewGeneralRepository extends RepositoryLogger {
 
       return reviews;
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findAllClientsReviews.name;
+      this.repositoryErrorHandler.init<ReviewEntity>(
+        new ReviewEntity(),
+        this.className,
+        this.methodName,
+        err,
+        { stuff: id, stuffMean: "아이디" },
+      );
     }
   }
 
@@ -60,8 +67,13 @@ export class ReviewGeneralRepository extends RepositoryLogger {
         })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.createReview.name;
+      this.repositoryErrorHandler.init<ReviewEntity>(
+        new ReviewEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -80,8 +92,13 @@ export class ReviewGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id: beforeReview.id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.modifyReview.name;
+      this.repositoryErrorHandler.init<ReviewEntity>(
+        new ReviewEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -94,8 +111,13 @@ export class ReviewGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id: review.id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.deleteReview.name;
+      this.repositoryErrorHandler.init<ReviewEntity>(
+        new ReviewEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 }

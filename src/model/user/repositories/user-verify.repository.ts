@@ -1,13 +1,14 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "../entities/user.entity";
 import { Repository } from "typeorm";
 import { UserProfileEntity } from "../entities/user.profile.entity";
 import { UserAuthEntity } from "../entities/user.auth.entity";
-import { RepositoryLogger } from "src/common/classes/repository.logger";
+import { RepositoryErrorHandleLibrary } from "src/common/lib/repository-error-handler.library";
+import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 
 @Injectable()
-export class UserVerifyRepository extends RepositoryLogger {
+export class UserVerifyRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
@@ -15,8 +16,9 @@ export class UserVerifyRepository extends RepositoryLogger {
     private readonly userProfileRepository: Repository<UserProfileEntity>,
     @InjectRepository(UserAuthEntity)
     private readonly userAuthRepository: Repository<UserAuthEntity>,
+    private readonly repositoryErrorHandler: RepositoryErrorHandleLibrary,
   ) {
-    super("User Verify");
+    super();
   }
 
   async isExistUserId(userId: string): Promise<boolean> {
@@ -24,8 +26,13 @@ export class UserVerifyRepository extends RepositoryLogger {
       const result = await this.userRepository.exist({ where: { id: userId } });
       return result ? true : false;
     } catch (err) {
-      this.logger.log(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.isExistUserId.name;
+      this.repositoryErrorHandler.init<UserEntity>(
+        new UserEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -34,8 +41,13 @@ export class UserVerifyRepository extends RepositoryLogger {
       const result = await this.userAuthRepository.exist({ where: { email } });
       return result ? true : false;
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.isExistUserEmail.name;
+      this.repositoryErrorHandler.init<UserAuthEntity>(
+        new UserAuthEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -44,8 +56,13 @@ export class UserVerifyRepository extends RepositoryLogger {
       const result = await this.userAuthRepository.exist({ where: { email } });
       return result ? false : true;
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.isNotExistUserEmail.name;
+      this.repositoryErrorHandler.init<UserAuthEntity>(
+        new UserAuthEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -56,8 +73,13 @@ export class UserVerifyRepository extends RepositoryLogger {
       });
       return result ? true : false;
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.isExistUserRealName.name;
+      this.repositoryErrorHandler.init<UserProfileEntity>(
+        new UserProfileEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -68,8 +90,13 @@ export class UserVerifyRepository extends RepositoryLogger {
       });
       return result ? false : true;
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.isNotExistUserNickName.name;
+      this.repositoryErrorHandler.init<UserAuthEntity>(
+        new UserAuthEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -80,8 +107,13 @@ export class UserVerifyRepository extends RepositoryLogger {
       });
       return result ? true : false;
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.isExistUserPhoneNumber.name;
+      this.repositoryErrorHandler.init<UserProfileEntity>(
+        new UserProfileEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -92,8 +124,13 @@ export class UserVerifyRepository extends RepositoryLogger {
       });
       return result ? false : true;
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.isNotExistUserPhoneNumber.name;
+      this.repositoryErrorHandler.init<UserProfileEntity>(
+        new UserProfileEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 }

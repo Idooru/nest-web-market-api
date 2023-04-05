@@ -1,25 +1,22 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ModifyProductDto } from "../dto/modify-product.dto";
 import { CreateProductDto } from "../dto/create-product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
 import { productSelectProperty } from "src/common/config/repository-select-configs/product-select";
-import { BadRequestException } from "@nestjs/common/exceptions";
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
-import { RepositoryLogger } from "src/common/classes/repository.logger";
+import { RepositoryErrorHandleLibrary } from "src/common/lib/repository-error-handler.library";
+import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 
 @Injectable()
-export class ProductGeneralRepository extends RepositoryLogger {
+export class ProductGeneralRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
+    private readonly repositoryErrorHandler: RepositoryErrorHandleLibrary,
   ) {
-    super("Product General");
+    super();
   }
 
   private readonly select = productSelectProperty;
@@ -32,8 +29,13 @@ export class ProductGeneralRepository extends RepositoryLogger {
         .from(ProductEntity, "product")
         .getMany();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findProductsAllId.name;
+      this.repositoryErrorHandler.init<ProductEntity>(
+        new ProductEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -63,8 +65,13 @@ export class ProductGeneralRepository extends RepositoryLogger {
         .orderBy("product.createdAt", "DESC")
         .getMany();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findAllProductsFromLatest.name;
+      this.repositoryErrorHandler.init<ProductEntity>(
+        new ProductEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -94,14 +101,19 @@ export class ProductGeneralRepository extends RepositoryLogger {
         .orderBy("product.createdAt", "ASC")
         .getMany();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findAllProductsFromOldest.name;
+      this.repositoryErrorHandler.init<ProductEntity>(
+        new ProductEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
   async findProductOneByName(name: string): Promise<ProductEntity> {
     try {
-      const product = await this.productRepository
+      return await this.productRepository
         .createQueryBuilder()
         .select(this.select.productSelect)
         .from(ProductEntity, "product")
@@ -124,15 +136,15 @@ export class ProductGeneralRepository extends RepositoryLogger {
         .leftJoin("InquiryRequest.Video", "InquiryRequestVideo")
         .where("product.name = :name", { name })
         .getOneOrFail();
-      return product;
     } catch (err) {
-      this.logger.error(err);
-      if (err.message.includes("Could not find any entity of type")) {
-        throw new NotFoundException(
-          `해당 이름(${name})의 상품을 찾을 수 없습니다.`,
-        );
-      }
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findProductOneByName.name;
+      this.repositoryErrorHandler.init<ProductEntity>(
+        new ProductEntity(),
+        this.className,
+        this.methodName,
+        err,
+        { stuff: name, stuffMean: "이름" },
+      );
     }
   }
 
@@ -162,13 +174,14 @@ export class ProductGeneralRepository extends RepositoryLogger {
         .where("product.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
-      this.logger.error(err);
-      if (err.message.includes("Could not find any entity of type")) {
-        throw new NotFoundException(
-          `해당 아이디(${id})의 상품을 찾을 수 없습니다.`,
-        );
-      }
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findProductOneById.name;
+      this.repositoryErrorHandler.init<ProductEntity>(
+        new ProductEntity(),
+        this.className,
+        this.methodName,
+        err,
+        { stuff: id, stuffMean: "아이디" },
+      );
     }
   }
 
@@ -182,8 +195,14 @@ export class ProductGeneralRepository extends RepositoryLogger {
         .where("product.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findProductOneJustNeedStarRate.name;
+      this.repositoryErrorHandler.init<ProductEntity>(
+        new ProductEntity(),
+        this.className,
+        this.methodName,
+        err,
+        { stuff: id, stuffMean: "아이디" },
+      );
     }
   }
 
@@ -199,8 +218,13 @@ export class ProductGeneralRepository extends RepositoryLogger {
         .values({ creater: admin, ...createProductDto })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.createProduct.name;
+      this.repositoryErrorHandler.init<ProductEntity>(
+        new ProductEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -216,13 +240,13 @@ export class ProductGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      if (err.message.includes("Out of range value for column")) {
-        throw new BadRequestException(
-          "가격 혹은 수량을 마이너스로 수정 할 수 없습니다.",
-        );
-      }
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.modifyProduct.name;
+      this.repositoryErrorHandler.init<ProductEntity>(
+        new ProductEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -235,8 +259,13 @@ export class ProductGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.modifyProductName.name;
+      this.repositoryErrorHandler.init<ProductEntity>(
+        new ProductEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -249,11 +278,13 @@ export class ProductGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      if (err.message.includes("Out of range value for column")) {
-        throw new BadRequestException("가격을 마이너스로 수정 할 수 없습니다.");
-      }
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.modifyProductPrice.name;
+      this.repositoryErrorHandler.init<ProductEntity>(
+        new ProductEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -266,8 +297,13 @@ export class ProductGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.modifyProductOrigin.name;
+      this.repositoryErrorHandler.init<ProductEntity>(
+        new ProductEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -280,8 +316,13 @@ export class ProductGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.modifyProductType.name;
+      this.repositoryErrorHandler.init<ProductEntity>(
+        new ProductEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -297,8 +338,13 @@ export class ProductGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.modifyProductDescription.name;
+      this.repositoryErrorHandler.init<ProductEntity>(
+        new ProductEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -311,25 +357,32 @@ export class ProductGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      if (err.message.includes("Out of range value for column")) {
-        throw new BadRequestException("수량을 마이너스로 수정 할 수 없습니다.");
-      }
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.modifyProductQuantity.name;
+      this.repositoryErrorHandler.init<ProductEntity>(
+        new ProductEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
-  async removeProduct(productId: string): Promise<void> {
+  async removeProduct(id: string): Promise<void> {
     try {
       await this.productRepository
         .createQueryBuilder()
         .delete()
         .from(ProductEntity)
-        .where("id = :id", { id: productId })
+        .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.removeProduct.name;
+      this.repositoryErrorHandler.init<ProductEntity>(
+        new ProductEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 }

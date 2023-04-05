@@ -1,16 +1,18 @@
 import { Repository } from "typeorm";
 import { StarRateEntity } from "../entities/star-rate.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { RepositoryLogger } from "src/common/classes/repository.logger";
+import { Injectable } from "@nestjs/common";
+import { RepositoryErrorHandleLibrary } from "src/common/lib/repository-error-handler.library";
+import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 
 @Injectable()
-export class StarRateGeneralRepository extends RepositoryLogger {
+export class StarRateGeneralRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(StarRateEntity)
     private readonly starRateRepository: Repository<StarRateEntity>,
+    private readonly repositoryErrorHandler: RepositoryErrorHandleLibrary,
   ) {
-    super("Star Rate");
+    super();
   }
 
   async createStarRateSample(): Promise<StarRateEntity> {
@@ -18,8 +20,13 @@ export class StarRateGeneralRepository extends RepositoryLogger {
       const starRate = this.starRateRepository.create({});
       return await this.starRateRepository.save(starRate);
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.createStarRateSample.name;
+      this.repositoryErrorHandler.init<StarRateEntity>(
+        new StarRateEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -56,8 +63,13 @@ export class StarRateGeneralRepository extends RepositoryLogger {
           break;
       }
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.increaseStarRate.name;
+      this.repositoryErrorHandler.init<StarRateEntity>(
+        new StarRateEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -95,8 +107,13 @@ export class StarRateGeneralRepository extends RepositoryLogger {
           break;
       }
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.decreaseStarRate.name;
+      this.repositoryErrorHandler.init<StarRateEntity>(
+        new StarRateEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -107,10 +124,15 @@ export class StarRateGeneralRepository extends RepositoryLogger {
         .select(["starRate"])
         .from(StarRateEntity, "starRate")
         .where("starRate.id = :id", { id: StarRateId })
-        .getOne();
+        .getOneOrFail();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findStarRateWithId.name;
+      this.repositoryErrorHandler.init<StarRateEntity>(
+        new StarRateEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -123,8 +145,13 @@ export class StarRateGeneralRepository extends RepositoryLogger {
         .where("id = :id", { id: starRate.id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.renewTotalScore.name;
+      this.repositoryErrorHandler.init<StarRateEntity>(
+        new StarRateEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 }

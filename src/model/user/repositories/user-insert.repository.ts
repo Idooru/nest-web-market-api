@@ -1,15 +1,16 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { RepositoryLogger } from "src/common/classes/repository.logger";
+import { RepositoryErrorHandleLibrary } from "src/common/lib/repository-error-handler.library";
 import { Repository } from "typeorm";
 import { AdminUserEntity } from "../entities/admin-user.entity";
 import { ClientUserEntity } from "../entities/client-user.entity";
 import { UserAuthEntity } from "../entities/user.auth.entity";
 import { UserEntity } from "../entities/user.entity";
 import { UserProfileEntity } from "../entities/user.profile.entity";
+import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 
 @Injectable()
-export class UserInsertRepository extends RepositoryLogger {
+export class UserInsertRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
@@ -21,8 +22,9 @@ export class UserInsertRepository extends RepositoryLogger {
     private readonly clientUserRepository: Repository<ClientUserEntity>,
     @InjectRepository(AdminUserEntity)
     private readonly adminUserRepository: Repository<AdminUserEntity>,
+    private readonly repositoryErrorHandler: RepositoryErrorHandleLibrary,
   ) {
-    super("User Insert");
+    super();
   }
 
   async findLastCreatedUserProfile(): Promise<UserProfileEntity> {
@@ -35,8 +37,13 @@ export class UserInsertRepository extends RepositoryLogger {
         .limit(1)
         .getOne();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findLastCreatedUserProfile.name;
+      this.repositoryErrorHandler.init<UserProfileEntity>(
+        new UserProfileEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -50,8 +57,13 @@ export class UserInsertRepository extends RepositoryLogger {
         .limit(1)
         .getOne();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findLastCreatedUserAuth.name;
+      this.repositoryErrorHandler.init<UserAuthEntity>(
+        new UserAuthEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -65,8 +77,13 @@ export class UserInsertRepository extends RepositoryLogger {
         .limit(1)
         .getOne();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findLastCreatedUserBase.name;
+      this.repositoryErrorHandler.init<UserEntity>(
+        new UserEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -80,8 +97,13 @@ export class UserInsertRepository extends RepositoryLogger {
         .limit(1)
         .getOne();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findLastCreatedClientUser.name;
+      this.repositoryErrorHandler.init<ClientUserEntity>(
+        new ClientUserEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -95,8 +117,13 @@ export class UserInsertRepository extends RepositoryLogger {
         .limit(1)
         .getOne();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findLastCreatedAdminUser.name;
+      this.repositoryErrorHandler.init<AdminUserEntity>(
+        new AdminUserEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -112,8 +139,13 @@ export class UserInsertRepository extends RepositoryLogger {
         .where("id = :id", { id: userProfile.id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.insertUserBaseIdOnUserProfile.name;
+      this.repositoryErrorHandler.init<UserProfileEntity>(
+        new UserProfileEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -129,8 +161,13 @@ export class UserInsertRepository extends RepositoryLogger {
         .where("id = :id", { id: userAuth.id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.insertUserBaseIdOnUserAuth.name;
+      this.repositoryErrorHandler.init<UserAuthEntity>(
+        new UserAuthEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -146,8 +183,13 @@ export class UserInsertRepository extends RepositoryLogger {
         .where("id = :id", { id: clientUser.id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.insertUserBaseIdOnClientUser.name;
+      this.repositoryErrorHandler.init<ClientUserEntity>(
+        new ClientUserEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -163,8 +205,13 @@ export class UserInsertRepository extends RepositoryLogger {
         .where("id = :id", { id: adminUser.id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.insertUserBaseIdOnAdminUser.name;
+      this.repositoryErrorHandler.init<AdminUserEntity>(
+        new AdminUserEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 }

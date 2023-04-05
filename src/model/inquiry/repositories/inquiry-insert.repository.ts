@@ -1,21 +1,23 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { RepositoryLogger } from "src/common/classes/repository.logger";
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { Repository } from "typeorm";
 import { InquiryRequestEntity } from "../entities/inquiry-request.entity";
 import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
+import { RepositoryErrorHandleLibrary } from "src/common/lib/repository-error-handler.library";
+import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 
 @Injectable()
-export class InquiryInsertRepository extends RepositoryLogger {
+export class InquiryInsertRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(InquiryRequestEntity)
     private readonly inquiryRequestRepository: Repository<InquiryRequestEntity>,
     @InjectRepository(InquiryResponseEntity)
     private readonly inquiryResponseRepository: Repository<InquiryResponseEntity>,
+    private readonly repositoryErrorHandler: RepositoryErrorHandleLibrary,
   ) {
-    super("Inquiry Insert");
+    super();
   }
 
   async findLastCreatedInquiryRequest(): Promise<InquiryRequestEntity> {
@@ -28,8 +30,13 @@ export class InquiryInsertRepository extends RepositoryLogger {
         .limit(1)
         .getOne();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findLastCreatedInquiryRequest.name;
+      this.repositoryErrorHandler.init<InquiryRequestEntity>(
+        new InquiryRequestEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -43,8 +50,13 @@ export class InquiryInsertRepository extends RepositoryLogger {
         .limit(1)
         .getOne();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.findLastCreatedInquiryResponse.name;
+      this.repositoryErrorHandler.init<InquiryResponseEntity>(
+        new InquiryResponseEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -60,8 +72,13 @@ export class InquiryInsertRepository extends RepositoryLogger {
         .where("id = :id", { id: inquiryRequest.id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.insertClientUserIdOnInquiryRequest.name;
+      this.repositoryErrorHandler.init<InquiryRequestEntity>(
+        new InquiryRequestEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
@@ -77,8 +94,13 @@ export class InquiryInsertRepository extends RepositoryLogger {
         .where("id = :id", { id: inquiryResponse.id })
         .execute();
     } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.insertAdminUserIdOnInquiryResponse.name;
+      this.repositoryErrorHandler.init<InquiryResponseEntity>(
+        new InquiryResponseEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 }
