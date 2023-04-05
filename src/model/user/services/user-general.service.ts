@@ -6,6 +6,7 @@ import { RegisterUserDto } from "../dtos/register-user.dto";
 import { UserEntity } from "../entities/user.entity";
 import * as bcrypt from "bcrypt";
 import { UserInsertRepository } from "../repositories/user-insert.repository";
+import { CreateUserBaseDto } from "../dtos/create-user-base.dto";
 
 @Injectable()
 export class UserGeneralService {
@@ -36,14 +37,43 @@ export class UserGeneralService {
   }
 
   async createUserBase(registerUserDto: RegisterUserDto): Promise<UserEntity> {
-    const { password } = registerUserDto;
+    const {
+      realname,
+      nickname,
+      birth,
+      gender,
+      email,
+      phonenumber,
+      type,
+      password,
+    } = registerUserDto;
 
     const hashed = await bcrypt.hash(
       password,
       this.securityLibrary.getHashSalt(),
     );
 
-    await this.userGeneralRepository.createUserBase(registerUserDto, hashed);
+    const userProfileColumn = { realname, birth, gender, phonenumber };
+
+    const userAuthColumn = { nickname, email, password: hashed };
+
+    const [userProfileDummy, userAuthDummy] = await Promise.all([
+      this.userGeneralRepository.createUserProfile(userProfileColumn),
+      this.userGeneralRepository.createUserAuth(userAuthColumn),
+    ]);
+
+    const [userProfileObject, userAuthObject] = await Promise.all([
+      this.userGeneralRepository.findUserProfile(userProfileDummy),
+      this.userGeneralRepository.findUserAuth(userAuthDummy),
+    ]);
+
+    const createUserBaseDto: CreateUserBaseDto = {
+      Profile: userProfileObject,
+      Auth: userAuthObject,
+      type,
+    };
+
+    await this.userGeneralRepository.createUserBase(createUserBaseDto);
 
     const [userProfile, userAuth, userBase] = await Promise.all([
       this.userInsertRepository.findLastCreatedUserProfile(),
@@ -91,18 +121,22 @@ export class UserGeneralService {
   ): Promise<void> {
     const user = await this.userGeneralRepository.findUserWithId(userId);
 
-    const { password } = modifyUserDto;
+    const { password, phonenumber, email, nickname } = modifyUserDto;
     const hashed = await bcrypt.hash(
       password,
       this.securityLibrary.getHashSalt(),
     );
 
-    await this.userGeneralRepository.modifyUser(
-      modifyUserDto,
-      hashed,
-      user.Profile.id,
-      user.Auth.id,
-    );
+    await Promise.all([
+      this.userGeneralRepository.modifyUserProfile(
+        { phonenumber },
+        user.Profile.id,
+      ),
+      this.userGeneralRepository.modifyUserAuth(
+        { email, nickname, password: hashed },
+        user.Auth.id,
+      ),
+    ]);
   }
 
   async modifyUserEmail(email: string, userId: string): Promise<void> {
