@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { RepositoryErrorHandleLibrary } from "src/common/lib/error-handler/repository-error-handler.library";
+import { RepositoryLayerErrorHandleLibrary } from "src/common/lib/error-handler/repository-error-handler.library";
 import { Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
@@ -10,7 +10,7 @@ export class ProductVerifyRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
-    private readonly repositoryErrorHandler: RepositoryErrorHandleLibrary,
+    private readonly repositoryErrorHandler: RepositoryLayerErrorHandleLibrary,
   ) {
     super();
   }

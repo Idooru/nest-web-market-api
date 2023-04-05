@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { RepositoryErrorHandleLibrary } from "src/common/lib/error-handler/repository-error-handler.library";
+import { RepositoryLayerErrorHandleLibrary } from "src/common/lib/error-handler/repository-error-handler.library";
 import { Repository } from "typeorm";
 import { AdminUserEntity } from "../entities/admin-user.entity";
 import { ClientUserEntity } from "../entities/client-user.entity";
@@ -22,7 +22,7 @@ export class UserInsertRepository extends ErrorHandlerProps {
     private readonly clientUserRepository: Repository<ClientUserEntity>,
     @InjectRepository(AdminUserEntity)
     private readonly adminUserRepository: Repository<AdminUserEntity>,
-    private readonly repositoryErrorHandler: RepositoryErrorHandleLibrary,
+    private readonly repositoryErrorHandler: RepositoryLayerErrorHandleLibrary,
   ) {
     super();
   }

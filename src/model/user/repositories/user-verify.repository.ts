@@ -4,7 +4,7 @@ import { UserEntity } from "../entities/user.entity";
 import { Repository } from "typeorm";
 import { UserProfileEntity } from "../entities/user.profile.entity";
 import { UserAuthEntity } from "../entities/user.auth.entity";
-import { RepositoryErrorHandleLibrary } from "src/common/lib/error-handler/repository-error-handler.library";
+import { RepositoryLayerErrorHandleLibrary } from "src/common/lib/error-handler/repository-error-handler.library";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 
 @Injectable()
@@ -16,7 +16,7 @@ export class UserVerifyRepository extends ErrorHandlerProps {
     private readonly userProfileRepository: Repository<UserProfileEntity>,
     @InjectRepository(UserAuthEntity)
     private readonly userAuthRepository: Repository<UserAuthEntity>,
-    private readonly repositoryErrorHandler: RepositoryErrorHandleLibrary,
+    private readonly repositoryErrorHandler: RepositoryLayerErrorHandleLibrary,
   ) {
     super();
   }

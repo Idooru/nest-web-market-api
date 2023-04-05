@@ -1,6 +1,6 @@
 import { InternalServerErrorException, Logger } from "@nestjs/common";
 
-export class SendMailErrorHandlerLibrary {
+export class ServiceLayerErrorHandlerLibrary {
   private className: string;
   private methodName: string;
   private error: Error;

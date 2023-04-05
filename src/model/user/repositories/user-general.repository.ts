@@ -9,7 +9,7 @@ import { RegisterUserProfileDto } from "../dtos/register-user.dto";
 import { AdminUserEntity } from "../entities/admin-user.entity";
 import { UserEntity } from "../entities/user.entity";
 import { CreateUserBaseDto } from "../dtos/create-user-base.dto";
-import { RepositoryErrorHandleLibrary } from "src/common/lib/error-handler/repository-error-handler.library";
+import { RepositoryLayerErrorHandleLibrary } from "src/common/lib/error-handler/repository-error-handler.library";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 import { RegisterUserAuthDto } from "../dtos/register-user.dto";
 import { ModifyUserProfileDto } from "../dtos/modify-user.dto";
@@ -28,7 +28,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     private readonly clientUserRepository: Repository<ClientUserEntity>,
     @InjectRepository(AdminUserEntity)
     private readonly adminUserRepository: Repository<AdminUserEntity>,
-    private readonly repositoryErrorHandler: RepositoryErrorHandleLibrary,
+    private readonly repositoryErrorHandler: RepositoryLayerErrorHandleLibrary,
   ) {
     super();
   }

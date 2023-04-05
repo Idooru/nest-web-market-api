@@ -5,7 +5,7 @@ import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { Repository } from "typeorm";
 import { InquiryRequestEntity } from "../entities/inquiry-request.entity";
 import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
-import { RepositoryErrorHandleLibrary } from "src/common/lib/error-handler/repository-error-handler.library";
+import { RepositoryLayerErrorHandleLibrary } from "src/common/lib/error-handler/repository-error-handler.library";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 
 @Injectable()
@@ -15,7 +15,7 @@ export class InquiryInsertRepository extends ErrorHandlerProps {
     private readonly inquiryRequestRepository: Repository<InquiryRequestEntity>,
     @InjectRepository(InquiryResponseEntity)
     private readonly inquiryResponseRepository: Repository<InquiryResponseEntity>,
-    private readonly repositoryErrorHandler: RepositoryErrorHandleLibrary,
+    private readonly repositoryErrorHandler: RepositoryLayerErrorHandleLibrary,
   ) {
     super();
   }

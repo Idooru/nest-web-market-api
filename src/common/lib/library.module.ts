@@ -4,8 +4,8 @@ import { DotenvConfigurationModule } from "../config/dotenv.config";
 import { MeidaLoggerLibrary } from "./logger/media-logger.library";
 import { SecurityLibrary } from "./config/security.library";
 import { TimeLoggerLibrary } from "./logger/time-logger.library";
-import { RepositoryErrorHandleLibrary } from "./error-handler/repository-error-handler.library";
-import { SendMailErrorHandlerLibrary } from "./error-handler/send-mail-error-handler.library";
+import { RepositoryLayerErrorHandleLibrary } from "./error-handler/repository-error-handler.library";
+import { ServiceLayerErrorHandlerLibrary } from "./error-handler/service-layer-error-handler.library";
 
 @Module({
   imports: [DotenvConfigurationModule],
@@ -14,15 +14,15 @@ import { SendMailErrorHandlerLibrary } from "./error-handler/send-mail-error-han
     ConfigService,
     SecurityLibrary,
     MeidaLoggerLibrary,
-    RepositoryErrorHandleLibrary,
-    SendMailErrorHandlerLibrary,
+    RepositoryLayerErrorHandleLibrary,
+    ServiceLayerErrorHandlerLibrary,
   ],
   exports: [
     TimeLoggerLibrary,
     SecurityLibrary,
     MeidaLoggerLibrary,
-    RepositoryErrorHandleLibrary,
-    SendMailErrorHandlerLibrary,
+    RepositoryLayerErrorHandleLibrary,
+    ServiceLayerErrorHandlerLibrary,
   ],
 })
 export class LibraryModule {}

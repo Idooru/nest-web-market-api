@@ -13,7 +13,7 @@ import { AdminUserErrorCase } from "src/model/user/error/admin-user-error.case";
 import { ClientUserErrorCase } from "src/model/user/error/client-user-error.case";
 import { UserErrorCase } from "src/model/user/error/user-error.case";
 
-export class RepositoryErrorHandleLibrary {
+export class RepositoryLayerErrorHandleLibrary {
   private className: string;
   private methodName: string;
   private error: Error;
