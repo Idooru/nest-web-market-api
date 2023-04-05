@@ -6,10 +6,7 @@ import {
   UploadedFiles,
   Delete,
 } from "@nestjs/common";
-import {
-  maxContentsCount,
-  MulterConfig,
-} from "src/common/config/multer.config";
+import { MulterConfigService } from "src/common/config/multer.config";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
@@ -36,16 +33,14 @@ export class MediaVersionOneOnlyClientController {
     private readonly mediaAccessoryService: MediaAccessoryService,
     private readonly mediaBundleService: MediaBundleService,
     private readonly mediaLoggerLibrary: MeidaLoggerLibrary,
-  ) {
-    MulterConfig.createFolder("image", "video");
-  }
+  ) {}
 
   @UseInterceptors(JsonSendCookiesInterceptor)
   @UseInterceptors(
     FilesInterceptor(
       "review_image",
-      maxContentsCount,
-      MulterConfig.upload("/image/review"),
+      MulterConfigService.maxContentsCount,
+      MulterConfigService.upload("/image/review"),
     ),
   )
   @Post("/review/image")
@@ -80,8 +75,8 @@ export class MediaVersionOneOnlyClientController {
   @UseInterceptors(
     FilesInterceptor(
       "review_video",
-      maxContentsCount,
-      MulterConfig.upload("video/review"),
+      MulterConfigService.maxContentsCount,
+      MulterConfigService.upload("video/review"),
     ),
   )
   @Post("/review/video")
@@ -116,8 +111,8 @@ export class MediaVersionOneOnlyClientController {
   @UseInterceptors(
     FilesInterceptor(
       "inquiry_request_image",
-      maxContentsCount,
-      MulterConfig.upload("image/inquiry/request"),
+      MulterConfigService.maxContentsCount,
+      MulterConfigService.upload("image/inquiry/request"),
     ),
   )
   @Post("/inquiry/request/image")
@@ -156,8 +151,8 @@ export class MediaVersionOneOnlyClientController {
   @UseInterceptors(
     FilesInterceptor(
       "inquiry_request_video",
-      maxContentsCount,
-      MulterConfig.upload("video/inquiry/request"),
+      MulterConfigService.maxContentsCount,
+      MulterConfigService.upload("video/inquiry/request"),
     ),
   )
   @Post("/inquiry/request/video")

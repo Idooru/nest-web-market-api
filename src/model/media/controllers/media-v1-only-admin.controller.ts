@@ -7,10 +7,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
-import {
-  maxContentsCount,
-  MulterConfig,
-} from "src/common/config/multer.config";
+import { MulterConfigService } from "src/common/config/multer.config";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
@@ -46,7 +43,10 @@ export class MediaVersionOneOnlyAdminController {
 
   @UseInterceptors(JsonSendCookieInterceptor)
   @UseInterceptors(
-    FileInterceptor("product_image", MulterConfig.upload("/image/product")),
+    FileInterceptor(
+      "product_image",
+      MulterConfigService.upload("/image/product"),
+    ),
   )
   @Post("/product/image")
   async uploadProductImage(
@@ -75,8 +75,8 @@ export class MediaVersionOneOnlyAdminController {
   @UseInterceptors(
     FilesInterceptor(
       "inquiry_response_image",
-      maxContentsCount,
-      MulterConfig.upload("image/inquiry/response"),
+      MulterConfigService.maxContentsCount,
+      MulterConfigService.upload("image/inquiry/response"),
     ),
   )
   @Post("/inquiry/response/image")
@@ -118,8 +118,8 @@ export class MediaVersionOneOnlyAdminController {
   @UseInterceptors(
     FilesInterceptor(
       "inquiry_response_video",
-      maxContentsCount,
-      MulterConfig.upload("video/inquiry/response"),
+      MulterConfigService.maxContentsCount,
+      MulterConfigService.upload("video/inquiry/response"),
     ),
   )
   @Post("/inquiry/response/video")
