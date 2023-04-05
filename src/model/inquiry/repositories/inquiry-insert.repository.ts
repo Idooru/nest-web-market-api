@@ -60,6 +60,28 @@ export class InquiryInsertRepository extends ErrorHandlerProps {
     }
   }
 
+  async insertInquiryRequestIdOnInquiryResponse(
+    inquiryRequest: InquiryRequestEntity,
+    inquiryResponse: InquiryResponseEntity,
+  ): Promise<void> {
+    try {
+      await this.inquiryResponseRepository
+        .createQueryBuilder()
+        .update(InquiryResponseEntity)
+        .set({ InquiryRequest: inquiryRequest })
+        .where("id = :id", { id: inquiryResponse.id })
+        .execute();
+    } catch (err) {
+      this.methodName = this.insertInquiryRequestIdOnInquiryResponse.name;
+      this.repositoryErrorHandler.init<InquiryResponseEntity>(
+        new InquiryResponseEntity(),
+        this.className,
+        this.methodName,
+        err,
+      );
+    }
+  }
+
   async insertClientUserIdOnInquiryRequest(
     clientUser: ClientUserEntity,
     inquiryRequest: InquiryRequestEntity,
