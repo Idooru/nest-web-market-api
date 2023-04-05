@@ -45,17 +45,17 @@ import { InquiryResponseVideoEntity } from "./entities/inquiry-response-video.en
   ],
   providers: [
     MediaGeneralService,
-    MediaGeneralRepository,
-    MediaInsertRepository,
     MediaAccessoryService,
     MediaBundleService,
+    MediaGeneralRepository,
+    MediaInsertRepository,
   ],
   exports: [
     MediaGeneralService,
-    MediaGeneralRepository,
-    MediaInsertRepository,
     MediaAccessoryService,
     MediaBundleService,
+    MediaGeneralRepository,
+    MediaInsertRepository,
   ],
 })
 export class MediaModule {}

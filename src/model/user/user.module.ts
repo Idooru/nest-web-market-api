@@ -41,15 +41,15 @@ import { UserInsertRepository } from "./repositories/user-insert.repository";
   ],
   providers: [
     UserGeneralService,
-    UserGeneralRepository,
     UserVerifyService,
+    UserGeneralRepository,
     UserVerifyRepository,
     UserInsertRepository,
   ],
   exports: [
     UserGeneralService,
-    UserGeneralRepository,
     UserVerifyService,
+    UserGeneralRepository,
     UserVerifyRepository,
     UserInsertRepository,
   ],
