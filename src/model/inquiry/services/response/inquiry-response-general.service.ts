@@ -30,12 +30,18 @@ export class InquiryResponseGeneralService {
 
     const lastCreatedInquiryResponse =
       await this.inquiryInsertRepository.findLastCreatedInquiryResponse();
-    await this.inquiryInsertRepository.insertAdminUserIdOnInquiryResponse(
-      admin,
-      lastCreatedInquiryResponse,
-    );
 
-    await this.inquiryGeneralRepository.setIsAnsweredTrue(inquiryRequest);
+    await Promise.all([
+      this.inquiryInsertRepository.insertAdminUserIdOnInquiryResponse(
+        admin,
+        lastCreatedInquiryResponse,
+      ),
+      this.inquiryInsertRepository.insertInquiryRequestIdOnInquiryResponse(
+        inquiryRequest,
+        lastCreatedInquiryResponse,
+      ),
+      this.inquiryGeneralRepository.setIsAnsweredTrue(inquiryRequest),
+    ]);
 
     return lastCreatedInquiryResponse;
   }
