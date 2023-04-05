@@ -20,6 +20,7 @@ import { MediaBundleService } from "./services/media-bundle.service";
 import { InquiryModule } from "../inquiry/inquiry.module";
 import { InquiryResponseImageEntity } from "./entities/inquiry-response-image.entity";
 import { InquiryResponseVideoEntity } from "./entities/inquiry-response-video.entity";
+import { MulterConfigurationModule } from "src/common/config/multer.config";
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { InquiryResponseVideoEntity } from "./entities/inquiry-response-video.en
     JwtModule,
     LibraryModule,
     DotenvConfigurationModule,
+    MulterConfigurationModule,
   ],
   controllers: [
     MediaVersionOneOnlyClientController,
