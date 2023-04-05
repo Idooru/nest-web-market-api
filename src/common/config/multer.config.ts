@@ -1,11 +1,25 @@
-import { Logger, UnsupportedMediaTypeException } from "@nestjs/common";
-
+import {
+  Injectable,
+  Logger,
+  Module,
+  UnsupportedMediaTypeException,
+} from "@nestjs/common";
+import { MulterModule } from "@nestjs/platform-express";
+import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 import * as fs from "fs";
 import * as path from "path";
 import * as multer from "multer";
 
-export class MulterConfig {
-  static createFolder(folder1: string, folder2: string) {
+@Injectable()
+export class MulterConfigService {
+  createMulterOptions(): MulterOptions | Promise<MulterOptions> {
+    MulterConfigService.createFolder();
+    return { storage: MulterConfigService.storage };
+  }
+
+  static maxContentsCount = 5;
+
+  static createFolder(): void {
     const logger = new Logger("MulterConfiguration");
 
     try {
@@ -16,20 +30,16 @@ export class MulterConfig {
     }
 
     try {
-      logger.log(`Create ${folder1} ${folder2} folder into uploads folder`);
-      fs.mkdirSync(path.join(__dirname, `../../../uploads/${folder1}`));
-      fs.mkdirSync(path.join(__dirname, `../../../uploads/${folder2}`));
+      logger.log(`Create image and video folder into uploads folder`);
+      fs.mkdirSync(path.join(__dirname, `../../../uploads/image`));
+      fs.mkdirSync(path.join(__dirname, `../../../uploads/video`));
 
       ["review", "inquiry", "announcement"].forEach((idx) => {
-        fs.mkdirSync(
-          path.join(__dirname, `../../../uploads/${folder1}/${idx}`),
-        );
-        fs.mkdirSync(
-          path.join(__dirname, `../../../uploads/${folder2}/${idx}`),
-        );
+        fs.mkdirSync(path.join(__dirname, `../../../uploads/image/${idx}`));
+        fs.mkdirSync(path.join(__dirname, `../../../uploads/video/${idx}`));
       });
 
-      fs.mkdirSync(path.join(__dirname, `../../../uploads/${folder1}/product`));
+      fs.mkdirSync(path.join(__dirname, `../../../uploads/image/product`));
       fs.mkdirSync(
         path.join(__dirname, "../../../uploads/image/inquiry/request"),
       );
@@ -43,8 +53,8 @@ export class MulterConfig {
         path.join(__dirname, "../../../uploads/video/inquiry/response"),
       );
     } catch (err) {
-      logger.log(`${folder1} is already exist`);
-      logger.log(`${folder2} is already exist`);
+      logger.log(`image is already exist`);
+      logger.log(`video is already exist`);
     }
   }
 
@@ -76,9 +86,16 @@ export class MulterConfig {
     });
   }
 
-  static upload = (folder: string) => ({
-    storage: this.storage(folder),
-  });
+  static upload(folder: string): MulterOptions {
+    return { storage: this.storage(folder) };
+  }
 }
 
-export const maxContentsCount = 5;
+@Module({
+  imports: [
+    MulterModule.registerAsync({
+      useClass: MulterConfigService,
+    }),
+  ],
+})
+export class MulterConfigurationModule {}
