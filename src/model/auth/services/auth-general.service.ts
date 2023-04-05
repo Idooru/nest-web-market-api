@@ -112,10 +112,21 @@ export class AuthGeneralService extends ErrorHandlerProps {
 
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
     const { email, password } = resetPasswordDto;
+    let hashed: string;
 
     const user = await this.userGeneralRepository.findUserWithEmail(email);
 
-    const hashed = await bcrypt.hash(password, 10);
+    try {
+      hashed = await bcrypt.hash(password, this.securityLibrary.getHashSalt());
+    } catch (err) {
+      this.methodName = this.resetPassword.name;
+      this.serviceLayerErrorHandlerLibrary.init(
+        this.className,
+        this.methodName,
+        err,
+      );
+    }
+
     await this.userGeneralRepository.resetPassword(user.Auth.id, hashed);
   }
 }

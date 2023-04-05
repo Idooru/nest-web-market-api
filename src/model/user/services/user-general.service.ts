@@ -4,17 +4,22 @@ import { UserGeneralRepository } from "../repositories/user-general.repository";
 import { SecurityLibrary } from "src/common/lib/config/security.library";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { UserEntity } from "../entities/user.entity";
-import * as bcrypt from "bcrypt";
 import { UserInsertRepository } from "../repositories/user-insert.repository";
 import { CreateUserBaseDto } from "../dtos/create-user-base.dto";
+import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
+import { ServiceLayerErrorHandlerLibrary } from "src/common/lib/error-handler/service-layer-error-handler.library";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
-export class UserGeneralService {
+export class UserGeneralService extends ErrorHandlerProps {
   constructor(
     private readonly userGeneralRepository: UserGeneralRepository,
     private readonly userInsertRepository: UserInsertRepository,
     private readonly securityLibrary: SecurityLibrary,
-  ) {}
+    private readonly serviceLayerErrorHandlerLibrary: ServiceLayerErrorHandlerLibrary,
+  ) {
+    super();
+  }
 
   async findAllUsersFromLatest(): Promise<UserEntity[]> {
     return await this.userGeneralRepository.findAllUsersFromLatest();
@@ -47,11 +52,18 @@ export class UserGeneralService {
       type,
       password,
     } = registerUserDto;
+    let hashed: string;
 
-    const hashed = await bcrypt.hash(
-      password,
-      this.securityLibrary.getHashSalt(),
-    );
+    try {
+      hashed = await bcrypt.hash(password, this.securityLibrary.getHashSalt());
+    } catch (err) {
+      this.methodName = this.createUserBase.name;
+      this.serviceLayerErrorHandlerLibrary.init(
+        this.className,
+        this.methodName,
+        err,
+      );
+    }
 
     const userProfileColumn = { realname, birth, gender, phonenumber };
 
@@ -119,13 +131,21 @@ export class UserGeneralService {
     modifyUserDto: ModifyUserDto,
     userId: string,
   ): Promise<void> {
-    const user = await this.userGeneralRepository.findUserWithId(userId);
-
     const { password, phonenumber, email, nickname } = modifyUserDto;
-    const hashed = await bcrypt.hash(
-      password,
-      this.securityLibrary.getHashSalt(),
-    );
+    let hashed: string;
+
+    try {
+      hashed = await bcrypt.hash(password, this.securityLibrary.getHashSalt());
+    } catch (err) {
+      this.methodName = this.createUserBase.name;
+      this.serviceLayerErrorHandlerLibrary.init(
+        this.className,
+        this.methodName,
+        err,
+      );
+    }
+
+    const user = await this.userGeneralRepository.findUserWithId(userId);
 
     await Promise.all([
       this.userGeneralRepository.modifyUserProfile(
@@ -164,12 +184,20 @@ export class UserGeneralService {
   }
 
   async modifyUserPassword(password: string, userId: string): Promise<void> {
-    const user = await this.userGeneralRepository.findUserWithId(userId);
+    let hashed: string;
 
-    const hashed = await bcrypt.hash(
-      password,
-      this.securityLibrary.getHashSalt(),
-    );
+    try {
+      hashed = await bcrypt.hash(password, this.securityLibrary.getHashSalt());
+    } catch (err) {
+      this.methodName = this.createUserBase.name;
+      this.serviceLayerErrorHandlerLibrary.init(
+        this.className,
+        this.methodName,
+        err,
+      );
+    }
+
+    const user = await this.userGeneralRepository.findUserWithId(userId);
 
     await this.userGeneralRepository.modifyUserPassword(hashed, user.Auth.id);
   }
