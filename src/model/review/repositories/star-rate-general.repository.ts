@@ -2,7 +2,7 @@ import { Repository } from "typeorm";
 import { StarRateEntity } from "../entities/star-rate.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable } from "@nestjs/common";
-import { RepositoryErrorHandleLibrary } from "src/common/lib/repository-error-handler.library";
+import { RepositoryErrorHandleLibrary } from "src/common/lib/error-handler/repository-error-handler.library";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 
 @Injectable()

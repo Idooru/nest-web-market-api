@@ -7,7 +7,7 @@ import {
 import { JwtService } from "@nestjs/jwt";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { Request } from "express";
-import { SecurityLibrary } from "../../lib/security.library";
+import { SecurityLibrary } from "../../lib/config/security.library";
 
 @Injectable()
 export class IsLoginGuard implements CanActivate {

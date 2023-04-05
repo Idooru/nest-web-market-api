@@ -1,7 +1,7 @@
 import { ModifyUserDto } from "../dtos/modify-user.dto";
 import { Injectable } from "@nestjs/common";
 import { UserGeneralRepository } from "../repositories/user-general.repository";
-import { SecurityLibrary } from "src/common/lib/security.library";
+import { SecurityLibrary } from "src/common/lib/config/security.library";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { UserEntity } from "../entities/user.entity";
 import * as bcrypt from "bcrypt";

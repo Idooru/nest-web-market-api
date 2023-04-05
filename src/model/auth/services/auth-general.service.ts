@@ -8,7 +8,7 @@ import { ResetPasswordDto } from "../../user/dtos/reset-password.dto";
 import { FindEmailDto } from "../../user/dtos/find-email.dto";
 import { JwtService } from "@nestjs/jwt";
 import { LoginUserDto } from "../../user/dtos/login-user.dto";
-import { SecurityLibrary } from "src/common/lib/security.library";
+import { SecurityLibrary } from "src/common/lib/config/security.library";
 import { JwtPayload } from "../jwt/jwt-payload.interface";
 import { JwtRefreshTokenPayload } from "../jwt/jwt-refresh-token-payload.interface";
 import { v4 } from "uuid";

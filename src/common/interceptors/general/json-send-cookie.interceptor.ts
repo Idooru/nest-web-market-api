@@ -5,8 +5,8 @@ import {
   NestInterceptor,
 } from "@nestjs/common";
 import { map, Observable } from "rxjs";
-import { TimeLoggerLibrary } from "../../lib/time-logger.library";
-import { SecurityLibrary } from "../../lib/security.library";
+import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
+import { SecurityLibrary } from "../../lib/config/security.library";
 import { JsonSendCookieParam } from "./interface/json-send-cookie-param.interface";
 import { Request, Response } from "express";
 

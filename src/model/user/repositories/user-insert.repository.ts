@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { RepositoryErrorHandleLibrary } from "src/common/lib/repository-error-handler.library";
+import { RepositoryErrorHandleLibrary } from "src/common/lib/error-handler/repository-error-handler.library";
 import { Repository } from "typeorm";
 import { AdminUserEntity } from "../entities/admin-user.entity";
 import { ClientUserEntity } from "../entities/client-user.entity";

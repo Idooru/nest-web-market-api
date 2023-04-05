@@ -5,7 +5,7 @@ import {
   NestInterceptor,
 } from "@nestjs/common";
 import { map, Observable } from "rxjs";
-import { TimeLoggerLibrary } from "../../lib/time-logger.library";
+import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { JsonClearCookiesInterface } from "./interface/json-clear-cookies.interface";
 import { Request, Response } from "express";
 

@@ -13,7 +13,6 @@ import {
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { MeidaLoggerLibrary } from "src/common/lib/media-logger.library";
 import { mediaCookieKeys } from "src/common/config/cookie-key-configs";
 import { JsonSendCookiesInterceptor } from "src/common/interceptors/general/json-send-cookies.interceptor";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
@@ -26,6 +25,7 @@ import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
 import { MediaAccessoryService } from "../services/media-accessory.service";
 import { MediaBundleService } from "../services/media-bundle.service";
 import { MediaDto } from "../dto/media.dto";
+import { MeidaLoggerLibrary } from "src/common/lib/logger/media-logger.library";
 
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)

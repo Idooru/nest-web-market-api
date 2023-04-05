@@ -4,7 +4,7 @@ import {
   Injectable,
   NestInterceptor,
 } from "@nestjs/common";
-import { TimeLoggerLibrary } from "../../lib/time-logger.library";
+import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { map, Observable } from "rxjs";
 import { Request, Response } from "express";
 import { JsonJwtLogoutInterface } from "./interface/json-jwt-logout.interface";

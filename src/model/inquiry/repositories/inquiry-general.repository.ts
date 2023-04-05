@@ -5,7 +5,7 @@ import { Repository } from "typeorm";
 import { CreateInquiryRequestDao } from "../dto/request/create-inquiry-request.dto";
 import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
 import { InquiryResponseDto } from "../dto/response/inquiry-response.dto";
-import { RepositoryErrorHandleLibrary } from "src/common/lib/repository-error-handler.library";
+import { RepositoryErrorHandleLibrary } from "src/common/lib/error-handler/repository-error-handler.library";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 
 @Injectable()

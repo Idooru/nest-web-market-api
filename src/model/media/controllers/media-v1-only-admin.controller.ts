@@ -13,7 +13,6 @@ import {
 } from "src/common/config/multer.config";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { MeidaLoggerLibrary } from "src/common/lib/media-logger.library";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { mediaCookieKeys } from "../../../common/config/cookie-key-configs";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
@@ -32,6 +31,7 @@ import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/jso
 import { MediaBundleService } from "../services/media-bundle.service";
 import { JsonClearCookiesInterface } from "src/common/interceptors/general/interface/json-clear-cookies.interface";
 import { MediaDto } from "../dto/media.dto";
+import { MeidaLoggerLibrary } from "src/common/lib/logger/media-logger.library";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)

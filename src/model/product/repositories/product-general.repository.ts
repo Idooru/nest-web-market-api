@@ -6,7 +6,7 @@ import { Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
 import { productSelectProperty } from "src/common/config/repository-select-configs/product-select";
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
-import { RepositoryErrorHandleLibrary } from "src/common/lib/repository-error-handler.library";
+import { RepositoryErrorHandleLibrary } from "src/common/lib/error-handler/repository-error-handler.library";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 
 @Injectable()

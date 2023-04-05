@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { RepositoryErrorHandleLibrary } from "src/common/lib/repository-error-handler.library";
+import { RepositoryErrorHandleLibrary } from "src/common/lib/error-handler/repository-error-handler.library";
 import { InquiryRequestEntity } from "src/model/inquiry/entities/inquiry-request.entity";
 import { InquiryResponseEntity } from "src/model/inquiry/entities/inquiry-response.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";

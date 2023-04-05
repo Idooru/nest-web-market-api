@@ -9,7 +9,7 @@ import { RegisterUserProfileDto } from "../dtos/register-user.dto";
 import { AdminUserEntity } from "../entities/admin-user.entity";
 import { UserEntity } from "../entities/user.entity";
 import { CreateUserBaseDto } from "../dtos/create-user-base.dto";
-import { RepositoryErrorHandleLibrary } from "src/common/lib/repository-error-handler.library";
+import { RepositoryErrorHandleLibrary } from "src/common/lib/error-handler/repository-error-handler.library";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 import { RegisterUserAuthDto } from "../dtos/register-user.dto";
 import { ModifyUserProfileDto } from "../dtos/modify-user.dto";
