@@ -13,18 +13,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const res = host.switchToHttp().getResponse<Response>();
     const err = exception.getResponse() as HttpExceptionType;
 
-    if (err.statusCode >= 500) {
-      return res.status(err.statusCode).setHeader("X-Powered-By", "").json({
-        success: false,
-        statusCode: err.statusCode,
-        message: "Http Exception이 발생하였습니다.",
-        timestamp: new Date().toString(),
-        reason: err.message,
-        info: "서버 로그를 확인하세요",
-        error: err.error,
-      });
-    }
-
     return res.status(err.statusCode).setHeader("X-Powered-By", "").json({
       success: false,
       statusCode: err.statusCode,
@@ -32,6 +20,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       timestamp: new Date().toString(),
       reason: err.message,
       error: err.error,
+      info: "서버 로그를 확인하세요",
     });
   }
 }
