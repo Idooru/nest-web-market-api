@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { ResetPasswordDto } from "../../user/dtos/reset-password.dto";
 import { FindEmailDto } from "../../user/dtos/find-email.dto";
 import { JwtService } from "@nestjs/jwt";
@@ -15,17 +10,22 @@ import { v4 } from "uuid";
 import { AuthExistService } from "./auth-exist.service";
 import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
 import { UserEntity } from "src/model/user/entities/user.entity";
-import * as bcrypt from "bcrypt";
 import { JwtAccessTokenPayload } from "../jwt/jwt-access-token-payload.interface";
+import { ServiceLayerErrorHandlerLibrary } from "src/common/lib/error-handler/service-layer-error-handler.library";
+import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
-export class AuthGeneralService {
+export class AuthGeneralService extends ErrorHandlerProps {
   constructor(
     private readonly userGeneralRepository: UserGeneralRepository,
     private readonly authExistService: AuthExistService,
     private readonly securityLibrary: SecurityLibrary,
     private readonly jwtService: JwtService,
-  ) {}
+    private readonly serviceLayerErrorHandlerLibrary: ServiceLayerErrorHandlerLibrary,
+  ) {
+    super();
+  }
 
   async refreshToken(jwtPayload: JwtRefreshTokenPayload): Promise<JwtPayload> {
     const user = await this.userGeneralRepository.findUserWithEmail(
@@ -80,8 +80,12 @@ export class AuthGeneralService {
 
       return { accessToken, refreshToken };
     } catch (err) {
-      new Logger("Error").error(err.message);
-      throw new InternalServerErrorException(err.message);
+      this.methodName = this.signToken.name;
+      this.serviceLayerErrorHandlerLibrary.init(
+        this.className,
+        this.methodName,
+        err,
+      );
     }
   }
 
