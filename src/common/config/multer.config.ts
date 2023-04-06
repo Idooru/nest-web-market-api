@@ -14,7 +14,7 @@ import * as multer from "multer";
 export class MulterConfigService {
   createMulterOptions(): MulterOptions | Promise<MulterOptions> {
     MulterConfigService.createFolder();
-    return { storage: MulterConfigService.storage };
+    return { storage: MulterConfigService.storage, dest: "../../../uploads" };
   }
 
   static maxContentsCount = 5;
