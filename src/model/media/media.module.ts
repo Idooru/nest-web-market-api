@@ -7,7 +7,6 @@ import { UserModule } from "../user/user.module";
 import { ProductEntity } from "../product/entities/product.entity";
 import { LibraryModule } from "src/common/lib/library.module";
 import { JwtModule } from "@nestjs/jwt";
-import { DotenvConfigurationModule } from "src/common/config/dotenv.config";
 import { InquiryRequestImageEntity } from "./entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "./entities/inquiry-request-video.entity";
 import { MediaVersionOneOnlyClientController } from "./controllers/media-v1-only-client.controller";
@@ -20,7 +19,6 @@ import { MediaBundleService } from "./services/media-bundle.service";
 import { InquiryModule } from "../inquiry/inquiry.module";
 import { InquiryResponseImageEntity } from "./entities/inquiry-response-image.entity";
 import { InquiryResponseVideoEntity } from "./entities/inquiry-response-video.entity";
-import { MulterConfigurationModule } from "src/common/config/multer.config";
 
 @Module({
   imports: [
@@ -38,8 +36,6 @@ import { MulterConfigurationModule } from "src/common/config/multer.config";
     forwardRef(() => InquiryModule),
     JwtModule,
     LibraryModule,
-    DotenvConfigurationModule,
-    MulterConfigurationModule,
   ],
   controllers: [
     MediaVersionOneOnlyClientController,
