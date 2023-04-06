@@ -18,11 +18,9 @@ import { DotenvConfigurationModule } from "src/common/config/dotenv.config";
 import { InquiryRequestAccessoryService } from "./services/request/inquiry-request-accessory.service";
 import { InquiryRequestBundleService } from "./services/request/inquiry-request-bundle.service";
 import { InquiryRequestGeneralService } from "./services/request/inquiry-request-general.service";
-import { InquiryRequestSendMailService } from "./services/request/inquiry-request-send-mail.service";
 import { InquiryResponseAccessoryService } from "./services/response/inquiry-response-accessory.service";
 import { InquiryResponseBundleService } from "./services/response/inquiry-response-bundle.service";
 import { InquiryResponseGeneralService } from "./services/response/inquiry-response-general.service";
-import { InquiryResponseSendMailService } from "./services/response/inquiry-response-send-mail.service";
 import { InquiryResponseEntity } from "./entities/inquiry-response.entity";
 
 @Module({
@@ -31,8 +29,8 @@ import { InquiryResponseEntity } from "./entities/inquiry-response.entity";
     forwardRef(() => MediaModule),
     forwardRef(() => UserModule),
     forwardRef(() => ProductModule),
+    forwardRef(() => LibraryModule),
     JwtModule,
-    LibraryModule,
     MailerConfigurationModule,
     DotenvConfigurationModule,
   ],
@@ -45,11 +43,9 @@ import { InquiryResponseEntity } from "./entities/inquiry-response.entity";
     InquiryRequestAccessoryService,
     InquiryRequestBundleService,
     InquiryRequestGeneralService,
-    InquiryRequestSendMailService,
     InquiryResponseAccessoryService,
     InquiryResponseBundleService,
     InquiryResponseGeneralService,
-    InquiryResponseSendMailService,
     InquiryVerifyService,
     InquiryGeneralRepository,
     InquiryVerifyRepository,
@@ -59,11 +55,9 @@ import { InquiryResponseEntity } from "./entities/inquiry-response.entity";
     InquiryRequestAccessoryService,
     InquiryRequestBundleService,
     InquiryRequestGeneralService,
-    InquiryRequestSendMailService,
     InquiryResponseAccessoryService,
     InquiryResponseBundleService,
     InquiryResponseGeneralService,
-    InquiryResponseSendMailService,
     InquiryVerifyService,
     InquiryGeneralRepository,
     InquiryVerifyRepository,
