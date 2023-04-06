@@ -2,6 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { PushInquiryMediaDto } from "../../dto/response/push-inquiry-response-media.dto";
 import { InquiryResponseAccessoryService } from "./inquiry-response-accessory.service";
 import { InsertInquiryResponseMediaDto } from "../../dto/response/insert-inquiry-response-media.dto";
+import { UserEntity } from "src/model/user/entities/user.entity";
+import { InquiryRequestEntity } from "../../entities/inquiry-request.entity";
+import { InquiryResponseEntity } from "../../entities/inquiry-response.entity";
 
 @Injectable()
 export class InquiryResponseBundleService {
@@ -62,5 +65,15 @@ export class InquiryResponseBundleService {
         inquiryResponse,
       );
     }
+  }
+
+  async findStuffForEmail(
+    userId: string,
+    inquiryRequestId: string,
+  ): Promise<[UserEntity, InquiryRequestEntity, InquiryResponseEntity]> {
+    return await this.inquiryResponseAccessoryService.findStuffForEmail(
+      userId,
+      inquiryRequestId,
+    );
   }
 }

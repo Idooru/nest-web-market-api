@@ -8,12 +8,17 @@ import { PushInquiryRequestImageDto } from "../../dto/request/push-inquiry-reque
 import { PushInquiryRequestVideoDto } from "../../dto/request/push-inquiry-request-video.dto";
 import { InquiryRequestEntity } from "../../entities/inquiry-request.entity";
 import { MediaDto } from "src/model/media/dto/media.dto";
+import { ProductGeneralRepository } from "src/model/product/repositories/product-general.repository";
+import { InquiryInsertRepository } from "../../repositories/inquiry-insert.repository";
+import { ProductEntity } from "src/model/product/entities/product.entity";
 
 @Injectable()
 export class InquiryRequestAccessoryService {
   constructor(
     private readonly mediaInsertRepository: MediaInsertRepository,
     private readonly mediaGeneralRepository: MediaGeneralRepository,
+    private readonly productGeneralRepository: ProductGeneralRepository,
+    private readonly inquiryInsertRepository: InquiryInsertRepository,
   ) {}
 
   async pushMoreThenTwoInquiryImageInDto(
@@ -200,5 +205,14 @@ export class InquiryRequestAccessoryService {
         inquiryRequest,
       );
     }
+  }
+
+  async findStuffForEmail(
+    productId: string,
+  ): Promise<[ProductEntity, InquiryRequestEntity]> {
+    return await Promise.all([
+      this.productGeneralRepository.findProductOneById(productId),
+      this.inquiryInsertRepository.findLastCreatedInquiryRequest(),
+    ]);
   }
 }

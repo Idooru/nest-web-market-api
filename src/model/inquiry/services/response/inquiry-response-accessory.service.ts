@@ -8,12 +8,20 @@ import { PushInquiryResponseImageDto } from "../../dto/response/push-inquiry-rep
 import { PushInquiryResponseVideoDto } from "../../dto/response/push-inquiry-response-video.dto";
 import { InquiryResponseEntity } from "../../entities/inquiry-response.entity";
 import { MediaDto } from "src/model/media/dto/media.dto";
+import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
+import { InquiryGeneralRepository } from "../../repositories/inquiry-general.repository";
+import { InquiryInsertRepository } from "../../repositories/inquiry-insert.repository";
+import { UserEntity } from "src/model/user/entities/user.entity";
+import { InquiryRequestEntity } from "../../entities/inquiry-request.entity";
 
 @Injectable()
 export class InquiryResponseAccessoryService {
   constructor(
     private readonly mediaInsertRepository: MediaInsertRepository,
     private readonly mediaGeneralRepository: MediaGeneralRepository,
+    private readonly userGeneralRepository: UserGeneralRepository,
+    private readonly inquiryGeneralRepository: InquiryGeneralRepository,
+    private readonly inquiryInsertRepository: InquiryInsertRepository,
   ) {}
 
   async pushMoreThenTwoInquiryImageInDto(
@@ -200,5 +208,16 @@ export class InquiryResponseAccessoryService {
         inquiryResponse,
       );
     }
+  }
+
+  async findStuffForEmail(
+    userId: string,
+    inquiryRequestId: string,
+  ): Promise<[UserEntity, InquiryRequestEntity, InquiryResponseEntity]> {
+    return await Promise.all([
+      this.userGeneralRepository.findClientUserWithId(userId),
+      this.inquiryGeneralRepository.findInquiryRequestWithId(inquiryRequestId),
+      this.inquiryInsertRepository.findLastCreatedInquiryResponse(),
+    ]);
   }
 }
