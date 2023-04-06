@@ -6,9 +6,11 @@ import { SecurityLibrary } from "./config/security.library";
 import { TimeLoggerLibrary } from "./logger/time-logger.library";
 import { RepositoryLayerErrorHandleLibrary } from "./error-handler/repository-error-handler.library";
 import { ServiceLayerErrorHandlerLibrary } from "./error-handler/service-layer-error-handler.library";
+import { SendEmailLibrary } from "./email/send-email-library";
+import { MailerConfigurationModule } from "../config/mailer.config";
 
 @Module({
-  imports: [DotenvConfigurationModule],
+  imports: [DotenvConfigurationModule, MailerConfigurationModule],
   providers: [
     TimeLoggerLibrary,
     ConfigService,
@@ -16,6 +18,7 @@ import { ServiceLayerErrorHandlerLibrary } from "./error-handler/service-layer-e
     MeidaLoggerLibrary,
     RepositoryLayerErrorHandleLibrary,
     ServiceLayerErrorHandlerLibrary,
+    SendEmailLibrary,
   ],
   exports: [
     TimeLoggerLibrary,
@@ -23,6 +26,7 @@ import { ServiceLayerErrorHandlerLibrary } from "./error-handler/service-layer-e
     MeidaLoggerLibrary,
     RepositoryLayerErrorHandleLibrary,
     ServiceLayerErrorHandlerLibrary,
+    SendEmailLibrary,
   ],
 })
 export class LibraryModule {}
