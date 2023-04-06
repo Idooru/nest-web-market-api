@@ -157,7 +157,6 @@ export class MediaVersionOneOnlyAdminController {
     };
   }
 
-  @UseInterceptors(JsonSendCookieInterceptor)
   @UseInterceptors(JsonClearCookieInterceptor)
   @Delete("/product/image")
   async cancelImageUploadForProduct(
