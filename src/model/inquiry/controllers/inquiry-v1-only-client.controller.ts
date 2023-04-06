@@ -24,7 +24,7 @@ import { MediaDto } from "src/model/media/dto/media.dto";
 import { InquiryRequestDto } from "../dto/request/inquiry-request.dto";
 import { InquiryRequestBundleService } from "../services/request/inquiry-request-bundle.service";
 import { InquiryRequestGeneralService } from "../services/request/inquiry-request-general.service";
-import { InquiryRequestSendMailService } from "../services/request/inquiry-request-send-mail.service";
+import { SendEmailLibrary } from "src/common/lib/email/send-email-library";
 
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)
@@ -33,7 +33,7 @@ export class InquiryVersionOneOnlyClientController {
   constructor(
     private readonly inquiryRequestGeneralService: InquiryRequestGeneralService,
     private readonly inquiryRequestBundleService: InquiryRequestBundleService,
-    private readonly inquiryRequestSendMailService: InquiryRequestSendMailService,
+    private readonly sendEmailLibrary: SendEmailLibrary,
   ) {}
 
   @UseInterceptors(JsonClearCookiesInterceptor)
@@ -70,10 +70,17 @@ export class InquiryVersionOneOnlyClientController {
       });
     };
 
-    await Promise.all([
-      mediaWork(),
-      this.inquiryRequestSendMailService.sendMailToAdmin(productId),
-    ]);
+    const mailWork = async () => {
+      const [product, inquiryRequest] =
+        await this.inquiryRequestBundleService.findStuffForEmail(productId);
+
+      await this.sendEmailLibrary.sendMailToAdminAboutInquiryRequest({
+        product,
+        inquiryRequest,
+      });
+    };
+
+    await Promise.all([mediaWork(), mailWork()]);
 
     return {
       statusCode: 201,
@@ -116,10 +123,17 @@ export class InquiryVersionOneOnlyClientController {
       });
     };
 
-    await Promise.all([
-      mediaWork(),
-      this.inquiryRequestSendMailService.sendMailToAdmin(productId),
-    ]);
+    const mailWork = async () => {
+      const [product, inquiryRequest] =
+        await this.inquiryRequestBundleService.findStuffForEmail(productId);
+
+      await this.sendEmailLibrary.sendMailToAdminAboutInquiryRequest({
+        product,
+        inquiryRequest,
+      });
+    };
+
+    await Promise.all([mediaWork(), mailWork()]);
 
     return {
       statusCode: 201,
@@ -161,10 +175,17 @@ export class InquiryVersionOneOnlyClientController {
       });
     };
 
-    await Promise.all([
-      mediaWork(),
-      this.inquiryRequestSendMailService.sendMailToAdmin(productId),
-    ]);
+    const mailWork = async () => {
+      const [product, inquiryRequest] =
+        await this.inquiryRequestBundleService.findStuffForEmail(productId);
+
+      await this.sendEmailLibrary.sendMailToAdminAboutInquiryRequest({
+        product,
+        inquiryRequest,
+      });
+    };
+
+    await Promise.all([mediaWork(), mailWork()]);
 
     return {
       statusCode: 201,
@@ -190,7 +211,15 @@ export class InquiryVersionOneOnlyClientController {
       jwtPayload,
     });
 
-    await this.inquiryRequestSendMailService.sendMailToAdmin(productId);
+    (async () => {
+      const [product, inquiryRequest] =
+        await this.inquiryRequestBundleService.findStuffForEmail(productId);
+
+      await this.sendEmailLibrary.sendMailToAdminAboutInquiryRequest({
+        product,
+        inquiryRequest,
+      });
+    })();
 
     return {
       statusCode: 201,

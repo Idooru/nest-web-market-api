@@ -24,7 +24,7 @@ import { MediaDto } from "src/model/media/dto/media.dto";
 import { InquiryResponseDto } from "../dto/response/inquiry-response.dto";
 import { InquiryResponseBundleService } from "../services/response/inquiry-response-bundle.service";
 import { InquiryResponseGeneralService } from "../services/response/inquiry-response-general.service";
-import { InquiryResponseSendMailService } from "../services/response/inquiry-response-send-mail.service";
+import { SendEmailLibrary } from "src/common/lib/email/send-email-library";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
@@ -33,7 +33,7 @@ export class InquiryVersionOneOnlyAdminController {
   constructor(
     private readonly inquiryResponseGeneralService: InquiryResponseGeneralService,
     private readonly inquiryResponseBundleService: InquiryResponseBundleService,
-    private readonly inquiryResponseSendMailService: InquiryResponseSendMailService,
+    private readonly sendEmailLibrary: SendEmailLibrary,
   ) {}
 
   @UseInterceptors(JsonClearCookiesInterceptor)
@@ -74,13 +74,21 @@ export class InquiryVersionOneOnlyAdminController {
       });
     };
 
-    await Promise.all([
-      mediaWork(),
-      this.inquiryResponseSendMailService.sendMailToClient({
-        userId,
-        inquiryRequestId,
-      }),
-    ]);
+    const mailWork = async () => {
+      const [user, inquiryRequest, inquiryResponse] =
+        await this.inquiryResponseBundleService.findStuffForEmail(
+          userId,
+          inquiryRequestId,
+        );
+
+      await this.sendEmailLibrary.sendMailToClientAboutInquiryResponse({
+        user,
+        inquiryRequest,
+        inquiryResponse,
+      });
+    };
+
+    await Promise.all([mediaWork(), mailWork()]);
 
     return {
       statusCode: 201,
@@ -126,13 +134,21 @@ export class InquiryVersionOneOnlyAdminController {
       });
     };
 
-    await Promise.all([
-      mediaWork(),
-      this.inquiryResponseSendMailService.sendMailToClient({
-        userId,
-        inquiryRequestId,
-      }),
-    ]);
+    const mailWork = async () => {
+      const [user, inquiryRequest, inquiryResponse] =
+        await this.inquiryResponseBundleService.findStuffForEmail(
+          userId,
+          inquiryRequestId,
+        );
+
+      await this.sendEmailLibrary.sendMailToClientAboutInquiryResponse({
+        user,
+        inquiryRequest,
+        inquiryResponse,
+      });
+    };
+
+    await Promise.all([mediaWork(), mailWork()]);
 
     return {
       statusCode: 201,
@@ -177,13 +193,21 @@ export class InquiryVersionOneOnlyAdminController {
       });
     };
 
-    await Promise.all([
-      mediaWork(),
-      this.inquiryResponseSendMailService.sendMailToClient({
-        userId,
-        inquiryRequestId,
-      }),
-    ]);
+    const mailWork = async () => {
+      const [user, inquiryRequest, inquiryResponse] =
+        await this.inquiryResponseBundleService.findStuffForEmail(
+          userId,
+          inquiryRequestId,
+        );
+
+      await this.sendEmailLibrary.sendMailToClientAboutInquiryResponse({
+        user,
+        inquiryRequest,
+        inquiryResponse,
+      });
+    };
+
+    await Promise.all([mediaWork(), mailWork()]);
 
     return {
       statusCode: 201,
@@ -212,10 +236,19 @@ export class InquiryVersionOneOnlyAdminController {
       jwtPayload,
     });
 
-    await this.inquiryResponseSendMailService.sendMailToClient({
-      userId,
-      inquiryRequestId,
-    });
+    (async () => {
+      const [user, inquiryRequest, inquiryResponse] =
+        await this.inquiryResponseBundleService.findStuffForEmail(
+          userId,
+          inquiryRequestId,
+        );
+
+      await this.sendEmailLibrary.sendMailToClientAboutInquiryResponse({
+        user,
+        inquiryRequest,
+        inquiryResponse,
+      });
+    })();
 
     return {
       statusCode: 201,
