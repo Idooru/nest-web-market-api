@@ -26,7 +26,7 @@ export class ErrorHandlerBuilder<T> {
     return this;
   }
 
-  public setStuffs(stuff?: string, stuffMean?: string): this {
+  public setStuffs(stuff: string, stuffMean: string): this {
     this.stuff = stuff;
     this.stuffMean = stuffMean;
     return this;
@@ -37,7 +37,7 @@ export class ErrorHandlerBuilder<T> {
     return this;
   }
 
-  public invoke() {
+  public handle() {
     return new ErrorHandler(
       this.entity,
       this.error,
