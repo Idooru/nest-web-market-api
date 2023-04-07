@@ -13,28 +13,19 @@ import { AdminUserErrorCase } from "src/model/user/error/admin-user-error.case";
 import { ClientUserErrorCase } from "src/model/user/error/client-user-error.case";
 import { UserErrorCase } from "src/model/user/error/user-error.case";
 
-export class RepositoryLayerErrorHandleLibrary {
-  private className: string;
-  private methodName: string;
-  private error: Error;
-  private stuff: string;
-  private stuffMean: string;
-
-  public init<T>(
-    entity: T,
-    className: string,
-    methodName: string,
-    error: Error,
-    stuffPack?: { stuff: string; stuffMean: string },
-  ): void {
-    this.className = className;
-    this.methodName = methodName;
-    this.error = error;
-    this.stuff = stuffPack.stuff;
-    this.stuffMean = stuffPack.stuffMean;
-
+export class ErrorHandler<Entity> {
+  constructor(
+    private readonly entity: Entity,
+    private readonly error: Error,
+    private readonly className: string,
+    private readonly methodName: string,
+    private readonly stuff: string,
+    private readonly stuffMean: string,
+    private readonly layer: string,
+  ) {
     this.logging();
-    this.checkSourceOfError<T>(entity);
+    if (this.layer.includes("repository")) this.checkSourceOfError(this.entity);
+    this.throwInternalServerErrorException();
   }
 
   private logging(): void {
@@ -45,7 +36,7 @@ export class RepositoryLayerErrorHandleLibrary {
     methodName.error(this.error);
   }
 
-  private checkSourceOfError<T>(entity: T) {
+  private checkSourceOfError(entity: Entity): void {
     switch (this.retrievingEntityName(entity)) {
       case "Product":
         ProductErrorCase.init(this.error, this.stuff, this.stuffMean);
@@ -115,7 +106,7 @@ export class RepositoryLayerErrorHandleLibrary {
     throw new InternalServerErrorException(this.error.message);
   }
 
-  private retrievingEntityName<T>(entity: T): string {
+  private retrievingEntityName(entity: Entity): string {
     return entity.constructor.name.replace("Entity", "");
   }
 }
