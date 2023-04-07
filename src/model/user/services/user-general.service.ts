@@ -7,7 +7,7 @@ import { UserEntity } from "../entities/user.entity";
 import { UserInsertRepository } from "../repositories/user-insert.repository";
 import { CreateUserBaseDto } from "../dtos/create-user-base.dto";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
-import { ServiceLayerErrorHandlerLibrary } from "src/common/lib/error-handler/service-layer-error-handler.library";
+import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder-builder";
 import * as bcrypt from "bcrypt";
 
 @Injectable()
@@ -16,7 +16,7 @@ export class UserGeneralService extends ErrorHandlerProps {
     private readonly userGeneralRepository: UserGeneralRepository,
     private readonly userInsertRepository: UserInsertRepository,
     private readonly securityLibrary: SecurityLibrary,
-    private readonly serviceLayerErrorHandlerLibrary: ServiceLayerErrorHandlerLibrary,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder<unknown>,
   ) {
     super();
   }
@@ -29,8 +29,10 @@ export class UserGeneralService extends ErrorHandlerProps {
     return await this.userGeneralRepository.findAllUsersFromOldest();
   }
 
-  async findClientUserInfoFromAdmin(id: string): Promise<UserEntity> {
-    return await this.userGeneralRepository.findClientUserInfoFromAdmin(id);
+  async findClientUserInfoFromAdminWithId(id: string): Promise<UserEntity> {
+    return await this.userGeneralRepository.findClientUserInfoFromAdminWithId(
+      id,
+    );
   }
 
   async findClientUserProfileInfoWithId(id: string): Promise<UserEntity> {
@@ -58,11 +60,11 @@ export class UserGeneralService extends ErrorHandlerProps {
       hashed = await bcrypt.hash(password, this.securityLibrary.getHashSalt());
     } catch (err) {
       this.methodName = this.createUserBase.name;
-      this.serviceLayerErrorHandlerLibrary.init(
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("service")
+        .handle();
     }
 
     const userProfileColumn = { realname, birth, gender, phonenumber };
@@ -138,11 +140,11 @@ export class UserGeneralService extends ErrorHandlerProps {
       hashed = await bcrypt.hash(password, this.securityLibrary.getHashSalt());
     } catch (err) {
       this.methodName = this.createUserBase.name;
-      this.serviceLayerErrorHandlerLibrary.init(
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("service")
+        .handle();
     }
 
     const user = await this.userGeneralRepository.findUserWithId(userId);
@@ -190,11 +192,11 @@ export class UserGeneralService extends ErrorHandlerProps {
       hashed = await bcrypt.hash(password, this.securityLibrary.getHashSalt());
     } catch (err) {
       this.methodName = this.createUserBase.name;
-      this.serviceLayerErrorHandlerLibrary.init(
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("service")
+        .handle();
     }
 
     const user = await this.userGeneralRepository.findUserWithId(userId);

@@ -32,7 +32,7 @@ export class ReviewBundleService {
     reviewId: string,
     userId: string,
   ): Promise<ReviewEntity> {
-    const client = await this.userGeneralRepository.findClientUserObject(
+    const client = await this.userGeneralRepository.findClientUserObjectWithId(
       userId,
     );
 

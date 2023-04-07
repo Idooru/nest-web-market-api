@@ -225,7 +225,9 @@ export class ReviewAccessoryService {
   ): Promise<void> {
     if (reviewImgCookies.length >= 2) {
       const beforeImages =
-        await this.mediaGeneralRepository.findBeforeReviewImages(review.id);
+        await this.mediaGeneralRepository.findBeforeReviewImagesWithId(
+          review.id,
+        );
       await this.insertReviewIdOnMoreThenTwoReviewImage(
         reviewRequestDto.Image,
         review,
@@ -234,7 +236,9 @@ export class ReviewAccessoryService {
         this.deleteMoreThenTwoReviewImage(beforeImages);
     } else {
       const beforeImage =
-        await this.mediaGeneralRepository.findBeforeReviewImage(review.id);
+        await this.mediaGeneralRepository.findBeforeReviewImageWithId(
+          review.id,
+        );
       await this.insertReviewIdOnOneReviewImage(
         reviewRequestDto.Image[0],
         review,
@@ -250,7 +254,9 @@ export class ReviewAccessoryService {
   ): Promise<void> {
     if (reviewVdoCookies.length >= 2) {
       const beforeVideos =
-        await this.mediaGeneralRepository.findBeforeReviewVideos(review.id);
+        await this.mediaGeneralRepository.findBeforeReviewVideosWithId(
+          review.id,
+        );
       await this.insertReviewIdOnMoreThenTwoReviewVideo(
         reviewRequestDto.Video,
         review,
@@ -260,7 +266,9 @@ export class ReviewAccessoryService {
       }
     } else {
       const beforeVideo =
-        await this.mediaGeneralRepository.findBeforeReviewVideo(review.id);
+        await this.mediaGeneralRepository.findBeforeReviewVideoWithId(
+          review.id,
+        );
       await this.insertReviewIdOnOneReviewVideo(
         reviewRequestDto.Video[0],
         review,
@@ -275,11 +283,15 @@ export class ReviewAccessoryService {
   ): Promise<void> {
     if (reviewImages.length >= 2) {
       const beforeImages =
-        await this.mediaGeneralRepository.findBeforeReviewImages(review.id);
+        await this.mediaGeneralRepository.findBeforeReviewImagesWithId(
+          review.id,
+        );
       await this.deleteMoreThenTwoReviewImage(beforeImages);
     } else {
       const beforeImage =
-        await this.mediaGeneralRepository.findBeforeReviewImage(review.id);
+        await this.mediaGeneralRepository.findBeforeReviewImageWithId(
+          review.id,
+        );
       await this.deleteOneReviewImage(beforeImage);
     }
   }
@@ -290,11 +302,15 @@ export class ReviewAccessoryService {
   ): Promise<void> {
     if (reviewVideos.length >= 2) {
       const beforeVideos =
-        await this.mediaGeneralRepository.findBeforeReviewVideos(review.id);
+        await this.mediaGeneralRepository.findBeforeReviewVideosWithId(
+          review.id,
+        );
       await this.deleteMoreThenTwoReviewVideo(beforeVideos);
     } else {
       const beforeVideo =
-        await this.mediaGeneralRepository.findBeforeReviewVideo(review.id);
+        await this.mediaGeneralRepository.findBeforeReviewVideoWithId(
+          review.id,
+        );
       await this.deleteOneReviewVideo(beforeVideo);
     }
   }

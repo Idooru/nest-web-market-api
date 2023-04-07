@@ -62,7 +62,7 @@ export class ProductGeneralService {
     const [image, StarRate, admin] = await Promise.all([
       this.mediaGeneralRepository.findProductImageWithUrl(imageCookie.url),
       this.starRateRepository.createStarRateSample(),
-      this.userGeneralRepository.findAdminUserObject(jwtPayload.userId),
+      this.userGeneralRepository.findAdminUserObjectWithId(jwtPayload.userId),
     ]);
 
     await this.productGeneralRepository.createProduct(createProductDto, admin);

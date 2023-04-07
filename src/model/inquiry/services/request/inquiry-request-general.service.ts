@@ -23,7 +23,7 @@ export class InquiryRequestGeneralService {
 
     const [product, client] = await Promise.all([
       this.productGeneralRepository.findProductOneById(productId),
-      this.userGeneralRepository.findClientUserObject(jwtPayload.userId),
+      this.userGeneralRepository.findClientUserObjectWithId(jwtPayload.userId),
     ]);
 
     await this.inquiryGeneralRepository.createInquiryRequest({

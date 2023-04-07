@@ -21,7 +21,7 @@ export class ReviewGeneralService {
 
     const [product, client] = await Promise.all([
       this.productGeneralRepository.findProductOneById(productId),
-      this.userGeneralRepository.findClientUserObject(jwtPayload.userId),
+      this.userGeneralRepository.findClientUserObjectWithId(jwtPayload.userId),
     ]);
 
     await this.reviewGeneralRepository.createReview({

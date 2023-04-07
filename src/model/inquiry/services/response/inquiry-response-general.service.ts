@@ -21,7 +21,7 @@ export class InquiryResponseGeneralService {
 
     const [inquiryRequest, admin] = await Promise.all([
       this.inquiryGeneralRepository.findInquiryRequestWithId(inquiryRequestId),
-      this.userGenralRepository.findAdminUserObject(jwtPayload.userId),
+      this.userGenralRepository.findAdminUserObjectWithId(jwtPayload.userId),
     ]);
 
     await this.inquiryGeneralRepository.createInquiryResponse(

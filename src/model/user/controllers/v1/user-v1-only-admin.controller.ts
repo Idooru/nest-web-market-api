@@ -43,13 +43,15 @@ export class UserVersionOneOnlyAdminController {
 
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/:id")
-  async findClientUserInfoFromAdmin(
+  async findClientUserInfoFromAdminWithId(
     @Param("id") userId: string,
   ): Promise<JsonGeneralInterface<UserEntity>> {
     return {
       statusCode: 200,
       message: `${userId}에 해당하는 사용자 정보를 가져옵니다.`,
-      result: await this.userGeneralService.findClientUserInfoFromAdmin(userId),
+      result: await this.userGeneralService.findClientUserInfoFromAdminWithId(
+        userId,
+      ),
     };
   }
 

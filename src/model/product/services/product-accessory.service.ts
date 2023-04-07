@@ -25,7 +25,7 @@ export class ProductAccessoryService {
     return await Promise.all([
       this.productGeneralRepository.findProductOneById(id),
       this.mediaGeneralRepository.findProductImageWithUrl(imageCookie.url),
-      this.mediaGeneralRepository.findProductImageEvenUse(id),
+      this.mediaGeneralRepository.findProductImageEvenUseWithId(id),
     ]);
   }
 }
