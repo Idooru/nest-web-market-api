@@ -13,9 +13,9 @@ import { AdminUserErrorCase } from "src/model/user/error/admin-user-error.case";
 import { ClientUserErrorCase } from "src/model/user/error/client-user-error.case";
 import { UserErrorCase } from "src/model/user/error/user-error.case";
 
-export class ErrorHandler<Entity> {
+export class ErrorHandler<T> {
   constructor(
-    private readonly entity: Entity,
+    private readonly entity: T,
     private readonly error: Error,
     private readonly className: string,
     private readonly methodName: string,
@@ -24,7 +24,7 @@ export class ErrorHandler<Entity> {
     private readonly layer: string,
   ) {
     this.logging();
-    if (this.layer.includes("repository")) this.checkSourceOfError(this.entity);
+    if (this.layer.includes("repository")) this.checkSourceOfError();
     this.throwInternalServerErrorException();
   }
 
@@ -36,8 +36,8 @@ export class ErrorHandler<Entity> {
     methodName.error(this.error);
   }
 
-  private checkSourceOfError(entity: Entity): void {
-    switch (this.retrievingEntityName(entity)) {
+  private checkSourceOfError(): void {
+    switch (this.retrievingEntityName()) {
       case "Product":
         ProductErrorCase.init(this.error, this.stuff, this.stuffMean);
         break;
@@ -106,7 +106,7 @@ export class ErrorHandler<Entity> {
     throw new InternalServerErrorException(this.error.message);
   }
 
-  private retrievingEntityName(entity: Entity): string {
-    return entity.constructor.name.replace("Entity", "");
+  private retrievingEntityName(): string {
+    return this.entity.constructor.name.replace("Entity", "");
   }
 }
