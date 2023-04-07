@@ -6,15 +6,15 @@ import { Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
 import { productSelectProperty } from "src/common/config/repository-select-configs/product-select";
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
-import { RepositoryLayerErrorHandleLibrary } from "src/common/lib/error-handler/repository-error-handler.library";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
+import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder-builder";
 
 @Injectable()
 export class ProductGeneralRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
-    private readonly repositoryErrorHandler: RepositoryLayerErrorHandleLibrary,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder<unknown>,
   ) {
     super();
   }
@@ -30,12 +30,12 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .getMany();
     } catch (err) {
       this.methodName = this.findProductsAllId.name;
-      this.repositoryErrorHandler.init<ProductEntity>(
-        new ProductEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ProductEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -66,12 +66,12 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .getMany();
     } catch (err) {
       this.methodName = this.findAllProductsFromLatest.name;
-      this.repositoryErrorHandler.init<ProductEntity>(
-        new ProductEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ProductEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -102,12 +102,12 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .getMany();
     } catch (err) {
       this.methodName = this.findAllProductsFromOldest.name;
-      this.repositoryErrorHandler.init<ProductEntity>(
-        new ProductEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ProductEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -138,13 +138,13 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findProductOneByName.name;
-      this.repositoryErrorHandler.init<ProductEntity>(
-        new ProductEntity(),
-        this.className,
-        this.methodName,
-        err,
-        { stuff: name, stuffMean: "이름" },
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ProductEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setStuffs(name, "이름")
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -175,13 +175,13 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findProductOneById.name;
-      this.repositoryErrorHandler.init<ProductEntity>(
-        new ProductEntity(),
-        this.className,
-        this.methodName,
-        err,
-        { stuff: id, stuffMean: "아이디" },
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ProductEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setStuffs(id, "아이디")
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -196,13 +196,13 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findProductOneJustNeedStarRate.name;
-      this.repositoryErrorHandler.init<ProductEntity>(
-        new ProductEntity(),
-        this.className,
-        this.methodName,
-        err,
-        { stuff: id, stuffMean: "아이디" },
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ProductEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setStuffs(id, "아이디")
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -219,12 +219,12 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.createProduct.name;
-      this.repositoryErrorHandler.init<ProductEntity>(
-        new ProductEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ProductEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -241,12 +241,12 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.modifyProduct.name;
-      this.repositoryErrorHandler.init<ProductEntity>(
-        new ProductEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ProductEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -260,12 +260,12 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.modifyProductName.name;
-      this.repositoryErrorHandler.init<ProductEntity>(
-        new ProductEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ProductEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -279,12 +279,12 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.modifyProductPrice.name;
-      this.repositoryErrorHandler.init<ProductEntity>(
-        new ProductEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ProductEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -298,12 +298,12 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.modifyProductOrigin.name;
-      this.repositoryErrorHandler.init<ProductEntity>(
-        new ProductEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ProductEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -317,12 +317,12 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.modifyProductType.name;
-      this.repositoryErrorHandler.init<ProductEntity>(
-        new ProductEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ProductEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -339,12 +339,12 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.modifyProductDescription.name;
-      this.repositoryErrorHandler.init<ProductEntity>(
-        new ProductEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ProductEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -358,12 +358,12 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.modifyProductQuantity.name;
-      this.repositoryErrorHandler.init<ProductEntity>(
-        new ProductEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ProductEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -377,12 +377,12 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.removeProduct.name;
-      this.repositoryErrorHandler.init<ProductEntity>(
-        new ProductEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ProductEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 }

@@ -3,15 +3,15 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 import { SendMailToClientAboutInquiryResponseDto } from "src/model/inquiry/dto/response/send-mail-to-client-about-inquiry-response.dto";
-import { ServiceLayerErrorHandlerLibrary } from "../error-handler/service-layer-error-handler.library";
 import { SendMailToAdminAboutInquiryRequestDto } from "src/model/inquiry/dto/request/send-mail-to-admin-about-inquiry-request.dto";
+import { ErrorHandlerBuilder } from "../error-handler/error-hanlder-builder";
 
 @Injectable()
 export class SendEmailLibrary extends ErrorHandlerProps {
   constructor(
     private readonly configService: ConfigService,
     private readonly mailerService: MailerService,
-    private readonly serviceLayerErrorHandlerLibrary: ServiceLayerErrorHandlerLibrary,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder<unknown>,
   ) {
     super();
   }
@@ -38,11 +38,11 @@ export class SendEmailLibrary extends ErrorHandlerProps {
       });
     } catch (err) {
       this.methodName = this.sendMailToAdminAboutInquiryRequest.name;
-      this.serviceLayerErrorHandlerLibrary.init(
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("service")
+        .handle();
     }
   }
 
@@ -70,11 +70,24 @@ export class SendEmailLibrary extends ErrorHandlerProps {
       });
     } catch (err) {
       this.methodName = this.sendMailToClientAboutInquiryResponse.name;
-      this.serviceLayerErrorHandlerLibrary.init(
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("service")
+        .handle();
+    }
+  }
+
+  async sendMailToClientAboutRegister(): Promise<void> {
+    try {
+      // await this.mailerService.
+    } catch (err) {
+      this.methodName = this.sendMailToClientAboutRegister.name;
+      this.errorHandlerBuilder
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("service")
+        .handle();
     }
   }
 }

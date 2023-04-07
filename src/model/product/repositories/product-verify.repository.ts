@@ -1,16 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { RepositoryLayerErrorHandleLibrary } from "src/common/lib/error-handler/repository-error-handler.library";
 import { Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
+import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder-builder";
 
 @Injectable()
 export class ProductVerifyRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
-    private readonly repositoryErrorHandler: RepositoryLayerErrorHandleLibrary,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder<unknown>,
   ) {
     super();
   }
@@ -21,12 +21,12 @@ export class ProductVerifyRepository extends ErrorHandlerProps {
       return result ? true : false;
     } catch (err) {
       this.methodName = this.isExistProductId.name;
-      this.repositoryErrorHandler.init<ProductEntity>(
-        new ProductEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ProductEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -36,12 +36,12 @@ export class ProductVerifyRepository extends ErrorHandlerProps {
       return result ? false : true;
     } catch (err) {
       this.methodName = this.isNotExistProductName.name;
-      this.repositoryErrorHandler.init<ProductEntity>(
-        new ProductEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ProductEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 }

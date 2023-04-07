@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { RepositoryLayerErrorHandleLibrary } from "src/common/lib/error-handler/repository-error-handler.library";
 import { InquiryRequestEntity } from "src/model/inquiry/entities/inquiry-request.entity";
 import { InquiryResponseEntity } from "src/model/inquiry/entities/inquiry-response.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
@@ -14,6 +13,7 @@ import { ProductImageEntity } from "../entities/product.image.entity";
 import { ReviewImageEntity } from "../entities/review.image.entity";
 import { ReviewVideoEntity } from "../entities/review.video.entity";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
+import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder-builder";
 
 @Injectable()
 export class MediaInsertRepository extends ErrorHandlerProps {
@@ -32,7 +32,7 @@ export class MediaInsertRepository extends ErrorHandlerProps {
     private readonly inquiryResponseImageRepository: Repository<InquiryResponseImageEntity>,
     @InjectRepository(InquiryResponseVideoEntity)
     private readonly inquiryResponseVideoRepository: Repository<InquiryResponseVideoEntity>,
-    private readonly repositoryErrorHandler: RepositoryLayerErrorHandleLibrary,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder<unknown>,
   ) {
     super();
   }
@@ -50,12 +50,12 @@ export class MediaInsertRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.insertProductIdOnProductImage.name;
-      this.repositoryErrorHandler.init<ProductImageEntity>(
-        new ProductImageEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ProductImageEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -72,12 +72,12 @@ export class MediaInsertRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.insertReviewIdOnReviewImage.name;
-      this.repositoryErrorHandler.init<ReviewImageEntity>(
-        new ReviewImageEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ReviewImageEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -94,12 +94,12 @@ export class MediaInsertRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.insertReviewIdOnReviewVideo.name;
-      this.repositoryErrorHandler.init<ReviewVideoEntity>(
-        new ReviewVideoEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ReviewVideoEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -116,12 +116,12 @@ export class MediaInsertRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.insertInquiryRequestIdOnInquiryRequestImage.name;
-      this.repositoryErrorHandler.init<InquiryRequestImageEntity>(
-        new InquiryRequestImageEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new InquiryRequestImageEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -138,12 +138,12 @@ export class MediaInsertRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.insertInquiryResponseIdOnInquiryResponseImage.name;
-      this.repositoryErrorHandler.init<InquiryResponseImageEntity>(
-        new InquiryResponseImageEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new InquiryResponseImageEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -160,12 +160,12 @@ export class MediaInsertRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.insertInquiryRequestIdOnInquiryRequestVideo.name;
-      this.repositoryErrorHandler.init<InquiryRequestVideoEntity>(
-        new InquiryRequestVideoEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new InquiryRequestVideoEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -182,12 +182,12 @@ export class MediaInsertRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.insertInquiryResponseIdOnInquiryResponseVideo.name;
-      this.repositoryErrorHandler.init<InquiryResponseVideoEntity>(
-        new InquiryResponseVideoEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new InquiryResponseVideoEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 }

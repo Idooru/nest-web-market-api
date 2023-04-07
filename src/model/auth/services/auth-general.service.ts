@@ -11,9 +11,9 @@ import { AuthExistService } from "./auth-exist.service";
 import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
 import { UserEntity } from "src/model/user/entities/user.entity";
 import { JwtAccessTokenPayload } from "../jwt/jwt-access-token-payload.interface";
-import { ServiceLayerErrorHandlerLibrary } from "src/common/lib/error-handler/service-layer-error-handler.library";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 import * as bcrypt from "bcrypt";
+import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder-builder";
 
 @Injectable()
 export class AuthGeneralService extends ErrorHandlerProps {
@@ -22,7 +22,7 @@ export class AuthGeneralService extends ErrorHandlerProps {
     private readonly authExistService: AuthExistService,
     private readonly securityLibrary: SecurityLibrary,
     private readonly jwtService: JwtService,
-    private readonly serviceLayerErrorHandlerLibrary: ServiceLayerErrorHandlerLibrary,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder<unknown>,
   ) {
     super();
   }
@@ -81,11 +81,11 @@ export class AuthGeneralService extends ErrorHandlerProps {
       return { accessToken, refreshToken };
     } catch (err) {
       this.methodName = this.signToken.name;
-      this.serviceLayerErrorHandlerLibrary.init(
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("service")
+        .handle();
     }
   }
 
@@ -120,11 +120,11 @@ export class AuthGeneralService extends ErrorHandlerProps {
       hashed = await bcrypt.hash(password, this.securityLibrary.getHashSalt());
     } catch (err) {
       this.methodName = this.resetPassword.name;
-      this.serviceLayerErrorHandlerLibrary.init(
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("service")
+        .handle();
     }
 
     await this.userGeneralRepository.resetPassword(user.Auth.id, hashed);

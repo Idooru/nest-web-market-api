@@ -1,17 +1,17 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { RepositoryLayerErrorHandleLibrary } from "src/common/lib/error-handler/repository-error-handler.library";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { Repository } from "typeorm";
 import { ReviewEntity } from "../entities/review.entity";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
+import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder-builder";
 
 @Injectable()
 export class ReviewInsertRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(ReviewEntity)
     private readonly reviewRepository: Repository<ReviewEntity>,
-    private readonly repositoryErrorHandler: RepositoryLayerErrorHandleLibrary,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder<unknown>,
   ) {
     super();
   }
@@ -27,12 +27,12 @@ export class ReviewInsertRepository extends ErrorHandlerProps {
         .getOne();
     } catch (err) {
       this.methodName = this.findLastCreatedReview.name;
-      this.repositoryErrorHandler.init<ReviewEntity>(
-        new ReviewEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ReviewEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 
@@ -49,12 +49,12 @@ export class ReviewInsertRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.insertReviewIdOnClientUser.name;
-      this.repositoryErrorHandler.init<ReviewEntity>(
-        new ReviewEntity(),
-        this.className,
-        this.methodName,
-        err,
-      );
+      this.errorHandlerBuilder
+        .setEntity(new ReviewEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setLayer("repository")
+        .handle();
     }
   }
 }
