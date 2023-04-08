@@ -18,6 +18,7 @@ import { ClientUserEntity } from "./entities/client-user.entity";
 import { AdminUserEntity } from "./entities/admin-user.entity";
 import { UserEntity } from "./entities/user.entity";
 import { UserInsertRepository } from "./repositories/user-insert.repository";
+import { userSelectProperty } from "src/common/config/repository-select-configs/user-select";
 
 @Module({
   imports: [
@@ -40,6 +41,10 @@ import { UserInsertRepository } from "./repositories/user-insert.repository";
     UserVersionOneVerifyController,
   ],
   providers: [
+    {
+      provide: "UserSelectProperty",
+      useValue: userSelectProperty,
+    },
     UserGeneralService,
     UserVerifyService,
     UserGeneralRepository,
