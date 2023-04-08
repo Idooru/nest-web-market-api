@@ -17,6 +17,7 @@ import { ProductVerifyService } from "./services/product-verify.service";
 import { ProductVerifyRepository } from "./repositories/product-verify.repository";
 import { ProductInsertRepository } from "./repositories/product-insert.repository";
 import { ProductAccessoryService } from "./services/product-accessory.service";
+import { productSelectProperty } from "src/common/config/repository-select-configs/product-select";
 
 @Module({
   imports: [
@@ -34,6 +35,10 @@ import { ProductAccessoryService } from "./services/product-accessory.service";
     ProductVersionOneVerfiyController,
   ],
   providers: [
+    {
+      provide: "ProductsSelectProperty",
+      useValue: productSelectProperty,
+    },
     ProductGeneralService,
     ProductVerifyService,
     ProductAccessoryService,
