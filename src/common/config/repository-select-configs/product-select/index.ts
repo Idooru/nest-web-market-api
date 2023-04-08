@@ -1,3 +1,10 @@
+export interface ProductSelectProperty {
+  productsIdSelect: string[];
+  productsSelect: string[];
+  productSelect: string[];
+  productSelectWhenNeedStarRate: string[];
+}
+
 export const productSelectProperty = {
   productsIdSelect: ["product.id", "product.name", "product.type"],
   productsSelect: [
