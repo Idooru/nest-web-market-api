@@ -5,7 +5,7 @@ export interface ProductSelectProperty {
   productSelectWhenNeedStarRate: string[];
 }
 
-export const productSelectProperty = {
+export const productSelectProperty: ProductSelectProperty = {
   productsIdSelect: ["product.id", "product.name", "product.type"],
   productsSelect: [
     "product.name",
