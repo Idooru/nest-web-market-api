@@ -1,25 +1,25 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { ModifyProductDto } from "../dto/modify-product.dto";
 import { CreateProductDto } from "../dto/create-product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
-import { productSelectProperty } from "src/common/config/repository-select-configs/product-select";
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder-builder";
+import { ProductSelectProperty } from "src/common/config/repository-select-configs/product-select";
 
 @Injectable()
 export class ProductGeneralRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
+    @Inject("ProductsSelectProperty")
+    private readonly select: ProductSelectProperty,
     private readonly errorHandlerBuilder: ErrorHandlerBuilder<unknown>,
   ) {
     super();
   }
-
-  private readonly select = productSelectProperty;
 
   async findProductsAllId(): Promise<ProductEntity[]> {
     try {
