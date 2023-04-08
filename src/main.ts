@@ -84,6 +84,7 @@ class NestCoreConfig {
 async function init() {
   const nestApp = await NestFactory.create<NestExpressApplication>(AppModule);
   const server = new NestCoreConfig(nestApp);
+  console.log("git test");
   server.run();
 }
 
