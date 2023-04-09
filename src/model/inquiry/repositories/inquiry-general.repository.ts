@@ -74,7 +74,7 @@ export class InquiryGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.inquiryRequestRepository
         .createQueryBuilder()
-        .select(this.select.inquiryRequestSelect)
+        .select(this.select.inquiryRequest)
         .from(InquiryRequestEntity, "inquiryRequest")
         .innerJoin("inquiryRequest.Product", "Product")
         .where("inquiryRequest.id = :id", { id })

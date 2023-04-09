@@ -1,18 +1,18 @@
 export interface UserSelectProperty {
-  userBaseSelect: string[];
-  clientUserSelect: string[];
-  clientUserSimpleSelect: string[];
-  clientUserProfileSelect: string[];
-  adminUserSelect: string[];
-  adminUserProfileSelect: string[];
-  whenAdminSelectClientUser: string[];
+  userBase: string[];
+  clientUser: string[];
+  clientUserSimple: string[];
+  clientUserProfile: string[];
+  adminUser: string[];
+  adminUserProfile: string[];
+  whenAdminClientUser: string[];
 }
 
 export const userSelectProperty: UserSelectProperty = {
-  userBaseSelect: ["user", "Profile", "Auth"],
-  clientUserSelect: ["user", "Profile", "Auth", "Client"],
-  clientUserSimpleSelect: ["user", "Auth.nickname", "Auth.email"],
-  clientUserProfileSelect: [
+  userBase: ["user", "Profile", "Auth"],
+  clientUser: ["user", "Profile", "Auth", "Client"],
+  clientUserSimple: ["user", "Auth.nickname", "Auth.email"],
+  clientUserProfile: [
     "user",
     "Profile.realname",
     "Profile.birth",
@@ -33,8 +33,8 @@ export const userSelectProperty: UserSelectProperty = {
     "InquiryResponseImage.url",
     "InquiryResponseVideo.url",
   ],
-  adminUserSelect: ["user", "Profile", "Auth", "Admin"],
-  adminUserProfileSelect: [
+  adminUser: ["user", "Profile", "Auth", "Admin"],
+  adminUserProfile: [
     "user",
     "Profile.realname",
     "Profile.birth",
@@ -59,7 +59,7 @@ export const userSelectProperty: UserSelectProperty = {
     "ReceivedInquiryRequestImage.url",
     "ReceivedInquiryRequestVideo.url",
   ],
-  whenAdminSelectClientUser: [
+  whenAdminClientUser: [
     "user",
     "Auth.nickname",
     "Auth.email",

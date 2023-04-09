@@ -25,7 +25,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.productRepository
         .createQueryBuilder()
-        .select(this.select.productsIdSelect)
+        .select(this.select.productsId)
         .from(ProductEntity, "product")
         .getMany();
     } catch (err) {
@@ -43,7 +43,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.productRepository
         .createQueryBuilder()
-        .select(this.select.productsSelect)
+        .select(this.select.products)
         .from(ProductEntity, "product")
         .innerJoin("product.Image", "Image")
         .innerJoin("product.StarRate", "StarRate")
@@ -79,7 +79,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.productRepository
         .createQueryBuilder()
-        .select(this.select.productsSelect)
+        .select(this.select.products)
         .from(ProductEntity, "product")
         .innerJoin("product.Image", "Image")
         .innerJoin("product.StarRate", "StarRate")
@@ -115,7 +115,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.productRepository
         .createQueryBuilder()
-        .select(this.select.productSelect)
+        .select(this.select.product)
         .from(ProductEntity, "product")
         .innerJoin("product.Image", "Image")
         .innerJoin("product.StarRate", "StarRate")
@@ -152,7 +152,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.productRepository
         .createQueryBuilder()
-        .select(this.select.productSelect)
+        .select(this.select.product)
         .from(ProductEntity, "product")
         .innerJoin("product.Image", "Image")
         .innerJoin("product.StarRate", "StarRate")
@@ -189,7 +189,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.productRepository
         .createQueryBuilder()
-        .select(this.select.productSelectWhenNeedStarRate)
+        .select(this.select.productWhenNeedStarRate)
         .from(ProductEntity, "product")
         .innerJoin("product.StarRate", "StarRate")
         .where("product.id = :id", { id })

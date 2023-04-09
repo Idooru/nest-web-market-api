@@ -1,9 +1,9 @@
 export interface ReviewSelectProperty {
-  reviewsSelect: string[];
-  starRateSelect: string[];
+  reviews: string[];
+  starRate: string[];
 }
 
 export const reviewSelectProperty = {
-  reviewsSelect: ["review", "Product", "Client", "Image", "Video"],
-  starRateSelect: ["starRate"],
+  reviews: ["review", "Product", "Client", "Image", "Video"],
+  starRate: ["starRate"],
 };

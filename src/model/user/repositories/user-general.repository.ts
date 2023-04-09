@@ -38,7 +38,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.userRepository
         .createQueryBuilder()
-        .select(this.select.clientUserSimpleSelect)
+        .select(this.select.clientUserSimple)
         .from(UserEntity, "user")
         .innerJoin("user.Auth", "Auth")
         .orderBy("user.createdAt", "DESC")
@@ -58,7 +58,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.userRepository
         .createQueryBuilder()
-        .select(this.select.clientUserSimpleSelect)
+        .select(this.select.clientUserSimple)
         .from(UserEntity, "user")
         .innerJoin("user.Auth", "Auth")
         .orderBy("user.createdAt", "ASC")
@@ -78,7 +78,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.userRepository
         .createQueryBuilder()
-        .select(this.select.userBaseSelect)
+        .select(this.select.userBase)
         .from(UserEntity, "user")
         .innerJoin("user.Profile", "Profile")
         .innerJoin("user.Auth", "Auth")
@@ -100,7 +100,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.userRepository
         .createQueryBuilder()
-        .select(this.select.clientUserSelect)
+        .select(this.select.clientUser)
         .from(UserEntity, "user")
         .innerJoin("user.Profile", "Profile")
         .innerJoin("user.Auth", "Auth")
@@ -123,7 +123,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.userRepository
         .createQueryBuilder()
-        .select(this.select.adminUserSelect)
+        .select(this.select.adminUser)
         .from(UserEntity, "user")
         .innerJoin("user.Profile", "Profile")
         .innerJoin("user.Auth", "Auth")
@@ -209,7 +209,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.userRepository
         .createQueryBuilder()
-        .select(this.select.userBaseSelect)
+        .select(this.select.userBase)
         .from(UserEntity, "user")
         .innerJoin("user.Profile", "Profile")
         .innerJoin("user.Auth", "Auth")
@@ -231,7 +231,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.userRepository
         .createQueryBuilder()
-        .select(this.select.userBaseSelect)
+        .select(this.select.userBase)
         .from(UserEntity, "user")
         .innerJoin("user.Profile", "Profile")
         .innerJoin("user.Auth", "Auth")
@@ -253,7 +253,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.userRepository
         .createQueryBuilder()
-        .select(this.select.userBaseSelect)
+        .select(this.select.userBase)
         .from(UserEntity, "user")
         .leftJoin("user.Profile", "Profile")
         .leftJoin("user.Auth", "Auth")
@@ -276,7 +276,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.clientUserRepository
         .createQueryBuilder()
-        .select(this.select.userBaseSelect)
+        .select(this.select.userBase)
         .from(UserEntity, "user")
         .leftJoin("user.Profile", "Profile")
         .leftJoin("user.Auth", "Auth")
@@ -297,7 +297,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.userRepository
         .createQueryBuilder()
-        .select(this.select.clientUserProfileSelect)
+        .select(this.select.clientUserProfile)
         .from(UserEntity, "user")
         .innerJoin("user.Profile", "Profile")
         .innerJoin("user.Auth", "Auth")
@@ -331,7 +331,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.userRepository
         .createQueryBuilder()
-        .select(this.select.adminUserProfileSelect)
+        .select(this.select.adminUserProfile)
         .from(UserEntity, "user")
         .innerJoin("user.Profile", "Profile")
         .innerJoin("user.Auth", "Auth")
@@ -369,7 +369,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.userRepository
         .createQueryBuilder()
-        .select(this.select.whenAdminSelectClientUser)
+        .select(this.select.whenAdminClientUser)
         .from(UserEntity, "user")
         .innerJoin("user.Auth", "Auth")
         .innerJoin("user.clientActions", "Client")

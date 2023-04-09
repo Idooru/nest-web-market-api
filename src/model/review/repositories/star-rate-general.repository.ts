@@ -124,7 +124,7 @@ export class StarRateGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.starRateRepository
         .createQueryBuilder()
-        .select(this.select.starRateSelect)
+        .select(this.select.starRate)
         .from(StarRateEntity, "starRate")
         .where("starRate.id = :id", { id: StarRateId })
         .getOneOrFail();

@@ -1,7 +1,7 @@
 export interface InquirySelectProperty {
-  inquiryRequestSelect: string[];
+  inquiryRequest: string[];
 }
 
 export const inquirySelectProperty: InquirySelectProperty = {
-  inquiryRequestSelect: ["inquiryRequest", "Product"],
+  inquiryRequest: ["inquiryRequest", "Product"],
 };

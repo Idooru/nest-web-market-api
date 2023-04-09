@@ -24,7 +24,7 @@ export class ReviewGeneralRepository extends ErrorHandlerProps {
     try {
       const reviews = await this.reviewRepository
         .createQueryBuilder()
-        .select(this.select.reviewsSelect)
+        .select(this.select.reviews)
         .from(ReviewEntity, "review")
         .innerJoin("review.Product", "Product")
         .innerJoin("review.reviewer", "Client")

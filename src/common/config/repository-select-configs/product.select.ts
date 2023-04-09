@@ -1,13 +1,13 @@
 export interface ProductSelectProperty {
-  productsIdSelect: string[];
-  productsSelect: string[];
-  productSelect: string[];
-  productSelectWhenNeedStarRate: string[];
+  productsId: string[];
+  products: string[];
+  product: string[];
+  productWhenNeedStarRate: string[];
 }
 
 export const productSelectProperty: ProductSelectProperty = {
-  productsIdSelect: ["product.id", "product.name", "product.type"],
-  productsSelect: [
+  productsId: ["product.id", "product.name", "product.type"],
+  products: [
     "product.name",
     "product.price",
     "product.type",
@@ -22,7 +22,7 @@ export const productSelectProperty: ProductSelectProperty = {
     "InquiryUser",
     "InquiryAuth.nickname",
   ],
-  productSelect: [
+  product: [
     "product.id",
     "product.name",
     "product.price",
@@ -45,5 +45,5 @@ export const productSelectProperty: ProductSelectProperty = {
     "InquiryRequestImage.url",
     "InquiryRequestVideo.url",
   ],
-  productSelectWhenNeedStarRate: ["product", "StarRate.id"],
+  productWhenNeedStarRate: ["product", "StarRate.id"],
 };

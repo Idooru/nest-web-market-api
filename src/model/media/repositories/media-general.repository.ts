@@ -181,7 +181,7 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.productImageRepository
         .createQueryBuilder()
-        .select(this.select.productImagesSelect)
+        .select(this.select.productImages)
         .from(ProductImageEntity, "productImage")
         .where("productImage.url = :url", { url })
         .getOneOrFail();
@@ -201,7 +201,7 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.reviewImageRepository
         .createQueryBuilder()
-        .select(this.select.reviewImagesSelect)
+        .select(this.select.reviewImages)
         .from(ReviewImageEntity, "reviewImage")
         .leftJoin("reviewImage.Review", "Review")
         .where("reviewImage.url = :url", { url })
@@ -222,7 +222,7 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.reviewVideoRepository
         .createQueryBuilder()
-        .select(this.select.reviewVideosSelect)
+        .select(this.select.reviewVideos)
         .from(ReviewVideoEntity, "reviewVideo")
         .leftJoin("reviewVideo.Review", "Review")
         .where("reviewVideo.url = :url", { url })
@@ -245,7 +245,7 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.inquiryRequestImageRepository
         .createQueryBuilder()
-        .select(this.select.inquiryRequestImagesSelect)
+        .select(this.select.inquiryRequestImages)
         .from(InquiryRequestImageEntity, "inquiryRequestImage")
         .leftJoin("inquiryRequestImage.InquiryRequest", "InquiryRequest")
         .where("inquiryRequestImage.url = :url", { url })
@@ -268,7 +268,7 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.inquiryRequestVideoRepository
         .createQueryBuilder()
-        .select(this.select.inquiryRequestVideoesSelect)
+        .select(this.select.inquiryRequestVideoes)
         .from(InquiryRequestVideoEntity, "inquiryRequestVideo")
         .leftJoin("inquiryRequestVideo.InquiryRequest", "InquiryRequest")
         .where("inquiryRequestVideo.url = :url", { url })
@@ -291,7 +291,7 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.inquiryResponseImageRepository
         .createQueryBuilder()
-        .select(this.select.inquiryRequestImagesSelect)
+        .select(this.select.inquiryRequestImages)
         .from(InquiryResponseImageEntity, "inquiryImage")
         .leftJoin("inquiryImage.Inquiry", "Inquiry")
         .where("inquiryImage.url = :url", { url })
@@ -314,7 +314,7 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.inquiryResponseVideoRepository
         .createQueryBuilder()
-        .select(this.select.inquiryRequestVideoesSelect)
+        .select(this.select.inquiryRequestVideoes)
         .from(InquiryResponseVideoEntity, "inquiryVideo")
         .leftJoin("inquiryVideo.Inquiry", "Inquiry")
         .where("inquiryVideo.url = :url", { url })
