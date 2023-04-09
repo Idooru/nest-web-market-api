@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { InquiryRequestEntity } from "src/model/inquiry/entities/inquiry-request.entity";
 import { Repository } from "typeorm";
@@ -7,6 +7,7 @@ import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
 import { InquiryResponseDto } from "../dto/response/inquiry-response.dto";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder-builder";
+import { InquirySelectProperty } from "src/common/config/repository-select-configs/inquiry.select";
 
 @Injectable()
 export class InquiryGeneralRepository extends ErrorHandlerProps {
@@ -15,6 +16,8 @@ export class InquiryGeneralRepository extends ErrorHandlerProps {
     private readonly inquiryRequestRepository: Repository<InquiryRequestEntity>,
     @InjectRepository(InquiryResponseEntity)
     private readonly inquiryResponseRepository: Repository<InquiryResponseEntity>,
+    @Inject("InquirySelectProperty")
+    private readonly select: InquirySelectProperty,
     private readonly errorHandlerBuilder: ErrorHandlerBuilder<unknown>,
   ) {
     super();
@@ -71,7 +74,7 @@ export class InquiryGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.inquiryRequestRepository
         .createQueryBuilder()
-        .select(["inquiryRequest", "Product"])
+        .select(this.select.inquiryRequestSelect)
         .from(InquiryRequestEntity, "inquiryRequest")
         .innerJoin("inquiryRequest.Product", "Product")
         .where("inquiryRequest.id = :id", { id })
