@@ -38,7 +38,7 @@ import { reviewSelectProperty } from "src/common/config/repository-select-config
   ],
   providers: [
     {
-      provide: "ReviewSelectProPerty",
+      provide: "ReviewSelectProperty",
       useValue: reviewSelectProperty,
     },
     ReviewGeneralService,

@@ -3,10 +3,7 @@ import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserProfileEntity } from "../entities/user.profile.entity";
 import { Repository } from "typeorm";
-import {
-  UserSelectProperty,
-  userSelectProperty,
-} from "src/common/config/repository-select-configs/user-select";
+import { UserSelectProperty } from "src/common/config/repository-select-configs/user-select";
 import { ClientUserEntity } from "../entities/client-user.entity";
 import { RegisterUserProfileDto } from "../dtos/register-user.dto";
 import { AdminUserEntity } from "../entities/admin-user.entity";
@@ -31,7 +28,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     private readonly clientUserRepository: Repository<ClientUserEntity>,
     @InjectRepository(AdminUserEntity)
     private readonly adminUserRepository: Repository<AdminUserEntity>,
-    @Inject(userSelectProperty) private readonly select: UserSelectProperty,
+    @Inject("UserSelectProperty") private readonly select: UserSelectProperty,
     private readonly errorHandlerBuilder: ErrorHandlerBuilder<unknown>,
   ) {
     super();
