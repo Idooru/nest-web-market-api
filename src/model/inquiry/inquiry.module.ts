@@ -22,6 +22,7 @@ import { InquiryResponseAccessoryService } from "./services/response/inquiry-res
 import { InquiryResponseBundleService } from "./services/response/inquiry-response-bundle.service";
 import { InquiryResponseGeneralService } from "./services/response/inquiry-response-general.service";
 import { InquiryResponseEntity } from "./entities/inquiry-response.entity";
+import { inquirySelectProperty } from "src/common/config/repository-select-configs/inquiry.select";
 
 @Module({
   imports: [
@@ -40,6 +41,10 @@ import { InquiryResponseEntity } from "./entities/inquiry-response.entity";
     InquiryVersionOneVerifyController,
   ],
   providers: [
+    {
+      provide: "InquirySelectProperty",
+      useValue: inquirySelectProperty,
+    },
     InquiryRequestAccessoryService,
     InquiryRequestBundleService,
     InquiryRequestGeneralService,
