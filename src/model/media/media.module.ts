@@ -19,6 +19,7 @@ import { MediaBundleService } from "./services/media-bundle.service";
 import { InquiryModule } from "../inquiry/inquiry.module";
 import { InquiryResponseImageEntity } from "./entities/inquiry-response-image.entity";
 import { InquiryResponseVideoEntity } from "./entities/inquiry-response-video.entity";
+import { mediaSelectProperty } from "src/common/config/repository-select-configs/media-select";
 
 @Module({
   imports: [
@@ -42,6 +43,10 @@ import { InquiryResponseVideoEntity } from "./entities/inquiry-response-video.en
     MediaVersionOneOnlyAdminController,
   ],
   providers: [
+    {
+      provide: "MediaSelectProperty",
+      useValue: mediaSelectProperty,
+    },
     MediaGeneralService,
     MediaAccessoryService,
     MediaBundleService,
