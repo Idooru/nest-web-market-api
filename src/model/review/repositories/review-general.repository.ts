@@ -4,7 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ModifyReviewDto } from "../dto/modify-review.dto";
 import { CreateReviewDao } from "../dto/create-review.dto";
-import { ReviewSelectProperty } from "src/common/config/repository-select-configs/review-select";
+import { ReviewSelectProperty } from "src/common/config/repository-select-configs/review.select";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder-builder";
 

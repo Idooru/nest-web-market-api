@@ -20,7 +20,7 @@ import { StarRateInsertRepository } from "./repositories/star-rate-insert.reposi
 import { ReviewInsertRepository } from "./repositories/review-insert.repository";
 import { ReviewAccessoryService } from "./services/review-accessory.service";
 import { ReviewBundleService } from "./services/review-bundle.service";
-import { reviewSelectProperty } from "src/common/config/repository-select-configs/review-select";
+import { reviewSelectProperty } from "src/common/config/repository-select-configs/review.select";
 
 @Module({
   imports: [

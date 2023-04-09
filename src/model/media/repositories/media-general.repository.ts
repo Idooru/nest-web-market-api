@@ -5,7 +5,7 @@ import { ProductImageEntity } from "../entities/product.image.entity";
 import { ReviewImageEntity } from "../entities/review.image.entity";
 import { ReviewVideoEntity } from "../entities/review.video.entity";
 import { Repository } from "typeorm";
-import { MediaSelectProperty } from "src/common/config/repository-select-configs/media-select";
+import { MediaSelectProperty } from "src/common/config/repository-select-configs/media.select";
 import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
 import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
