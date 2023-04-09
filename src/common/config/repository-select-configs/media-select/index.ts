@@ -1,4 +1,14 @@
-export const mediaSelectProperty = {
+export interface MediaSelectProperty {
+  productImagesSelect: string[];
+  reviewImagesSelect: string[];
+  reviewVideosSelect: string[];
+  inquiryRequestImagesSelect: string[];
+  inquiryRequestVideoesSelect: string[];
+  inquiryResponseImagesSelect: string[];
+  inquiryResponseVideosSelect: string[];
+}
+
+export const mediaSelectProperty: MediaSelectProperty = {
   productImagesSelect: [
     "productImage.id",
     "productImage.url",
