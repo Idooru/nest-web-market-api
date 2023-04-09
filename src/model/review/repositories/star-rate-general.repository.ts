@@ -1,15 +1,18 @@
 import { Repository } from "typeorm";
 import { StarRateEntity } from "../entities/star-rate.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder-builder";
+import { ReviewSelectProperty } from "src/common/config/repository-select-configs/review-select";
 
 @Injectable()
 export class StarRateGeneralRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(StarRateEntity)
     private readonly starRateRepository: Repository<StarRateEntity>,
+    @Inject("ReviewSelectProperty")
+    private readonly select: ReviewSelectProperty,
     private readonly errorHandlerBuilder: ErrorHandlerBuilder<unknown>,
   ) {
     super();
@@ -121,7 +124,7 @@ export class StarRateGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.starRateRepository
         .createQueryBuilder()
-        .select(["starRate"])
+        .select(this.select.starRateSelect)
         .from(StarRateEntity, "starRate")
         .where("starRate.id = :id", { id: StarRateId })
         .getOneOrFail();
