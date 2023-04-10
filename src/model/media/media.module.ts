@@ -20,6 +20,9 @@ import { InquiryModule } from "../inquiry/inquiry.module";
 import { InquiryResponseImageEntity } from "./entities/inquiry-response-image.entity";
 import { InquiryResponseVideoEntity } from "./entities/inquiry-response-video.entity";
 import { mediaSelectProperty } from "src/common/config/repository-select-configs/media.select";
+import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
+import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
+import { productMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
 
 @Module({
   imports: [
@@ -43,6 +46,18 @@ import { mediaSelectProperty } from "src/common/config/repository-select-configs
     MediaVersionOneOnlyAdminController,
   ],
   providers: [
+    {
+      provide: "ProductMediaCookieKey",
+      useValue: productMediaCookieKey,
+    },
+    {
+      provide: "ReviewMediaCookieKey",
+      useValue: reviewMediaCookieKey,
+    },
+    {
+      provide: "InquiryMediaCookieKey",
+      useValue: inquiryMediaCookieKey,
+    },
     {
       provide: "MediaSelectProperty",
       useValue: mediaSelectProperty,

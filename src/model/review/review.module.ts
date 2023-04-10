@@ -21,6 +21,8 @@ import { ReviewInsertRepository } from "./repositories/review-insert.repository"
 import { ReviewAccessoryService } from "./services/review-accessory.service";
 import { ReviewBundleService } from "./services/review-bundle.service";
 import { reviewSelectProperty } from "src/common/config/repository-select-configs/review.select";
+import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
+import { reviewVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/review-verify-cookie.key";
 
 @Module({
   imports: [
@@ -37,6 +39,14 @@ import { reviewSelectProperty } from "src/common/config/repository-select-config
     ReviewVersionOneVerifyController,
   ],
   providers: [
+    {
+      provide: "ReviewMediaCookieKey",
+      useValue: reviewMediaCookieKey,
+    },
+    {
+      provide: "ReviewVerifyCookieKey",
+      useValue: reviewVerifyCookieKey,
+    },
     {
       provide: "ReviewSelectProperty",
       useValue: reviewSelectProperty,

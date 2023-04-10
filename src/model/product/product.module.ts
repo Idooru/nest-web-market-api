@@ -18,6 +18,8 @@ import { ProductVerifyRepository } from "./repositories/product-verify.repositor
 import { ProductInsertRepository } from "./repositories/product-insert.repository";
 import { ProductAccessoryService } from "./services/product-accessory.service";
 import { productSelectProperty } from "src/common/config/repository-select-configs/product.select";
+import { productMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
+import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
 
 @Module({
   imports: [
@@ -35,6 +37,14 @@ import { productSelectProperty } from "src/common/config/repository-select-confi
     ProductVersionOneVerfiyController,
   ],
   providers: [
+    {
+      provide: "ProductVerifyCookieKey",
+      useValue: productVerifyCookieKey,
+    },
+    {
+      provide: "ProductMediaCookieKey",
+      useValue: productMediaCookieKey,
+    },
     {
       provide: "ProductsSelectProperty",
       useValue: productSelectProperty,

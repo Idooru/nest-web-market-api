@@ -19,6 +19,7 @@ import { AdminUserEntity } from "./entities/admin-user.entity";
 import { UserEntity } from "./entities/user.entity";
 import { UserInsertRepository } from "./repositories/user-insert.repository";
 import { userSelectProperty } from "src/common/config/repository-select-configs/user.select";
+import { userVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/user-verify-cookie.key";
 
 @Module({
   imports: [
@@ -41,6 +42,10 @@ import { userSelectProperty } from "src/common/config/repository-select-configs/
     UserVersionOneVerifyController,
   ],
   providers: [
+    {
+      provide: "UserVerifyCookieKey",
+      useValue: userVerifyCookieKey,
+    },
     {
       provide: "UserSelectProperty",
       useValue: userSelectProperty,
