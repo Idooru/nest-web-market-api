@@ -21,7 +21,6 @@ import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
 import { IsNotLoginGuard } from "../../../../common/guards/authenticate/is-not-login.guard";
 import { IsRefreshTokenAvailableGuard } from "src/common/guards/authenticate/is-refresh-token-available.guard";
 import { JwtRefreshTokenPayload } from "src/model/auth/jwt/jwt-refresh-token-payload.interface";
-import { verifyCookieKeys } from "src/common/config/cookie-key-configs";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JsonGeneralInterface } from "src/common/interceptors/general/interface/json-general-interface";
 import { JsonJwtAuthInterface } from "src/common/interceptors/general/interface/json-jwt-auth.interface";
@@ -31,6 +30,7 @@ import { JsonJwtLogoutInterface } from "src/common/interceptors/general/interfac
 import { RegisterUserDto } from "../../dtos/register-user.dto";
 import { UserEntity } from "../../entities/user.entity";
 import { VerifyDataGuard } from "src/common/guards/verify/verify-data.guard";
+import { userVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/user-verify-cookie.key";
 
 @Controller("/api/v1/free-use/user")
 export class UserVersionOneFreeUseController {
@@ -42,9 +42,9 @@ export class UserVersionOneFreeUseController {
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(
     new VerifyDataGuard(
-      verifyCookieKeys.user.is_not_exist.email_executed,
-      verifyCookieKeys.user.is_not_exist.nickname_executed,
-      verifyCookieKeys.user.is_not_exist.phonenumber_executed,
+      userVerifyCookieKey.is_not_exist.email_executed,
+      userVerifyCookieKey.is_not_exist.nickname_executed,
+      userVerifyCookieKey.is_not_exist.phonenumber_executed,
     ),
   )
   @UseGuards(IsNotLoginGuard)
@@ -142,9 +142,9 @@ export class UserVersionOneFreeUseController {
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(
     new VerifyDataGuard(
-      verifyCookieKeys.user.is_not_exist.email_executed,
-      verifyCookieKeys.user.is_not_exist.nickname_executed,
-      verifyCookieKeys.user.is_not_exist.phonenumber_executed,
+      userVerifyCookieKey.is_not_exist.email_executed,
+      userVerifyCookieKey.is_not_exist.nickname_executed,
+      userVerifyCookieKey.is_not_exist.phonenumber_executed,
     ),
   )
   @UseGuards(IsLoginGuard)
@@ -163,7 +163,7 @@ export class UserVersionOneFreeUseController {
 
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(
-    new VerifyDataGuard(verifyCookieKeys.user.is_not_exist.email_executed),
+    new VerifyDataGuard(userVerifyCookieKey.is_not_exist.email_executed),
   )
   @UseGuards(IsLoginGuard)
   @Patch("/me/email")
@@ -181,7 +181,7 @@ export class UserVersionOneFreeUseController {
 
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(
-    new VerifyDataGuard(verifyCookieKeys.user.is_not_exist.nickname_executed),
+    new VerifyDataGuard(userVerifyCookieKey.is_not_exist.nickname_executed),
   )
   @UseGuards(IsLoginGuard)
   @Patch("/me/nickname")
@@ -202,9 +202,7 @@ export class UserVersionOneFreeUseController {
 
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(
-    new VerifyDataGuard(
-      verifyCookieKeys.user.is_not_exist.phonenumber_executed,
-    ),
+    new VerifyDataGuard(userVerifyCookieKey.is_not_exist.phonenumber_executed),
   )
   @UseGuards(IsLoginGuard)
   @Patch("/me/phonenumber")
@@ -242,7 +240,7 @@ export class UserVersionOneFreeUseController {
   }
 
   @UseInterceptors(JsonJwtLogoutInterceptor)
-  @UseGuards(new VerifyDataGuard(verifyCookieKeys.user.is_exist.id_executed))
+  @UseGuards(new VerifyDataGuard(userVerifyCookieKey.is_exist.id_executed))
   @UseGuards(IsLoginGuard)
   @Delete("/secession")
   async secession(
@@ -260,8 +258,8 @@ export class UserVersionOneFreeUseController {
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(
     new VerifyDataGuard(
-      verifyCookieKeys.user.is_exist.realname_executed,
-      verifyCookieKeys.user.is_exist.phonenumber_executed,
+      userVerifyCookieKey.is_exist.realname_executed,
+      userVerifyCookieKey.is_exist.phonenumber_executed,
     ),
   )
   @UseGuards(IsNotLoginGuard)
@@ -280,7 +278,7 @@ export class UserVersionOneFreeUseController {
   }
 
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(new VerifyDataGuard(verifyCookieKeys.user.is_exist.email_executed))
+  @UseGuards(new VerifyDataGuard(userVerifyCookieKey.is_exist.email_executed))
   @UseGuards(IsNotLoginGuard)
   @Patch("/reset-password")
   async resetPassword(

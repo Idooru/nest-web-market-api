@@ -6,7 +6,6 @@ import {
   Param,
   Delete,
 } from "@nestjs/common";
-import { verifyCookieKeys } from "src/common/config/cookie-key-configs";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { VerifyDataGuard } from "src/common/guards/verify/verify-data.guard";
@@ -14,6 +13,7 @@ import { JsonGeneralInterface } from "src/common/interceptors/general/interface/
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { UserEntity } from "../../entities/user.entity";
 import { UserGeneralService } from "../../services/user-general.service";
+import { userVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/user-verify-cookie.key";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
@@ -56,7 +56,7 @@ export class UserVersionOneOnlyAdminController {
   }
 
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(new VerifyDataGuard(verifyCookieKeys.user.is_exist.id_executed))
+  @UseGuards(new VerifyDataGuard(userVerifyCookieKey.is_exist.id_executed))
   @Delete("/:id")
   async kickUser(
     @Param("id") userId: string,

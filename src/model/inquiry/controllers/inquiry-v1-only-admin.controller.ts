@@ -6,10 +6,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
-import {
-  mediaCookieKeys,
-  verifyCookieKeys,
-} from "src/common/config/cookie-key-configs";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
@@ -25,6 +21,8 @@ import { InquiryResponseDto } from "../dto/response/inquiry-response.dto";
 import { InquiryResponseBundleService } from "../services/response/inquiry-response-bundle.service";
 import { InquiryResponseGeneralService } from "../services/response/inquiry-response-general.service";
 import { SendEmailLibrary } from "src/common/lib/email/send-email-library";
+import { inquiryVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/inquiry-verify-cookie.key";
+import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
@@ -38,15 +36,15 @@ export class InquiryVersionOneOnlyAdminController {
 
   @UseInterceptors(JsonClearCookiesInterceptor)
   @UseGuards(
-    new VerifyDataGuard(verifyCookieKeys.inquiry.response.is_exist.id_executed),
+    new VerifyDataGuard(inquiryVerifyCookieKey.response.is_exist.id_executed),
   )
   @Post("/inquiry-request/:inquiryRequestId/user/:userId/image&video")
   async createInquiryResponseWithImageAndVideo(
     @Param("inquiryRequestId") inquiryRequestId: string,
     @Param("userId") userId: string,
-    @MediaCookiesParser(mediaCookieKeys.inquiry.response.image_url_cookie)
+    @MediaCookiesParser(inquiryMediaCookieKey.response.image_url_cookie)
     inquiryResponseImgCookies: MediaDto[],
-    @MediaCookiesParser(mediaCookieKeys.inquiry.response.video_url_cookie)
+    @MediaCookiesParser(inquiryMediaCookieKey.response.video_url_cookie)
     inquiryResponseVdoCookies: MediaDto[],
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
     @Body() inquiryResponseDto: InquiryResponseDto,
@@ -102,13 +100,13 @@ export class InquiryVersionOneOnlyAdminController {
 
   @UseInterceptors(JsonClearCookiesInterceptor)
   @UseGuards(
-    new VerifyDataGuard(verifyCookieKeys.inquiry.response.is_exist.id_executed),
+    new VerifyDataGuard(inquiryVerifyCookieKey.response.is_exist.id_executed),
   )
   @Post("/inquiry-request/:inquiryRequestId/user/:userId/image")
   async createInquiryWithImage(
     @Param("inquiryRequestId") inquiryRequestId: string,
     @Param("userId") userId: string,
-    @MediaCookiesParser(mediaCookieKeys.inquiry.response.image_url_cookie)
+    @MediaCookiesParser(inquiryMediaCookieKey.response.image_url_cookie)
     inquiryResponseImgCookies: MediaDto[],
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
     @Body() inquiryResponseDto: InquiryResponseDto,
@@ -161,13 +159,13 @@ export class InquiryVersionOneOnlyAdminController {
 
   @UseInterceptors(JsonClearCookiesInterceptor)
   @UseGuards(
-    new VerifyDataGuard(verifyCookieKeys.inquiry.response.is_exist.id_executed),
+    new VerifyDataGuard(inquiryVerifyCookieKey.response.is_exist.id_executed),
   )
   @Post("/inquiry-request/:inquiryRequestId/user/:userId/video")
   async createInquiryWithVideo(
     @Param("inquiryRequestId") inquiryRequestId: string,
     @Param("userId") userId: string,
-    @MediaCookiesParser(mediaCookieKeys.inquiry.response.video_url_cookie)
+    @MediaCookiesParser(inquiryMediaCookieKey.response.video_url_cookie)
     inquiryResponseVdoCookies: MediaDto[],
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
     @Body() inquiryResponseDto: InquiryResponseDto,
@@ -220,7 +218,7 @@ export class InquiryVersionOneOnlyAdminController {
 
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(
-    new VerifyDataGuard(verifyCookieKeys.inquiry.response.is_exist.id_executed),
+    new VerifyDataGuard(inquiryVerifyCookieKey.response.is_exist.id_executed),
   )
   @Post("/inquiry-request/:inquiryRequestId/user/:userId")
   async createInquiryWithoutMedia(

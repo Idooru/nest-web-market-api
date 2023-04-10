@@ -6,10 +6,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
-import {
-  mediaCookieKeys,
-  verifyCookieKeys,
-} from "src/common/config/cookie-key-configs";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
@@ -25,6 +21,8 @@ import { InquiryRequestDto } from "../dto/request/inquiry-request.dto";
 import { InquiryRequestBundleService } from "../services/request/inquiry-request-bundle.service";
 import { InquiryRequestGeneralService } from "../services/request/inquiry-request-general.service";
 import { SendEmailLibrary } from "src/common/lib/email/send-email-library";
+import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
+import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)
@@ -37,13 +35,13 @@ export class InquiryVersionOneOnlyClientController {
   ) {}
 
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @UseGuards(new VerifyDataGuard(verifyCookieKeys.product.is_exist.id_executed))
+  @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Post("/product/:productId/image&video")
   async createInquiryRequestWithImageAndVideo(
     @Param("productId") productId: string,
-    @MediaCookiesParser(mediaCookieKeys.inquiry.request.image_url_cookie)
+    @MediaCookiesParser(inquiryMediaCookieKey.request.image_url_cookie)
     inquiryRequestImgCookies: MediaDto[],
-    @MediaCookiesParser(mediaCookieKeys.inquiry.request.video_url_cookie)
+    @MediaCookiesParser(inquiryMediaCookieKey.request.video_url_cookie)
     inquiryRequestVdoCookies: MediaDto[],
     @Body() inquiryRequestDto: InquiryRequestDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
@@ -94,11 +92,11 @@ export class InquiryVersionOneOnlyClientController {
   }
 
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @UseGuards(new VerifyDataGuard(verifyCookieKeys.product.is_exist.id_executed))
+  @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Post("/product/:productId/image")
   async createInquiryWithImage(
     @Param("productId") productId: string,
-    @MediaCookiesParser(mediaCookieKeys.inquiry.request.image_url_cookie)
+    @MediaCookiesParser(inquiryMediaCookieKey.request.image_url_cookie)
     inquiryRequestImgCookies: MediaDto[],
     @Body() inquiryRequestDto: InquiryRequestDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
@@ -146,11 +144,11 @@ export class InquiryVersionOneOnlyClientController {
   }
 
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @UseGuards(new VerifyDataGuard(verifyCookieKeys.product.is_exist.id_executed))
+  @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Post("/product/:productId/video")
   async createInquiryWithVideo(
     @Param("productId") productId: string,
-    @MediaCookiesParser(mediaCookieKeys.inquiry.request.video_url_cookie)
+    @MediaCookiesParser(inquiryMediaCookieKey.request.video_url_cookie)
     inquiryRequestVdoCookies: MediaDto[],
     @Body() inquiryRequestDto: InquiryRequestDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
@@ -198,7 +196,7 @@ export class InquiryVersionOneOnlyClientController {
   }
 
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(new VerifyDataGuard(verifyCookieKeys.product.is_exist.id_executed))
+  @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Post("/product/:productId")
   async createInquiryWithoutMedia(
     @Param("productId") productId: string,
