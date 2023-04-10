@@ -23,6 +23,8 @@ import { InquiryResponseBundleService } from "./services/response/inquiry-respon
 import { InquiryResponseGeneralService } from "./services/response/inquiry-response-general.service";
 import { InquiryResponseEntity } from "./entities/inquiry-response.entity";
 import { inquirySelectProperty } from "src/common/config/repository-select-configs/inquiry.select";
+import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
+import { inquiryVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/inquiry-verify-cookie.key";
 
 @Module({
   imports: [
@@ -41,6 +43,14 @@ import { inquirySelectProperty } from "src/common/config/repository-select-confi
     InquiryVersionOneVerifyController,
   ],
   providers: [
+    {
+      provide: "InquiryMediaCookieKey",
+      useValue: inquiryMediaCookieKey,
+    },
+    {
+      provide: "InquiryVerifyCookieKey",
+      useValue: inquiryVerifyCookieKey,
+    },
     {
       provide: "InquirySelectProperty",
       useValue: inquirySelectProperty,
