@@ -5,12 +5,12 @@ import {
   UseInterceptors,
   UploadedFiles,
   Delete,
+  Inject,
 } from "@nestjs/common";
 import { MulterConfigService } from "src/common/config/multer.config";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { mediaCookieKeys } from "src/common/config/cookie-key-configs";
 import { JsonSendCookiesInterceptor } from "src/common/interceptors/general/json-send-cookies.interceptor";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { JsonSendCookiesInterface } from "src/common/interceptors/general/interface/json-send-cookies.interface";
@@ -23,12 +23,24 @@ import { MediaAccessoryService } from "../services/media-accessory.service";
 import { MediaBundleService } from "../services/media-bundle.service";
 import { MediaDto } from "../dto/media.dto";
 import { MeidaLoggerLibrary } from "src/common/lib/logger/media-logger.library";
+import {
+  ReviewMediaCookieKey,
+  reviewMediaCookieKey,
+} from "src/common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
+import {
+  InquiryMediaCookieKey,
+  inquiryMediaCookieKey,
+} from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)
 @Controller("/api/v1/only-client/media")
 export class MediaVersionOneOnlyClientController {
   constructor(
+    @Inject("ReviewMediaCookieKey")
+    private readonly reviewMedia: ReviewMediaCookieKey,
+    @Inject("InquiryMediaCookieKey")
+    private readonly inquiryMedia: InquiryMediaCookieKey,
     private readonly mediaGeneralService: MediaGeneralService,
     private readonly mediaAccessoryService: MediaAccessoryService,
     private readonly mediaBundleService: MediaBundleService,
@@ -58,7 +70,7 @@ export class MediaVersionOneOnlyClientController {
     await this.mediaGeneralService.uploadReviewImage(files, jwtPayload, urls);
 
     const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
-      mediaCookieKeys.review.image_url_cookie,
+      this.reviewMedia.image_url_cookie,
       files,
       urls,
     );
@@ -66,7 +78,7 @@ export class MediaVersionOneOnlyClientController {
     return {
       statusCode: 201,
       message: "리뷰 사진을 업로드 하였습니다.",
-      cookieKey: mediaCookieKeys.review.image_url_cookie,
+      cookieKey: this.reviewMedia.image_url_cookie,
       cookieValues,
     };
   }
@@ -94,7 +106,7 @@ export class MediaVersionOneOnlyClientController {
     await this.mediaGeneralService.uploadReviewVideo(files, jwtPayload, urls);
 
     const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
-      mediaCookieKeys.review.video_url_cookie,
+      this.reviewMedia.video_url_cookie,
       files,
       urls,
     );
@@ -102,7 +114,7 @@ export class MediaVersionOneOnlyClientController {
     return {
       statusCode: 201,
       message: "리뷰 동영상을 업로드 하였습니다.",
-      cookieKey: mediaCookieKeys.review.video_url_cookie,
+      cookieKey: this.reviewMedia.video_url_cookie,
       cookieValues,
     };
   }
@@ -134,7 +146,7 @@ export class MediaVersionOneOnlyClientController {
     );
 
     const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
-      mediaCookieKeys.inquiry.request.image_url_cookie,
+      this.inquiryMedia.request.image_url_cookie,
       files,
       urls,
     );
@@ -142,7 +154,7 @@ export class MediaVersionOneOnlyClientController {
     return {
       statusCode: 201,
       message: "문의 요청 사진을 업로드 하였습니다.",
-      cookieKey: mediaCookieKeys.inquiry.request.image_url_cookie,
+      cookieKey: this.inquiryMedia.request.image_url_cookie,
       cookieValues,
     };
   }
@@ -174,7 +186,7 @@ export class MediaVersionOneOnlyClientController {
     );
 
     const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
-      mediaCookieKeys.inquiry.request.video_url_cookie,
+      this.inquiryMedia.request.video_url_cookie,
       files,
       urls,
     );
@@ -182,7 +194,7 @@ export class MediaVersionOneOnlyClientController {
     return {
       statusCode: 201,
       message: "문의 요청 동영상을 업로드 하였습니다.",
-      cookieKey: mediaCookieKeys.inquiry.request.video_url_cookie,
+      cookieKey: this.inquiryMedia.request.video_url_cookie,
       cookieValues,
     };
   }
@@ -190,7 +202,7 @@ export class MediaVersionOneOnlyClientController {
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/review/image")
   async cancelReviewImageUpload(
-    @MediaCookiesParser(mediaCookieKeys.review.image_url_cookie)
+    @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
     reviewImgCookies: MediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteReviewImagesWithCookies(
@@ -211,7 +223,7 @@ export class MediaVersionOneOnlyClientController {
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/review/video")
   async cancelReviewVideoUpload(
-    @MediaCookiesParser(mediaCookieKeys.review.video_url_cookie)
+    @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
     reviewVdoCookies: MediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteReviewVideosWithCookies(
@@ -232,7 +244,7 @@ export class MediaVersionOneOnlyClientController {
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/inquiry/request/image")
   async cancelInquiryRequestImageUpload(
-    @MediaCookiesParser(mediaCookieKeys.inquiry.request.image_url_cookie)
+    @MediaCookiesParser(inquiryMediaCookieKey.request.image_url_cookie)
     inquiryRequestImgCookies: MediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteInquiryRequestImagesWithCookies(
@@ -258,7 +270,7 @@ export class MediaVersionOneOnlyClientController {
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/inquiry/request/video")
   async cancelInquiryRequestVideoUpload(
-    @MediaCookiesParser(mediaCookieKeys.inquiry.request.video_url_cookie)
+    @MediaCookiesParser(inquiryMediaCookieKey.request.video_url_cookie)
     inquiryRequestVdoCookies: MediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteInquiryRequestVideosWithCookies(

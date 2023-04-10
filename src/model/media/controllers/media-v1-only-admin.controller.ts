@@ -1,6 +1,7 @@
 import {
   Controller,
   Delete,
+  Inject,
   Post,
   UploadedFile,
   UploadedFiles,
@@ -11,7 +12,6 @@ import { MulterConfigService } from "src/common/config/multer.config";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
-import { mediaCookieKeys } from "../../../common/config/cookie-key-configs";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { JsonSendCookieInterceptor } from "src/common/interceptors/general/json-send-cookie.interceptor";
@@ -29,12 +29,24 @@ import { MediaBundleService } from "../services/media-bundle.service";
 import { JsonClearCookiesInterface } from "src/common/interceptors/general/interface/json-clear-cookies.interface";
 import { MediaDto } from "../dto/media.dto";
 import { MeidaLoggerLibrary } from "src/common/lib/logger/media-logger.library";
+import {
+  InquiryMediaCookieKey,
+  inquiryMediaCookieKey,
+} from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
+import {
+  ProductMediaCookieKey,
+  productMediaCookieKey,
+} from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
 @Controller("/api/v1/only-admin/media")
 export class MediaVersionOneOnlyAdminController {
   constructor(
+    @Inject("ProductMediaCookieKey")
+    private readonly productMedia: ProductMediaCookieKey,
+    @Inject("InquiryMediaCookieKey")
+    private readonly inquiryMedia: InquiryMediaCookieKey,
     private readonly mediaGeneralService: MediaGeneralService,
     private readonly mediaAccessoryService: MediaAccessoryService,
     private readonly mediaBundleService: MediaBundleService,
@@ -59,14 +71,14 @@ export class MediaVersionOneOnlyAdminController {
     await this.mediaGeneralService.uploadProductImage(file, jwtPayload);
 
     const cookieValue = this.mediaAccessoryService.createMediaCookieValue(
-      mediaCookieKeys.product.image_url_cookie,
+      this.productMedia.image_url_cookie,
       file,
     );
 
     return {
       statusCode: 201,
       message: "상품 사진을 업로드 하였습니다.",
-      cookieKey: mediaCookieKeys.product.image_url_cookie,
+      cookieKey: this.productMedia.image_url_cookie,
       cookieValue,
     };
   }
@@ -101,7 +113,7 @@ export class MediaVersionOneOnlyAdminController {
     );
 
     const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
-      mediaCookieKeys.inquiry.response.image_url_cookie,
+      this.inquiryMedia.response.image_url_cookie,
       files,
       urls,
     );
@@ -109,7 +121,7 @@ export class MediaVersionOneOnlyAdminController {
     return {
       statusCode: 201,
       message: "문의 응답 사진을 업로드 하였습니다.",
-      cookieKey: mediaCookieKeys.inquiry.response.image_url_cookie,
+      cookieKey: this.inquiryMedia.response.image_url_cookie,
       cookieValues,
     };
   }
@@ -144,7 +156,7 @@ export class MediaVersionOneOnlyAdminController {
     );
 
     const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
-      mediaCookieKeys.inquiry.response.video_url_cookie,
+      this.inquiryMedia.response.video_url_cookie,
       files,
       urls,
     );
@@ -152,7 +164,7 @@ export class MediaVersionOneOnlyAdminController {
     return {
       statusCode: 201,
       message: "문의 응답 동영상을 업로드 하였습니다.",
-      cookieKey: mediaCookieKeys.inquiry.response.video_url_cookie,
+      cookieKey: this.inquiryMedia.response.video_url_cookie,
       cookieValues,
     };
   }
@@ -160,7 +172,7 @@ export class MediaVersionOneOnlyAdminController {
   @UseInterceptors(JsonClearCookieInterceptor)
   @Delete("/product/image")
   async cancelImageUploadForProduct(
-    @MediaCookieParser(mediaCookieKeys.product.image_url_cookie)
+    @MediaCookieParser(productMediaCookieKey.image_url_cookie)
     productImgCookie: MediaDto,
   ): Promise<JsonClearCookieInterface> {
     await this.mediaGeneralService.deleteProductImageWithCookies(
@@ -182,7 +194,7 @@ export class MediaVersionOneOnlyAdminController {
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/inquiry/response/image")
   async cancelInquiryResponseImageUpload(
-    @MediaCookiesParser(mediaCookieKeys.inquiry.response.image_url_cookie)
+    @MediaCookiesParser(inquiryMediaCookieKey.response.image_url_cookie)
     inquiryResponseImgCookies: MediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteInquiryResponseImagesWithCookies(
@@ -208,7 +220,7 @@ export class MediaVersionOneOnlyAdminController {
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/inquiry/response/video")
   async cancelInquiryResponseVideoUpload(
-    @MediaCookiesParser(mediaCookieKeys.inquiry.response.video_url_cookie)
+    @MediaCookiesParser(inquiryMediaCookieKey.response.video_url_cookie)
     inquiryResponseVdoCookies: MediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteInquiryResponseVideosWithCookies(

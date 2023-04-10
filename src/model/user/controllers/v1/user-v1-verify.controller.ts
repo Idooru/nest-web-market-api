@@ -1,14 +1,21 @@
-import { Controller, Get, Param, UseInterceptors } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Inject,
+  Param,
+  UseInterceptors,
+} from "@nestjs/common";
 import { UserVerifyService } from "../../services/user-verify.service";
 import { SendVerifyCookieInterceptor } from "src/common/interceptors/verify/send-verify-cookie.interceptor";
 import { VerifyDataDto } from "src/common/interceptors/verify/verify-data.dto";
-import { verifyCookieKeys } from "src/common/config/cookie-key-configs";
+import { UserVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/user-verify-cookie.key";
 
 @Controller("/api/v1/verify/user")
 export class UserVersionOneVerifyController {
-  constructor(private readonly userVerifyService: UserVerifyService) {}
-
-  private readonly userVerifyCookieKey = verifyCookieKeys.user;
+  constructor(
+    @Inject("UserVerifyCookieKey") private readonly verify: UserVerifyCookieKey,
+    private readonly userVerifyService: UserVerifyService,
+  ) {}
 
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/existent/id/:id")
@@ -17,7 +24,7 @@ export class UserVersionOneVerifyController {
 
     return {
       message: "해당 사용자가 데이터베이스에 존재하는 것이 확인되었습니다.",
-      setCookieKey: this.userVerifyCookieKey.is_exist.id_executed,
+      setCookieKey: this.verify.is_exist.id_executed,
     };
   }
 
@@ -30,7 +37,7 @@ export class UserVersionOneVerifyController {
 
     return {
       message: "해당 이메일이 데이터베이스에 존재하는 것이 확인되었습니다.",
-      setCookieKey: this.userVerifyCookieKey.is_exist.email_executed,
+      setCookieKey: this.verify.is_exist.email_executed,
     };
   }
 
@@ -44,7 +51,7 @@ export class UserVersionOneVerifyController {
     return {
       message:
         "해당 이메일이 데이터베이스에 존재하지 않는 것이 확인되었습니다.",
-      setCookieKey: this.userVerifyCookieKey.is_not_exist.email_executed,
+      setCookieKey: this.verify.is_not_exist.email_executed,
     };
   }
 
@@ -57,7 +64,7 @@ export class UserVersionOneVerifyController {
 
     return {
       message: "해당 실명이 데이터베이스에 존재하는 것이 확인되었습니다.",
-      setCookieKey: this.userVerifyCookieKey.is_exist.realname_executed,
+      setCookieKey: this.verify.is_exist.realname_executed,
     };
   }
 
@@ -71,7 +78,7 @@ export class UserVersionOneVerifyController {
     return {
       message:
         "해당 닉네임이 데이터베이스에 존재하지 않는 것이 확인되었습니다.",
-      setCookieKey: this.userVerifyCookieKey.is_not_exist.nickname_executed,
+      setCookieKey: this.verify.is_not_exist.nickname_executed,
     };
   }
 
@@ -84,7 +91,7 @@ export class UserVersionOneVerifyController {
 
     return {
       message: "해당 전화번호가 데이터베이스에 존재하는 것이 확인되었습니다.",
-      setCookieKey: this.userVerifyCookieKey.is_exist.phonenumber_executed,
+      setCookieKey: this.verify.is_exist.phonenumber_executed,
     };
   }
 
@@ -98,7 +105,7 @@ export class UserVersionOneVerifyController {
     return {
       message:
         "해당 전화번호가 데이터베이스에 존재하지 않는 것이 확인되었습니다.",
-      setCookieKey: this.userVerifyCookieKey.is_not_exist.phonenumber_executed,
+      setCookieKey: this.verify.is_not_exist.phonenumber_executed,
     };
   }
 }
