@@ -6,15 +6,19 @@ export class ResponseLoggerMiddleware implements NestMiddleware {
     res.on("finish", () => {
       const { ip, originalUrl, method } = req;
       const { statusCode, statusMessage } = res;
-      const logger = new Logger(originalUrl);
+      let logger: Logger;
+
       if (400 <= statusCode || statusCode >= 599) {
-        const logger = new Logger(`${res.statusMessage}`);
-        return logger.error(`${method} ${originalUrl}`);
+        logger = new Logger(`${res.statusMessage}`);
+        logger.error(`${method} ${originalUrl}`);
+      } else {
+        logger = new Logger("Success");
+        logger.log(
+          `${method} ${originalUrl} ${ip} - ${statusCode} ${statusMessage}`,
+        );
       }
-      return logger.log(
-        `${method} ${originalUrl} ${ip} - ${statusCode} ${statusMessage}`,
-      );
     });
+
     next();
   }
 }
