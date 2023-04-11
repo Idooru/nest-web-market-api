@@ -36,6 +36,31 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
     super();
   }
 
+  async findUploadedProductImage(
+    email: string,
+    url: string,
+  ): Promise<ProductImageEntity> {
+    try {
+      return await this.productImageRepository
+        .createQueryBuilder()
+        .select(this.select.productImages)
+        .from(ProductImageEntity, "productImage")
+        .where("productImage.url = :url", { url })
+        .andWhere("productImage.uploader = :uploader", { uploader: email })
+        .getOneOrFail();
+    } catch (err) {
+      this.methodName = this.findUploadedProductImage.name;
+      this.errorHandlerBuilder
+        .setEntity(new ProductImageEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setStuffs(email, "이메일")
+        .setStuffs(url, "url")
+        .setLayer("repository")
+        .handle();
+    }
+  }
+
   async uploadProductImage(uploadMediaDto: UploadMediaDto): Promise<void> {
     try {
       await this.productImageRepository

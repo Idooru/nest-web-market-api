@@ -1,6 +1,7 @@
 import {
   Controller,
   Delete,
+  Get,
   Inject,
   Post,
   UploadedFile,
@@ -37,6 +38,9 @@ import {
   ProductMediaCookieKey,
   productMediaCookieKey,
 } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
+import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
+import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
+import { ProductImageEntity } from "../entities/product.image.entity";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
@@ -52,6 +56,26 @@ export class MediaVersionOneOnlyAdminController {
     private readonly mediaBundleService: MediaBundleService,
     private readonly mediaLoggerLibrary: MeidaLoggerLibrary,
   ) {}
+
+  @UseInterceptors(JsonGeneralInterceptor)
+  @Get("/product/image")
+  async findUploadedProductImage(
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
+    @MediaCookieParser(productMediaCookieKey.image_url_cookie)
+    productImgCookie: MediaDto,
+  ): Promise<JsonGeneralInterface<ProductImageEntity>> {
+    const productImage =
+      await this.mediaGeneralService.findUploadedProductImage(
+        jwtPayload.email,
+        productImgCookie.url,
+      );
+
+    return {
+      statusCode: 200,
+      message: "현재 업로드된 상품 이미지를 가져옵니다.",
+      result: productImage,
+    };
+  }
 
   @UseInterceptors(JsonSendCookieInterceptor)
   @UseInterceptors(

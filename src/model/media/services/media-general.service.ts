@@ -4,6 +4,7 @@ import { UserGeneralRepository } from "src/model/user/repositories/user-general.
 import { MediaGeneralRepository } from "../repositories/media-general.repository";
 import { MediaAccessoryService } from "./media-accessory.service";
 import { MediaDto } from "../dto/media.dto";
+import { ProductImageEntity } from "../entities/product.image.entity";
 
 @Injectable()
 export class MediaGeneralService {
@@ -12,6 +13,16 @@ export class MediaGeneralService {
     private readonly userGeneralRepository: UserGeneralRepository,
     private readonly mediaAccessoryService: MediaAccessoryService,
   ) {}
+
+  async findUploadedProductImage(
+    email: string,
+    url: string,
+  ): Promise<ProductImageEntity> {
+    return await this.mediaGeneralRepository.findUploadedProductImage(
+      email,
+      url,
+    );
+  }
 
   async uploadProductImage(
     file: Express.Multer.File,
