@@ -7,7 +7,7 @@ import {
 } from "@nestjs/common";
 import { UserVerifyService } from "../../services/user-verify.service";
 import { SendVerifyCookieInterceptor } from "src/common/interceptors/verify/send-verify-cookie.interceptor";
-import { VerifyDataDto } from "src/common/interceptors/verify/verify-data.dto";
+import { VerifyDataInterface } from "src/common/interceptors/verify/verify-data.dto";
 import { UserVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/user-verify-cookie.key";
 
 @Controller("/api/v1/verify/user")
@@ -19,7 +19,9 @@ export class UserVersionOneVerifyController {
 
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/existent/id/:id")
-  async isExistUserId(@Param("id") userId: string): Promise<VerifyDataDto> {
+  async isExistUserId(
+    @Param("id") userId: string,
+  ): Promise<VerifyDataInterface> {
     await this.userVerifyService.isExistUserId(userId);
 
     return {
@@ -32,7 +34,7 @@ export class UserVersionOneVerifyController {
   @Get("/existent/email/:email")
   async isExistUserEmail(
     @Param("email") email: string,
-  ): Promise<VerifyDataDto> {
+  ): Promise<VerifyDataInterface> {
     await this.userVerifyService.isExistUserEmail(email);
 
     return {
@@ -45,7 +47,7 @@ export class UserVersionOneVerifyController {
   @Get("/none-existent/email/:email")
   async isNotExistUserEmail(
     @Param("email") email: string,
-  ): Promise<VerifyDataDto> {
+  ): Promise<VerifyDataInterface> {
     await this.userVerifyService.isNotExistUserEmail(email);
 
     return {
@@ -59,7 +61,7 @@ export class UserVersionOneVerifyController {
   @Get("/existent/realname/:realname")
   async isExistUserRealName(
     @Param("realname") realname: string,
-  ): Promise<VerifyDataDto> {
+  ): Promise<VerifyDataInterface> {
     await this.userVerifyService.isExistUserRealName(realname);
 
     return {
@@ -72,7 +74,7 @@ export class UserVersionOneVerifyController {
   @Get("/none-existent/nickname/:nickname")
   async isNotExistUserNickName(
     @Param("nickname") nickname: string,
-  ): Promise<VerifyDataDto> {
+  ): Promise<VerifyDataInterface> {
     await this.userVerifyService.isNotExistUserNickName(nickname);
 
     return {
@@ -86,7 +88,7 @@ export class UserVersionOneVerifyController {
   @Get("/existent/phonenumber/:phonenumber")
   async isExistUserPhoneNumber(
     @Param("phonenumber") phonenumber: string,
-  ): Promise<VerifyDataDto> {
+  ): Promise<VerifyDataInterface> {
     await this.userVerifyService.isExistUserPhoneNumber(phonenumber);
 
     return {
@@ -99,7 +101,7 @@ export class UserVersionOneVerifyController {
   @Get("/none-existent/phonenumber/:phonenumber")
   async isNotExistUserPhoneNumber(
     @Param("phonenumber") phonenumber: string,
-  ): Promise<VerifyDataDto> {
+  ): Promise<VerifyDataInterface> {
     await this.userVerifyService.isNotExistUserPhoneNumber(phonenumber);
 
     return {

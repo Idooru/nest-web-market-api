@@ -1,4 +1,4 @@
-export class VerifyDataDto {
+export class VerifyDataInterface {
   message: string;
   setCookieKey: string;
 }

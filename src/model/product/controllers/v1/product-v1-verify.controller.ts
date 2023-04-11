@@ -6,7 +6,7 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { SendVerifyCookieInterceptor } from "src/common/interceptors/verify/send-verify-cookie.interceptor";
-import { VerifyDataDto } from "src/common/interceptors/verify/verify-data.dto";
+import { VerifyDataInterface } from "src/common/interceptors/verify/verify-data.dto";
 import { ProductVerifyService } from "../../services/product-verify.service";
 import { ProductVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
 
@@ -20,7 +20,9 @@ export class ProductVersionOneVerfiyController {
 
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/existent/id/:id")
-  async isExistProductId(@Param("id") id: string): Promise<VerifyDataDto> {
+  async isExistProductId(
+    @Param("id") id: string,
+  ): Promise<VerifyDataInterface> {
     await this.productVerifyService.isExistProductId(id);
 
     return {
@@ -34,7 +36,7 @@ export class ProductVersionOneVerfiyController {
   @Get("/none-existent/name/:name")
   async isNotExistProductName(
     @Param("name") name: string,
-  ): Promise<VerifyDataDto> {
+  ): Promise<VerifyDataInterface> {
     await this.productVerifyService.isNotExistProductName(name);
 
     return {
