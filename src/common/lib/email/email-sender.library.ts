@@ -7,7 +7,7 @@ import { SendMailToAdminAboutInquiryRequestDto } from "src/model/inquiry/dto/req
 import { ErrorHandlerBuilder } from "../error-handler/error-hanlder-builder";
 
 @Injectable()
-export class SendEmailLibrary extends ErrorHandlerProps {
+export class EmailSenderLibrary extends ErrorHandlerProps {
   constructor(
     private readonly configService: ConfigService,
     private readonly mailerService: MailerService,

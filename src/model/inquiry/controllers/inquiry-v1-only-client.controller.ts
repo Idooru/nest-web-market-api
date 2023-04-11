@@ -20,7 +20,7 @@ import { MediaDto } from "src/model/media/dto/media.dto";
 import { InquiryRequestDto } from "../dto/request/inquiry-request.dto";
 import { InquiryRequestBundleService } from "../services/request/inquiry-request-bundle.service";
 import { InquiryRequestGeneralService } from "../services/request/inquiry-request-general.service";
-import { SendEmailLibrary } from "src/common/lib/email/send-email-library";
+import { EmailSenderLibrary } from "src/common/lib/email/email-sender.library";
 import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
 import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 
@@ -31,7 +31,7 @@ export class InquiryVersionOneOnlyClientController {
   constructor(
     private readonly inquiryRequestGeneralService: InquiryRequestGeneralService,
     private readonly inquiryRequestBundleService: InquiryRequestBundleService,
-    private readonly sendEmailLibrary: SendEmailLibrary,
+    private readonly EmailSenderLibrary: EmailSenderLibrary,
   ) {}
 
   @UseInterceptors(JsonClearCookiesInterceptor)
@@ -72,7 +72,7 @@ export class InquiryVersionOneOnlyClientController {
       const [product, inquiryRequest] =
         await this.inquiryRequestBundleService.findStuffForEmail(productId);
 
-      await this.sendEmailLibrary.sendMailToAdminAboutInquiryRequest({
+      await this.EmailSenderLibrary.sendMailToAdminAboutInquiryRequest({
         product,
         inquiryRequest,
       });
@@ -125,7 +125,7 @@ export class InquiryVersionOneOnlyClientController {
       const [product, inquiryRequest] =
         await this.inquiryRequestBundleService.findStuffForEmail(productId);
 
-      await this.sendEmailLibrary.sendMailToAdminAboutInquiryRequest({
+      await this.EmailSenderLibrary.sendMailToAdminAboutInquiryRequest({
         product,
         inquiryRequest,
       });
@@ -177,7 +177,7 @@ export class InquiryVersionOneOnlyClientController {
       const [product, inquiryRequest] =
         await this.inquiryRequestBundleService.findStuffForEmail(productId);
 
-      await this.sendEmailLibrary.sendMailToAdminAboutInquiryRequest({
+      await this.EmailSenderLibrary.sendMailToAdminAboutInquiryRequest({
         product,
         inquiryRequest,
       });
@@ -213,7 +213,7 @@ export class InquiryVersionOneOnlyClientController {
       const [product, inquiryRequest] =
         await this.inquiryRequestBundleService.findStuffForEmail(productId);
 
-      await this.sendEmailLibrary.sendMailToAdminAboutInquiryRequest({
+      await this.EmailSenderLibrary.sendMailToAdminAboutInquiryRequest({
         product,
         inquiryRequest,
       });

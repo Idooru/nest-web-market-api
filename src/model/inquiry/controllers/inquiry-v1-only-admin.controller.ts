@@ -20,7 +20,7 @@ import { MediaDto } from "src/model/media/dto/media.dto";
 import { InquiryResponseDto } from "../dto/response/inquiry-response.dto";
 import { InquiryResponseBundleService } from "../services/response/inquiry-response-bundle.service";
 import { InquiryResponseGeneralService } from "../services/response/inquiry-response-general.service";
-import { SendEmailLibrary } from "src/common/lib/email/send-email-library";
+import { EmailSenderLibrary } from "src/common/lib/email/email-sender.library";
 import { inquiryVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/inquiry-verify-cookie.key";
 import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 
@@ -31,7 +31,7 @@ export class InquiryVersionOneOnlyAdminController {
   constructor(
     private readonly inquiryResponseGeneralService: InquiryResponseGeneralService,
     private readonly inquiryResponseBundleService: InquiryResponseBundleService,
-    private readonly sendEmailLibrary: SendEmailLibrary,
+    private readonly EmailSenderLibrary: EmailSenderLibrary,
   ) {}
 
   @UseInterceptors(JsonClearCookiesInterceptor)
@@ -79,7 +79,7 @@ export class InquiryVersionOneOnlyAdminController {
           inquiryRequestId,
         );
 
-      await this.sendEmailLibrary.sendMailToClientAboutInquiryResponse({
+      await this.EmailSenderLibrary.sendMailToClientAboutInquiryResponse({
         user,
         inquiryRequest,
         inquiryResponse,
@@ -139,7 +139,7 @@ export class InquiryVersionOneOnlyAdminController {
           inquiryRequestId,
         );
 
-      await this.sendEmailLibrary.sendMailToClientAboutInquiryResponse({
+      await this.EmailSenderLibrary.sendMailToClientAboutInquiryResponse({
         user,
         inquiryRequest,
         inquiryResponse,
@@ -198,7 +198,7 @@ export class InquiryVersionOneOnlyAdminController {
           inquiryRequestId,
         );
 
-      await this.sendEmailLibrary.sendMailToClientAboutInquiryResponse({
+      await this.EmailSenderLibrary.sendMailToClientAboutInquiryResponse({
         user,
         inquiryRequest,
         inquiryResponse,
@@ -241,7 +241,7 @@ export class InquiryVersionOneOnlyAdminController {
           inquiryRequestId,
         );
 
-      await this.sendEmailLibrary.sendMailToClientAboutInquiryResponse({
+      await this.EmailSenderLibrary.sendMailToClientAboutInquiryResponse({
         user,
         inquiryRequest,
         inquiryResponse,
