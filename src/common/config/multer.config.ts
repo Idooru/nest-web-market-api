@@ -6,56 +6,86 @@ import {
 } from "@nestjs/common";
 import { MulterModule } from "@nestjs/platform-express";
 import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
-import * as fs from "fs";
+import { promises as fsPromises } from "fs";
 import * as path from "path";
 import * as multer from "multer";
 
 @Injectable()
 export class MulterConfigService {
-  createMulterOptions(): MulterOptions | Promise<MulterOptions> {
-    MulterConfigService.createFolder();
+  public createMulterOptions(): MulterOptions | Promise<MulterOptions> {
+    this.createFolder();
     return { storage: MulterConfigService.storage, dest: "../../../uploads" };
   }
 
   static maxContentsCount = 5;
+  private readonly logger = new Logger("MulterConfiguration");
+  private readonly inquiry = ["request", "response"];
 
-  static createFolder(): void {
-    const logger = new Logger("MulterConfiguration");
-
+  private async createUploadFolder() {
     try {
-      logger.log("Create uploads folder");
-      fs.mkdirSync(path.join(__dirname, "../../../uploads"));
+      this.logger.log("Create uploads folder");
+      await fsPromises.mkdir(path.join(__dirname, "../../../uploads"));
     } catch (err) {
-      logger.log("uploads folder is already exist");
+      this.logger.log("uploads folder is already exist");
     }
+  }
 
+  private async createImageFolder() {
+    const stuffForImages = ["product", "review", "inquiry", "announcement"];
+
+    this.logger.log("Create folders about image into uploads folder");
     try {
-      logger.log(`Create image and video folder into uploads folder`);
-      fs.mkdirSync(path.join(__dirname, `../../../uploads/image`));
-      fs.mkdirSync(path.join(__dirname, `../../../uploads/video`));
+      await fsPromises.mkdir(path.join(__dirname, "../../../uploads/image"));
 
-      ["review", "inquiry", "announcement"].forEach((idx) => {
-        fs.mkdirSync(path.join(__dirname, `../../../uploads/image/${idx}`));
-        fs.mkdirSync(path.join(__dirname, `../../../uploads/video/${idx}`));
+      const modelPromises = stuffForImages.map(async (model) => {
+        return await fsPromises.mkdir(
+          path.join(__dirname, `../../../uploads/image/${model}`),
+        );
       });
 
-      fs.mkdirSync(path.join(__dirname, `../../../uploads/image/product`));
-      fs.mkdirSync(
-        path.join(__dirname, "../../../uploads/image/inquiry/request"),
-      );
-      fs.mkdirSync(
-        path.join(__dirname, "../../../uploads/image/inquiry/response"),
-      );
-      fs.mkdirSync(
-        path.join(__dirname, "../../../uploads/video/inquiry/request"),
-      );
-      fs.mkdirSync(
-        path.join(__dirname, "../../../uploads/video/inquiry/response"),
-      );
+      const inquiryPromises = this.inquiry.map(async (val) => {
+        return await fsPromises.mkdir(
+          path.join(__dirname, `../../../uploads/image/inquiry/${val}`),
+        );
+      });
+
+      const promises = [...modelPromises, ...inquiryPromises];
+      await Promise.all(promises);
     } catch (err) {
-      logger.log(`image is already exist`);
-      logger.log(`video is already exist`);
+      this.logger.log("image is already exist");
     }
+  }
+
+  private async createVideoFolder() {
+    const stuffForVideos = ["review", "inquiry", "announcement"];
+
+    this.logger.log("Create folders about video into uploads folder");
+    try {
+      await fsPromises.mkdir(path.join(__dirname, "../../../uploads/video"));
+
+      const modelPromises = stuffForVideos.map(async (model) => {
+        return await fsPromises.mkdir(
+          path.join(__dirname, `../../../uploads/video/${model}`),
+        );
+      });
+
+      const inquiryPromises = this.inquiry.map(async (val) => {
+        return await fsPromises.mkdir(
+          path.join(__dirname, `../../../uploads/video/inquiry/${val}`),
+        );
+      });
+
+      const promises = [...modelPromises, ...inquiryPromises];
+      await Promise.all(promises);
+    } catch (err) {
+      this.logger.log("video is already exist`");
+    }
+  }
+
+  private createFolder(): void {
+    this.createUploadFolder();
+    this.createImageFolder();
+    this.createVideoFolder();
   }
 
   static storage(folder: string): multer.StorageEngine {
