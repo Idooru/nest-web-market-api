@@ -22,11 +22,11 @@ import { IsNotLoginGuard } from "../../../../common/guards/authenticate/is-not-l
 import { IsRefreshTokenAvailableGuard } from "src/common/guards/authenticate/is-refresh-token-available.guard";
 import { JwtRefreshTokenPayload } from "src/model/auth/jwt/jwt-refresh-token-payload.interface";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
-import { JsonGeneralInterface } from "src/common/interceptors/general/interface/json-general-interface";
-import { JsonJwtAuthInterface } from "src/common/interceptors/general/interface/json-jwt-auth.interface";
+import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
+import { JsonJwtAuthInterface } from "src/common/interceptors/interface/json-jwt-auth.interface";
 import { JsonJwtAuthInterceptor } from "src/common/interceptors/general/json-jwt-auth.interceptor";
 import { JsonJwtLogoutInterceptor } from "src/common/interceptors/general/json-jwt-logout.interceptor";
-import { JsonJwtLogoutInterface } from "src/common/interceptors/general/interface/json-jwt-logout.interface";
+import { JsonJwtLogoutInterface } from "src/common/interceptors/interface/json-jwt-logout.interface";
 import { RegisterUserDto } from "../../dtos/register-user.dto";
 import { UserEntity } from "../../entities/user.entity";
 import { VerifyDataGuard } from "src/common/guards/verify/verify-data.guard";

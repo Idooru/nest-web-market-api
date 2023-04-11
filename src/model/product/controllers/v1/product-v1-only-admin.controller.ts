@@ -16,8 +16,8 @@ import { MediaCookieParser } from "src/common/decorators/media-cookie-parser.dec
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { VerifyDataGuard } from "src/common/guards/verify/verify-data.guard";
-import { JsonClearCookieInterface } from "src/common/interceptors/general/interface/json-clear-cookie.interface";
-import { JsonGeneralInterface } from "src/common/interceptors/general/interface/json-general-interface";
+import { JsonClearCookieInterface } from "src/common/interceptors/interface/json-clear-cookie.interface";
+import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/general/json-clear-cookie.interceptor";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";

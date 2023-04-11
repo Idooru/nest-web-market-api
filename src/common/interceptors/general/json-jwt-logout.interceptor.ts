@@ -7,7 +7,7 @@ import {
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { map, Observable } from "rxjs";
 import { Request, Response } from "express";
-import { JsonJwtLogoutInterface } from "./interface/json-jwt-logout.interface";
+import { JsonJwtLogoutInterface } from "../interface/json-jwt-logout.interface";
 
 @Injectable()
 export class JsonJwtLogoutInterceptor implements NestInterceptor {

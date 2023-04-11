@@ -13,9 +13,9 @@ import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-paylo
 import { UseInterceptors } from "@nestjs/common";
 import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { JsonClearCookiesInterface } from "src/common/interceptors/general/interface/json-clear-cookies.interface";
+import { JsonClearCookiesInterface } from "src/common/interceptors/interface/json-clear-cookies.interface";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
-import { JsonGeneralInterface } from "src/common/interceptors/general/interface/json-general-interface";
+import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { StarRateGeneralService } from "../services/star-rate-general.service";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";

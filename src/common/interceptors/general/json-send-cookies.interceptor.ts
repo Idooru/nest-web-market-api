@@ -7,7 +7,7 @@ import {
 import { map, Observable } from "rxjs";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { SecurityLibrary } from "../../lib/config/security.library";
-import { JsonSendCookiesParamInterface } from "./interface/json-send-cookies-param.interface";
+import { JsonSendCookiesParamInterface } from "../interface/json-send-cookies-param.interface";
 import { Request, Response } from "express";
 
 @Injectable()

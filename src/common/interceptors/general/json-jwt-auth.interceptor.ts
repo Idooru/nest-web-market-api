@@ -7,7 +7,7 @@ import {
 import { map, Observable } from "rxjs";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { SecurityLibrary } from "../../lib/config/security.library";
-import { JsonJwtAuthInterface } from "./interface/json-jwt-auth.interface";
+import { JsonJwtAuthInterface } from "../interface/json-jwt-auth.interface";
 import { Request, Response } from "express";
 
 @Injectable()

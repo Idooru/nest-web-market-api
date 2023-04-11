@@ -7,7 +7,7 @@ import {
 } from "@nestjs/common";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { JsonGeneralInterface } from "src/common/interceptors/general/interface/json-general-interface";
+import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { ProductGeneralService } from "src/model/product/services/product-general.service";
 import { ReviewEntity } from "../entities/review.entity";

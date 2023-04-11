@@ -6,7 +6,7 @@ import {
 } from "@nestjs/common";
 import { map, Observable } from "rxjs";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
-import { JsonClearCookiesInterface } from "./interface/json-clear-cookies.interface";
+import { JsonClearCookiesInterface } from "../interface/json-clear-cookies.interface";
 import { Request, Response } from "express";
 
 @Injectable()

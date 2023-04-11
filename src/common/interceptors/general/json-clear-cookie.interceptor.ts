@@ -7,7 +7,7 @@ import {
 import { map, Observable } from "rxjs";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { Request, Response } from "express";
-import { JsonClearCookieInterface } from "./interface/json-clear-cookie.interface";
+import { JsonClearCookieInterface } from "../interface/json-clear-cookie.interface";
 
 @Injectable()
 export class JsonClearCookieInterceptor implements NestInterceptor {

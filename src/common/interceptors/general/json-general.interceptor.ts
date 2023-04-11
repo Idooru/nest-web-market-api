@@ -6,7 +6,7 @@ import {
 } from "@nestjs/common";
 import { map, Observable } from "rxjs";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
-import { JsonGeneralParamInterface } from "./interface/json-general-param.interface";
+import { JsonGeneralParamInterface } from "../interface/json-general-param.interface";
 import { Request, Response } from "express";
 
 @Injectable()

@@ -2,7 +2,7 @@ import { Controller, Get, UseInterceptors, Param } from "@nestjs/common";
 import { ProductGeneralService } from "../../services/product-general.service";
 import { ProductEntity } from "../../entities/product.entity";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
-import { JsonGeneralInterface } from "src/common/interceptors/general/interface/json-general-interface";
+import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 
 @Controller("/api/v1/free-use/product")
 export class ProductVersionOneFreeUseController {
