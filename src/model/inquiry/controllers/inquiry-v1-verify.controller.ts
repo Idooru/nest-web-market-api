@@ -6,7 +6,7 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { SendVerifyCookieInterceptor } from "src/common/interceptors/verify/send-verify-cookie.interceptor";
-import { VerifyDataInterface } from "src/common/interceptors/verify/verify-data.dto";
+import { VerifyDataInterface } from "src/common/interceptors/interface/verify-data.dto";
 import { InquiryVerifyService } from "../services/inquiry-verify.service";
 import { InquiryVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/inquiry-verify-cookie.key";
 

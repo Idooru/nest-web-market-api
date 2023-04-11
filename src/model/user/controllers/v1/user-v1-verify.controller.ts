@@ -7,7 +7,7 @@ import {
 } from "@nestjs/common";
 import { UserVerifyService } from "../../services/user-verify.service";
 import { SendVerifyCookieInterceptor } from "src/common/interceptors/verify/send-verify-cookie.interceptor";
-import { VerifyDataInterface } from "src/common/interceptors/verify/verify-data.dto";
+import { VerifyDataInterface } from "src/common/interceptors/interface/verify-data.dto";
 import { UserVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/user-verify-cookie.key";
 
 @Controller("/api/v1/verify/user")
