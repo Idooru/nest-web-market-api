@@ -5,8 +5,8 @@ export class ErrorHandlerBuilder<T> {
   private error: Error;
   private className: string;
   private methodName: string;
-  private stuff: string;
-  private stuffMean: string;
+  public static stuffs: string[] = [];
+  public static stuffMeans: string[] = [];
   private layer: string;
 
   public setEntity(entity: T): this {
@@ -26,8 +26,8 @@ export class ErrorHandlerBuilder<T> {
   }
 
   public setStuffs(stuff: string, stuffMean: string): this {
-    this.stuff = stuff;
-    this.stuffMean = stuffMean;
+    ErrorHandlerBuilder.stuffs.push(stuff);
+    ErrorHandlerBuilder.stuffMeans.push(stuffMean);
     return this;
   }
 
@@ -42,8 +42,8 @@ export class ErrorHandlerBuilder<T> {
       this.error,
       this.className,
       this.methodName,
-      this.stuff,
-      this.stuffMean,
+      ErrorHandlerBuilder.stuffs,
+      ErrorHandlerBuilder.stuffMeans,
       this.layer,
     );
   }
