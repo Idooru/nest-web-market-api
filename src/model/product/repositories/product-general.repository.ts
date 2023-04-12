@@ -142,7 +142,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .setEntity(new ProductEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(name, "이름")
+        .setStuffs(name, "name")
         .setLayer("repository")
         .handle();
     }
@@ -179,7 +179,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .setEntity(new ProductEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(id, "아이디")
+        .setStuffs(id, "id")
         .setLayer("repository")
         .handle();
     }
@@ -200,7 +200,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .setEntity(new ProductEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(id, "아이디")
+        .setStuffs(id, "id")
         .setLayer("repository")
         .handle();
     }
