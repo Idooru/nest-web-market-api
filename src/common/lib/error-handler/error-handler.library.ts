@@ -1,4 +1,5 @@
 import { InternalServerErrorException, Logger } from "@nestjs/common";
+import { ErrorCaseProp } from "src/common/classes/error-case-prop";
 import { InquiryRequestErrorCase } from "src/model/inquiry/error/inquiry-request-error.case";
 import { InquiryResponseErrorCase } from "src/model/inquiry/error/inquiry-response-error.case";
 import { InquiryRequestImageErrorCase } from "src/model/media/error/inquiry-request-image-error.case";
@@ -23,6 +24,7 @@ export class ErrorHandler<T> {
     private readonly stuffMeans: string[],
     private readonly layer: string,
   ) {
+    ErrorCaseProp.clearStuffs();
     this.logging();
     if (this.layer.includes("repository")) this.checkSourceOfError();
     this.throwInternalServerErrorException();
