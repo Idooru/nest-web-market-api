@@ -245,6 +245,8 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .setEntity(new ProductEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
+        .setStuffs(String(modifyProductDto.price), "price")
+        .setStuffs(String(modifyProductDto.quantity), "quantity")
         .setLayer("repository")
         .handle();
     }
@@ -283,6 +285,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .setEntity(new ProductEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
+        .setStuffs(price, "price")
         .setLayer("repository")
         .handle();
     }
@@ -362,6 +365,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .setEntity(new ProductEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
+        .setStuffs(quantity, "quantity")
         .setLayer("repository")
         .handle();
     }
