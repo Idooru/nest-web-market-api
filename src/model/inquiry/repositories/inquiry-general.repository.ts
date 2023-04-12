@@ -85,7 +85,7 @@ export class InquiryGeneralRepository extends ErrorHandlerProps {
         .setEntity(new InquiryRequestEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(id, "아이디")
+        .setStuffs(id, "id")
         .setLayer("repository")
         .handle();
     }
