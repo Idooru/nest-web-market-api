@@ -47,7 +47,7 @@ export class ReviewGeneralRepository extends ErrorHandlerProps {
         .setEntity(new ReviewEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(id, "아이디")
+        .setStuffs(id, "id")
         .setLayer("repository")
         .handle();
     }

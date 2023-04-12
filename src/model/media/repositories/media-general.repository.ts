@@ -54,8 +54,8 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .setEntity(new ProductImageEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(email, "이메일")
         .setStuffs(url, "url")
+        .setStuffs(email, "email")
         .setLayer("repository")
         .handle();
     }
@@ -505,7 +505,7 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .setEntity(new ProductImageEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(id, "아이디")
+        .setStuffs(id, "id")
         .setLayer("repository")
         .handle();
     }
@@ -526,7 +526,7 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .setEntity(new ReviewImageEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(id, "아이디")
+        .setStuffs(id, "id")
         .setLayer("repository")
         .handle();
     }
@@ -547,7 +547,7 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .setEntity(new ReviewImageEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(id, "아이디")
+        .setStuffs(id, "id")
         .setLayer("repository")
         .handle();
     }
@@ -568,7 +568,7 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .setEntity(new ReviewVideoEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(id, "아이디")
+        .setStuffs(id, "id")
         .setLayer("repository")
         .handle();
     }
@@ -589,7 +589,7 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .setEntity(new ReviewVideoEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(id, "아이디")
+        .setStuffs(id, "id")
         .setLayer("repository")
         .handle();
     }

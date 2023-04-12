@@ -90,7 +90,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .setEntity(new UserEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(id, "아이디")
+        .setStuffs(id, "id")
         .setLayer("repository")
         .handle();
     }
@@ -113,7 +113,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .setEntity(new UserEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(id, "아이디")
+        .setStuffs(id, "id")
         .setLayer("repository")
         .handle();
     }
@@ -136,7 +136,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .setEntity(new UserEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(id, "아이디")
+        .setStuffs(id, "id")
         .setLayer("repository")
         .handle();
     }
@@ -158,7 +158,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .setEntity(new ClientUserEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(id, "아이디")
+        .setStuffs(id, "id")
         .setLayer("repository")
         .handle();
     }
@@ -180,7 +180,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .setEntity(new AdminUserEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(id, "아이디")
+        .setStuffs(id, "id")
         .setLayer("repository")
         .handle();
     }
@@ -221,7 +221,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .setEntity(new UserEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(email, "이메일")
+        .setStuffs(email, "email")
         .setLayer("repository")
         .handle();
     }
@@ -243,7 +243,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .setEntity(new UserEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(nickname, "닉네임")
+        .setStuffs(nickname, "nickname")
         .setLayer("repository")
         .handle();
     }
@@ -321,7 +321,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .setEntity(new UserEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(id, "아이디")
+        .setStuffs(id, "id")
         .setLayer("repository")
         .handle();
     }
@@ -359,7 +359,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .setEntity(new UserEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(id, "아이디")
+        .setStuffs(id, "id")
         .setLayer("repository")
         .handle();
     }
@@ -389,7 +389,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .setEntity(new UserEntity())
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(id, "아이디")
+        .setStuffs(id, "id")
         .setLayer("repository")
         .handle();
     }
