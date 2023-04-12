@@ -9,24 +9,24 @@ import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
-import { ProductGeneralService } from "src/model/product/services/product-general.service";
 import { ReviewEntity } from "../entities/review.entity";
+import { ReviewGeneralService } from "../services/review-general.service";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
 @Controller("/api/v1/only-admin/review")
 export class ReviewVersionOneOnlyAdminController {
-  constructor(private readonly productService: ProductGeneralService) {}
+  constructor(private readonly reviewGeneralService: ReviewGeneralService) {}
 
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/product/:productId")
-  async findReviewFromProduct(
+  async findReviewFromProductById(
     @Param("productId") id: string,
   ): Promise<JsonGeneralInterface<ReviewEntity[]>> {
     return {
       statusCode: 200,
       message: `상품아이디(${id})에 해당하는 상품의 리뷰를 가져옵니다.`,
-      result: (await this.productService.findProductById(id)).Review,
+      result: await this.reviewGeneralService.findReviewFromProductById(id),
     };
   }
 }
