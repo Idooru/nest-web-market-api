@@ -1,6 +1,6 @@
 import { CreateReviewDto } from "../dto/create-review.dto";
 import { ReviewGeneralRepository } from "../repositories/review-general.repository";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { ModifyReviewDto } from "../dto/modify-review.dto";
 import { ReviewEntity } from "../entities/review.entity";
 import { ProductGeneralRepository } from "src/model/product/repositories/product-general.repository";
@@ -15,6 +15,16 @@ export class ReviewGeneralService {
     private readonly userGeneralRepository: UserGeneralRepository,
     private readonly reviewInsertRepository: ReviewInsertRepository,
   ) {}
+
+  async findReviewFromProductById(id: string): Promise<ReviewEntity[]> {
+    const product = await this.productGeneralRepository.findProductOneById(id);
+
+    if (product.Review.length === 0) {
+      throw new NotFoundException("해당 상품에 리뷰가 존재하지 않습니다.");
+    }
+
+    return product.Review;
+  }
 
   async createReview(createReviewDto: CreateReviewDto): Promise<ReviewEntity> {
     const { reviewRequestDto, jwtPayload, productId } = createReviewDto;
