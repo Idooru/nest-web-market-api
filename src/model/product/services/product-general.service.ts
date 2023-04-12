@@ -89,13 +89,14 @@ export class ProductGeneralService {
         imageCookie,
       );
 
+    await this.productGeneralRepository.modifyProduct(id, modifyProductDto);
+
     await Promise.all([
       this.mediaGeneralRepository.deleteProductImageWithId(evenImage.id),
       this.mediaInsertRepository.insertProductIdOnProductImage(
         newImage,
         product,
       ),
-      this.productGeneralRepository.modifyProduct(id, modifyProductDto),
     ]);
   }
 
