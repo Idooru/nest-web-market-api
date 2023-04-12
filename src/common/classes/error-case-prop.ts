@@ -1,7 +1,10 @@
 import { ErrorHandlerBuilder } from "../lib/error-handler/error-hanlder-builder";
 
 export class ErrorCaseProp {
-  constructor(protected stuffs: string[], protected stuffMeans: string[]) {}
+  constructor(
+    protected readonly stuffs: string[],
+    protected readonly stuffMeans: string[],
+  ) {}
 
   protected stuffArr = [this.stuffMeans, this.stuffs].map((_, idx) => {
     return this.makeObjLiteral(this.stuffs[idx], this.stuffMeans[idx]);
