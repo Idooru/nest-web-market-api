@@ -19,8 +19,8 @@ export class ErrorHandler<T> {
     private readonly error: Error,
     private readonly className: string,
     private readonly methodName: string,
-    private readonly stuff: string,
-    private readonly stuffMean: string,
+    private readonly stuffs: string[],
+    private readonly stuffMeans: string[],
     private readonly layer: string,
   ) {
     this.logging();
@@ -39,61 +39,61 @@ export class ErrorHandler<T> {
   private checkSourceOfError(): void {
     switch (this.retrievingEntityName()) {
       case "Product":
-        ProductErrorCase.init(this.error, this.stuff, this.stuffMean);
+        new ProductErrorCase(this.error, this.stuffs, this.stuffMeans);
         break;
       case "ProductImage":
-        ProductImageErrorCase.init(this.error, this.stuff, this.stuffMean);
+        new ProductImageErrorCase(this.error, this.stuffs, this.stuffMeans);
         break;
       case "User":
-        UserErrorCase.init(this.error, this.stuff, this.stuffMean);
+        new UserErrorCase(this.error, this.stuffs, this.stuffMeans);
         break;
       case "ClientUser":
-        ClientUserErrorCase.init(this.error, this.stuff, this.stuffMean);
+        new ClientUserErrorCase(this.error, this.stuffs, this.stuffMeans);
         break;
       case "AdminUser":
-        AdminUserErrorCase.init(this.error, this.stuff, this.stuffMean);
+        new AdminUserErrorCase(this.error, this.stuffs, this.stuffMeans);
         break;
       case "Review":
-        ReviewErrorCase.init(this.error, this.stuff, this.stuffMean);
+        new ReviewErrorCase(this.error, this.stuffs, this.stuffMeans);
         break;
       case "ReviewImage":
-        ReviewImageErrorCase.init(this.error, this.stuff, this.stuffMean);
+        new ReviewImageErrorCase(this.error, this.stuffs, this.stuffMeans);
         break;
       case "ReviewVideo":
-        ReviewVideoErrorCase.init(this.error, this.stuff, this.stuffMean);
+        new ReviewVideoErrorCase(this.error, this.stuffs, this.stuffMeans);
         break;
       case "InquiryRequest":
-        InquiryRequestErrorCase.init(this.error, this.stuff, this.stuffMean);
+        new InquiryRequestErrorCase(this.error, this.stuffs, this.stuffMeans);
         break;
       case "InquiryRequestImage":
-        InquiryRequestImageErrorCase.init(
+        new InquiryRequestImageErrorCase(
           this.error,
-          this.stuff,
-          this.stuffMean,
+          this.stuffs,
+          this.stuffMeans,
         );
         break;
       case "InquiryRequestVideo":
-        InquiryRequestVideoErrorCase.init(
+        new InquiryRequestVideoErrorCase(
           this.error,
-          this.stuff,
-          this.stuffMean,
+          this.stuffs,
+          this.stuffMeans,
         );
         break;
       case "InquiryResponse":
-        InquiryResponseErrorCase.init(this.error, this.stuff, this.stuffMean);
+        new InquiryResponseErrorCase(this.error, this.stuffs, this.stuffMeans);
         break;
       case "InquiryResponseImage":
-        InquiryRequestImageErrorCase.init(
+        new InquiryRequestImageErrorCase(
           this.error,
-          this.stuff,
-          this.stuffMean,
+          this.stuffs,
+          this.stuffMeans,
         );
         break;
       case "InquiryResponseVideo":
-        InquiryResponseVideoErrorCase.init(
+        new InquiryResponseVideoErrorCase(
           this.error,
-          this.stuff,
-          this.stuffMean,
+          this.stuffs,
+          this.stuffMeans,
         );
         break;
       default: {
