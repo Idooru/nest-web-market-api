@@ -4,6 +4,7 @@ import { InquiryRequestErrorCase } from "src/model/inquiry/error/inquiry-request
 import { InquiryResponseErrorCase } from "src/model/inquiry/error/inquiry-response-error.case";
 import { InquiryRequestImageErrorCase } from "src/model/media/error/inquiry-request-image-error.case";
 import { InquiryRequestVideoErrorCase } from "src/model/media/error/inquiry-request-video-error.case";
+import { InquiryResponseImageErrorCase } from "src/model/media/error/inquiry-response-image-error.case";
 import { InquiryResponseVideoErrorCase } from "src/model/media/error/inquiry-response-video-error.case";
 import { ProductImageErrorCase } from "src/model/media/error/product-image-error.case";
 import { ReviewImageErrorCase } from "src/model/media/error/review-image-error.case";
@@ -85,7 +86,7 @@ export class ErrorHandler<T> {
         new InquiryResponseErrorCase(this.error, this.stuffs, this.stuffMeans);
         break;
       case "InquiryResponseImage":
-        new InquiryRequestImageErrorCase(
+        new InquiryResponseImageErrorCase(
           this.error,
           this.stuffs,
           this.stuffMeans,
