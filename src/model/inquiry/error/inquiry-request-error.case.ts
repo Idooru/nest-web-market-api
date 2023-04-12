@@ -1,13 +1,29 @@
 import { NotFoundException } from "@nestjs/common";
+import { ErrorCaseProp } from "src/common/classes/error-case-prop";
 
-export class InquiryRequestErrorCase {
-  static init(error: Error, stuff: string, stuffMean: string): void {
+export class InquiryRequestErrorCase extends ErrorCaseProp {
+  constructor(
+    protected readonly error: Error,
+    protected readonly stuffs: string[],
+    protected readonly stuffMeans: string[],
+  ) {
+    super(stuffs, stuffMeans);
+    this.case();
+  }
+
+  private case() {
+    this.notFound();
+  }
+
+  private notFound() {
+    const idStuff = this.stuffArr.find((val) => val.key() === "id");
+
     if (
-      error.message.includes("Could not find any entity of type") &&
-      stuffMean === "아이디"
+      this.error.message.includes("Could not find any entity of type") &&
+      idStuff
     ) {
       throw new NotFoundException(
-        `해당 id(${stuff})을 가진 문의 요청을 찾을 수 없습니다.`,
+        `해당 id(${idStuff.value()})을 가진 문의 요청을 찾을 수 없습니다.`,
       );
     }
   }
