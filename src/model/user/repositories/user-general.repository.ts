@@ -186,25 +186,6 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     }
   }
 
-  async findAdminUserObjectWithoutId(): Promise<AdminUserEntity> {
-    try {
-      return await this.adminUserRepository
-        .createQueryBuilder()
-        .select(["admin"])
-        .from(AdminUserEntity, "admin")
-        .orderBy("admin.createdAt", "DESC")
-        .getOneOrFail();
-    } catch (err) {
-      this.methodName = this.findAdminUserObjectWithoutId.name;
-      this.errorHandlerBuilder
-        .setEntity(new AdminUserEntity())
-        .setError(err)
-        .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
-        .handle();
-    }
-  }
-
   async findUserWithEmail(email: string): Promise<UserEntity> {
     try {
       return await this.userRepository
