@@ -226,7 +226,7 @@ export class ReviewVersionOneOnlyClientController {
         reviewImgCookies,
         reviewVdoCookies,
       });
-      await this.reviewBundleService.deleteReviewMediaIfItHad(review);
+      await this.reviewBundleService.deleteReviewMedia(review);
     };
 
     await Promise.all([
@@ -286,7 +286,7 @@ export class ReviewVersionOneOnlyClientController {
         reviewRequestDto,
         review,
       });
-      await this.reviewBundleService.deleteReviewMediaIfItHad(review);
+      await this.reviewBundleService.deleteReviewMedia(review);
     };
 
     await Promise.all([
@@ -343,7 +343,7 @@ export class ReviewVersionOneOnlyClientController {
         reviewRequestDto,
         review,
       });
-      await this.reviewBundleService.deleteReviewMediaIfItHad(review);
+      await this.reviewBundleService.deleteReviewMedia(review);
     };
 
     await Promise.all([
@@ -399,7 +399,7 @@ export class ReviewVersionOneOnlyClientController {
         jwtPayload,
         beforeReview: review,
       }),
-      this.reviewBundleService.deleteReviewMediaIfItHad(review),
+      this.reviewBundleService.deleteReviewMedia(review),
     ]);
 
     return {
@@ -422,7 +422,7 @@ export class ReviewVersionOneOnlyClientController {
 
     await Promise.all([
       this.reviewGeneralService.deleteReview(review),
-      this.reviewBundleService.deleteReviewMediaIfItHad(review),
+      this.reviewBundleService.deleteReviewMedia(review),
       this.starRateGeneralService.decreaseStarRate(review),
     ]);
 

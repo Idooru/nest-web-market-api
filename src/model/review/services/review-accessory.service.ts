@@ -148,7 +148,7 @@ export class ReviewAccessoryService {
     );
   }
 
-  async distinguishReviewImagesCountForPush(
+  async pushReviewImages(
     pushReviewImageDto: PushReviewImageDto,
   ): Promise<void> {
     const { reviewImgCookies, reviewRequestDto } = pushReviewImageDto;
@@ -165,7 +165,7 @@ export class ReviewAccessoryService {
     }
   }
 
-  async distinguishReviewVideosCountForPush(
+  async pushReviewVideos(
     pushReviewVideoDto: PushReviewVideoDto,
   ): Promise<void> {
     const { reviewVdoCookies, reviewRequestDto } = pushReviewVideoDto;
@@ -182,7 +182,7 @@ export class ReviewAccessoryService {
     }
   }
 
-  async distinguishReviewImagesCountForInsert(
+  async insertReviewImages(
     reviewImgCookies: MediaDto[],
     reviewRequestDto: ReviewRequestDto,
     review: ReviewEntity,
@@ -200,7 +200,7 @@ export class ReviewAccessoryService {
     }
   }
 
-  async distinguishReviewVideosCountForInsert(
+  async insertReviewVideos(
     reviewVdoCookies: MediaDto[],
     reviewRequestDto: ReviewRequestDto,
     review: ReviewEntity,
@@ -218,7 +218,7 @@ export class ReviewAccessoryService {
     }
   }
 
-  async distinguishReviewImagesCountForModify(
+  async modifyReviewImages(
     reviewImgCookies: MediaDto[],
     reviewRequestDto: ReviewRequestDto,
     review: ReviewEntity,
@@ -228,26 +228,33 @@ export class ReviewAccessoryService {
         await this.mediaGeneralRepository.findBeforeReviewImagesWithId(
           review.id,
         );
+
       await this.insertReviewIdOnMoreThenTwoReviewImage(
         reviewRequestDto.Image,
         review,
       );
-      if (beforeImages.length >= 1)
-        this.deleteMoreThenTwoReviewImage(beforeImages);
+
+      if (beforeImages.length >= 1) {
+        await this.deleteMoreThenTwoReviewImage(beforeImages);
+      }
     } else {
       const beforeImage =
         await this.mediaGeneralRepository.findBeforeReviewImageWithId(
           review.id,
         );
+
       await this.insertReviewIdOnOneReviewImage(
         reviewRequestDto.Image[0],
         review,
       );
-      if (beforeImage) this.deleteOneReviewImage(beforeImage);
+
+      if (beforeImage) {
+        await this.deleteOneReviewImage(beforeImage);
+      }
     }
   }
 
-  async distinguishReviewVideosCountForModify(
+  async modifyReviewVideos(
     reviewVdoCookies: MediaDto[],
     reviewRequestDto: ReviewRequestDto,
     review: ReviewEntity,
@@ -257,10 +264,12 @@ export class ReviewAccessoryService {
         await this.mediaGeneralRepository.findBeforeReviewVideosWithId(
           review.id,
         );
+
       await this.insertReviewIdOnMoreThenTwoReviewVideo(
         reviewRequestDto.Video,
         review,
       );
+
       if (beforeVideos.length >= 1) {
         await this.deleteMoreThenTwoReviewVideo(beforeVideos);
       }
@@ -269,15 +278,19 @@ export class ReviewAccessoryService {
         await this.mediaGeneralRepository.findBeforeReviewVideoWithId(
           review.id,
         );
+
       await this.insertReviewIdOnOneReviewVideo(
         reviewRequestDto.Video[0],
         review,
       );
-      if (beforeVideo) await this.deleteOneReviewVideo(beforeVideo);
+
+      if (beforeVideo) {
+        await this.deleteOneReviewVideo(beforeVideo);
+      }
     }
   }
 
-  async distinguishReviewImagesCountForDelete(
+  async deleteReviewImages(
     reviewImages: ReviewImageEntity[],
     review: ReviewEntity,
   ): Promise<void> {
@@ -286,17 +299,19 @@ export class ReviewAccessoryService {
         await this.mediaGeneralRepository.findBeforeReviewImagesWithId(
           review.id,
         );
+
       await this.deleteMoreThenTwoReviewImage(beforeImages);
     } else {
       const beforeImage =
         await this.mediaGeneralRepository.findBeforeReviewImageWithId(
           review.id,
         );
+
       await this.deleteOneReviewImage(beforeImage);
     }
   }
 
-  async distinguishReviewVideosCountForDelete(
+  async deleteReviewVideos(
     reviewVideos: ReviewVideoEntity[],
     review: ReviewEntity,
   ): Promise<void> {
@@ -305,12 +320,14 @@ export class ReviewAccessoryService {
         await this.mediaGeneralRepository.findBeforeReviewVideosWithId(
           review.id,
         );
+
       await this.deleteMoreThenTwoReviewVideo(beforeVideos);
     } else {
       const beforeVideo =
         await this.mediaGeneralRepository.findBeforeReviewVideoWithId(
           review.id,
         );
+
       await this.deleteOneReviewVideo(beforeVideo);
     }
   }

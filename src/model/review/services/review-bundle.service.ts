@@ -57,14 +57,14 @@ export class ReviewBundleService {
       pushReviewMediaDto;
 
     if (reviewImgCookies) {
-      await this.reviewAccessoryService.distinguishReviewImagesCountForPush({
+      await this.reviewAccessoryService.pushReviewImages({
         reviewRequestDto,
         reviewImgCookies,
       });
     }
 
     if (reviewVdoCookies) {
-      await this.reviewAccessoryService.distinguishReviewVideosCountForPush({
+      await this.reviewAccessoryService.pushReviewVideos({
         reviewRequestDto,
         reviewVdoCookies,
       });
@@ -78,7 +78,7 @@ export class ReviewBundleService {
       insertReviewMediaDto;
 
     if (reviewImgCookies) {
-      await this.reviewAccessoryService.distinguishReviewImagesCountForInsert(
+      await this.reviewAccessoryService.insertReviewImages(
         reviewImgCookies,
         reviewRequestDto,
         review,
@@ -86,7 +86,7 @@ export class ReviewBundleService {
     }
 
     if (reviewVdoCookies) {
-      await this.reviewAccessoryService.distinguishReviewVideosCountForInsert(
+      await this.reviewAccessoryService.insertReviewVideos(
         reviewVdoCookies,
         reviewRequestDto,
         review,
@@ -101,7 +101,7 @@ export class ReviewBundleService {
       modifyReviewMediaDto;
 
     if (reviewImgCookies) {
-      this.reviewAccessoryService.distinguishReviewImagesCountForModify(
+      this.reviewAccessoryService.modifyReviewImages(
         reviewImgCookies,
         reviewRequestDto,
         review,
@@ -109,7 +109,7 @@ export class ReviewBundleService {
     }
 
     if (reviewVdoCookies) {
-      this.reviewAccessoryService.distinguishReviewVideosCountForModify(
+      this.reviewAccessoryService.modifyReviewVideos(
         reviewVdoCookies,
         reviewRequestDto,
         review,
@@ -117,7 +117,7 @@ export class ReviewBundleService {
     }
   }
 
-  async deleteReviewMediaIfItHad(review: ReviewEntity): Promise<void> {
+  async deleteReviewMedia(review: ReviewEntity): Promise<void> {
     if (review.Image.length >= 1) {
       review.Image.map(brieflyFileName).forEach((name) =>
         this.mediaAccessoryService.deleteMediaFilesOnServerDisk(
@@ -126,7 +126,7 @@ export class ReviewBundleService {
         ),
       );
 
-      await this.reviewAccessoryService.distinguishReviewImagesCountForDelete(
+      await this.reviewAccessoryService.deleteReviewImages(
         review.Image,
         review,
       );
@@ -140,7 +140,7 @@ export class ReviewBundleService {
         ),
       );
 
-      await this.reviewAccessoryService.distinguishReviewVideosCountForDelete(
+      await this.reviewAccessoryService.deleteReviewVideos(
         review.Video,
         review,
       );
