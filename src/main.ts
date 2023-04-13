@@ -22,6 +22,14 @@ class NestCoreConfig {
     this.setStaticAssets();
   }
 
+  public async run() {
+    await this.app.listen(this.port, () =>
+      new Logger("NestApplication").log(
+        `Server is running at ${this.scheme}://${this.host}:${this.port}`,
+      ),
+    );
+  }
+
   private setGlobals() {
     this.app.useGlobalFilters(
       new HttpExceptionFilter(),
@@ -69,14 +77,6 @@ class NestCoreConfig {
     this.app.useStaticAssets(
       path.join(__dirname, "..", "uploads", "video", "announcement"),
       { prefix: "/media" },
-    );
-  }
-
-  public async run() {
-    await this.app.listen(this.port, () =>
-      new Logger("NestApplication").log(
-        `Server is running at ${this.scheme}://${this.host}:${this.port}`,
-      ),
     );
   }
 }
