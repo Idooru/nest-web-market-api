@@ -6,6 +6,7 @@ import {
   UploadedFiles,
   Delete,
   Inject,
+  Get,
 } from "@nestjs/common";
 import { MulterConfigService } from "src/common/config/multer.config";
 import { FilesInterceptor } from "@nestjs/platform-express";
@@ -31,6 +32,12 @@ import {
   InquiryMediaCookieKey,
   inquiryMediaCookieKey,
 } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
+import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
+import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
+import { ReviewImageEntity } from "../entities/review.image.entity";
+import { ReviewVideoEntity } from "../entities/review.video.entity";
+import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.entity";
+import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
 
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)
@@ -46,6 +53,104 @@ export class MediaVersionOneOnlyClientController {
     private readonly mediaBundleService: MediaBundleService,
     private readonly mediaLoggerLibrary: MeidaLoggerLibrary,
   ) {}
+
+  @UseInterceptors(JsonGeneralInterceptor)
+  @Get("/review/image")
+  async findUploadedReviewImage(
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
+    @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
+    reviewImgCookies: MediaDto[],
+  ): Promise<JsonGeneralInterface<ReviewImageEntity[]>> {
+    const reviewImages = await this.mediaAccessoryService.findReviewImages(
+      reviewImgCookies,
+    );
+
+    const uploadedReviewImages =
+      await this.mediaGeneralService.findUploadedReviewImages(
+        jwtPayload.email,
+        reviewImages,
+      );
+
+    return {
+      statusCode: 200,
+      message: "현재 업로드된 리뷰 이미지를 가져옵니다.",
+      result: uploadedReviewImages,
+    };
+  }
+
+  @UseInterceptors(JsonGeneralInterceptor)
+  @Get("/review/video")
+  async findUploadedReviewVideo(
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
+    @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
+    reviewVdoCookies: MediaDto[],
+  ): Promise<JsonGeneralInterface<ReviewVideoEntity[]>> {
+    const reviewVideos = await this.mediaAccessoryService.findReviewVideos(
+      reviewVdoCookies,
+    );
+
+    const uploadedReviewVideos =
+      await this.mediaGeneralService.findUploadedReviewVideos(
+        jwtPayload.email,
+        reviewVideos,
+      );
+
+    return {
+      statusCode: 200,
+      message: "현재 업로드된 리뷰 동영상을 가져옵니다.",
+      result: uploadedReviewVideos,
+    };
+  }
+
+  @UseInterceptors(JsonGeneralInterceptor)
+  @Get("/inquiry/request/image")
+  async findUploadedInquiryRequestImage(
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
+    @MediaCookiesParser(inquiryMediaCookieKey.request.image_url_cookie)
+    inquiryRequestImgCookies: MediaDto[],
+  ): Promise<JsonGeneralInterface<InquiryRequestImageEntity[]>> {
+    const inquiryRequestImages =
+      await this.mediaAccessoryService.findInquiryRequestImages(
+        inquiryRequestImgCookies,
+      );
+
+    const uploadedInquiryRequestImages =
+      await this.mediaGeneralService.findUploadedInquiryRequestImages(
+        jwtPayload.email,
+        inquiryRequestImages,
+      );
+
+    return {
+      statusCode: 200,
+      message: "현재 업로드된 문의 요청 이미지를 가져옵니다.",
+      result: uploadedInquiryRequestImages,
+    };
+  }
+
+  @UseInterceptors(JsonGeneralInterceptor)
+  @Get("/inquiry/request/video")
+  async findUploadedInquiryRequestVideo(
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
+    @MediaCookiesParser(inquiryMediaCookieKey.request.video_url_cookie)
+    inquiryRequestVdoCookies: MediaDto[],
+  ): Promise<JsonGeneralInterface<InquiryRequestVideoEntity[]>> {
+    const inquiryRequestVideos =
+      await this.mediaAccessoryService.findInquiryRequestVideos(
+        inquiryRequestVdoCookies,
+      );
+
+    const uploadedInquiryRequestVideos =
+      await this.mediaGeneralService.findUploadedInquiryRequestVideos(
+        jwtPayload.email,
+        inquiryRequestVideos,
+      );
+
+    return {
+      statusCode: 200,
+      message: "현재 업로드된 문의 요청 동영상을 가져옵니다.",
+      result: uploadedInquiryRequestVideos,
+    };
+  }
 
   @UseInterceptors(JsonSendCookiesInterceptor)
   @UseInterceptors(

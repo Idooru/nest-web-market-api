@@ -5,6 +5,12 @@ import { MediaGeneralRepository } from "../repositories/media-general.repository
 import { MediaAccessoryService } from "./media-accessory.service";
 import { MediaDto } from "../dto/media.dto";
 import { ProductImageEntity } from "../entities/product.image.entity";
+import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
+import { InquiryResponseVideoEntity } from "../entities/inquiry-response-video.entity";
+import { ReviewImageEntity } from "../entities/review.image.entity";
+import { ReviewVideoEntity } from "../entities/review.video.entity";
+import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.entity";
+import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
 
 @Injectable()
 export class MediaGeneralService {
@@ -22,6 +28,142 @@ export class MediaGeneralService {
       email,
       url,
     );
+  }
+
+  async findUploadedReviewImages(
+    email: string,
+    reviewImages: ReviewImageEntity[],
+  ): Promise<ReviewImageEntity[]> {
+    if (reviewImages.length >= 2) {
+      const promises = reviewImages.map(async (reviewImage) => {
+        return await this.mediaGeneralRepository.findUploadedReviewImages(
+          email,
+          reviewImage.url,
+        );
+      });
+
+      return await Promise.all(promises);
+    } else {
+      return [
+        await this.mediaGeneralRepository.findUploadedReviewImages(
+          email,
+          reviewImages[0].url,
+        ),
+      ];
+    }
+  }
+
+  async findUploadedReviewVideos(
+    email: string,
+    reviewVideos: ReviewVideoEntity[],
+  ): Promise<ReviewVideoEntity[]> {
+    if (reviewVideos.length >= 2) {
+      const promoises = reviewVideos.map(async (reviewVideo) => {
+        return await this.mediaGeneralRepository.findUploadedReviewVideos(
+          email,
+          reviewVideo.url,
+        );
+      });
+
+      return await Promise.all(promoises);
+    } else {
+      return [
+        await this.mediaGeneralRepository.findUploadedReviewVideos(
+          email,
+          reviewVideos[0].url,
+        ),
+      ];
+    }
+  }
+
+  async findUploadedInquiryRequestImages(
+    email: string,
+    inquiryReqeustImages: InquiryRequestImageEntity[],
+  ): Promise<InquiryRequestImageEntity[]> {
+    if (inquiryReqeustImages.length >= 2) {
+      const promises = inquiryReqeustImages.map(async (inquiryRequestImage) => {
+        return await this.mediaGeneralRepository.findUploadedInquiryReqeustImages(
+          email,
+          inquiryRequestImage.url,
+        );
+      });
+
+      return await Promise.all(promises);
+    } else {
+      return [
+        await this.mediaGeneralRepository.findUploadedInquiryReqeustImages(
+          email,
+          inquiryReqeustImages[0].url,
+        ),
+      ];
+    }
+  }
+
+  async findUploadedInquiryRequestVideos(
+    email: string,
+    inquiryReqeustVideos: InquiryRequestVideoEntity[],
+  ): Promise<InquiryRequestImageEntity[]> {
+    if (inquiryReqeustVideos.length >= 2) {
+      const promises = inquiryReqeustVideos.map(async (inquiryRequestVideo) => {
+        return await this.mediaGeneralRepository.findUploadedInquiryReqeustVideos(
+          email,
+          inquiryRequestVideo.url,
+        );
+      });
+
+      return await Promise.all(promises);
+    } else {
+      return [
+        await this.mediaGeneralRepository.findUploadedInquiryReqeustImages(
+          email,
+          inquiryReqeustVideos[0].url,
+        ),
+      ];
+    }
+  }
+
+  async findUploadedInquiryResponseImages(
+    email: string,
+    inquiryResponseImages: InquiryResponseImageEntity[],
+  ): Promise<InquiryResponseImageEntity[]> {
+    if (inquiryResponseImages.length >= 2) {
+      const promises = inquiryResponseImages.map(
+        async (inquiryResponseImage) => {
+          return await this.mediaGeneralRepository.findUploadedInquiryResponseImages(
+            email,
+            inquiryResponseImage.url,
+          );
+        },
+      );
+
+      return await Promise.all(promises);
+    } else {
+      return [
+        await this.mediaGeneralRepository.findUploadedInquiryResponseImages(
+          email,
+          inquiryResponseImages[0].url,
+        ),
+      ];
+    }
+  }
+
+  async findUploadedInquiryResponseVideos(
+    email: string,
+    inquiryResponseVideos: InquiryResponseVideoEntity[],
+  ): Promise<InquiryResponseVideoEntity[]> {
+    if (inquiryResponseVideos.length >= 2) {
+      const promises = inquiryResponseVideos.map(
+        async (inquiryResponseVideo) => {
+          return await this.mediaGeneralRepository.findUploadedInquiryResponseVideos(
+            email,
+            inquiryResponseVideo.url,
+          );
+        },
+      );
+
+      return await Promise.all(promises);
+    } else {
+    }
   }
 
   async uploadProductImage(
@@ -292,7 +434,7 @@ export class MediaGeneralService {
     if (inquiryRequestVdoCookies.length >= 2) {
       const promises = inquiryRequestVdoCookies.map(async (cookie) => {
         const video =
-          await this.mediaGeneralRepository.findInquiryReuqestVideoWithUrl(
+          await this.mediaGeneralRepository.findInquiryRequestVideoWithUrl(
             cookie.url,
           );
         await this.mediaGeneralRepository.deleteInquiryRequestVideoWIthId(
@@ -303,7 +445,7 @@ export class MediaGeneralService {
       await Promise.all(promises);
     } else {
       const video =
-        await this.mediaGeneralRepository.findInquiryReuqestVideoWithUrl(
+        await this.mediaGeneralRepository.findInquiryRequestVideoWithUrl(
           inquiryRequestVdoCookies[0].url,
         );
 

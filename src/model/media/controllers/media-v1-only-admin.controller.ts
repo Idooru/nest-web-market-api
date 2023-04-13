@@ -41,6 +41,7 @@ import {
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { ProductImageEntity } from "../entities/product.image.entity";
+import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
@@ -74,6 +75,56 @@ export class MediaVersionOneOnlyAdminController {
       statusCode: 200,
       message: "현재 업로드된 상품 이미지를 가져옵니다.",
       result: productImage,
+    };
+  }
+
+  @UseInterceptors(JsonGeneralInterceptor)
+  @Get("/inquiry/response/image")
+  async findUploadedInquiryResponseImages(
+    @GetJWT() jwtPaylaod: JwtAccessTokenPayload,
+    @MediaCookiesParser(inquiryMediaCookieKey.response.image_url_cookie)
+    inquiryResponseImgCookies: MediaDto[],
+  ): Promise<JsonGeneralInterface<InquiryResponseImageEntity[]>> {
+    const inquiryResponseImages =
+      await this.mediaAccessoryService.findInquiryResponseImages(
+        inquiryResponseImgCookies,
+      );
+
+    const uploadedInquiryResponseImages =
+      await this.mediaGeneralService.findUploadedInquiryResponseImages(
+        jwtPaylaod.email,
+        inquiryResponseImages,
+      );
+
+    return {
+      statusCode: 200,
+      message: "현재 업로드된 문의 응답 이미지를 가져옵니다.",
+      result: uploadedInquiryResponseImages,
+    };
+  }
+
+  @UseInterceptors(JsonGeneralInterceptor)
+  @Get("/inquiry/response/video")
+  async findUploadedInquiryResponseVideos(
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
+    @MediaCookiesParser(inquiryMediaCookieKey.response.video_url_cookie)
+    inquiryResponseVdoCookies: MediaDto[],
+  ): Promise<any> {
+    const inquiryResponseVideos =
+      await this.mediaAccessoryService.findInquiryResponseVideos(
+        inquiryResponseVdoCookies,
+      );
+
+    const uploadedInquiryResponseVideos =
+      await this.mediaGeneralService.findUploadedInquiryResponseImages(
+        jwtPayload.email,
+        inquiryResponseVideos,
+      );
+
+    return {
+      statusCode: 200,
+      message: "현재 업로드된 문의 응답 동영상을 가져옵니다.",
+      result: uploadedInquiryResponseVideos,
     };
   }
 

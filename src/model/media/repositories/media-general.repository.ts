@@ -61,6 +61,161 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
     }
   }
 
+  async findUploadedReviewImages(
+    email: string,
+    url: string,
+  ): Promise<ReviewImageEntity> {
+    try {
+      return await this.reviewImageRepository
+        .createQueryBuilder()
+        .select(this.select.reviewImages)
+        .from(ReviewImageEntity, "reviewImage")
+        .where("reviewImage.url = :url", { url })
+        .andWhere("reviewImage.uploader = :uploader", { uploader: email })
+        .getOneOrFail();
+    } catch (err) {
+      this.methodName = this.findUploadedReviewImages.name;
+      this.errorHandlerBuilder
+        .setEntity(new ReviewImageEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setStuffs(url, "url")
+        .setStuffs(email, "email")
+        .setLayer("repository")
+        .handle();
+    }
+  }
+
+  async findUploadedReviewVideos(email: string, url: string) {
+    try {
+      return await this.reviewVideoRepository
+        .createQueryBuilder()
+        .select(this.select.reviewVideos)
+        .from(ReviewVideoEntity, "reviewVideo")
+        .where("reviewVideo.url = :url", { url })
+        .andWhere("reviewVideo.uploader = :uploader")
+        .getOneOrFail();
+    } catch (err) {
+      this.methodName = this.findUploadedReviewImages.name;
+      this.errorHandlerBuilder
+        .setEntity(new ReviewVideoEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setStuffs(url, "url")
+        .setStuffs(email, "email")
+        .setLayer("repository")
+        .handle();
+    }
+  }
+
+  async findUploadedInquiryReqeustImages(
+    email: string,
+    url: string,
+  ): Promise<InquiryRequestImageEntity> {
+    try {
+      return await this.inquiryRequestImageRepository
+        .createQueryBuilder()
+        .select(this.select.inquiryRequestImages)
+        .from(InquiryRequestImageEntity, "inquiryReqeustImage")
+        .where("inquiryReqeustImage.url = :url", { url })
+        .andWhere("inquiryReqeustImage.uploader = :uploader", {
+          uploader: email,
+        })
+        .getOneOrFail();
+    } catch (err) {
+      this.methodName = this.findUploadedReviewImages.name;
+      this.errorHandlerBuilder
+        .setEntity(new InquiryRequestImageEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setStuffs(url, "url")
+        .setStuffs(email, "email")
+        .setLayer("repository")
+        .handle();
+    }
+  }
+
+  async findUploadedInquiryReqeustVideos(
+    email: string,
+    url: string,
+  ): Promise<InquiryRequestVideoEntity> {
+    try {
+      return await this.inquiryRequestVideoRepository
+        .createQueryBuilder()
+        .select(this.select.inquiryRequestVideos)
+        .from(InquiryRequestVideoEntity, "inquiryRequestVideo")
+        .where("inquiryRequestVideo.url = :url", { url })
+        .andWhere("inquiryRequestVideo.uploader = :uploader", {
+          uploader: email,
+        })
+        .getOneOrFail();
+    } catch (err) {
+      this.methodName = this.findUploadedReviewImages.name;
+      this.errorHandlerBuilder
+        .setEntity(new InquiryRequestImageEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setStuffs(url, "url")
+        .setStuffs(email, "email")
+        .setLayer("repository")
+        .handle();
+    }
+  }
+
+  async findUploadedInquiryResponseImages(
+    email: string,
+    url: string,
+  ): Promise<InquiryResponseImageEntity> {
+    try {
+      return await this.inquiryResponseImageRepository
+        .createQueryBuilder()
+        .select(this.select.inquiryResponseImages)
+        .from(InquiryResponseImageEntity, "inquiryResponseImage")
+        .where("inquiryResponseImage.url = :url", { url })
+        .andWhere("inquiryResponseImage.uploader = :uploader", {
+          uploader: email,
+        })
+        .getOneOrFail();
+    } catch (err) {
+      this.methodName = this.findUploadedInquiryResponseImages.name;
+      this.errorHandlerBuilder
+        .setEntity(new InquiryResponseImageEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setStuffs(url, "url")
+        .setStuffs(email, "email")
+        .setLayer("repository")
+        .handle();
+    }
+  }
+
+  async findUploadedInquiryResponseVideos(
+    email: string,
+    url: string,
+  ): Promise<InquiryResponseVideoEntity> {
+    try {
+      return await this.inquiryResponseVideoRepository
+        .createQueryBuilder()
+        .select(this.select.inquiryResponseVideos)
+        .from(InquiryResponseVideoEntity, "inquiryResponseVideo")
+        .where("inquiryResponseVideo.url = :url", { url })
+        .andWhere("inquiryResponseVideo.uploader = :uploader", {
+          uploader: email,
+        })
+        .getOneOrFail();
+    } catch (err) {
+      this.methodName = this.findUploadedInquiryResponseVideos.name;
+      this.errorHandlerBuilder
+        .setEntity(new InquiryResponseVideoEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setStuffs(url, "url")
+        .setStuffs(email, "email")
+        .setLayer("repository")
+        .handle();
+    }
+  }
+
   async uploadProductImage(uploadMediaDto: UploadMediaDto): Promise<void> {
     try {
       await this.productImageRepository
@@ -287,19 +442,19 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
     }
   }
 
-  async findInquiryReuqestVideoWithUrl(
+  async findInquiryRequestVideoWithUrl(
     url: string,
   ): Promise<InquiryRequestVideoEntity> {
     try {
       return await this.inquiryRequestVideoRepository
         .createQueryBuilder()
-        .select(this.select.inquiryRequestVideoes)
+        .select(this.select.inquiryRequestVideos)
         .from(InquiryRequestVideoEntity, "inquiryRequestVideo")
         .leftJoin("inquiryRequestVideo.InquiryRequest", "InquiryRequest")
         .where("inquiryRequestVideo.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
-      this.methodName = this.findInquiryReuqestVideoWithUrl.name;
+      this.methodName = this.findInquiryRequestVideoWithUrl.name;
       this.errorHandlerBuilder
         .setEntity(new InquiryRequestVideoEntity())
         .setError(err)
@@ -316,10 +471,10 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.inquiryResponseImageRepository
         .createQueryBuilder()
-        .select(this.select.inquiryRequestImages)
-        .from(InquiryResponseImageEntity, "inquiryImage")
-        .leftJoin("inquiryImage.Inquiry", "Inquiry")
-        .where("inquiryImage.url = :url", { url })
+        .select(this.select.inquiryResponseImages)
+        .from(InquiryResponseImageEntity, "inquiryResponseImage")
+        .leftJoin("inquiryResponseImage.InquiryResponse", "InquiryResponse")
+        .where("inquiryResponseImage.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findInquiryResponseImageWithUrl.name;
@@ -339,10 +494,10 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
     try {
       return await this.inquiryResponseVideoRepository
         .createQueryBuilder()
-        .select(this.select.inquiryRequestVideoes)
-        .from(InquiryResponseVideoEntity, "inquiryVideo")
-        .leftJoin("inquiryVideo.Inquiry", "Inquiry")
-        .where("inquiryVideo.url = :url", { url })
+        .select(this.select.inquiryResponseVideos)
+        .from(InquiryResponseVideoEntity, "inquiryResponseVideo")
+        .leftJoin("inquiryResponseVideo.InquiryResponse", "InquiryResponse")
+        .where("inquiryResponseVideo.url = :url", { url })
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findInquiryResponseVideoWithUrl.name;
