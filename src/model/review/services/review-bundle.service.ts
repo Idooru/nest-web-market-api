@@ -101,7 +101,7 @@ export class ReviewBundleService {
       modifyReviewMediaDto;
 
     if (reviewImgCookies) {
-      this.reviewAccessoryService.modifyReviewImages(
+      await this.reviewAccessoryService.modifyReviewImages(
         reviewImgCookies,
         reviewRequestDto,
         review,
@@ -109,7 +109,7 @@ export class ReviewBundleService {
     }
 
     if (reviewVdoCookies) {
-      this.reviewAccessoryService.modifyReviewVideos(
+      await this.reviewAccessoryService.modifyReviewVideos(
         reviewVdoCookies,
         reviewRequestDto,
         review,
