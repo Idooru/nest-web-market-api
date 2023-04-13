@@ -65,7 +65,7 @@ export class MediaVersionOneOnlyAdminController {
     @MediaCookieParser(productMediaCookieKey.image_url_cookie)
     productImgCookie: MediaDto,
   ): Promise<JsonGeneralInterface<ProductImageEntity>> {
-    const productImage =
+    const uploadedProductImage =
       await this.mediaGeneralService.findUploadedProductImage(
         jwtPayload.email,
         productImgCookie.url,
@@ -74,7 +74,7 @@ export class MediaVersionOneOnlyAdminController {
     return {
       statusCode: 200,
       message: "현재 업로드된 상품 이미지를 가져옵니다.",
-      result: productImage,
+      result: uploadedProductImage,
     };
   }
 
