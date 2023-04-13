@@ -21,21 +21,17 @@ export class InquiryRequestBundleService {
     } = pushInquiryMediaDto;
 
     if (inquiryRequestImgCookies) {
-      await this.inquiryRequestAccessoryService.distinguishInquiryImagesCountForPush(
-        {
-          inquiryRequestDto,
-          inquiryRequestImgCookies,
-        },
-      );
+      await this.inquiryRequestAccessoryService.pushInquiryImages({
+        inquiryRequestDto,
+        inquiryRequestImgCookies,
+      });
     }
 
     if (inquiryRequestVdoCookies) {
-      await this.inquiryRequestAccessoryService.distinguishInquiryVideosCountForPush(
-        {
-          inquiryRequestDto,
-          inquiryRequestVdoCookies,
-        },
-      );
+      await this.inquiryRequestAccessoryService.pushInquiryVideos({
+        inquiryRequestDto,
+        inquiryRequestVdoCookies,
+      });
     }
   }
 
@@ -50,7 +46,7 @@ export class InquiryRequestBundleService {
     } = insertInquiryMediaDto;
 
     if (inquiryRequestImgCookies) {
-      await this.inquiryRequestAccessoryService.distinguishInquiryImagesCountForInsert(
+      await this.inquiryRequestAccessoryService.insertInquiryImages(
         inquiryRequestImgCookies,
         inquiryRequestDto,
         inquiryRequest,
@@ -58,7 +54,7 @@ export class InquiryRequestBundleService {
     }
 
     if (inquiryRequestVdoCookies) {
-      await this.inquiryRequestAccessoryService.distinguishInquiryVideosCountForInsert(
+      await this.inquiryRequestAccessoryService.insertInquiryVideos(
         inquiryRequestVdoCookies,
         inquiryRequestDto,
         inquiryRequest,

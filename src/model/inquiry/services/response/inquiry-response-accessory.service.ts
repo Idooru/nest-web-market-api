@@ -132,7 +132,7 @@ export class InquiryResponseAccessoryService {
     );
   }
 
-  async distinguishInquiryImagesCountForPush(
+  async pushInquiryImages(
     pushInquiryResponseImageDto: PushInquiryResponseImageDto,
   ): Promise<void> {
     const { inquiryResponseImgCookies, inquiryResponseDto } =
@@ -153,7 +153,7 @@ export class InquiryResponseAccessoryService {
     }
   }
 
-  async distinguishInquiryVideosCountForPush(
+  async pushInquiryVideos(
     pushInquiryResponseVideoDto: PushInquiryResponseVideoDto,
   ): Promise<void> {
     const { inquiryResponseVdoCookies, inquiryResponseDto } =
@@ -174,7 +174,7 @@ export class InquiryResponseAccessoryService {
     }
   }
 
-  async distinguishInquiryImagesCountForInsert(
+  async insertInquiryImages(
     inquiryResponseImgCookies: MediaDto[],
     inquiryResponseDto: InquiryResponseDto,
     inquiryResponse: InquiryResponseEntity,
@@ -192,7 +192,7 @@ export class InquiryResponseAccessoryService {
     }
   }
 
-  async distinguishInquiryVideosCountForInsert(
+  async insertInquiryVideos(
     inquiryResponseVdoCookies: MediaDto[],
     inquiryResponseDto: InquiryResponseDto,
     inquiryResponse: InquiryResponseEntity,
