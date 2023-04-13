@@ -3,7 +3,7 @@ export interface MediaSelectProperty {
   reviewImages: string[];
   reviewVideos: string[];
   inquiryRequestImages: string[];
-  inquiryRequestVideoes: string[];
+  inquiryRequestVideos: string[];
   inquiryResponseImages: string[];
   inquiryResponseVideos: string[];
 }
@@ -32,7 +32,7 @@ export const mediaSelectProperty: MediaSelectProperty = {
     "inquiryRequestImage.InquiryRequest",
     "inquiryRequestImage.uploader",
   ],
-  inquiryRequestVideoes: [
+  inquiryRequestVideos: [
     "inquiryRequestVideo.id",
     "inquiryRequestVideo.url",
     "inquiryRequestVideo.InquiryRequest",

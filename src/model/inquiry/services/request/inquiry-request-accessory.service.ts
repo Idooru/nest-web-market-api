@@ -58,7 +58,7 @@ export class InquiryRequestAccessoryService {
     const promises = inquiryRequestVdoCookies.map(
       async (inquiryRequestVdoCookie) => {
         const video =
-          await this.mediaGeneralRepository.findInquiryReuqestVideoWithUrl(
+          await this.mediaGeneralRepository.findInquiryRequestVideoWithUrl(
             inquiryRequestVdoCookie.url,
           );
 
@@ -74,7 +74,7 @@ export class InquiryRequestAccessoryService {
     inquiryRequestDto: InquiryRequestDto,
   ): Promise<void> {
     const video =
-      await this.mediaGeneralRepository.findInquiryReuqestVideoWithUrl(
+      await this.mediaGeneralRepository.findInquiryRequestVideoWithUrl(
         inquiryRequestVdoCookies[0].url,
       );
 
