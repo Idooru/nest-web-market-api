@@ -23,11 +23,16 @@ class NestCoreConfig {
   }
 
   public async run() {
-    await this.app.listen(this.port, () =>
-      new Logger("NestApplication").log(
+    await this.app.listen(this.port, () => {
+      const nestLogger = new Logger("NestApplication");
+
+      nestLogger.log(
         `Server is running at ${this.scheme}://${this.host}:${this.port}`,
-      ),
-    );
+      );
+      nestLogger.log(
+        `The current execution environment is ${process.env.NODE_ENV}`,
+      );
+    });
   }
 
   private setGlobals() {
