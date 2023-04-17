@@ -31,7 +31,7 @@ export class InquiryVersionOneOnlyClientController {
   constructor(
     private readonly inquiryRequestGeneralService: InquiryRequestGeneralService,
     private readonly inquiryRequestBundleService: InquiryRequestBundleService,
-    private readonly EmailSenderLibrary: EmailSenderLibrary,
+    private readonly emailSenderLibrary: EmailSenderLibrary,
   ) {}
 
   @UseInterceptors(JsonClearCookiesInterceptor)
@@ -72,7 +72,7 @@ export class InquiryVersionOneOnlyClientController {
       const [product, inquiryRequest] =
         await this.inquiryRequestBundleService.findStuffForEmail(productId);
 
-      await this.EmailSenderLibrary.sendMailToAdminAboutInquiryRequest({
+      await this.emailSenderLibrary.sendMailToAdminAboutInquiryRequest({
         product,
         inquiryRequest,
       });
@@ -125,7 +125,7 @@ export class InquiryVersionOneOnlyClientController {
       const [product, inquiryRequest] =
         await this.inquiryRequestBundleService.findStuffForEmail(productId);
 
-      await this.EmailSenderLibrary.sendMailToAdminAboutInquiryRequest({
+      await this.emailSenderLibrary.sendMailToAdminAboutInquiryRequest({
         product,
         inquiryRequest,
       });
@@ -177,7 +177,7 @@ export class InquiryVersionOneOnlyClientController {
       const [product, inquiryRequest] =
         await this.inquiryRequestBundleService.findStuffForEmail(productId);
 
-      await this.EmailSenderLibrary.sendMailToAdminAboutInquiryRequest({
+      await this.emailSenderLibrary.sendMailToAdminAboutInquiryRequest({
         product,
         inquiryRequest,
       });
@@ -213,7 +213,7 @@ export class InquiryVersionOneOnlyClientController {
       const [product, inquiryRequest] =
         await this.inquiryRequestBundleService.findStuffForEmail(productId);
 
-      await this.EmailSenderLibrary.sendMailToAdminAboutInquiryRequest({
+      await this.emailSenderLibrary.sendMailToAdminAboutInquiryRequest({
         product,
         inquiryRequest,
       });
