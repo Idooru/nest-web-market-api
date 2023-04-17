@@ -57,7 +57,7 @@ const isNodeEnvProd = (): boolean =>
         ],
         synchronize: isNodeEnvDev(),
         migrationsRun: isNodeEnvProd(),
-        logging: false,
+        logging: isNodeEnvDev(),
         dropSchema: false,
         keepConnectionAlive: true,
       }),
