@@ -31,12 +31,16 @@ import { RegisterUserDto } from "../../dtos/register-user.dto";
 import { UserEntity } from "../../entities/user.entity";
 import { VerifyDataGuard } from "src/common/guards/verify/verify-data.guard";
 import { userVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/user-verify-cookie.key";
+import { UserAccessoryService } from "../../services/user-accessory.service";
+import { EmailSenderLibrary } from "src/common/lib/email/email-sender.library";
 
 @Controller("/api/v1/free-use/user")
 export class UserVersionOneFreeUseController {
   constructor(
     private readonly userGeneralService: UserGeneralService,
     private readonly authGeneralService: AuthGeneralService,
+    private readonly userAccessorySrevice: UserAccessoryService,
+    private readonly emailSenderLibrary: EmailSenderLibrary,
   ) {}
 
   @UseInterceptors(JsonGeneralInterceptor)
@@ -52,14 +56,26 @@ export class UserVersionOneFreeUseController {
   async register(
     @Body() registerUserDto: RegisterUserDto,
   ): Promise<JsonGeneralInterface<void>> {
-    const userBase = await this.userGeneralService.createUserBase(
-      registerUserDto,
-    );
+    const registerWork = async () => {
+      const userBase = await this.userGeneralService.createUserBase(
+        registerUserDto,
+      );
 
-    await this.userGeneralService.createClientOrAdmin(
-      registerUserDto,
-      userBase,
-    );
+      await this.userGeneralService.createClientOrAdmin(
+        registerUserDto,
+        userBase,
+      );
+    };
+
+    const mailWork = async () => {
+      const user = await this.userAccessorySrevice.findUserWithEmail(
+        registerUserDto.email,
+      );
+
+      await this.emailSenderLibrary.sendMailToClientAboutRegister(user);
+    };
+
+    await Promise.all([registerWork(), mailWork()]);
 
     return {
       statusCode: 201,
