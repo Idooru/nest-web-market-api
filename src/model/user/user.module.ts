@@ -20,6 +20,7 @@ import { UserEntity } from "./entities/user.entity";
 import { UserInsertRepository } from "./repositories/user-insert.repository";
 import { userSelectProperty } from "src/common/config/repository-select-configs/user.select";
 import { userVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/user-verify-cookie.key";
+import { UserAccessoryService } from "./services/user-accessory.service";
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { userVerifyCookieKey } from "src/common/config/cookie-key-configs/verify
     },
     UserGeneralService,
     UserVerifyService,
+    UserAccessoryService,
     UserGeneralRepository,
     UserVerifyRepository,
     UserInsertRepository,
@@ -59,6 +61,7 @@ import { userVerifyCookieKey } from "src/common/config/cookie-key-configs/verify
   exports: [
     UserGeneralService,
     UserVerifyService,
+    UserAccessoryService,
     UserGeneralRepository,
     UserVerifyRepository,
     UserInsertRepository,
