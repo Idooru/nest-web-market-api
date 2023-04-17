@@ -5,6 +5,7 @@ import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 import { SendMailToClientAboutInquiryResponseDto } from "src/model/inquiry/dto/response/send-mail-to-client-about-inquiry-response.dto";
 import { SendMailToAdminAboutInquiryRequestDto } from "src/model/inquiry/dto/request/send-mail-to-admin-about-inquiry-request.dto";
 import { ErrorHandlerBuilder } from "../error-handler/error-hanlder-builder";
+import { UserEntity } from "src/model/user/entities/user.entity";
 
 @Injectable()
 export class EmailSenderLibrary extends ErrorHandlerProps {
@@ -47,15 +48,16 @@ export class EmailSenderLibrary extends ErrorHandlerProps {
   }
 
   async sendMailToClientAboutInquiryResponse(
-    sendMailToClientDto: SendMailToClientAboutInquiryResponseDto,
+    sendMailToClientAboutInquiryResponseDto: SendMailToClientAboutInquiryResponseDto,
   ): Promise<void> {
-    const { user, inquiryRequest, inquiryResponse } = sendMailToClientDto;
+    const { user, inquiryRequest, inquiryResponse } =
+      sendMailToClientAboutInquiryResponseDto;
     try {
       await this.mailerService.sendMail({
         to: user.Auth.email,
         from: this.configService.get("MAIL_USER"),
-        subject: "고객님, 서비스 관리자로부터 문의 응답이 도착하였습니다.",
-        text: `고객님께서 작성하신 문의로부터 서비스 관리자가 문의 응답을 달아주었습니다.\n
+        subject: `${user.Auth.nickname}님, 서비스 관리자로부터 문의 응답이 도착하였습니다.`,
+        text: `${user.Auth.nickname}님께서 작성하신 문의로부터 서비스 관리자가 문의 응답을 달아주었습니다.\n
           ----------------------------------------------------------------------
           문의 요청 상품 이름: ${inquiryRequest.Product.name}
           문의 요청 카테코리: ${inquiryRequest.categories}
@@ -65,7 +67,7 @@ export class EmailSenderLibrary extends ErrorHandlerProps {
           문의 응답 제목: ${inquiryResponse.title}
           문의 응답 내용: ${inquiryResponse.content}
           ----------------------------------------------------------------------
-          \n자세한 내용은 서비스에 접속하여서 고객님의 프로필을 확인해보시기 바랍니다.
+          \n자세한 내용은 서비스에 접속하여서 ${user.Auth.nickname}님의 프로필을 확인해보시기 바랍니다.
           `,
       });
     } catch (err) {
@@ -78,9 +80,14 @@ export class EmailSenderLibrary extends ErrorHandlerProps {
     }
   }
 
-  async sendMailToClientAboutRegister(): Promise<void> {
+  async sendMailToClientAboutRegister(user: UserEntity): Promise<void> {
     try {
-      // await this.mailerService.
+      await this.mailerService.sendMail({
+        to: user.Auth.email,
+        from: this.configService.get("MAIL_USER"),
+        subject: `${user.Auth.nickname}님, 저희 서비스에 회원 가입을 해주셔서 진심으로 감사드립니다!`,
+        text: `환영합니다!`,
+      });
     } catch (err) {
       this.methodName = this.sendMailToClientAboutRegister.name;
       this.errorHandlerBuilder
