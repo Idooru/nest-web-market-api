@@ -56,26 +56,20 @@ export class UserVersionOneFreeUseController {
   async register(
     @Body() registerUserDto: RegisterUserDto,
   ): Promise<JsonGeneralInterface<void>> {
-    const registerWork = async () => {
-      const userBase = await this.userGeneralService.createUserBase(
-        registerUserDto,
-      );
+    const userBase = await this.userGeneralService.createUserBase(
+      registerUserDto,
+    );
 
-      await this.userGeneralService.createClientOrAdmin(
-        registerUserDto,
-        userBase,
-      );
-    };
+    await this.userGeneralService.createClientOrAdmin(
+      registerUserDto,
+      userBase,
+    );
 
-    const mailWork = async () => {
-      const user = await this.userAccessorySrevice.findUserWithEmail(
-        registerUserDto.email,
-      );
+    const user = await this.userAccessorySrevice.findUserWithEmail(
+      registerUserDto.email,
+    );
 
-      await this.emailSenderLibrary.sendMailToClientAboutRegister(user);
-    };
-
-    await Promise.all([registerWork(), mailWork()]);
+    await this.emailSenderLibrary.sendMailToClientAboutRegister(user);
 
     return {
       statusCode: 201,
