@@ -27,46 +27,6 @@ export class UserInsertRepository extends ErrorHandlerProps {
     super();
   }
 
-  async findLastCreatedUserProfile(): Promise<UserProfileEntity> {
-    try {
-      return await this.userProfileRepository
-        .createQueryBuilder()
-        .select("profile")
-        .from(UserProfileEntity, "profile")
-        .orderBy("profile.createdAt", "DESC")
-        .limit(1)
-        .getOne();
-    } catch (err) {
-      this.methodName = this.findLastCreatedUserProfile.name;
-      this.errorHandlerBuilder
-        .setEntity(new UserProfileEntity())
-        .setError(err)
-        .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
-        .handle();
-    }
-  }
-
-  async findLastCreatedUserAuth(): Promise<UserAuthEntity> {
-    try {
-      return await this.userAuthRepository
-        .createQueryBuilder()
-        .select("auth")
-        .from(UserAuthEntity, "auth")
-        .orderBy("auth.createdAt", "DESC")
-        .limit(1)
-        .getOne();
-    } catch (err) {
-      this.methodName = this.findLastCreatedUserAuth.name;
-      this.errorHandlerBuilder
-        .setEntity(new UserAuthEntity())
-        .setError(err)
-        .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
-        .handle();
-    }
-  }
-
   async findOneUserBaseById(id: string): Promise<UserEntity> {
     try {
       return await this.userRepository
