@@ -91,6 +91,26 @@ export class InquiryGeneralRepository extends ErrorHandlerProps {
     }
   }
 
+  async findInquiryResponseWithId(id: string): Promise<InquiryResponseEntity> {
+    try {
+      return await this.inquiryResponseRepository
+        .createQueryBuilder()
+        .select(this.select.inquiryResponse)
+        .from(InquiryResponseEntity, "inquiryResponse")
+        .where("inquiryResponse.id = :id", { id })
+        .getOneOrFail();
+    } catch (err) {
+      this.methodName = this.findInquiryResponseWithId.name;
+      this.errorHandlerBuilder
+        .setEntity(new InquiryResponseEntity())
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setStuffs(id, "id")
+        .setLayer("repository")
+        .handle();
+    }
+  }
+
   async setIsAnsweredTrue(inquiryRequest: InquiryRequestEntity): Promise<void> {
     try {
       await this.inquiryRequestRepository
