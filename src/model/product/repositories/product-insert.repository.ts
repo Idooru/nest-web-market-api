@@ -15,17 +15,16 @@ export class ProductInsertRepository extends ErrorHandlerProps {
     super();
   }
 
-  async findLastCreatedProduct(): Promise<ProductEntity> {
+  async findOneProductById(id: string): Promise<ProductEntity> {
     try {
       return await this.productRepository
         .createQueryBuilder()
         .select("product")
         .from(ProductEntity, "product")
-        .orderBy("product.createdAt", "DESC")
-        .limit(1)
-        .getOne();
+        .where("product.id = :id", { id })
+        .getOneOrFail();
     } catch (err) {
-      this.methodName = this.findLastCreatedProduct.name;
+      this.methodName = this.findOneProductById.name;
       this.errorHandlerBuilder
         .setEntity(new ProductEntity())
         .setError(err)

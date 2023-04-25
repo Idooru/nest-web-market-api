@@ -67,17 +67,16 @@ export class UserInsertRepository extends ErrorHandlerProps {
     }
   }
 
-  async findLastCreatedUserBase(): Promise<UserEntity> {
+  async findOneUserBaseById(id: string): Promise<UserEntity> {
     try {
       return await this.userRepository
         .createQueryBuilder()
         .select("userBase")
         .from(UserEntity, "userBase")
-        .orderBy("userBase.createdAt", "DESC")
-        .limit(1)
-        .getOne();
+        .where("userBase.id = :id", { id })
+        .getOneOrFail();
     } catch (err) {
-      this.methodName = this.findLastCreatedUserBase.name;
+      this.methodName = this.findOneUserBaseById.name;
       this.errorHandlerBuilder
         .setEntity(new UserEntity())
         .setError(err)
@@ -87,17 +86,16 @@ export class UserInsertRepository extends ErrorHandlerProps {
     }
   }
 
-  async findLastCreatedClientUser(): Promise<ClientUserEntity> {
+  async findOneClientUserById(id: string): Promise<ClientUserEntity> {
     try {
       return await this.clientUserRepository
         .createQueryBuilder()
         .select("clientUser")
         .from(ClientUserEntity, "clientUser")
-        .orderBy("clientUser.createdAt", "DESC")
-        .limit(1)
-        .getOne();
+        .where("clientUser.id = :id", { id })
+        .getOneOrFail();
     } catch (err) {
-      this.methodName = this.findLastCreatedClientUser.name;
+      this.methodName = this.findOneClientUserById.name;
       this.errorHandlerBuilder
         .setEntity(new ClientUserEntity())
         .setError(err)
@@ -107,17 +105,16 @@ export class UserInsertRepository extends ErrorHandlerProps {
     }
   }
 
-  async findLastCreatedAdminUser(): Promise<AdminUserEntity> {
+  async findOneAdminUserById(id: string): Promise<AdminUserEntity> {
     try {
       return await this.adminUserRepository
         .createQueryBuilder()
         .select("adminUser")
         .from(AdminUserEntity, "adminUser")
-        .orderBy("adminUser.createdAt", "DESC")
-        .limit(1)
-        .getOne();
+        .where("adminUser.id = :id", { id })
+        .getOneOrFail();
     } catch (err) {
-      this.methodName = this.findLastCreatedAdminUser.name;
+      this.methodName = this.findOneAdminUserById.name;
       this.errorHandlerBuilder
         .setEntity(new AdminUserEntity())
         .setError(err)

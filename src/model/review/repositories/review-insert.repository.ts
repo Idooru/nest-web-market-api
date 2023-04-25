@@ -16,17 +16,16 @@ export class ReviewInsertRepository extends ErrorHandlerProps {
     super();
   }
 
-  async findLastCreatedReview(): Promise<ReviewEntity> {
+  async findOneReviewById(id: string): Promise<ReviewEntity> {
     try {
       return await this.reviewRepository
         .createQueryBuilder()
         .select("review")
         .from(ReviewEntity, "review")
-        .orderBy("review.createdAt", "DESC")
-        .limit(1)
-        .getOne();
+        .where("review.id = :id", { id })
+        .getOneOrFail();
     } catch (err) {
-      this.methodName = this.findLastCreatedReview.name;
+      this.methodName = this.findOneReviewById.name;
       this.errorHandlerBuilder
         .setEntity(new ReviewEntity())
         .setError(err)

@@ -20,17 +20,16 @@ export class InquiryInsertRepository extends ErrorHandlerProps {
     super();
   }
 
-  async findLastCreatedInquiryRequest(): Promise<InquiryRequestEntity> {
+  async findOneInquiryRequestById(id: string): Promise<InquiryRequestEntity> {
     try {
       return await this.inquiryRequestRepository
         .createQueryBuilder()
         .select("inquiryRequest")
         .from(InquiryRequestEntity, "inquiryRequest")
-        .orderBy("inquiryRequest.createdAt", "DESC")
-        .limit(1)
-        .getOne();
+        .where("inquiryRequest.id = :id", { id })
+        .getOneOrFail();
     } catch (err) {
-      this.methodName = this.findLastCreatedInquiryRequest.name;
+      this.methodName = this.findOneInquiryRequestById.name;
       this.errorHandlerBuilder
         .setEntity(new InquiryRequestEntity())
         .setError(err)
@@ -40,17 +39,16 @@ export class InquiryInsertRepository extends ErrorHandlerProps {
     }
   }
 
-  async findLastCreatedInquiryResponse(): Promise<InquiryResponseEntity> {
+  async findOneInquiryResponseById(id: string): Promise<InquiryResponseEntity> {
     try {
       return await this.inquiryResponseRepository
         .createQueryBuilder()
         .select("inquiryResponse")
         .from(InquiryResponseEntity, "inquiryResponse")
-        .orderBy("inquiryResponse.createdAt", "DESC")
-        .limit(1)
-        .getOne();
+        .where("inquiryResponse.id = :id", { id })
+        .getOneOrFail();
     } catch (err) {
-      this.methodName = this.findLastCreatedInquiryResponse.name;
+      this.methodName = this.findOneInquiryResponseById.name;
       this.errorHandlerBuilder
         .setEntity(new InquiryResponseEntity())
         .setError(err)
