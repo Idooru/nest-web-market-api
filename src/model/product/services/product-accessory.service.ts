@@ -23,7 +23,7 @@ export class ProductAccessoryService {
     imageCookie: MediaDto,
   ): Promise<[ProductEntity, ProductImageEntity, ProductImageEntity]> {
     return await Promise.all([
-      this.productGeneralRepository.findProductOneById(id),
+      this.productGeneralRepository.findOneProductById(id),
       this.mediaGeneralRepository.findProductImageWithUrl(imageCookie.url),
       this.mediaGeneralRepository.findProductImageEvenUseWithId(id),
     ]);
