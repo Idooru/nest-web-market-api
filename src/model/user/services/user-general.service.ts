@@ -68,7 +68,6 @@ export class UserGeneralService extends ErrorHandlerProps {
     }
 
     const userProfileColumn = { realname, birth, gender, phonenumber };
-
     const userAuthColumn = { nickname, email, password: hashed };
 
     const [userProfileDummy, userAuthDummy] = await Promise.all([
@@ -76,24 +75,26 @@ export class UserGeneralService extends ErrorHandlerProps {
       this.userGeneralRepository.createUserAuth(userAuthColumn),
     ]);
 
-    const [userProfileObject, userAuthObject] = await Promise.all([
+    const [userProfile, userAuth] = await Promise.all([
       this.userGeneralRepository.findUserProfile(userProfileDummy),
       this.userGeneralRepository.findUserAuth(userAuthDummy),
     ]);
 
     const createUserBaseDto: CreateUserBaseDto = {
-      Profile: userProfileObject,
-      Auth: userAuthObject,
+      Profile: userProfile,
+      Auth: userAuth,
       type,
     };
 
-    await this.userGeneralRepository.createUserBase(createUserBaseDto);
+    const userBaseOutput = await this.userGeneralRepository.createUserBase(
+      createUserBaseDto,
+    );
 
-    const [userProfile, userAuth, userBase] = await Promise.all([
-      this.userInsertRepository.findLastCreatedUserProfile(),
-      this.userInsertRepository.findLastCreatedUserAuth(),
-      this.userInsertRepository.findLastCreatedUserBase(),
-    ]);
+    const userBaseId: string = userBaseOutput.generatedMaps[0].id;
+
+    const userBase = await this.userInsertRepository.findOneUserBaseById(
+      userBaseId,
+    );
 
     await Promise.all([
       this.userInsertRepository.insertUserBaseIdOnUserProfile(
@@ -111,17 +112,30 @@ export class UserGeneralService extends ErrorHandlerProps {
     userBase: UserEntity,
   ) {
     if (registerUserDto.type.toString() === "client") {
-      await this.userGeneralRepository.createClientUser(userBase);
-      const clientUser =
-        await this.userInsertRepository.findLastCreatedClientUser();
+      const clientUserOutput =
+        await this.userGeneralRepository.createClientUser(userBase);
+
+      const clientUserId: string = clientUserOutput.generatedMaps[0].id;
+
+      const clientUser = await this.userInsertRepository.findOneClientUserById(
+        clientUserId,
+      );
+
       await this.userInsertRepository.insertUserBaseIdOnClientUser(
         userBase,
         clientUser,
       );
     } else {
-      await this.userGeneralRepository.createAdminUser(userBase);
-      const adminUser =
-        await this.userInsertRepository.findLastCreatedAdminUser();
+      const adminUserOutput = await this.userGeneralRepository.createAdminUser(
+        userBase,
+      );
+
+      const adminUserId: string = adminUserOutput.generatedMaps[0].id;
+
+      const adminUser = await this.userInsertRepository.findOneAdminUserById(
+        adminUserId,
+      );
+
       await this.userInsertRepository.insertUserBaseIdOnAdminUser(
         userBase,
         adminUser,

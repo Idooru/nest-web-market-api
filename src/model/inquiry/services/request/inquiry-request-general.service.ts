@@ -22,23 +22,29 @@ export class InquiryRequestGeneralService {
       createInquiryRequestDto;
 
     const [product, client] = await Promise.all([
-      this.productGeneralRepository.findProductOneById(productId),
+      this.productGeneralRepository.findOneProductById(productId),
       this.userGeneralRepository.findClientUserObjectWithId(jwtPayload.userId),
     ]);
 
-    await this.inquiryGeneralRepository.createInquiryRequest({
-      inquiryRequestDto,
-      client,
-      product,
-    });
+    const inquiryRequestOutput =
+      await this.inquiryGeneralRepository.createInquiryRequest({
+        inquiryRequestDto,
+        client,
+        product,
+      });
 
-    const lastCreatedInquiryRequest =
-      await this.inquiryInsertRepository.findLastCreatedInquiryRequest();
+    const inquiryRequestId: string = inquiryRequestOutput.generatedMaps[0].id;
+
+    const inquiryRequest =
+      await this.inquiryInsertRepository.findOneInquiryRequestById(
+        inquiryRequestId,
+      );
+
     await this.inquiryInsertRepository.insertClientUserIdOnInquiryRequest(
       client,
-      lastCreatedInquiryRequest,
+      inquiryRequest,
     );
 
-    return lastCreatedInquiryRequest;
+    return inquiryRequest;
   }
 }

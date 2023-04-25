@@ -51,7 +51,7 @@ export class ProductGeneralService {
   }
 
   async findProductById(id: string): Promise<ProductEntity> {
-    return await this.productGeneralRepository.findProductOneById(id);
+    return await this.productGeneralRepository.findOneProductById(id);
   }
 
   async createProduct(
@@ -65,9 +65,16 @@ export class ProductGeneralService {
       this.userGeneralRepository.findAdminUserObjectWithId(jwtPayload.userId),
     ]);
 
-    await this.productGeneralRepository.createProduct(createProductDto, admin);
+    const productOutput = await this.productGeneralRepository.createProduct(
+      createProductDto,
+      admin,
+    );
 
-    const product = await this.productInsertRepository.findLastCreatedProduct();
+    const productId: string = productOutput.generatedMaps[0].id;
+
+    const product = await this.productInsertRepository.findOneProductById(
+      productId,
+    );
 
     await Promise.all([
       this.mediaInsertRepository.insertProductIdOnProductImage(image, product),

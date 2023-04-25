@@ -24,25 +24,30 @@ export class InquiryResponseGeneralService {
       this.userGenralRepository.findAdminUserObjectWithId(jwtPayload.userId),
     ]);
 
-    await this.inquiryGeneralRepository.createInquiryResponse(
-      inquiryResponseDto,
-    );
+    const inquiryResponseOutput =
+      await this.inquiryGeneralRepository.createInquiryResponse(
+        inquiryResponseDto,
+      );
 
-    const lastCreatedInquiryResponse =
-      await this.inquiryInsertRepository.findLastCreatedInquiryResponse();
+    const inquiryResponseId: string = inquiryResponseOutput.generatedMaps[0].id;
+
+    const inquiryResponse =
+      await this.inquiryInsertRepository.findOneInquiryResponseById(
+        inquiryResponseId,
+      );
 
     await Promise.all([
       this.inquiryInsertRepository.insertAdminUserIdOnInquiryResponse(
         admin,
-        lastCreatedInquiryResponse,
+        inquiryResponse,
       ),
       this.inquiryInsertRepository.insertInquiryRequestIdOnInquiryResponse(
         inquiryRequest,
-        lastCreatedInquiryResponse,
+        inquiryResponse,
       ),
       this.inquiryGeneralRepository.setIsAnsweredTrue(inquiryRequest),
     ]);
 
-    return lastCreatedInquiryResponse;
+    return inquiryResponse;
   }
 }

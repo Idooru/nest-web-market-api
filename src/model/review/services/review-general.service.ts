@@ -17,7 +17,7 @@ export class ReviewGeneralService {
   ) {}
 
   async findReviewFromProductById(id: string): Promise<ReviewEntity[]> {
-    const product = await this.productGeneralRepository.findProductOneById(id);
+    const product = await this.productGeneralRepository.findOneProductById(id);
 
     if (product.Review.length === 0) {
       throw new NotFoundException("해당 상품에 리뷰가 존재하지 않습니다.");
@@ -30,17 +30,22 @@ export class ReviewGeneralService {
     const { reviewRequestDto, jwtPayload, productId } = createReviewDto;
 
     const [product, client] = await Promise.all([
-      this.productGeneralRepository.findProductOneById(productId),
+      this.productGeneralRepository.findOneProductById(productId),
       this.userGeneralRepository.findClientUserObjectWithId(jwtPayload.userId),
     ]);
 
-    await this.reviewGeneralRepository.createReview({
+    const reviewOutput = await this.reviewGeneralRepository.createReview({
       reviewRequestDto,
       client,
       product,
     });
 
-    const review = await this.reviewInsertRepository.findLastCreatedReview();
+    const reviewId = reviewOutput.generatedMaps[0].id;
+
+    const review = await this.reviewInsertRepository.findOneReviewById(
+      reviewId,
+    );
+
     await this.reviewInsertRepository.insertReviewIdOnClientUser(
       client,
       review,
