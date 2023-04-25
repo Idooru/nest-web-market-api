@@ -31,7 +31,7 @@ export class InquiryVersionOneOnlyAdminController {
   constructor(
     private readonly inquiryResponseGeneralService: InquiryResponseGeneralService,
     private readonly inquiryResponseBundleService: InquiryResponseBundleService,
-    private readonly EmailSenderLibrary: EmailSenderLibrary,
+    private readonly emailSenderLibrary: EmailSenderLibrary,
   ) {}
 
   @UseInterceptors(JsonClearCookiesInterceptor)
@@ -57,6 +57,8 @@ export class InquiryVersionOneOnlyAdminController {
         jwtPayload,
       });
 
+    const inquiryResponseId = inquiryResponse.id;
+
     const mediaWork = async () => {
       await this.inquiryResponseBundleService.pushInquiryMedia({
         inquiryResponseDto,
@@ -77,9 +79,10 @@ export class InquiryVersionOneOnlyAdminController {
         await this.inquiryResponseBundleService.findStuffForEmail(
           userId,
           inquiryRequestId,
+          inquiryResponseId,
         );
 
-      await this.EmailSenderLibrary.sendMailToClientAboutInquiryResponse({
+      await this.emailSenderLibrary.sendMailToClientAboutInquiryResponse({
         user,
         inquiryRequest,
         inquiryResponse,
@@ -119,6 +122,8 @@ export class InquiryVersionOneOnlyAdminController {
         jwtPayload,
       });
 
+    const inquiryResponseId = inquiryResponse.id;
+
     const mediaWork = async () => {
       await this.inquiryResponseBundleService.pushInquiryMedia({
         inquiryResponseDto,
@@ -137,9 +142,10 @@ export class InquiryVersionOneOnlyAdminController {
         await this.inquiryResponseBundleService.findStuffForEmail(
           userId,
           inquiryRequestId,
+          inquiryResponseId,
         );
 
-      await this.EmailSenderLibrary.sendMailToClientAboutInquiryResponse({
+      await this.emailSenderLibrary.sendMailToClientAboutInquiryResponse({
         user,
         inquiryRequest,
         inquiryResponse,
@@ -178,6 +184,8 @@ export class InquiryVersionOneOnlyAdminController {
         jwtPayload,
       });
 
+    const inquiryResponseId = inquiryResponse.id;
+
     const mediaWork = async () => {
       await this.inquiryResponseBundleService.pushInquiryMedia({
         inquiryResponseDto,
@@ -196,9 +204,10 @@ export class InquiryVersionOneOnlyAdminController {
         await this.inquiryResponseBundleService.findStuffForEmail(
           userId,
           inquiryRequestId,
+          inquiryResponseId,
         );
 
-      await this.EmailSenderLibrary.sendMailToClientAboutInquiryResponse({
+      await this.emailSenderLibrary.sendMailToClientAboutInquiryResponse({
         user,
         inquiryRequest,
         inquiryResponse,
@@ -227,21 +236,25 @@ export class InquiryVersionOneOnlyAdminController {
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
     @Body() inquiryResponseDto: InquiryResponseDto,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.inquiryResponseGeneralService.createInquiry({
-      userId,
-      inquiryRequestId,
-      inquiryResponseDto,
-      jwtPayload,
-    });
+    const inquiryResponse =
+      await this.inquiryResponseGeneralService.createInquiry({
+        userId,
+        inquiryRequestId,
+        inquiryResponseDto,
+        jwtPayload,
+      });
+
+    const inquiryResponseId = inquiryResponse.id;
 
     (async () => {
       const [user, inquiryRequest, inquiryResponse] =
         await this.inquiryResponseBundleService.findStuffForEmail(
           userId,
           inquiryRequestId,
+          inquiryResponseId,
         );
 
-      await this.EmailSenderLibrary.sendMailToClientAboutInquiryResponse({
+      await this.emailSenderLibrary.sendMailToClientAboutInquiryResponse({
         user,
         inquiryRequest,
         inquiryResponse,

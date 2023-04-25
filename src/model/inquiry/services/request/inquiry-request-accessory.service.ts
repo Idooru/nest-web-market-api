@@ -209,10 +209,11 @@ export class InquiryRequestAccessoryService {
 
   async findStuffForEmail(
     productId: string,
+    inquiryRequestId: string,
   ): Promise<[ProductEntity, InquiryRequestEntity]> {
     return await Promise.all([
-      this.productGeneralRepository.findProductOneById(productId),
-      this.inquiryInsertRepository.findLastCreatedInquiryRequest(),
+      this.productGeneralRepository.findOneProductById(productId),
+      this.inquiryInsertRepository.findOneInquiryRequestById(inquiryRequestId),
     ]);
   }
 }

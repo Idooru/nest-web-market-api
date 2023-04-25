@@ -64,9 +64,11 @@ export class InquiryRequestBundleService {
 
   async findStuffForEmail(
     productId: string,
+    inquiryRequestId: string,
   ): Promise<[ProductEntity, InquiryRequestEntity]> {
     return await this.inquiryRequestAccessoryService.findStuffForEmail(
       productId,
+      inquiryRequestId,
     );
   }
 }

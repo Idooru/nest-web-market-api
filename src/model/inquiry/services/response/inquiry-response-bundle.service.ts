@@ -66,10 +66,12 @@ export class InquiryResponseBundleService {
   async findStuffForEmail(
     userId: string,
     inquiryRequestId: string,
+    inquiryResponseId: string,
   ): Promise<[UserEntity, InquiryRequestEntity, InquiryResponseEntity]> {
     return await this.inquiryResponseAccessoryService.findStuffForEmail(
       userId,
       inquiryRequestId,
+      inquiryResponseId,
     );
   }
 }

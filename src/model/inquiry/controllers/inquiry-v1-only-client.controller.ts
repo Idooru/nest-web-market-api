@@ -53,6 +53,8 @@ export class InquiryVersionOneOnlyClientController {
         jwtPayload,
       });
 
+    const inquiryRequestId = inquiryRequest.id;
+
     const mediaWork = async () => {
       await this.inquiryRequestBundleService.pushInquiryMedia({
         inquiryRequestDto,
@@ -70,7 +72,10 @@ export class InquiryVersionOneOnlyClientController {
 
     const mailWork = async () => {
       const [product, inquiryRequest] =
-        await this.inquiryRequestBundleService.findStuffForEmail(productId);
+        await this.inquiryRequestBundleService.findStuffForEmail(
+          productId,
+          inquiryRequestId,
+        );
 
       await this.emailSenderLibrary.sendMailToAdminAboutInquiryRequest({
         product,
@@ -108,6 +113,8 @@ export class InquiryVersionOneOnlyClientController {
         jwtPayload,
       });
 
+    const inquiryRequestId = inquiryRequest.id;
+
     const mediaWork = async () => {
       await this.inquiryRequestBundleService.pushInquiryMedia({
         inquiryRequestDto,
@@ -123,7 +130,10 @@ export class InquiryVersionOneOnlyClientController {
 
     const mailWork = async () => {
       const [product, inquiryRequest] =
-        await this.inquiryRequestBundleService.findStuffForEmail(productId);
+        await this.inquiryRequestBundleService.findStuffForEmail(
+          productId,
+          inquiryRequestId,
+        );
 
       await this.emailSenderLibrary.sendMailToAdminAboutInquiryRequest({
         product,
@@ -160,6 +170,8 @@ export class InquiryVersionOneOnlyClientController {
         jwtPayload,
       });
 
+    const inquiryRequestId = inquiryRequest.id;
+
     const mediaWork = async () => {
       await this.inquiryRequestBundleService.pushInquiryMedia({
         inquiryRequestDto,
@@ -175,7 +187,10 @@ export class InquiryVersionOneOnlyClientController {
 
     const mailWork = async () => {
       const [product, inquiryRequest] =
-        await this.inquiryRequestBundleService.findStuffForEmail(productId);
+        await this.inquiryRequestBundleService.findStuffForEmail(
+          productId,
+          inquiryRequestId,
+        );
 
       await this.emailSenderLibrary.sendMailToAdminAboutInquiryRequest({
         product,
@@ -203,15 +218,21 @@ export class InquiryVersionOneOnlyClientController {
     @Body() inquiryRequestDto: InquiryRequestDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.inquiryRequestGeneralService.createInquiry({
-      productId,
-      inquiryRequestDto,
-      jwtPayload,
-    });
+    const inquiryRequest =
+      await this.inquiryRequestGeneralService.createInquiry({
+        productId,
+        inquiryRequestDto,
+        jwtPayload,
+      });
+
+    const inquiryRequestId = inquiryRequest.id;
 
     (async () => {
       const [product, inquiryRequest] =
-        await this.inquiryRequestBundleService.findStuffForEmail(productId);
+        await this.inquiryRequestBundleService.findStuffForEmail(
+          productId,
+          inquiryRequestId,
+        );
 
       await this.emailSenderLibrary.sendMailToAdminAboutInquiryRequest({
         product,

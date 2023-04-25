@@ -213,11 +213,14 @@ export class InquiryResponseAccessoryService {
   async findStuffForEmail(
     userId: string,
     inquiryRequestId: string,
+    inquiryResponseId: string,
   ): Promise<[UserEntity, InquiryRequestEntity, InquiryResponseEntity]> {
     return await Promise.all([
       this.userGeneralRepository.findClientUserWithId(userId),
       this.inquiryGeneralRepository.findInquiryRequestWithId(inquiryRequestId),
-      this.inquiryInsertRepository.findLastCreatedInquiryResponse(),
+      this.inquiryGeneralRepository.findInquiryResponseWithId(
+        inquiryResponseId,
+      ),
     ]);
   }
 }
