@@ -1,7 +1,7 @@
 import { ReviewEntity } from "../entities/review.entity";
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { InsertResult, Repository } from "typeorm";
 import { ModifyReviewDto } from "../dto/modify-review.dto";
 import { CreateReviewDao } from "../dto/create-review.dto";
 import { ReviewSelectProperty } from "src/common/config/repository-select-configs/review.select";
@@ -53,10 +53,10 @@ export class ReviewGeneralRepository extends ErrorHandlerProps {
     }
   }
 
-  async createReview(createReviewDao: CreateReviewDao): Promise<void> {
+  async createReview(createReviewDao: CreateReviewDao): Promise<InsertResult> {
     try {
       const { reviewRequestDto, client, product } = createReviewDao;
-      await this.reviewRepository
+      return await this.reviewRepository
         .createQueryBuilder()
         .insert()
         .into(ReviewEntity)

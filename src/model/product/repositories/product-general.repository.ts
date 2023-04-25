@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ModifyProductDto } from "../dto/modify-product.dto";
 import { CreateProductDto } from "../dto/create-product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { InsertResult, Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
@@ -148,7 +148,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     }
   }
 
-  async findProductOneById(id: string): Promise<ProductEntity> {
+  async findOneProductById(id: string): Promise<ProductEntity> {
     try {
       return await this.productRepository
         .createQueryBuilder()
@@ -174,7 +174,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .where("product.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
-      this.methodName = this.findProductOneById.name;
+      this.methodName = this.findOneProductById.name;
       this.errorHandlerBuilder
         .setEntity(new ProductEntity())
         .setError(err)
@@ -209,9 +209,9 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
   async createProduct(
     createProductDto: CreateProductDto,
     admin: AdminUserEntity,
-  ): Promise<void> {
+  ): Promise<InsertResult> {
     try {
-      await this.productRepository
+      return await this.productRepository
         .createQueryBuilder()
         .insert()
         .into(ProductEntity)

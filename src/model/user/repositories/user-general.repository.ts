@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserProfileEntity } from "../entities/user.profile.entity";
-import { Repository } from "typeorm";
+import { InsertResult, Repository } from "typeorm";
 import { UserSelectProperty } from "src/common/config/repository-select-configs/user.select";
 import { ClientUserEntity } from "../entities/client-user.entity";
 import { RegisterUserProfileDto } from "../dtos/register-user.dto";
@@ -470,9 +470,11 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     }
   }
 
-  async createUserBase(createUserBaseDto: CreateUserBaseDto): Promise<void> {
+  async createUserBase(
+    createUserBaseDto: CreateUserBaseDto,
+  ): Promise<InsertResult> {
     try {
-      await this.userRepository
+      return await this.userRepository
         .createQueryBuilder()
         .insert()
         .into(UserEntity)
@@ -489,9 +491,9 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     }
   }
 
-  async createClientUser(user: UserEntity): Promise<void> {
+  async createClientUser(user: UserEntity): Promise<InsertResult> {
     try {
-      await this.clientUserRepository
+      return await this.clientUserRepository
         .createQueryBuilder()
         .insert()
         .into(ClientUserEntity)
@@ -508,9 +510,9 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     }
   }
 
-  async createAdminUser(user: UserEntity): Promise<void> {
+  async createAdminUser(user: UserEntity): Promise<InsertResult> {
     try {
-      await this.adminUserRepository
+      return await this.adminUserRepository
         .createQueryBuilder()
         .insert()
         .into(AdminUserEntity)

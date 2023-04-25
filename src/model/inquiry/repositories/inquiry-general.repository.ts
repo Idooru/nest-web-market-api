@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { InquiryRequestEntity } from "src/model/inquiry/entities/inquiry-request.entity";
-import { Repository } from "typeorm";
+import { InsertResult, Repository } from "typeorm";
 import { CreateInquiryRequestDao } from "../dto/request/create-inquiry-request.dto";
 import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
 import { InquiryResponseDto } from "../dto/response/inquiry-response.dto";
@@ -25,10 +25,10 @@ export class InquiryGeneralRepository extends ErrorHandlerProps {
 
   async createInquiryRequest(
     createInquiryDao: CreateInquiryRequestDao,
-  ): Promise<void> {
+  ): Promise<InsertResult> {
     try {
       const { inquiryRequestDto, client, product } = createInquiryDao;
-      await this.inquiryRequestRepository
+      return await this.inquiryRequestRepository
         .createQueryBuilder()
         .insert()
         .into(InquiryRequestEntity)
@@ -51,9 +51,9 @@ export class InquiryGeneralRepository extends ErrorHandlerProps {
 
   async createInquiryResponse(
     inquiryResponseDto: InquiryResponseDto,
-  ): Promise<void> {
+  ): Promise<InsertResult> {
     try {
-      await this.inquiryResponseRepository
+      return await this.inquiryResponseRepository
         .createQueryBuilder()
         .insert()
         .into(InquiryResponseEntity)
