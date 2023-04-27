@@ -23,7 +23,7 @@ class NestCoreConfig {
   }
 
   public async run() {
-    await this.app.listen(this.port, () => {
+    await this.app.listen(this.port, "0.0.0.0", () => {
       const nestLogger = new Logger("NestApplication");
 
       nestLogger.log(
