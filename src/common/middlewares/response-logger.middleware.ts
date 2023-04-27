@@ -9,8 +9,10 @@ export class ResponseLoggerMiddleware implements NestMiddleware {
       let logger: Logger;
 
       if (400 <= statusCode || statusCode >= 599) {
-        logger = new Logger(`${res.statusMessage}`);
-        logger.error(`${method} ${originalUrl}`);
+        logger = new Logger("Fail");
+        logger.error(
+          `${method} ${originalUrl} ${ip} - ${statusCode} ${statusMessage}`,
+        );
       } else {
         logger = new Logger("Success");
         logger.log(
