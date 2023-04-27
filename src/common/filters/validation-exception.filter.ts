@@ -27,7 +27,7 @@ export class ValidationExceptionFilter implements ExceptionFilter {
     const res = host.switchToHttp().getResponse<Response>();
     const err = exception.getResponse() as ValidationExceptionType;
 
-    return res.status(400).json({
+    return res.status(418).json({
       success: false,
       message: "Validation Exception이 발생하였습니다.",
       timestamp: new Date().toString(),
