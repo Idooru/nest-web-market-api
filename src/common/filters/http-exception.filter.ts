@@ -18,9 +18,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
       statusCode: err.statusCode,
       message: "Http Exception이 발생하였습니다.",
       timestamp: new Date().toString(),
-      reason: err.message,
       error: err.error,
-      info: "서버 로그를 확인하세요",
+      reason: err.message,
+      info: "서버 로그를 확인하세요.",
     });
   }
 }
