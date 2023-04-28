@@ -1,14 +1,15 @@
-import { Logger, ValidationPipe } from "@nestjs/common";
+import { Logger, ValidationError, ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
-import cookieParser from "cookie-parser";
 import { AppModule } from "./app.module";
 import { HttpExceptionFilter } from "./common/filters/http-exception.filter";
 import { ValidationExceptionFilter } from "./common/filters/validation-exception.filter";
+import { ValidationException } from "./common/errors/validation.exception";
 
 import path from "path";
 import helmet from "helmet";
+import cookieParser from "cookie-parser";
 
 class NestCoreConfig {
   private readonly scheme = new ConfigService().get("APPLICATION_SCHEME");
@@ -40,7 +41,13 @@ class NestCoreConfig {
       new HttpExceptionFilter(),
       new ValidationExceptionFilter(),
     );
-    this.app.useGlobalPipes(new ValidationPipe({ errorHttpStatusCode: 418 }));
+    this.app.useGlobalPipes(
+      new ValidationPipe({
+        exceptionFactory: (validationErrors: ValidationError[]) => {
+          throw new ValidationException(validationErrors);
+        },
+      }),
+    );
   }
 
   private setMiddlewares() {
