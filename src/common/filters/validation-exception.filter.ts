@@ -1,11 +1,6 @@
-import {
-  ExceptionFilter,
-  Catch,
-  ArgumentsHost,
-  UnsupportedMediaTypeException,
-  ImATeapotException,
-} from "@nestjs/common";
+import { ExceptionFilter, Catch, ArgumentsHost } from "@nestjs/common";
 import { Response } from "express";
+import { ValidationException } from "../errors/validation.exception";
 import { ValidationExceptionType } from "./interface/validation-exception.interface";
 
 /**
@@ -21,18 +16,19 @@ import { ValidationExceptionType } from "./interface/validation-exception.interf
  * 나중에 커스텀 예외를 만들어서 캐치할 수 있게 된다면 ImATeapotException
  * 을 대신하여 커스텀 예외를 만들어 붙일 계획이다. 임시로 일단 사용한다.
  */
-@Catch(ImATeapotException)
+@Catch(ValidationException)
 export class ValidationExceptionFilter implements ExceptionFilter {
-  catch(exception: UnsupportedMediaTypeException, host: ArgumentsHost) {
+  catch(exception: ValidationException, host: ArgumentsHost) {
     const res = host.switchToHttp().getResponse<Response>();
     const err = exception.getResponse() as ValidationExceptionType;
 
-    return res.status(418).json({
+    return res.status(err.statusCode).json({
       success: false,
       message: "Validation Exception이 발생하였습니다.",
       timestamp: new Date().toString(),
-      reason: err.message.map((idx) => idx),
+      reason: err.errors,
       error: "Validation Error",
+      info: "전송될 데이터의 유효성을 잘 확인해주세요.",
     });
   }
 }
