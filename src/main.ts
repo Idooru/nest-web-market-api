@@ -12,10 +12,7 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 
 class NestCoreConfig {
-  private readonly scheme = new ConfigService().get("APPLICATION_SCHEME");
-  private readonly host = new ConfigService().get("APPLICATION_HOST");
-  private readonly port = new ConfigService().get("APPLICATION_PORT");
-  private readonly cookieSecret = new ConfigService().get("COOKIE_SECRET");
+  private readonly envData = this.getDataFromEnv();
 
   constructor(private readonly app: NestExpressApplication) {
     this.setGlobals();
@@ -24,13 +21,22 @@ class NestCoreConfig {
   }
 
   public async run() {
-    await this.app.listen(this.port, "0.0.0.0", () => {
+    await this.app.listen(this.envData.port, "0.0.0.0", () => {
       const nestLogger = new Logger("NestApplication");
 
       nestLogger.log(
-        `Server is running at ${this.scheme}://${this.host}:${this.port} | NODE_ENV: ${process.env.NODE_ENV}`,
+        `Server is running at ${this.envData.scheme}://${this.envData.host}:${this.envData.port} | NODE_ENV: ${process.env.NODE_ENV}`,
       );
     });
+  }
+
+  private getDataFromEnv() {
+    const scheme: string = new ConfigService().get("APPLICATION_SCHEME");
+    const host: string = new ConfigService().get("APPLICATION_HOST");
+    const port: string = new ConfigService().get("APPLICATION_PORT");
+    const cookieSecret: string = new ConfigService().get("COOKIE_SECRET");
+
+    return { scheme, host, port, cookieSecret };
   }
 
   private setGlobals() {
@@ -48,7 +54,7 @@ class NestCoreConfig {
   }
 
   private setMiddlewares() {
-    this.app.use(cookieParser(this.cookieSecret));
+    this.app.use(cookieParser(this.envData.cookieSecret));
     this.app.use(helmet());
   }
 
