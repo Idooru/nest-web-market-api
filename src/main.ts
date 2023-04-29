@@ -28,10 +28,7 @@ class NestCoreConfig {
       const nestLogger = new Logger("NestApplication");
 
       nestLogger.log(
-        `Server is running at ${this.scheme}://${this.host}:${this.port}`,
-      );
-      nestLogger.log(
-        `The current execution environment is ${process.env.NODE_ENV}`,
+        `Server is running at ${this.scheme}://${this.host}:${this.port} | NODE_ENV: ${process.env.NODE_ENV}`,
       );
     });
   }
