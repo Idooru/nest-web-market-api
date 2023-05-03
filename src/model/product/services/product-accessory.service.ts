@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { ProductImageEntity } from "src/model/media/entities/product.image.entity";
+import { ProductImageEntity } from "src/model/media/entities/product-image.entity";
 import { MediaGeneralRepository } from "src/model/media/repositories/media-general.repository";
 import { ProductEntity } from "../entities/product.entity";
 import { ProductGeneralRepository } from "../repositories/product-general.repository";

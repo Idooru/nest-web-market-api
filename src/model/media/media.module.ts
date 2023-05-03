@@ -1,8 +1,8 @@
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Module, forwardRef } from "@nestjs/common";
-import { ProductImageEntity } from "./entities/product.image.entity";
-import { ReviewImageEntity } from "./entities/review.image.entity";
-import { ReviewVideoEntity } from "./entities/review.video.entity";
+import { ProductImageEntity } from "./entities/product-image.entity";
+import { ReviewImageEntity } from "./entities/review-image.entity";
+import { ReviewVideoEntity } from "./entities/review-video.entity";
 import { UserModule } from "../user/user.module";
 import { ProductEntity } from "../product/entities/product.entity";
 import { LibraryModule } from "src/common/lib/library.module";

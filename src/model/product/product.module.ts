@@ -8,7 +8,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserModule } from "../user/user.module";
 import { ReviewModule } from "../review/review.module";
 import { InquiryModule } from "../inquiry/inquiry.module";
-import { ProductImageEntity } from "../media/entities/product.image.entity";
+import { ProductImageEntity } from "../media/entities/product-image.entity";
 import { LibraryModule } from "src/common/lib/library.module";
 import { ProductVersionOneOnlyAdminController } from "./controllers/v1/product-v1-only-admin.controller";
 import { JwtModule } from "@nestjs/jwt";

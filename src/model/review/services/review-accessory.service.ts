@@ -1,7 +1,7 @@
 import { ReviewRequestDto } from "../dto/review-request.dto";
 import { Injectable } from "@nestjs/common";
-import { ReviewImageEntity } from "src/model/media/entities/review.image.entity";
-import { ReviewVideoEntity } from "src/model/media/entities/review.video.entity";
+import { ReviewImageEntity } from "src/model/media/entities/review-image.entity";
+import { ReviewVideoEntity } from "src/model/media/entities/review-video.entity";
 import { MediaGeneralRepository } from "src/model/media/repositories/media-general.repository";
 import { MediaInsertRepository } from "src/model/media/repositories/media-insert.repository";
 import { ReviewEntity } from "../entities/review.entity";

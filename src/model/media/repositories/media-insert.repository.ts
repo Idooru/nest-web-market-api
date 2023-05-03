@@ -9,9 +9,9 @@ import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.ent
 import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
 import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
 import { InquiryResponseVideoEntity } from "../entities/inquiry-response-video.entity";
-import { ProductImageEntity } from "../entities/product.image.entity";
-import { ReviewImageEntity } from "../entities/review.image.entity";
-import { ReviewVideoEntity } from "../entities/review.video.entity";
+import { ProductImageEntity } from "../entities/product-image.entity";
+import { ReviewImageEntity } from "../entities/review-image.entity";
+import { ReviewVideoEntity } from "../entities/review-video.entity";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder.builder";
 

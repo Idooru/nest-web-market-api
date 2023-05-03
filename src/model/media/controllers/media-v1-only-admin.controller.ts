@@ -40,7 +40,7 @@ import {
 } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
-import { ProductImageEntity } from "../entities/product.image.entity";
+import { ProductImageEntity } from "../entities/product-image.entity";
 import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
 
 @UseGuards(IsAdminGuard)

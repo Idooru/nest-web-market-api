@@ -4,11 +4,11 @@ import { UserGeneralRepository } from "src/model/user/repositories/user-general.
 import { MediaGeneralRepository } from "../repositories/media-general.repository";
 import { MediaAccessoryService } from "./media-accessory.service";
 import { MediaDto } from "../dto/media.dto";
-import { ProductImageEntity } from "../entities/product.image.entity";
+import { ProductImageEntity } from "../entities/product-image.entity";
 import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
 import { InquiryResponseVideoEntity } from "../entities/inquiry-response-video.entity";
-import { ReviewImageEntity } from "../entities/review.image.entity";
-import { ReviewVideoEntity } from "../entities/review.video.entity";
+import { ReviewImageEntity } from "../entities/review-image.entity";
+import { ReviewVideoEntity } from "../entities/review-video.entity";
 import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
 

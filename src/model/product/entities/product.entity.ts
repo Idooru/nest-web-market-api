@@ -3,7 +3,7 @@ import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
 import { StarRateEntity } from "../../review/entities/star-rate.entity";
-import { ProductImageEntity } from "src/model/media/entities/product.image.entity";
+import { ProductImageEntity } from "src/model/media/entities/product-image.entity";
 import { InquiryRequestEntity } from "../../inquiry/entities/inquiry-request.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";

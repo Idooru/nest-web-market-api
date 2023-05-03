@@ -1,8 +1,8 @@
 import { Column, Entity, OneToMany, ManyToOne } from "typeorm";
 import { ProductEntity } from "./../../product/entities/product.entity";
 import { IsNotEmpty, IsEnum, IsNumber } from "class-validator";
-import { ReviewImageEntity } from "src/model/media/entities/review.image.entity";
-import { ReviewVideoEntity } from "src/model/media/entities/review.video.entity";
+import { ReviewImageEntity } from "src/model/media/entities/review-image.entity";
+import { ReviewVideoEntity } from "src/model/media/entities/review-video.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { PostEntity } from "src/common/entities/post.entity";
 

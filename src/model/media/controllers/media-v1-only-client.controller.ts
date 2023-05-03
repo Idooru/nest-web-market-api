@@ -34,8 +34,8 @@ import {
 } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
-import { ReviewImageEntity } from "../entities/review.image.entity";
-import { ReviewVideoEntity } from "../entities/review.video.entity";
+import { ReviewImageEntity } from "../entities/review-image.entity";
+import { ReviewVideoEntity } from "../entities/review-video.entity";
 import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
 
