@@ -1,6 +1,5 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Logger } from "@nestjs/common";
 
-@Injectable()
 export class MeidaLoggerLibrary {
   private readonly logger = new Logger("Media");
 

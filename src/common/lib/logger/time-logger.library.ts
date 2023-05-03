@@ -1,7 +1,6 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Logger } from "@nestjs/common";
 import { Request } from "express";
 
-@Injectable()
 export class TimeLoggerLibrary {
   private readonly startLogger = new Logger("TimeStart");
   private readonly endLogger = new Logger("TimeEnd");

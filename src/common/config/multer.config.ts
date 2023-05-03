@@ -1,16 +1,10 @@
-import {
-  Injectable,
-  Logger,
-  Module,
-  UnsupportedMediaTypeException,
-} from "@nestjs/common";
+import { Logger, Module, UnsupportedMediaTypeException } from "@nestjs/common";
 import { MulterModule } from "@nestjs/platform-express";
 import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 import { promises as fsPromises } from "fs";
 import * as path from "path";
 import * as multer from "multer";
 
-@Injectable()
 export class MulterConfigService {
   public createMulterOptions(): MulterOptions | Promise<MulterOptions> {
     this.createFolder();

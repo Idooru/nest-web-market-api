@@ -1,12 +1,10 @@
 import {
   CanActivate,
   ExecutionContext,
-  Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
 import { Request, Response } from "express";
 
-@Injectable()
 export class VerifyDataGuard implements CanActivate {
   private readonly data: string[];
 
