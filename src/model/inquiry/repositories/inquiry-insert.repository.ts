@@ -15,7 +15,7 @@ export class InquiryInsertRepository extends ErrorHandlerProps {
     private readonly inquiryRequestRepository: Repository<InquiryRequestEntity>,
     @InjectRepository(InquiryResponseEntity)
     private readonly inquiryResponseRepository: Repository<InquiryResponseEntity>,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder<EntityTarget>,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
   ) {
     super();
   }
@@ -31,7 +31,7 @@ export class InquiryInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findOneInquiryRequestById.name;
       this.errorHandlerBuilder
-        .setEntity(new InquiryRequestEntity())
+        .setEntity(InquiryRequestEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -50,7 +50,7 @@ export class InquiryInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findOneInquiryResponseById.name;
       this.errorHandlerBuilder
-        .setEntity(new InquiryResponseEntity())
+        .setEntity(InquiryResponseEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -72,7 +72,7 @@ export class InquiryInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.insertInquiryRequestIdOnInquiryResponse.name;
       this.errorHandlerBuilder
-        .setEntity(new InquiryResponseEntity())
+        .setEntity(InquiryResponseEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -94,7 +94,7 @@ export class InquiryInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.insertClientUserIdOnInquiryRequest.name;
       this.errorHandlerBuilder
-        .setEntity(new InquiryRequestEntity())
+        .setEntity(InquiryRequestEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -116,7 +116,7 @@ export class InquiryInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.insertAdminUserIdOnInquiryResponse.name;
       this.errorHandlerBuilder
-        .setEntity(new InquiryResponseEntity())
+        .setEntity(InquiryResponseEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")

@@ -10,7 +10,7 @@ export class InquiryVerifyRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(InquiryRequestEntity)
     private readonly inquiryRequestRepository: Repository<InquiryRequestEntity>,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder<EntityTarget>,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
   ) {
     super();
   }
@@ -23,7 +23,7 @@ export class InquiryVerifyRepository extends ErrorHandlerProps {
       return result ? true : false;
     } catch (err) {
       this.errorHandlerBuilder
-        .setEntity(new InquiryRequestEntity())
+        .setEntity(InquiryRequestEntity)
         .setSourceNames(this.className, this.methodName)
         .handle();
     }

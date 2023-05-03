@@ -10,7 +10,7 @@ export class ProductVerifyRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder<EntityTarget>,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
   ) {
     super();
   }
@@ -22,7 +22,7 @@ export class ProductVerifyRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.isExistProductId.name;
       this.errorHandlerBuilder
-        .setEntity(new ProductEntity())
+        .setEntity(ProductEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -37,7 +37,7 @@ export class ProductVerifyRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.isNotExistProductName.name;
       this.errorHandlerBuilder
-        .setEntity(new ProductEntity())
+        .setEntity(ProductEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")

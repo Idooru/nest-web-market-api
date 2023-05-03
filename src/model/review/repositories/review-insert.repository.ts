@@ -11,7 +11,7 @@ export class ReviewInsertRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(ReviewEntity)
     private readonly reviewRepository: Repository<ReviewEntity>,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder<EntityTarget>,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
   ) {
     super();
   }
@@ -27,7 +27,7 @@ export class ReviewInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findOneReviewById.name;
       this.errorHandlerBuilder
-        .setEntity(new ReviewEntity())
+        .setEntity(ReviewEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -49,7 +49,7 @@ export class ReviewInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.insertReviewIdOnClientUser.name;
       this.errorHandlerBuilder
-        .setEntity(new ReviewEntity())
+        .setEntity(ReviewEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")

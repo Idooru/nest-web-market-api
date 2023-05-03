@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ModifyProductDto } from "../dto/modify-product.dto";
 import { CreateProductDto } from "../dto/create-product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
-import { EntityTarget, InsertResult, Repository } from "typeorm";
+import { InsertResult, Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
@@ -16,7 +16,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     private readonly productRepository: Repository<ProductEntity>,
     @Inject("ProductsSelectProperty")
     private readonly select: ProductSelectProperty,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder<EntityTarget>,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
   ) {
     super();
   }
@@ -31,7 +31,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findProductsAllId.name;
       this.errorHandlerBuilder
-        .setEntity(new ProductEntity())
+        .setEntity(ProductEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -67,7 +67,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findAllProductsFromLatest.name;
       this.errorHandlerBuilder
-        .setEntity(new ProductEntity())
+        .setEntity(ProductEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -103,7 +103,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findAllProductsFromOldest.name;
       this.errorHandlerBuilder
-        .setEntity(new ProductEntity())
+        .setEntity(ProductEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -139,7 +139,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findOneProductByName.name;
       this.errorHandlerBuilder
-        .setEntity(new ProductEntity())
+        .setEntity(ProductEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(name, "name")
@@ -176,7 +176,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findOneProductById.name;
       this.errorHandlerBuilder
-        .setEntity(new ProductEntity())
+        .setEntity(ProductEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
@@ -197,7 +197,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findProductOneJustNeedStarRate.name;
       this.errorHandlerBuilder
-        .setEntity(new ProductEntity())
+        .setEntity(ProductEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
@@ -220,7 +220,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.createProduct.name;
       this.errorHandlerBuilder
-        .setEntity(new ProductEntity())
+        .setEntity(ProductEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -242,7 +242,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.modifyProduct.name;
       this.errorHandlerBuilder
-        .setEntity(new ProductEntity())
+        .setEntity(ProductEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(String(modifyProductDto.price), "price")
@@ -263,7 +263,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.modifyProductName.name;
       this.errorHandlerBuilder
-        .setEntity(new ProductEntity())
+        .setEntity(ProductEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -282,7 +282,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.modifyProductPrice.name;
       this.errorHandlerBuilder
-        .setEntity(new ProductEntity())
+        .setEntity(ProductEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(price, "price")
@@ -302,7 +302,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.modifyProductOrigin.name;
       this.errorHandlerBuilder
-        .setEntity(new ProductEntity())
+        .setEntity(ProductEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -321,7 +321,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.modifyProductType.name;
       this.errorHandlerBuilder
-        .setEntity(new ProductEntity())
+        .setEntity(ProductEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -343,7 +343,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.modifyProductDescription.name;
       this.errorHandlerBuilder
-        .setEntity(new ProductEntity())
+        .setEntity(ProductEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -362,7 +362,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.modifyProductQuantity.name;
       this.errorHandlerBuilder
-        .setEntity(new ProductEntity())
+        .setEntity(ProductEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(quantity, "quantity")
@@ -382,7 +382,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.removeProduct.name;
       this.errorHandlerBuilder
-        .setEntity(new ProductEntity())
+        .setEntity(ProductEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")

@@ -18,7 +18,7 @@ export class InquiryGeneralRepository extends ErrorHandlerProps {
     private readonly inquiryResponseRepository: Repository<InquiryResponseEntity>,
     @Inject("InquirySelectProperty")
     private readonly select: InquirySelectProperty,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder<EntityTarget>,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
   ) {
     super();
   }
@@ -41,7 +41,7 @@ export class InquiryGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.createInquiryRequest.name;
       this.errorHandlerBuilder
-        .setEntity(new InquiryRequestEntity())
+        .setEntity(InquiryRequestEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -62,7 +62,7 @@ export class InquiryGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.createInquiryResponse.name;
       this.errorHandlerBuilder
-        .setEntity(new InquiryRequestEntity())
+        .setEntity(InquiryRequestEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -82,7 +82,7 @@ export class InquiryGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findInquiryRequestWithId.name;
       this.errorHandlerBuilder
-        .setEntity(new InquiryRequestEntity())
+        .setEntity(InquiryRequestEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
@@ -102,7 +102,7 @@ export class InquiryGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findInquiryResponseWithId.name;
       this.errorHandlerBuilder
-        .setEntity(new InquiryResponseEntity())
+        .setEntity(InquiryResponseEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
@@ -122,7 +122,7 @@ export class InquiryGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.setIsAnsweredTrue.name;
       this.errorHandlerBuilder
-        .setEntity(new InquiryRequestEntity())
+        .setEntity(InquiryRequestEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")

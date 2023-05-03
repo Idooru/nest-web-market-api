@@ -16,7 +16,7 @@ export class UserGeneralService extends ErrorHandlerProps {
     private readonly userGeneralRepository: UserGeneralRepository,
     private readonly userInsertRepository: UserInsertRepository,
     private readonly securityLibrary: SecurityLibrary,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder<null>,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
   ) {
     super();
   }

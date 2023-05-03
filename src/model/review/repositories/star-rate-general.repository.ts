@@ -13,7 +13,7 @@ export class StarRateGeneralRepository extends ErrorHandlerProps {
     private readonly starRateRepository: Repository<StarRateEntity>,
     @Inject("ReviewSelectProperty")
     private readonly select: ReviewSelectProperty,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder<EntityTarget>,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
   ) {
     super();
   }
@@ -25,7 +25,7 @@ export class StarRateGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.createStarRateSample.name;
       this.errorHandlerBuilder
-        .setEntity(new StarRateEntity())
+        .setEntity(StarRateEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -68,7 +68,7 @@ export class StarRateGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.increaseStarRate.name;
       this.errorHandlerBuilder
-        .setEntity(new StarRateEntity())
+        .setEntity(StarRateEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -112,7 +112,7 @@ export class StarRateGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.decreaseStarRate.name;
       this.errorHandlerBuilder
-        .setEntity(new StarRateEntity())
+        .setEntity(StarRateEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -131,7 +131,7 @@ export class StarRateGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findStarRateWithId.name;
       this.errorHandlerBuilder
-        .setEntity(new StarRateEntity())
+        .setEntity(StarRateEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -150,7 +150,7 @@ export class StarRateGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.renewTotalScore.name;
       this.errorHandlerBuilder
-        .setEntity(new StarRateEntity())
+        .setEntity(StarRateEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")

@@ -14,10 +14,11 @@ import { ReviewErrorCase } from "src/model/review/error/review-error.case";
 import { AdminUserErrorCase } from "src/model/user/error/admin-user-error.case";
 import { ClientUserErrorCase } from "src/model/user/error/client-user-error.case";
 import { UserErrorCase } from "src/model/user/error/user-error.case";
+import { EntityTarget } from "typeorm";
 
-export class ErrorHandler<T> {
+export class ErrorHandler {
   constructor(
-    private readonly entity: T,
+    private readonly entity: EntityTarget,
     private readonly error: Error,
     private readonly className: string,
     private readonly methodName: string,

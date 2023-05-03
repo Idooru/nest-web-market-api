@@ -16,7 +16,7 @@ export class UserVerifyRepository extends ErrorHandlerProps {
     private readonly userProfileRepository: Repository<UserProfileEntity>,
     @InjectRepository(UserAuthEntity)
     private readonly userAuthRepository: Repository<UserAuthEntity>,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder<EntityTarget>,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
   ) {
     super();
   }
@@ -28,7 +28,7 @@ export class UserVerifyRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.isExistUserId.name;
       this.errorHandlerBuilder
-        .setEntity(new UserEntity())
+        .setEntity(UserEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -43,7 +43,7 @@ export class UserVerifyRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.isExistUserEmail.name;
       this.errorHandlerBuilder
-        .setEntity(new UserAuthEntity())
+        .setEntity(UserAuthEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -58,7 +58,7 @@ export class UserVerifyRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.isNotExistUserEmail.name;
       this.errorHandlerBuilder
-        .setEntity(new UserAuthEntity())
+        .setEntity(UserAuthEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -75,7 +75,7 @@ export class UserVerifyRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.isExistUserRealName.name;
       this.errorHandlerBuilder
-        .setEntity(new UserAuthEntity())
+        .setEntity(UserAuthEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -92,7 +92,7 @@ export class UserVerifyRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.isNotExistUserNickName.name;
       this.errorHandlerBuilder
-        .setEntity(new UserAuthEntity())
+        .setEntity(UserAuthEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -109,7 +109,7 @@ export class UserVerifyRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.isExistUserPhoneNumber.name;
       this.errorHandlerBuilder
-        .setEntity(new UserProfileEntity())
+        .setEntity(UserProfileEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -126,7 +126,7 @@ export class UserVerifyRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.isNotExistUserPhoneNumber.name;
       this.errorHandlerBuilder
-        .setEntity(new UserProfileEntity())
+        .setEntity(UserProfileEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")

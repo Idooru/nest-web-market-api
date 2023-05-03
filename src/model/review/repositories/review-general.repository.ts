@@ -15,7 +15,7 @@ export class ReviewGeneralRepository extends ErrorHandlerProps {
     private readonly reviewRepository: Repository<ReviewEntity>,
     @Inject("ReviewSelectProperty")
     private readonly select: ReviewSelectProperty,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder<EntityTarget>,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
   ) {
     super();
   }
@@ -44,7 +44,7 @@ export class ReviewGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findAllClientsReviews.name;
       this.errorHandlerBuilder
-        .setEntity(new ReviewEntity())
+        .setEntity(ReviewEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
@@ -69,7 +69,7 @@ export class ReviewGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.createReview.name;
       this.errorHandlerBuilder
-        .setEntity(new ReviewEntity())
+        .setEntity(ReviewEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -94,7 +94,7 @@ export class ReviewGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.modifyReview.name;
       this.errorHandlerBuilder
-        .setEntity(new ReviewEntity())
+        .setEntity(ReviewEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -113,7 +113,7 @@ export class ReviewGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.deleteReview.name;
       this.errorHandlerBuilder
-        .setEntity(new ReviewEntity())
+        .setEntity(ReviewEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")

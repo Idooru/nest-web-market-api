@@ -1,7 +1,8 @@
+import { EntityTarget } from "typeorm";
 import { ErrorHandler } from "./error-handler.library";
 
-export class ErrorHandlerBuilder<T> {
-  private entity: T;
+export class ErrorHandlerBuilder {
+  private entity: EntityTarget;
   private error: Error;
   private className: string;
   private methodName: string;
@@ -9,7 +10,7 @@ export class ErrorHandlerBuilder<T> {
   public static stuffMeans: string[] = [];
   private layer: string;
 
-  public setEntity(entity: T): this {
+  public setEntity(entity: EntityTarget): this {
     this.entity = entity;
     return this;
   }

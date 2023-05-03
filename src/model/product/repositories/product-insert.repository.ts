@@ -10,7 +10,7 @@ export class ProductInsertRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder<EntityTarget>,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
   ) {
     super();
   }
@@ -26,7 +26,7 @@ export class ProductInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findOneProductById.name;
       this.errorHandlerBuilder
-        .setEntity(new ProductEntity())
+        .setEntity(ProductEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")

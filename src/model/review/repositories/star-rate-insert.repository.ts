@@ -13,7 +13,7 @@ export class StarRateInsertRepository extends ErrorHandlerProps {
     @InjectRepository(StarRateEntity)
     private readonly starRateRepository: Repository<StarRateEntity>,
     private readonly starRateGeneralRepository: StarRateGeneralRepository,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder<EntityTarget>,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
   ) {
     super();
   }
@@ -29,7 +29,7 @@ export class StarRateInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.renewTotalScore.name;
       this.errorHandlerBuilder
-        .setEntity(new StarRateEntity())
+        .setEntity(StarRateEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
@@ -51,7 +51,7 @@ export class StarRateInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.insertProductIdOnStarRate.name;
       this.errorHandlerBuilder
-        .setEntity(new StarRateEntity())
+        .setEntity(StarRateEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setLayer("repository")
