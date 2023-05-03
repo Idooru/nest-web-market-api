@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "../entities/user.entity";
-import { Repository } from "typeorm";
+import { EntityTarget, Repository } from "typeorm";
 import { UserProfileEntity } from "../entities/user.profile.entity";
 import { UserAuthEntity } from "../entities/user.auth.entity";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
@@ -16,7 +16,7 @@ export class UserVerifyRepository extends ErrorHandlerProps {
     private readonly userProfileRepository: Repository<UserProfileEntity>,
     @InjectRepository(UserAuthEntity)
     private readonly userAuthRepository: Repository<UserAuthEntity>,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder<unknown>,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder<EntityTarget>,
   ) {
     super();
   }

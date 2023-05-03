@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ProductEntity } from "src/model/product/entities/product.entity";
-import { Repository } from "typeorm";
+import { EntityTarget, Repository } from "typeorm";
 import { StarRateEntity } from "../entities/star-rate.entity";
 import { StarRateGeneralRepository } from "./star-rate-general.repository";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
@@ -13,7 +13,7 @@ export class StarRateInsertRepository extends ErrorHandlerProps {
     @InjectRepository(StarRateEntity)
     private readonly starRateRepository: Repository<StarRateEntity>,
     private readonly starRateGeneralRepository: StarRateGeneralRepository,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder<unknown>,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder<EntityTarget>,
   ) {
     super();
   }

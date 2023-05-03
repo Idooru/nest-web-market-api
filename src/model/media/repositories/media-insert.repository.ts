@@ -4,7 +4,7 @@ import { InquiryRequestEntity } from "src/model/inquiry/entities/inquiry-request
 import { InquiryResponseEntity } from "src/model/inquiry/entities/inquiry-response.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
-import { Repository } from "typeorm";
+import { EntityTarget, Repository } from "typeorm";
 import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
 import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
@@ -32,7 +32,7 @@ export class MediaInsertRepository extends ErrorHandlerProps {
     private readonly inquiryResponseImageRepository: Repository<InquiryResponseImageEntity>,
     @InjectRepository(InquiryResponseVideoEntity)
     private readonly inquiryResponseVideoRepository: Repository<InquiryResponseVideoEntity>,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder<unknown>,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder<EntityTarget>,
   ) {
     super();
   }

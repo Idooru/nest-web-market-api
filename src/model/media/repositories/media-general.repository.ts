@@ -4,7 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { ProductImageEntity } from "../entities/product.image.entity";
 import { ReviewImageEntity } from "../entities/review.image.entity";
 import { ReviewVideoEntity } from "../entities/review.video.entity";
-import { Repository } from "typeorm";
+import { EntityTarget, Repository } from "typeorm";
 import { MediaSelectProperty } from "src/common/config/repository-select-configs/media.select";
 import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
@@ -31,7 +31,7 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
     @InjectRepository(InquiryResponseVideoEntity)
     private readonly inquiryResponseVideoRepository: Repository<InquiryResponseVideoEntity>,
     @Inject("MediaSelectProperty") private readonly select: MediaSelectProperty,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder<unknown>,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder<EntityTarget>,
   ) {
     super();
   }

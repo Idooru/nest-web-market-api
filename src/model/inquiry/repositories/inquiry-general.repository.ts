@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { InquiryRequestEntity } from "src/model/inquiry/entities/inquiry-request.entity";
-import { InsertResult, Repository } from "typeorm";
+import { EntityTarget, InsertResult, Repository } from "typeorm";
 import { CreateInquiryRequestDao } from "../dto/request/create-inquiry-request.dto";
 import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
 import { InquiryResponseDto } from "../dto/response/inquiry-response.dto";
@@ -18,7 +18,7 @@ export class InquiryGeneralRepository extends ErrorHandlerProps {
     private readonly inquiryResponseRepository: Repository<InquiryResponseEntity>,
     @Inject("InquirySelectProperty")
     private readonly select: InquirySelectProperty,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder<unknown>,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder<EntityTarget>,
   ) {
     super();
   }

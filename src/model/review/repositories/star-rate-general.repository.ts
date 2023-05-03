@@ -1,4 +1,4 @@
-import { Repository } from "typeorm";
+import { EntityTarget, Repository } from "typeorm";
 import { StarRateEntity } from "../entities/star-rate.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Inject, Injectable } from "@nestjs/common";
@@ -13,7 +13,7 @@ export class StarRateGeneralRepository extends ErrorHandlerProps {
     private readonly starRateRepository: Repository<StarRateEntity>,
     @Inject("ReviewSelectProperty")
     private readonly select: ReviewSelectProperty,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder<unknown>,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder<EntityTarget>,
   ) {
     super();
   }

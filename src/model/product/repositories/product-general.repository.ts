@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ModifyProductDto } from "../dto/modify-product.dto";
 import { CreateProductDto } from "../dto/create-product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
-import { InsertResult, Repository } from "typeorm";
+import { EntityTarget, InsertResult, Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
@@ -16,7 +16,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     private readonly productRepository: Repository<ProductEntity>,
     @Inject("ProductsSelectProperty")
     private readonly select: ProductSelectProperty,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder<unknown>,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder<EntityTarget>,
   ) {
     super();
   }
