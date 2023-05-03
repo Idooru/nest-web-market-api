@@ -13,7 +13,7 @@ import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 import { RegisterUserAuthDto } from "../dtos/register-user.dto";
 import { ModifyUserProfileDto } from "../dtos/modify-user.dto";
 import { ModifyUserAuthDto } from "../dtos/modify-user.dto";
-import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder-builder";
+import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder.builder";
 
 @Injectable()
 export class UserGeneralRepository extends ErrorHandlerProps {

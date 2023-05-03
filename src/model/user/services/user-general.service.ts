@@ -7,7 +7,7 @@ import { UserEntity } from "../entities/user.entity";
 import { UserInsertRepository } from "../repositories/user-insert.repository";
 import { CreateUserBaseDto } from "../dtos/create-user-base.dto";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
-import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder-builder";
+import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder.builder";
 import * as bcrypt from "bcrypt";
 
 @Injectable()

@@ -13,7 +13,7 @@ import { UserEntity } from "src/model/user/entities/user.entity";
 import { JwtAccessTokenPayload } from "../jwt/jwt-access-token-payload.interface";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 import * as bcrypt from "bcrypt";
-import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder-builder";
+import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder.builder";
 
 @Injectable()
 export class AuthGeneralService extends ErrorHandlerProps {

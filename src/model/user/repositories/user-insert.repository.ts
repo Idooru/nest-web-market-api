@@ -7,7 +7,7 @@ import { UserAuthEntity } from "../entities/user.auth.entity";
 import { UserEntity } from "../entities/user.entity";
 import { UserProfileEntity } from "../entities/user.profile.entity";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
-import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder-builder";
+import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder.builder";
 
 @Injectable()
 export class UserInsertRepository extends ErrorHandlerProps {

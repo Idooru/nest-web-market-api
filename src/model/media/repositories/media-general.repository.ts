@@ -11,7 +11,7 @@ import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.ent
 import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
 import { InquiryResponseVideoEntity } from "../entities/inquiry-response-video.entity";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
-import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder-builder";
+import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder.builder";
 
 @Injectable()
 export class MediaGeneralRepository extends ErrorHandlerProps {

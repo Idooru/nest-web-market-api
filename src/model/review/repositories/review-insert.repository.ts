@@ -4,7 +4,7 @@ import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { EntityTarget, Repository } from "typeorm";
 import { ReviewEntity } from "../entities/review.entity";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
-import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder-builder";
+import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder.builder";
 
 @Injectable()
 export class ReviewInsertRepository extends ErrorHandlerProps {

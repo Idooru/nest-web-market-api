@@ -4,7 +4,7 @@ import { ConfigService } from "@nestjs/config";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 import { SendMailToClientAboutInquiryResponseDto } from "src/model/inquiry/dto/response/send-mail-to-client-about-inquiry-response.dto";
 import { SendMailToAdminAboutInquiryRequestDto } from "src/model/inquiry/dto/request/send-mail-to-admin-about-inquiry-request.dto";
-import { ErrorHandlerBuilder } from "../error-handler/error-hanlder-builder";
+import { ErrorHandlerBuilder } from "../error-handler/error-hanlder.builder";
 import { UserEntity } from "src/model/user/entities/user.entity";
 
 @Injectable()

@@ -6,7 +6,7 @@ import { CreateInquiryRequestDao } from "../dto/request/create-inquiry-request.d
 import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
 import { InquiryResponseDto } from "../dto/response/inquiry-response.dto";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
-import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder-builder";
+import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder.builder";
 import { InquirySelectProperty } from "src/common/config/repository-select-configs/inquiry.select";
 
 @Injectable()

@@ -1,4 +1,4 @@
-import { ErrorHandlerBuilder } from "../lib/error-handler/error-hanlder-builder";
+import { ErrorHandlerBuilder } from "../lib/error-handler/error-hanlder.builder";
 
 export class ErrorCaseProp {
   constructor(
