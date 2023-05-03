@@ -22,7 +22,7 @@ export class AuthGeneralService extends ErrorHandlerProps {
     private readonly authExistService: AuthExistService,
     private readonly securityLibrary: SecurityLibrary,
     private readonly jwtService: JwtService,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder<unknown>,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder<null>,
   ) {
     super();
   }

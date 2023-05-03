@@ -12,7 +12,7 @@ export class EmailSenderLibrary extends ErrorHandlerProps {
   constructor(
     private readonly configService: ConfigService,
     private readonly mailerService: MailerService,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder<unknown>,
+    private readonly errorHandlerBuilder: ErrorHandlerBuilder<null>,
   ) {
     super();
   }
