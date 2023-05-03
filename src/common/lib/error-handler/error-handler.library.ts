@@ -26,9 +26,13 @@ export class ErrorHandler {
     private readonly stuffMeans: string[],
     private readonly layer: string,
   ) {
-    ErrorCaseProp.clearStuffs();
     this.logging();
-    if (this.layer.includes("repository")) this.checkSourceOfError();
+
+    if (this.layer.includes("repository")) {
+      ErrorCaseProp.clearStuffs();
+      this.checkSourceOfError();
+    }
+
     this.throwInternalServerErrorException();
   }
 
