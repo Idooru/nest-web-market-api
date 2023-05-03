@@ -47,7 +47,7 @@ export class ProductGeneralService {
   }
 
   async findProductByName(name: string): Promise<ProductEntity> {
-    return await this.productGeneralRepository.findProductOneByName(name);
+    return await this.productGeneralRepository.findOneProductByName(name);
   }
 
   async findProductById(id: string): Promise<ProductEntity> {

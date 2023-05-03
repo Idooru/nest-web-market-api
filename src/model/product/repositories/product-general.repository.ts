@@ -111,7 +111,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
     }
   }
 
-  async findProductOneByName(name: string): Promise<ProductEntity> {
+  async findOneProductByName(name: string): Promise<ProductEntity> {
     try {
       return await this.productRepository
         .createQueryBuilder()
@@ -137,7 +137,7 @@ export class ProductGeneralRepository extends ErrorHandlerProps {
         .where("product.name = :name", { name })
         .getOneOrFail();
     } catch (err) {
-      this.methodName = this.findProductOneByName.name;
+      this.methodName = this.findOneProductByName.name;
       this.errorHandlerBuilder
         .setEntity(new ProductEntity())
         .setError(err)
