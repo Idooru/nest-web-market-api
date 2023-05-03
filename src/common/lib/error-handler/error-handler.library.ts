@@ -41,59 +41,59 @@ export class ErrorHandler {
   }
 
   private checkSourceOfError(): void {
-    switch (this.retrievingEntityName()) {
-      case "Product":
+    switch (this.entity.name) {
+      case "ProductEntity":
         new ProductErrorCase(this.error, this.stuffs, this.stuffMeans);
         break;
-      case "ProductImage":
+      case "ProductImageEntity":
         new ProductImageErrorCase(this.error, this.stuffs, this.stuffMeans);
         break;
-      case "User":
+      case "UserEntity":
         new UserErrorCase(this.error, this.stuffs, this.stuffMeans);
         break;
-      case "ClientUser":
+      case "ClientUserEntity":
         new ClientUserErrorCase(this.error, this.stuffs, this.stuffMeans);
         break;
-      case "AdminUser":
+      case "AdminUserEntity":
         new AdminUserErrorCase(this.error, this.stuffs, this.stuffMeans);
         break;
-      case "Review":
+      case "ReviewEntity":
         new ReviewErrorCase(this.error, this.stuffs, this.stuffMeans);
         break;
-      case "ReviewImage":
+      case "ReviewImageEntity":
         new ReviewImageErrorCase(this.error, this.stuffs, this.stuffMeans);
         break;
-      case "ReviewVideo":
+      case "ReviewVideoEntity":
         new ReviewVideoErrorCase(this.error, this.stuffs, this.stuffMeans);
         break;
-      case "InquiryRequest":
+      case "InquiryRequestEntity":
         new InquiryRequestErrorCase(this.error, this.stuffs, this.stuffMeans);
         break;
-      case "InquiryRequestImage":
+      case "InquiryRequestImageEntity":
         new InquiryRequestImageErrorCase(
           this.error,
           this.stuffs,
           this.stuffMeans,
         );
         break;
-      case "InquiryRequestVideo":
+      case "InquiryRequestVideoEntity":
         new InquiryRequestVideoErrorCase(
           this.error,
           this.stuffs,
           this.stuffMeans,
         );
         break;
-      case "InquiryResponse":
+      case "InquiryResponseEntity":
         new InquiryResponseErrorCase(this.error, this.stuffs, this.stuffMeans);
         break;
-      case "InquiryResponseImage":
+      case "InquiryResponseImageEntity":
         new InquiryResponseImageErrorCase(
           this.error,
           this.stuffs,
           this.stuffMeans,
         );
         break;
-      case "InquiryResponseVideo":
+      case "InquiryResponseVideoEntity":
         new InquiryResponseVideoErrorCase(
           this.error,
           this.stuffs,
@@ -108,9 +108,5 @@ export class ErrorHandler {
 
   private throwInternalServerErrorException(): never {
     throw new InternalServerErrorException(this.error.message);
-  }
-
-  private retrievingEntityName(): string {
-    return this.entity.constructor.name.replace("Entity", "");
   }
 }
