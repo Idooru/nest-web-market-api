@@ -42,8 +42,8 @@ class NestCoreConfig {
 
   private setGlobals() {
     this.app.useGlobalFilters(
-      new TypeOrmExceptionFilter(),
       new HttpExceptionFilter(),
+      new TypeOrmExceptionFilter(),
       new ValidationExceptionFilter(),
     );
     this.app.useGlobalPipes(
