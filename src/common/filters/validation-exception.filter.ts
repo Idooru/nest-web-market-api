@@ -13,8 +13,8 @@ export class ValidationExceptionFilter implements ExceptionFilter {
       success: false,
       message: "Validation Exception이 발생하였습니다.",
       timestamp: new Date().toString(),
+      error: "Validation Exception",
       reason: err.errors,
-      error: "Validation Error",
       info: "전송될 데이터의 유효성을 잘 확인해주세요.",
     });
   }
