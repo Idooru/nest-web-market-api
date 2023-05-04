@@ -10,6 +10,7 @@ import { ValidationException } from "./common/errors/validation.exception";
 import path from "path";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
+import { TypeOrmExceptionFilter } from "./common/filters/typeorm-exception.filter";
 
 class NestCoreConfig {
   private readonly envData = this.getDataFromEnv();
@@ -41,6 +42,7 @@ class NestCoreConfig {
 
   private setGlobals() {
     this.app.useGlobalFilters(
+      new TypeOrmExceptionFilter(),
       new HttpExceptionFilter(),
       new ValidationExceptionFilter(),
     );
