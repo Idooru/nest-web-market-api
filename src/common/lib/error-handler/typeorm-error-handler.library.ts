@@ -33,7 +33,6 @@ export class TypeOrmErrorHandler {
     this.logging();
     this.clearStuffs();
     this.checkSourceOfError();
-    this.throwTypeOrmException();
   }
 
   private logging(): void {
