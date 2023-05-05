@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserProfileEntity } from "../entities/user.profile.entity";
-import { EntityTarget, InsertResult, Repository } from "typeorm";
+import { InsertResult, Repository } from "typeorm";
 import { UserSelectProperty } from "src/common/config/repository-select-configs/user.select";
 import { ClientUserEntity } from "../entities/client-user.entity";
 import { RegisterUserProfileDto } from "../dtos/register-user.dto";
@@ -13,7 +13,7 @@ import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 import { RegisterUserAuthDto } from "../dtos/register-user.dto";
 import { ModifyUserProfileDto } from "../dtos/modify-user.dto";
 import { ModifyUserAuthDto } from "../dtos/modify-user.dto";
-import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder.builder";
+import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 
 @Injectable()
 export class UserGeneralRepository extends ErrorHandlerProps {
@@ -29,7 +29,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     @InjectRepository(AdminUserEntity)
     private readonly adminUserRepository: Repository<AdminUserEntity>,
     @Inject("UserSelectProperty") private readonly select: UserSelectProperty,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
+    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlerBuilder,
   ) {
     super();
   }
@@ -45,11 +45,10 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .getMany();
     } catch (err) {
       this.methodName = this.findAllUsersFromLatest.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -65,11 +64,10 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .getMany();
     } catch (err) {
       this.methodName = this.findAllUsersFromOldest.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -86,12 +84,11 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findUserWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -109,12 +106,11 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findClientUserWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -132,12 +128,11 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findAdminUserWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -154,12 +149,11 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findClientUserObjectWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ClientUserEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -176,12 +170,11 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findAdminUserObjectWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(AdminUserEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -198,12 +191,11 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findUserWithEmail.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(email, "email")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -220,12 +212,11 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findUserWithNickName.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(nickname, "nickname")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -242,11 +233,10 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .getOne();
     } catch (err) {
       this.methodName = this.findUserWithRealName.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -265,11 +255,10 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .getOne();
     } catch (err) {
       this.methodName = this.findUserWithPhoneNumber.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -298,12 +287,11 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findClientUserProfileInfoWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -336,12 +324,11 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findAdminUserProfileInfoWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -366,12 +353,11 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findClientUserInfoFromAdminWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -387,11 +373,10 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.resetPassword.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserAuthEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -405,11 +390,10 @@ export class UserGeneralRepository extends ErrorHandlerProps {
       });
     } catch (err) {
       this.methodName = this.createUserProfile.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserProfileEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -421,11 +405,10 @@ export class UserGeneralRepository extends ErrorHandlerProps {
       return await this.userAuthRepository.save({ ...registerUserAuthDto });
     } catch (err) {
       this.methodName = this.createUserAuth.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserAuthEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -442,11 +425,10 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .getOne();
     } catch (err) {
       this.methodName = this.findUserProfile.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserProfileEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -461,11 +443,10 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .getOne();
     } catch (err) {
       this.methodName = this.findUserAuth.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserAuthEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -482,11 +463,10 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.createUserBase.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -501,11 +481,10 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.createClientUser.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ClientUserEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -520,11 +499,10 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.createAdminUser.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(AdminUserEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -542,11 +520,10 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.modifyUserProfile.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserProfileEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -564,11 +541,10 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.modifyUserAuth.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserAuthEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -583,11 +559,10 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.modifyUserEmail.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserAuthEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -602,11 +577,10 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.modifyUserNickName.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserAuthEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -621,11 +595,10 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.modifyUserPhoneNumber.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserProfileEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -640,11 +613,10 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.modifyUserPassword.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserAuthEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -659,11 +631,10 @@ export class UserGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.deleteUser.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }

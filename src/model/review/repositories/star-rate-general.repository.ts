@@ -1,10 +1,10 @@
-import { EntityTarget, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { StarRateEntity } from "../entities/star-rate.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Inject, Injectable } from "@nestjs/common";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
-import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder.builder";
 import { ReviewSelectProperty } from "src/common/config/repository-select-configs/review.select";
+import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 
 @Injectable()
 export class StarRateGeneralRepository extends ErrorHandlerProps {
@@ -13,7 +13,7 @@ export class StarRateGeneralRepository extends ErrorHandlerProps {
     private readonly starRateRepository: Repository<StarRateEntity>,
     @Inject("ReviewSelectProperty")
     private readonly select: ReviewSelectProperty,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
+    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlerBuilder,
   ) {
     super();
   }
@@ -24,11 +24,10 @@ export class StarRateGeneralRepository extends ErrorHandlerProps {
       return await this.starRateRepository.save(starRate);
     } catch (err) {
       this.methodName = this.createStarRateSample.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(StarRateEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -67,11 +66,10 @@ export class StarRateGeneralRepository extends ErrorHandlerProps {
       }
     } catch (err) {
       this.methodName = this.increaseStarRate.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(StarRateEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -111,11 +109,10 @@ export class StarRateGeneralRepository extends ErrorHandlerProps {
       }
     } catch (err) {
       this.methodName = this.decreaseStarRate.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(StarRateEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -130,11 +127,10 @@ export class StarRateGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findStarRateWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(StarRateEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -149,11 +145,10 @@ export class StarRateGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.renewTotalScore.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(StarRateEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }

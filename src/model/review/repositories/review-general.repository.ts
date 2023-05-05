@@ -1,12 +1,12 @@
 import { ReviewEntity } from "../entities/review.entity";
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { EntityTarget, InsertResult, Repository } from "typeorm";
+import { InsertResult, Repository } from "typeorm";
 import { ModifyReviewDto } from "../dto/modify-review.dto";
 import { CreateReviewDao } from "../dto/create-review.dto";
 import { ReviewSelectProperty } from "src/common/config/repository-select-configs/review.select";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
-import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder.builder";
+import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 
 @Injectable()
 export class ReviewGeneralRepository extends ErrorHandlerProps {
@@ -15,7 +15,7 @@ export class ReviewGeneralRepository extends ErrorHandlerProps {
     private readonly reviewRepository: Repository<ReviewEntity>,
     @Inject("ReviewSelectProperty")
     private readonly select: ReviewSelectProperty,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
+    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlerBuilder,
   ) {
     super();
   }
@@ -43,12 +43,11 @@ export class ReviewGeneralRepository extends ErrorHandlerProps {
       return reviews;
     } catch (err) {
       this.methodName = this.findAllClientsReviews.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ReviewEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -68,11 +67,10 @@ export class ReviewGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.createReview.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ReviewEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -93,11 +91,10 @@ export class ReviewGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.modifyReview.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ReviewEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -112,11 +109,10 @@ export class ReviewGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.deleteReview.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ReviewEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }

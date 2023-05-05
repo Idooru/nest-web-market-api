@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ProductEntity } from "src/model/product/entities/product.entity";
-import { EntityTarget, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { StarRateEntity } from "../entities/star-rate.entity";
 import { StarRateGeneralRepository } from "./star-rate-general.repository";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
-import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder.builder";
+import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 
 @Injectable()
 export class StarRateInsertRepository extends ErrorHandlerProps {
@@ -13,7 +13,7 @@ export class StarRateInsertRepository extends ErrorHandlerProps {
     @InjectRepository(StarRateEntity)
     private readonly starRateRepository: Repository<StarRateEntity>,
     private readonly starRateGeneralRepository: StarRateGeneralRepository,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
+    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlerBuilder,
   ) {
     super();
   }
@@ -28,11 +28,10 @@ export class StarRateInsertRepository extends ErrorHandlerProps {
       await this.starRateRepository.save(StarRate);
     } catch (err) {
       this.methodName = this.renewTotalScore.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(StarRateEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -50,11 +49,10 @@ export class StarRateInsertRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.insertProductIdOnStarRate.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(StarRateEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }

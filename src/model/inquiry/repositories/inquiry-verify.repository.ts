@@ -1,16 +1,18 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { EntityTarget, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { InquiryRequestEntity } from "../entities/inquiry-request.entity";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder.builder";
+import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 
 @Injectable()
 export class InquiryVerifyRepository extends ErrorHandlerProps {
   constructor(
     @InjectRepository(InquiryRequestEntity)
     private readonly inquiryRequestRepository: Repository<InquiryRequestEntity>,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
+
+    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlerBuilder,
   ) {
     super();
   }
@@ -22,7 +24,7 @@ export class InquiryVerifyRepository extends ErrorHandlerProps {
       });
       return result ? true : false;
     } catch (err) {
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryRequestEntity)
         .setSourceNames(this.className, this.methodName)
         .handle();

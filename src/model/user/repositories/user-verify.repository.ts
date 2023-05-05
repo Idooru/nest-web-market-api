@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "../entities/user.entity";
-import { EntityTarget, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { UserProfileEntity } from "../entities/user.profile.entity";
 import { UserAuthEntity } from "../entities/user.auth.entity";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
-import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder.builder";
+import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 
 @Injectable()
 export class UserVerifyRepository extends ErrorHandlerProps {
@@ -16,7 +16,7 @@ export class UserVerifyRepository extends ErrorHandlerProps {
     private readonly userProfileRepository: Repository<UserProfileEntity>,
     @InjectRepository(UserAuthEntity)
     private readonly userAuthRepository: Repository<UserAuthEntity>,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
+    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlerBuilder,
   ) {
     super();
   }
@@ -27,11 +27,10 @@ export class UserVerifyRepository extends ErrorHandlerProps {
       return result ? true : false;
     } catch (err) {
       this.methodName = this.isExistUserId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -42,11 +41,10 @@ export class UserVerifyRepository extends ErrorHandlerProps {
       return result ? true : false;
     } catch (err) {
       this.methodName = this.isExistUserEmail.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserAuthEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -57,11 +55,10 @@ export class UserVerifyRepository extends ErrorHandlerProps {
       return result ? false : true;
     } catch (err) {
       this.methodName = this.isNotExistUserEmail.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserAuthEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -74,11 +71,10 @@ export class UserVerifyRepository extends ErrorHandlerProps {
       return result ? true : false;
     } catch (err) {
       this.methodName = this.isExistUserRealName.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserAuthEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -91,11 +87,10 @@ export class UserVerifyRepository extends ErrorHandlerProps {
       return result ? false : true;
     } catch (err) {
       this.methodName = this.isNotExistUserNickName.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserAuthEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -108,11 +103,10 @@ export class UserVerifyRepository extends ErrorHandlerProps {
       return result ? true : false;
     } catch (err) {
       this.methodName = this.isExistUserPhoneNumber.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserProfileEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -125,11 +119,10 @@ export class UserVerifyRepository extends ErrorHandlerProps {
       return result ? false : true;
     } catch (err) {
       this.methodName = this.isNotExistUserPhoneNumber.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(UserProfileEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }

@@ -11,7 +11,7 @@ import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.ent
 import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
 import { InquiryResponseVideoEntity } from "../entities/inquiry-response-video.entity";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
-import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder.builder";
+import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 
 @Injectable()
 export class MediaGeneralRepository extends ErrorHandlerProps {
@@ -31,7 +31,7 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
     @InjectRepository(InquiryResponseVideoEntity)
     private readonly inquiryResponseVideoRepository: Repository<InquiryResponseVideoEntity>,
     @Inject("MediaSelectProperty") private readonly select: MediaSelectProperty,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
+    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlerBuilder,
   ) {
     super();
   }
@@ -50,13 +50,12 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findUploadedProductImage.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ProductImageEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(url, "url")
         .setStuffs(email, "email")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -75,13 +74,12 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findUploadedReviewImages.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ReviewImageEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(url, "url")
         .setStuffs(email, "email")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -97,13 +95,12 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findUploadedReviewImages.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ReviewVideoEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(url, "url")
         .setStuffs(email, "email")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -124,13 +121,12 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findUploadedReviewImages.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryRequestImageEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(url, "url")
         .setStuffs(email, "email")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -151,13 +147,12 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findUploadedReviewImages.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryRequestImageEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(url, "url")
         .setStuffs(email, "email")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -178,13 +173,12 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findUploadedInquiryResponseImages.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryResponseImageEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(url, "url")
         .setStuffs(email, "email")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -205,13 +199,12 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findUploadedInquiryResponseVideos.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryResponseVideoEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(url, "url")
         .setStuffs(email, "email")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -226,11 +219,10 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.uploadProductImage.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ProductImageEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -245,11 +237,10 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.uploadReviewImage.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ReviewImageEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -264,11 +255,10 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.uploadReviewVideo.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ReviewVideoEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -285,11 +275,10 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.uploadInquiryRequestImage.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryRequestImageEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -306,11 +295,10 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.uploadInquiryRequestVideo.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryRequestVideoEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -327,11 +315,10 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.uploadInquiryResponseImage.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryResponseImageEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -348,11 +335,10 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.uploadInquiryResponseVideo.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryResponseVideoEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -367,12 +353,11 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findProductImageWithUrl.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ProductImageEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(url, "url")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -388,12 +373,11 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findReviewImageWithUrl.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ReviewImageEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(url, "url")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -409,12 +393,11 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findReviewVideoWithUrl.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ReviewVideoEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(url, "url")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -432,12 +415,11 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findInquiryRequestImageWithUrl.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryRequestImageEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(url, "url")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -455,12 +437,11 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findInquiryRequestVideoWithUrl.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryRequestVideoEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(url, "url")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -478,12 +459,11 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findInquiryResponseImageWithUrl.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryResponseImageEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(url, "url")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -501,12 +481,11 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findInquiryResponseVideoWithUrl.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryResponseVideoEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(url, "url")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -521,11 +500,10 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.deleteProductImageWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ProductImageEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -540,11 +518,10 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.deleteReviewImageWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ReviewImageEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -559,11 +536,10 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.deleteReviewVideoWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ReviewVideoEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -578,11 +554,10 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.deleteInquiryRequestImageWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryRequestImageEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -597,11 +572,10 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.deleteInquiryRequestVideoWIthId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryRequestVideoEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -616,11 +590,10 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.deleteInquiryResponseImageWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryResponseImageEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -635,11 +608,10 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.deleteInquiryResponseVideoWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryResponseVideoEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -656,12 +628,11 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .getOne();
     } catch (err) {
       this.methodName = this.findProductImageEvenUseWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ProductImageEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -677,12 +648,11 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .getMany();
     } catch (err) {
       this.methodName = this.findBeforeReviewImagesWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ReviewImageEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -698,12 +668,11 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .getOne();
     } catch (err) {
       this.methodName = this.findBeforeReviewImageWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ReviewImageEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -719,12 +688,11 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .getMany();
     } catch (err) {
       this.methodName = this.findBeforeReviewVideosWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ReviewVideoEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -740,12 +708,11 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .getOne();
     } catch (err) {
       this.methodName = this.findBeforeReviewVideoWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(ReviewVideoEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
-        .setLayer("repository")
         .handle();
     }
   }

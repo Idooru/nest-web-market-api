@@ -1,13 +1,13 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { InquiryRequestEntity } from "src/model/inquiry/entities/inquiry-request.entity";
-import { EntityTarget, InsertResult, Repository } from "typeorm";
+import { InsertResult, Repository } from "typeorm";
 import { CreateInquiryRequestDao } from "../dto/request/create-inquiry-request.dto";
 import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
 import { InquiryResponseDto } from "../dto/response/inquiry-response.dto";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
-import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder.builder";
 import { InquirySelectProperty } from "src/common/config/repository-select-configs/inquiry.select";
+import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 
 @Injectable()
 export class InquiryGeneralRepository extends ErrorHandlerProps {
@@ -18,7 +18,7 @@ export class InquiryGeneralRepository extends ErrorHandlerProps {
     private readonly inquiryResponseRepository: Repository<InquiryResponseEntity>,
     @Inject("InquirySelectProperty")
     private readonly select: InquirySelectProperty,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
+    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlerBuilder,
   ) {
     super();
   }
@@ -40,11 +40,10 @@ export class InquiryGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.createInquiryRequest.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryRequestEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -61,11 +60,10 @@ export class InquiryGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.createInquiryResponse.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryRequestEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
@@ -81,12 +79,11 @@ export class InquiryGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findInquiryRequestWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryRequestEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -101,12 +98,11 @@ export class InquiryGeneralRepository extends ErrorHandlerProps {
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findInquiryResponseWithId.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryResponseEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
-        .setLayer("repository")
         .handle();
     }
   }
@@ -121,11 +117,10 @@ export class InquiryGeneralRepository extends ErrorHandlerProps {
         .execute();
     } catch (err) {
       this.methodName = this.setIsAnsweredTrue.name;
-      this.errorHandlerBuilder
+      this.typeOrmErrorHandlerBuilder
         .setEntity(InquiryRequestEntity)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setLayer("repository")
         .handle();
     }
   }
