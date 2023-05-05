@@ -6,11 +6,12 @@ import { AppModule } from "./app.module";
 import { HttpExceptionFilter } from "./common/filters/http-exception.filter";
 import { ValidationExceptionFilter } from "./common/filters/validation-exception.filter";
 import { ValidationException } from "./common/errors/validation.exception";
+import { TypeOrmExceptionFilter } from "./common/filters/typeorm-exception.filter";
+import { LibraryExceptionFilter } from "./common/filters/library-exception.filter";
 
 import path from "path";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
-import { TypeOrmExceptionFilter } from "./common/filters/typeorm-exception.filter";
 
 class NestCoreConfig {
   private readonly envData = this.getDataFromEnv();
@@ -43,6 +44,7 @@ class NestCoreConfig {
   private setGlobals() {
     this.app.useGlobalFilters(
       new HttpExceptionFilter(),
+      new LibraryExceptionFilter(),
       new TypeOrmExceptionFilter(),
       new ValidationExceptionFilter(),
     );
