@@ -12,8 +12,9 @@ import { UserGeneralRepository } from "src/model/user/repositories/user-general.
 import { UserEntity } from "src/model/user/entities/user.entity";
 import { JwtAccessTokenPayload } from "../jwt/jwt-access-token-payload.interface";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
+import { LibraryErrorHandlerBuilder } from "../../../common/lib/error-handler/library-error-handler.builder";
+
 import * as bcrypt from "bcrypt";
-import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder.builder";
 
 @Injectable()
 export class AuthGeneralService extends ErrorHandlerProps {
@@ -22,7 +23,7 @@ export class AuthGeneralService extends ErrorHandlerProps {
     private readonly authExistService: AuthExistService,
     private readonly securityLibrary: SecurityLibrary,
     private readonly jwtService: JwtService,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
+    private readonly libraryErrorHandlerBuilder: LibraryErrorHandlerBuilder,
   ) {
     super();
   }
@@ -81,10 +82,11 @@ export class AuthGeneralService extends ErrorHandlerProps {
       return { accessToken, refreshToken };
     } catch (err) {
       this.methodName = this.signToken.name;
-      this.errorHandlerBuilder
+
+      this.libraryErrorHandlerBuilder
         .setError(err)
+        .setLibraryName("jwtService")
         .setSourceNames(this.className, this.methodName)
-        .setLayer("service")
         .handle();
     }
   }
@@ -120,10 +122,10 @@ export class AuthGeneralService extends ErrorHandlerProps {
       hashed = await bcrypt.hash(password, this.securityLibrary.getHashSalt());
     } catch (err) {
       this.methodName = this.resetPassword.name;
-      this.errorHandlerBuilder
+      this.libraryErrorHandlerBuilder
         .setError(err)
+        .setLibraryName("bcrypt")
         .setSourceNames(this.className, this.methodName)
-        .setLayer("service")
         .handle();
     }
 

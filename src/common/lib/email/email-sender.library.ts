@@ -4,15 +4,15 @@ import { ConfigService } from "@nestjs/config";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
 import { SendMailToClientAboutInquiryResponseDto } from "src/model/inquiry/dto/response/send-mail-to-client-about-inquiry-response.dto";
 import { SendMailToAdminAboutInquiryRequestDto } from "src/model/inquiry/dto/request/send-mail-to-admin-about-inquiry-request.dto";
-import { ErrorHandlerBuilder } from "../error-handler/error-hanlder.builder";
 import { UserEntity } from "src/model/user/entities/user.entity";
+import { LibraryErrorHandlerBuilder } from "../error-handler/library-error-handler.builder";
 
 @Injectable()
 export class EmailSenderLibrary extends ErrorHandlerProps {
   constructor(
     private readonly configService: ConfigService,
     private readonly mailerService: MailerService,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
+    private readonly libraryErrorHandlerBuilder: LibraryErrorHandlerBuilder,
   ) {
     super();
   }
@@ -39,10 +39,10 @@ export class EmailSenderLibrary extends ErrorHandlerProps {
       });
     } catch (err) {
       this.methodName = this.sendMailToAdminAboutInquiryRequest.name;
-      this.errorHandlerBuilder
+      this.libraryErrorHandlerBuilder
         .setError(err)
+        .setLibraryName("mailerService")
         .setSourceNames(this.className, this.methodName)
-        .setLayer("service")
         .handle();
     }
   }
@@ -72,10 +72,10 @@ export class EmailSenderLibrary extends ErrorHandlerProps {
       });
     } catch (err) {
       this.methodName = this.sendMailToClientAboutInquiryResponse.name;
-      this.errorHandlerBuilder
+      this.libraryErrorHandlerBuilder
         .setError(err)
+        .setLibraryName("mailerService")
         .setSourceNames(this.className, this.methodName)
-        .setLayer("service")
         .handle();
     }
   }
@@ -90,10 +90,10 @@ export class EmailSenderLibrary extends ErrorHandlerProps {
       });
     } catch (err) {
       this.methodName = this.sendMailToClientAboutRegister.name;
-      this.errorHandlerBuilder
+      this.libraryErrorHandlerBuilder
         .setError(err)
+        .setLibraryName("mailerService")
         .setSourceNames(this.className, this.methodName)
-        .setLayer("service")
         .handle();
     }
   }

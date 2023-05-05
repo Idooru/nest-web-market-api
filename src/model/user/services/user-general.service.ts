@@ -7,7 +7,8 @@ import { UserEntity } from "../entities/user.entity";
 import { UserInsertRepository } from "../repositories/user-insert.repository";
 import { CreateUserBaseDto } from "../dtos/create-user-base.dto";
 import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
-import { ErrorHandlerBuilder } from "src/common/lib/error-handler/error-hanlder.builder";
+import { LibraryErrorHandlerBuilder } from "src/common/lib/error-handler/library-error-handler.builder";
+
 import * as bcrypt from "bcrypt";
 
 @Injectable()
@@ -16,7 +17,7 @@ export class UserGeneralService extends ErrorHandlerProps {
     private readonly userGeneralRepository: UserGeneralRepository,
     private readonly userInsertRepository: UserInsertRepository,
     private readonly securityLibrary: SecurityLibrary,
-    private readonly errorHandlerBuilder: ErrorHandlerBuilder,
+    private readonly libraryErrorHandlerBuilder: LibraryErrorHandlerBuilder,
   ) {
     super();
   }
@@ -60,10 +61,10 @@ export class UserGeneralService extends ErrorHandlerProps {
       hashed = await bcrypt.hash(password, this.securityLibrary.getHashSalt());
     } catch (err) {
       this.methodName = this.createUserBase.name;
-      this.errorHandlerBuilder
+      this.libraryErrorHandlerBuilder
         .setError(err)
+        .setLibraryName("bcrypt")
         .setSourceNames(this.className, this.methodName)
-        .setLayer("service")
         .handle();
     }
 
@@ -154,10 +155,10 @@ export class UserGeneralService extends ErrorHandlerProps {
       hashed = await bcrypt.hash(password, this.securityLibrary.getHashSalt());
     } catch (err) {
       this.methodName = this.createUserBase.name;
-      this.errorHandlerBuilder
+      this.libraryErrorHandlerBuilder
         .setError(err)
+        .setLibraryName("bcrypt")
         .setSourceNames(this.className, this.methodName)
-        .setLayer("service")
         .handle();
     }
 
@@ -206,10 +207,10 @@ export class UserGeneralService extends ErrorHandlerProps {
       hashed = await bcrypt.hash(password, this.securityLibrary.getHashSalt());
     } catch (err) {
       this.methodName = this.createUserBase.name;
-      this.errorHandlerBuilder
+      this.libraryErrorHandlerBuilder
         .setError(err)
+        .setLibraryName("bcrypt")
         .setSourceNames(this.className, this.methodName)
-        .setLayer("service")
         .handle();
     }
 
