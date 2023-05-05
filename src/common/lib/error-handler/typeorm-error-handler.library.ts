@@ -109,12 +109,8 @@ export class TypeOrmErrorHandler {
         );
         break;
       default: {
-        this.throwTypeOrmException();
+        throw new TypeOrmException(this.error);
       }
     }
-  }
-
-  private throwTypeOrmException(): never {
-    throw new TypeOrmException(this.error);
   }
 }
