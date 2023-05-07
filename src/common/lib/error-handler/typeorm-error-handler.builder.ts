@@ -33,10 +33,10 @@ export class TypeOrmErrorHandlerBuilder {
 
   public handle() {
     return new TypeOrmErrorHandler(
-      this.entity,
       this.error,
       this.className,
       this.methodName,
+      this.entity,
       TypeOrmErrorHandlerBuilder.stuffs,
       TypeOrmErrorHandlerBuilder.stuffMeans,
     );

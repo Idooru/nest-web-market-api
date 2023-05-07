@@ -25,9 +25,9 @@ export class LibraryErrorHandlerBuilder {
   public handle() {
     return new LibraryErrorHandler(
       this.error,
-      this.libraryName,
       this.className,
       this.methodName,
+      this.libraryName,
     );
   }
 }
