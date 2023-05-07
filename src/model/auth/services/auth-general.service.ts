@@ -11,7 +11,7 @@ import { AuthExistService } from "./auth-exist.service";
 import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
 import { UserEntity } from "src/model/user/entities/user.entity";
 import { JwtAccessTokenPayload } from "../jwt/jwt-access-token-payload.interface";
-import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
+import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { LibraryErrorHandlerBuilder } from "../../../common/lib/error-handler/library-error-handler.builder";
 
 import * as bcrypt from "bcrypt";

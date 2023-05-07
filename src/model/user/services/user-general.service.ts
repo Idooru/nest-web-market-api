@@ -6,7 +6,7 @@ import { RegisterUserDto } from "../dtos/register-user.dto";
 import { UserEntity } from "../entities/user.entity";
 import { UserInsertRepository } from "../repositories/user-insert.repository";
 import { CreateUserBaseDto } from "../dtos/create-user-base.dto";
-import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
+import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { LibraryErrorHandlerBuilder } from "src/common/lib/error-handler/library-error-handler.builder";
 
 import * as bcrypt from "bcrypt";

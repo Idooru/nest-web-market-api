@@ -5,7 +5,7 @@ import { InsertResult, Repository } from "typeorm";
 import { ModifyReviewDto } from "../dto/modify-review.dto";
 import { CreateReviewDao } from "../dto/create-review.dto";
 import { ReviewSelectProperty } from "src/common/config/repository-select-configs/review.select";
-import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
+import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 
 @Injectable()

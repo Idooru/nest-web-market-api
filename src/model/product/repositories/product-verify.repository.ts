@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
-import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
+import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 
 @Injectable()

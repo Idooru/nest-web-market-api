@@ -5,7 +5,7 @@ import { InsertResult, Repository } from "typeorm";
 import { CreateInquiryRequestDao } from "../dto/request/create-inquiry-request.dto";
 import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
 import { InquiryResponseDto } from "../dto/response/inquiry-response.dto";
-import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
+import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { InquirySelectProperty } from "src/common/config/repository-select-configs/inquiry.select";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 

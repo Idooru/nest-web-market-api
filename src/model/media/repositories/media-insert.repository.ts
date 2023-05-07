@@ -12,7 +12,7 @@ import { InquiryResponseVideoEntity } from "../entities/inquiry-response-video.e
 import { ProductImageEntity } from "../entities/product-image.entity";
 import { ReviewImageEntity } from "../entities/review-image.entity";
 import { ReviewVideoEntity } from "../entities/review-video.entity";
-import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
+import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 
 @Injectable()

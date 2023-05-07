@@ -5,7 +5,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { InsertResult, Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
-import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
+import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { ProductSelectProperty } from "src/common/config/repository-select-configs/product.select";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 

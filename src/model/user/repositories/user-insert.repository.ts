@@ -6,7 +6,7 @@ import { ClientUserEntity } from "../entities/client-user.entity";
 import { UserAuthEntity } from "../entities/user.auth.entity";
 import { UserEntity } from "../entities/user.entity";
 import { UserProfileEntity } from "../entities/user.profile.entity";
-import { ErrorHandlerProps } from "src/common/classes/error-handler-props";
+import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 
 @Injectable()
