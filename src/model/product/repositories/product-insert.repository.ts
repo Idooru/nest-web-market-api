@@ -4,9 +4,13 @@ import { Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
+import { IProductInsertRepository } from "../interfaces/repositories/product-insert-repository.interface";
 
 @Injectable()
-export class ProductInsertRepository extends ErrorHandlerProps {
+export class ProductInsertRepository
+  extends ErrorHandlerProps
+  implements IProductInsertRepository
+{
   constructor(
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,

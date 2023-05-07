@@ -1,9 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { BadRequestException } from "@nestjs/common/exceptions";
 import { ProductVerifyRepository } from "../repositories/product-verify.repository";
+import { IProductVerifyService } from "../interfaces/services/product-verify-service.interface";
 
 @Injectable()
-export class ProductVerifyService {
+export class ProductVerifyService implements IProductVerifyService {
   constructor(
     private readonly productVerifyRepository: ProductVerifyRepository,
   ) {}

@@ -4,9 +4,10 @@ import { MediaGeneralRepository } from "src/model/media/repositories/media-gener
 import { ProductEntity } from "../entities/product.entity";
 import { ProductGeneralRepository } from "../repositories/product-general.repository";
 import { MediaDto } from "src/model/media/dto/media.dto";
+import { IProductAccessoryService } from "../interfaces/services/product-accessory-service.interface";
 
 @Injectable()
-export class ProductAccessoryService {
+export class ProductAccessoryService implements IProductAccessoryService {
   constructor(
     private readonly productGeneralRepository: ProductGeneralRepository,
     private readonly mediaGeneralRepository: MediaGeneralRepository,

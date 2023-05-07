@@ -12,9 +12,10 @@ import { StarRateInsertRepository } from "src/model/review/repositories/star-rat
 import { ProductInsertRepository } from "../repositories/product-insert.repository";
 import { ProductAccessoryService } from "./product-accessory.service";
 import { MediaDto } from "src/model/media/dto/media.dto";
+import { IProductGeneralService } from "../interfaces/services/product-general-service.interface";
 
 @Injectable()
-export class ProductGeneralService {
+export class ProductGeneralService implements IProductGeneralService {
   constructor(
     private readonly productGeneralRepository: ProductGeneralRepository,
     private readonly mediaGeneralRepository: MediaGeneralRepository,
