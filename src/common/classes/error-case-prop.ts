@@ -1,4 +1,4 @@
-export class ErrorCaseProp {
+export abstract class ErrorCaseProp {
   constructor(
     protected readonly stuffs: string[],
     protected readonly stuffMeans: string[],
