@@ -1,30 +1,24 @@
-import { Logger } from "@nestjs/common";
+import { ErrorLogger } from "src/common/classes/abstract/error-logger";
 import { LibraryException } from "src/common/errors/library.exception";
+import { Throwable } from "./interface/throwable.interface";
 
-export class LibraryErrorHandler {
+export class LibraryErrorHandler extends ErrorLogger implements Throwable {
   constructor(
-    private readonly error: Error,
+    protected readonly error: Error,
+    protected readonly className: string,
+    protected readonly methodName: string,
     private readonly libraryName: string,
-    private readonly className: string,
-    private readonly methodName: string,
   ) {
+    super(error, className, methodName);
     this.main();
   }
 
   private main() {
-    this.logging();
-    this.throwServiceException();
+    super.logging();
+    this.throwException();
   }
 
-  private logging(): void {
-    const className = new Logger(this.className);
-    const methodName = new Logger(this.methodName);
-
-    className.error(`Error occurred in ${this.className} class`);
-    methodName.error(this.error);
-  }
-
-  private throwServiceException(): never {
+  public throwException(): never {
     throw new LibraryException(this.error, this.libraryName);
   }
 }

@@ -1,4 +1,3 @@
-import { Logger } from "@nestjs/common";
 import { TypeOrmException } from "src/common/errors/typeorm.exception";
 import { InquiryRequestErrorCase } from "src/model/inquiry/error/inquiry-request-error.case";
 import { InquiryResponseErrorCase } from "src/model/inquiry/error/inquiry-response-error.case";
@@ -16,31 +15,26 @@ import { ClientUserErrorCase } from "src/model/user/error/client-user-error.case
 import { UserErrorCase } from "src/model/user/error/user-error.case";
 import { EntityTarget, TypeORMError } from "typeorm";
 import { TypeOrmErrorHandlerBuilder } from "./typeorm-error-handler.builder";
+import { ErrorLogger } from "src/common/classes/abstract/error-logger";
+import { Throwable } from "./interface/throwable.interface";
 
-export class TypeOrmErrorHandler {
+export class TypeOrmErrorHandler extends ErrorLogger implements Throwable {
   constructor(
+    protected readonly error: TypeORMError,
+    protected readonly className: string,
+    protected readonly methodName: string,
     private readonly entity: EntityTarget,
-    private readonly error: TypeORMError,
-    private readonly className: string,
-    private readonly methodName: string,
     private readonly stuffs: string[],
     private readonly stuffMeans: string[],
   ) {
+    super(error, className, methodName);
     this.main();
   }
 
   private main() {
-    this.logging();
+    super.logging();
     this.clearStuffs();
     this.checkSourceOfError();
-  }
-
-  private logging(): void {
-    const className = new Logger(this.className);
-    const methodName = new Logger(this.methodName);
-
-    className.error(`Error occurred in ${this.className} class`);
-    methodName.error(this.error);
   }
 
   private clearStuffs() {
@@ -114,7 +108,7 @@ export class TypeOrmErrorHandler {
     }
   }
 
-  private throwException(): never {
+  public throwException(): never {
     throw new TypeOrmException(this.error);
   }
 }
