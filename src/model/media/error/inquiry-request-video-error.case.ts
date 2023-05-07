@@ -1,5 +1,5 @@
 import { NotFoundException } from "@nestjs/common";
-import { ErrorCaseProp } from "src/common/classes/error-case-prop";
+import { ErrorCaseProp } from "src/common/classes/abstract/error-case-prop";
 
 export class InquiryRequestVideoErrorCase extends ErrorCaseProp {
   constructor(
