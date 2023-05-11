@@ -1,9 +1,8 @@
-import { EntityTarget, TypeORMError } from "typeorm";
+import { TypeORMError } from "typeorm";
 import { TypeOrmErrorHandler } from "./typeorm-error-handler.library";
 import { ErrorHandlerStrategy } from "./interface/error-handler-strategy.interface";
 
 export class TypeOrmErrorHandlerBuilder {
-  private entity: EntityTarget;
   private handler: new (
     error: TypeORMError,
     stuffs: string[],
@@ -14,11 +13,6 @@ export class TypeOrmErrorHandlerBuilder {
   private methodName: string;
   public static stuffs: string[] = [];
   public static stuffMeans: string[] = [];
-
-  public setEntity(entity: EntityTarget): this {
-    this.entity = entity;
-    return this;
-  }
 
   public setErrorHandler(
     handler: new (
@@ -54,7 +48,6 @@ export class TypeOrmErrorHandlerBuilder {
       this.className,
       this.methodName,
       this.handler,
-      this.entity,
       TypeOrmErrorHandlerBuilder.stuffs,
       TypeOrmErrorHandlerBuilder.stuffMeans,
     );
