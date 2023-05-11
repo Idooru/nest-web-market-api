@@ -12,7 +12,7 @@ export class ProductErrorCase extends EntityErrorHandler {
     this.handle(error);
   }
 
-  handle(error: TypeORMError): void {
+  public handle(error: TypeORMError): void {
     this.notFound(error);
     this.badRequest(error);
   }
