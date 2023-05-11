@@ -1,8 +1,13 @@
 import { NotFoundException } from "@nestjs/common";
 import { EntityErrorHandler } from "src/common/classes/abstract/entity-error-handler";
+import { TypeOrmException } from "src/common/errors/typeorm.exception";
+import { Throwable } from "src/common/lib/error-handler/interface/throwable.interface";
 import { TypeORMError } from "typeorm";
 
-export class AdminUserErrorCase extends EntityErrorHandler {
+export class AdminUserErrorCase
+  extends EntityErrorHandler
+  implements Throwable
+{
   constructor(
     protected readonly error: TypeORMError,
     protected readonly stuffs: string[],
@@ -14,6 +19,7 @@ export class AdminUserErrorCase extends EntityErrorHandler {
 
   public handle(error: TypeORMError): void {
     this.notFound(error);
+    this.throwException(error);
   }
 
   private notFound(error: TypeORMError): void {
@@ -27,5 +33,9 @@ export class AdminUserErrorCase extends EntityErrorHandler {
         `해당 아이디(${idStuff.value()})의 관리자 사용자를 찾을 수 없습니다. 검증 API를 먼저 사용해주세요.`,
       );
     }
+  }
+
+  public throwException(error: Error): never {
+    throw new TypeOrmException(error);
   }
 }
