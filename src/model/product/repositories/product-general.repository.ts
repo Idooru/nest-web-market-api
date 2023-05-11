@@ -9,6 +9,7 @@ import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-pro
 import { ProductSelectProperty } from "src/common/config/repository-select-configs/product.select";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 import { IProductGeneralRepository } from "../interfaces/repositories/product-general-repository.interface";
+import { ProductErrorCase } from "../error/product-error.case";
 
 @Injectable()
 export class ProductGeneralRepository
@@ -35,7 +36,7 @@ export class ProductGeneralRepository
     } catch (err) {
       this.methodName = this.findProductsAllId.name;
       this.typeOrmErrorHandlerBuilder
-        .setEntity(ProductEntity)
+        .setErrorHandler(ProductErrorCase)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -70,7 +71,7 @@ export class ProductGeneralRepository
     } catch (err) {
       this.methodName = this.findAllProductsFromLatest.name;
       this.typeOrmErrorHandlerBuilder
-        .setEntity(ProductEntity)
+        .setErrorHandler(ProductErrorCase)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -105,7 +106,7 @@ export class ProductGeneralRepository
     } catch (err) {
       this.methodName = this.findAllProductsFromOldest.name;
       this.typeOrmErrorHandlerBuilder
-        .setEntity(ProductEntity)
+        .setErrorHandler(ProductErrorCase)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -140,7 +141,7 @@ export class ProductGeneralRepository
     } catch (err) {
       this.methodName = this.findOneProductByName.name;
       this.typeOrmErrorHandlerBuilder
-        .setEntity(ProductEntity)
+        .setErrorHandler(ProductErrorCase)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(name, "name")
@@ -176,7 +177,7 @@ export class ProductGeneralRepository
     } catch (err) {
       this.methodName = this.findOneProductById.name;
       this.typeOrmErrorHandlerBuilder
-        .setEntity(ProductEntity)
+        .setErrorHandler(ProductErrorCase)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
@@ -196,7 +197,7 @@ export class ProductGeneralRepository
     } catch (err) {
       this.methodName = this.findProductOneJustNeedStarRate.name;
       this.typeOrmErrorHandlerBuilder
-        .setEntity(ProductEntity)
+        .setErrorHandler(ProductErrorCase)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
@@ -218,7 +219,7 @@ export class ProductGeneralRepository
     } catch (err) {
       this.methodName = this.createProduct.name;
       this.typeOrmErrorHandlerBuilder
-        .setEntity(ProductEntity)
+        .setErrorHandler(ProductErrorCase)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -239,7 +240,7 @@ export class ProductGeneralRepository
     } catch (err) {
       this.methodName = this.modifyProduct.name;
       this.typeOrmErrorHandlerBuilder
-        .setEntity(ProductEntity)
+        .setErrorHandler(ProductErrorCase)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(String(modifyProductDto.price), "price")
@@ -259,7 +260,7 @@ export class ProductGeneralRepository
     } catch (err) {
       this.methodName = this.modifyProductName.name;
       this.typeOrmErrorHandlerBuilder
-        .setEntity(ProductEntity)
+        .setErrorHandler(ProductErrorCase)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -277,7 +278,7 @@ export class ProductGeneralRepository
     } catch (err) {
       this.methodName = this.modifyProductPrice.name;
       this.typeOrmErrorHandlerBuilder
-        .setEntity(ProductEntity)
+        .setErrorHandler(ProductErrorCase)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(price, "price")
@@ -296,7 +297,7 @@ export class ProductGeneralRepository
     } catch (err) {
       this.methodName = this.modifyProductOrigin.name;
       this.typeOrmErrorHandlerBuilder
-        .setEntity(ProductEntity)
+        .setErrorHandler(ProductErrorCase)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -314,7 +315,7 @@ export class ProductGeneralRepository
     } catch (err) {
       this.methodName = this.modifyProductType.name;
       this.typeOrmErrorHandlerBuilder
-        .setEntity(ProductEntity)
+        .setErrorHandler(ProductErrorCase)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -335,7 +336,7 @@ export class ProductGeneralRepository
     } catch (err) {
       this.methodName = this.modifyProductDescription.name;
       this.typeOrmErrorHandlerBuilder
-        .setEntity(ProductEntity)
+        .setErrorHandler(ProductErrorCase)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -353,7 +354,7 @@ export class ProductGeneralRepository
     } catch (err) {
       this.methodName = this.modifyProductQuantity.name;
       this.typeOrmErrorHandlerBuilder
-        .setEntity(ProductEntity)
+        .setErrorHandler(ProductErrorCase)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(quantity, "quantity")
@@ -372,7 +373,7 @@ export class ProductGeneralRepository
     } catch (err) {
       this.methodName = this.removeProduct.name;
       this.typeOrmErrorHandlerBuilder
-        .setEntity(ProductEntity)
+        .setErrorHandler(ProductErrorCase)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();

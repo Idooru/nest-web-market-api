@@ -5,6 +5,7 @@ import { ProductEntity } from "../entities/product.entity";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 import { IProductVerifyRepository } from "../interfaces/repositories/product-verify-repository.interface";
+import { ProductErrorCase } from "../error/product-error.case";
 
 @Injectable()
 export class ProductVerifyRepository
@@ -26,7 +27,7 @@ export class ProductVerifyRepository
     } catch (err) {
       this.methodName = this.isExistProductId.name;
       this.typeOrmErrorHandlerBuilder
-        .setEntity(ProductEntity)
+        .setErrorHandler(ProductErrorCase)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -40,7 +41,7 @@ export class ProductVerifyRepository
     } catch (err) {
       this.methodName = this.isNotExistProductName.name;
       this.typeOrmErrorHandlerBuilder
-        .setEntity(ProductEntity)
+        .setErrorHandler(ProductErrorCase)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();

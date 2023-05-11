@@ -4,6 +4,7 @@ import { Repository } from "typeorm";
 import { InquiryRequestEntity } from "../entities/inquiry-request.entity";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
+import { InquiryRequestErrorCase } from "../error/inquiry-request-error.case";
 
 @Injectable()
 export class InquiryVerifyRepository extends ErrorHandlerProps {
@@ -24,7 +25,7 @@ export class InquiryVerifyRepository extends ErrorHandlerProps {
       return result ? true : false;
     } catch (err) {
       this.typeOrmErrorHandlerBuilder
-        .setEntity(InquiryRequestEntity)
+        .setErrorHandler(InquiryRequestErrorCase)
         .setSourceNames(this.className, this.methodName)
         .handle();
     }
