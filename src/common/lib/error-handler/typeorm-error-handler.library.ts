@@ -1,11 +1,9 @@
-import { TypeOrmException } from "src/common/errors/typeorm.exception";
 import { TypeORMError } from "typeorm";
 import { TypeOrmErrorHandlerBuilder } from "./typeorm-error-handler.builder";
 import { ErrorLogger } from "src/common/classes/abstract/error-logger";
-import { Throwable } from "./interface/throwable.interface";
 import { ErrorHandlerStrategy } from "./interface/error-handler-strategy.interface";
 
-export class TypeOrmErrorHandler extends ErrorLogger implements Throwable {
+export class TypeOrmErrorHandler extends ErrorLogger {
   constructor(
     protected readonly error: TypeORMError,
     protected readonly className: string,
@@ -36,9 +34,5 @@ export class TypeOrmErrorHandler extends ErrorLogger implements Throwable {
 
   private handleEntityError(): void {
     new this.Handler(this.error, this.stuffs, this.stuffMeans);
-  }
-
-  public throwException(): never {
-    throw new TypeOrmException(this.error);
   }
 }
