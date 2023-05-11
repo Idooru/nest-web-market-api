@@ -1,27 +1,28 @@
 import { BadRequestException, NotFoundException } from "@nestjs/common";
-import { ErrorCaseProp } from "src/common/classes/abstract/error-case-prop";
+import { EntityErrorHandler } from "src/common/classes/abstract/entity-error-handler";
+import { TypeORMError } from "typeorm";
 
-export class ProductErrorCase extends ErrorCaseProp {
+export class ProductErrorCase extends EntityErrorHandler {
   constructor(
-    protected error: Error,
+    protected error: TypeORMError,
     protected stuffs: string[],
     protected stuffMeans: string[],
   ) {
     super(stuffs, stuffMeans);
-    this.case();
+    this.handle(error);
   }
 
-  private case() {
-    this.notFound();
-    this.badRequest();
+  handle(error: TypeORMError): void {
+    this.notFound(error);
+    this.badRequest(error);
   }
 
-  private notFound() {
+  private notFound(error: TypeORMError): void {
     const idStuff = this.stuffArr.find((val) => val.key() === "id");
     const nameStuff = this.stuffArr.find((val) => val.key() === "name");
 
     if (
-      this.error.message.includes("Could not find any entity of type") &&
+      error.message.includes("Could not find any entity of type") &&
       nameStuff
     ) {
       throw new NotFoundException(
@@ -30,7 +31,7 @@ export class ProductErrorCase extends ErrorCaseProp {
     }
 
     if (
-      this.error.message.includes("Could not find any entity of type") &&
+      error.message.includes("Could not find any entity of type") &&
       idStuff
     ) {
       throw new NotFoundException(
@@ -39,7 +40,7 @@ export class ProductErrorCase extends ErrorCaseProp {
     }
   }
 
-  private badRequest() {
+  private badRequest(error: TypeORMError) {
     const priceStuff = this.stuffArr.find((val) => val.key() === "price");
 
     const quantityStuff = this.stuffArr.find((val) => val.key() === "quantity");
@@ -50,17 +51,14 @@ export class ProductErrorCase extends ErrorCaseProp {
       );
     }
 
-    if (
-      this.error.message.includes("Out of range value for column") &&
-      priceStuff
-    ) {
+    if (error.message.includes("Out of range value for column") && priceStuff) {
       throw new BadRequestException(
         `가격을 마이너스(${priceStuff.value()})로 수정 할 수 없습니다.`,
       );
     }
 
     if (
-      this.error.message.includes("Out of range value for column") &&
+      error.message.includes("Out of range value for column") &&
       quantityStuff
     ) {
       throw new BadRequestException(

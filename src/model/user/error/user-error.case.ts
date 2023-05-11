@@ -1,27 +1,28 @@
 import { NotFoundException } from "@nestjs/common";
-import { ErrorCaseProp } from "src/common/classes/abstract/error-case-prop";
+import { EntityErrorHandler } from "src/common/classes/abstract/entity-error-handler";
+import { TypeORMError } from "typeorm";
 
-export class UserErrorCase extends ErrorCaseProp {
+export class UserErrorCase extends EntityErrorHandler {
   constructor(
-    protected readonly error: Error,
+    protected readonly error: TypeORMError,
     protected readonly stuffs: string[],
     protected readonly stuffMeans: string[],
   ) {
     super(stuffs, stuffMeans);
-    this.case();
+    this.handle(error);
   }
 
-  private case() {
-    this.notFound();
+  public handle(error: TypeORMError): void {
+    this.notFound(error);
   }
 
-  private notFound() {
+  private notFound(error: TypeORMError): void {
     const idStuff = this.stuffArr.find((val) => val.key() === "id");
     const emailStuff = this.stuffArr.find((val) => val.key() === "email");
     const nickNameStuff = this.stuffArr.find((val) => val.key() === "nickname");
 
     if (
-      this.error.message.includes("Could not find any entity of type") &&
+      error.message.includes("Could not find any entity of type") &&
       idStuff
     ) {
       throw new NotFoundException(
@@ -30,7 +31,7 @@ export class UserErrorCase extends ErrorCaseProp {
     }
 
     if (
-      this.error.message.includes("Could not find any entity of type") &&
+      error.message.includes("Could not find any entity of type") &&
       emailStuff
     ) {
       throw new NotFoundException(
@@ -39,7 +40,7 @@ export class UserErrorCase extends ErrorCaseProp {
     }
 
     if (
-      this.error.message.includes("Could not find any entity of type") &&
+      error.message.includes("Could not find any entity of type") &&
       nickNameStuff
     ) {
       throw new NotFoundException(

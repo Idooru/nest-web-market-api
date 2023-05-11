@@ -1,25 +1,26 @@
 import { NotFoundException } from "@nestjs/common";
-import { ErrorCaseProp } from "src/common/classes/abstract/error-case-prop";
+import { EntityErrorHandler } from "src/common/classes/abstract/entity-error-handler";
+import { TypeORMError } from "typeorm";
 
-export class ReviewErrorCase extends ErrorCaseProp {
+export class ReviewErrorCase extends EntityErrorHandler {
   constructor(
-    protected readonly error: Error,
+    protected readonly error: TypeORMError,
     protected readonly stuffs: string[],
     protected readonly stuffMeans: string[],
   ) {
     super(stuffs, stuffMeans);
-    this.case();
+    this.handle(error);
   }
 
-  private case() {
-    this.notFound();
+  public handle(error: TypeORMError): void {
+    this.notFound(error);
   }
 
-  private notFound() {
+  private notFound(error: TypeORMError): void {
     const idStuff = this.stuffArr.find((val) => val.key() === "id");
 
     if (
-      this.error.message.includes("Could not find any entity of type") &&
+      error.message.includes("Could not find any entity of type") &&
       idStuff
     ) {
       throw new NotFoundException(

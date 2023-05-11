@@ -1,21 +1,22 @@
 import { NotFoundException } from "@nestjs/common";
-import { ErrorCaseProp } from "src/common/classes/abstract/error-case-prop";
+import { EntityErrorHandler } from "src/common/classes/abstract/entity-error-handler";
+import { TypeORMError } from "typeorm";
 
-export class ProductImageErrorCase extends ErrorCaseProp {
+export class ProductImageErrorCase extends EntityErrorHandler {
   constructor(
-    protected error: Error,
+    protected error: TypeORMError,
     protected stuffs: string[],
     protected stuffMeans: string[],
   ) {
     super(stuffs, stuffMeans);
-    this.case();
+    this.handle(error);
   }
 
-  private case() {
-    this.notFound();
+  public handle(error: TypeORMError): void {
+    this.notFound(error);
   }
 
-  private notFound() {
+  private notFound(error: TypeORMError): void {
     const idStuff = this.stuffArr.find((val) => val.key() === "id");
     const urlStuff = this.stuffArr.find((val) => val.key() === "url");
     const emailStuff = this.stuffArr.find((val) => val.key() === "email");
@@ -27,7 +28,7 @@ export class ProductImageErrorCase extends ErrorCaseProp {
     }
 
     if (
-      this.error.message.includes("Could not find any entity of type") &&
+      error.message.includes("Could not find any entity of type") &&
       idStuff
     ) {
       throw new NotFoundException(
@@ -36,7 +37,7 @@ export class ProductImageErrorCase extends ErrorCaseProp {
     }
 
     if (
-      this.error.message.includes("Could not find any entity of type") &&
+      error.message.includes("Could not find any entity of type") &&
       urlStuff
     ) {
       throw new NotFoundException(
@@ -45,7 +46,7 @@ export class ProductImageErrorCase extends ErrorCaseProp {
     }
 
     if (
-      this.error.message.includes("Could not find any entity of type") &&
+      error.message.includes("Could not find any entity of type") &&
       emailStuff
     ) {
       throw new NotFoundException(
