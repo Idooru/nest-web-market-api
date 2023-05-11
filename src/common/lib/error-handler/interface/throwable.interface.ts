@@ -1,3 +1,3 @@
 export interface Throwable {
-  throwException(): never;
+  throwException(error: Error): never;
 }
