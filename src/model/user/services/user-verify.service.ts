@@ -1,8 +1,9 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { UserVerifyRepository } from "../repositories/user-verify.repository";
+import { IUserVerifyService } from "../interfaces/services/user-verify-service.interface";
 
 @Injectable()
-export class UserVerifyService {
+export class UserVerifyService implements IUserVerifyService {
   constructor(private readonly userVerifyRepository: UserVerifyRepository) {}
 
   async isExistUserId(id: string): Promise<void> {

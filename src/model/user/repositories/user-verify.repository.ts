@@ -7,9 +7,13 @@ import { UserAuthEntity } from "../entities/user.auth.entity";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 import { UserErrorHandler } from "../error/user-error.handler";
+import { IUserVerifyRepository } from "../interfaces/repositories/user-verify-repository.interface";
 
 @Injectable()
-export class UserVerifyRepository extends ErrorHandlerProps {
+export class UserVerifyRepository
+  extends ErrorHandlerProps
+  implements IUserVerifyRepository
+{
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,

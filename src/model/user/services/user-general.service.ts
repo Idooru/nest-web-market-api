@@ -10,9 +10,13 @@ import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-pro
 import { LibraryErrorHandlerBuilder } from "src/common/lib/error-handler/library-error-handler.builder";
 
 import * as bcrypt from "bcrypt";
+import { IUserGeneralService } from "../interfaces/services/user-general-service.intreface";
 
 @Injectable()
-export class UserGeneralService extends ErrorHandlerProps {
+export class UserGeneralService
+  extends ErrorHandlerProps
+  implements IUserGeneralService
+{
   constructor(
     private readonly userGeneralRepository: UserGeneralRepository,
     private readonly userInsertRepository: UserInsertRepository,

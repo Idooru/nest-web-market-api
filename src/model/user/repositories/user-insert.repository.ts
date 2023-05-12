@@ -11,9 +11,13 @@ import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm
 import { UserErrorHandler } from "../error/user-error.handler";
 import { ClientUserErrorHandler } from "../error/client-user-error.handler";
 import { AdminUserErrorHandler } from "../error/admin-user-error.handler";
+import { IUserInsertRepository } from "../interfaces/repositories/user-insert-repository.interface";
 
 @Injectable()
-export class UserInsertRepository extends ErrorHandlerProps {
+export class UserInsertRepository
+  extends ErrorHandlerProps
+  implements IUserInsertRepository
+{
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
