@@ -19,7 +19,10 @@ export class StarRateInsertRepository extends ErrorHandlerProps {
     super();
   }
 
-  async renewTotalScore(averageScore: number, starRateId: string) {
+  async renewTotalScore(
+    averageScore: number,
+    starRateId: string,
+  ): Promise<void> {
     try {
       const StarRate = await this.starRateGeneralRepository.findStarRateWithId(
         starRateId,
@@ -40,7 +43,7 @@ export class StarRateInsertRepository extends ErrorHandlerProps {
   async insertProductIdOnStarRate(
     starRate: StarRateEntity,
     product: ProductEntity,
-  ) {
+  ): Promise<void> {
     try {
       await this.starRateRepository
         .createQueryBuilder()

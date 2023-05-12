@@ -116,7 +116,9 @@ export class ReviewAccessoryService {
     );
   }
 
-  async deleteMoreThenTwoReviewImage(beforeReviewImages: ReviewImageEntity[]) {
+  async deleteMoreThenTwoReviewImage(
+    beforeReviewImages: ReviewImageEntity[],
+  ): Promise<void> {
     const promises = beforeReviewImages.map(async (beforeReviewImage) => {
       await this.mediaGeneralRepository.deleteReviewImageWithId(
         beforeReviewImage.id,
@@ -126,13 +128,17 @@ export class ReviewAccessoryService {
     await Promise.all(promises);
   }
 
-  async deleteOneReviewImage(beforeReviewImage: ReviewImageEntity) {
+  async deleteOneReviewImage(
+    beforeReviewImage: ReviewImageEntity,
+  ): Promise<void> {
     await this.mediaGeneralRepository.deleteReviewImageWithId(
       beforeReviewImage.id,
     );
   }
 
-  async deleteMoreThenTwoReviewVideo(beforeReviewVideos: ReviewVideoEntity[]) {
+  async deleteMoreThenTwoReviewVideo(
+    beforeReviewVideos: ReviewVideoEntity[],
+  ): Promise<void> {
     const promises = beforeReviewVideos.map(async (beforeReviewVideo) => {
       await this.mediaGeneralRepository.deleteReviewVideoWithId(
         beforeReviewVideo.id,
@@ -142,7 +148,9 @@ export class ReviewAccessoryService {
     await Promise.all(promises);
   }
 
-  async deleteOneReviewVideo(beforeReviewVideo: ReviewVideoEntity) {
+  async deleteOneReviewVideo(
+    beforeReviewVideo: ReviewVideoEntity,
+  ): Promise<void> {
     await this.mediaGeneralRepository.deleteReviewVideoWithId(
       beforeReviewVideo.id,
     );
