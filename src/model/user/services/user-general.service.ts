@@ -111,7 +111,7 @@ export class UserGeneralService extends ErrorHandlerProps {
   async createClientOrAdmin(
     registerUserDto: RegisterUserDto,
     userBase: UserEntity,
-  ) {
+  ): Promise<void> {
     if (registerUserDto.type.toString() === "client") {
       const clientUserOutput =
         await this.userGeneralRepository.createClientUser(userBase);
