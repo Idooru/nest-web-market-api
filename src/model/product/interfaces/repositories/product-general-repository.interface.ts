@@ -5,7 +5,6 @@ import { InsertResult } from "typeorm";
 import { ModifyProductDto } from "../../dto/modify-product.dto";
 
 export interface IProductGeneralRepository {
-  findProductsAllId(): Promise<ProductEntity[]>;
   findAllProductsFromLatest(): Promise<ProductEntity[]>;
   findAllProductsFromOldest(): Promise<ProductEntity[]>;
   findOneProductByName(name: string): Promise<ProductEntity>;

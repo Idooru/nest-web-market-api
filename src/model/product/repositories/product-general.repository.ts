@@ -26,23 +26,6 @@ export class ProductGeneralRepository
     super();
   }
 
-  async findProductsAllId(): Promise<ProductEntity[]> {
-    try {
-      return await this.productRepository
-        .createQueryBuilder()
-        .select(this.select.productsId)
-        .from(ProductEntity, "product")
-        .getMany();
-    } catch (err) {
-      this.methodName = this.findProductsAllId.name;
-      this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(ProductErrorHandler)
-        .setError(err)
-        .setSourceNames(this.className, this.methodName)
-        .handle();
-    }
-  }
-
   async findAllProductsFromLatest(): Promise<ProductEntity[]> {
     try {
       return await this.productRepository

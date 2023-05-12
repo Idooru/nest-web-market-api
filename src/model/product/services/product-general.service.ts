@@ -27,12 +27,6 @@ export class ProductGeneralService implements IProductGeneralService {
     private readonly productAccessoryService: ProductAccessoryService,
   ) {}
 
-  async findProductsAllId(): Promise<ProductEntity[]> {
-    const founds = await this.productGeneralRepository.findProductsAllId();
-    this.productAccessoryService.isExistProducts(founds);
-    return founds;
-  }
-
   async findAllProductsFromLatest(): Promise<ProductEntity[]> {
     const founds =
       await this.productGeneralRepository.findAllProductsFromLatest();

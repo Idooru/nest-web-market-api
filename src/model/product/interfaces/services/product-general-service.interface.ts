@@ -5,7 +5,6 @@ import { CreateProductDto } from "../../dto/create-product.dto";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 
 export interface IProductGeneralService {
-  findProductsAllId(): Promise<ProductEntity[]>;
   findAllProductsFromLatest(): Promise<ProductEntity[]>;
   findAllProductsFromOldest(): Promise<ProductEntity[]>;
   findProductByName(name: string): Promise<ProductEntity>;

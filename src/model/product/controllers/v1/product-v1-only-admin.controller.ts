@@ -23,7 +23,6 @@ import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-gen
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { CreateProductDto } from "../../dto/create-product.dto";
 import { ModifyProductDto } from "../../dto/modify-product.dto";
-import { RequestProductForAdminDto } from "../../dto/request-product-for-admin.dto";
 import { ProductEntity } from "../../entities/product.entity";
 import { ProductGeneralService } from "../../services/product-general.service";
 import { MediaDto } from "src/model/media/dto/media.dto";
@@ -42,24 +41,6 @@ export class ProductVersionOneOnlyAdminController {
     private readonly productMedia: ProductMediaCookieKey,
     private readonly productGeneralService: ProductGeneralService,
   ) {}
-
-  @UseInterceptors(JsonGeneralInterceptor)
-  @Get("/all-id")
-  async findProductsAllId(): Promise<
-    JsonGeneralInterface<RequestProductForAdminDto[]>
-  > {
-    const products = await this.productGeneralService.findProductsAllId();
-
-    return {
-      statusCode: 200,
-      message: "데이터베이스에 존재하는 모든 상품 아이디를 가져옵니다.",
-      result: products.map((product) => ({
-        id: product.id,
-        name: product.name,
-        type: product.type,
-      })),
-    };
-  }
 
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/:id")
