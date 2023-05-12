@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { InsertInquiryRequestMediaDto } from "../../dto/request/insert-inquiry-request-media.dto";
-import { PushInquiryMediaDto } from "../../dto/request/push-inquiry-request-media.dto";
 import { InquiryRequestAccessoryService } from "./inquiry-request-accessory.service";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { InquiryRequestEntity } from "../../entities/inquiry-request.entity";
 import { IInquiryRequestBundleService } from "../../interfaces/services/request/inquiry-request-bundle-service.interface";
+import { PushInquiryRequestMediaDto } from "../../dto/request/push-inquiry-request-media.dto";
 
 @Injectable()
 export class InquiryRequestBundleService
@@ -15,7 +15,7 @@ export class InquiryRequestBundleService
   ) {}
 
   async pushInquiryMedia(
-    pushInquiryMediaDto: PushInquiryMediaDto,
+    pushInquiryMediaDto: PushInquiryRequestMediaDto,
   ): Promise<void> {
     const {
       inquiryRequestDto,
