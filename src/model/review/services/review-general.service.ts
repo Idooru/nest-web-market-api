@@ -6,9 +6,10 @@ import { ReviewEntity } from "../entities/review.entity";
 import { ProductGeneralRepository } from "src/model/product/repositories/product-general.repository";
 import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
 import { ReviewInsertRepository } from "../repositories/review-insert.repository";
+import { IReviewGeneralService } from "../interfaces/services/review-general-service.interface";
 
 @Injectable()
-export class ReviewGeneralService {
+export class ReviewGeneralService implements IReviewGeneralService {
   constructor(
     private readonly reviewGeneralRepository: ReviewGeneralRepository,
     private readonly productGeneralRepository: ProductGeneralRepository,

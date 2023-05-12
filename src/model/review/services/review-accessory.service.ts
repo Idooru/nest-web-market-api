@@ -8,9 +8,10 @@ import { ReviewEntity } from "../entities/review.entity";
 import { PushReviewImageDto } from "../dto/push-review-image.dto";
 import { PushReviewVideoDto } from "../dto/push-review-video.dto";
 import { MediaDto } from "src/model/media/dto/media.dto";
+import { IReviewAccessoryService } from "../interfaces/services/review-accessory-service.interface";
 
 @Injectable()
-export class ReviewAccessoryService {
+export class ReviewAccessoryService implements IReviewAccessoryService {
   constructor(
     private readonly mediaGeneralRepository: MediaGeneralRepository,
     private readonly mediaInsertRepository: MediaInsertRepository,

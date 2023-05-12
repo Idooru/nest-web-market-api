@@ -5,9 +5,10 @@ import { ReviewEntity } from "../entities/review.entity";
 import { ProductGeneralRepository } from "src/model/product/repositories/product-general.repository";
 import { StarRatingDto } from "../dto/star-rating.dto";
 import { ModifyStarRateDto } from "../dto/modify-star-rate.dto";
+import { IStarRateGeneralService } from "../interfaces/services/star-rate-general-service.interface";
 
 @Injectable()
-export class StarRateGeneralService {
+export class StarRateGeneralService implements IStarRateGeneralService {
   constructor(
     private readonly productGeneralRepository: ProductGeneralRepository,
     private readonly starRateGeneralRepository: StarRateGeneralRepository,

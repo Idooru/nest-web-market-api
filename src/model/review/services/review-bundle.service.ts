@@ -12,9 +12,10 @@ import { ReviewGeneralRepository } from "../repositories/review-general.reposito
 import { ReviewAccessoryService } from "./review-accessory.service";
 import { MediaAccessoryService } from "src/model/media/services/media-accessory.service";
 import { brieflyFileName } from "src/common/functions/callbacks";
+import { IReviewBundleService } from "../interfaces/services/review-bundle-service.interface";
 
 @Injectable()
-export class ReviewBundleService {
+export class ReviewBundleService implements IReviewBundleService {
   constructor(
     private readonly userGeneralRepository: UserGeneralRepository,
     private readonly reviewGeneralRepository: ReviewGeneralRepository,

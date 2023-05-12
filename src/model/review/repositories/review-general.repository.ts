@@ -8,9 +8,13 @@ import { ReviewSelectProperty } from "src/common/config/repository-select-config
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 import { ReviewErrorHandler } from "../error/review-error.handler";
+import { IReviewGeneralRepository } from "../interfaces/repositories/review-general-repository.interface";
 
 @Injectable()
-export class ReviewGeneralRepository extends ErrorHandlerProps {
+export class ReviewGeneralRepository
+  extends ErrorHandlerProps
+  implements IReviewGeneralRepository
+{
   constructor(
     @InjectRepository(ReviewEntity)
     private readonly reviewRepository: Repository<ReviewEntity>,

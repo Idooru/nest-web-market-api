@@ -6,9 +6,13 @@ import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-pro
 import { ReviewSelectProperty } from "src/common/config/repository-select-configs/review.select";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 import { StarRateErrorHandler } from "../error/star-rate-error.handler";
+import { IStarRateGeneralRepository } from "../interfaces/repositories/star-rate-general-repository.interface";
 
 @Injectable()
-export class StarRateGeneralRepository extends ErrorHandlerProps {
+export class StarRateGeneralRepository
+  extends ErrorHandlerProps
+  implements IStarRateGeneralRepository
+{
   constructor(
     @InjectRepository(StarRateEntity)
     private readonly starRateRepository: Repository<StarRateEntity>,

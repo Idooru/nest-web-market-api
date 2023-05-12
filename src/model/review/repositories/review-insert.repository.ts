@@ -6,9 +6,13 @@ import { ReviewEntity } from "../entities/review.entity";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 import { ReviewErrorHandler } from "../error/review-error.handler";
+import { IReviewInsertRepository } from "../interfaces/repositories/review-insert-repository";
 
 @Injectable()
-export class ReviewInsertRepository extends ErrorHandlerProps {
+export class ReviewInsertRepository
+  extends ErrorHandlerProps
+  implements IReviewInsertRepository
+{
   constructor(
     @InjectRepository(ReviewEntity)
     private readonly reviewRepository: Repository<ReviewEntity>,

@@ -1,8 +1,9 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { ReviewVerifyRepository } from "../repositories/review-verify.repository";
+import { IReviewVerifyService } from "../interfaces/services/review-verify-service.interface";
 
 @Injectable()
-export class ReviewVerifyService {
+export class ReviewVerifyService implements IReviewVerifyService {
   constructor(
     private readonly reviewVerifyRepository: ReviewVerifyRepository,
   ) {}
