@@ -8,6 +8,7 @@ export interface ProductSelectProperty {
 export const productSelectProperty: ProductSelectProperty = {
   productsId: ["product.id", "product.name", "product.type"],
   products: [
+    "product.id",
     "product.name",
     "product.price",
     "product.type",
