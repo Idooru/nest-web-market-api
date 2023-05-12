@@ -8,9 +8,9 @@ import { UserEntity } from "../entities/user.entity";
 import { UserProfileEntity } from "../entities/user.profile.entity";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
-import { UserErrorCase } from "../error/user-error.case";
-import { ClientUserErrorCase } from "../error/client-user-error.case";
-import { AdminUserErrorCase } from "../error/admin-user-error.case";
+import { UserErrorCase } from "../error/user-error.handler";
+import { ClientUserErrorCase } from "../error/client-user-error.handler";
+import { AdminUserErrorCase } from "../error/admin-user-error.handler";
 
 @Injectable()
 export class UserInsertRepository extends ErrorHandlerProps {

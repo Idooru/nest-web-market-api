@@ -8,8 +8,8 @@ import { InquiryResponseDto } from "../dto/response/inquiry-response.dto";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { InquirySelectProperty } from "src/common/config/repository-select-configs/inquiry.select";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
-import { InquiryRequestErrorCase } from "../error/inquiry-request-error.case";
-import { InquiryResponseErrorCase } from "../error/inquiry-response-error.case";
+import { InquiryRequestErrorCase } from "../error/inquiry-request-error.handler";
+import { InquiryResponseErrorCase } from "../error/inquiry-response-error.handler";
 
 @Injectable()
 export class InquiryGeneralRepository extends ErrorHandlerProps {

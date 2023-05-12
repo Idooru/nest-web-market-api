@@ -14,9 +14,9 @@ import { RegisterUserAuthDto } from "../dtos/register-user.dto";
 import { ModifyUserProfileDto } from "../dtos/modify-user.dto";
 import { ModifyUserAuthDto } from "../dtos/modify-user.dto";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
-import { UserErrorCase } from "../error/user-error.case";
-import { ClientUserErrorCase } from "../error/client-user-error.case";
-import { AdminUserErrorCase } from "../error/admin-user-error.case";
+import { UserErrorCase } from "../error/user-error.handler";
+import { ClientUserErrorCase } from "../error/client-user-error.handler";
+import { AdminUserErrorCase } from "../error/admin-user-error.handler";
 
 @Injectable()
 export class UserGeneralRepository extends ErrorHandlerProps {

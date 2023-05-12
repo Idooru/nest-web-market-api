@@ -14,13 +14,13 @@ import { ReviewImageEntity } from "../entities/review-image.entity";
 import { ReviewVideoEntity } from "../entities/review-video.entity";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
-import { ProductErrorCase } from "src/model/product/error/product-error.case";
-import { ReviewImageErrorCase } from "../error/review-image-error.case";
-import { ReviewVideoErrorCase } from "../error/review-video.error.case";
-import { InquiryRequestImageErrorCase } from "../error/inquiry-request-image-error.case";
-import { InquiryResponseImageErrorCase } from "../error/inquiry-response-image-error.case";
-import { InquiryRequestVideoErrorCase } from "../error/inquiry-request-video-error.case";
-import { InquiryResponseVideoErrorCase } from "../error/inquiry-response-video-error.case";
+import { ProductErrorCase } from "src/model/product/error/product-error.handler";
+import { ReviewImageErrorCase } from "../error/review-image-error.handler";
+import { ReviewVideoErrorCase } from "../error/review-video.error.handler";
+import { InquiryRequestImageErrorCase } from "../error/inquiry-request-image-error.handler";
+import { InquiryResponseImageErrorCase } from "../error/inquiry-response-image-error.handler";
+import { InquiryRequestVideoErrorCase } from "../error/inquiry-request-video-error.handler";
+import { InquiryResponseVideoErrorCase } from "../error/inquiry-response-video-error.handler";
 
 @Injectable()
 export class MediaInsertRepository extends ErrorHandlerProps {

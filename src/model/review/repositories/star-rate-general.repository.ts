@@ -5,7 +5,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { ReviewSelectProperty } from "src/common/config/repository-select-configs/review.select";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
-import { StarRateErrorCase } from "../error/star-rate-error.case";
+import { StarRateErrorCase } from "../error/star-rate-error.handler";
 
 @Injectable()
 export class StarRateGeneralRepository extends ErrorHandlerProps {

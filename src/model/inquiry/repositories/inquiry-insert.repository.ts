@@ -7,8 +7,8 @@ import { InquiryRequestEntity } from "../entities/inquiry-request.entity";
 import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
-import { InquiryRequestErrorCase } from "../error/inquiry-request-error.case";
-import { InquiryResponseErrorCase } from "../error/inquiry-response-error.case";
+import { InquiryRequestErrorCase } from "../error/inquiry-request-error.handler";
+import { InquiryResponseErrorCase } from "../error/inquiry-response-error.handler";
 
 @Injectable()
 export class InquiryInsertRepository extends ErrorHandlerProps {

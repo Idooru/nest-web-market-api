@@ -7,7 +7,7 @@ import { CreateReviewDao } from "../dto/create-review.dto";
 import { ReviewSelectProperty } from "src/common/config/repository-select-configs/review.select";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
-import { ReviewErrorCase } from "../error/review-error.case";
+import { ReviewErrorCase } from "../error/review-error.handler";
 
 @Injectable()
 export class ReviewGeneralRepository extends ErrorHandlerProps {

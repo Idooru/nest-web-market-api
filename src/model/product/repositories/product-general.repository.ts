@@ -9,7 +9,7 @@ import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-pro
 import { ProductSelectProperty } from "src/common/config/repository-select-configs/product.select";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 import { IProductGeneralRepository } from "../interfaces/repositories/product-general-repository.interface";
-import { ProductErrorCase } from "../error/product-error.case";
+import { ProductErrorCase } from "../error/product-error.handler";
 
 @Injectable()
 export class ProductGeneralRepository

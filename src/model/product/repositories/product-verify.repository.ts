@@ -5,7 +5,7 @@ import { ProductEntity } from "../entities/product.entity";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
 import { IProductVerifyRepository } from "../interfaces/repositories/product-verify-repository.interface";
-import { ProductErrorCase } from "../error/product-error.case";
+import { ProductErrorCase } from "../error/product-error.handler";
 
 @Injectable()
 export class ProductVerifyRepository

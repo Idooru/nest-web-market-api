@@ -6,7 +6,7 @@ import { UserProfileEntity } from "../entities/user.profile.entity";
 import { UserAuthEntity } from "../entities/user.auth.entity";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
-import { UserErrorCase } from "../error/user-error.case";
+import { UserErrorCase } from "../error/user-error.handler";
 
 @Injectable()
 export class UserVerifyRepository extends ErrorHandlerProps {

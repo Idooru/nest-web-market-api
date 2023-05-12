@@ -5,7 +5,7 @@ import { Repository } from "typeorm";
 import { ReviewEntity } from "../entities/review.entity";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
-import { ReviewErrorCase } from "../error/review-error.case";
+import { ReviewErrorCase } from "../error/review-error.handler";
 
 @Injectable()
 export class ReviewInsertRepository extends ErrorHandlerProps {
