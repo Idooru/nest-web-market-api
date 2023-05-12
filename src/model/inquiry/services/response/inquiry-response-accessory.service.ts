@@ -10,7 +10,6 @@ import { InquiryResponseEntity } from "../../entities/inquiry-response.entity";
 import { MediaDto } from "src/model/media/dto/media.dto";
 import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
 import { InquiryGeneralRepository } from "../../repositories/inquiry-general.repository";
-import { InquiryInsertRepository } from "../../repositories/inquiry-insert.repository";
 import { UserEntity } from "src/model/user/entities/user.entity";
 import { InquiryRequestEntity } from "../../entities/inquiry-request.entity";
 
@@ -21,7 +20,6 @@ export class InquiryResponseAccessoryService {
     private readonly mediaGeneralRepository: MediaGeneralRepository,
     private readonly userGeneralRepository: UserGeneralRepository,
     private readonly inquiryGeneralRepository: InquiryGeneralRepository,
-    private readonly inquiryInsertRepository: InquiryInsertRepository,
   ) {}
 
   async pushMoreThenTwoInquiryImageInDto(
