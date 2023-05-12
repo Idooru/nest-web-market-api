@@ -12,9 +12,12 @@ import { UserGeneralRepository } from "src/model/user/repositories/user-general.
 import { InquiryGeneralRepository } from "../../repositories/inquiry-general.repository";
 import { UserEntity } from "src/model/user/entities/user.entity";
 import { InquiryRequestEntity } from "../../entities/inquiry-request.entity";
+import { IInquiryResponseAccessoryService } from "../../interfaces/services/response/inquiry-response-accessory-service.interface";
 
 @Injectable()
-export class InquiryResponseAccessoryService {
+export class InquiryResponseAccessoryService
+  implements IInquiryResponseAccessoryService
+{
   constructor(
     private readonly mediaInsertRepository: MediaInsertRepository,
     private readonly mediaGeneralRepository: MediaGeneralRepository,

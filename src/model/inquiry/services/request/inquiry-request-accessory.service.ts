@@ -11,9 +11,12 @@ import { MediaDto } from "src/model/media/dto/media.dto";
 import { ProductGeneralRepository } from "src/model/product/repositories/product-general.repository";
 import { InquiryInsertRepository } from "../../repositories/inquiry-insert.repository";
 import { ProductEntity } from "src/model/product/entities/product.entity";
+import { IInquiryRequestAccessoryService } from "../../interfaces/services/request/inquiry-request-accessory-service.interface";
 
 @Injectable()
-export class InquiryRequestAccessoryService {
+export class InquiryRequestAccessoryService
+  implements IInquiryRequestAccessoryService
+{
   constructor(
     private readonly mediaInsertRepository: MediaInsertRepository,
     private readonly mediaGeneralRepository: MediaGeneralRepository,

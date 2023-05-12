@@ -4,9 +4,12 @@ import { CreateInquiryResponseDto } from "../../dto/response/create-inquiry-resp
 import { InquiryResponseEntity } from "../../entities/inquiry-response.entity";
 import { InquiryGeneralRepository } from "../../repositories/inquiry-general.repository";
 import { InquiryInsertRepository } from "../../repositories/inquiry-insert.repository";
+import { IInquiryResponseGeneralService } from "../../interfaces/services/response/inquiry-response-general-service.interface";
 
 @Injectable()
-export class InquiryResponseGeneralService {
+export class InquiryResponseGeneralService
+  implements IInquiryResponseGeneralService
+{
   constructor(
     private readonly inquiryGeneralRepository: InquiryGeneralRepository,
     private readonly userGenralRepository: UserGeneralRepository,

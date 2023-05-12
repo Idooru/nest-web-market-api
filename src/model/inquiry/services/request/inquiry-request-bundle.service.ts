@@ -4,9 +4,12 @@ import { PushInquiryMediaDto } from "../../dto/request/push-inquiry-request-medi
 import { InquiryRequestAccessoryService } from "./inquiry-request-accessory.service";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { InquiryRequestEntity } from "../../entities/inquiry-request.entity";
+import { IInquiryRequestBundleService } from "../../interfaces/services/request/inquiry-request-bundle-service.interface";
 
 @Injectable()
-export class InquiryRequestBundleService {
+export class InquiryRequestBundleService
+  implements IInquiryRequestBundleService
+{
   constructor(
     private readonly inquiryRequestAccessoryService: InquiryRequestAccessoryService,
   ) {}

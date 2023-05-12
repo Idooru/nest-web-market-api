@@ -5,9 +5,12 @@ import { InsertInquiryResponseMediaDto } from "../../dto/response/insert-inquiry
 import { UserEntity } from "src/model/user/entities/user.entity";
 import { InquiryRequestEntity } from "../../entities/inquiry-request.entity";
 import { InquiryResponseEntity } from "../../entities/inquiry-response.entity";
+import { IInquiryResponseBundleService } from "../../interfaces/services/response/inquiry-response-bundle-service.interface";
 
 @Injectable()
-export class InquiryResponseBundleService {
+export class InquiryResponseBundleService
+  implements IInquiryResponseBundleService
+{
   constructor(
     private readonly inquiryResponseAccessoryService: InquiryResponseAccessoryService,
   ) {}
