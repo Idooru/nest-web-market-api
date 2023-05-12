@@ -14,9 +14,9 @@ import { RegisterUserAuthDto } from "../dtos/register-user.dto";
 import { ModifyUserProfileDto } from "../dtos/modify-user.dto";
 import { ModifyUserAuthDto } from "../dtos/modify-user.dto";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
-import { UserErrorCase } from "../error/user-error.handler";
-import { ClientUserErrorCase } from "../error/client-user-error.handler";
-import { AdminUserErrorCase } from "../error/admin-user-error.handler";
+import { UserErrorHandler } from "../error/user-error.handler";
+import { ClientUserErrorHandler } from "../error/client-user-error.handler";
+import { AdminUserErrorHandler } from "../error/admin-user-error.handler";
 
 @Injectable()
 export class UserGeneralRepository extends ErrorHandlerProps {
@@ -49,7 +49,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findAllUsersFromLatest.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -68,7 +68,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findAllUsersFromOldest.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -88,7 +88,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findUserWithId.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
@@ -110,7 +110,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findClientUserWithId.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
@@ -132,7 +132,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findAdminUserWithId.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
@@ -153,7 +153,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findClientUserObjectWithId.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(ClientUserErrorCase)
+        .setErrorHandler(ClientUserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
@@ -174,7 +174,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findAdminUserObjectWithId.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(AdminUserErrorCase)
+        .setErrorHandler(AdminUserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
@@ -195,7 +195,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findUserWithEmail.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(email, "email")
@@ -216,7 +216,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findUserWithNickName.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(nickname, "nickname")
@@ -237,7 +237,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findUserWithRealName.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -259,7 +259,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findUserWithPhoneNumber.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -291,7 +291,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findClientUserProfileInfoWithId.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
@@ -328,7 +328,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findAdminUserProfileInfoWithId.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
@@ -357,7 +357,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findClientUserInfoFromAdminWithId.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
@@ -377,7 +377,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.resetPassword.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -394,7 +394,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.createUserProfile.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -409,7 +409,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.createUserAuth.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -429,7 +429,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findUserProfile.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -447,7 +447,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findUserAuth.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -467,7 +467,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.createUserBase.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -485,7 +485,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.createClientUser.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(ClientUserErrorCase)
+        .setErrorHandler(ClientUserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -503,7 +503,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.createAdminUser.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(AdminUserErrorCase)
+        .setErrorHandler(AdminUserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -524,7 +524,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.modifyUserProfile.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -545,7 +545,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.modifyUserAuth.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -563,7 +563,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.modifyUserEmail.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -581,7 +581,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.modifyUserNickName.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -599,7 +599,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.modifyUserPhoneNumber.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -617,7 +617,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.modifyUserPassword.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -635,7 +635,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.deleteUser.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorCase)
+        .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();

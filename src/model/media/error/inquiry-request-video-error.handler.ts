@@ -4,7 +4,7 @@ import { TypeOrmException } from "src/common/errors/typeorm.exception";
 import { Throwable } from "src/common/lib/error-handler/interface/throwable.interface";
 import { TypeORMError } from "typeorm";
 
-export class InquiryRequestVideoErrorCase
+export class InquiryRequestVideoErrorHandler
   extends EntityErrorHandler
   implements Throwable
 {

@@ -4,7 +4,10 @@ import { TypeOrmException } from "src/common/errors/typeorm.exception";
 import { Throwable } from "src/common/lib/error-handler/interface/throwable.interface";
 import { TypeORMError } from "typeorm";
 
-export class ReviewErrorCase extends EntityErrorHandler implements Throwable {
+export class ReviewErrorHandler
+  extends EntityErrorHandler
+  implements Throwable
+{
   constructor(
     protected readonly error: TypeORMError,
     protected readonly stuffs: string[],

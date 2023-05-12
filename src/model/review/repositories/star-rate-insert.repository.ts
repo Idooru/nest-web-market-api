@@ -6,7 +6,7 @@ import { StarRateEntity } from "../entities/star-rate.entity";
 import { StarRateGeneralRepository } from "./star-rate-general.repository";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
-import { StarRateErrorCase } from "../error/star-rate-error.handler";
+import { StarRateErrorHandler } from "../error/star-rate-error.handler";
 
 @Injectable()
 export class StarRateInsertRepository extends ErrorHandlerProps {
@@ -30,7 +30,7 @@ export class StarRateInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.renewTotalScore.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(StarRateErrorCase)
+        .setErrorHandler(StarRateErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -51,7 +51,7 @@ export class StarRateInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.insertProductIdOnStarRate.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(StarRateErrorCase)
+        .setErrorHandler(StarRateErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();

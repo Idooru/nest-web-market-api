@@ -4,7 +4,10 @@ import { TypeOrmException } from "src/common/errors/typeorm.exception";
 import { Throwable } from "src/common/lib/error-handler/interface/throwable.interface";
 import { TypeORMError } from "typeorm";
 
-export class StarRateErrorCase extends EntityErrorHandler implements Throwable {
+export class StarRateErrorHandler
+  extends EntityErrorHandler
+  implements Throwable
+{
   constructor(
     protected error: TypeORMError,
     protected stuffs: string[],

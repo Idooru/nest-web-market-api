@@ -7,8 +7,8 @@ import { InquiryRequestEntity } from "../entities/inquiry-request.entity";
 import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
-import { InquiryRequestErrorCase } from "../error/inquiry-request-error.handler";
-import { InquiryResponseErrorCase } from "../error/inquiry-response-error.handler";
+import { InquiryRequestErrorHandler } from "../error/inquiry-request-error.handler";
+import { InquiryResponseErrorHandler } from "../error/inquiry-response-error.handler";
 
 @Injectable()
 export class InquiryInsertRepository extends ErrorHandlerProps {
@@ -33,7 +33,7 @@ export class InquiryInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findOneInquiryRequestById.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(InquiryRequestErrorCase)
+        .setErrorHandler(InquiryRequestErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -51,7 +51,7 @@ export class InquiryInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findOneInquiryResponseById.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(InquiryResponseErrorCase)
+        .setErrorHandler(InquiryResponseErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -72,7 +72,7 @@ export class InquiryInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.insertInquiryRequestIdOnInquiryResponse.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(InquiryResponseErrorCase)
+        .setErrorHandler(InquiryResponseErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -93,7 +93,7 @@ export class InquiryInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.insertClientUserIdOnInquiryRequest.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(InquiryRequestErrorCase)
+        .setErrorHandler(InquiryRequestErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -114,7 +114,7 @@ export class InquiryInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.insertAdminUserIdOnInquiryResponse.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(InquiryResponseErrorCase)
+        .setErrorHandler(InquiryResponseErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();

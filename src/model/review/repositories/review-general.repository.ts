@@ -7,7 +7,7 @@ import { CreateReviewDao } from "../dto/create-review.dto";
 import { ReviewSelectProperty } from "src/common/config/repository-select-configs/review.select";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
-import { ReviewErrorCase } from "../error/review-error.handler";
+import { ReviewErrorHandler } from "../error/review-error.handler";
 
 @Injectable()
 export class ReviewGeneralRepository extends ErrorHandlerProps {
@@ -45,7 +45,7 @@ export class ReviewGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findAllClientsReviews.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(ReviewErrorCase)
+        .setErrorHandler(ReviewErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .setStuffs(id, "id")
@@ -69,7 +69,7 @@ export class ReviewGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.createReview.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(ReviewErrorCase)
+        .setErrorHandler(ReviewErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -93,7 +93,7 @@ export class ReviewGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.modifyReview.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(ReviewErrorCase)
+        .setErrorHandler(ReviewErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -111,7 +111,7 @@ export class ReviewGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.deleteReview.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(ReviewErrorCase)
+        .setErrorHandler(ReviewErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();

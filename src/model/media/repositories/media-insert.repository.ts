@@ -14,13 +14,13 @@ import { ReviewImageEntity } from "../entities/review-image.entity";
 import { ReviewVideoEntity } from "../entities/review-video.entity";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
-import { ProductErrorCase } from "src/model/product/error/product-error.handler";
-import { ReviewImageErrorCase } from "../error/review-image-error.handler";
-import { ReviewVideoErrorCase } from "../error/review-video.error.handler";
-import { InquiryRequestImageErrorCase } from "../error/inquiry-request-image-error.handler";
-import { InquiryResponseImageErrorCase } from "../error/inquiry-response-image-error.handler";
-import { InquiryRequestVideoErrorCase } from "../error/inquiry-request-video-error.handler";
-import { InquiryResponseVideoErrorCase } from "../error/inquiry-response-video-error.handler";
+import { ProductErrorHandler } from "src/model/product/error/product-error.handler";
+import { ReviewImageErrorHandler } from "../error/review-image-error.handler";
+import { ReviewVideoErrorHandler } from "../error/review-video.error.handler";
+import { InquiryRequestImageErrorHandler } from "../error/inquiry-request-image-error.handler";
+import { InquiryResponseImageErrorHandler } from "../error/inquiry-response-image-error.handler";
+import { InquiryRequestVideoErrorHandler } from "../error/inquiry-request-video-error.handler";
+import { InquiryResponseVideoErrorHandler } from "../error/inquiry-response-video-error.handler";
 
 @Injectable()
 export class MediaInsertRepository extends ErrorHandlerProps {
@@ -58,7 +58,7 @@ export class MediaInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.insertProductIdOnProductImage.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(ProductErrorCase)
+        .setErrorHandler(ProductErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -79,7 +79,7 @@ export class MediaInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.insertReviewIdOnReviewImage.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(ReviewImageErrorCase)
+        .setErrorHandler(ReviewImageErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -100,7 +100,7 @@ export class MediaInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.insertReviewIdOnReviewVideo.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(ReviewVideoErrorCase)
+        .setErrorHandler(ReviewVideoErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -121,7 +121,7 @@ export class MediaInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.insertInquiryRequestIdOnInquiryRequestImage.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(InquiryRequestImageErrorCase)
+        .setErrorHandler(InquiryRequestImageErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -142,7 +142,7 @@ export class MediaInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.insertInquiryResponseIdOnInquiryResponseImage.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(InquiryResponseImageErrorCase)
+        .setErrorHandler(InquiryResponseImageErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -163,7 +163,7 @@ export class MediaInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.insertInquiryRequestIdOnInquiryRequestVideo.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(InquiryRequestVideoErrorCase)
+        .setErrorHandler(InquiryRequestVideoErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -184,7 +184,7 @@ export class MediaInsertRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.insertInquiryResponseIdOnInquiryResponseVideo.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(InquiryResponseVideoErrorCase)
+        .setErrorHandler(InquiryResponseVideoErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();

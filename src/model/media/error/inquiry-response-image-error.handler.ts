@@ -2,7 +2,7 @@ import { NotFoundException } from "@nestjs/common";
 import { EntityErrorHandler } from "src/common/classes/abstract/entity-error-handler";
 import { TypeORMError } from "typeorm";
 
-export class InquiryResponseImageErrorCase extends EntityErrorHandler {
+export class InquiryResponseImageErrorHandler extends EntityErrorHandler {
   constructor(
     protected readonly error: TypeORMError,
     protected readonly stuffs: string[],

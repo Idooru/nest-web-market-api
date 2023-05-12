@@ -5,7 +5,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { ReviewSelectProperty } from "src/common/config/repository-select-configs/review.select";
 import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
-import { StarRateErrorCase } from "../error/star-rate-error.handler";
+import { StarRateErrorHandler } from "../error/star-rate-error.handler";
 
 @Injectable()
 export class StarRateGeneralRepository extends ErrorHandlerProps {
@@ -26,7 +26,7 @@ export class StarRateGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.createStarRateSample.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(StarRateErrorCase)
+        .setErrorHandler(StarRateErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -68,7 +68,7 @@ export class StarRateGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.increaseStarRate.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(StarRateErrorCase)
+        .setErrorHandler(StarRateErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -111,7 +111,7 @@ export class StarRateGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.decreaseStarRate.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(StarRateErrorCase)
+        .setErrorHandler(StarRateErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -129,7 +129,7 @@ export class StarRateGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.findStarRateWithId.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(StarRateErrorCase)
+        .setErrorHandler(StarRateErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
@@ -147,7 +147,7 @@ export class StarRateGeneralRepository extends ErrorHandlerProps {
     } catch (err) {
       this.methodName = this.renewTotalScore.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(StarRateErrorCase)
+        .setErrorHandler(StarRateErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
