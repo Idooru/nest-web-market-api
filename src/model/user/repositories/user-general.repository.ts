@@ -365,7 +365,7 @@ export class UserGeneralRepository extends ErrorHandlerProps {
     }
   }
 
-  async resetPassword(id: string, hashed: string) {
+  async resetPassword(id: string, hashed: string): Promise<void> {
     try {
       const password = { password: hashed };
       await this.userAuthRepository
