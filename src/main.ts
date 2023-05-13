@@ -1,5 +1,4 @@
 import { ValidationError, ValidationPipe } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { AppModule } from "./app.module";
@@ -14,9 +13,11 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { loggerFactory } from "./common/functions/logger.factory";
+import { EnvData } from "./common/classes/env-data";
+import { envKeys } from "./security/env-keys";
 
 class NestCoreConfig {
-  private readonly envData = this.getDataFromEnv();
+  private readonly envData: EnvData = this.envDataFactory();
 
   constructor(private readonly app: NestExpressApplication) {
     this.setSwagger();
@@ -26,20 +27,19 @@ class NestCoreConfig {
   }
 
   public async run() {
-    await this.app.listen(this.envData.port, "0.0.0.0", () => {
+    await this.app.listen(this.envData.getValue("port"), "0.0.0.0", () => {
       loggerFactory("NestApplication").log(
-        `Server is running at ${this.envData.scheme}://${this.envData.host}:${this.envData.port} | NODE_ENV: ${process.env.NODE_ENV}`,
+        `Server is running at ${this.envData.getValue(
+          "scheme",
+        )}://${this.envData.getValue("host")}:${this.envData.getValue(
+          "port",
+        )} | NODE_ENV: ${process.env.NODE_ENV}`,
       );
     });
   }
 
-  private getDataFromEnv() {
-    const scheme: string = new ConfigService().get("APPLICATION_SCHEME");
-    const host: string = new ConfigService().get("APPLICATION_HOST");
-    const port: string = new ConfigService().get("APPLICATION_PORT");
-    const cookieSecret: string = new ConfigService().get("COOKIE_SECRET");
-
-    return { scheme, host, port, cookieSecret };
+  private envDataFactory(): EnvData {
+    return new EnvData(envKeys);
   }
 
   private setSwagger() {
@@ -74,7 +74,7 @@ class NestCoreConfig {
   }
 
   private setMiddlewares() {
-    this.app.use(cookieParser(this.envData.cookieSecret));
+    this.app.use(cookieParser(this.envData.getValue("cookiesecret")));
     this.app.use(helmet());
   }
 
