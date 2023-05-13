@@ -1,9 +1,10 @@
-import { Logger, Module, UnsupportedMediaTypeException } from "@nestjs/common";
+import { Module, UnsupportedMediaTypeException } from "@nestjs/common";
 import { MulterModule } from "@nestjs/platform-express";
 import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 import { promises as fsPromises } from "fs";
 import * as path from "path";
 import * as multer from "multer";
+import { loggerFactory } from "../functions/logger.factory";
 
 export class MulterConfigService {
   public createMulterOptions(): MulterOptions | Promise<MulterOptions> {
@@ -12,7 +13,7 @@ export class MulterConfigService {
   }
 
   static maxContentsCount = 5;
-  private readonly logger = new Logger("MulterConfiguration");
+  private readonly logger = loggerFactory("MulterConfiguration");
   private readonly inquiry = ["request", "response"];
 
   private async createUploadFolder() {

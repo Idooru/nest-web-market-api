@@ -1,5 +1,6 @@
 import { NestMiddleware, Logger } from "@nestjs/common";
 import { Request, Response, NextFunction } from "express";
+import { loggerFactory } from "../functions/logger.factory";
 
 export class ResponseLoggerMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction): void {
@@ -9,12 +10,12 @@ export class ResponseLoggerMiddleware implements NestMiddleware {
       let logger: Logger;
 
       if (400 <= statusCode || statusCode >= 599) {
-        logger = new Logger("Fail");
+        logger = loggerFactory("Fail");
         logger.error(
           `${method} ${originalUrl} ${ip} - ${statusCode} ${statusMessage}`,
         );
       } else {
-        logger = new Logger("Success");
+        logger = loggerFactory("Success");
         logger.log(
           `${method} ${originalUrl} ${ip} - ${statusCode} ${statusMessage}`,
         );

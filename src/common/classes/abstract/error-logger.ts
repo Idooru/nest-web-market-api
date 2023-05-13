@@ -1,4 +1,4 @@
-import { Logger } from "@nestjs/common";
+import { loggerFactory } from "src/common/functions/logger.factory";
 
 export abstract class ErrorLogger {
   constructor(
@@ -8,10 +8,9 @@ export abstract class ErrorLogger {
   ) {}
 
   protected logging(): void {
-    const className = new Logger(this.className);
-    const methodName = new Logger(this.methodName);
-
-    className.error(`Error occurred in ${this.className} class`);
-    methodName.error(this.error);
+    loggerFactory(this.className).error(
+      `Error occurred in ${this.className} class`,
+    );
+    loggerFactory(this.methodName).error(this.error);
   }
 }

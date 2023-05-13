@@ -1,9 +1,9 @@
-import { Logger } from "@nestjs/common";
 import { Request } from "express";
+import { loggerFactory } from "src/common/functions/logger.factory";
 
 export class TimeLoggerLibrary {
-  private readonly startLogger = new Logger("TimeStart");
-  private readonly endLogger = new Logger("TimeEnd");
+  private readonly startLogger = loggerFactory("TimeStart");
+  private readonly endLogger = loggerFactory("TimeEnd");
   private now = 0;
 
   receiveRequest(req: Request) {

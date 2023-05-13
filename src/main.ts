@@ -1,4 +1,4 @@
-import { Logger, ValidationError, ValidationPipe } from "@nestjs/common";
+import { ValidationError, ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
@@ -13,6 +13,7 @@ import path from "path";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { loggerFactory } from "./common/functions/logger.factory";
 
 class NestCoreConfig {
   private readonly envData = this.getDataFromEnv();
@@ -26,9 +27,7 @@ class NestCoreConfig {
 
   public async run() {
     await this.app.listen(this.envData.port, "0.0.0.0", () => {
-      const nestLogger = new Logger("NestApplication");
-
-      nestLogger.log(
+      loggerFactory("NestApplication").log(
         `Server is running at ${this.envData.scheme}://${this.envData.host}:${this.envData.port} | NODE_ENV: ${process.env.NODE_ENV}`,
       );
     });
@@ -51,7 +50,11 @@ class NestCoreConfig {
       .addCookieAuth("connect.sid")
       .build();
     const document = SwaggerModule.createDocument(this.app, config);
+
     SwaggerModule.setup("api", this.app, document);
+    loggerFactory("NestApplication").log(
+      "Success to setting up for swagger module",
+    );
   }
 
   private setGlobals() {
@@ -119,4 +122,4 @@ async function init() {
   await server.run();
 }
 
-init().catch((err) => new Logger("NestApplication").error(err));
+init().catch((err) => loggerFactory("NestApplication").error(err));

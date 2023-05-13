@@ -1,7 +1,7 @@
-import { Logger } from "@nestjs/common";
+import { loggerFactory } from "src/common/functions/logger.factory";
 
 export class MeidaLoggerLibrary {
-  private readonly logger = new Logger("Media");
+  private readonly logger = loggerFactory("Media");
 
   public log(
     mediaType: string,
