@@ -40,3 +40,6 @@ lerna-debug.log*
 
 # uploads
 uploads
+
+# security
+src/security/env-keys.ts
