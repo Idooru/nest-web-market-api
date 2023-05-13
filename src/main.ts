@@ -12,11 +12,13 @@ import { LibraryExceptionFilter } from "./common/filters/library-exception.filte
 import path from "path";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 class NestCoreConfig {
   private readonly envData = this.getDataFromEnv();
 
   constructor(private readonly app: NestExpressApplication) {
+    this.setSwagger();
     this.setGlobals();
     this.setMiddlewares();
     this.setStaticAssets();
@@ -39,6 +41,17 @@ class NestCoreConfig {
     const cookieSecret: string = new ConfigService().get("COOKIE_SECRET");
 
     return { scheme, host, port, cookieSecret };
+  }
+
+  private setSwagger() {
+    const config = new DocumentBuilder()
+      .setTitle("Nest Web Market API")
+      .setDescription("Nest Web Market API 어플리케이션을 위한 API 문서입니다.")
+      .setVersion("1.0")
+      .addCookieAuth("connect.sid")
+      .build();
+    const document = SwaggerModule.createDocument(this.app, config);
+    SwaggerModule.setup("api", this.app, document);
   }
 
   private setGlobals() {
