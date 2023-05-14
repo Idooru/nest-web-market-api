@@ -1,4 +1,5 @@
 import { ConfigService } from "@nestjs/config";
+import { EnvKeyNames } from "src/security/env-keys";
 
 export class EnvData {
   private envValues: { [x: string]: any }[];
@@ -18,17 +19,11 @@ export class EnvData {
     });
   }
 
-  public getValue(keyName: string): string {
-    const result = this.envValues
+  public getValue(keyName: EnvKeyNames): string {
+    return this.envValues
       .find((value) => {
         return value.getKeyName().toLowerCase().includes(keyName);
       })
       .getValue();
-
-    if (!result) {
-      throw new Error(`옳바르지 않은 키 이름(${keyName})입니다.`);
-    }
-
-    return result;
   }
 }
