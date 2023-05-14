@@ -5,7 +5,7 @@ export class EnvData {
 
   constructor(private readonly envKeys: string[]) {
     this.envValues = this.envKeys.map((key: string) => {
-      const value = new ConfigService().get(key);
+      const value = new ConfigService().getOrThrow(key);
       return {
         [key]: value,
         getKeyName(): string {
