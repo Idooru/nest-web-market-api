@@ -74,7 +74,7 @@ class NestCoreConfig {
   }
 
   private setMiddlewares() {
-    this.app.use(cookieParser(this.envData.getValue("cookiesecret")));
+    this.app.use(cookieParser(this.envData.getValue("cookie_secret")));
     this.app.use(helmet());
   }
 
