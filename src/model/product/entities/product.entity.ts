@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, OneToMany, OneToOne } from "typeorm";
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsNotEmpty, IsPositive, IsString } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
 import { StarRateEntity } from "../../review/entities/star-rate.entity";
@@ -15,7 +15,7 @@ export class ProductEntity extends CommonEntity {
   @Column({ type: "varchar", length: 20, unique: true, nullable: false })
   name: string;
 
-  @IsNumber()
+  @IsPositive()
   @IsNotEmpty()
   @Column({ type: "int", unsigned: true, nullable: false })
   price: number;
@@ -35,7 +35,7 @@ export class ProductEntity extends CommonEntity {
   @Column({ type: "text", nullable: true })
   description: string;
 
-  @IsNumber()
+  @IsPositive()
   @Column({ type: "int", unsigned: true, default: 50 })
   quantity: number;
 
