@@ -2,8 +2,8 @@ import { IsNotEmpty } from "class-validator";
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { Column, Entity, OneToOne } from "typeorm";
-import { UserAuthEntity } from "./user.auth.entity";
-import { UserProfileEntity } from "./user.profile.entity";
+import { UserAuthEntity } from "./user-auth.entity";
+import { UserProfileEntity } from "./user-profile.entity";
 import { CommonEntity } from "../../../common/entities/common.entity";
 
 @Entity({ name: "users", synchronize: true })

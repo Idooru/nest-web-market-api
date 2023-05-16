@@ -1,8 +1,8 @@
 import { AdminUserEntity } from "../../entities/admin-user.entity";
 import { ClientUserEntity } from "../../entities/client-user.entity";
-import { UserAuthEntity } from "../../entities/user.auth.entity";
+import { UserAuthEntity } from "../../entities/user-auth.entity";
 import { UserEntity } from "../../entities/user.entity";
-import { UserProfileEntity } from "../../entities/user.profile.entity";
+import { UserProfileEntity } from "../../entities/user-profile.entity";
 
 export interface IUserInsertRepository {
   findOneUserBaseById(id: string): Promise<UserEntity>;

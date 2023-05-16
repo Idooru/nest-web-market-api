@@ -1,8 +1,8 @@
 import { ReviewModule } from "../review/review.module";
-import { UserAuthEntity } from "./entities/user.auth.entity";
+import { UserAuthEntity } from "./entities/user-auth.entity";
 import { MediaModule } from "../media/media.module";
 import { AuthModule } from "../auth/auth.module";
-import { UserProfileEntity } from "./entities/user.profile.entity";
+import { UserProfileEntity } from "./entities/user-profile.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { forwardRef, Module } from "@nestjs/common";
 import { UserGeneralService } from "./services/user-general.service";

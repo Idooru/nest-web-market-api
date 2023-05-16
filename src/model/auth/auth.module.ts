@@ -1,9 +1,9 @@
-import { UserProfileEntity } from "../user/entities/user.profile.entity";
+import { UserProfileEntity } from "../user/entities/user-profile.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { forwardRef, Module } from "@nestjs/common";
 import { AuthGeneralService } from "./services/auth-general.service";
 import { JwtModule } from "@nestjs/jwt";
-import { UserAuthEntity } from "../user/entities/user.auth.entity";
+import { UserAuthEntity } from "../user/entities/user-auth.entity";
 import { ConfigService } from "@nestjs/config";
 import { LibraryModule } from "src/common/lib/library.module";
 import { SecurityLibrary } from "src/common/lib/config/security.library";

@@ -1,6 +1,6 @@
 import { IntersectionType, PickType } from "@nestjs/swagger";
-import { UserAuthEntity } from "../entities/user.auth.entity";
-import { UserProfileEntity } from "../entities/user.profile.entity";
+import { UserAuthEntity } from "../entities/user-auth.entity";
+import { UserProfileEntity } from "../entities/user-profile.entity";
 
 export class ModifyUserProfileDto extends PickType(UserProfileEntity, [
   "phonenumber",

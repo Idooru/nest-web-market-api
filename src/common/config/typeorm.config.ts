@@ -1,7 +1,7 @@
 import { TypeOrmModule, TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { ConfigService } from "@nestjs/config";
-import { UserProfileEntity } from "src/model/user/entities/user.profile.entity";
-import { UserAuthEntity } from "src/model/user/entities/user.auth.entity";
+import { UserProfileEntity } from "src/model/user/entities/user-profile.entity";
+import { UserAuthEntity } from "src/model/user/entities/user-auth.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { StarRateEntity } from "src/model/review/entities/star-rate.entity";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
