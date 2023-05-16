@@ -33,6 +33,10 @@ import { VerifyDataGuard } from "src/common/guards/verify/verify-data.guard";
 import { userVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/user-verify-cookie.key";
 import { UserAccessoryService } from "../../services/user-accessory.service";
 import { EmailSenderLibrary } from "src/common/lib/email/email-sender.library";
+import { ModifyUserEmailDto } from "../../dtos/modify-user-email.dto";
+import { ModifyUserNicknameDto } from "../../dtos/modify-user-nickname.dto";
+import { ModifyUserPhonenumberDto } from "../../dtos/modify-user-phonenumber.dto";
+import { ModifyUserPasswordDto } from "../../dtos/modify-user-password.dto";
 
 @Controller("/api/v1/free-use/user")
 export class UserVersionOneFreeUseController {
@@ -178,7 +182,7 @@ export class UserVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Patch("/me/email")
   async modifyUserEmail(
-    @Body("email") email: string,
+    @Body() { email }: ModifyUserEmailDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
     await this.userGeneralService.modifyUserEmail(email, jwtPayload.userId);
@@ -196,7 +200,7 @@ export class UserVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Patch("/me/nickname")
   async modifyUserNickName(
-    @Body("nickname") nickname: string,
+    @Body() { nickname }: ModifyUserNicknameDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
     await this.userGeneralService.modifyUserNickName(
@@ -217,7 +221,7 @@ export class UserVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Patch("/me/phonenumber")
   async modifyUserPhoneNumber(
-    @Body("phonenumber") phonenumber: string,
+    @Body() { phonenumber }: ModifyUserPhonenumberDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
     await this.userGeneralService.modifyUserPhoneNumber(
@@ -235,7 +239,7 @@ export class UserVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Patch("/me/password")
   async modifyUserPassword(
-    @Body("password") password: string,
+    @Body() { password }: ModifyUserPasswordDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
     await this.userGeneralService.modifyUserPassword(

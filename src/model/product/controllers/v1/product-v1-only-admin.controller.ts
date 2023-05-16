@@ -31,6 +31,11 @@ import {
   productMediaCookieKey,
 } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
 import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
+import { ModifyProductNameDto } from "../../dto/modify-product-name.dto";
+import { ModifyProductPriceDto } from "../../dto/modify-product-price.dto";
+import { ModifyProductOriginDto } from "../../dto/modify-product-origin.dto";
+import { ModifyProductDesctiptionDto } from "../../dto/modify-product-description.dto";
+import { ModifyProductQuantityDto } from "../../dto/modify-product-quantity.dto";
 
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
@@ -133,7 +138,7 @@ export class ProductVersionOneOnlyAdminController {
   @Patch("/:id/name")
   async modifyProductName(
     @Param("id") id: string,
-    @Body("name") name: string,
+    @Body() { name }: ModifyProductNameDto,
   ): Promise<JsonGeneralInterface<null>> {
     await this.productGeneralService.modifyProductName(id, name);
 
@@ -148,7 +153,7 @@ export class ProductVersionOneOnlyAdminController {
   @Patch("/:id/price")
   async modifyProductPrice(
     @Param("id") id: string,
-    @Body("price") price: number,
+    @Body() { price }: ModifyProductPriceDto,
   ): Promise<JsonGeneralInterface<null>> {
     await this.productGeneralService.modifyProductPrice(id, price);
 
@@ -163,7 +168,7 @@ export class ProductVersionOneOnlyAdminController {
   @Patch("/:id/origin")
   async modifyProductOrigin(
     @Param("id") id: string,
-    @Body("origin") origin: string,
+    @Body() { origin }: ModifyProductOriginDto,
   ): Promise<JsonGeneralInterface<null>> {
     await this.productGeneralService.modifyProductOrigin(id, origin);
 
@@ -178,7 +183,7 @@ export class ProductVersionOneOnlyAdminController {
   @Patch("/:id/description")
   async modifyProductDescription(
     @Param("id") id: string,
-    @Body("description") description: string,
+    @Body() { description }: ModifyProductDesctiptionDto,
   ): Promise<JsonGeneralInterface<null>> {
     await this.productGeneralService.modifyProductDescription(id, description);
 
@@ -193,7 +198,7 @@ export class ProductVersionOneOnlyAdminController {
   @Patch("/:id/quantity")
   async modifyProductQuantity(
     @Param("id") id: string,
-    @Body("quantity") quantity: number,
+    @Body() { quantity }: ModifyProductQuantityDto,
   ): Promise<JsonGeneralInterface<null>> {
     await this.productGeneralService.modifyProductQuantity(id, quantity);
 
