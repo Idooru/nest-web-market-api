@@ -21,13 +21,13 @@ export class TypeOrmErrorHandler extends ErrorLogger {
     this.main();
   }
 
-  private main() {
+  private main(): void {
     super.logging();
     this.clearStuffs();
     this.handleEntityError();
   }
 
-  private clearStuffs() {
+  private clearStuffs(): void {
     TypeOrmErrorHandlerBuilder.stuffs = [];
     TypeOrmErrorHandlerBuilder.stuffMeans = [];
   }
