@@ -148,7 +148,7 @@ export class ProductVersionOneOnlyAdminController {
   @Patch("/:id/price")
   async modifyProductPrice(
     @Param("id") id: string,
-    @Body("price") price: string,
+    @Body("price") price: number,
   ): Promise<JsonGeneralInterface<null>> {
     await this.productGeneralService.modifyProductPrice(id, price);
 
@@ -193,7 +193,7 @@ export class ProductVersionOneOnlyAdminController {
   @Patch("/:id/quantity")
   async modifyProductQuantity(
     @Param("id") id: string,
-    @Body("quantity") quantity: string,
+    @Body("quantity") quantity: number,
   ): Promise<JsonGeneralInterface<null>> {
     await this.productGeneralService.modifyProductQuantity(id, quantity);
 

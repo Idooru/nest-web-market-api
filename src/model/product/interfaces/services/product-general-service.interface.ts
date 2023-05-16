@@ -21,10 +21,10 @@ export interface IProductGeneralService {
   ): Promise<void>;
   modifyProductImage(id: string, imageCookie: MediaDto): Promise<void>;
   modifyProductName(id: string, name: string): Promise<void>;
-  modifyProductPrice(id: string, price: string): Promise<void>;
+  modifyProductPrice(id: string, price: number): Promise<void>;
   modifyProductOrigin(id: string, origin: string): Promise<void>;
   modifyProductType(id: string, type: string): Promise<void>;
   modifyProductDescription(id: string, description: string): Promise<void>;
-  modifyProductQuantity(id: string, quantity: string): Promise<void>;
+  modifyProductQuantity(id: string, quantity: number): Promise<void>;
   removeProduct(id: string): Promise<void>;
 }

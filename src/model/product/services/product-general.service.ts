@@ -122,7 +122,7 @@ export class ProductGeneralService implements IProductGeneralService {
     await this.productGeneralRepository.modifyProductName(id, name);
   }
 
-  async modifyProductPrice(id: string, price: string): Promise<void> {
+  async modifyProductPrice(id: string, price: number): Promise<void> {
     await this.productGeneralRepository.modifyProductPrice(id, price);
   }
 
@@ -144,7 +144,7 @@ export class ProductGeneralService implements IProductGeneralService {
     );
   }
 
-  async modifyProductQuantity(id: string, quantity: string): Promise<void> {
+  async modifyProductQuantity(id: string, quantity: number): Promise<void> {
     await this.productGeneralRepository.modifyProductQuantity(id, quantity);
   }
 

@@ -250,7 +250,7 @@ export class ProductGeneralRepository
     }
   }
 
-  async modifyProductPrice(id: string, price: string): Promise<void> {
+  async modifyProductPrice(id: string, price: number): Promise<void> {
     try {
       await this.productRepository
         .createQueryBuilder()
@@ -264,7 +264,7 @@ export class ProductGeneralRepository
         .setErrorHandler(ProductErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(price, "price")
+        .setStuffs(price.toString(), "price")
         .handle();
     }
   }
@@ -326,7 +326,7 @@ export class ProductGeneralRepository
     }
   }
 
-  async modifyProductQuantity(id: string, quantity: string): Promise<void> {
+  async modifyProductQuantity(id: string, quantity: number): Promise<void> {
     try {
       await this.productRepository
         .createQueryBuilder()
@@ -340,7 +340,7 @@ export class ProductGeneralRepository
         .setErrorHandler(ProductErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(quantity, "quantity")
+        .setStuffs(quantity.toString(), "quantity")
         .handle();
     }
   }
