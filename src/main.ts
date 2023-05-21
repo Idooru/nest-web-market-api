@@ -81,37 +81,37 @@ class NestCoreConfig {
   private setStaticAssets() {
     this.app.useStaticAssets(
       path.join(__dirname, "..", "uploads", "image", "product"),
-      { prefix: "/media" },
+      { prefix: "/media/product/images" },
     );
 
     this.app.useStaticAssets(
       path.join(__dirname, "..", "uploads", "image", "review"),
-      { prefix: "/media" },
+      { prefix: "/media/review/images" },
     );
 
     this.app.useStaticAssets(
       path.join(__dirname, "..", "uploads", "video", "review"),
-      { prefix: "/media" },
+      { prefix: "/media/review/videos" },
     );
 
     this.app.useStaticAssets(
       path.join(__dirname, "..", "uploads", "image", "inquiry", "request"),
-      { prefix: "/media" },
-    );
-
-    this.app.useStaticAssets(
-      path.join(__dirname, "..", "uploads", "image", "inquiry", "response"),
-      { prefix: "/media" },
+      { prefix: "/media/inquiry/request/images" },
     );
 
     this.app.useStaticAssets(
       path.join(__dirname, "..", "uploads", "video", "inquiry", "request"),
-      { prefix: "/media" },
+      { prefix: "/media/inquiry/request/videos" },
+    );
+
+    this.app.useStaticAssets(
+      path.join(__dirname, "..", "uploads", "image", "inquiry", "response"),
+      { prefix: "/media/inquiry/response/images" },
     );
 
     this.app.useStaticAssets(
       path.join(__dirname, "..", "uploads", "video", "inquiry", "response"),
-      { prefix: "/media" },
+      { prefix: "/media/inquiry/response/videos" },
     );
 
     this.app.useStaticAssets(
