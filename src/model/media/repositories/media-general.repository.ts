@@ -98,7 +98,7 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
         .select(this.select.reviewVideos)
         .from(ReviewVideoEntity, "reviewVideo")
         .where("reviewVideo.url = :url", { url })
-        .andWhere("reviewVideo.uploader = :uploader")
+        .andWhere("reviewVideo.uploader = :uploader", { uploader: email })
         .getOneOrFail();
     } catch (err) {
       this.methodName = this.findUploadedReviewImages.name;
