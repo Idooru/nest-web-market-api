@@ -328,7 +328,7 @@ export class MediaVersionOneOnlyClientController {
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/review/video")
   async cancelReviewVideoUpload(
-    @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
+    @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
     reviewVdoCookies: MediaDto[],
   ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteReviewVideosWithCookies(
