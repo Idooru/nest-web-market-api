@@ -83,7 +83,7 @@ export class InquiryVersionOneOnlyClientController {
       });
     };
 
-    await Promise.all([mediaWork(), mailWork()]);
+    await Promise.all([mediaWork, mailWork]);
 
     return {
       statusCode: 201,
@@ -141,7 +141,7 @@ export class InquiryVersionOneOnlyClientController {
       });
     };
 
-    await Promise.all([mediaWork(), mailWork()]);
+    await Promise.all([mediaWork, mailWork]);
 
     return {
       statusCode: 201,
@@ -198,7 +198,7 @@ export class InquiryVersionOneOnlyClientController {
       });
     };
 
-    await Promise.all([mediaWork(), mailWork()]);
+    await Promise.all([mediaWork, mailWork]);
 
     return {
       statusCode: 201,
