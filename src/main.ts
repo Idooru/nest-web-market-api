@@ -95,12 +95,22 @@ class NestCoreConfig {
     );
 
     this.app.useStaticAssets(
-      path.join(__dirname, "..", "uploads", "image", "inquiry"),
+      path.join(__dirname, "..", "uploads", "image", "inquiry", "request"),
       { prefix: "/media" },
     );
 
     this.app.useStaticAssets(
-      path.join(__dirname, "..", "uploads", "video", "inquiry"),
+      path.join(__dirname, "..", "uploads", "image", "inquiry", "response"),
+      { prefix: "/media" },
+    );
+
+    this.app.useStaticAssets(
+      path.join(__dirname, "..", "uploads", "video", "inquiry", "request"),
+      { prefix: "/media" },
+    );
+
+    this.app.useStaticAssets(
+      path.join(__dirname, "..", "uploads", "video", "inquiry", "response"),
       { prefix: "/media" },
     );
 
