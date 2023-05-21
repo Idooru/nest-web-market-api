@@ -167,15 +167,13 @@ export class MediaGeneralService {
   }
 
   async uploadProductImage(
-    file: Express.Multer.File,
     jwtPayload: JwtAccessTokenPayload,
+    url: string,
   ): Promise<void> {
     const user =
       await this.userGeneralRepository.findAdminUserProfileInfoWithId(
         jwtPayload.userId,
       );
-
-    const url = this.mediaAccessoryService.setUrl(file.filename);
 
     await this.mediaGeneralRepository.uploadProductImage({
       url,
@@ -202,7 +200,7 @@ export class MediaGeneralService {
 
       await Promise.all(promises);
     } else {
-      const url = this.mediaAccessoryService.setUrl(files[0].filename);
+      const url = urls[0];
 
       await this.mediaGeneralRepository.uploadReviewImage({
         url,
@@ -230,7 +228,7 @@ export class MediaGeneralService {
 
       await Promise.all(promoises);
     } else {
-      const url = this.mediaAccessoryService.setUrl(files[0].filename);
+      const url = urls[0];
 
       await this.mediaGeneralRepository.uploadReviewVideo({
         url,
@@ -258,7 +256,7 @@ export class MediaGeneralService {
 
       await Promise.all(promises);
     } else {
-      const url = this.mediaAccessoryService.setUrl(files[0].filename);
+      const url = urls[0];
 
       await this.mediaGeneralRepository.uploadInquiryRequestImage({
         url,
@@ -286,7 +284,7 @@ export class MediaGeneralService {
 
       await Promise.all(promises);
     } else {
-      const url = this.mediaAccessoryService.setUrl(files[0].filename);
+      const url = urls[0];
 
       await this.mediaGeneralRepository.uploadInquiryRequestVideo({
         url,
@@ -314,7 +312,7 @@ export class MediaGeneralService {
 
       await Promise.all(promises);
     } else {
-      const url = this.mediaAccessoryService.setUrl(files[0].filename);
+      const url = urls[0];
 
       await this.mediaGeneralRepository.uploadInquiryResponseImage({
         url,
@@ -342,7 +340,7 @@ export class MediaGeneralService {
         await Promise.all(promises);
       });
     } else {
-      const url = this.mediaAccessoryService.setUrl(files[0].filename);
+      const url = urls[0];
 
       await this.mediaGeneralRepository.uploadInquiryResponseVideo({
         url,
