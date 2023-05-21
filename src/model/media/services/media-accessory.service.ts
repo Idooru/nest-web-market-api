@@ -40,10 +40,11 @@ export class MediaAccessoryService {
   createMediaCookieValue(
     cookieKey: string,
     file: Express.Multer.File,
+    url: string,
   ): MediaDto {
     return {
       whatCookie: cookieKey,
-      url: this.setUrl(file.filename),
+      url,
       fileName: file.filename,
     };
   }
