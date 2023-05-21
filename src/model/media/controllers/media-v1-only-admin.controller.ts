@@ -143,11 +143,17 @@ export class MediaVersionOneOnlyAdminController {
     this.mediaAccessoryService.isExistMediaFile("product image", file);
     this.mediaLoggerLibrary.log("product image", file, null);
 
-    await this.mediaGeneralService.uploadProductImage(file, jwtPayload);
+    const url = this.mediaAccessoryService.setUrl(
+      file.filename,
+      "product/images",
+    );
+
+    await this.mediaGeneralService.uploadProductImage(jwtPayload, url);
 
     const cookieValue = this.mediaAccessoryService.createMediaCookieValue(
       this.productMedia.image_url_cookie,
       file,
+      url,
     );
 
     return {
@@ -178,7 +184,10 @@ export class MediaVersionOneOnlyAdminController {
     this.mediaLoggerLibrary.log("inquiry response images", null, files);
 
     const urls = files.map((file) =>
-      this.mediaAccessoryService.setUrl(file.filename),
+      this.mediaAccessoryService.setUrl(
+        file.filename,
+        "inquiry/response/images",
+      ),
     );
 
     await this.mediaGeneralService.uploadInquiryResponseImage(
@@ -221,7 +230,10 @@ export class MediaVersionOneOnlyAdminController {
     this.mediaLoggerLibrary.log("inquiry response video", null, files);
 
     const urls = files.map((file) =>
-      this.mediaAccessoryService.setUrl(file.filename),
+      this.mediaAccessoryService.setUrl(
+        file.filename,
+        "inquiry/response/videos",
+      ),
     );
 
     await this.mediaGeneralService.uploadInquiryResponseVideo(

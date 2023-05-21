@@ -169,7 +169,7 @@ export class MediaVersionOneOnlyClientController {
     this.mediaLoggerLibrary.log("review images", null, files);
 
     const urls = files.map((file) =>
-      this.mediaAccessoryService.setUrl(file.filename),
+      this.mediaAccessoryService.setUrl(file.filename, "review/images"),
     );
 
     await this.mediaGeneralService.uploadReviewImage(files, jwtPayload, urls);
@@ -205,7 +205,7 @@ export class MediaVersionOneOnlyClientController {
     this.mediaLoggerLibrary.log("review videos", null, files);
 
     const urls = files.map((file) =>
-      this.mediaAccessoryService.setUrl(file.filename),
+      this.mediaAccessoryService.setUrl(file.filename, "review/videos"),
     );
 
     await this.mediaGeneralService.uploadReviewVideo(files, jwtPayload, urls);
@@ -241,7 +241,10 @@ export class MediaVersionOneOnlyClientController {
     this.mediaLoggerLibrary.log("inquiry request images", null, files);
 
     const urls = files.map((file) =>
-      this.mediaAccessoryService.setUrl(file.filename),
+      this.mediaAccessoryService.setUrl(
+        file.filename,
+        "inquiry/request/images",
+      ),
     );
 
     await this.mediaGeneralService.uploadInquiryRequestImage(
@@ -281,7 +284,10 @@ export class MediaVersionOneOnlyClientController {
     this.mediaLoggerLibrary.log("inquiry request videos", null, files);
 
     const urls = files.map((file) =>
-      this.mediaAccessoryService.setUrl(file.filename),
+      this.mediaAccessoryService.setUrl(
+        file.filename,
+        "inquiry/request/videos",
+      ),
     );
 
     await this.mediaGeneralService.uploadInquiryRequestVideo(
