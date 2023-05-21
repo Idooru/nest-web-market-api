@@ -29,12 +29,12 @@ export class MediaAccessoryService {
     }
   }
 
-  setUrl(mediaFileName: string): string {
+  setUrl(mediaFileName: string, path: string): string {
     return `${this.configService.get(
       "APPLICATION_SCHEME",
     )}://${this.configService.get("APPLICATION_HOST")}:${this.configService.get(
       "APPLICATION_PORT",
-    )}/media/${mediaFileName}`.toLowerCase();
+    )}/media/${path}/${mediaFileName}`.toLowerCase();
   }
 
   createMediaCookieValue(
