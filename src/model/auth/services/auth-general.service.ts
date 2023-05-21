@@ -58,7 +58,7 @@ export class AuthGeneralService extends ErrorHandlerProps {
       userId: user.id,
       email: user.Auth.email,
       nickname: user.Auth.nickname,
-      userType: user.type,
+      userRole: user.role,
     };
 
     const jwtRefreshTokenPayload: JwtRefreshTokenPayload = {

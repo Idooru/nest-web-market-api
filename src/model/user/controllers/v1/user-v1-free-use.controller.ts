@@ -87,7 +87,7 @@ export class UserVersionOneFreeUseController {
   async whoAmI(
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<UserEntity>> {
-    if (jwtPayload.userType.toString() === "admin") {
+    if (jwtPayload.userRole.toString() === "admin") {
       return {
         statusCode: 200,
         message: "관리자 사용자의 정보를 가져옵니다.",

@@ -10,7 +10,7 @@ import { CommonEntity } from "../../../common/entities/common.entity";
 export class UserEntity extends CommonEntity {
   @IsNotEmpty()
   @Column({ type: "enum", enum: ["client", "admin"] })
-  type: ["client", "admin"];
+  role: ["client", "admin"];
 
   @OneToOne(() => UserProfileEntity, (profile) => profile.User, {
     cascade: true,

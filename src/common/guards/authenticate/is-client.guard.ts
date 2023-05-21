@@ -10,7 +10,7 @@ export class IsClientGuard implements CanActivate {
     const req = context.switchToHttp().getRequest() as Request;
     const { user } = req;
 
-    if (user.userType !== "client") {
+    if (user.userRole !== "client") {
       throw new UnauthorizedException(
         "client 계정만 수행 할 수 있는 작업입니다.",
       );
