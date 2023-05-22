@@ -6,7 +6,7 @@ import { MediaDto } from "../dto/media.dto";
 export class MediaBundleService {
   constructor(private readonly mediaAccessoryService: MediaAccessoryService) {}
 
-  deleteMediaFile(mediaCookies: MediaDto[], mediaPath: string) {
+  deleteMediaFile(mediaCookies: MediaDto[], mediaPath: string): void {
     if (mediaCookies.length >= 2) {
       mediaCookies.forEach((cookie) => {
         this.mediaAccessoryService.deleteMediaFilesOnServerDisk(
