@@ -120,9 +120,9 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
       return await this.inquiryRequestImageRepository
         .createQueryBuilder()
         .select(this.select.inquiryRequestImages)
-        .from(InquiryRequestImageEntity, "inquiryReqeustImage")
-        .where("inquiryReqeustImage.url = :url", { url })
-        .andWhere("inquiryReqeustImage.uploader = :uploader", {
+        .from(InquiryRequestImageEntity, "inquiryRequestImage")
+        .where("inquiryRequestImage.url = :url", { url })
+        .andWhere("inquiryRequestImage.uploader = :uploader", {
           uploader: email,
         })
         .getOneOrFail();
