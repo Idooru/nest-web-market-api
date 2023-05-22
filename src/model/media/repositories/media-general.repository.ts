@@ -91,7 +91,10 @@ export class MediaGeneralRepository extends ErrorHandlerProps {
     }
   }
 
-  async findUploadedReviewVideos(email: string, url: string) {
+  async findUploadedReviewVideos(
+    email: string,
+    url: string,
+  ): Promise<ReviewVideoEntity> {
     try {
       return await this.reviewVideoRepository
         .createQueryBuilder()
