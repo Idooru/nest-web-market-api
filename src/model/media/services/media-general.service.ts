@@ -11,9 +11,10 @@ import { ReviewImageEntity } from "../entities/review-image.entity";
 import { ReviewVideoEntity } from "../entities/review-video.entity";
 import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
+import { IMediaGeneralService } from "../interfaces/services/media-general-service.interface";
 
 @Injectable()
-export class MediaGeneralService {
+export class MediaGeneralService implements IMediaGeneralService {
   constructor(
     private readonly mediaGeneralRepository: MediaGeneralRepository,
     private readonly userGeneralRepository: UserGeneralRepository,

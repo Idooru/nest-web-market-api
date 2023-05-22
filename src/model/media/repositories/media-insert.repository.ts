@@ -21,9 +21,13 @@ import { InquiryRequestImageErrorHandler } from "../error/inquiry-request-image-
 import { InquiryResponseImageErrorHandler } from "../error/inquiry-response-image-error.handler";
 import { InquiryRequestVideoErrorHandler } from "../error/inquiry-request-video-error.handler";
 import { InquiryResponseVideoErrorHandler } from "../error/inquiry-response-video-error.handler";
+import { IMediaInsertRepository } from "../interfaces/repositories/media-insert-repository.interface";
 
 @Injectable()
-export class MediaInsertRepository extends ErrorHandlerProps {
+export class MediaInsertRepository
+  extends ErrorHandlerProps
+  implements IMediaInsertRepository
+{
   constructor(
     @InjectRepository(ProductImageEntity)
     private readonly productImageRepository: Repository<ProductImageEntity>,
