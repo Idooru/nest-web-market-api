@@ -157,7 +157,7 @@ export class MediaVersionOneOnlyClientController {
     FilesInterceptor(
       "review_image",
       MulterConfigService.maxContentsCount,
-      MulterConfigService.upload("/image/review"),
+      MulterConfigService.upload("/images/review"),
     ),
   )
   @Post("/review/image")
@@ -193,7 +193,7 @@ export class MediaVersionOneOnlyClientController {
     FilesInterceptor(
       "review_video",
       MulterConfigService.maxContentsCount,
-      MulterConfigService.upload("video/review"),
+      MulterConfigService.upload("videos/review"),
     ),
   )
   @Post("/review/video")
@@ -229,7 +229,7 @@ export class MediaVersionOneOnlyClientController {
     FilesInterceptor(
       "inquiry_request_image",
       MulterConfigService.maxContentsCount,
-      MulterConfigService.upload("image/inquiry/request"),
+      MulterConfigService.upload("images/inquiry/request"),
     ),
   )
   @Post("/inquiry/request/image")
@@ -272,7 +272,7 @@ export class MediaVersionOneOnlyClientController {
     FilesInterceptor(
       "inquiry_request_video",
       MulterConfigService.maxContentsCount,
-      MulterConfigService.upload("video/inquiry/request"),
+      MulterConfigService.upload("videos/inquiry/request"),
     ),
   )
   @Post("/inquiry/request/video")
@@ -320,7 +320,7 @@ export class MediaVersionOneOnlyClientController {
       reviewImgCookies,
     );
 
-    this.mediaBundleService.deleteMediaFile(reviewImgCookies, "image/review");
+    this.mediaBundleService.deleteMediaFile(reviewImgCookies, "images/review");
 
     const cookieKey = reviewImgCookies.map((cookie) => cookie.whatCookie);
 
@@ -341,7 +341,7 @@ export class MediaVersionOneOnlyClientController {
       reviewVdoCookies,
     );
 
-    this.mediaBundleService.deleteMediaFile(reviewVdoCookies, "video/review");
+    this.mediaBundleService.deleteMediaFile(reviewVdoCookies, "videos/review");
 
     const cookieKey = reviewVdoCookies.map((cookie) => cookie.whatCookie);
 
@@ -364,7 +364,7 @@ export class MediaVersionOneOnlyClientController {
 
     this.mediaBundleService.deleteMediaFile(
       inquiryRequestImgCookies,
-      "image/inquiry/request",
+      "images/inquiry/request",
     );
 
     const cookieKey = inquiryRequestImgCookies.map(
@@ -390,7 +390,7 @@ export class MediaVersionOneOnlyClientController {
 
     this.mediaBundleService.deleteMediaFile(
       inquiryRequestVdoCookies,
-      "video/inquiry/request",
+      "videos/inquiry/request",
     );
 
     const cookieKey = inquiryRequestVdoCookies.map(

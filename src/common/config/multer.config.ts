@@ -30,17 +30,15 @@ export class MulterConfigService {
 
     this.logger.log("Create folders about image into uploads folder");
     try {
-      await fsPromises.mkdir(path.join(__dirname, "../../../uploads/image"));
-
       const modelPromises = stuffForImages.map(async (model) => {
         return await fsPromises.mkdir(
-          path.join(__dirname, `../../../uploads/image/${model}`),
+          path.join(__dirname, `../../../uploads/images/${model}`),
         );
       });
 
       const inquiryPromises = this.inquiry.map(async (val) => {
         return await fsPromises.mkdir(
-          path.join(__dirname, `../../../uploads/image/inquiry/${val}`),
+          path.join(__dirname, `../../../uploads/images/inquiry/${val}`),
         );
       });
 
@@ -56,17 +54,17 @@ export class MulterConfigService {
 
     this.logger.log("Create folders about video into uploads folder");
     try {
-      await fsPromises.mkdir(path.join(__dirname, "../../../uploads/video"));
+      await fsPromises.mkdir(path.join(__dirname, "../../../uploads/videos"));
 
       const modelPromises = stuffForVideos.map(async (model) => {
         return await fsPromises.mkdir(
-          path.join(__dirname, `../../../uploads/video/${model}`),
+          path.join(__dirname, `../../../uploads/videos/${model}`),
         );
       });
 
       const inquiryPromises = this.inquiry.map(async (val) => {
         return await fsPromises.mkdir(
-          path.join(__dirname, `../../../uploads/video/inquiry/${val}`),
+          path.join(__dirname, `../../../uploads/videos/inquiry/${val}`),
         );
       });
 

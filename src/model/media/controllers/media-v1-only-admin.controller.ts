@@ -132,7 +132,7 @@ export class MediaVersionOneOnlyAdminController {
   @UseInterceptors(
     FileInterceptor(
       "product_image",
-      MulterConfigService.upload("/image/product"),
+      MulterConfigService.upload("/images/product"),
     ),
   )
   @Post("/product/image")
@@ -169,7 +169,7 @@ export class MediaVersionOneOnlyAdminController {
     FilesInterceptor(
       "inquiry_response_image",
       MulterConfigService.maxContentsCount,
-      MulterConfigService.upload("image/inquiry/response"),
+      MulterConfigService.upload("images/inquiry/response"),
     ),
   )
   @Post("/inquiry/response/image")
@@ -215,7 +215,7 @@ export class MediaVersionOneOnlyAdminController {
     FilesInterceptor(
       "inquiry_response_video",
       MulterConfigService.maxContentsCount,
-      MulterConfigService.upload("video/inquiry/response"),
+      MulterConfigService.upload("videos/inquiry/response"),
     ),
   )
   @Post("/inquiry/response/video")
@@ -268,7 +268,7 @@ export class MediaVersionOneOnlyAdminController {
 
     this.mediaBundleService.deleteMediaFile(
       [productImgCookie],
-      "image/product",
+      "images/product",
     );
 
     return {
@@ -290,7 +290,7 @@ export class MediaVersionOneOnlyAdminController {
 
     this.mediaBundleService.deleteMediaFile(
       inquiryResponseImgCookies,
-      "image/inquiry/response",
+      "images/inquiry/response",
     );
 
     const cookieKey = inquiryResponseImgCookies.map(
@@ -316,7 +316,7 @@ export class MediaVersionOneOnlyAdminController {
 
     this.mediaBundleService.deleteMediaFile(
       inquiryResponseVdoCookies,
-      "video/inquiry/response",
+      "videos/inquiry/response",
     );
 
     const cookieKey = inquiryResponseVdoCookies.map(
