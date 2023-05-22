@@ -7,14 +7,15 @@ import { ValidationExceptionFilter } from "./common/filters/validation-exception
 import { ValidationException } from "./common/errors/validation.exception";
 import { TypeOrmExceptionFilter } from "./common/filters/typeorm-exception.filter";
 import { LibraryExceptionFilter } from "./common/filters/library-exception.filter";
-
-import path from "path";
-import helmet from "helmet";
-import cookieParser from "cookie-parser";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { loggerFactory } from "./common/functions/logger.factory";
 import { EnvData } from "./common/classes/env-data";
 import { envKeys } from "./common/security/env-keys";
+import { staticMediaConfigs } from "./common/config/static-media-configs";
+
+import path from "path";
+import helmet from "helmet";
+import cookieParser from "cookie-parser";
 
 class NestCoreConfig {
   private readonly envData: EnvData = this.envDataFactory();
@@ -79,50 +80,34 @@ class NestCoreConfig {
   }
 
   private setStaticAssets() {
-    this.app.useStaticAssets(
-      path.join(__dirname, "..", "uploads", "image", "product"),
-      { prefix: "/media/product/images" },
-    );
-
-    this.app.useStaticAssets(
-      path.join(__dirname, "..", "uploads", "image", "review"),
-      { prefix: "/media/review/images" },
-    );
-
-    this.app.useStaticAssets(
-      path.join(__dirname, "..", "uploads", "video", "review"),
-      { prefix: "/media/review/videos" },
-    );
-
-    this.app.useStaticAssets(
-      path.join(__dirname, "..", "uploads", "image", "inquiry", "request"),
-      { prefix: "/media/inquiry/request/images" },
-    );
-
-    this.app.useStaticAssets(
-      path.join(__dirname, "..", "uploads", "video", "inquiry", "request"),
-      { prefix: "/media/inquiry/request/videos" },
-    );
-
-    this.app.useStaticAssets(
-      path.join(__dirname, "..", "uploads", "image", "inquiry", "response"),
-      { prefix: "/media/inquiry/response/images" },
-    );
-
-    this.app.useStaticAssets(
-      path.join(__dirname, "..", "uploads", "video", "inquiry", "response"),
-      { prefix: "/media/inquiry/response/videos" },
-    );
-
-    this.app.useStaticAssets(
-      path.join(__dirname, "..", "uploads", "image", "announcement"),
-      { prefix: "/media" },
-    );
-
-    this.app.useStaticAssets(
-      path.join(__dirname, "..", "uploads", "video", "announcement"),
-      { prefix: "/media" },
-    );
+    staticMediaConfigs.forEach((mediaConfig) => {
+      if (mediaConfig.others) {
+        this.app.useStaticAssets(
+          path.join(
+            __dirname,
+            "..",
+            "uploads",
+            mediaConfig.mediaType,
+            mediaConfig.model,
+            mediaConfig.others,
+          ),
+          {
+            prefix: `/media/${mediaConfig.model}/${mediaConfig.others}/${mediaConfig.mediaType}`,
+          },
+        );
+      } else {
+        this.app.useStaticAssets(
+          path.join(
+            __dirname,
+            "..",
+            "uploads",
+            mediaConfig.mediaType,
+            mediaConfig.model,
+          ),
+          { prefix: `/media/${mediaConfig.model}/${mediaConfig.mediaType}` },
+        );
+      }
+    });
   }
 }
 
