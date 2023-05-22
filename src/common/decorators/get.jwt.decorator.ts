@@ -1,8 +1,12 @@
 import { createParamDecorator } from "@nestjs/common";
 import { ArgumentsHost } from "@nestjs/common";
+import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
+import { JwtRefreshTokenPayload } from "src/model/auth/jwt/jwt-refresh-token-payload.interface";
 
-export const GetJWT = createParamDecorator((data, context: ArgumentsHost) => {
-  const req = context.switchToHttp().getRequest();
+export const GetJWT = createParamDecorator(
+  (context: ArgumentsHost): JwtAccessTokenPayload | JwtRefreshTokenPayload => {
+    const req = context.switchToHttp().getRequest();
 
-  return req.user;
-});
+    return req.user;
+  },
+);
