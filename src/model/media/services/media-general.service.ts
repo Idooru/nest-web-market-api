@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { JwtAccessTokenPayload } from "../../auth/jwt/jwt-access-token-payload.interface";
 import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
 import { MediaGeneralRepository } from "../repositories/media-general.repository";
-import { MediaAccessoryService } from "./media-accessory.service";
 import { MediaDto } from "../dto/media.dto";
 import { ProductImageEntity } from "../entities/product-image.entity";
 import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
@@ -18,7 +17,6 @@ export class MediaGeneralService implements IMediaGeneralService {
   constructor(
     private readonly mediaGeneralRepository: MediaGeneralRepository,
     private readonly userGeneralRepository: UserGeneralRepository,
-    private readonly mediaAccessoryService: MediaAccessoryService,
   ) {}
 
   async findUploadedProductImage(
