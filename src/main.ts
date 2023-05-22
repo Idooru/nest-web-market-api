@@ -14,7 +14,7 @@ import cookieParser from "cookie-parser";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { loggerFactory } from "./common/functions/logger.factory";
 import { EnvData } from "./common/classes/env-data";
-import { envKeys } from "./security/env-keys";
+import { envKeys } from "./common/security/env-keys";
 
 class NestCoreConfig {
   private readonly envData: EnvData = this.envDataFactory();

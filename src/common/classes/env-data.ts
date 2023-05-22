@@ -1,5 +1,5 @@
 import { ConfigService } from "@nestjs/config";
-import { EnvKeyNames } from "src/security/env-keys";
+import { EnvKeyNames } from "src/common/security/env-keys";
 
 export class EnvData {
   private envValues: { [x: string]: any }[];
