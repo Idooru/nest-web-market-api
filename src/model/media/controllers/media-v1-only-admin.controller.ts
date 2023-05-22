@@ -116,7 +116,7 @@ export class MediaVersionOneOnlyAdminController {
       );
 
     const uploadedInquiryResponseVideos =
-      await this.mediaGeneralService.findUploadedInquiryResponseImages(
+      await this.mediaGeneralService.findUploadedInquiryResponseVideos(
         jwtPayload.email,
         inquiryResponseVideos,
       );
