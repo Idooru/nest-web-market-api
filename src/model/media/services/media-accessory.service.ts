@@ -21,7 +21,7 @@ export class MediaAccessoryService {
   isExistMediaFile(
     mediaType: string,
     file: Express.Multer.File | Express.Multer.File[],
-  ) {
+  ): void {
     if (!file) {
       throw new BadRequestException(
         `${mediaType}을(를) 업로드 할 수 없습니다. 파일을 제시해주세요.`,
@@ -61,7 +61,7 @@ export class MediaAccessoryService {
     }));
   }
 
-  deleteMediaFilesOnServerDisk(mediaFileName: string, mediaPath: string) {
+  deleteMediaFilesOnServerDisk(mediaFileName: string, mediaPath: string): void {
     fs.rmSync(
       path.join(__dirname, `../../../../uploads/${mediaPath}/${mediaFileName}`),
     );
