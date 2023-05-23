@@ -8,7 +8,7 @@ import { EmailSenderLibrary } from "./email/email-sender.library";
 import { MailerConfigurationModule } from "../config/mailer.config";
 import { TypeOrmErrorHandlerBuilder } from "./error-handler/typeorm-error-handler.builder";
 import { LibraryErrorHandlerBuilder } from "./error-handler/library-error-handler.builder";
-import { JwtErrorHandlerBuilder } from "./error-handler/jwt-error-handling.builder";
+import { JwtErrorHandlingBuilder } from "./error-handler/jwt-error-handling.builder";
 
 @Module({
   imports: [DotenvConfigurationModule, MailerConfigurationModule],
@@ -18,7 +18,7 @@ import { JwtErrorHandlerBuilder } from "./error-handler/jwt-error-handling.build
     EmailSenderLibrary,
     TypeOrmErrorHandlerBuilder,
     LibraryErrorHandlerBuilder,
-    JwtErrorHandlerBuilder,
+    JwtErrorHandlingBuilder,
     TimeLoggerLibrary,
     MeidaLoggerLibrary,
   ],
@@ -27,7 +27,7 @@ import { JwtErrorHandlerBuilder } from "./error-handler/jwt-error-handling.build
     EmailSenderLibrary,
     TypeOrmErrorHandlerBuilder,
     LibraryErrorHandlerBuilder,
-    JwtErrorHandlerBuilder,
+    JwtErrorHandlingBuilder,
     TimeLoggerLibrary,
     MeidaLoggerLibrary,
   ],

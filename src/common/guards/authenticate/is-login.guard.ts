@@ -8,7 +8,7 @@ import { JwtService } from "@nestjs/jwt";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { Request } from "express";
 import { SecurityLibrary } from "../../lib/config/security.library";
-import { JwtErrorHandlerBuilder } from "src/common/lib/error-handler/jwt-error-handling.builder";
+import { JwtErrorHandlingBuilder } from "src/common/lib/error-handler/jwt-error-handling.builder";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 
 @Injectable()
@@ -16,7 +16,7 @@ export class IsLoginGuard extends ErrorHandlerProps implements CanActivate {
   constructor(
     private readonly securityLibrary: SecurityLibrary,
     private readonly jwtService: JwtService,
-    private readonly jwtErrorHandlerBuilder: JwtErrorHandlerBuilder,
+    private readonly jwtErrorHandlerBuilder: JwtErrorHandlingBuilder,
   ) {
     super();
   }

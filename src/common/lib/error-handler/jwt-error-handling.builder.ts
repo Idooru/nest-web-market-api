@@ -2,7 +2,7 @@ import { JsonWebTokenError } from "jsonwebtoken";
 import { JwtErrorHandler } from "./jwt-error-handler.library";
 import { JwtWhatToken } from "src/model/auth/jwt/jwt-what-token.type";
 
-export class JwtErrorHandlerBuilder {
+export class JwtErrorHandlingBuilder {
   private error: JsonWebTokenError;
   private whatToken: JwtWhatToken;
   private className: string;
