@@ -8,13 +8,18 @@ import { JwtService } from "@nestjs/jwt";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { Request } from "express";
 import { SecurityLibrary } from "../../lib/config/security.library";
+import { JwtErrorHandlerBuilder } from "src/common/lib/error-handler/jwt-error-handler.builder";
+import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 
 @Injectable()
-export class IsLoginGuard implements CanActivate {
+export class IsLoginGuard extends ErrorHandlerProps implements CanActivate {
   constructor(
     private readonly securityLibrary: SecurityLibrary,
     private readonly jwtService: JwtService,
-  ) {}
+    private readonly jwtErrorHandlerBuilder: JwtErrorHandlerBuilder,
+  ) {
+    super();
+  }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<Request>();
@@ -38,12 +43,12 @@ export class IsLoginGuard implements CanActivate {
         this.securityLibrary.getJwtAcessTokenVerifyOption(),
       );
     } catch (err) {
-      if (err.name.includes("Expired")) {
-        throw new UnauthorizedException(
-          "만료된 access_token입니다. refresh_token을 이용하여 토큰을 재발급 받거나 다시 로그인 해주세요.",
-        );
-      }
-      throw new UnauthorizedException("유효하지 않은 토큰입니다.");
+      this.methodName = this.validateToken.name;
+      this.jwtErrorHandlerBuilder
+        .setError(err)
+        .setWhatToken("access_token")
+        .setSourceNames(this.className, this.methodName)
+        .handle();
     }
   }
 }
