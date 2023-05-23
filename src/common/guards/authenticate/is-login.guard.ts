@@ -8,7 +8,7 @@ import { JwtService } from "@nestjs/jwt";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { Request } from "express";
 import { SecurityLibrary } from "../../lib/config/security.library";
-import { JwtErrorHandlerBuilder } from "src/common/lib/error-handler/jwt-error-handler.builder";
+import { JwtErrorHandlerBuilder } from "src/common/lib/error-handler/jwt-error-handling.builder";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 
 @Injectable()

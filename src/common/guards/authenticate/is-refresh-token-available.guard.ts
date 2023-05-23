@@ -9,7 +9,7 @@ import { Request } from "express";
 import { JwtRefreshTokenPayload } from "src/model/auth/jwt/jwt-refresh-token-payload.interface";
 import { SecurityLibrary } from "../../lib/config/security.library";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
-import { JwtErrorHandlerBuilder } from "src/common/lib/error-handler/jwt-error-handler.builder";
+import { JwtErrorHandlerBuilder } from "src/common/lib/error-handler/jwt-error-handling.builder";
 
 @Injectable()
 export class IsRefreshTokenAvailableGuard
