@@ -12,11 +12,11 @@ import { loggerFactory } from "./common/functions/logger.factory";
 import { EnvData } from "./common/classes/env-data";
 import { envKeys } from "./common/security/env-keys";
 import { staticMediaConfigs } from "./common/config/static-media-configs";
+import { JwtServiceExceptionFilter } from "./common/filters/jwt-service-exception.filter";
 
 import path from "path";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
-
 class NestCoreConfig {
   private readonly envData: EnvData = this.envDataFactory();
 
@@ -61,6 +61,7 @@ class NestCoreConfig {
   private setGlobals() {
     this.app.useGlobalFilters(
       new HttpExceptionFilter(),
+      new JwtServiceExceptionFilter(),
       new LibraryExceptionFilter(),
       new TypeOrmExceptionFilter(),
       new ValidationExceptionFilter(),
