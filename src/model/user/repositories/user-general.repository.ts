@@ -13,7 +13,7 @@ import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-pro
 import { RegisterUserAuthDto } from "../dtos/register-user.dto";
 import { ModifyUserProfileDto } from "../dtos/modify-user.dto";
 import { ModifyUserAuthDto } from "../dtos/modify-user.dto";
-import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
+import { TypeOrmErrorHandlingBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
 import { UserErrorHandler } from "../error/user-error.handler";
 import { ClientUserErrorHandler } from "../error/client-user-error.handler";
 import { AdminUserErrorHandler } from "../error/admin-user-error.handler";
@@ -36,7 +36,7 @@ export class UserGeneralRepository
     @InjectRepository(AdminUserEntity)
     private readonly adminUserRepository: Repository<AdminUserEntity>,
     @Inject("UserSelectProperty") private readonly select: UserSelectProperty,
-    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlerBuilder,
+    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlingBuilder,
   ) {
     super();
   }

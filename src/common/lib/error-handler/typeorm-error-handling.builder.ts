@@ -1,8 +1,8 @@
 import { TypeORMError } from "typeorm";
-import { TypeOrmErrorHandler } from "./typeorm-error-handler.library";
+import { TypeOrmErrorHandlingLibrary } from "./typeorm-error-handling.library";
 import { ErrorHandlerStrategy } from "./interface/error-handler-strategy.interface";
 
-export class TypeOrmErrorHandlerBuilder {
+export class TypeOrmErrorHandlingBuilder {
   private handler: new (
     error: TypeORMError,
     stuffs: string[],
@@ -37,19 +37,19 @@ export class TypeOrmErrorHandlerBuilder {
   }
 
   public setStuffs(stuff: string, stuffMean: string): this {
-    TypeOrmErrorHandlerBuilder.stuffs.push(stuff);
-    TypeOrmErrorHandlerBuilder.stuffMeans.push(stuffMean);
+    TypeOrmErrorHandlingBuilder.stuffs.push(stuff);
+    TypeOrmErrorHandlingBuilder.stuffMeans.push(stuffMean);
     return this;
   }
 
   public handle() {
-    return new TypeOrmErrorHandler(
+    return new TypeOrmErrorHandlingLibrary(
       this.error,
       this.className,
       this.methodName,
       this.handler,
-      TypeOrmErrorHandlerBuilder.stuffs,
-      TypeOrmErrorHandlerBuilder.stuffMeans,
+      TypeOrmErrorHandlingBuilder.stuffs,
+      TypeOrmErrorHandlingBuilder.stuffMeans,
     );
   }
 }

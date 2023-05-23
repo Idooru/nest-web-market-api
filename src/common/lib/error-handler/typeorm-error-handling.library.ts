@@ -1,9 +1,9 @@
 import { TypeORMError } from "typeorm";
-import { TypeOrmErrorHandlerBuilder } from "./typeorm-error-handling.builder";
+import { TypeOrmErrorHandlingBuilder } from "./typeorm-error-handling.builder";
 import { ErrorLogger } from "src/common/classes/abstract/error-logger";
 import { ErrorHandlerStrategy } from "./interface/error-handler-strategy.interface";
 
-export class TypeOrmErrorHandler extends ErrorLogger {
+export class TypeOrmErrorHandlingLibrary extends ErrorLogger {
   constructor(
     protected readonly error: TypeORMError,
     protected readonly className: string,
@@ -28,8 +28,8 @@ export class TypeOrmErrorHandler extends ErrorLogger {
   }
 
   private clearStuffs(): void {
-    TypeOrmErrorHandlerBuilder.stuffs = [];
-    TypeOrmErrorHandlerBuilder.stuffMeans = [];
+    TypeOrmErrorHandlingBuilder.stuffs = [];
+    TypeOrmErrorHandlingBuilder.stuffMeans = [];
   }
 
   private handleEntityError(): void {

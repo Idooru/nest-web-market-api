@@ -7,7 +7,7 @@ import { UserAuthEntity } from "../entities/user-auth.entity";
 import { UserEntity } from "../entities/user.entity";
 import { UserProfileEntity } from "../entities/user-profile.entity";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
-import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
+import { TypeOrmErrorHandlingBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
 import { UserErrorHandler } from "../error/user-error.handler";
 import { ClientUserErrorHandler } from "../error/client-user-error.handler";
 import { AdminUserErrorHandler } from "../error/admin-user-error.handler";
@@ -29,7 +29,7 @@ export class UserInsertRepository
     private readonly clientUserRepository: Repository<ClientUserEntity>,
     @InjectRepository(AdminUserEntity)
     private readonly adminUserRepository: Repository<AdminUserEntity>,
-    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlerBuilder,
+    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlingBuilder,
   ) {
     super();
   }

@@ -6,7 +6,7 @@ import { ModifyReviewDto } from "../dto/modify-review.dto";
 import { CreateReviewDao } from "../dto/create-review.dto";
 import { ReviewSelectProperty } from "src/common/config/repository-select-configs/review.select";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
-import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
+import { TypeOrmErrorHandlingBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
 import { ReviewErrorHandler } from "../error/review-error.handler";
 import { IReviewGeneralRepository } from "../interfaces/repositories/review-general-repository.interface";
 
@@ -20,7 +20,7 @@ export class ReviewGeneralRepository
     private readonly reviewRepository: Repository<ReviewEntity>,
     @Inject("ReviewSelectProperty")
     private readonly select: ReviewSelectProperty,
-    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlerBuilder,
+    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlingBuilder,
   ) {
     super();
   }

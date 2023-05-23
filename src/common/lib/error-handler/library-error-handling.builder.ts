@@ -1,6 +1,6 @@
-import { LibraryErrorHandler } from "./library-error-handler.library";
+import { LibraryErrorHandlingLibrary } from "./library-error-handling.library";
 
-export class LibraryErrorHandlerBuilder {
+export class LibraryErrorHandlingBuilder {
   private error: Error;
   private libraryName: string;
   private className: string;
@@ -23,7 +23,7 @@ export class LibraryErrorHandlerBuilder {
   }
 
   public handle() {
-    return new LibraryErrorHandler(
+    return new LibraryErrorHandlingLibrary(
       this.error,
       this.className,
       this.methodName,

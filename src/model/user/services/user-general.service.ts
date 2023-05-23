@@ -7,7 +7,7 @@ import { UserEntity } from "../entities/user.entity";
 import { UserInsertRepository } from "../repositories/user-insert.repository";
 import { CreateUserBaseDto } from "../dtos/create-user-base.dto";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
-import { LibraryErrorHandlerBuilder } from "src/common/lib/error-handler/library-error-handling.builder";
+import { LibraryErrorHandlingBuilder } from "src/common/lib/error-handler/library-error-handling.builder";
 
 import * as bcrypt from "bcrypt";
 import { IUserGeneralService } from "../interfaces/services/user-general-service.intreface";
@@ -21,7 +21,7 @@ export class UserGeneralService
     private readonly userGeneralRepository: UserGeneralRepository,
     private readonly userInsertRepository: UserInsertRepository,
     private readonly securityLibrary: SecurityLibrary,
-    private readonly libraryErrorHandlerBuilder: LibraryErrorHandlerBuilder,
+    private readonly libraryErrorHandlerBuilder: LibraryErrorHandlingBuilder,
   ) {
     super();
   }

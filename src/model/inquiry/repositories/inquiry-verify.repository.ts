@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { InquiryRequestEntity } from "../entities/inquiry-request.entity";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
-import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
+import { TypeOrmErrorHandlingBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
 import { InquiryRequestErrorHandler } from "../error/inquiry-request-error.handler";
 
 @Injectable()
@@ -12,7 +12,7 @@ export class InquiryVerifyRepository extends ErrorHandlerProps {
     @InjectRepository(InquiryRequestEntity)
     private readonly inquiryRequestRepository: Repository<InquiryRequestEntity>,
 
-    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlerBuilder,
+    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlingBuilder,
   ) {
     super();
   }

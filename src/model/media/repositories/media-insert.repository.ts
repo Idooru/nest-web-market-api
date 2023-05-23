@@ -13,7 +13,7 @@ import { ProductImageEntity } from "../entities/product-image.entity";
 import { ReviewImageEntity } from "../entities/review-image.entity";
 import { ReviewVideoEntity } from "../entities/review-video.entity";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
-import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
+import { TypeOrmErrorHandlingBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
 import { ProductErrorHandler } from "src/model/product/error/product-error.handler";
 import { ReviewImageErrorHandler } from "../error/review-image-error.handler";
 import { ReviewVideoErrorHandler } from "../error/review-video.error.handler";
@@ -43,7 +43,7 @@ export class MediaInsertRepository
     private readonly inquiryResponseImageRepository: Repository<InquiryResponseImageEntity>,
     @InjectRepository(InquiryResponseVideoEntity)
     private readonly inquiryResponseVideoRepository: Repository<InquiryResponseVideoEntity>,
-    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlerBuilder,
+    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlingBuilder,
   ) {
     super();
   }

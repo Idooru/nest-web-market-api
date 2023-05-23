@@ -13,7 +13,7 @@ import { UserEntity } from "src/model/user/entities/user.entity";
 import { JwtAccessTokenPayload } from "../jwt/jwt-access-token-payload.interface";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { JwtErrorHandlingBuilder } from "../../../common/lib/error-handler/jwt-error-handling.builder";
-import { LibraryErrorHandlerBuilder } from "../../../common/lib/error-handler/library-error-handling.builder";
+import { LibraryErrorHandlingBuilder } from "../../../common/lib/error-handler/library-error-handling.builder";
 
 import * as bcrypt from "bcrypt";
 
@@ -24,7 +24,7 @@ export class AuthGeneralService extends ErrorHandlerProps {
     private readonly authExistService: AuthExistService,
     private readonly securityLibrary: SecurityLibrary,
     private readonly jwtService: JwtService,
-    private readonly libraryErrorHandlerBuilder: LibraryErrorHandlerBuilder,
+    private readonly libraryErrorHandlerBuilder: LibraryErrorHandlingBuilder,
     private readonly jwtErrorHandlerBuilder: JwtErrorHandlingBuilder,
   ) {
     super();

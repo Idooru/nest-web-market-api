@@ -5,7 +5,7 @@ import { Injectable } from "@nestjs/common";
 import { JwtServiceException } from "src/common/errors/jwt-service.exception";
 
 @Injectable()
-export class JwtErrorHandler extends ErrorLogger {
+export class JwtErrorHandlingLibrary extends ErrorLogger {
   constructor(
     protected readonly error: JsonWebTokenError,
     protected readonly className: string,

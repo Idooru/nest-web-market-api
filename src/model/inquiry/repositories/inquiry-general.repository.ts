@@ -7,7 +7,7 @@ import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
 import { InquiryResponseDto } from "../dto/response/inquiry-response.dto";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { InquirySelectProperty } from "src/common/config/repository-select-configs/inquiry.select";
-import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
+import { TypeOrmErrorHandlingBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
 import { InquiryRequestErrorHandler } from "../error/inquiry-request-error.handler";
 import { InquiryResponseErrorHandler } from "../error/inquiry-response-error.handler";
 
@@ -20,7 +20,7 @@ export class InquiryGeneralRepository extends ErrorHandlerProps {
     private readonly inquiryResponseRepository: Repository<InquiryResponseEntity>,
     @Inject("InquirySelectProperty")
     private readonly select: InquirySelectProperty,
-    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlerBuilder,
+    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlingBuilder,
   ) {
     super();
   }

@@ -5,7 +5,7 @@ import { Repository } from "typeorm";
 import { StarRateEntity } from "../entities/star-rate.entity";
 import { StarRateGeneralRepository } from "./star-rate-general.repository";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
-import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
+import { TypeOrmErrorHandlingBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
 import { StarRateErrorHandler } from "../error/star-rate-error.handler";
 import { IStarRateInsertRepository } from "../interfaces/repositories/star-rate-insert-repository.interface";
 
@@ -18,7 +18,7 @@ export class StarRateInsertRepository
     @InjectRepository(StarRateEntity)
     private readonly starRateRepository: Repository<StarRateEntity>,
     private readonly starRateGeneralRepository: StarRateGeneralRepository,
-    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlerBuilder,
+    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlingBuilder,
   ) {
     super();
   }

@@ -6,8 +6,8 @@ import { SecurityLibrary } from "./config/security.library";
 import { TimeLoggerLibrary } from "./logger/time-logger.library";
 import { EmailSenderLibrary } from "./email/email-sender.library";
 import { MailerConfigurationModule } from "../config/mailer.config";
-import { TypeOrmErrorHandlerBuilder } from "./error-handler/typeorm-error-handling.builder";
-import { LibraryErrorHandlerBuilder } from "./error-handler/library-error-handling.builder";
+import { TypeOrmErrorHandlingBuilder } from "./error-handler/typeorm-error-handling.builder";
+import { LibraryErrorHandlingBuilder } from "./error-handler/library-error-handling.builder";
 import { JwtErrorHandlingBuilder } from "./error-handler/jwt-error-handling.builder";
 
 @Module({
@@ -16,8 +16,8 @@ import { JwtErrorHandlingBuilder } from "./error-handler/jwt-error-handling.buil
     ConfigService,
     SecurityLibrary,
     EmailSenderLibrary,
-    TypeOrmErrorHandlerBuilder,
-    LibraryErrorHandlerBuilder,
+    TypeOrmErrorHandlingBuilder,
+    LibraryErrorHandlingBuilder,
     JwtErrorHandlingBuilder,
     TimeLoggerLibrary,
     MeidaLoggerLibrary,
@@ -25,8 +25,8 @@ import { JwtErrorHandlingBuilder } from "./error-handler/jwt-error-handling.buil
   exports: [
     SecurityLibrary,
     EmailSenderLibrary,
-    TypeOrmErrorHandlerBuilder,
-    LibraryErrorHandlerBuilder,
+    TypeOrmErrorHandlingBuilder,
+    LibraryErrorHandlingBuilder,
     JwtErrorHandlingBuilder,
     TimeLoggerLibrary,
     MeidaLoggerLibrary,

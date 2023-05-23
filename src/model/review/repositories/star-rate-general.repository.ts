@@ -4,7 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Inject, Injectable } from "@nestjs/common";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { ReviewSelectProperty } from "src/common/config/repository-select-configs/review.select";
-import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
+import { TypeOrmErrorHandlingBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
 import { StarRateErrorHandler } from "../error/star-rate-error.handler";
 import { IStarRateGeneralRepository } from "../interfaces/repositories/star-rate-general-repository.interface";
 
@@ -18,7 +18,7 @@ export class StarRateGeneralRepository
     private readonly starRateRepository: Repository<StarRateEntity>,
     @Inject("ReviewSelectProperty")
     private readonly select: ReviewSelectProperty,
-    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlerBuilder,
+    private readonly typeOrmErrorHandlerBuilder: TypeOrmErrorHandlingBuilder,
   ) {
     super();
   }
