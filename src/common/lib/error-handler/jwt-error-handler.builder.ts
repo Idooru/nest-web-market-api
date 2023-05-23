@@ -5,7 +5,6 @@ import { JwtWhatToken } from "src/model/auth/jwt/jwt-what-token.type";
 export class JwtErrorHandlerBuilder {
   private error: JsonWebTokenError;
   private whatToken: JwtWhatToken;
-  private token: string;
   private className: string;
   private methodName: string;
 
@@ -16,11 +15,6 @@ export class JwtErrorHandlerBuilder {
 
   public setWhatToken(whatToken: JwtWhatToken): this {
     this.whatToken = whatToken;
-    return this;
-  }
-
-  public setToken(token: string): this {
-    this.token = token;
     return this;
   }
 
@@ -36,7 +30,6 @@ export class JwtErrorHandlerBuilder {
       this.className,
       this.methodName,
       this.whatToken,
-      this.token,
     );
   }
 }
