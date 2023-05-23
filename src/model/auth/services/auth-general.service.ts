@@ -12,6 +12,7 @@ import { UserGeneralRepository } from "src/model/user/repositories/user-general.
 import { UserEntity } from "src/model/user/entities/user.entity";
 import { JwtAccessTokenPayload } from "../jwt/jwt-access-token-payload.interface";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
+import { JwtErrorHandlerBuilder } from "../../../common/lib/error-handler/jwt-error-handler.builder";
 import { LibraryErrorHandlerBuilder } from "../../../common/lib/error-handler/library-error-handler.builder";
 
 import * as bcrypt from "bcrypt";
@@ -24,6 +25,7 @@ export class AuthGeneralService extends ErrorHandlerProps {
     private readonly securityLibrary: SecurityLibrary,
     private readonly jwtService: JwtService,
     private readonly libraryErrorHandlerBuilder: LibraryErrorHandlerBuilder,
+    private readonly jwtErrorHandlerBuilder: JwtErrorHandlerBuilder,
   ) {
     super();
   }
@@ -82,10 +84,8 @@ export class AuthGeneralService extends ErrorHandlerProps {
       return { accessToken, refreshToken };
     } catch (err) {
       this.methodName = this.signToken.name;
-
-      this.libraryErrorHandlerBuilder
+      this.jwtErrorHandlerBuilder
         .setError(err)
-        .setLibraryName("jwtService")
         .setSourceNames(this.className, this.methodName)
         .handle();
     }
