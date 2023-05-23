@@ -1,5 +1,5 @@
 import { JsonWebTokenError } from "jsonwebtoken";
-import { JwtErrorHandler } from "./jwt-error-handler.library";
+import { JwtErrorHandler } from "./jwt-error-handling.library";
 import { JwtWhatToken } from "src/model/auth/jwt/jwt-what-token.type";
 
 export class JwtErrorHandlingBuilder {

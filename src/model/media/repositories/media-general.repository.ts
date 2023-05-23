@@ -11,7 +11,7 @@ import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.ent
 import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
 import { InquiryResponseVideoEntity } from "../entities/inquiry-response-video.entity";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
-import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
+import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
 import { ProductImageErrorHandler } from "../error/product-image-error.handler";
 import { ReviewImageErrorHandler } from "../error/review-image-error.handler";
 import { ReviewVideoErrorHandler } from "../error/review-video.error.handler";

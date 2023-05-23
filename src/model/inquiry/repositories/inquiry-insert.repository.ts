@@ -6,7 +6,7 @@ import { Repository } from "typeorm";
 import { InquiryRequestEntity } from "../entities/inquiry-request.entity";
 import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
-import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handler.builder";
+import { TypeOrmErrorHandlerBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
 import { InquiryRequestErrorHandler } from "../error/inquiry-request-error.handler";
 import { InquiryResponseErrorHandler } from "../error/inquiry-response-error.handler";
 

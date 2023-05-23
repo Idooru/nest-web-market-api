@@ -5,7 +5,7 @@ import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-pro
 import { SendMailToClientAboutInquiryResponseDto } from "src/model/inquiry/dto/response/send-mail-to-client-about-inquiry-response.dto";
 import { SendMailToAdminAboutInquiryRequestDto } from "src/model/inquiry/dto/request/send-mail-to-admin-about-inquiry-request.dto";
 import { UserEntity } from "src/model/user/entities/user.entity";
-import { LibraryErrorHandlerBuilder } from "../error-handler/library-error-handler.builder";
+import { LibraryErrorHandlerBuilder } from "../error-handler/library-error-handling.builder";
 
 @Injectable()
 export class EmailSenderLibrary extends ErrorHandlerProps {

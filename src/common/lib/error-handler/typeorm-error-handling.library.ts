@@ -1,5 +1,5 @@
 import { TypeORMError } from "typeorm";
-import { TypeOrmErrorHandlerBuilder } from "./typeorm-error-handler.builder";
+import { TypeOrmErrorHandlerBuilder } from "./typeorm-error-handling.builder";
 import { ErrorLogger } from "src/common/classes/abstract/error-logger";
 import { ErrorHandlerStrategy } from "./interface/error-handler-strategy.interface";
 
