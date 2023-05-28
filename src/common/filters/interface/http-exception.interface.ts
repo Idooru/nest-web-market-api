@@ -1,5 +1,7 @@
+import { HttpStatus } from "@nestjs/common";
+
 export interface HttpExceptionType {
-  statusCode: number;
+  statusCode: HttpStatus;
   message: Array<string>;
   error: string;
 }

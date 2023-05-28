@@ -1,4 +1,6 @@
+import { HttpStatus } from "aws-sdk/clients/lambda";
+
 export interface ValidationExceptionType {
-  statusCode: number;
+  statusCode: HttpStatus;
   errors: string[];
 }

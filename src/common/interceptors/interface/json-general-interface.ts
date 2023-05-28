@@ -1,5 +1,7 @@
+import { HttpStatus } from "@nestjs/common";
+
 export class JsonGeneralInterface<T> {
-  statusCode: number;
+  statusCode: HttpStatus;
   message: string;
   result?: T;
 }

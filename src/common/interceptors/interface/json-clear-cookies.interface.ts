@@ -1,5 +1,7 @@
+import { HttpStatus } from "@nestjs/common";
+
 export class JsonClearCookiesInterface {
-  statusCode: number;
+  statusCode: HttpStatus;
   message: string;
   cookieKey: string[];
 }

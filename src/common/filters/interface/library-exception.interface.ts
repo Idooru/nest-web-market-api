@@ -1,5 +1,7 @@
+import { HttpStatus } from "@nestjs/common";
+
 export interface LibraryExceptionType {
-  statusCode: number;
+  statusCode: HttpStatus;
   libraryName: string;
   error: Error;
 }
