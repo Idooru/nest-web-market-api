@@ -1,14 +1,13 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { CanActivate, ExecutionContext, HttpStatus } from "@nestjs/common";
 import { Request, Response } from "express";
+import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
+import { HttpExceptionHandlingBuilder } from "src/common/lib/error-handler/http-exception-handling.builder";
 
-export class VerifyDataGuard implements CanActivate {
+export class VerifyDataGuard extends ErrorHandlerProps implements CanActivate {
   private readonly data: string[];
 
   constructor(...data: string[]) {
+    super();
     this.data = data;
   }
 
@@ -32,9 +31,15 @@ export class VerifyDataGuard implements CanActivate {
         );
 
       if (!isEqual) {
-        throw new UnauthorizedException(
-          "검증에 필요한 쿠키가 일치하지 않았기 때문에 해당 로직을 사용할 수 없습니다. 검증 API를 먼저 실행시켜 주세요.",
-        );
+        this.methodName = this.canActivate.name;
+        new HttpExceptionHandlingBuilder()
+          .setMessage(
+            "검증에 필요한 쿠키가 일치하지 않았기 때문에 해당 로직을 사용할 수 없습니다. 검증 API를 먼저 실행시켜 주세요.",
+          )
+          .setOccuredLocation("class")
+          .setOccuredClass(this.className, this.methodName)
+          .setExceptionStatus(HttpStatus.UNAUTHORIZED)
+          .handle();
       }
 
       importedCookies.forEach((cookie) => res.clearCookie(cookie));

@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { HttpStatus, Injectable } from "@nestjs/common";
 import { ResetPasswordDto } from "../../user/dtos/reset-password.dto";
 import { FindEmailDto } from "../../user/dtos/find-email.dto";
 import { JwtService } from "@nestjs/jwt";
@@ -14,6 +14,7 @@ import { JwtAccessTokenPayload } from "../jwt/jwt-access-token-payload.interface
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { JwtErrorHandlingBuilder } from "../../../common/lib/error-handler/jwt-error-handling.builder";
 import { LibraryErrorHandlingBuilder } from "../../../common/lib/error-handler/library-error-handling.builder";
+import { HttpExceptionHandlingBuilder } from "src/common/lib/error-handler/http-exception-handling.builder";
 
 import * as bcrypt from "bcrypt";
 
@@ -25,6 +26,7 @@ export class AuthGeneralService extends ErrorHandlerProps {
     private readonly securityLibrary: SecurityLibrary,
     private readonly jwtService: JwtService,
     private readonly libraryErrorHandlerBuilder: LibraryErrorHandlingBuilder,
+    private readonly httpExceptionHandlingBuilder: HttpExceptionHandlingBuilder,
     private readonly jwtErrorHandlerBuilder: JwtErrorHandlingBuilder,
   ) {
     super();
@@ -41,6 +43,7 @@ export class AuthGeneralService extends ErrorHandlerProps {
   async validateUser(loginUserDto: LoginUserDto): Promise<UserEntity> {
     const { email, password } = loginUserDto;
     const isExistUserEmail = await this.authExistService.verifyEmail(email);
+    this.methodName = this.validateUser.name;
 
     if (isExistUserEmail) {
       const user = await this.userGeneralRepository.findUserWithEmail(email);
@@ -50,9 +53,14 @@ export class AuthGeneralService extends ErrorHandlerProps {
       ) {
         return user;
       }
-      throw new UnauthorizedException("아이디 혹은 비밀번호가 틀렸습니다.");
     }
-    throw new UnauthorizedException("아이디 혹은 비밀번호가 틀렸습니다.");
+
+    this.httpExceptionHandlingBuilder
+      .setMessage("아이디 혹은 비밀번호가 틀렸습니다.")
+      .setOccuredLocation("class")
+      .setOccuredClass(this.className, this.methodName)
+      .setExceptionStatus(HttpStatus.UNAUTHORIZED)
+      .handle();
   }
 
   async signToken(user: UserEntity): Promise<JwtPayload> {
@@ -94,22 +102,31 @@ export class AuthGeneralService extends ErrorHandlerProps {
   async findEmail(findEmailDto: FindEmailDto): Promise<string> {
     const { realname, phonenumber } = findEmailDto;
 
-    const [realNameResult, phoneNumberResult] = await Promise.all([
+    const [realNameFound, phoneNumberFound] = await Promise.all([
       this.userGeneralRepository.findUserWithRealName(realname),
       this.userGeneralRepository.findUserWithPhoneNumber(phonenumber),
     ]);
 
-    if (realNameResult === null || phoneNumberResult === null) {
-      throw new UnauthorizedException(
-        "사용자 실명과 전화번호가 서로 일치하지 않습니다.",
-      );
-    } else if (realNameResult.id !== phoneNumberResult.id) {
-      throw new UnauthorizedException(
-        "사용자 실명과 전화번호가 서로 일치하지 않습니다.",
-      );
+    this.methodName = this.findEmail.name;
+    const message = "사용자 실명과 전화번호가 서로 일치하지 않습니다.";
+
+    if (realNameFound === null || phoneNumberFound === null) {
+      this.httpExceptionHandlingBuilder
+        .setMessage(message)
+        .setOccuredLocation("class")
+        .setOccuredClass(this.className, this.methodName)
+        .setExceptionStatus(HttpStatus.UNAUTHORIZED)
+        .handle();
+    } else if (realNameFound.id !== phoneNumberFound.id) {
+      this.httpExceptionHandlingBuilder
+        .setMessage(message)
+        .setOccuredLocation("class")
+        .setOccuredClass(this.className, this.methodName)
+        .setExceptionStatus(HttpStatus.UNAUTHORIZED)
+        .handle();
     }
 
-    return realNameResult.Auth.email;
+    return realNameFound.Auth.email;
   }
 
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {

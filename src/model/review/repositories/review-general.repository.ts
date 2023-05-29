@@ -1,5 +1,5 @@
 import { ReviewEntity } from "../entities/review.entity";
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { InsertResult, Repository } from "typeorm";
 import { ModifyReviewDto } from "../dto/modify-review.dto";
@@ -27,7 +27,7 @@ export class ReviewGeneralRepository
 
   async findAllClientsReviews(id: string): Promise<ReviewEntity[]> {
     try {
-      const reviews = await this.reviewRepository
+      return await this.reviewRepository
         .createQueryBuilder()
         .select(this.select.reviews)
         .from(ReviewEntity, "review")
@@ -37,15 +37,6 @@ export class ReviewGeneralRepository
         .leftJoin("review.Video", "Video")
         .where("Client.id = :id", { id })
         .getMany();
-
-      if (!reviews.length) {
-        // 만약 리뷰를 하나도 작성하지 않은 사용자가 다른 사용자의 리뷰를 수정하려고 시도할시 아래 예외가 발생한다.
-        throw new NotFoundException(
-          `고객 사용자의 아이디(${id})로 작성된 리뷰가 없습니다.`,
-        );
-      }
-
-      return reviews;
     } catch (err) {
       this.methodName = this.findAllClientsReviews.name;
       this.typeOrmErrorHandlerBuilder

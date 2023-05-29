@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { HttpStatus, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import * as fs from "fs";
 import * as path from "path";
@@ -11,22 +11,36 @@ import { ReviewVideoEntity } from "../entities/review-video.entity";
 import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
 import { IMediaAccessoryService } from "../interfaces/services/media-accessory-service.interface";
+import { HttpExceptionHandlingBuilder } from "src/common/lib/error-handler/http-exception-handling.builder";
+import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 
 @Injectable()
-export class MediaAccessoryService implements IMediaAccessoryService {
+export class MediaAccessoryService
+  extends ErrorHandlerProps
+  implements IMediaAccessoryService
+{
   constructor(
     private readonly configService: ConfigService,
     private readonly mediaGeneralRepository: MediaGeneralRepository,
-  ) {}
+    private readonly httpExceptionHandlingBuilder: HttpExceptionHandlingBuilder,
+  ) {
+    super();
+  }
 
   isExistMediaFile(
     mediaType: string,
     file: Express.Multer.File | Express.Multer.File[],
   ): void {
     if (!file) {
-      throw new BadRequestException(
-        `${mediaType}을(를) 업로드 할 수 없습니다. 파일을 제시해주세요.`,
-      );
+      this.methodName = this.isExistMediaFile.name;
+      this.httpExceptionHandlingBuilder
+        .setMessage(
+          `${mediaType}을(를) 업로드 할 수 없습니다. 파일을 제시해주세요.`,
+        )
+        .setOccuredLocation("class")
+        .setOccuredClass(this.className, this.methodName)
+        .setExceptionStatus(HttpStatus.BAD_REQUEST)
+        .handle();
     }
   }
 
