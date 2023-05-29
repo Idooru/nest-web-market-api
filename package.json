@@ -68,7 +68,6 @@
     "swagger-ui-express": "^4.6.3",
     "typeorm": "0.3.12",
     "typeorm-naming-strategies": "^4.1.0",
-    "typeorm-seeding": "^1.6.1",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
