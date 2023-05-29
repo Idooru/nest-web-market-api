@@ -9,7 +9,9 @@ import { UserVerifyService } from "../../services/user-verify.service";
 import { SendVerifyCookieInterceptor } from "src/common/interceptors/verify/send-verify-cookie.interceptor";
 import { VerifyDataInterface } from "src/common/interceptors/interface/verify-data.dto";
 import { UserVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/user-verify-cookie.key";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("v1 검증 User API")
 @Controller("/api/v1/verify/user")
 export class UserVersionOneVerifyController {
   constructor(

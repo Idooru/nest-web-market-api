@@ -9,7 +9,9 @@ import { SendVerifyCookieInterceptor } from "src/common/interceptors/verify/send
 import { VerifyDataInterface } from "src/common/interceptors/interface/verify-data.dto";
 import { ProductVerifyService } from "../../services/product-verify.service";
 import { ProductVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("v1 검증 Product API")
 @Controller("/api/v1/verify/product")
 export class ProductVersionOneVerfiyController {
   constructor(

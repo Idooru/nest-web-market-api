@@ -42,7 +42,9 @@ import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-gen
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { ProductImageEntity } from "../entities/product-image.entity";
 import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("v1 관리자 Media API")
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
 @Controller("/api/v1/only-admin/media")

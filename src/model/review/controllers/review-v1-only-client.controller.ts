@@ -25,7 +25,9 @@ import { ReviewBundleService } from "../services/review-bundle.service";
 import { MediaDto } from "src/model/media/dto/media.dto";
 import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
 import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("v1 고객 Review API")
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)
 @Controller("/api/v1/only-client/review")

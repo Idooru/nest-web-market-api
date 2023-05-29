@@ -23,7 +23,9 @@ import { InquiryRequestGeneralService } from "../services/request/inquiry-reques
 import { EmailSenderLibrary } from "src/common/lib/email/email-sender.library";
 import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
 import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("v1 고객 Inquiry API")
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)
 @Controller("/api/v1/only-client/inquiry")

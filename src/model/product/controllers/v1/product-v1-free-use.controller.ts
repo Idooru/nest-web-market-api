@@ -3,7 +3,9 @@ import { ProductGeneralService } from "../../services/product-general.service";
 import { ProductEntity } from "../../entities/product.entity";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("v1 공용 Product API")
 @Controller("/api/v1/free-use/product")
 export class ProductVersionOneFreeUseController {
   constructor(private readonly productGeneralService: ProductGeneralService) {}

@@ -38,7 +38,9 @@ import { ReviewImageEntity } from "../entities/review-image.entity";
 import { ReviewVideoEntity } from "../entities/review-video.entity";
 import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("v1 고객 Media API")
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)
 @Controller("/api/v1/only-client/media")

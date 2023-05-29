@@ -36,7 +36,9 @@ import { ModifyProductPriceDto } from "../../dto/modify-product-price.dto";
 import { ModifyProductOriginDto } from "../../dto/modify-product-origin.dto";
 import { ModifyProductDesctiptionDto } from "../../dto/modify-product-description.dto";
 import { ModifyProductQuantityDto } from "../../dto/modify-product-quantity.dto";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("v1 관리자 Product API")
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
 @Controller("/api/v1/only-admin/product")

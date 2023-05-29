@@ -14,7 +14,9 @@ import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-gen
 import { UserEntity } from "../../entities/user.entity";
 import { UserGeneralService } from "../../services/user-general.service";
 import { userVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/user-verify-cookie.key";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("v1 관리자 User API")
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
 @Controller("/api/v1/only-admin/user")
