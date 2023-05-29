@@ -22,12 +22,12 @@ export class LibraryErrorHandlingBuilder {
     return this;
   }
 
-  public handle() {
-    return new LibraryErrorHandlingLibrary(
+  public handle(): void {
+    new LibraryErrorHandlingLibrary(
       this.error,
       this.className,
       this.methodName,
       this.libraryName,
-    );
+    ).main();
   }
 }

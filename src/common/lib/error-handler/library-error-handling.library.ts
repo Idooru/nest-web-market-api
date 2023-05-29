@@ -16,7 +16,7 @@ export class LibraryErrorHandlingLibrary
     this.main();
   }
 
-  private main() {
+  public main() {
     super.logging();
     this.throwException();
   }

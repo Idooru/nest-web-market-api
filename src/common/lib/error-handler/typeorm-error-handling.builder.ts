@@ -42,14 +42,14 @@ export class TypeOrmErrorHandlingBuilder {
     return this;
   }
 
-  public handle() {
-    return new TypeOrmErrorHandlingLibrary(
+  public handle(): void {
+    new TypeOrmErrorHandlingLibrary(
       this.error,
       this.className,
       this.methodName,
       this.handler,
       TypeOrmErrorHandlingBuilder.stuffs,
       TypeOrmErrorHandlingBuilder.stuffMeans,
-    );
+    ).main();
   }
 }

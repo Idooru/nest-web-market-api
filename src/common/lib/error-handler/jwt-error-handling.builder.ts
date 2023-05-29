@@ -24,12 +24,12 @@ export class JwtErrorHandlingBuilder {
     return this;
   }
 
-  public handle() {
-    return new JwtErrorHandlingLibrary(
+  public handle(): void {
+    new JwtErrorHandlingLibrary(
       this.error,
       this.className,
       this.methodName,
       this.whatToken,
-    );
+    ).main();
   }
 }

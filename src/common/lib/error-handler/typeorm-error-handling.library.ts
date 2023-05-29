@@ -21,7 +21,7 @@ export class TypeOrmErrorHandlingLibrary extends ErrorLogger {
     this.main();
   }
 
-  private main(): void {
+  public main(): void {
     super.logging();
     this.clearStuffs();
     this.handleEntityError();

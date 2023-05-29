@@ -18,7 +18,7 @@ export class JwtErrorHandlingLibrary extends ErrorLogger {
 
   private info: string;
 
-  private main(): void {
+  public main(): void {
     super.logging();
 
     if (this.whatToken) {
