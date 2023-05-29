@@ -9,6 +9,7 @@ import { MailerConfigurationModule } from "../config/mailer.config";
 import { TypeOrmErrorHandlingBuilder } from "./error-handler/typeorm-error-handling.builder";
 import { LibraryErrorHandlingBuilder } from "./error-handler/library-error-handling.builder";
 import { JwtErrorHandlingBuilder } from "./error-handler/jwt-error-handling.builder";
+import { HttpExceptionHandlingBuilder } from "./error-handler/http-exception-handling.builder";
 
 @Module({
   imports: [DotenvConfigurationModule, MailerConfigurationModule],
@@ -16,6 +17,7 @@ import { JwtErrorHandlingBuilder } from "./error-handler/jwt-error-handling.buil
     ConfigService,
     SecurityLibrary,
     EmailSenderLibrary,
+    HttpExceptionHandlingBuilder,
     TypeOrmErrorHandlingBuilder,
     LibraryErrorHandlingBuilder,
     JwtErrorHandlingBuilder,
@@ -25,6 +27,7 @@ import { JwtErrorHandlingBuilder } from "./error-handler/jwt-error-handling.buil
   exports: [
     SecurityLibrary,
     EmailSenderLibrary,
+    HttpExceptionHandlingBuilder,
     TypeOrmErrorHandlingBuilder,
     LibraryErrorHandlingBuilder,
     JwtErrorHandlingBuilder,
