@@ -9,7 +9,7 @@ import { SendVerifyCookieInterceptor } from "src/common/interceptors/verify/send
 import { VerifyDataInterface } from "src/common/interceptors/interface/verify-data.dto";
 import { ReviewVerifyService } from "../services/review-verify.service";
 import { ReviewVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/review-verify-cookie.key";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
 @ApiTags("v1 검증 Review API")
 @Controller("/api/v1/verify/review")
@@ -20,6 +20,11 @@ export class ReviewVersionOneVerifyController {
     private readonly reviewVerifyService: ReviewVerifyService,
   ) {}
 
+  @ApiOperation({
+    summary: "is exist review id",
+    description:
+      "파라미터로 받은 리뷰의 아이디가 데이터베이스에 존재하는지 검증합니다.",
+  })
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/existent/id/:id")
   async isExistReviewId(@Param("id") id: string): Promise<VerifyDataInterface> {

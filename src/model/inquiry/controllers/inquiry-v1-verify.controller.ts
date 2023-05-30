@@ -9,7 +9,7 @@ import { SendVerifyCookieInterceptor } from "src/common/interceptors/verify/send
 import { VerifyDataInterface } from "src/common/interceptors/interface/verify-data.dto";
 import { InquiryVerifyService } from "../services/inquiry-verify.service";
 import { InquiryVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/inquiry-verify-cookie.key";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
 @ApiTags("v1 검증 Inquiry API")
 @Controller("/api/v1/verify/inquiry")
@@ -20,6 +20,11 @@ export class InquiryVersionOneVerifyController {
     private readonly inquiryVerfiyService: InquiryVerifyService,
   ) {}
 
+  @ApiOperation({
+    summary: "is exist inquiry request id",
+    description:
+      "파라미터로 받은 문의 요청 아이디가 데이터베이스에 존재하는지 검증합니다.",
+  })
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/existent/id/:id")
   async isExistInquiryRequestId(

@@ -23,7 +23,7 @@ import { InquiryRequestGeneralService } from "../services/request/inquiry-reques
 import { EmailSenderLibrary } from "src/common/lib/email/email-sender.library";
 import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
 import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
 @ApiTags("v1 고객 Inquiry API")
 @UseGuards(IsClientGuard)
@@ -36,6 +36,11 @@ export class InquiryVersionOneOnlyClientController {
     private readonly emailSenderLibrary: EmailSenderLibrary,
   ) {}
 
+  @ApiOperation({
+    summary: "create inquiry request with image and video",
+    description:
+      "이미지와 비디오가 포함된 문의 요청을 생성합니다. 이 api를 실행하기 전에 무조건 문의 요청 이미지 혹은 비디오를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 문의 요청 이미지, 비디오 쿠키를 사용합니다.",
+  })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Post("/product/:productId/image&video")
@@ -98,6 +103,11 @@ export class InquiryVersionOneOnlyClientController {
     };
   }
 
+  @ApiOperation({
+    summary: "create inquiry request with image",
+    description:
+      "이미지가 포함된 문의 요청을 생성합니다. 이 api를 실행하기 전에 무조건 문의 요청 이미지를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 문의 요청 이미지 쿠키를 사용합니다.",
+  })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Post("/product/:productId/image")
@@ -155,6 +165,11 @@ export class InquiryVersionOneOnlyClientController {
     };
   }
 
+  @ApiOperation({
+    summary: "create inquiry request with video",
+    description:
+      "비디오가 포함된 문의 요청을 생성합니다. 이 api를 실행하기 전에 무조건 문의 요청 비디오를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 문의 요청 비디오 쿠키를 사용합니다.",
+  })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Post("/product/:productId/video")
@@ -212,6 +227,10 @@ export class InquiryVersionOneOnlyClientController {
     };
   }
 
+  @ApiOperation({
+    summary: "create inquiry request without media",
+    description: "미디어 없이 문의 요청을 생성합니다.",
+  })
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Post("/product/:productId")

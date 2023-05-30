@@ -9,7 +9,7 @@ import { SendVerifyCookieInterceptor } from "src/common/interceptors/verify/send
 import { VerifyDataInterface } from "src/common/interceptors/interface/verify-data.dto";
 import { ProductVerifyService } from "../../services/product-verify.service";
 import { ProductVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
 @ApiTags("v1 검증 Product API")
 @Controller("/api/v1/verify/product")
@@ -20,6 +20,11 @@ export class ProductVersionOneVerfiyController {
     private readonly productVerifyService: ProductVerifyService,
   ) {}
 
+  @ApiOperation({
+    summary: "is exist product id",
+    description:
+      "파라미터로 받은 상품의 아이디가 데이터베이스에 존재하는지 검증합니다.",
+  })
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/existent/id/:id")
   async isExistProductId(
@@ -34,6 +39,11 @@ export class ProductVersionOneVerfiyController {
     };
   }
 
+  @ApiOperation({
+    summary: "is exist product name",
+    description:
+      "파라미터로 받은 상품의 이름이 데이터베이스에 존재하는지 검증합니다.",
+  })
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/none-existent/name/:name")
   async isNotExistProductName(

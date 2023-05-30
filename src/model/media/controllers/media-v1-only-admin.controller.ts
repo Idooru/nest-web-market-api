@@ -42,7 +42,7 @@ import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-gen
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { ProductImageEntity } from "../entities/product-image.entity";
 import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
 @ApiTags("v1 관리자 Media API")
 @UseGuards(IsAdminGuard)
@@ -60,6 +60,11 @@ export class MediaVersionOneOnlyAdminController {
     private readonly mediaLoggerLibrary: MeidaLoggerLibrary,
   ) {}
 
+  @ApiOperation({
+    summary: "find uploaded product image",
+    description:
+      "업로드된 상품 이미지를 가져옵니다. 상품 이미지를 가져올 때는 쿠키에 기재된 정보를 사용합니다.",
+  })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/product/image")
   async findUploadedProductImage(
@@ -80,6 +85,11 @@ export class MediaVersionOneOnlyAdminController {
     };
   }
 
+  @ApiOperation({
+    summary: "find uploaded inquiry response images",
+    description:
+      "업로드된 문의 응답 이미지를 가져옵니다. 문의 응답 이미지를 가져올 때는 쿠키에 기재된 정보를 사용합니다.",
+  })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/inquiry/response/image")
   async findUploadedInquiryResponseImages(
@@ -105,6 +115,11 @@ export class MediaVersionOneOnlyAdminController {
     };
   }
 
+  @ApiOperation({
+    summary: "find uploaded inquiry response videos",
+    description:
+      "업로드된 문의 응답 비디오를 가져옵니다. 문의 응답 비디오를 가져올 때는 쿠키에 기재된 정보를 사용합니다.",
+  })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/inquiry/response/video")
   async findUploadedInquiryResponseVideos(
@@ -130,6 +145,11 @@ export class MediaVersionOneOnlyAdminController {
     };
   }
 
+  @ApiOperation({
+    summary: "upload product image",
+    description:
+      "상품 이미지를 업로드합니다. 상품 이미지는 api를 호출할 때 하나씩만 업로드가 가능합니다. 업로드된 상품 이미지는 쿠키에 기재되어 다른 api에서 사용이 가능합니다.",
+  })
   @UseInterceptors(JsonSendCookieInterceptor)
   @UseInterceptors(
     FileInterceptor(
@@ -166,6 +186,11 @@ export class MediaVersionOneOnlyAdminController {
     };
   }
 
+  @ApiOperation({
+    summary: "upload inquiry response image",
+    description:
+      "문의 응답 이미지를 업로드합니다. 문의 응답 이미지는 api를 호출할 때 최대 5개 업로드가 가능합니다. 업로드된 문의 응답 이미지는 쿠키에 기재되어 다른 api에서 사용이 가능합니다.",
+  })
   @UseInterceptors(JsonSendCookiesInterceptor)
   @UseInterceptors(
     FilesInterceptor(
@@ -212,6 +237,11 @@ export class MediaVersionOneOnlyAdminController {
     };
   }
 
+  @ApiOperation({
+    summary: "upload inquiry response video",
+    description:
+      "문의 응답 비디오를 업로드합니다. 문의 응답 비디오는 api를 호출할 때 최대 5개 업로드가 가능합니다. 업로드된 문의 응답 비디오는 쿠키에 기재되어 다른 api에서 사용이 가능합니다.",
+  })
   @UseInterceptors(JsonSendCookiesInterceptor)
   @UseInterceptors(
     FilesInterceptor(
@@ -258,6 +288,11 @@ export class MediaVersionOneOnlyAdminController {
     };
   }
 
+  @ApiOperation({
+    summary: "cancel product image upload",
+    description:
+      "상품 이미지 업로드를 취소합니다. 클라이언트에 저장되어 있던 상품 이미지 쿠키를 제거합니다.",
+  })
   @UseInterceptors(JsonClearCookieInterceptor)
   @Delete("/product/image")
   async cancelImageUploadForProduct(
@@ -280,6 +315,11 @@ export class MediaVersionOneOnlyAdminController {
     };
   }
 
+  @ApiOperation({
+    summary: "cancel inquiry response image upload",
+    description:
+      "문의 응답 이미지 업로드를 취소합니다. 클라이언트에 저장되어 있던 문의 응답 이미지 쿠키를 제거합니다.",
+  })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/inquiry/response/image")
   async cancelInquiryResponseImageUpload(
@@ -306,6 +346,11 @@ export class MediaVersionOneOnlyAdminController {
     };
   }
 
+  @ApiOperation({
+    summary: "cancel inquiry response video upload",
+    description:
+      "문의 응답 비디오 업로드를 취소합니다. 클라이언트에 저장되어 있던 문의 응답 비디오 쿠키를 제거합니다.",
+  })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/inquiry/response/video")
   async cancelInquiryResponseVideoUpload(

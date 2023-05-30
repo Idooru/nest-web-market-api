@@ -38,7 +38,7 @@ import { ReviewImageEntity } from "../entities/review-image.entity";
 import { ReviewVideoEntity } from "../entities/review-video.entity";
 import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
 @ApiTags("v1 고객 Media API")
 @UseGuards(IsClientGuard)
@@ -56,6 +56,11 @@ export class MediaVersionOneOnlyClientController {
     private readonly mediaLoggerLibrary: MeidaLoggerLibrary,
   ) {}
 
+  @ApiOperation({
+    summary: "find uploaded review image",
+    description:
+      "업로드된 리뷰 이미지를 가져옵니다. 리뷰 이미지를 가져올 때는 쿠키에 기재된 정보를 사용합니다.",
+  })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/review/image")
   async findUploadedReviewImage(
@@ -80,6 +85,11 @@ export class MediaVersionOneOnlyClientController {
     };
   }
 
+  @ApiOperation({
+    summary: "find uploaded review video",
+    description:
+      "업로드된 리뷰 비디오를 가져옵니다. 리뷰 비디오를 가져올 때는 쿠키에 기재된 정보를 사용합니다.",
+  })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/review/video")
   async findUploadedReviewVideo(
@@ -104,6 +114,11 @@ export class MediaVersionOneOnlyClientController {
     };
   }
 
+  @ApiOperation({
+    summary: "find uploaded inquiry request image",
+    description:
+      "업로드된 문의 요청 이미지를 가져옵니다. 문의 요청 이미지를 가져올 때는 쿠키에 기재된 정보를 사용합니다.",
+  })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/inquiry/request/image")
   async findUploadedInquiryRequestImage(
@@ -129,6 +144,11 @@ export class MediaVersionOneOnlyClientController {
     };
   }
 
+  @ApiOperation({
+    summary: "find uploaded inquiry request video",
+    description:
+      "업로드된 문의 요청 비디오를 가져옵니다. 문의 요청 비디오를 가져올 때는 쿠키에 기재된 정보를 사용합니다.",
+  })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/inquiry/request/video")
   async findUploadedInquiryRequestVideo(
@@ -154,6 +174,11 @@ export class MediaVersionOneOnlyClientController {
     };
   }
 
+  @ApiOperation({
+    summary: "upload review image",
+    description:
+      "리뷰 이미지를 업로드합니다. 리뷰 이미지는 api를 호출할 때 최대 5개 업로드가 가능합니다. 업로드된 리뷰 이미지는 쿠키에 기재되어 다른 api에서 사용이 가능합니다.",
+  })
   @UseInterceptors(JsonSendCookiesInterceptor)
   @UseInterceptors(
     FilesInterceptor(
@@ -190,6 +215,11 @@ export class MediaVersionOneOnlyClientController {
     };
   }
 
+  @ApiOperation({
+    summary: "upload review video",
+    description:
+      "리뷰 비디오를 업로드합니다. 리뷰 비디오는 api를 호출할 때 최대 5개 업로드가 가능합니다. 업로드된 리뷰 비디오는 쿠키에 기재되어 다른 api에서 사용이 가능합니다.",
+  })
   @UseInterceptors(JsonSendCookiesInterceptor)
   @UseInterceptors(
     FilesInterceptor(
@@ -226,6 +256,11 @@ export class MediaVersionOneOnlyClientController {
     };
   }
 
+  @ApiOperation({
+    summary: "upload inquiry request image",
+    description:
+      "문의 요청 이미지를 업로드합니다. 문의 요청 이미지는 api를 호출할 때 최대 5개 업로드가 가능합니다. 업로드된 문의 요청 이미지는 쿠키에 기재되어 다른 api에서 사용이 가능합니다.",
+  })
   @UseInterceptors(JsonSendCookiesInterceptor)
   @UseInterceptors(
     FilesInterceptor(
@@ -269,6 +304,11 @@ export class MediaVersionOneOnlyClientController {
     };
   }
 
+  @ApiOperation({
+    summary: "upload inquiry request video",
+    description:
+      "문의 요청 비디오를 업로드합니다. 문의 요청 비디오는 api를 호출할 때 최대 5개 업로드가 가능합니다. 업로드된 문의 요청 비디오는 쿠키에 기재되어 다른 api에서 사용이 가능합니다.",
+  })
   @UseInterceptors(JsonSendCookiesInterceptor)
   @UseInterceptors(
     FilesInterceptor(
@@ -312,6 +352,11 @@ export class MediaVersionOneOnlyClientController {
     };
   }
 
+  @ApiOperation({
+    summary: "cancel review image upload",
+    description:
+      "리뷰 이미지 업로드를 취소합니다. 클라이언트에 저장되어 있던 리뷰 이미지 쿠키를 제거합니다.",
+  })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/review/image")
   async cancelReviewImageUpload(
@@ -333,6 +378,11 @@ export class MediaVersionOneOnlyClientController {
     };
   }
 
+  @ApiOperation({
+    summary: "cancel review video upload",
+    description:
+      "리뷰 비디오 업로드를 취소합니다. 클라이언트에 저장되어 있던 리뷰 비디오 쿠키를 제거합니다.",
+  })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/review/video")
   async cancelReviewVideoUpload(
@@ -354,6 +404,11 @@ export class MediaVersionOneOnlyClientController {
     };
   }
 
+  @ApiOperation({
+    summary: "cancel inquiry request image upload",
+    description:
+      "문의 요청 이미지 업로드를 취소합니다. 클라이언트에 저장되어 있던 문의 요청 이미지 쿠키를 제거합니다.",
+  })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/inquiry/request/image")
   async cancelInquiryRequestImageUpload(
@@ -380,6 +435,11 @@ export class MediaVersionOneOnlyClientController {
     };
   }
 
+  @ApiOperation({
+    summary: "cancel inquiry request video upload",
+    description:
+      "문의 요청 비디오 업로드를 취소합니다. 클라이언트에 저장되어 있던 문의 요청 비디오 쿠키를 제거합니다.",
+  })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/inquiry/request/video")
   async cancelInquiryRequestVideoUpload(

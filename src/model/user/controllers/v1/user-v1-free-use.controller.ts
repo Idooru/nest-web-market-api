@@ -37,7 +37,7 @@ import { ModifyUserEmailDto } from "../../dtos/modify-user-email.dto";
 import { ModifyUserNicknameDto } from "../../dtos/modify-user-nickname.dto";
 import { ModifyUserPhonenumberDto } from "../../dtos/modify-user-phonenumber.dto";
 import { ModifyUserPasswordDto } from "../../dtos/modify-user-password.dto";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 @ApiTags("v1 공용 User API")
 @Controller("/api/v1/free-use/user")
 export class UserVersionOneFreeUseController {
@@ -48,6 +48,11 @@ export class UserVersionOneFreeUseController {
     private readonly emailSenderLibrary: EmailSenderLibrary,
   ) {}
 
+  @ApiOperation({
+    summary: "register",
+    description:
+      "회원 가입을 합니다. 회원가입을 할 때 사용된 이메일, 닉네임, 전화번호등이 이미 데이터베이스에 존재하면 에러를 반환합니다.",
+  })
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(
     new VerifyDataGuard(
@@ -82,6 +87,11 @@ export class UserVersionOneFreeUseController {
     };
   }
 
+  @ApiOperation({
+    summary: "get my profile",
+    description:
+      "본인의 프로필 정보를 가져옵니다. 본인 계정의 권한에 해당되는 정보를 가져옵니다.",
+  })
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Get("/profile")
@@ -107,6 +117,11 @@ export class UserVersionOneFreeUseController {
     };
   }
 
+  @ApiOperation({
+    summary: "login",
+    description:
+      "로그인을 합니다. 계정에 해당하는 이메일과 비밀번호가 일치하지 않다면 에러를 반환합니다. 로그인이 성공하면 access token과 refresh token이 담겨진 쿠키를 얻습니다.",
+  })
   @UseInterceptors(JsonJwtAuthInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Post("/login")
@@ -126,6 +141,11 @@ export class UserVersionOneFreeUseController {
     };
   }
 
+  @ApiOperation({
+    summary: "refresh token",
+    description:
+      "토큰을 재발급 받습니다. access token의 유효기간이 끝났다고 클라이언트에서 판단하면 이 api를 호출 할 수 있도록 합니다. 만약 refresh token의 유효기간이 끝났을 때 이 api를 호출 하면 access token, refresh token이 담긴 쿠키를 제거하여 로그아웃 됩니다.",
+  })
   @UseInterceptors(JsonJwtAuthInterceptor)
   @UseGuards(IsRefreshTokenAvailableGuard)
   @Get("/refresh-token")
@@ -143,6 +163,11 @@ export class UserVersionOneFreeUseController {
     };
   }
 
+  @ApiOperation({
+    summary: "logout",
+    description:
+      "로그아웃을 합니다. access token, refresh token이 담긴 쿠키를 제거합니다.",
+  })
   @UseInterceptors(JsonJwtLogoutInterceptor)
   @UseGuards(IsLoginGuard)
   @Delete("/logout")
@@ -154,6 +179,11 @@ export class UserVersionOneFreeUseController {
     };
   }
 
+  @ApiOperation({
+    summary: "modify user",
+    description:
+      "로그인을 했을 때 본인의 사용자 전체 column을 수정합니다. 수정하려는 이메일, 닉네임, 전화번호가 이미 데이터베이스에 존재 한다면 에러를 반환합니다.",
+  })
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(
     new VerifyDataGuard(
@@ -176,6 +206,11 @@ export class UserVersionOneFreeUseController {
     };
   }
 
+  @ApiOperation({
+    summary: "modify user email",
+    description:
+      "로그인을 했을 때 본인의 사용자 이메일 column을 수정합니다. 수정하려는 사용자의 이메일이 이미 데이터베이스에 존재한다면 에러를 반환합니다.",
+  })
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(
     new VerifyDataGuard(userVerifyCookieKey.is_not_exist.email_executed),
@@ -194,6 +229,11 @@ export class UserVersionOneFreeUseController {
     };
   }
 
+  @ApiOperation({
+    summary: "modify user nickname",
+    description:
+      "로그인을 했을 때 본인의 사용자 닉네임 column을 수정합니다. 수정하려는 사용자의 닉네임이 이미 데이터베이스에 존재한다면 에러를 반환합니다.",
+  })
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(
     new VerifyDataGuard(userVerifyCookieKey.is_not_exist.nickname_executed),
@@ -215,6 +255,11 @@ export class UserVersionOneFreeUseController {
     };
   }
 
+  @ApiOperation({
+    summary: "modify user phone number",
+    description:
+      "로그인을 했을 때 본인의 사용자 전화번호 column을 수정합니다. 수정하려는 사용자의 전화번호가 이미 데이터베이스에 존재한다면 에러를 반환합니다.",
+  })
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(
     new VerifyDataGuard(userVerifyCookieKey.is_not_exist.phonenumber_executed),
@@ -236,6 +281,10 @@ export class UserVersionOneFreeUseController {
     };
   }
 
+  @ApiOperation({
+    summary: "modify user password",
+    description: "로그인을 했을 때 본인의 사용자 비밀번호 column을 수정합니다.",
+  })
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/password")
@@ -254,6 +303,7 @@ export class UserVersionOneFreeUseController {
     };
   }
 
+  @ApiOperation({ summary: "secession", description: "회원 탈퇴를 합니다." })
   @UseInterceptors(JsonJwtLogoutInterceptor)
   @UseGuards(new VerifyDataGuard(userVerifyCookieKey.is_exist.id_executed))
   @UseGuards(IsLoginGuard)
@@ -270,6 +320,11 @@ export class UserVersionOneFreeUseController {
     };
   }
 
+  @ApiOperation({
+    summary: "find email",
+    description:
+      "이메일을 찾습니다. 본인 인증을 하기 위해서 실명과 전화번호를 사용합니다.",
+  })
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(
     new VerifyDataGuard(
@@ -292,6 +347,11 @@ export class UserVersionOneFreeUseController {
     };
   }
 
+  @ApiOperation({
+    summary: "reset password",
+    description:
+      "비밀번호를 변경합니다. 본인의 이메일과 변경할 비밀번호를 사용합니다.",
+  })
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(new VerifyDataGuard(userVerifyCookieKey.is_exist.email_executed))
   @UseGuards(IsNotLoginGuard)

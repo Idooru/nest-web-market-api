@@ -23,7 +23,7 @@ import { InquiryResponseGeneralService } from "../services/response/inquiry-resp
 import { EmailSenderLibrary } from "src/common/lib/email/email-sender.library";
 import { inquiryVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/inquiry-verify-cookie.key";
 import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
 @ApiTags("v1 관리자 Inquiry API")
 @UseGuards(IsAdminGuard)
@@ -36,6 +36,11 @@ export class InquiryVersionOneOnlyAdminController {
     private readonly emailSenderLibrary: EmailSenderLibrary,
   ) {}
 
+  @ApiOperation({
+    summary: "create inquiry response with image and video",
+    description:
+      "이미지와 비디오가 포함된 문의 응답을 생성합니다. 이 api를 실행하기 전에 무조건 문의 응답 이미지 혹은 비디오를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 문의 응답 이미지, 비디오 쿠키를 사용합니다.",
+  })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @UseGuards(
     new VerifyDataGuard(inquiryVerifyCookieKey.response.is_exist.id_executed),
@@ -103,6 +108,11 @@ export class InquiryVersionOneOnlyAdminController {
     };
   }
 
+  @ApiOperation({
+    summary: "create inquiry response with image",
+    description:
+      "이미지가 포함된 문의 응답을 생성합니다. 이 api를 실행하기 전에 무조건 문의 응답 이미지를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 문의 응답 이미지 쿠키를 사용합니다.",
+  })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @UseGuards(
     new VerifyDataGuard(inquiryVerifyCookieKey.response.is_exist.id_executed),
@@ -165,6 +175,11 @@ export class InquiryVersionOneOnlyAdminController {
     };
   }
 
+  @ApiOperation({
+    summary: "create inquiry response with video",
+    description:
+      "비디오가 포함된 문의 응답을 생성합니다. 이 api를 실행하기 전에 무조건 문의 응답 비디오를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 문의 응답 비디오 쿠키를 사용합니다.",
+  })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @UseGuards(
     new VerifyDataGuard(inquiryVerifyCookieKey.response.is_exist.id_executed),
@@ -227,6 +242,10 @@ export class InquiryVersionOneOnlyAdminController {
     };
   }
 
+  @ApiOperation({
+    summary: "create inquiry response without media",
+    description: "미디어 없이 문의 응답을 생성합니다.",
+  })
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(
     new VerifyDataGuard(inquiryVerifyCookieKey.response.is_exist.id_executed),

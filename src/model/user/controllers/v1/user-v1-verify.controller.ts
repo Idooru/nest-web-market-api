@@ -9,7 +9,7 @@ import { UserVerifyService } from "../../services/user-verify.service";
 import { SendVerifyCookieInterceptor } from "src/common/interceptors/verify/send-verify-cookie.interceptor";
 import { VerifyDataInterface } from "src/common/interceptors/interface/verify-data.dto";
 import { UserVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/user-verify-cookie.key";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
 @ApiTags("v1 검증 User API")
 @Controller("/api/v1/verify/user")
@@ -19,6 +19,11 @@ export class UserVersionOneVerifyController {
     private readonly userVerifyService: UserVerifyService,
   ) {}
 
+  @ApiOperation({
+    summary: "is exist user id",
+    description:
+      "파라미터로 받은 사용자의 아이디가 데이터베이스에 존재하는지 검증합니다.",
+  })
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/existent/id/:id")
   async isExistUserId(
@@ -32,6 +37,11 @@ export class UserVersionOneVerifyController {
     };
   }
 
+  @ApiOperation({
+    summary: "is exist user email",
+    description:
+      "파라미터로 받은 사용자의 이메일이 데이터베이스에 존재하는지 검증합니다.",
+  })
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/existent/email/:email")
   async isExistUserEmail(
@@ -45,6 +55,11 @@ export class UserVersionOneVerifyController {
     };
   }
 
+  @ApiOperation({
+    summary: "is not exist user email",
+    description:
+      "파라미터로 받은 사용자의 이메일이 데이터베이스에 존재하지 않는지 검증합니다.",
+  })
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/none-existent/email/:email")
   async isNotExistUserEmail(
@@ -59,6 +74,11 @@ export class UserVersionOneVerifyController {
     };
   }
 
+  @ApiOperation({
+    summary: "is exist user realname",
+    description:
+      "파라미터로 받은 사용자의 실명이 데이터베이스에 존재하는지 검증합니다.",
+  })
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/existent/realname/:realname")
   async isExistUserRealName(
@@ -72,6 +92,11 @@ export class UserVersionOneVerifyController {
     };
   }
 
+  @ApiOperation({
+    summary: "is not exist user nickname",
+    description:
+      "파라미터로 받은 사용자의 별명이 데이터베이스에 존재하지 않는지 검증합니다.",
+  })
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/none-existent/nickname/:nickname")
   async isNotExistUserNickName(
@@ -86,6 +111,11 @@ export class UserVersionOneVerifyController {
     };
   }
 
+  @ApiOperation({
+    summary: "is exist user phonenumber",
+    description:
+      "파라미터로 받은 사용자의 전화번호가 데이터베이스에 존재하는지 검증합니다.",
+  })
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/existent/phonenumber/:phonenumber")
   async isExistUserPhoneNumber(
@@ -99,6 +129,11 @@ export class UserVersionOneVerifyController {
     };
   }
 
+  @ApiOperation({
+    summary: "is not exist user phonenumber",
+    description:
+      "파라미터로 받은 사용자의 전화번호가 데이터베이스에 존재하지 않는지 검증합니다.",
+  })
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/none-existent/phonenumber/:phonenumber")
   async isNotExistUserPhoneNumber(
