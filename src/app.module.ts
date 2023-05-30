@@ -8,6 +8,8 @@ import { DotenvConfigurationModule } from "./common/config/dotenv.config";
 import { TypeormConfigurationModule } from "./common/config/typeorm.config";
 import { MediaModule } from "./model/media/media.module";
 import { MulterConfigurationModule } from "./common/config/multer.config";
+import { AppController } from "./app.controller";
+import { LibraryModule } from "./common/lib/library.module";
 
 @Module({
   imports: [
@@ -19,8 +21,9 @@ import { MulterConfigurationModule } from "./common/config/multer.config";
     ProductModule,
     MediaModule,
     ReviewModule,
+    LibraryModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule implements NestModule {
