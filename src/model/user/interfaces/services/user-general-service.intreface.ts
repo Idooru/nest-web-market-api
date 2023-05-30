@@ -5,7 +5,7 @@ import { UserEntity } from "../../entities/user.entity";
 export interface IUserGeneralService {
   findAllUsersFromLatest(): Promise<UserEntity[]>;
   findAllUsersFromOldest(): Promise<UserEntity[]>;
-  findClientUserInfoFromAdminWithId(id: string): Promise<UserEntity>;
+  findClientUserInfo(id: string): Promise<UserEntity>;
   findClientUserProfileInfoWithId(id: string): Promise<UserEntity>;
   findAdminUserProfileInfoWithId(id: string): Promise<UserEntity>;
   createUserBase(registerUserDto: RegisterUserDto): Promise<UserEntity>;

@@ -111,7 +111,7 @@ export class InquiryVersionOneOnlyClientController {
   @UseInterceptors(JsonClearCookiesInterceptor)
   @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Post("/product/:productId/image")
-  async createInquiryWithImage(
+  async createInquiryRequestWithImage(
     @Param("productId") productId: string,
     @MediaCookiesParser(inquiryMediaCookieKey.request.image_url_cookie)
     inquiryRequestImgCookies: MediaDto[],
@@ -173,7 +173,7 @@ export class InquiryVersionOneOnlyClientController {
   @UseInterceptors(JsonClearCookiesInterceptor)
   @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Post("/product/:productId/video")
-  async createInquiryWithVideo(
+  async createInquiryRequestWithVideo(
     @Param("productId") productId: string,
     @MediaCookiesParser(inquiryMediaCookieKey.request.video_url_cookie)
     inquiryRequestVdoCookies: MediaDto[],
@@ -234,7 +234,7 @@ export class InquiryVersionOneOnlyClientController {
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Post("/product/:productId")
-  async createInquiryWithoutMedia(
+  async createInquiryRequestWithoutMedia(
     @Param("productId") productId: string,
     @Body() inquiryRequestDto: InquiryRequestDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,

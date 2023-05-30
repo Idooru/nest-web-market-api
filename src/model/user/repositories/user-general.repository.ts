@@ -340,7 +340,7 @@ export class UserGeneralRepository
     }
   }
 
-  async findClientUserInfoFromAdminWithId(id: string): Promise<UserEntity> {
+  async findClientUserInfo(id: string): Promise<UserEntity> {
     try {
       return await this.userRepository
         .createQueryBuilder()
@@ -359,7 +359,7 @@ export class UserGeneralRepository
         .where("user.id = :id", { id })
         .getOneOrFail();
     } catch (err) {
-      this.methodName = this.findClientUserInfoFromAdminWithId.name;
+      this.methodName = this.findClientUserInfo.name;
       this.typeOrmErrorHandlerBuilder
         .setErrorHandler(UserErrorHandler)
         .setError(err)

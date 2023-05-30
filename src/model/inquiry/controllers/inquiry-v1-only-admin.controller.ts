@@ -118,7 +118,7 @@ export class InquiryVersionOneOnlyAdminController {
     new VerifyDataGuard(inquiryVerifyCookieKey.response.is_exist.id_executed),
   )
   @Post("/inquiry-request/:inquiryRequestId/user/:userId/image")
-  async createInquiryWithImage(
+  async createInquiryResponseWithImage(
     @Param("inquiryRequestId") inquiryRequestId: string,
     @Param("userId") userId: string,
     @MediaCookiesParser(inquiryMediaCookieKey.response.image_url_cookie)
@@ -185,7 +185,7 @@ export class InquiryVersionOneOnlyAdminController {
     new VerifyDataGuard(inquiryVerifyCookieKey.response.is_exist.id_executed),
   )
   @Post("/inquiry-request/:inquiryRequestId/user/:userId/video")
-  async createInquiryWithVideo(
+  async createInquiryResponseWithVideo(
     @Param("inquiryRequestId") inquiryRequestId: string,
     @Param("userId") userId: string,
     @MediaCookiesParser(inquiryMediaCookieKey.response.video_url_cookie)
@@ -251,7 +251,7 @@ export class InquiryVersionOneOnlyAdminController {
     new VerifyDataGuard(inquiryVerifyCookieKey.response.is_exist.id_executed),
   )
   @Post("/inquiry-request/:inquiryRequestId/user/:userId")
-  async createInquiryWithoutMedia(
+  async createInquiryResponseWithoutMedia(
     @Param("inquiryRequestId") inquiryRequestId: string,
     @Param("userId") userId: string,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,

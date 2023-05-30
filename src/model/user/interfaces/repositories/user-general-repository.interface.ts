@@ -28,7 +28,7 @@ export interface IUserGeneralRepository {
   findUserWithPhoneNumber(phonenumber: string): Promise<UserEntity | null>;
   findClientUserProfileInfoWithId(id: string): Promise<UserEntity>;
   findAdminUserProfileInfoWithId(id: string): Promise<UserEntity>;
-  findClientUserInfoFromAdminWithId(id: string): Promise<UserEntity>;
+  findClientUserInfo(id: string): Promise<UserEntity>;
   resetPassword(id: string, hashed: string): Promise<void>;
   createUserProfile(
     registerUserProfileDto: RegisterUserProfileDto,

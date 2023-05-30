@@ -34,10 +34,8 @@ export class UserGeneralService
     return await this.userGeneralRepository.findAllUsersFromOldest();
   }
 
-  async findClientUserInfoFromAdminWithId(id: string): Promise<UserEntity> {
-    return await this.userGeneralRepository.findClientUserInfoFromAdminWithId(
-      id,
-    );
+  async findClientUserInfo(id: string): Promise<UserEntity> {
+    return await this.userGeneralRepository.findClientUserInfo(id);
   }
 
   async findClientUserProfileInfoWithId(id: string): Promise<UserEntity> {
