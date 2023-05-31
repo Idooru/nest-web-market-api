@@ -1,8 +1,8 @@
 import { MediaDto } from "src/model/media/dto/media.dto";
-import { ReviewRequestDto } from "./review-request.dto";
+import { ReviewDto } from "./review-request.dto";
 
 export class PushReviewMediaDto {
-  reviewRequestDto: ReviewRequestDto;
+  reviewRequestDto: ReviewDto;
   reviewImgCookies?: MediaDto[];
   reviewVdoCookies?: MediaDto[];
 }

@@ -1,5 +1,5 @@
 import { MediaDto } from "src/model/media/dto/media.dto";
-import { ReviewRequestDto } from "../../dto/review-request.dto";
+import { ReviewDto } from "../../dto/review-request.dto";
 import { ReviewEntity } from "../../entities/review.entity";
 import { ReviewImageEntity } from "src/model/media/entities/review-image.entity";
 import { ReviewVideoEntity } from "src/model/media/entities/review-video.entity";
@@ -9,19 +9,19 @@ import { PushReviewVideoDto } from "../../dto/push-review-video.dto";
 export interface IReviewAccessoryService {
   pushMoreThenTwoReviewImageInDto(
     reviewImgCookies: MediaDto[],
-    reviewRequestDto: ReviewRequestDto,
+    reviewRequestDto: ReviewDto,
   ): Promise<void>;
   pushOneReviewImageInDto(
     reviewImgCookies: MediaDto[],
-    reviewRequestDto: ReviewRequestDto,
+    reviewRequestDto: ReviewDto,
   ): Promise<void>;
   pushMoreThenTwoReviewVideoInDto(
     reviewVdoCookies: MediaDto[],
-    reviewRequestDto: ReviewRequestDto,
+    reviewRequestDto: ReviewDto,
   ): Promise<void>;
   pushOneReviewVideoInDto(
     reviewVdoCookies: MediaDto[],
-    reviewRequestDto: ReviewRequestDto,
+    reviewRequestDto: ReviewDto,
   ): Promise<void>;
   insertReviewIdOnMoreThenTwoReviewImage(
     reviewImages: ReviewImageEntity[],
@@ -51,22 +51,22 @@ export interface IReviewAccessoryService {
   pushReviewVideos(pushReviewVideoDto: PushReviewVideoDto): Promise<void>;
   insertReviewImages(
     reviewImgCookies: MediaDto[],
-    reviewRequestDto: ReviewRequestDto,
+    reviewRequestDto: ReviewDto,
     review: ReviewEntity,
   ): Promise<void>;
   insertReviewVideos(
     reviewVdoCookies: MediaDto[],
-    reviewRequestDto: ReviewRequestDto,
+    reviewRequestDto: ReviewDto,
     review: ReviewEntity,
   ): Promise<void>;
   modifyReviewImages(
     reviewImgCookies: MediaDto[],
-    reviewRequestDto: ReviewRequestDto,
+    reviewRequestDto: ReviewDto,
     review: ReviewEntity,
   ): Promise<void>;
   modifyReviewVideos(
     reviewVdoCookies: MediaDto[],
-    reviewRequestDto: ReviewRequestDto,
+    reviewRequestDto: ReviewDto,
     review: ReviewEntity,
   ): Promise<void>;
   deleteReviewImages(

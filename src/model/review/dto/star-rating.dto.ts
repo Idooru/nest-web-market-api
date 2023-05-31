@@ -1,6 +1,6 @@
-import { ReviewRequestDto } from "./review-request.dto";
+import { ReviewDto } from "./review-request.dto";
 
 export class StarRatingDto {
-  reviewRequestDto: ReviewRequestDto;
+  reviewRequestDto: ReviewDto;
   productId: string;
 }

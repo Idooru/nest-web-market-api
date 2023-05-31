@@ -1,4 +1,4 @@
-import { ReviewRequestDto } from "../dto/review-request.dto";
+import { ReviewDto } from "../dto/review-request.dto";
 import { Injectable } from "@nestjs/common";
 import { ReviewImageEntity } from "src/model/media/entities/review-image.entity";
 import { ReviewVideoEntity } from "src/model/media/entities/review-video.entity";
@@ -19,7 +19,7 @@ export class ReviewAccessoryService implements IReviewAccessoryService {
 
   async pushMoreThenTwoReviewImageInDto(
     reviewImgCookies: MediaDto[],
-    reviewRequestDto: ReviewRequestDto,
+    reviewRequestDto: ReviewDto,
   ): Promise<void> {
     const promises = reviewImgCookies.map(async (reviewImgCookie) => {
       const image = await this.mediaGeneralRepository.findReviewImageWithUrl(
@@ -34,7 +34,7 @@ export class ReviewAccessoryService implements IReviewAccessoryService {
 
   async pushOneReviewImageInDto(
     reviewImgCookies: MediaDto[],
-    reviewRequestDto: ReviewRequestDto,
+    reviewRequestDto: ReviewDto,
   ): Promise<void> {
     const image = await this.mediaGeneralRepository.findReviewImageWithUrl(
       reviewImgCookies[0].url,
@@ -45,7 +45,7 @@ export class ReviewAccessoryService implements IReviewAccessoryService {
 
   async pushMoreThenTwoReviewVideoInDto(
     reviewVdoCookies: MediaDto[],
-    reviewRequestDto: ReviewRequestDto,
+    reviewRequestDto: ReviewDto,
   ): Promise<void> {
     const promises = reviewVdoCookies.map(async (reviewVdoCookie) => {
       const video = await this.mediaGeneralRepository.findReviewVideoWithUrl(
@@ -60,7 +60,7 @@ export class ReviewAccessoryService implements IReviewAccessoryService {
 
   async pushOneReviewVideoInDto(
     reviewVdoCookies: MediaDto[],
-    reviewRequestDto: ReviewRequestDto,
+    reviewRequestDto: ReviewDto,
   ): Promise<void> {
     const video = await this.mediaGeneralRepository.findReviewVideoWithUrl(
       reviewVdoCookies[0].url,
@@ -193,7 +193,7 @@ export class ReviewAccessoryService implements IReviewAccessoryService {
 
   async insertReviewImages(
     reviewImgCookies: MediaDto[],
-    reviewRequestDto: ReviewRequestDto,
+    reviewRequestDto: ReviewDto,
     review: ReviewEntity,
   ): Promise<void> {
     if (reviewImgCookies.length >= 2) {
@@ -211,7 +211,7 @@ export class ReviewAccessoryService implements IReviewAccessoryService {
 
   async insertReviewVideos(
     reviewVdoCookies: MediaDto[],
-    reviewRequestDto: ReviewRequestDto,
+    reviewRequestDto: ReviewDto,
     review: ReviewEntity,
   ): Promise<void> {
     if (reviewVdoCookies.length >= 2) {
@@ -229,7 +229,7 @@ export class ReviewAccessoryService implements IReviewAccessoryService {
 
   async modifyReviewImages(
     reviewImgCookies: MediaDto[],
-    reviewRequestDto: ReviewRequestDto,
+    reviewRequestDto: ReviewDto,
     review: ReviewEntity,
   ): Promise<void> {
     if (reviewImgCookies.length >= 2) {
@@ -265,7 +265,7 @@ export class ReviewAccessoryService implements IReviewAccessoryService {
 
   async modifyReviewVideos(
     reviewVdoCookies: MediaDto[],
-    reviewRequestDto: ReviewRequestDto,
+    reviewRequestDto: ReviewDto,
     review: ReviewEntity,
   ): Promise<void> {
     if (reviewVdoCookies.length >= 2) {
