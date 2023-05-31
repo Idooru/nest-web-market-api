@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, OneToMany, OneToOne } from "typeorm";
-import { IsNotEmpty, IsPositive, IsString } from "class-validator";
+import { IsEnum, IsNotEmpty, IsPositive, IsString } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
 import { StarRateEntity } from "../../review/entities/star-rate.entity";
@@ -7,6 +7,10 @@ import { ProductImageEntity } from "src/model/media/entities/product-image.entit
 import { InquiryRequestEntity } from "../../inquiry/entities/inquiry-request.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
+import {
+  ProductCategory,
+  productCategory,
+} from "../types/product-category.type";
 
 @Entity({ name: "products", synchronize: true })
 export class ProductEntity extends CommonEntity {
@@ -25,10 +29,11 @@ export class ProductEntity extends CommonEntity {
   @Column({ type: "varchar", length: 20, nullable: false })
   origin: string;
 
+  @IsEnum(productCategory)
   @IsString()
   @IsNotEmpty()
-  @Column({ type: "varchar", length: 20, nullable: false })
-  type: string;
+  @Column({ type: "enum", enum: productCategory })
+  category: ProductCategory;
 
   @IsString()
   @IsNotEmpty()

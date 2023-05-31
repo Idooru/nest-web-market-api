@@ -6,12 +6,12 @@ export interface ProductSelectProperty {
 }
 
 export const productSelectProperty: ProductSelectProperty = {
-  productsId: ["product.id", "product.name", "product.type"],
+  productsId: ["product.id", "product.name", "product.category"],
   products: [
     "product.id",
     "product.name",
     "product.price",
-    "product.type",
+    "product.category",
     "Image.url",
     "StarRate.averageScore",
     "Review",
@@ -28,7 +28,7 @@ export const productSelectProperty: ProductSelectProperty = {
     "product.name",
     "product.price",
     "product.origin",
-    "product.type",
+    "product.category",
     "product.description",
     "product.quantity",
     "Image.url",

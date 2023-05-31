@@ -6,7 +6,7 @@ export class CreateProductDto extends PickType(ProductEntity, [
   "name",
   "price",
   "origin",
-  "type",
+  "category",
   "description",
 ] as const) {
   @ApiProperty({

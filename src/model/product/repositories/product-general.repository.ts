@@ -10,6 +10,7 @@ import { ProductSelectProperty } from "src/common/config/repository-select-confi
 import { TypeOrmErrorHandlingBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
 import { IProductGeneralRepository } from "../interfaces/repositories/product-general-repository.interface";
 import { ProductErrorHandler } from "../error/product-error.handler";
+import { ProductCategory } from "../types/product-category.type";
 
 @Injectable()
 export class ProductGeneralRepository
@@ -287,16 +288,19 @@ export class ProductGeneralRepository
     }
   }
 
-  async modifyProductType(id: string, type: string): Promise<void> {
+  async modifyProductCategory(
+    id: string,
+    category: ProductCategory,
+  ): Promise<void> {
     try {
       await this.productRepository
         .createQueryBuilder()
         .update(ProductEntity)
-        .set({ type })
+        .set({ category })
         .where("id = :id", { id })
         .execute();
     } catch (err) {
-      this.methodName = this.modifyProductType.name;
+      this.methodName = this.modifyProductCategory.name;
       this.typeOrmErrorHandlerBuilder
         .setErrorHandler(ProductErrorHandler)
         .setError(err)

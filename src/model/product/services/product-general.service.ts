@@ -13,6 +13,7 @@ import { ProductInsertRepository } from "../repositories/product-insert.reposito
 import { ProductAccessoryService } from "./product-accessory.service";
 import { MediaDto } from "src/model/media/dto/media.dto";
 import { IProductGeneralService } from "../interfaces/services/product-general-service.interface";
+import { ProductCategory } from "../types/product-category.type";
 
 @Injectable()
 export class ProductGeneralService implements IProductGeneralService {
@@ -130,8 +131,11 @@ export class ProductGeneralService implements IProductGeneralService {
     await this.productGeneralRepository.modifyProductOrigin(id, origin);
   }
 
-  async modifyProductType(id: string, type: string): Promise<void> {
-    await this.productGeneralRepository.modifyProductType(id, type);
+  async modifyProductCategory(
+    id: string,
+    type: ProductCategory,
+  ): Promise<void> {
+    await this.productGeneralRepository.modifyProductCategory(id, type);
   }
 
   async modifyProductDescription(
