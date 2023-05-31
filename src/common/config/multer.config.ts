@@ -30,6 +30,8 @@ export class MulterConfigService {
 
     this.logger.log("Create folders about image into uploads folder");
     try {
+      await fsPromises.mkdir(path.join(__dirname, "../../../uploads/images"));
+
       const modelPromises = stuffForImages.map(async (model) => {
         return await fsPromises.mkdir(
           path.join(__dirname, `../../../uploads/images/${model}`),
