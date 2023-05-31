@@ -1,5 +1,5 @@
 import { MediaDto } from "src/model/media/dto/media.dto";
-import { ReviewDto } from "../../dto/review-request.dto";
+import { ReviewDto } from "../../dto/review.dto";
 import { ReviewEntity } from "../../entities/review.entity";
 import { ReviewImageEntity } from "src/model/media/entities/review-image.entity";
 import { ReviewVideoEntity } from "src/model/media/entities/review-video.entity";

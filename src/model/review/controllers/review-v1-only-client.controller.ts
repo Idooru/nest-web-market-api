@@ -20,7 +20,7 @@ import { StarRateGeneralService } from "../services/star-rate-general.service";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
 import { VerifyDataGuard } from "src/common/guards/verify/verify-data.guard";
-import { ReviewDto } from "../dto/review-request.dto";
+import { ReviewDto } from "../dto/review.dto";
 import { ReviewBundleService } from "../services/review-bundle.service";
 import { MediaDto } from "src/model/media/dto/media.dto";
 import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";

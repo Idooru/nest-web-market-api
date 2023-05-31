@@ -1,4 +1,4 @@
-import { ReviewDto } from "./review-request.dto";
+import { ReviewDto } from "./review.dto";
 
 export class StarRatingDto {
   reviewRequestDto: ReviewDto;

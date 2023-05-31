@@ -1,7 +1,7 @@
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
-import { ReviewDto } from "./review-request.dto";
+import { ReviewDto } from "./review.dto";
 
 export class CreateReviewDto {
   reviewRequestDto: ReviewDto;
