@@ -37,6 +37,7 @@ import { ModifyProductOriginDto } from "../../dto/modify-product-origin.dto";
 import { ModifyProductDesctiptionDto } from "../../dto/modify-product-description.dto";
 import { ModifyProductQuantityDto } from "../../dto/modify-product-quantity.dto";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ModifyProductCategoryDto } from "../../dto/modify-product-category.dto";
 
 @ApiTags("v1 관리자 Product API")
 @UseGuards(IsAdminGuard)
@@ -211,6 +212,25 @@ export class ProductVersionOneOnlyAdminController {
     return {
       statusCode: 201,
       message: `id(${id})에 해당하는 상품의 원산지를 수정하였습니다.`,
+    };
+  }
+
+  @ApiOperation({
+    summary: "modify product category",
+    description: "상품 아이디에 해당하는 상품의 카테고리 column을 수정합니다.",
+  })
+  @UseInterceptors(JsonGeneralInterceptor)
+  @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
+  @Patch("/:id/category")
+  async modifyProductCategory(
+    @Param("id") id: string,
+    @Body() { category }: ModifyProductCategoryDto,
+  ) {
+    await this.productGeneralService.modifyProductCategory(id, category);
+
+    return {
+      statusCode: 201,
+      message: `id(${id})에 해당하는 상품의 카테고리를 수정하였습니다.`,
     };
   }
 
