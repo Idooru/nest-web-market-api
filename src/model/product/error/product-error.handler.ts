@@ -1,6 +1,5 @@
 import { BadRequestException, NotFoundException } from "@nestjs/common";
 import { EntityErrorHandler } from "src/common/classes/abstract/entity-error-handler";
-import { TypeOrmException } from "src/common/errors/typeorm.exception";
 import { Throwable } from "src/common/lib/error-handler/interface/throwable.interface";
 import { TypeORMError } from "typeorm";
 
@@ -20,7 +19,7 @@ export class ProductErrorHandler
   public handle(error: TypeORMError): void {
     this.notFound(error);
     this.badRequest(error);
-    this.throwException(error);
+    super.throwException(error);
   }
 
   private notFound(error: TypeORMError): void {
@@ -71,9 +70,5 @@ export class ProductErrorHandler
         `수량을 마이너스(${quantityStuff.value()})로 수정 할 수 없습니다.`,
       );
     }
-  }
-
-  public throwException(error: TypeORMError): never {
-    throw new TypeOrmException(error);
   }
 }

@@ -14,6 +14,7 @@ export class InquiryResponseImageErrorHandler extends EntityErrorHandler {
 
   public handle(error: TypeORMError): void {
     this.notFound(error);
+    super.throwException(error);
   }
 
   private notFound(error: TypeORMError): void {

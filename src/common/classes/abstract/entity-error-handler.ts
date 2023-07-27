@@ -1,6 +1,7 @@
 import { ErrorHandlerStrategy } from "src/common/lib/error-handler/interface/error-handler-strategy.interface";
 import { TypeORMError } from "typeorm";
 import { ErrorCaseProp } from "./error-case-prop";
+import { TypeOrmException } from "src/common/errors/typeorm.exception";
 
 export abstract class EntityErrorHandler
   extends ErrorCaseProp
@@ -11,4 +12,8 @@ export abstract class EntityErrorHandler
   }
 
   abstract handle(error: TypeORMError): void;
+
+  public throwException(error: Error): never {
+    throw new TypeOrmException(error);
+  }
 }

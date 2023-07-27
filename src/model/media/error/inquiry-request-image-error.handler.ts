@@ -1,6 +1,5 @@
 import { NotFoundException } from "@nestjs/common";
 import { EntityErrorHandler } from "src/common/classes/abstract/entity-error-handler";
-import { TypeOrmException } from "src/common/errors/typeorm.exception";
 import { Throwable } from "src/common/lib/error-handler/interface/throwable.interface";
 import { TypeORMError } from "typeorm";
 
@@ -19,7 +18,7 @@ export class InquiryRequestImageErrorHandler
 
   public handle(error: TypeORMError) {
     this.notFound(error);
-    this.throwException(error);
+    super.throwException(error);
   }
 
   private notFound(error: TypeORMError): void {
@@ -33,9 +32,5 @@ export class InquiryRequestImageErrorHandler
         `해당 url(${urlStuff.value()})을 가진 문의 요청 이미지를 찾을 수 없습니다. 검증 API를 먼저 사용해주세요.`,
       );
     }
-  }
-
-  public throwException(error: Error): never {
-    throw new TypeOrmException(error);
   }
 }

@@ -1,6 +1,5 @@
 import { NotFoundException } from "@nestjs/common";
 import { EntityErrorHandler } from "src/common/classes/abstract/entity-error-handler";
-import { TypeOrmException } from "src/common/errors/typeorm.exception";
 import { Throwable } from "src/common/lib/error-handler/interface/throwable.interface";
 import { TypeORMError } from "typeorm";
 
@@ -19,7 +18,7 @@ export class InquiryRequestErrorHandler
 
   public handle(error: TypeORMError): void {
     this.notFound(error);
-    this.throwException(error);
+    super.throwException(error);
   }
 
   private notFound(error: TypeORMError): void {
@@ -35,7 +34,4 @@ export class InquiryRequestErrorHandler
     }
   }
 
-  public throwException(error: Error): never {
-    throw new TypeOrmException(error);
-  }
 }

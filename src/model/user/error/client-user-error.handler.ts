@@ -1,6 +1,5 @@
 import { NotFoundException } from "@nestjs/common";
 import { EntityErrorHandler } from "src/common/classes/abstract/entity-error-handler";
-import { TypeOrmException } from "src/common/errors/typeorm.exception";
 import { Throwable } from "src/common/lib/error-handler/interface/throwable.interface";
 import { TypeORMError } from "typeorm";
 
@@ -19,7 +18,7 @@ export class ClientUserErrorHandler
 
   public handle(error: TypeORMError): void {
     this.notFound(error);
-    this.throwException(error);
+    super.throwException(error);
   }
 
   private notFound(error: TypeORMError): void {
@@ -33,9 +32,5 @@ export class ClientUserErrorHandler
         `해당 아이디(${idStuff.value()})의 고객 사용자를 찾을 수 없습니다. 검증 API를 먼저 실행시켜주세요.`,
       );
     }
-  }
-
-  public throwException(error: Error): never {
-    throw new TypeOrmException(error);
   }
 }

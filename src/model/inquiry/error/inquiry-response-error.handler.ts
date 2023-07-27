@@ -1,6 +1,5 @@
 import { NotFoundException } from "@nestjs/common";
 import { EntityErrorHandler } from "src/common/classes/abstract/entity-error-handler";
-import { TypeOrmException } from "src/common/errors/typeorm.exception";
 import { Throwable } from "src/common/lib/error-handler/interface/throwable.interface";
 import { TypeORMError } from "typeorm";
 
@@ -19,7 +18,7 @@ export class InquiryResponseErrorHandler
 
   public handle(error: TypeORMError): void {
     this.notFound(error);
-    this.throwException(error);
+    super.throwException(error);
   }
 
   private notFound(error: TypeORMError): void {
@@ -33,9 +32,5 @@ export class InquiryResponseErrorHandler
         `해당 id(${idStuff.value()})을 가진 문의 응답을 찾을 수 없습니다.`,
       );
     }
-  }
-
-  public throwException(error: Error): never {
-    throw new TypeOrmException(error);
   }
 }

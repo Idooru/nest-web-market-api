@@ -1,6 +1,5 @@
 import { NotFoundException } from "@nestjs/common";
 import { EntityErrorHandler } from "src/common/classes/abstract/entity-error-handler";
-import { TypeOrmException } from "src/common/errors/typeorm.exception";
 import { Throwable } from "src/common/lib/error-handler/interface/throwable.interface";
 import { TypeORMError } from "typeorm";
 
@@ -19,7 +18,7 @@ export class ReviewErrorHandler
 
   public handle(error: TypeORMError): void {
     this.notFound(error);
-    this.throwException(error);
+    super.throwException(error);
   }
 
   private notFound(error: TypeORMError): void {
@@ -33,9 +32,5 @@ export class ReviewErrorHandler
         `해당 아이디(${idStuff.value()})의 리뷰를 찾을 수 없습니다. 검증 API를 먼저 사용해주세요.`,
       );
     }
-  }
-
-  public throwException(error: TypeORMError): never {
-    throw new TypeOrmException(error);
   }
 }
