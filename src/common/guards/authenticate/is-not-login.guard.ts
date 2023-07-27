@@ -18,7 +18,9 @@ export class IsNotLoginGuard extends ErrorHandlerProps implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const req = context.switchToHttp().getRequest<Request>();
-    if (req.signedCookies.access_token || req.signedCookies.refresh_token) {
+    const { access_token, refresh_token } = req.signedCookies;
+
+    if (access_token || refresh_token) {
       this.methodName = this.canActivate.name;
       this.httpExceptionHandlingBuilder
         .setMessage("현재 로그인 중이므로 해당 작업을 수행할 수 없습니다.")
