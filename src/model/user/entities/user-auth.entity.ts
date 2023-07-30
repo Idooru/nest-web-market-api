@@ -1,10 +1,10 @@
 import { Column, Entity, OneToOne, JoinColumn } from "typeorm";
 import { IsEmail, IsNotEmpty, IsString, Matches } from "class-validator";
-import { CommonEntity } from "src/common/entities/common.entity";
 import { UserEntity } from "./user.entity";
+import { ChildEntity } from "src/common/entities/child.entity";
 
 @Entity({ name: "users_auth", synchronize: true })
-export class UserAuthEntity extends CommonEntity {
+export class UserAuthEntity extends ChildEntity {
   @OneToOne(() => UserEntity, (user) => user.Auth, {
     onDelete: "CASCADE",
   })

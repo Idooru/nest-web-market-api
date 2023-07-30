@@ -5,12 +5,12 @@ import {
   IsDateString,
   IsMobilePhone,
 } from "class-validator";
-import { CommonEntity } from "src/common/entities/common.entity";
 import { Column, Entity, OneToOne, JoinColumn } from "typeorm";
 import { UserEntity } from "./user.entity";
+import { ChildEntity } from "src/common/entities/child.entity";
 
 @Entity({ name: "users_profile", synchronize: true })
-export class UserProfileEntity extends CommonEntity {
+export class UserProfileEntity extends ChildEntity {
   @OneToOne(() => UserEntity, (user) => user.Profile, {
     onDelete: "CASCADE",
   })

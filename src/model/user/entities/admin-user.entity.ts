@@ -1,11 +1,11 @@
-import { CommonEntity } from "src/common/entities/common.entity";
 import { InquiryResponseEntity } from "src/model/inquiry/entities/inquiry-response.entity";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
 import { UserEntity } from "./user.entity";
+import { ChildEntity } from "src/common/entities/child.entity";
 
 @Entity({ name: "admin_users", synchronize: true })
-export class AdminUserEntity extends CommonEntity {
+export class AdminUserEntity extends ChildEntity {
   @OneToOne(() => UserEntity, (user) => user.adminActions, {
     onDelete: "CASCADE",
   })
