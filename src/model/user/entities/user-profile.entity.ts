@@ -14,7 +14,7 @@ export class UserProfileEntity extends ChildEntity {
   @OneToOne(() => UserEntity, (user) => user.Profile, {
     onDelete: "CASCADE",
   })
-  @JoinColumn({ name: "userId", referencedColumnName: "id" })
+  @JoinColumn({ name: "id" })
   User: UserEntity;
 
   @IsString()

@@ -8,7 +8,7 @@ export class UserAuthEntity extends ChildEntity {
   @OneToOne(() => UserEntity, (user) => user.Auth, {
     onDelete: "CASCADE",
   })
-  @JoinColumn({ name: "userId", referencedColumnName: "id" })
+  @JoinColumn({ name: "id" })
   User: UserEntity;
 
   @IsString()

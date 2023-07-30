@@ -9,7 +9,7 @@ export class AdminUserEntity extends ChildEntity {
   @OneToOne(() => UserEntity, (user) => user.adminActions, {
     onDelete: "CASCADE",
   })
-  @JoinColumn({ name: "userId", referencedColumnName: "id" })
+  @JoinColumn({ name: "id" })
   User: UserEntity;
 
   @OneToMany(() => ProductEntity, (product) => product.creater)

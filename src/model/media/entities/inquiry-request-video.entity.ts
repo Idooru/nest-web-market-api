@@ -1,4 +1,4 @@
-import { Entity, ManyToOne } from "typeorm";
+import { Entity, JoinColumn, ManyToOne } from "typeorm";
 import { InquiryRequestEntity } from "src/model/inquiry/entities/inquiry-request.entity";
 import { MediaEntity } from "../../../common/entities/media.entity";
 
@@ -9,5 +9,6 @@ export class InquiryRequestVideoEntity extends MediaEntity {
     (inquiryRequest) => inquiryRequest.Image,
     { onDelete: "CASCADE" },
   )
+  @JoinColumn({ name: "id" })
   InquiryRequest: InquiryRequestEntity;
 }

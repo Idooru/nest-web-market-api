@@ -1,6 +1,6 @@
 import { MediaEntity } from "src/common/entities/media.entity";
 import { InquiryResponseEntity } from "src/model/inquiry/entities/inquiry-response.entity";
-import { Entity, ManyToOne } from "typeorm";
+import { Entity, JoinColumn, ManyToOne } from "typeorm";
 
 @Entity({ name: "inquiry_response_videos", synchronize: true })
 export class InquiryResponseVideoEntity extends MediaEntity {
@@ -9,5 +9,6 @@ export class InquiryResponseVideoEntity extends MediaEntity {
     (inquiryResponse) => inquiryResponse.Video,
     { onDelete: "CASCADE" },
   )
+  @JoinColumn({ name: "id" })
   InquiryResponse: InquiryResponseEntity;
 }

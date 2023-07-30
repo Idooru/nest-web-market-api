@@ -10,7 +10,7 @@ export class ClientUserEntity extends ChildEntity {
   @OneToOne(() => UserEntity, (user) => user.clientActions, {
     onDelete: "CASCADE",
   })
-  @JoinColumn({ name: "userId", referencedColumnName: "id" })
+  @JoinColumn({ name: "id" })
   User: UserEntity;
 
   @OneToMany(() => ProductEntity, (product) => product.purchaser)

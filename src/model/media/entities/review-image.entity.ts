@@ -1,4 +1,4 @@
-import { Entity, ManyToOne } from "typeorm";
+import { Entity, JoinColumn, ManyToOne } from "typeorm";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
 import { MediaEntity } from "../../../common/entities/media.entity";
 
@@ -7,5 +7,6 @@ export class ReviewImageEntity extends MediaEntity {
   @ManyToOne(() => ReviewEntity, (review) => review.Image, {
     onDelete: "CASCADE",
   })
+  @JoinColumn({ name: "id" })
   Review: ReviewEntity;
 }

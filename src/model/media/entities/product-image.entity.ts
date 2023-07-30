@@ -7,6 +7,6 @@ export class ProductImageEntity extends MediaEntity {
   @OneToOne(() => ProductEntity, (product) => product.Image, {
     onDelete: "CASCADE",
   })
-  @JoinColumn({ name: "productId" })
+  @JoinColumn({ name: "id" })
   Product: ProductEntity;
 }
