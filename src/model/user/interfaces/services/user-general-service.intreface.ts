@@ -8,10 +8,12 @@ export interface IUserGeneralService {
   findClientUserInfo(id: string): Promise<UserEntity>;
   findClientUserProfileInfoWithId(id: string): Promise<UserEntity>;
   findAdminUserProfileInfoWithId(id: string): Promise<UserEntity>;
-  createUserBase(registerUserDto: RegisterUserDto): Promise<UserEntity>;
-  createClientOrAdmin(
+  createUserEntity(role: ["client", "admin"]): Promise<UserEntity>;
+  createClientUser(user: UserEntity): Promise<void>;
+  createAdminUser(user: UserEntity): Promise<void>;
+  createUserBase(
+    user: UserEntity,
     registerUserDto: RegisterUserDto,
-    userBase: UserEntity,
   ): Promise<void>;
   modifyUser(modifyUserDto: ModifyUserDto, userId: string): Promise<void>;
   modifyUserEmail(email: string, userId: string): Promise<void>;

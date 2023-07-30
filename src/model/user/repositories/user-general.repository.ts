@@ -5,12 +5,14 @@ import { UserProfileEntity } from "../entities/user-profile.entity";
 import { InsertResult, Repository } from "typeorm";
 import { UserSelectProperty } from "src/common/config/repository-select-configs/user.select";
 import { ClientUserEntity } from "../entities/client-user.entity";
-import { RegisterUserProfileDto } from "../dtos/register-user.dto";
+import {
+  CreateUserAuthDto,
+  CreateUserProfileDto,
+} from "../dtos/register-user.dto";
 import { AdminUserEntity } from "../entities/admin-user.entity";
 import { UserEntity } from "../entities/user.entity";
 import { CreateUserBaseDto } from "../dtos/create-user-base.dto";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
-import { RegisterUserAuthDto } from "../dtos/register-user.dto";
 import { ModifyUserProfileDto } from "../dtos/modify-user.dto";
 import { ModifyUserAuthDto } from "../dtos/modify-user.dto";
 import { TypeOrmErrorHandlingBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
@@ -388,12 +390,24 @@ export class UserGeneralRepository
     }
   }
 
+  async createUserEntity(role: ["client", "admin"]): Promise<UserEntity> {
+    try {
+      return await this.userRepository.save({ role });
+    } catch (err) {
+      this.methodName = this.createUserEntity.name;
+      this.typeOrmErrorHandlerBuilder
+        .setErrorHandler(err)
+        .setSourceNames(this.className, this.methodName)
+        .handle();
+    }
+  }
+
   async createUserProfile(
-    registerUserProfileDto: RegisterUserProfileDto,
+    createUserProfileDto: CreateUserProfileDto,
   ): Promise<UserProfileEntity> {
     try {
       return await this.userProfileRepository.save({
-        ...registerUserProfileDto,
+        ...createUserProfileDto,
       });
     } catch (err) {
       this.methodName = this.createUserProfile.name;
@@ -406,10 +420,10 @@ export class UserGeneralRepository
   }
 
   async createUserAuth(
-    registerUserAuthDto: RegisterUserAuthDto,
+    createUserAuthDto: CreateUserAuthDto,
   ): Promise<UserAuthEntity> {
     try {
-      return await this.userAuthRepository.save({ ...registerUserAuthDto });
+      return await this.userAuthRepository.save({ ...createUserAuthDto });
     } catch (err) {
       this.methodName = this.createUserAuth.name;
       this.typeOrmErrorHandlerBuilder

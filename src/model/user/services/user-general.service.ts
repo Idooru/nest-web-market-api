@@ -4,8 +4,6 @@ import { UserGeneralRepository } from "../repositories/user-general.repository";
 import { SecurityLibrary } from "src/common/lib/config/security.library";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { UserEntity } from "../entities/user.entity";
-import { UserInsertRepository } from "../repositories/user-insert.repository";
-import { CreateUserBaseDto } from "../dtos/create-user-base.dto";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { LibraryErrorHandlingBuilder } from "src/common/lib/error-handler/library-error-handling.builder";
 import { IUserGeneralService } from "../interfaces/services/user-general-service.intreface";
@@ -19,7 +17,6 @@ export class UserGeneralService
 {
   constructor(
     private readonly userGeneralRepository: UserGeneralRepository,
-    private readonly userInsertRepository: UserInsertRepository,
     private readonly securityLibrary: SecurityLibrary,
     private readonly libraryErrorHandlerBuilder: LibraryErrorHandlingBuilder,
   ) {
@@ -46,17 +43,33 @@ export class UserGeneralService
     return await this.userGeneralRepository.findAdminUserProfileInfoWithId(id);
   }
 
-  async createUserBase(registerUserDto: RegisterUserDto): Promise<UserEntity> {
-    const {
-      realname,
-      nickname,
-      birth,
-      gender,
-      email,
-      phonenumber,
-      type,
-      password,
-    } = registerUserDto;
+  async createUserEntity(role: ["client", "admin"]): Promise<UserEntity> {
+    const user = await this.userGeneralRepository.createUserEntity(role);
+
+    if (role.toString() === "admin") {
+      await this.createAdminUser(user);
+    } else {
+      await this.createClientUser(user);
+    }
+
+    return user;
+  }
+
+  async createClientUser(user: UserEntity): Promise<void> {
+    await this.userGeneralRepository.createClientUser(user);
+  }
+
+  async createAdminUser(user: UserEntity): Promise<void> {
+    await this.userGeneralRepository.createAdminUser(user);
+  }
+
+  async createUserBase(
+    user: UserEntity,
+    registerUserDto: RegisterUserDto,
+  ): Promise<void> {
+    const { id } = user;
+    const { realname, nickname, birth, gender, email, phonenumber, password } =
+      registerUserDto;
     let hashed: string;
 
     try {
@@ -70,80 +83,13 @@ export class UserGeneralService
         .handle();
     }
 
-    const userProfileColumn = { realname, birth, gender, phonenumber };
-    const userAuthColumn = { nickname, email, password: hashed };
+    const userProfileColumn = { id, realname, birth, gender, phonenumber };
+    const userAuthColumn = { id, nickname, email, password: hashed };
 
-    const [userProfileDummy, userAuthDummy] = await Promise.all([
+    await Promise.all([
       this.userGeneralRepository.createUserProfile(userProfileColumn),
       this.userGeneralRepository.createUserAuth(userAuthColumn),
     ]);
-
-    const [userProfile, userAuth] = await Promise.all([
-      this.userGeneralRepository.findUserProfile(userProfileDummy),
-      this.userGeneralRepository.findUserAuth(userAuthDummy),
-    ]);
-
-    const createUserBaseDto: CreateUserBaseDto = {
-      Profile: userProfile,
-      Auth: userAuth,
-      type,
-    };
-
-    const userBaseOutput = await this.userGeneralRepository.createUserBase(
-      createUserBaseDto,
-    );
-
-    const userBaseId: string = userBaseOutput.generatedMaps[0].id;
-
-    const userBase = await this.userInsertRepository.findOneUserBaseById(
-      userBaseId,
-    );
-
-    await Promise.all([
-      this.userInsertRepository.insertUserBaseIdOnUserProfile(
-        userBase,
-        userProfile,
-      ),
-      this.userInsertRepository.insertUserBaseIdOnUserAuth(userBase, userAuth),
-    ]);
-
-    return userBase;
-  }
-
-  async createClientOrAdmin(
-    registerUserDto: RegisterUserDto,
-    userBase: UserEntity,
-  ): Promise<void> {
-    if (registerUserDto.type.toString() === "client") {
-      const clientUserOutput =
-        await this.userGeneralRepository.createClientUser(userBase);
-
-      const clientUserId: string = clientUserOutput.generatedMaps[0].id;
-
-      const clientUser = await this.userInsertRepository.findOneClientUserById(
-        clientUserId,
-      );
-
-      await this.userInsertRepository.insertUserBaseIdOnClientUser(
-        userBase,
-        clientUser,
-      );
-    } else {
-      const adminUserOutput = await this.userGeneralRepository.createAdminUser(
-        userBase,
-      );
-
-      const adminUserId: string = adminUserOutput.generatedMaps[0].id;
-
-      const adminUser = await this.userInsertRepository.findOneAdminUserById(
-        adminUserId,
-      );
-
-      await this.userInsertRepository.insertUserBaseIdOnAdminUser(
-        userBase,
-        adminUser,
-      );
-    }
   }
 
   async modifyUser(
@@ -156,7 +102,7 @@ export class UserGeneralService
     try {
       hashed = await bcrypt.hash(password, this.securityLibrary.getHashSalt());
     } catch (err) {
-      this.methodName = this.createUserBase.name;
+      this.methodName = this.modifyUser.name;
       this.libraryErrorHandlerBuilder
         .setError(err)
         .setLibraryName("bcrypt")
@@ -208,7 +154,7 @@ export class UserGeneralService
     try {
       hashed = await bcrypt.hash(password, this.securityLibrary.getHashSalt());
     } catch (err) {
-      this.methodName = this.createUserBase.name;
+      this.methodName = this.modifyUserPassword.name;
       this.libraryErrorHandlerBuilder
         .setError(err)
         .setLibraryName("bcrypt")

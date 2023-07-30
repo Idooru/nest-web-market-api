@@ -66,20 +66,16 @@ export class UserVersionOneFreeUseController {
   async register(
     @Body() registerUserDto: RegisterUserDto,
   ): Promise<JsonGeneralInterface<void>> {
-    const userBase = await this.userGeneralService.createUserBase(
-      registerUserDto,
-    );
+    const role = registerUserDto.type;
+    const user = await this.userGeneralService.createUserEntity(role);
 
-    await this.userGeneralService.createClientOrAdmin(
-      registerUserDto,
-      userBase,
-    );
+    await this.userGeneralService.createUserBase(user, registerUserDto);
 
-    const user = await this.userAccessorySrevice.findUserWithEmail(
+    const searchedUser = await this.userAccessorySrevice.findUserWithEmail(
       registerUserDto.email,
     );
 
-    await this.emailSenderLibrary.sendMailToClientAboutRegister(user);
+    await this.emailSenderLibrary.sendMailToClientAboutRegister(searchedUser);
 
     return {
       statusCode: 201,
