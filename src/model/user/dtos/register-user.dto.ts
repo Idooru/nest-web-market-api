@@ -44,6 +44,14 @@ export class RegisterUserProfileDto extends PickType(UserProfileEntity, [
   phonenumber: string;
 }
 
+export class CreateUserProfileDto extends PickType(UserProfileEntity, [
+  "id",
+  "realname",
+  "birth",
+  "gender",
+  "phonenumber",
+]) {}
+
 export class RegisterUserAuthDto extends PickType(UserAuthEntity, [
   "email",
   "nickname",
@@ -73,6 +81,13 @@ export class RegisterUserAuthDto extends PickType(UserAuthEntity, [
   })
   password: string;
 }
+
+export class CreateUserAuthDto extends PickType(UserAuthEntity, [
+  "id",
+  "email",
+  "nickname",
+  "password",
+]) {}
 
 export class RegisterUserDto extends IntersectionType(
   RegisterUserProfileDto,
