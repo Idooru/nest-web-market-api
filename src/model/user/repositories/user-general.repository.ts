@@ -11,7 +11,6 @@ import {
 } from "../dtos/register-user.dto";
 import { AdminUserEntity } from "../entities/admin-user.entity";
 import { UserEntity } from "../entities/user.entity";
-import { CreateUserBaseDto } from "../dtos/create-user-base.dto";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { ModifyUserProfileDto } from "../dtos/modify-user.dto";
 import { ModifyUserAuthDto } from "../dtos/modify-user.dto";
@@ -426,64 +425,6 @@ export class UserGeneralRepository
       return await this.userAuthRepository.save({ ...createUserAuthDto });
     } catch (err) {
       this.methodName = this.createUserAuth.name;
-      this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorHandler)
-        .setError(err)
-        .setSourceNames(this.className, this.methodName)
-        .handle();
-    }
-  }
-
-  async findUserProfile(
-    userProfileDummy: UserProfileEntity,
-  ): Promise<UserProfileEntity> {
-    try {
-      return this.userProfileRepository
-        .createQueryBuilder()
-        .select("profile")
-        .from(UserProfileEntity, "profile")
-        .where("profile.id = :id", { id: userProfileDummy.id })
-        .getOne();
-    } catch (err) {
-      this.methodName = this.findUserProfile.name;
-      this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorHandler)
-        .setError(err)
-        .setSourceNames(this.className, this.methodName)
-        .handle();
-    }
-  }
-
-  async findUserAuth(userAuthDummy: UserAuthEntity): Promise<UserAuthEntity> {
-    try {
-      return this.userAuthRepository
-        .createQueryBuilder()
-        .select("auth")
-        .from(UserAuthEntity, "auth")
-        .where("auth.id = :id", { id: userAuthDummy.id })
-        .getOne();
-    } catch (err) {
-      this.methodName = this.findUserAuth.name;
-      this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorHandler)
-        .setError(err)
-        .setSourceNames(this.className, this.methodName)
-        .handle();
-    }
-  }
-
-  async createUserBase(
-    createUserBaseDto: CreateUserBaseDto,
-  ): Promise<InsertResult> {
-    try {
-      return await this.userRepository
-        .createQueryBuilder()
-        .insert()
-        .into(UserEntity)
-        .values({ ...createUserBaseDto })
-        .execute();
-    } catch (err) {
-      this.methodName = this.createUserBase.name;
       this.typeOrmErrorHandlerBuilder
         .setErrorHandler(UserErrorHandler)
         .setError(err)

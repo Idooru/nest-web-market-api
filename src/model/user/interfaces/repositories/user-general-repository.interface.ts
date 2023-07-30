@@ -1,5 +1,4 @@
 import { InsertResult } from "typeorm";
-import { CreateUserBaseDto } from "../../dtos/create-user-base.dto";
 import {
   RegisterUserAuthDto,
   RegisterUserProfileDto,
@@ -36,11 +35,6 @@ export interface IUserGeneralRepository {
   createUserAuth(
     registerUserAuthDto: RegisterUserAuthDto,
   ): Promise<UserAuthEntity>;
-  findUserProfile(
-    userProfileDummy: UserProfileEntity,
-  ): Promise<UserProfileEntity>;
-  findUserAuth(userAuthDummy: UserAuthEntity): Promise<UserAuthEntity>;
-  createUserBase(createUserBaseDto: CreateUserBaseDto): Promise<InsertResult>;
   createClientUser(user: UserEntity): Promise<InsertResult>;
   createAdminUser(user: UserEntity): Promise<InsertResult>;
   modifyUserProfile(
