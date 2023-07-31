@@ -17,7 +17,7 @@ import { UserVersionOneVerifyController } from "./controllers/v1/user-v1-verify.
 import { ClientUserEntity } from "./entities/client-user.entity";
 import { AdminUserEntity } from "./entities/admin-user.entity";
 import { UserEntity } from "./entities/user.entity";
-import { UserInsertRepository } from "./repositories/user-insert.repository";
+import { UserInsertRepository } from "../../deprecated/user-insert.repository";
 import { userSelectProperty } from "src/common/config/repository-select-configs/user.select";
 import { userVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/user-verify-cookie.key";
 import { UserAccessoryService } from "./services/user-accessory.service";
