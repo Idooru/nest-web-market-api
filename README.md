@@ -149,4 +149,4 @@ Nest is [MIT licensed](LICENSE).
 
 ## TO DO
 
-1. 나중에 집가서 환경 정보 파일(.env.dev) 데이터를 내 메일로 보내기
+1. 나중에 집가서 환경 정보 파일(.env.dev) 데이터를 내 메일로 보내기 // 완료
