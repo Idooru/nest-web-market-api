@@ -13,7 +13,7 @@ export class TypeOrmExceptionFilter implements ExceptionFilter {
       statusCode: exception.getStatus(),
       timestamp: new Date().toString(),
       reason: exception.message,
-      info: "Typeorm Config, Entity, SQL 서버의 상태를 확인하세요.",
+      info: "Typeorm Config, Entity, 요청 쿼리, SQL 서버의 상태를 확인하세요.",
     });
   }
 }
