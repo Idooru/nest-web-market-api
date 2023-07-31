@@ -1,17 +1,17 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { AdminUserEntity } from "../entities/admin-user.entity";
-import { ClientUserEntity } from "../entities/client-user.entity";
-import { UserAuthEntity } from "../entities/user-auth.entity";
-import { UserEntity } from "../entities/user.entity";
-import { UserProfileEntity } from "../entities/user-profile.entity";
+import { AdminUserEntity } from "../model/user/entities/admin-user.entity";
+import { ClientUserEntity } from "../model/user/entities/client-user.entity";
+import { UserAuthEntity } from "../model/user/entities/user-auth.entity";
+import { UserEntity } from "../model/user/entities/user.entity";
+import { UserProfileEntity } from "../model/user/entities/user-profile.entity";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { TypeOrmErrorHandlingBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
-import { UserErrorHandler } from "../error/user-error.handler";
-import { ClientUserErrorHandler } from "../error/client-user-error.handler";
-import { AdminUserErrorHandler } from "../error/admin-user-error.handler";
-import { IUserInsertRepository } from "../interfaces/repositories/user-insert-repository.interface";
+import { UserErrorHandler } from "../model/user/error/user-error.handler";
+import { ClientUserErrorHandler } from "../model/user/error/client-user-error.handler";
+import { AdminUserErrorHandler } from "../model/user/error/admin-user-error.handler";
+import { IUserInsertRepository } from "../model/user/interfaces/repositories/user-insert-repository.interface";
 
 @Injectable()
 export class UserInsertRepository
