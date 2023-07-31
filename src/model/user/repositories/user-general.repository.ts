@@ -273,7 +273,7 @@ export class UserGeneralRepository
 
   async findClientUserProfileInfoWithId(id: string): Promise<UserEntity> {
     try {
-      return await this.userRepository
+      const client = await this.userRepository
         .createQueryBuilder()
         .select(this.select.clientUserProfile)
         .from(UserEntity, "user")
@@ -293,6 +293,9 @@ export class UserGeneralRepository
         .leftJoin("InquiryResponse.Video", "InquiryResponseVideo")
         .where("user.id = :id", { id })
         .getOneOrFail();
+
+      client.clientActions.id = undefined;
+      return client;
     } catch (err) {
       this.methodName = this.findClientUserProfileInfoWithId.name;
       this.typeOrmErrorHandlerBuilder
@@ -306,7 +309,7 @@ export class UserGeneralRepository
 
   async findAdminUserProfileInfoWithId(id: string): Promise<UserEntity> {
     try {
-      return await this.userRepository
+      const admin = await this.userRepository
         .createQueryBuilder()
         .select(this.select.adminUserProfile)
         .from(UserEntity, "user")
@@ -330,6 +333,9 @@ export class UserGeneralRepository
         .leftJoin("ReceivedInquiryRequest.Video", "ReceivedInquiryRequestVideo")
         .where("user.id = :id", { id })
         .getOneOrFail();
+
+      admin.adminActions.id = undefined;
+      return admin;
     } catch (err) {
       this.methodName = this.findAdminUserProfileInfoWithId.name;
       this.typeOrmErrorHandlerBuilder
