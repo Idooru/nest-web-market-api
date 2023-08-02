@@ -69,13 +69,12 @@ export class UserVersionOneFreeUseController {
     const role = registerUserDto.type;
     const user = await this.userGeneralService.createUserEntity(role);
 
-    await this.userGeneralService.createUserBase(user, registerUserDto);
-
-    const searchedUser = await this.userAccessorySrevice.findUserWithEmail(
-      registerUserDto.email,
+    const authInfo = await this.userGeneralService.createUserBase(
+      user,
+      registerUserDto,
     );
 
-    await this.emailSenderLibrary.sendMailToClientAboutRegister(searchedUser);
+    await this.emailSenderLibrary.sendMailToClientAboutRegister(authInfo);
 
     return {
       statusCode: 201,
