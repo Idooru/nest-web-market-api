@@ -229,44 +229,28 @@ export class UserGeneralRepository
     }
   }
 
-  async findUserWithRealName(realname: string): Promise<UserEntity | null> {
+  async findUserForgotten(
+    realname: string,
+    phonenumber: string,
+  ): Promise<UserEntity> {
     try {
       return await this.userRepository
         .createQueryBuilder()
         .select(this.select.userBase)
         .from(UserEntity, "user")
-        .leftJoin("user.Profile", "Profile")
-        .leftJoin("user.Auth", "Auth")
+        .innerJoin("user.Profile", "Profile")
+        .innerJoin("user.Auth", "Auth")
         .where("Profile.realname = :realname", { realname })
-        .getOne();
+        .andWhere("Profile.phonenumber = :phonenumber", { phonenumber })
+        .getOneOrFail();
     } catch (err) {
-      this.methodName = this.findUserWithRealName.name;
+      this.methodName = this.findUserForgotten.name;
       this.typeOrmErrorHandlerBuilder
         .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .handle();
-    }
-  }
-
-  async findUserWithPhoneNumber(
-    phonenumber: string,
-  ): Promise<UserEntity | null> {
-    try {
-      return await this.clientUserRepository
-        .createQueryBuilder()
-        .select(this.select.userBase)
-        .from(UserEntity, "user")
-        .leftJoin("user.Profile", "Profile")
-        .leftJoin("user.Auth", "Auth")
-        .where("Profile.phonenumber = :phonenumber", { phonenumber })
-        .getOne();
-    } catch (err) {
-      this.methodName = this.findUserWithPhoneNumber.name;
-      this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(UserErrorHandler)
-        .setError(err)
-        .setSourceNames(this.className, this.methodName)
+        .setStuffs(realname, "realname")
+        .setStuffs(phonenumber, "phonenumber")
         .handle();
     }
   }

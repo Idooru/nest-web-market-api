@@ -23,8 +23,7 @@ export interface IUserGeneralRepository {
   findAdminUserObjectWithId(id: string): Promise<AdminUserEntity>;
   findUserWithEmail(email: string): Promise<UserEntity>;
   findUserWithNickName(nickname: string): Promise<UserEntity>;
-  findUserWithRealName(realname: string): Promise<UserEntity | null>;
-  findUserWithPhoneNumber(phonenumber: string): Promise<UserEntity | null>;
+  findUserForgotten(realname: string, phonenumber: string): Promise<UserEntity>;
   findClientUserProfileInfoWithId(id: string): Promise<UserEntity>;
   findAdminUserProfileInfoWithId(id: string): Promise<UserEntity>;
   findClientUserInfo(id: string): Promise<UserEntity>;
