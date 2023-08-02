@@ -22,6 +22,10 @@ export class UserErrorHandler extends EntityErrorHandler implements Throwable {
     const idStuff = this.stuffArr.find((val) => val.key() === "id");
     const emailStuff = this.stuffArr.find((val) => val.key() === "email");
     const nickNameStuff = this.stuffArr.find((val) => val.key() === "nickname");
+    const realNameStuff = this.stuffArr.find((val) => val.key() === "realname");
+    const phoneNumberStuff = this.stuffArr.find(
+      (val) => val.key() === "phonenumber",
+    );
 
     if (
       error.message.includes("Could not find any entity of type") &&
@@ -47,6 +51,12 @@ export class UserErrorHandler extends EntityErrorHandler implements Throwable {
     ) {
       throw new NotFoundException(
         `해당 닉네임(${nickNameStuff.value()})을 가진 사용자를 찾을 수 없습니다. 검증 API를 먼저 사용해주세요.`,
+      );
+    }
+
+    if (realNameStuff || phoneNumberStuff) {
+      throw new NotFoundException(
+        "사용자 실명과 전화번호가 서로 일치하지 않습니다.",
       );
     }
   }
