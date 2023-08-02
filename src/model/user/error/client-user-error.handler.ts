@@ -22,14 +22,12 @@ export class ClientUserErrorHandler
   }
 
   private notFound(error: TypeORMError): void {
-    const idStuff = this.stuffArr.find((val) => val.key() === "id");
-
     if (
       error.message.includes("Could not find any entity of type") &&
-      idStuff
+      this.idStuff
     ) {
       throw new NotFoundException(
-        `해당 아이디(${idStuff.value()})의 고객 사용자를 찾을 수 없습니다. 검증 API를 먼저 실행시켜주세요.`,
+        `해당 아이디(${this.idStuff.value})의 고객 사용자를 찾을 수 없습니다. 검증 API를 먼저 실행시켜주세요.`,
       );
     }
   }

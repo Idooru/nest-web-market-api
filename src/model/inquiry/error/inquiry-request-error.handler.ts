@@ -22,16 +22,13 @@ export class InquiryRequestErrorHandler
   }
 
   private notFound(error: TypeORMError): void {
-    const idStuff = this.stuffArr.find((val) => val.key() === "id");
-
     if (
       error.message.includes("Could not find any entity of type") &&
-      idStuff
+      this.idStuff
     ) {
       throw new NotFoundException(
-        `해당 id(${idStuff.value()})을 가진 문의 요청을 찾을 수 없습니다.`,
+        `해당 id(${this.idStuff.value})을 가진 문의 요청을 찾을 수 없습니다.`,
       );
     }
   }
-
 }

@@ -74,7 +74,7 @@ export class UserVersionOneFreeUseController {
       registerUserDto,
     );
 
-    await this.emailSenderLibrary.sendMailToClientAboutRegister(authInfo);
+    // await this.emailSenderLibrary.sendMailToClientAboutRegister(authInfo);
 
     return {
       statusCode: 201,

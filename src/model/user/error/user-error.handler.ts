@@ -13,6 +13,13 @@ export class UserErrorHandler extends EntityErrorHandler implements Throwable {
     this.handle(error);
   }
 
+  private emailStuff = this.stuffArr.find((item) => item.key === "email");
+  private nickNameStuff = this.stuffArr.find((item) => item.key === "nickname");
+  private realNameStuff = this.stuffArr.find((item) => item.key === "realname");
+  private phoneNumberStuff = this.stuffArr.find(
+    (item) => item.key === "phonenumber",
+  );
+
   public handle(error: TypeORMError): void {
     this.notFound(error);
     this.duplicated(error);
@@ -20,46 +27,38 @@ export class UserErrorHandler extends EntityErrorHandler implements Throwable {
   }
 
   private notFound(error: TypeORMError): void {
-    const idStuff = this.stuffArr.find((val) => val.key() === "id");
-    const emailStuff = this.stuffArr.find((val) => val.key() === "email");
-    const nickNameStuff = this.stuffArr.find((val) => val.key() === "nickname");
-    const realNameStuff = this.stuffArr.find((val) => val.key() === "realname");
-    const phoneNumberStuff = this.stuffArr.find(
-      (val) => val.key() === "phonenumber",
-    );
-
     if (
       error.message.includes("Could not find any entity of type") &&
-      idStuff
+      this.idStuff
     ) {
       throw new NotFoundException(
-        `해당 아이디(${idStuff.value()})의 사용자를 찾을 수 없습니다. 검증 API를 먼저 사용해주세요.`,
+        `해당 아이디(${this.idStuff.value})의 사용자를 찾을 수 없습니다. 검증 API를 먼저 사용해주세요.`,
       );
     }
 
     if (
       error.message.includes("Could not find any entity of type") &&
-      emailStuff
+      this.emailStuff
     ) {
       throw new NotFoundException(
-        `해당 이메일(${emailStuff.value()})을 가진 사용자를 찾을 수 없습니다. 검증 API를 먼저 사용해주세요.`,
+        `해당 이메일(${this.emailStuff.value})을 가진 사용자를 찾을 수 없습니다. 검증 API를 먼저 사용해주세요.`,
       );
     }
 
     if (
       error.message.includes("Could not find any entity of type") &&
-      nickNameStuff
+      this.nickNameStuff
     ) {
       throw new NotFoundException(
-        `해당 닉네임(${nickNameStuff.value()})을 가진 사용자를 찾을 수 없습니다. 검증 API를 먼저 사용해주세요.`,
+        `해당 닉네임(${this.nickNameStuff.value})을 가진 사용자를 찾을 수 없습니다. 검증 API를 먼저 사용해주세요.`,
       );
     }
 
     if (
       (error.message.includes("Could not find any entity of type") &&
-        realNameStuff) ||
+        this.realNameStuff) ||
       (error.message.includes("Could not find any entity of type") &&
-        phoneNumberStuff)
+        this.phoneNumberStuff)
     ) {
       throw new NotFoundException(
         "사용자 실명과 전화번호가 서로 일치하지 않습니다.",
@@ -68,21 +67,15 @@ export class UserErrorHandler extends EntityErrorHandler implements Throwable {
   }
 
   private duplicated(error: TypeORMError): void {
-    const phoneNumberStuff = this.stuffArr.find(
-      (val) => val.key() === "phonenumber",
-    );
-    const emailStuff = this.stuffArr.find((val) => val.key() === "email");
-    const nickNameStuff = this.stuffArr.find((val) => val.key() === "nickname");
-
-    if (error.message.includes("Duplicate entry") && phoneNumberStuff) {
+    if (error.message.includes("Duplicate entry") && this.phoneNumberStuff) {
       throw new BadRequestException("중복된 전화번호입니다.");
     }
 
-    if (error.message.includes("Duplicate entry") && emailStuff) {
+    if (error.message.includes("Duplicate entry") && this.emailStuff) {
       throw new BadRequestException("중복된 이메일입니다.");
     }
 
-    if (error.message.includes("Duplicate entry") && nickNameStuff) {
+    if (error.message.includes("Duplicate entry") && this.nickNameStuff) {
       throw new BadRequestException("중복된 닉네임입니다.");
     }
   }

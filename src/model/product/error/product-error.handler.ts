@@ -16,58 +16,65 @@ export class ProductErrorHandler
     this.handle(error);
   }
 
+  private nameStuff = this.stuffArr.find((item) => item.key === "name");
+  private priceStuff = this.stuffArr.find((item) => item.key === "price");
+  private quantityStuff = this.stuffArr.find((item) => item.key === "quantity");
+
   public handle(error: TypeORMError): void {
     this.notFound(error);
+    this.duplicated(error);
     this.badRequest(error);
     super.throwException(error);
   }
 
   private notFound(error: TypeORMError): void {
-    const idStuff = this.stuffArr.find((val) => val.key() === "id");
-    const nameStuff = this.stuffArr.find((val) => val.key() === "name");
-
     if (
       error.message.includes("Could not find any entity of type") &&
-      nameStuff
+      this.idStuff
     ) {
       throw new NotFoundException(
-        `해당 이름(${nameStuff.value()})의 상품을 찾을 수 없습니다. 검증 API를 먼저 사용해주세요.`,
+        `해당 아이디(${this.idStuff.value})의 상품을 찾을 수 없습니다. 검증 API를 먼저 사용해주세요.`,
       );
     }
 
     if (
       error.message.includes("Could not find any entity of type") &&
-      idStuff
+      this.nameStuff
     ) {
       throw new NotFoundException(
-        `해당 아이디(${idStuff.value()})의 상품을 찾을 수 없습니다. 검증 API를 먼저 사용해주세요.`,
+        `해당 이름(${this.nameStuff.value})의 상품을 찾을 수 없습니다. 검증 API를 먼저 사용해주세요.`,
       );
     }
   }
 
-  private badRequest(error: TypeORMError) {
-    const priceStuff = this.stuffArr.find((val) => val.key() === "price");
-
-    const quantityStuff = this.stuffArr.find((val) => val.key() === "quantity");
-
-    if (priceStuff && quantityStuff) {
-      throw new BadRequestException(
-        `가격혹은 수량을 마이너스(${priceStuff.value()}, ${quantityStuff.value()})로 수정 할 수 없습니다.`,
-      );
+  private duplicated(error: TypeORMError): void {
+    if (error.message.includes("Duplicate entry") && this.nameStuff) {
+      throw new BadRequestException("중복된 상품 이름입니다.");
     }
+  }
 
-    if (error.message.includes("Out of range value for column") && priceStuff) {
+  private badRequest(error: TypeORMError) {
+    if (this.priceStuff && this.quantityStuff) {
       throw new BadRequestException(
-        `가격을 마이너스(${priceStuff.value()})로 수정 할 수 없습니다.`,
+        `가격혹은 수량을 마이너스(${this.priceStuff.value}, ${this.quantityStuff.value})로 수정 할 수 없습니다.`,
       );
     }
 
     if (
       error.message.includes("Out of range value for column") &&
-      quantityStuff
+      this.priceStuff
     ) {
       throw new BadRequestException(
-        `수량을 마이너스(${quantityStuff.value()})로 수정 할 수 없습니다.`,
+        `가격을 마이너스(${this.priceStuff.value})로 수정 할 수 없습니다.`,
+      );
+    }
+
+    if (
+      error.message.includes("Out of range value for column") &&
+      this.quantityStuff
+    ) {
+      throw new BadRequestException(
+        `수량을 마이너스(${this.quantityStuff.value})로 수정 할 수 없습니다.`,
       );
     }
   }
