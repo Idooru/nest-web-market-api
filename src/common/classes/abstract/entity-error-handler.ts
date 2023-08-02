@@ -11,6 +11,8 @@ export abstract class EntityErrorHandler
     super(stuffs, stuffMeans);
   }
 
+  protected idStuff = this.stuffArr.find((item) => item.key === "id");
+
   abstract handle(error: TypeORMError): void;
 
   public throwException(error: Error): never {
