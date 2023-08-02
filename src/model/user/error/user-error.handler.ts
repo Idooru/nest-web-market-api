@@ -1,4 +1,4 @@
-import { NotFoundException } from "@nestjs/common";
+import { NotFoundException, BadRequestException } from "@nestjs/common";
 import { EntityErrorHandler } from "src/common/classes/abstract/entity-error-handler";
 import { Throwable } from "src/common/lib/error-handler/interface/throwable.interface";
 import { TypeORMError } from "typeorm";
@@ -15,6 +15,7 @@ export class UserErrorHandler extends EntityErrorHandler implements Throwable {
 
   public handle(error: TypeORMError): void {
     this.notFound(error);
+    this.duplicated(error);
     super.throwException(error);
   }
 
@@ -54,10 +55,35 @@ export class UserErrorHandler extends EntityErrorHandler implements Throwable {
       );
     }
 
-    if (realNameStuff || phoneNumberStuff) {
+    if (
+      (error.message.includes("Could not find any entity of type") &&
+        realNameStuff) ||
+      (error.message.includes("Could not find any entity of type") &&
+        phoneNumberStuff)
+    ) {
       throw new NotFoundException(
         "사용자 실명과 전화번호가 서로 일치하지 않습니다.",
       );
+    }
+  }
+
+  private duplicated(error: TypeORMError): void {
+    const phoneNumberStuff = this.stuffArr.find(
+      (val) => val.key() === "phonenumber",
+    );
+    const emailStuff = this.stuffArr.find((val) => val.key() === "email");
+    const nickNameStuff = this.stuffArr.find((val) => val.key() === "nickname");
+
+    if (error.message.includes("Duplicate entry") && phoneNumberStuff) {
+      throw new BadRequestException("중복된 전화번호입니다.");
+    }
+
+    if (error.message.includes("Duplicate entry") && emailStuff) {
+      throw new BadRequestException("중복된 이메일입니다.");
+    }
+
+    if (error.message.includes("Duplicate entry") && nickNameStuff) {
+      throw new BadRequestException("중복된 닉네임입니다.");
     }
   }
 }
