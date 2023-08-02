@@ -14,7 +14,7 @@ export interface IUserGeneralService {
   createUserBase(
     user: UserEntity,
     registerUserDto: RegisterUserDto,
-  ): Promise<void>;
+  ): Promise<{ email: string; nickname: string }>;
   modifyUser(modifyUserDto: ModifyUserDto, userId: string): Promise<void>;
   modifyUserEmail(email: string, userId: string): Promise<void>;
   modifyUserNickName(nickname: string, userId: string): Promise<void>;

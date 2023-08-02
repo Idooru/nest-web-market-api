@@ -80,12 +80,18 @@ export class EmailSenderLibrary extends ErrorHandlerProps {
     }
   }
 
-  async sendMailToClientAboutRegister(user: UserEntity): Promise<void> {
+  async sendMailToClientAboutRegister({
+    email,
+    nickname,
+  }: {
+    email: string;
+    nickname: string;
+  }): Promise<void> {
     try {
       await this.mailerService.sendMail({
-        to: user.Auth.email,
+        to: email,
         from: this.configService.get("MAIL_USER"),
-        subject: `${user.Auth.nickname}님, 저희 서비스에 회원 가입을 해주셔서 진심으로 감사드립니다!`,
+        subject: `${nickname}님, 저희 서비스에 회원 가입을 해주셔서 진심으로 감사드립니다!`,
         text: `환영합니다!`,
       });
     } catch (err) {

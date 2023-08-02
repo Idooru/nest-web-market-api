@@ -66,7 +66,7 @@ export class UserGeneralService
   async createUserBase(
     user: UserEntity,
     registerUserDto: RegisterUserDto,
-  ): Promise<void> {
+  ): Promise<{ email: string; nickname: string }> {
     const { id } = user;
     const { realname, nickname, birth, gender, email, phonenumber, password } =
       registerUserDto;
@@ -90,6 +90,11 @@ export class UserGeneralService
       this.userGeneralRepository.createUserProfile(userProfileColumn),
       this.userGeneralRepository.createUserAuth(userAuthColumn),
     ]);
+
+    return {
+      email,
+      nickname,
+    };
   }
 
   async modifyUser(
