@@ -9,6 +9,6 @@ export abstract class ErrorCaseProp {
   });
 
   private makeObjLiteral(stuff: string, stuffMean: string) {
-    return { [stuffMean]: stuff, key: () => stuffMean, value: () => stuff };
+    return { [stuffMean]: stuff, key: stuffMean, value: stuff };
   }
 }
