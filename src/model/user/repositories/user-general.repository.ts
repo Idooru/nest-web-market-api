@@ -423,9 +423,9 @@ export class UserGeneralRepository
     }
   }
 
-  async createClientUser(user: UserEntity): Promise<InsertResult> {
+  async createClientUser(user: UserEntity): Promise<void> {
     try {
-      return await this.clientUserRepository
+      await this.clientUserRepository
         .createQueryBuilder()
         .insert()
         .into(ClientUserEntity)
@@ -441,9 +441,9 @@ export class UserGeneralRepository
     }
   }
 
-  async createAdminUser(user: UserEntity): Promise<InsertResult> {
+  async createAdminUser(user: UserEntity): Promise<void> {
     try {
-      return await this.adminUserRepository
+      await this.adminUserRepository
         .createQueryBuilder()
         .insert()
         .into(AdminUserEntity)

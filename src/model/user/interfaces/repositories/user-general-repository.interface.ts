@@ -34,8 +34,8 @@ export interface IUserGeneralRepository {
   createUserAuth(
     registerUserAuthDto: RegisterUserAuthDto,
   ): Promise<UserAuthEntity>;
-  createClientUser(user: UserEntity): Promise<InsertResult>;
-  createAdminUser(user: UserEntity): Promise<InsertResult>;
+  createClientUser(user: UserEntity): Promise<void>;
+  createAdminUser(user: UserEntity): Promise<void>;
   modifyUserProfile(
     modifyUserProfileDto: ModifyUserProfileDto,
     id: string,
