@@ -17,6 +17,7 @@ import { JwtServiceExceptionFilter } from "./common/filters/jwt-service-exceptio
 import path from "path";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
+
 class NestCoreConfig {
   private readonly envData: EnvData = this.envDataFactory();
 
