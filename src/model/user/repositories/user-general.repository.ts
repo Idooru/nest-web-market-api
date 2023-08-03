@@ -404,7 +404,6 @@ export class UserGeneralRepository
         .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(createUserProfileDto.phonenumber, "phonenumber")
         .handle();
     }
   }
@@ -420,8 +419,6 @@ export class UserGeneralRepository
         .setErrorHandler(UserErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(createUserAuthDto.email, "email")
-        .setStuffs(createUserAuthDto.nickname, "nickname")
         .handle();
     }
   }
