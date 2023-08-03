@@ -38,6 +38,7 @@ import { ModifyUserNicknameDto } from "../../dtos/modify-user-nickname.dto";
 import { ModifyUserPhonenumberDto } from "../../dtos/modify-user-phonenumber.dto";
 import { ModifyUserPasswordDto } from "../../dtos/modify-user-password.dto";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
+
 @ApiTags("v1 공용 User API")
 @Controller("/api/v1/free-use/user")
 export class UserVersionOneFreeUseController {
