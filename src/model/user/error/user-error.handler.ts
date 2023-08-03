@@ -22,7 +22,6 @@ export class UserErrorHandler extends EntityErrorHandler implements Throwable {
 
   public handle(error: TypeORMError): void {
     this.notFound(error);
-    this.duplicated(error);
     super.throwException(error);
   }
 
@@ -63,20 +62,6 @@ export class UserErrorHandler extends EntityErrorHandler implements Throwable {
       throw new NotFoundException(
         "사용자 실명과 전화번호가 서로 일치하지 않습니다.",
       );
-    }
-  }
-
-  private duplicated(error: TypeORMError): void {
-    if (error.message.includes("Duplicate entry") && this.phoneNumberStuff) {
-      throw new BadRequestException("중복된 전화번호입니다.");
-    }
-
-    if (error.message.includes("Duplicate entry") && this.emailStuff) {
-      throw new BadRequestException("중복된 이메일입니다.");
-    }
-
-    if (error.message.includes("Duplicate entry") && this.nickNameStuff) {
-      throw new BadRequestException("중복된 닉네임입니다.");
     }
   }
 }

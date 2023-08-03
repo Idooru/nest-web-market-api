@@ -22,7 +22,6 @@ export class ProductErrorHandler
 
   public handle(error: TypeORMError): void {
     this.notFound(error);
-    this.duplicated(error);
     this.badRequest(error);
     super.throwException(error);
   }
@@ -44,12 +43,6 @@ export class ProductErrorHandler
       throw new NotFoundException(
         `해당 이름(${this.nameStuff.value})의 상품을 찾을 수 없습니다. 검증 API를 먼저 사용해주세요.`,
       );
-    }
-  }
-
-  private duplicated(error: TypeORMError): void {
-    if (error.message.includes("Duplicate entry") && this.nameStuff) {
-      throw new BadRequestException("중복된 상품 이름입니다.");
     }
   }
 
