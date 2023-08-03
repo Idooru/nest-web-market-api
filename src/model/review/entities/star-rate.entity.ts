@@ -7,7 +7,7 @@ export class StarRateEntity extends ChildEntity {
   @OneToOne(() => ProductEntity, (product) => product.StarRate, {
     onDelete: "CASCADE",
   })
-  @JoinColumn({ name: "productId" })
+  @JoinColumn({ name: "id" })
   Product: ProductEntity;
 
   @Column({ type: "float", default: 0 })
