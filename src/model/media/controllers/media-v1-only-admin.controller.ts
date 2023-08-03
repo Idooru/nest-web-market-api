@@ -4,7 +4,6 @@ import {
   Get,
   Inject,
   Post,
-  UploadedFile,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -12,11 +11,10 @@ import {
 import { MulterConfigService } from "src/common/config/multer.config";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
+import { FilesInterceptor } from "@nestjs/platform-express";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { JsonSendCookieInterceptor } from "src/common/interceptors/general/json-send-cookie.interceptor";
-import { JsonSendCookieInterface } from "src/common/interceptors/interface/json-send-cookie.interface";
 import { JsonClearCookieInterceptor } from "src/common/interceptors/general/json-clear-cookie.interceptor";
 import { JsonClearCookieInterface } from "src/common/interceptors/interface/json-clear-cookie.interface";
 import { MediaGeneralService } from "../services/media-general.service";
@@ -43,6 +41,7 @@ import { JsonGeneralInterface } from "src/common/interceptors/interface/json-gen
 import { ProductImageEntity } from "../entities/product-image.entity";
 import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { InquiryResponseVideoEntity } from "../entities/inquiry-response-video.entity";
 
 @ApiTags("v1 관리자 Media API")
 @UseGuards(IsAdminGuard)
@@ -69,19 +68,23 @@ export class MediaVersionOneOnlyAdminController {
   @Get("/product/image")
   async findUploadedProductImage(
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-    @MediaCookieParser(productMediaCookieKey.image_url_cookie)
-    productImgCookie: MediaDto,
-  ): Promise<JsonGeneralInterface<ProductImageEntity>> {
-    const uploadedProductImage =
-      await this.mediaGeneralService.findUploadedProductImage(
+    @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
+    productImgCookies: MediaDto[],
+  ): Promise<JsonGeneralInterface<ProductImageEntity[]>> {
+    const productImages = await this.mediaAccessoryService.findProductImages(
+      productImgCookies,
+    );
+
+    const uploadedProductImages =
+      await this.mediaGeneralService.findUploadedProductImages(
         jwtPayload.email,
-        productImgCookie.url,
+        productImages,
       );
 
     return {
       statusCode: 200,
       message: "현재 업로드된 상품 이미지를 가져옵니다.",
-      result: uploadedProductImage,
+      result: uploadedProductImages,
     };
   }
 
@@ -126,7 +129,7 @@ export class MediaVersionOneOnlyAdminController {
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
     @MediaCookiesParser(inquiryMediaCookieKey.response.video_url_cookie)
     inquiryResponseVdoCookies: MediaDto[],
-  ): Promise<any> {
+  ): Promise<JsonGeneralInterface<InquiryResponseVideoEntity[]>> {
     const inquiryResponseVideos =
       await this.mediaAccessoryService.findInquiryResponseVideos(
         inquiryResponseVdoCookies,
@@ -152,37 +155,37 @@ export class MediaVersionOneOnlyAdminController {
   })
   @UseInterceptors(JsonSendCookieInterceptor)
   @UseInterceptors(
-    FileInterceptor(
+    FilesInterceptor(
       "product_image",
+      MulterConfigService.maxContentsCount,
       MulterConfigService.upload("/images/product"),
     ),
   )
   @Post("/product/image")
   async uploadProductImage(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookieInterface<MediaDto>> {
-    this.mediaAccessoryService.isExistMediaFile("product image", file);
-    this.mediaLoggerLibrary.log("product image", file, null);
+  ): Promise<JsonSendCookiesInterface<MediaDto>> {
+    this.mediaAccessoryService.isExistMediaFiles("product image", files);
+    this.mediaLoggerLibrary.log("product image", files);
 
-    const url = this.mediaAccessoryService.setUrl(
-      file.filename,
-      "product/images",
+    const urls = files.map((file) =>
+      this.mediaAccessoryService.setUrl(file.filename, "product/images"),
     );
 
-    await this.mediaGeneralService.uploadProductImage(jwtPayload, url);
+    await this.mediaGeneralService.uploadProductsImage(files, jwtPayload, urls);
 
-    const cookieValue = this.mediaAccessoryService.createMediaCookieValue(
+    const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
       this.productMedia.image_url_cookie,
-      file,
-      url,
+      files,
+      urls,
     );
 
     return {
       statusCode: 201,
       message: "상품 사진을 업로드 하였습니다.",
       cookieKey: this.productMedia.image_url_cookie,
-      cookieValue,
+      cookieValues,
     };
   }
 
@@ -204,11 +207,11 @@ export class MediaVersionOneOnlyAdminController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookiesInterface<MediaDto>> {
-    this.mediaAccessoryService.isExistMediaFile(
+    this.mediaAccessoryService.isExistMediaFiles(
       "inquiry response image",
       files,
     );
-    this.mediaLoggerLibrary.log("inquiry response images", null, files);
+    this.mediaLoggerLibrary.log("inquiry response images", files);
 
     const urls = files.map((file) =>
       this.mediaAccessoryService.setUrl(
@@ -255,11 +258,11 @@ export class MediaVersionOneOnlyAdminController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookiesInterface<MediaDto>> {
-    this.mediaAccessoryService.isExistMediaFile(
+    this.mediaAccessoryService.isExistMediaFiles(
       "inquiry response video",
       files,
     );
-    this.mediaLoggerLibrary.log("inquiry response video", null, files);
+    this.mediaLoggerLibrary.log("inquiry response video", files);
 
     const urls = files.map((file) =>
       this.mediaAccessoryService.setUrl(

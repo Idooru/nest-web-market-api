@@ -19,14 +19,27 @@ export class MediaGeneralService implements IMediaGeneralService {
     private readonly userGeneralRepository: UserGeneralRepository,
   ) {}
 
-  async findUploadedProductImage(
+  async findUploadedProductImages(
     email: string,
-    url: string,
-  ): Promise<ProductImageEntity> {
-    return await this.mediaGeneralRepository.findUploadedProductImage(
-      email,
-      url,
-    );
+    productImages: ProductImageEntity[],
+  ): Promise<ProductImageEntity[]> {
+    if (productImages.length >= 2) {
+      const promises = productImages.map(async (productImage) => {
+        return await this.mediaGeneralRepository.findUploadedProductImage(
+          email,
+          productImage.url,
+        );
+      });
+
+      return await Promise.all(promises);
+    } else {
+      return [
+        await this.mediaGeneralRepository.findUploadedProductImage(
+          email,
+          productImages[0].url,
+        ),
+      ];
+    }
   }
 
   async findUploadedReviewImages(
@@ -165,19 +178,33 @@ export class MediaGeneralService implements IMediaGeneralService {
     }
   }
 
-  async uploadProductImage(
+  async uploadProductsImage(
+    files: Array<Express.Multer.File>,
     jwtPayload: JwtAccessTokenPayload,
-    url: string,
+    urls: string[],
   ): Promise<void> {
     const user =
       await this.userGeneralRepository.findAdminUserProfileInfoWithId(
         jwtPayload.userId,
       );
 
-    await this.mediaGeneralRepository.uploadProductImage({
-      url,
-      uploader: user.Auth.email,
-    });
+    if (files.length >= 2) {
+      const promises = urls.map(async (url) => {
+        await this.mediaGeneralRepository.uploadProductImage({
+          url,
+          uploader: user.Auth.email,
+        });
+      });
+
+      await Promise.all(promises);
+    } else {
+      const url = urls[0];
+
+      await this.mediaGeneralRepository.uploadProductImage({
+        url,
+        uploader: user.Auth.email,
+      });
+    }
   }
 
   async uploadReviewImage(

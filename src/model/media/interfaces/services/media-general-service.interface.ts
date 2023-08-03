@@ -9,10 +9,10 @@ import { ReviewVideoEntity } from "../../entities/review-video.entity";
 import { MediaDto } from "../../dto/media.dto";
 
 export interface IMediaGeneralService {
-  findUploadedProductImage(
+  findUploadedProductImages(
     email: string,
-    url: string,
-  ): Promise<ProductImageEntity>;
+    productImages: ProductImageEntity[],
+  ): Promise<ProductImageEntity[]>;
   findUploadedReviewImages(
     email: string,
     reviewImages: ReviewImageEntity[],
@@ -37,9 +37,10 @@ export interface IMediaGeneralService {
     email: string,
     inquiryResponseVideos: InquiryResponseVideoEntity[],
   ): Promise<InquiryResponseVideoEntity[]>;
-  uploadProductImage(
+  uploadProductsImage(
+    files: Array<Express.Multer.File>,
     jwtPayload: JwtAccessTokenPayload,
-    url: string,
+    urls: string[],
   ): Promise<void>;
   uploadReviewImage(
     files: Array<Express.Multer.File>,

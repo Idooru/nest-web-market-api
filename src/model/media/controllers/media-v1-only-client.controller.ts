@@ -192,8 +192,8 @@ export class MediaVersionOneOnlyClientController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookiesInterface<MediaDto>> {
-    this.mediaAccessoryService.isExistMediaFile("review image", files);
-    this.mediaLoggerLibrary.log("review images", null, files);
+    this.mediaAccessoryService.isExistMediaFiles("review image", files);
+    this.mediaLoggerLibrary.log("review images", files);
 
     const urls = files.map((file) =>
       this.mediaAccessoryService.setUrl(file.filename, "review/images"),
@@ -233,8 +233,8 @@ export class MediaVersionOneOnlyClientController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookiesInterface<MediaDto>> {
-    this.mediaAccessoryService.isExistMediaFile("review video", files);
-    this.mediaLoggerLibrary.log("review videos", null, files);
+    this.mediaAccessoryService.isExistMediaFiles("review video", files);
+    this.mediaLoggerLibrary.log("review videos", files);
 
     const urls = files.map((file) =>
       this.mediaAccessoryService.setUrl(file.filename, "review/videos"),
@@ -274,8 +274,11 @@ export class MediaVersionOneOnlyClientController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookiesInterface<MediaDto>> {
-    this.mediaAccessoryService.isExistMediaFile("inquiry request image", files);
-    this.mediaLoggerLibrary.log("inquiry request images", null, files);
+    this.mediaAccessoryService.isExistMediaFiles(
+      "inquiry request image",
+      files,
+    );
+    this.mediaLoggerLibrary.log("inquiry request images", files);
 
     const urls = files.map((file) =>
       this.mediaAccessoryService.setUrl(
@@ -322,8 +325,11 @@ export class MediaVersionOneOnlyClientController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonSendCookiesInterface<MediaDto>> {
-    this.mediaAccessoryService.isExistMediaFile("inquiry request video", files);
-    this.mediaLoggerLibrary.log("inquiry request videos", null, files);
+    this.mediaAccessoryService.isExistMediaFiles(
+      "inquiry request video",
+      files,
+    );
+    this.mediaLoggerLibrary.log("inquiry request videos", files);
 
     const urls = files.map((file) =>
       this.mediaAccessoryService.setUrl(

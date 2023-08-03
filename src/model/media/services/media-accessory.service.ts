@@ -27,12 +27,9 @@ export class MediaAccessoryService
     super();
   }
 
-  isExistMediaFile(
-    mediaType: string,
-    file: Express.Multer.File | Express.Multer.File[],
-  ): void {
-    if (!file) {
-      this.methodName = this.isExistMediaFile.name;
+  isExistMediaFiles(mediaType: string, files: Express.Multer.File[]): void {
+    if (files.length === 0) {
+      this.methodName = this.isExistMediaFiles.name;
       this.httpExceptionHandlingBuilder
         .setMessage(
           `${mediaType}을(를) 업로드 할 수 없습니다. 파일을 제시해주세요.`,
@@ -80,6 +77,24 @@ export class MediaAccessoryService
     fs.rmSync(
       path.join(__dirname, `../../../../uploads/${mediaPath}/${mediaFileName}`),
     );
+  }
+
+  async findProductImages(productImgCookies: MediaDto[]) {
+    if (productImgCookies.length >= 2) {
+      const promises = productImgCookies.map(async (productImgCookie) => {
+        return await this.mediaGeneralRepository.findProductImageWithUrl(
+          productImgCookie.url,
+        );
+      });
+
+      return await Promise.all(promises);
+    } else {
+      return [
+        await this.mediaGeneralRepository.findProductImageWithUrl(
+          productImgCookies[0].url,
+        ),
+      ];
+    }
   }
 
   async findReviewImages(

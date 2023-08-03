@@ -7,10 +7,7 @@ import { ReviewImageEntity } from "../../entities/review-image.entity";
 import { ReviewVideoEntity } from "../../entities/review-video.entity";
 
 export interface IMediaAccessoryService {
-  isExistMediaFile(
-    mediaType: string,
-    file: Express.Multer.File | Express.Multer.File[],
-  ): void;
+  isExistMediaFiles(mediaType: string, files: Express.Multer.File[]): void;
   setUrl(mediaFileName: string, path: string): string;
   createMediaCookieValue(
     cookieKey: string,
