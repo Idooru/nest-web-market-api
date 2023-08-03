@@ -7,6 +7,7 @@ import {
 import { Request } from "express";
 import { HttpExceptionHandlingBuilder } from "src/common/lib/error-handler/http-exception-handling.builder";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
+
 @Injectable()
 export class IsClientGuard extends ErrorHandlerProps implements CanActivate {
   constructor(
