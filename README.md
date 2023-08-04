@@ -138,14 +138,24 @@ Nest is [MIT licensed](LICENSE).
     문제는 따로 메서드를 만든 후, err.message배열에서 배열 메서드를 사용한 후 idx 매개변수를 이용해 접근해보려 했지만 idx 변수에 타입을 주지 않으면 idx.reason에 접근이 불가능해진다. idx에 정확한 타입을 주어야 할거 같다.
 
 13. cascade 해결
+
 14. UserEntity에서 원하는 정보만 쿼리빌더를 사용해서 빼오기 해결
+
 15. 전체 사용자가 사용할 수 있는 api 컨트롤러를 free-use와 only-admin으로 나눠 보았다. 아직은 Product 도메인만 적용되었지만 나중에 모든 도메인에 적용해볼것이다.
+
 16. jwt 인증 로직 기능 중 access token과 refresh token을 나누어 사용해 보았다. 주요 인증 기능인 access token의 유효 시간을 짧게 한 후, 유효 시간이 초과되었을 때 access token과 refresh token을 다시 발급 하여 사용할 수 있게 하였다. 이렇게 되면 access token이 탈취 되었다고 가정할 때 refresh token만큼은 잘 간직하고 있다가 refresh token API를 호출할 때 키로 사용하여 토큰을 다시 복구할 수 있게 된다. 만약 refresh token 마저 탈취 되면 답이 없을 거 같다.
+
 17. 각 도메인 마다 general과 verify 컨트롤러, 서비스, 리파지토리 등을 추가했다. 기존에는 general(여태 사용되었던 기본적인 컨트롤러, 서비스, 리파지토리)에서 수행되어야 할 검증과 기능이 공존했다면 이제는 이를 분리하여 사용하도록 했다. 이를 분리함으로서 나름 SRP(Single Responsibility Principle)를 준수하게 된거 같다. verify 컴포넌트의 존재 이유는 데이터베이스 작업을 할 때 각 entity에 unique 옵션이 달린 컬럼이 존재 할 시, 이를 확인 하지 않고 작업을 수행하다가 duplicate 에러가 날 확률이 존재한다. 이 확률을 최대한 줄이기 위해서 먼저 verify 컴포넌트 로직을 거치게 된 후, general 컴포넌트 작업을 거치도록 한다. (하지만 이것 역시 완벽하진 않다. 왜냐하면 verify 컴포넌트를 통해서 해당 컬럼에 해당되는 값을 검증한다 해도 general 컴포넌트 작업에서 이전에 검증된 값을 사용하지 않는다면(예를 들어 사용자 닉네임으로 데이터베이스에 존재하지 않는 UserA라는 닉네임을 검증 받은 후, general 컴포넌트에서 데이터베이스에 존재하는 UserB라는 닉네임으로 작업을 하게 될 때), 결국 데이터베이스에 존재하게 된 값을 사용하게 됨으로 이는 프론트엔드에서 요청을 적절히 수행해야 한다.)
+
 18. PromiseLibrary 기능을 사용 중지할 계획이다. 기존에는 여러 개의 프로미스를 처리할 상황이 생기게 된다면 우선 Promise.allSettled() 메서드에 인자로 프로미스를 반환하는 메서드를 넣고 그 반환값을 PromiseProcessor 클래스의 처리 메서드(twoPromiseSettled, threePromiseSettled 등)에 넣고 호출하게 되면 Settled 타입의 값을 내가 원하는 값(PromiseSettledResult가 아닌 동기적인 값(표현이 어색하지만 딱히 표현할 방도를 몰라 이렇게 표현하였다.))을 얻을 수 있게 되었다. 만일 여기서 처리 도중 에러가 나게 된다면 PromiseHandleException을 던지게 되고 이 던져진 예외를 PromiseExceptionFilter가 이 예외를 처리하게 되는 방식이다. 하지만 이는 너무 복잡한 방식이며 나중에 이런 과정을 거치지 않고 더 편리하게 다수의 프로미스 반환 메서드를 처리할 방법을 알아 내게 되었다. Promise.allSettled()대신 Promise.all()을 사용하는 것이다. Promise.all을 사용하게 되면 우선적으로 반환값이 PromiseSettledResult 타입을 갖지 않고 동기적인 값을 얻을 수 있게 된다. 두 번째로 만약 프로미스를 반환하는 메서드를 처리하다 에러가 났을 시 Promise.allSettled()메서드는 실패가 했을 시에도 우선 PromiseRejectedResult 타입으로 값을 가지게된다. 하지만 Promise.all()을 사용할 때는 이 메서드의 인자로 실패 할 거 같은 프로미스를 반환하는 메서드를 주게 될 떄 프로미스를 반환하는 메서드 내부에 try catch 로 감싼 후 그 내부 로직안에서 프로미스 예외가 나게 된다면 catch가 그 예외를 잡을 것이고 잡혀진 예외를 다시 HttpException으로 던지면 다시 이를 HttpFilter가 캐치하여 클라이언트에게 응답으로 요청에 대한 실패를 응답으로 보낼 수 있게 된다. 이는 백엔드쪽에서 유용하게 사용될 거 같은 이유가 Promise.allSettled와는 달리 Promise.all은 하나만 실패해도 전부 실패처리가 되게 한다. 이를 통해 데이터 처리가 엄격해야 할 경우에 좋게 사용될거 같다. 만약에 A라는 다중 프로미스 처리가 있고 이 결과를 이용해 B라는 다른 로직을 수행해야 할 상황이 생길 때 A에서 하나는 성공했는데 다른게 성공안됐다고 이를 묵인해버린다면 별로 좋지 않은 상황이 생길거 같다. 마지막으로 궁극적인 이유가 Promise.allSettled를 사용할 시 위에서도 언급했지만 성공 혹은 실패를 결과값으로 PromiseSettledResult 혹은 PromiseRejectedResult 두개로 받을 수 있다. 여기서 원하는 동기적인 값을 얻으려면 PromiseProcessor 처럼 약간 복잡한 로직을 거치게 된다. 이러면 런타임에도 좋지 않을 거 처럼 생각이 되었고 응답 시간이 늦춰질 거라 생각이 되어 아쉽지만 PromiseLibrary는 파기 해야 할 거 같다. 나중을 위해 아예 파일 삭제를 하는 대신 src/deprecated이라는 디렉터리에 저장해 놓을 계획이다.
+
 19. 이전에 typeorm 옵션중인 synchronize를 true로 했을 시, 잘 안되는 경향(애플리케이션을 실행할 수 없던 상태) 이 있었는데 database키의 값을 사용하던 데이터베이스 스키마의 이름을 소문자로 하였더니 적용이 잘 되었다. 참고하자.
+
 20. GPT의 도움으로 Validation Exception, 즉 예외 처리할 때 발생하게 될 예외를 커스텀 할 수 있게 되었다. 그리고 내가 이전에 만들어 두었던 Validation Filter에서 @Catch() 데코레이터에 ValidationException을 적용하였는데 문제는 컨트롤러에서 유효성 검사를 하게 되고 유효성 검사에 실패하였을 때 throw new ValidationException()으로 유효성 검사 예외를 던질 때 발생하였다. 그 문제는 ValidationException 클래스 안에서 발생하게 되었는데 ValidationException 클래스는 HttpException을 커스텀해서, 즉 래핑(상속)을 함으로써 만들어진 HttpException의 super set으로 보면 적절할 거 같다. 이렇게 만들어진 ValidationException을 ValidationExceptionFilter에서 걸러지게 해야 하는데 이 과정에서 "RangeError: Invalid status code: undefined" 이런 에러가 나와서 당혹쓰러웠다. (이 에러는 nestjs에서 자체적으로 잡아주지 못하기(catch할 수 없기) 때문에 에러가 터지면 서버가 가버린다. 조심하자.) 이 문제는 이 앱에서 사용되는 두개의 필터를 컨트롤러에서 사용하는것이 아닌 앱 전체에서 사용하기 위해 useGlobalFilters에 적용시켜두었는데 이 필터의 순서를 위에서 아래로 본다고 가정할 때, HttpExceptionFilter -> ValidationExceptionFilter 이 순서로 적용을 해야 했다. 이전에도 이런 비슷한 상황의 유의 사항을 작성한 적이 있었는데 filter, interceptor, pipe등등 nestjs에서 제공되는 기능들은 보통의 코드와 다르게 밑에서 부터(들여쓰기가 되지 않는다면 오른쪽부터)위로 이런 요소들이 적용되는 것으로 보인다. 정확한 원리는 모르겠지만 이런식으로하니 해결이 되었다.
+
 21. 관리자 (혹은 고객) 사용자의 프로필 정보를 가져오는 쿼리에서 Admin 엔티티의 모든 컬럼(Admin의 아이디를 제외한 모든 컬럼)을 가져오지 않기 위해 select 리스트에서 Admin을 통째로 select하지 않고 Admin.createdProduct, Admin.writtenInquiryResponse으로 필드를 select하려했지만 QueryFailedError: Unknown column 'Admin.createdProduct' in 'field list' 이런 에러가 던져지게 되었다. 아쉬운대로 adminActions.id에 null을 대입하여 임시방편으로 처리한다.
+
+22. 미디어 파일을 업로드하는 컨트롤러에서 여러 개의 미디어 파일을 업로드한다고 가정할 때 만약 업로드할 파일들의 이름이 모두 동일하다면 파일의 이름으로 url을 생성하고 이를 데이터베이스에 적재하는 과정에서 duplicated 에러가 발생하게 된다. 아직 프론트엔드가 확립되진 않았지만 이 문제를 해결하려면 프론트엔드 쪽에서 파일의 이름을 검증할 필요가 있다. 현재로서는 이런 api를 테스트할 때 같은 이름의 미디어 파일을 여러개 업로드 하는 행위는 하지 않도록한다.
 
 ## TO DO
 
