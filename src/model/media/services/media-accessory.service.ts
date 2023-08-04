@@ -49,18 +49,6 @@ export class MediaAccessoryService
     )}/media/${path}/${mediaFileName}`.toLowerCase();
   }
 
-  createMediaCookieValue(
-    cookieKey: string,
-    file: Express.Multer.File,
-    url: string,
-  ): MediaDto {
-    return {
-      whatCookie: cookieKey,
-      url,
-      fileName: file.filename,
-    };
-  }
-
   createMediaCookieValues(
     cookieKey: string,
     files: Express.Multer.File[],
