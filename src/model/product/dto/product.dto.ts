@@ -2,7 +2,7 @@ import { ProductEntity } from "../entities/product.entity";
 import { ApiProperty, PickType } from "@nestjs/swagger";
 import { ProductCategory } from "../types/product-category.type";
 
-export class CreateProductDto extends PickType(ProductEntity, [
+export class ProductDto extends PickType(ProductEntity, [
   "name",
   "price",
   "origin",
