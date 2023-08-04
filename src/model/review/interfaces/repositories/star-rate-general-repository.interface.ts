@@ -1,7 +1,8 @@
+import { ProductEntity } from "src/model/product/entities/product.entity";
 import { StarRateEntity } from "../../entities/star-rate.entity";
 
 export interface IStarRateGeneralRepository {
-  createStarRateSample(): Promise<StarRateEntity>;
+  createStarRate(product: ProductEntity): Promise<void>;
   increaseStarRate(
     starRate: StarRateEntity,
     scoreChosenByClient: number,

@@ -21,7 +21,7 @@ import { JsonGeneralInterface } from "src/common/interceptors/interface/json-gen
 import { JsonClearCookieInterceptor } from "src/common/interceptors/general/json-clear-cookie.interceptor";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { CreateProductDto } from "../../dto/create-product.dto";
+import { ProductDto } from "../../dto/product.dto";
 import { ModifyProductDto } from "../../dto/modify-product.dto";
 import { ProductEntity } from "../../entities/product.entity";
 import { ProductGeneralService } from "../../services/product-general.service";
@@ -38,6 +38,10 @@ import { ModifyProductDesctiptionDto } from "../../dto/modify-product-descriptio
 import { ModifyProductQuantityDto } from "../../dto/modify-product-quantity.dto";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { ModifyProductCategoryDto } from "../../dto/modify-product-category.dto";
+import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
+import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
+import { JsonClearCookiesInterface } from "src/common/interceptors/interface/json-clear-cookies.interface";
+import { ProductAccessoryService } from "../../services/product-accessory.service";
 
 @ApiTags("v1 관리자 Product API")
 @UseGuards(IsAdminGuard)
@@ -48,6 +52,7 @@ export class ProductVersionOneOnlyAdminController {
     @Inject("ProductMediaCookieKey")
     private readonly productMedia: ProductMediaCookieKey,
     private readonly productGeneralService: ProductGeneralService,
+    private readonly productAccessoryService: ProductAccessoryService,
   ) {}
 
   @ApiOperation({
@@ -72,28 +77,44 @@ export class ProductVersionOneOnlyAdminController {
     description:
       "상품을 생성합니다. 생성하려는 상품의 이름이 이미 데이터베이스에 존재하거나 가격, 수량을 양의 정수 이외의 숫자로 지정하면 에러를 반환합니다. 이 api를 실행하기 전에 무조건 상품 이미지를 하나 업로드해야 합니다.",
   })
-  @UseInterceptors(JsonClearCookieInterceptor)
+  @UseInterceptors(JsonClearCookiesInterceptor)
   @UseGuards(
     new VerifyDataGuard(productVerifyCookieKey.is_not_exist.name_executed),
   )
   @Post("/")
   async createProduct(
-    @Body()
-    createProductDto: CreateProductDto,
-    @MediaCookieParser("product_image_url_cookie")
-    productImgCookie: MediaDto,
+    @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
+    productImgCookies: MediaDto[],
+    @Body() productDto: ProductDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonClearCookieInterface> {
-    await this.productGeneralService.createProduct(
-      createProductDto,
-      productImgCookie,
+  ): Promise<JsonClearCookiesInterface> {
+    const product = await this.productGeneralService.createProduct({
+      productDto,
       jwtPayload,
-    );
+    });
+
+    const starRateWork = async () =>
+      await this.productAccessoryService.createStarRate(product);
+
+    const mediaWork = async () => {
+      await this.productAccessoryService.pushProductImages({
+        productDto,
+        productImgCookies,
+      });
+
+      await this.productAccessoryService.insertProductImages({
+        productImgCookies,
+        productDto,
+        product,
+      });
+    };
+
+    await Promise.all([starRateWork(), mediaWork()]);
 
     return {
       statusCode: 201,
       message: "상품을 생성하였습니다.",
-      cookieKey: "product_image_url_cookie",
+      cookieKey: [...productImgCookies.map((cookie) => cookie.whatCookie)],
     };
   }
 

@@ -8,6 +8,7 @@ export class ProductDto extends PickType(ProductEntity, [
   "origin",
   "category",
   "description",
+  "Image",
 ] as const) {
   @ApiProperty({
     description: "상품 이름",

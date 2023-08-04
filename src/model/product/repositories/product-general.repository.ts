@@ -1,16 +1,15 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ModifyProductDto } from "../dto/modify-product.dto";
-import { CreateProductDto } from "../dto/create-product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { InsertResult, Repository } from "typeorm";
 import { ProductEntity } from "../entities/product.entity";
-import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { ProductSelectProperty } from "src/common/config/repository-select-configs/product.select";
 import { TypeOrmErrorHandlingBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
 import { IProductGeneralRepository } from "../interfaces/repositories/product-general-repository.interface";
 import { ProductErrorHandler } from "../error/product-error.handler";
 import { ProductCategory } from "../types/product-category.type";
+import { CreateProductDao } from "../dto/create-product-dto";
 
 @Injectable()
 export class ProductGeneralRepository
@@ -190,15 +189,15 @@ export class ProductGeneralRepository
   }
 
   async createProduct(
-    createProductDto: CreateProductDto,
-    admin: AdminUserEntity,
+    createProductDao: CreateProductDao,
   ): Promise<InsertResult> {
     try {
+      const { productDto, admin } = createProductDao;
       return await this.productRepository
         .createQueryBuilder()
         .insert()
         .into(ProductEntity)
-        .values({ creater: admin, ...createProductDto })
+        .values({ ...productDto, creater: admin })
         .execute();
     } catch (err) {
       this.methodName = this.createProduct.name;

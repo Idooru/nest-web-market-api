@@ -1,8 +1,8 @@
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
-import { CreateProductDto } from "../../dto/create-product.dto";
 import { ProductEntity } from "../../entities/product.entity";
 import { InsertResult } from "typeorm";
 import { ModifyProductDto } from "../../dto/modify-product.dto";
+import { CreateProductDao } from "../../dto/create-product-dto";
 
 export interface IProductGeneralRepository {
   findAllProductsFromLatest(): Promise<ProductEntity[]>;
@@ -11,7 +11,7 @@ export interface IProductGeneralRepository {
   findOneProductById(id: string): Promise<ProductEntity>;
   findProductOneJustNeedStarRate(id: string): Promise<ProductEntity>;
   createProduct(
-    createProductDto: CreateProductDto,
+    createProductDao: CreateProductDao,
     admin: AdminUserEntity,
   ): Promise<InsertResult>;
   modifyProduct(id: string, modifyProductDto: ModifyProductDto): Promise<void>;

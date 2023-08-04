@@ -1,19 +1,14 @@
 import { MediaDto } from "src/model/media/dto/media.dto";
 import { ModifyProductDto } from "../../dto/modify-product.dto";
 import { ProductEntity } from "../../entities/product.entity";
-import { CreateProductDto } from "../../dto/create-product.dto";
-import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
+import { CreateProductDto } from "../../dto/create-product-dto";
 
 export interface IProductGeneralService {
   findAllProductsFromLatest(): Promise<ProductEntity[]>;
   findAllProductsFromOldest(): Promise<ProductEntity[]>;
   findProductByName(name: string): Promise<ProductEntity>;
   findProductById(id: string): Promise<ProductEntity>;
-  createProduct(
-    createProductDto: CreateProductDto,
-    imageCookie: MediaDto,
-    jwtPayload: JwtAccessTokenPayload,
-  ): Promise<void>;
+  createProduct(createProductDto: CreateProductDto): Promise<ProductEntity>;
   modifyProduct(
     id: string,
     modifyProductDto: ModifyProductDto,

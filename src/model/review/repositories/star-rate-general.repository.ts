@@ -7,6 +7,7 @@ import { ReviewSelectProperty } from "src/common/config/repository-select-config
 import { TypeOrmErrorHandlingBuilder } from "src/common/lib/error-handler/typeorm-error-handling.builder";
 import { StarRateErrorHandler } from "../error/star-rate-error.handler";
 import { IStarRateGeneralRepository } from "../interfaces/repositories/star-rate-general-repository.interface";
+import { ProductEntity } from "src/model/product/entities/product.entity";
 
 @Injectable()
 export class StarRateGeneralRepository
@@ -23,12 +24,11 @@ export class StarRateGeneralRepository
     super();
   }
 
-  async createStarRateSample(): Promise<StarRateEntity> {
+  async createStarRate(product: ProductEntity): Promise<void> {
     try {
-      const starRate = this.starRateRepository.create({});
-      return await this.starRateRepository.save(starRate);
+      await this.starRateRepository.save({ id: product.id });
     } catch (err) {
-      this.methodName = this.createStarRateSample.name;
+      this.methodName = this.createStarRate.name;
       this.typeOrmErrorHandlerBuilder
         .setErrorHandler(StarRateErrorHandler)
         .setError(err)

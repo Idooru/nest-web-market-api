@@ -2,10 +2,8 @@ import { StarRateGeneralRepository } from "../../review/repositories/star-rate-g
 import { ProductEntity } from "../entities/product.entity";
 import { ProductGeneralRepository } from "../repositories/product-general.repository";
 import { Injectable } from "@nestjs/common";
-import { CreateProductDto } from "../dto/create-product.dto";
 import { ModifyProductDto } from "../dto/modify-product.dto";
 import { MediaGeneralRepository } from "src/model/media/repositories/media-general.repository";
-import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
 import { MediaInsertRepository } from "src/model/media/repositories/media-insert.repository";
 import { StarRateInsertRepository } from "src/model/review/repositories/star-rate-insert.repository";
@@ -14,17 +12,17 @@ import { ProductAccessoryService } from "./product-accessory.service";
 import { MediaDto } from "src/model/media/dto/media.dto";
 import { IProductGeneralService } from "../interfaces/services/product-general-service.interface";
 import { ProductCategory } from "../types/product-category.type";
+import { CreateProductDto } from "../dto/create-product-dto";
 
 @Injectable()
 export class ProductGeneralService implements IProductGeneralService {
   constructor(
     private readonly productGeneralRepository: ProductGeneralRepository,
     private readonly mediaGeneralRepository: MediaGeneralRepository,
-    private readonly starRateRepository: StarRateGeneralRepository,
     private readonly userGeneralRepository: UserGeneralRepository,
     private readonly productInsertRepository: ProductInsertRepository,
     private readonly mediaInsertRepository: MediaInsertRepository,
-    private readonly starRateInsertRepository: StarRateInsertRepository,
+
     private readonly productAccessoryService: ProductAccessoryService,
   ) {}
 
@@ -52,33 +50,30 @@ export class ProductGeneralService implements IProductGeneralService {
 
   async createProduct(
     createProductDto: CreateProductDto,
-    imageCookie: MediaDto,
-    jwtPayload: JwtAccessTokenPayload,
-  ): Promise<void> {
-    const [image, StarRate, admin] = await Promise.all([
-      this.mediaGeneralRepository.findProductImageWithUrl(imageCookie.url),
-      this.starRateRepository.createStarRateSample(),
-      this.userGeneralRepository.findAdminUserObjectWithId(jwtPayload.userId),
-    ]);
+  ): Promise<ProductEntity> {
+    const { productDto, jwtPayload } = createProductDto;
 
-    const productOutput = await this.productGeneralRepository.createProduct(
-      createProductDto,
-      admin,
+    const admin = await this.userGeneralRepository.findAdminUserObjectWithId(
+      jwtPayload.userId,
     );
 
-    const productId: string = productOutput.generatedMaps[0].id;
+    const productOutput = await this.productGeneralRepository.createProduct({
+      productDto,
+      admin,
+    });
+
+    const productId = productOutput.generatedMaps[0].id;
 
     const product = await this.productInsertRepository.findOneProductById(
       productId,
     );
 
-    await Promise.all([
-      this.mediaInsertRepository.insertProductIdOnProductImage(image, product),
-      this.starRateInsertRepository.insertProductIdOnStarRate(
-        StarRate,
-        product,
-      ),
-    ]);
+    await this.productInsertRepository.insertProductIdOnAdminUser(
+      admin,
+      product,
+    );
+
+    return product;
   }
 
   async modifyProduct(
