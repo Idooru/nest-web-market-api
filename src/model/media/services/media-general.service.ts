@@ -375,12 +375,25 @@ export class MediaGeneralService implements IMediaGeneralService {
     }
   }
 
-  async deleteProductImageWithCookies(imageCookie: MediaDto): Promise<void> {
-    const image = await this.mediaGeneralRepository.findProductImageWithUrl(
-      imageCookie.url,
-    );
+  async deleteProductImageWithCookies(
+    productImgCookies: MediaDto[],
+  ): Promise<void> {
+    if (productImgCookies.length >= 2) {
+      const promises = productImgCookies.map(async (cookie) => {
+        const image = await this.mediaGeneralRepository.findProductImageWithUrl(
+          cookie.url,
+        );
+        await this.mediaGeneralRepository.deleteProductImageWithId(image.id);
+      });
 
-    await this.mediaGeneralRepository.deleteProductImageWithId(image.id);
+      await Promise.all(promises);
+    } else {
+      const image = await this.mediaGeneralRepository.findProductImageWithUrl(
+        productImgCookies[0].url,
+      );
+
+      await this.mediaGeneralRepository.deleteProductImageWithId(image.id);
+    }
   }
 
   async deleteReviewImagesWithCookies(

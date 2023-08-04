@@ -72,7 +72,7 @@ export interface IMediaGeneralService {
     jwtPayload: JwtAccessTokenPayload,
     urls: string[],
   ): Promise<void>;
-  deleteProductImageWithCookies(imageCookie: MediaDto): Promise<void>;
+  deleteProductImageWithCookies(productImgCookies: MediaDto[]): Promise<void>;
   deleteReviewImagesWithCookies(reviewImgCookies: MediaDto[]): Promise<void>;
   deleteReviewVideosWithCookies(reviewVdoCookies: MediaDto[]): Promise<void>;
   deleteInquiryRequestImagesWithCookies(

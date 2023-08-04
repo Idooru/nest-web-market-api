@@ -8,18 +8,11 @@ export class MediaBundleService implements IMediaBundleService {
   constructor(private readonly mediaAccessoryService: MediaAccessoryService) {}
 
   deleteMediaFile(mediaCookies: MediaDto[], mediaPath: string): void {
-    if (mediaCookies.length >= 2) {
-      mediaCookies.forEach((cookie) => {
-        this.mediaAccessoryService.deleteMediaFilesOnServerDisk(
-          cookie.fileName,
-          mediaPath,
-        );
-      });
-    } else {
+    mediaCookies.forEach((cookie) => {
       this.mediaAccessoryService.deleteMediaFilesOnServerDisk(
-        mediaCookies[0].fileName,
+        cookie.fileName,
         mediaPath,
       );
-    }
+    });
   }
 }

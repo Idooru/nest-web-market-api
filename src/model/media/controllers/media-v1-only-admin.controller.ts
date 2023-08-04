@@ -14,11 +14,7 @@ import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-paylo
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { JsonSendCookieInterceptor } from "src/common/interceptors/general/json-send-cookie.interceptor";
-import { JsonClearCookieInterceptor } from "src/common/interceptors/general/json-clear-cookie.interceptor";
-import { JsonClearCookieInterface } from "src/common/interceptors/interface/json-clear-cookie.interface";
 import { MediaGeneralService } from "../services/media-general.service";
-import { MediaCookieParser } from "src/common/decorators/media-cookie-parser.decorator";
 import { MediaAccessoryService } from "../services/media-accessory.service";
 import { JsonSendCookiesInterface } from "src/common/interceptors/interface/json-send-cookies.interface";
 import { JsonSendCookiesInterceptor } from "src/common/interceptors/general/json-send-cookies.interceptor";
@@ -153,7 +149,7 @@ export class MediaVersionOneOnlyAdminController {
     description:
       "상품 이미지를 업로드합니다. 상품 이미지는 api를 호출할 때 하나씩만 업로드가 가능합니다. 업로드된 상품 이미지는 쿠키에 기재되어 다른 api에서 사용이 가능합니다.",
   })
-  @UseInterceptors(JsonSendCookieInterceptor)
+  @UseInterceptors(JsonSendCookiesInterceptor)
   @UseInterceptors(
     FilesInterceptor(
       "product_image",
@@ -296,25 +292,27 @@ export class MediaVersionOneOnlyAdminController {
     description:
       "상품 이미지 업로드를 취소합니다. 클라이언트에 저장되어 있던 상품 이미지 쿠키를 제거합니다.",
   })
-  @UseInterceptors(JsonClearCookieInterceptor)
+  @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/product/image")
   async cancelImageUploadForProduct(
-    @MediaCookieParser(productMediaCookieKey.image_url_cookie)
-    productImgCookie: MediaDto,
-  ): Promise<JsonClearCookieInterface> {
+    @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
+    productImgCookies: MediaDto[],
+  ): Promise<JsonClearCookiesInterface> {
     await this.mediaGeneralService.deleteProductImageWithCookies(
-      productImgCookie,
+      productImgCookies,
     );
 
     this.mediaBundleService.deleteMediaFile(
-      [productImgCookie],
+      productImgCookies,
       "images/product",
     );
+
+    const cookieKey = productImgCookies.map((cookie) => cookie.whatCookie);
 
     return {
       statusCode: 200,
       message: "상품 사진 업로드를 취소하였습니다.",
-      cookieKey: productImgCookie.whatCookie,
+      cookieKey,
     };
   }
 

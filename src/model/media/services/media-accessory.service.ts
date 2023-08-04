@@ -28,7 +28,7 @@ export class MediaAccessoryService
   }
 
   isExistMediaFiles(mediaType: string, files: Express.Multer.File[]): void {
-    if (files.length === 0) {
+    if (!files || !files.length) {
       this.methodName = this.isExistMediaFiles.name;
       this.httpExceptionHandlingBuilder
         .setMessage(
