@@ -40,9 +40,9 @@ export class ProductVersionOneVerfiyController {
   }
 
   @ApiOperation({
-    summary: "is exist product name",
+    summary: "is none exist product name",
     description:
-      "파라미터로 받은 상품의 이름이 데이터베이스에 존재하는지 검증합니다.",
+      "파라미터로 받은 상품의 이름이 데이터베이스에 존재하지 않는지 검증합니다.",
   })
   @UseInterceptors(SendVerifyCookieInterceptor)
   @Get("/none-existent/name/:name")
