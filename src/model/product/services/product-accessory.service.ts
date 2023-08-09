@@ -73,11 +73,11 @@ export class ProductAccessoryService
   }
 
   async pushOneProductImageInDto(
-    productImgCookies: MediaDto[],
+    productImgCookie: MediaDto[],
     productDto: ProductDto,
   ): Promise<void> {
     const image = await this.mediaGeneralRepository.findProductImageWithUrl(
-      productImgCookies[0].url,
+      productImgCookie[0].url,
     );
 
     productDto.Image.push(image);
@@ -136,6 +136,57 @@ export class ProductAccessoryService
       );
     } else {
       await this.insertProductIdOnOneProductImage(productDto.Image[0], product);
+    }
+  }
+
+  async deleteMoreThenTwoProductImages(
+    beforeProductImages: ProductImageEntity[],
+  ) {
+    const promises = beforeProductImages.map(async (beforeProductImage) => {
+      await this.mediaGeneralRepository.deleteProductImageWithId(
+        beforeProductImage.id,
+      );
+    });
+
+    await Promise.all(promises);
+  }
+
+  async deleteOneProductImage(beforeProductImage: ProductImageEntity) {
+    await this.mediaGeneralRepository.deleteProductImageWithId(
+      beforeProductImage.id,
+    );
+  }
+
+  async modifyProductImages(
+    productImgCookies: MediaDto[],
+    productDto: ProductDto,
+    product: ProductEntity,
+  ): Promise<void> {
+    if (productImgCookies.length >= 2) {
+      const beforeImages =
+        await this.mediaGeneralRepository.findBeforeProductImagesWithId(
+          product.id,
+        );
+
+      await this.insertProductIdOneMoreThenTwoProductImage(
+        productDto.Image,
+        product,
+      );
+
+      if (beforeImages.length >= 1) {
+        await this.deleteMoreThenTwoProductImages(beforeImages);
+      }
+    } else {
+      const beforeImage =
+        await this.mediaGeneralRepository.findBeforeProductImageWithId(
+          product.id,
+        );
+
+      await this.insertProductIdOnOneProductImage(productDto.Image[0], product);
+
+      if (beforeImage) {
+        await this.deleteOneProductImage(beforeImage);
+      }
     }
   }
 

@@ -66,6 +66,8 @@ export interface IMediaGeneralRepository {
   deleteInquiryResponseImageWithId(id: string): Promise<void>;
   deleteInquiryResponseVideoWithId(id: string): Promise<void>;
   findProductImageEvenUseWithId(id: string): Promise<ProductImageEntity>;
+  findBeforeProductImagesWithId(id: string): Promise<ProductImageEntity[]>;
+  findBeforeProductImageWithId(id: string): Promise<ProductImageEntity>;
   findBeforeReviewImagesWithId(id: string): Promise<ReviewImageEntity[]>;
   findBeforeReviewImageWithId(id: string): Promise<ReviewImageEntity>;
   findBeforeReviewVideosWithId(id: string): Promise<ReviewVideoEntity[]>;

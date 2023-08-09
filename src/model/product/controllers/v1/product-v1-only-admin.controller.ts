@@ -12,17 +12,13 @@ import {
   Inject,
 } from "@nestjs/common";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
-import { MediaCookieParser } from "src/common/decorators/media-cookie-parser.decorator";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { VerifyDataGuard } from "src/common/guards/verify/verify-data.guard";
-import { JsonClearCookieInterface } from "src/common/interceptors/interface/json-clear-cookie.interface";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
-import { JsonClearCookieInterceptor } from "src/common/interceptors/general/json-clear-cookie.interceptor";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ProductDto } from "../../dto/product.dto";
-import { ModifyProductDto } from "../../dto/modify-product.dto";
 import { ProductEntity } from "../../entities/product.entity";
 import { ProductGeneralService } from "../../services/product-general.service";
 import { MediaDto } from "src/model/media/dto/media.dto";
@@ -123,7 +119,7 @@ export class ProductVersionOneOnlyAdminController {
     description:
       "상품의 아이디에 해당하는 상품의 전체 column, 상품에 사용되는 이미지를 수정합니다. 수정하려는 상품의 가격, 수량을 양의 정수 이외의 숫자로 지정하거나 수정하려는 상품의 이름이 이미 데이터베이스에 존재 한다면 에러를 반환합니다. 이 api를 실행하기 전에 무조건 상품 이미지를 업로드해야 합니다.",
   })
-  @UseInterceptors(JsonClearCookieInterceptor)
+  @UseInterceptors(JsonClearCookiesInterceptor)
   @UseGuards(
     new VerifyDataGuard(
       productVerifyCookieKey.is_exist.id_executed,
@@ -132,21 +128,34 @@ export class ProductVersionOneOnlyAdminController {
   )
   @Put("/:id")
   async modifyProduct(
+    @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
+    productImgCookies: MediaDto[],
     @Param("id") id: string,
-    @Body() modifyProductDto: ModifyProductDto,
-    @MediaCookieParser(productMediaCookieKey.image_url_cookie)
-    productImgCookie: MediaDto,
-  ): Promise<JsonClearCookieInterface> {
-    await this.productGeneralService.modifyProduct(
-      id,
-      modifyProductDto,
-      productImgCookie,
-    );
+    @Body() productDto: ProductDto,
+  ): Promise<JsonClearCookiesInterface> {
+    await this.productGeneralService.modifyProduct({ id, productDto });
+
+    const mediaWork = async () => {
+      const product = await this.productGeneralService.findProductById(id);
+
+      await this.productAccessoryService.pushProductImages({
+        productDto,
+        productImgCookies,
+      });
+
+      await this.productAccessoryService.modifyProductImages(
+        productImgCookies,
+        productDto,
+        product,
+      );
+    };
+
+    await mediaWork();
 
     return {
       statusCode: 201,
       message: `id(${id})에 해당하는 상품을 수정하였습니다.`,
-      cookieKey: this.productMedia.image_url_cookie,
+      cookieKey: [...productImgCookies.map((cookie) => cookie.whatCookie)],
     };
   }
 
@@ -155,20 +164,36 @@ export class ProductVersionOneOnlyAdminController {
     description:
       "상품의 아이디에 해당하는 상품에 사용되는 이미지를 수정합니다. 이 api를 실행하기 전에 무조건 상품 이미지를 생성해야 합니다.",
   })
-  @UseInterceptors(JsonClearCookieInterceptor)
+  @UseInterceptors(JsonClearCookiesInterceptor)
   @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Patch("/:id/image")
   async modifyProductImage(
+    @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
+    productImgCookies: MediaDto[],
     @Param("id") id: string,
-    @MediaCookieParser(productMediaCookieKey.image_url_cookie)
-    productImgCookie: MediaDto,
-  ): Promise<JsonClearCookieInterface> {
-    await this.productGeneralService.modifyProductImage(id, productImgCookie);
+  ): Promise<JsonClearCookiesInterface> {
+    const mediaWork = async () => {
+      const product = await this.productGeneralService.findProductById(id);
+      const productDto = new ProductDto();
+
+      await this.productAccessoryService.pushProductImages({
+        productDto,
+        productImgCookies,
+      });
+
+      await this.productAccessoryService.modifyProductImages(
+        productImgCookies,
+        productDto,
+        product,
+      );
+    };
+
+    await mediaWork();
 
     return {
       statusCode: 201,
       message: `id(${id})에 해당하는 상품의 사진을 수정하였습니다.`,
-      cookieKey: this.productMedia.image_url_cookie,
+      cookieKey: [...productImgCookies.map((cookie) => cookie.whatCookie)],
     };
   }
 

@@ -651,6 +651,48 @@ export class MediaGeneralRepository
     }
   }
 
+  async findBeforeProductImagesWithId(
+    id: string,
+  ): Promise<ProductImageEntity[]> {
+    try {
+      return await this.productImageRepository
+        .createQueryBuilder()
+        .select("productImages.id")
+        .from(ProductImageEntity, "productImages")
+        .where("productImages.Product = :Product", { Product: id })
+        .orderBy("productImages.createdAt", "DESC")
+        .getMany();
+    } catch (err) {
+      this.methodName = this.findBeforeProductImagesWithId.name;
+      this.typeOrmErrorHandlerBuilder
+        .setErrorHandler(ProductImageErrorHandler)
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setStuffs(id, "id")
+        .handle();
+    }
+  }
+
+  async findBeforeProductImageWithId(id: string): Promise<ProductImageEntity> {
+    try {
+      return await this.productImageRepository
+        .createQueryBuilder()
+        .select("productImages.id")
+        .from(ProductImageEntity, "productImages")
+        .where("productImages.Product = :Product", { Product: id })
+        .orderBy("productImages.createdAt", "DESC")
+        .getOne();
+    } catch (err) {
+      this.methodName = this.findBeforeProductImageWithId.name;
+      this.typeOrmErrorHandlerBuilder
+        .setErrorHandler(ProductImageErrorHandler)
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setStuffs(id, "id")
+        .handle();
+    }
+  }
+
   async findBeforeReviewImagesWithId(id: string): Promise<ReviewImageEntity[]> {
     try {
       return await this.reviewImageRepository

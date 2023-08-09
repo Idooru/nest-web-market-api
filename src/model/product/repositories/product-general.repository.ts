@@ -191,8 +191,9 @@ export class ProductGeneralRepository
   async createProduct(
     createProductDao: CreateProductDao,
   ): Promise<InsertResult> {
+    const { productDto, admin } = createProductDao;
+
     try {
-      const { productDto, admin } = createProductDao;
       return await this.productRepository
         .createQueryBuilder()
         .insert()
@@ -209,15 +210,18 @@ export class ProductGeneralRepository
     }
   }
 
-  async modifyProduct(
-    id: string,
-    modifyProductDto: ModifyProductDto,
-  ): Promise<void> {
+  async modifyProduct(modifyProductDto: ModifyProductDto): Promise<void> {
+    const {
+      id,
+      productDto,
+      productDto: { price, quantity },
+    } = modifyProductDto;
+
     try {
       await this.productRepository
         .createQueryBuilder()
         .update(ProductEntity)
-        .set({ ...modifyProductDto })
+        .set({ ...productDto })
         .where("id = :id", { id })
         .execute();
     } catch (err) {
@@ -226,8 +230,8 @@ export class ProductGeneralRepository
         .setErrorHandler(ProductErrorHandler)
         .setError(err)
         .setSourceNames(this.className, this.methodName)
-        .setStuffs(String(modifyProductDto.price), "price")
-        .setStuffs(String(modifyProductDto.quantity), "quantity")
+        .setStuffs(String(price), "price")
+        .setStuffs(String(quantity), "quantity")
         .handle();
     }
   }

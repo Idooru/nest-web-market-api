@@ -1,4 +1,3 @@
-import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
 import { ProductEntity } from "../../entities/product.entity";
 import { InsertResult } from "typeorm";
 import { ModifyProductDto } from "../../dto/modify-product.dto";
@@ -10,11 +9,8 @@ export interface IProductGeneralRepository {
   findOneProductByName(name: string): Promise<ProductEntity>;
   findOneProductById(id: string): Promise<ProductEntity>;
   findProductOneJustNeedStarRate(id: string): Promise<ProductEntity>;
-  createProduct(
-    createProductDao: CreateProductDao,
-    admin: AdminUserEntity,
-  ): Promise<InsertResult>;
-  modifyProduct(id: string, modifyProductDto: ModifyProductDto): Promise<void>;
+  createProduct(createProductDao: CreateProductDao): Promise<InsertResult>;
+  modifyProduct(modifyProductDto: ModifyProductDto): Promise<void>;
   modifyProductName(id: string, name: string): Promise<void>;
   modifyProductPrice(id: string, price: number): Promise<void>;
   modifyProductOrigin(id: string, origin: string): Promise<void>;
