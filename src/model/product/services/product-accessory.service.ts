@@ -1,17 +1,11 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { ProductImageEntity } from "src/model/media/entities/product-image.entity";
 import { MediaGeneralRepository } from "src/model/media/repositories/media-general.repository";
-import { ProductGeneralRepository } from "../repositories/product-general.repository";
 import { MediaDto } from "src/model/media/dto/media.dto";
 import { IProductAccessoryService } from "../interfaces/services/product-accessory-service.interface";
 import { HttpExceptionHandlingBuilder } from "src/common/lib/error-handler/http-exception-handling.builder";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { StarRateGeneralRepository } from "src/model/review/repositories/star-rate-general.repository";
-import { StarRateInsertRepository } from "src/model/review/repositories/star-rate-insert.repository";
-import { StarRateEntity } from "src/model/review/entities/star-rate.entity";
-import { PushProductImageDto } from "../dto/push-product-image.dto";
-import { ProductDto } from "../dto/product.dto";
-import { InsertProductImageDto } from "../dto/insert-product-image.dto";
 import { MediaInsertRepository } from "src/model/media/repositories/media-insert.repository";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 
@@ -21,12 +15,10 @@ export class ProductAccessoryService
   implements IProductAccessoryService
 {
   constructor(
-    private readonly productGeneralRepository: ProductGeneralRepository,
     private readonly mediaGeneralRepository: MediaGeneralRepository,
     private readonly mediaInsertRepository: MediaInsertRepository,
     private readonly httpExceptionHandlingBuilder: HttpExceptionHandlingBuilder,
     private readonly starRateGeneralRepository: StarRateGeneralRepository,
-    private readonly starRateInsertRepository: StarRateInsertRepository,
   ) {
     super();
   }
@@ -47,157 +39,58 @@ export class ProductAccessoryService
     await this.starRateGeneralRepository.createStarRate(product);
   }
 
-  async insertProductIdOnStarRate(
-    starRate: StarRateEntity,
-    product: ProductEntity,
-  ): Promise<void> {
-    await this.starRateInsertRepository.insertProductIdOnStarRate(
-      starRate,
-      product,
-    );
-  }
-
-  async pushMoreThenTwoProductImageInDto(
+  async getProductImages(
     productImgCookies: MediaDto[],
-    productDto: ProductDto,
-  ): Promise<void> {
-    const promises = productImgCookies.map(async (productImgCookie) => {
-      const image = await this.mediaGeneralRepository.findProductImageWithUrl(
+  ): Promise<ProductImageEntity[]> {
+    const productImages = productImgCookies.map(async (productImgCookie) => {
+      return await this.mediaGeneralRepository.findProductImageWithUrl(
         productImgCookie.url,
       );
-
-      productDto.Image.push(image);
     });
 
-    await Promise.all(promises);
+    return await Promise.all(productImages);
   }
 
-  async pushOneProductImageInDto(
-    productImgCookie: MediaDto[],
-    productDto: ProductDto,
-  ): Promise<void> {
-    const image = await this.mediaGeneralRepository.findProductImageWithUrl(
-      productImgCookie[0].url,
-    );
-
-    productDto.Image.push(image);
-  }
-
-  async pushProductImages(
-    pushProductImageDto: PushProductImageDto,
-  ): Promise<void> {
-    const { productImgCookies, productDto } = pushProductImageDto;
-
-    productDto.Image = [];
-
-    if (productImgCookies.length >= 2) {
-      await this.pushMoreThenTwoProductImageInDto(
-        productImgCookies,
-        productDto,
-      );
-    } else {
-      await this.pushOneProductImageInDto(productImgCookies, productDto);
-    }
-  }
-
-  async insertProductIdOneMoreThenTwoProductImage(
+  async insertProductImages(
     productImages: ProductImageEntity[],
     product: ProductEntity,
   ): Promise<void> {
-    const promises = productImages.map(async (productImage) => {
+    const insertWork = productImages.map(async (productImage) => {
       await this.mediaInsertRepository.insertProductIdOnProductImage(
         productImage,
         product,
       );
     });
 
-    await Promise.all(promises);
-  }
-
-  async insertProductIdOnOneProductImage(
-    productImage: ProductImageEntity,
-    product: ProductEntity,
-  ): Promise<void> {
-    await this.mediaInsertRepository.insertProductIdOnProductImage(
-      productImage,
-      product,
-    );
-  }
-
-  async insertProductImages(
-    insertProductImageDto: InsertProductImageDto,
-  ): Promise<void> {
-    const { productImgCookies, productDto, product } = insertProductImageDto;
-
-    if (productImgCookies.length >= 2) {
-      await this.insertProductIdOneMoreThenTwoProductImage(
-        productDto.Image,
-        product,
-      );
-    } else {
-      await this.insertProductIdOnOneProductImage(productDto.Image[0], product);
-    }
-  }
-
-  async deleteMoreThenTwoProductImages(
-    beforeProductImages: ProductImageEntity[],
-  ) {
-    const promises = beforeProductImages.map(async (beforeProductImage) => {
-      await this.mediaGeneralRepository.deleteProductImageWithId(
-        beforeProductImage.id,
-      );
-    });
-
-    await Promise.all(promises);
-  }
-
-  async deleteOneProductImage(beforeProductImage: ProductImageEntity) {
-    await this.mediaGeneralRepository.deleteProductImageWithId(
-      beforeProductImage.id,
-    );
+    await Promise.all(insertWork);
   }
 
   async modifyProductImages(
-    productImgCookies: MediaDto[],
-    productDto: ProductDto,
     product: ProductEntity,
+    productImages: ProductImageEntity[],
   ): Promise<void> {
-    if (productImgCookies.length >= 2) {
-      const beforeImages =
-        await this.mediaGeneralRepository.findBeforeProductImagesWithId(
-          product.id,
-        );
-
-      await this.insertProductIdOneMoreThenTwoProductImage(
-        productDto.Image,
-        product,
+    const beforeProductImages =
+      await this.mediaGeneralRepository.findBeforeProductImagesWithId(
+        product.id,
       );
 
-      if (beforeImages.length >= 1) {
-        await this.deleteMoreThenTwoProductImages(beforeImages);
-      }
-    } else {
-      const beforeImage =
-        await this.mediaGeneralRepository.findBeforeProductImageWithId(
-          product.id,
+    const modifyWork = productImages.map(async (productImage) => {
+      await this.mediaInsertRepository.insertProductIdOnProductImage(
+        productImage,
+        product,
+      );
+    });
+
+    await Promise.all(modifyWork);
+
+    if (beforeProductImages.length >= 1) {
+      const deleteWork = beforeProductImages.map(async (beforeProductImage) => {
+        await this.mediaGeneralRepository.deleteProductImageWithId(
+          beforeProductImage.id,
         );
+      });
 
-      await this.insertProductIdOnOneProductImage(productDto.Image[0], product);
-
-      if (beforeImage) {
-        await this.deleteOneProductImage(beforeImage);
-      }
+      await Promise.all(deleteWork);
     }
-  }
-
-  async findProductAndImageForModify(
-    id: string,
-    imageCookie: MediaDto,
-  ): Promise<[ProductEntity, ProductImageEntity, ProductImageEntity]> {
-    return await Promise.all([
-      this.productGeneralRepository.findOneProductById(id),
-      this.mediaGeneralRepository.findProductImageWithUrl(imageCookie.url),
-      this.mediaGeneralRepository.findProductImageEvenUseWithId(id),
-    ]);
   }
 }

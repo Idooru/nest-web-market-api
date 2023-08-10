@@ -9,7 +9,6 @@ import {
   UseGuards,
   UseInterceptors,
   Put,
-  Inject,
 } from "@nestjs/common";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
@@ -22,10 +21,7 @@ import { ProductDto } from "../../dto/product.dto";
 import { ProductEntity } from "../../entities/product.entity";
 import { ProductGeneralService } from "../../services/product-general.service";
 import { MediaDto } from "src/model/media/dto/media.dto";
-import {
-  ProductMediaCookieKey,
-  productMediaCookieKey,
-} from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
+import { productMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
 import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
 import { ModifyProductNameDto } from "../../dto/modify-product-name.dto";
 import { ModifyProductPriceDto } from "../../dto/modify-product-price.dto";
@@ -37,7 +33,7 @@ import { ModifyProductCategoryDto } from "../../dto/modify-product-category.dto"
 import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { JsonClearCookiesInterface } from "src/common/interceptors/interface/json-clear-cookies.interface";
-import { ProductAccessoryService } from "../../services/product-accessory.service";
+import { ProductFunctionService } from "../../services/product-function.service";
 
 @ApiTags("v1 관리자 Product API")
 @UseGuards(IsAdminGuard)
@@ -45,10 +41,8 @@ import { ProductAccessoryService } from "../../services/product-accessory.servic
 @Controller("/api/v1/only-admin/product")
 export class ProductVersionOneOnlyAdminController {
   constructor(
-    @Inject("ProductMediaCookieKey")
-    private readonly productMedia: ProductMediaCookieKey,
     private readonly productGeneralService: ProductGeneralService,
-    private readonly productAccessoryService: ProductAccessoryService,
+    private readonly productFunctionService: ProductFunctionService,
   ) {}
 
   @ApiOperation({
@@ -89,23 +83,17 @@ export class ProductVersionOneOnlyAdminController {
       jwtPayload,
     });
 
-    const starRateWork = async () =>
-      await this.productAccessoryService.createStarRate(product);
+    const createStarRate = await this.productFunctionService.getCreateStarRate(
+      product,
+    );
 
-    const mediaWork = async () => {
-      await this.productAccessoryService.pushProductImages({
-        productDto,
+    const insertProductImage =
+      await this.productFunctionService.getInsertProductImage(
         productImgCookies,
-      });
-
-      await this.productAccessoryService.insertProductImages({
-        productImgCookies,
-        productDto,
         product,
-      });
-    };
+      );
 
-    await Promise.all([starRateWork(), mediaWork()]);
+    await Promise.all([createStarRate(), insertProductImage()]);
 
     return {
       statusCode: 201,
@@ -135,22 +123,13 @@ export class ProductVersionOneOnlyAdminController {
   ): Promise<JsonClearCookiesInterface> {
     await this.productGeneralService.modifyProduct({ id, productDto });
 
-    const mediaWork = async () => {
-      const product = await this.productGeneralService.findProductById(id);
-
-      await this.productAccessoryService.pushProductImages({
-        productDto,
+    const modifyProductImage =
+      await this.productFunctionService.getModifyProductImage(
+        id,
         productImgCookies,
-      });
-
-      await this.productAccessoryService.modifyProductImages(
-        productImgCookies,
-        productDto,
-        product,
       );
-    };
 
-    await mediaWork();
+    modifyProductImage();
 
     return {
       statusCode: 201,
@@ -172,23 +151,13 @@ export class ProductVersionOneOnlyAdminController {
     productImgCookies: MediaDto[],
     @Param("id") id: string,
   ): Promise<JsonClearCookiesInterface> {
-    const mediaWork = async () => {
-      const product = await this.productGeneralService.findProductById(id);
-      const productDto = new ProductDto();
-
-      await this.productAccessoryService.pushProductImages({
-        productDto,
+    const modifyProductImage =
+      await this.productFunctionService.getModifyProductImage(
+        id,
         productImgCookies,
-      });
-
-      await this.productAccessoryService.modifyProductImages(
-        productImgCookies,
-        productDto,
-        product,
       );
-    };
 
-    await mediaWork();
+    modifyProductImage();
 
     return {
       statusCode: 201,
