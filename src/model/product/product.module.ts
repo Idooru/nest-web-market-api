@@ -20,6 +20,7 @@ import { ProductAccessoryService } from "./services/product-accessory.service";
 import { productSelectProperty } from "src/common/config/repository-select-configs/product.select";
 import { productMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
 import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
+import { ProductFunctionService } from "./services/product-function.service";
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/ver
     ProductGeneralService,
     ProductVerifyService,
     ProductAccessoryService,
+    ProductFunctionService,
     ProductGeneralRepository,
     ProductVerifyRepository,
     ProductInsertRepository,
