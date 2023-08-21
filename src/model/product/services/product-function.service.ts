@@ -3,9 +3,10 @@ import { ProductAccessoryService } from "./product-accessory.service";
 import { ProductEntity } from "../entities/product.entity";
 import { MediaDto } from "src/model/media/dto/media.dto";
 import { ProductGeneralService } from "./product-general.service";
+import { IProductFunctionService } from "../interfaces/services/product-function-service.interface";
 
 @Injectable()
-export class ProductFunctionService {
+export class ProductFunctionService implements IProductFunctionService {
   constructor(
     private readonly productGeneralService: ProductGeneralService,
     private readonly productAccessoryService: ProductAccessoryService,
