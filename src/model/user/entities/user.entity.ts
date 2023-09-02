@@ -1,4 +1,4 @@
-import { IsNotEmpty } from "class-validator";
+import { IsEnum, IsNotEmpty } from "class-validator";
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { Column, Entity, OneToOne } from "typeorm";
@@ -8,6 +8,7 @@ import { CommonEntity } from "../../../common/entities/common.entity";
 
 @Entity({ name: "users", synchronize: true })
 export class UserEntity extends CommonEntity {
+  @IsEnum(["client, admin"])
   @IsNotEmpty()
   @Column({ type: "enum", enum: ["client", "admin"] })
   role: ["client", "admin"];
