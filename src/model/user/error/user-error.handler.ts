@@ -1,4 +1,4 @@
-import { NotFoundException, BadRequestException } from "@nestjs/common";
+import { NotFoundException } from "@nestjs/common";
 import { EntityErrorHandler } from "src/common/classes/abstract/entity-error-handler";
 import { Throwable } from "src/common/lib/error-handler/interface/throwable.interface";
 import { TypeORMError } from "typeorm";
