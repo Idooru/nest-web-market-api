@@ -3,6 +3,7 @@ import { IsNotEmpty } from "class-validator";
 import { Column } from "typeorm";
 import { UserAuthEntity } from "../entities/user-auth.entity";
 import { UserProfileEntity } from "../entities/user-profile.entity";
+import { UserEntity } from "../entities/user.entity";
 
 export class RegisterUserProfileDto extends PickType(UserProfileEntity, [
   "realname",
@@ -89,10 +90,7 @@ export class CreateUserAuthDto extends PickType(UserAuthEntity, [
   "password",
 ]) {}
 
-export class RegisterUserDto extends IntersectionType(
-  RegisterUserProfileDto,
-  RegisterUserAuthDto,
-) {
+export class RegisterUserRoleDto extends PickType(UserEntity, ["role"]) {
   @ApiProperty({
     description: "사용자 권한",
     example: "admin",
@@ -101,5 +99,11 @@ export class RegisterUserDto extends IntersectionType(
   })
   @IsNotEmpty()
   @Column({ type: "enum", enum: ["client", "admin"], nullable: false })
-  type: ["client", "admin"];
+  role: ["client", "admin"];
 }
+
+export class RegisterUserDto extends IntersectionType(
+  RegisterUserProfileDto,
+  RegisterUserAuthDto,
+  RegisterUserRoleDto,
+) {}
