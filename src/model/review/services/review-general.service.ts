@@ -25,11 +25,15 @@ export class ReviewGeneralService
     super();
   }
 
-  async findReviewFromProductById(id: string): Promise<ReviewEntity[]> {
+  async findReviewById(id: string): Promise<ReviewEntity> {
+    return await this.reviewGeneralRepository.findReviewById(id);
+  }
+
+  async findReviewByProductId(id: string): Promise<ReviewEntity[]> {
     const product = await this.productGeneralRepository.findOneProductById(id);
 
-    if (product.Review.length === 0) {
-      this.methodName = this.findReviewFromProductById.name;
+    if (!product.Review.length) {
+      this.methodName = this.findReviewByProductId.name;
       this.httpExceptionHandlingBuilder
         .setMessage("해당 상품에 리뷰가 존재하지 않습니다.")
         .setOccuredLocation("class")
