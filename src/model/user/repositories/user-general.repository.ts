@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { UserAuthEntity } from "src/model/user/entities/user-auth.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserProfileEntity } from "../entities/user-profile.entity";
-import { InsertResult, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { UserSelectProperty } from "src/common/config/repository-select-configs/user.select";
 import { ClientUserEntity } from "../entities/client-user.entity";
 import {
@@ -385,7 +385,8 @@ export class UserGeneralRepository
     } catch (err) {
       this.methodName = this.createUserEntity.name;
       this.typeOrmErrorHandlerBuilder
-        .setErrorHandler(err)
+        .setErrorHandler(UserErrorHandler)
+        .setError(err)
         .setSourceNames(this.className, this.methodName)
         .handle();
     }
