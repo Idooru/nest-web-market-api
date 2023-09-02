@@ -67,8 +67,9 @@ export class UserVersionOneFreeUseController {
   async register(
     @Body() registerUserDto: RegisterUserDto,
   ): Promise<JsonGeneralInterface<void>> {
-    const role = registerUserDto.type;
-    const user = await this.userGeneralService.createUserEntity(role);
+    const user = await this.userGeneralService.createUserEntity(
+      registerUserDto.role,
+    );
 
     const authInfo = await this.userGeneralService.createUserBase(
       user,
