@@ -25,6 +25,28 @@ export class ReviewGeneralRepository
     super();
   }
 
+  async findReviewById(id: string): Promise<ReviewEntity> {
+    try {
+      return await this.reviewRepository
+        .createQueryBuilder()
+        .select(this.select.review)
+        .from(ReviewEntity, "review")
+        .innerJoin("review.Prodcut", "Product")
+        .leftJoin("review.Image", "Image")
+        .leftJoin("review.Video", "Video")
+        .where("review.id = :id", { id })
+        .getOneOrFail();
+    } catch (err) {
+      this.methodName = this.findAllClientsReviews.name;
+      this.typeOrmErrorHandlerBuilder
+        .setErrorHandler(ReviewErrorHandler)
+        .setError(err)
+        .setSourceNames(this.className, this.methodName)
+        .setStuffs(id, "id")
+        .handle();
+    }
+  }
+
   async findAllClientsReviews(id: string): Promise<ReviewEntity[]> {
     try {
       return await this.reviewRepository
