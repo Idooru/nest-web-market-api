@@ -1,4 +1,4 @@
-import { Entity, OneToOne, JoinColumn, ManyToOne } from "typeorm";
+import { Entity, JoinColumn, ManyToOne } from "typeorm";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 
 import { MediaEntity } from "../../../common/entities/media.entity";
