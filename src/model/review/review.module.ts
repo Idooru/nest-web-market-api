@@ -23,6 +23,7 @@ import { ReviewBundleService } from "./services/review-bundle.service";
 import { reviewSelectProperty } from "src/common/config/repository-select-configs/review.select";
 import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
 import { reviewVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/review-verify-cookie.key";
+import { ReviewFunctionService } from "./services/review-function.service";
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { reviewVerifyCookieKey } from "src/common/config/cookie-key-configs/veri
     ReviewVerifyService,
     ReviewBundleService,
     ReviewAccessoryService,
+    ReviewFunctionService,
     StarRateGeneralService,
     ReviewVerifyRepository,
     ReviewGeneralRepository,

@@ -1,14 +1,11 @@
-import { ReviewDto } from "../dto/review.dto";
 import { Injectable } from "@nestjs/common";
 import { ReviewImageEntity } from "src/model/media/entities/review-image.entity";
 import { ReviewVideoEntity } from "src/model/media/entities/review-video.entity";
 import { MediaGeneralRepository } from "src/model/media/repositories/media-general.repository";
 import { MediaInsertRepository } from "src/model/media/repositories/media-insert.repository";
 import { ReviewEntity } from "../entities/review.entity";
-import { PushReviewImageDto } from "../dto/push-review-image.dto";
-import { PushReviewVideoDto } from "../dto/push-review-video.dto";
-import { MediaDto } from "src/model/media/dto/media.dto";
 import { IReviewAccessoryService } from "../interfaces/services/review-accessory-service.interface";
+import { MediaDto } from "src/model/media/dto/media.dto";
 
 @Injectable()
 export class ReviewAccessoryService implements IReviewAccessoryService {
@@ -17,327 +14,125 @@ export class ReviewAccessoryService implements IReviewAccessoryService {
     private readonly mediaInsertRepository: MediaInsertRepository,
   ) {}
 
-  async pushMoreThenTwoReviewImageInDto(
+  async getReviewImages(
     reviewImgCookies: MediaDto[],
-    reviewRequestDto: ReviewDto,
-  ): Promise<void> {
-    const promises = reviewImgCookies.map(async (reviewImgCookie) => {
-      const image = await this.mediaGeneralRepository.findReviewImageWithUrl(
+  ): Promise<ReviewImageEntity[]> {
+    const reviewImages = reviewImgCookies.map(async (reviewImgCookie) => {
+      return await this.mediaGeneralRepository.findReviewImageWithUrl(
         reviewImgCookie.url,
       );
-
-      reviewRequestDto.Image.push(image);
     });
 
-    await Promise.all(promises);
+    return await Promise.all(reviewImages);
   }
 
-  async pushOneReviewImageInDto(
-    reviewImgCookies: MediaDto[],
-    reviewRequestDto: ReviewDto,
-  ): Promise<void> {
-    const image = await this.mediaGeneralRepository.findReviewImageWithUrl(
-      reviewImgCookies[0].url,
-    );
-
-    reviewRequestDto.Image.push(image);
-  }
-
-  async pushMoreThenTwoReviewVideoInDto(
+  async getReviewVideos(
     reviewVdoCookies: MediaDto[],
-    reviewRequestDto: ReviewDto,
-  ): Promise<void> {
-    const promises = reviewVdoCookies.map(async (reviewVdoCookie) => {
-      const video = await this.mediaGeneralRepository.findReviewVideoWithUrl(
+  ): Promise<ReviewVideoEntity[]> {
+    const reviewVideos = reviewVdoCookies.map(async (reviewVdoCookie) => {
+      return await this.mediaGeneralRepository.findReviewVideoWithUrl(
         reviewVdoCookie.url,
       );
-
-      reviewRequestDto.Video.push(video);
     });
 
-    await Promise.all(promises);
+    return await Promise.all(reviewVideos);
   }
 
-  async pushOneReviewVideoInDto(
-    reviewVdoCookies: MediaDto[],
-    reviewRequestDto: ReviewDto,
-  ): Promise<void> {
-    const video = await this.mediaGeneralRepository.findReviewVideoWithUrl(
-      reviewVdoCookies[0].url,
-    );
-
-    reviewRequestDto.Video.push(video);
-  }
-
-  async insertReviewIdOnMoreThenTwoReviewImage(
-    reviewImages: ReviewImageEntity[],
+  async insertReviewImages(
     review: ReviewEntity,
+    reviewImages: ReviewImageEntity[],
   ): Promise<void> {
-    const promises = reviewImages.map(async (reviewImage) => {
+    const insertWork = reviewImages.map(async (reviewImage) => {
       await this.mediaInsertRepository.insertReviewIdOnReviewImage(
         reviewImage,
         review,
       );
     });
 
-    await Promise.all(promises);
+    await Promise.all(insertWork);
   }
 
-  async insertReviewIdOnOneReviewImage(
-    reviewImage: ReviewImageEntity,
+  async insertReviewVideos(
     review: ReviewEntity,
-  ): Promise<void> {
-    await this.mediaInsertRepository.insertReviewIdOnReviewImage(
-      reviewImage,
-      review,
-    );
-  }
-
-  async insertReviewIdOnMoreThenTwoReviewVideo(
     reviewVideos: ReviewVideoEntity[],
-    review: ReviewEntity,
   ): Promise<void> {
-    const promises = reviewVideos.map(async (reviewVideo) => {
+    const insertWork = reviewVideos.map(async (reviewVideo) => {
       await this.mediaInsertRepository.insertReviewIdOnReviewVideo(
         reviewVideo,
         review,
       );
     });
 
-    await Promise.all(promises);
-  }
-
-  async insertReviewIdOnOneReviewVideo(
-    reviewVideo: ReviewVideoEntity,
-    review: ReviewEntity,
-  ): Promise<void> {
-    await this.mediaInsertRepository.insertReviewIdOnReviewVideo(
-      reviewVideo,
-      review,
-    );
-  }
-
-  async deleteMoreThenTwoReviewImage(
-    beforeReviewImages: ReviewImageEntity[],
-  ): Promise<void> {
-    const promises = beforeReviewImages.map(async (beforeReviewImage) => {
-      await this.mediaGeneralRepository.deleteReviewImageWithId(
-        beforeReviewImage.id,
-      );
-    });
-
-    await Promise.all(promises);
-  }
-
-  async deleteOneReviewImage(
-    beforeReviewImage: ReviewImageEntity,
-  ): Promise<void> {
-    await this.mediaGeneralRepository.deleteReviewImageWithId(
-      beforeReviewImage.id,
-    );
-  }
-
-  async deleteMoreThenTwoReviewVideo(
-    beforeReviewVideos: ReviewVideoEntity[],
-  ): Promise<void> {
-    const promises = beforeReviewVideos.map(async (beforeReviewVideo) => {
-      await this.mediaGeneralRepository.deleteReviewVideoWithId(
-        beforeReviewVideo.id,
-      );
-    });
-
-    await Promise.all(promises);
-  }
-
-  async deleteOneReviewVideo(
-    beforeReviewVideo: ReviewVideoEntity,
-  ): Promise<void> {
-    await this.mediaGeneralRepository.deleteReviewVideoWithId(
-      beforeReviewVideo.id,
-    );
-  }
-
-  async pushReviewImages(
-    pushReviewImageDto: PushReviewImageDto,
-  ): Promise<void> {
-    const { reviewImgCookies, reviewRequestDto } = pushReviewImageDto;
-
-    reviewRequestDto.Image = [];
-
-    if (reviewImgCookies.length >= 2) {
-      await this.pushMoreThenTwoReviewImageInDto(
-        reviewImgCookies,
-        reviewRequestDto,
-      );
-    } else {
-      await this.pushOneReviewImageInDto(reviewImgCookies, reviewRequestDto);
-    }
-  }
-
-  async pushReviewVideos(
-    pushReviewVideoDto: PushReviewVideoDto,
-  ): Promise<void> {
-    const { reviewVdoCookies, reviewRequestDto } = pushReviewVideoDto;
-
-    reviewRequestDto.Video = [];
-
-    if (reviewVdoCookies.length >= 2) {
-      await this.pushMoreThenTwoReviewVideoInDto(
-        reviewVdoCookies,
-        reviewRequestDto,
-      );
-    } else {
-      await this.pushOneReviewVideoInDto(reviewVdoCookies, reviewRequestDto);
-    }
-  }
-
-  async insertReviewImages(
-    reviewImgCookies: MediaDto[],
-    reviewRequestDto: ReviewDto,
-    review: ReviewEntity,
-  ): Promise<void> {
-    if (reviewImgCookies.length >= 2) {
-      await this.insertReviewIdOnMoreThenTwoReviewImage(
-        reviewRequestDto.Image,
-        review,
-      );
-    } else {
-      await this.insertReviewIdOnOneReviewImage(
-        reviewRequestDto.Image[0],
-        review,
-      );
-    }
-  }
-
-  async insertReviewVideos(
-    reviewVdoCookies: MediaDto[],
-    reviewRequestDto: ReviewDto,
-    review: ReviewEntity,
-  ): Promise<void> {
-    if (reviewVdoCookies.length >= 2) {
-      await this.insertReviewIdOnMoreThenTwoReviewVideo(
-        reviewRequestDto.Video,
-        review,
-      );
-    } else {
-      await this.insertReviewIdOnOneReviewVideo(
-        reviewRequestDto.Video[0],
-        review,
-      );
-    }
+    await Promise.all(insertWork);
   }
 
   async modifyReviewImages(
-    reviewImgCookies: MediaDto[],
-    reviewRequestDto: ReviewDto,
     review: ReviewEntity,
+    reviewImages: ReviewImageEntity[],
   ): Promise<void> {
-    if (reviewImgCookies.length >= 2) {
-      const beforeImages =
-        await this.mediaGeneralRepository.findBeforeReviewImagesWithId(
-          review.id,
-        );
+    const beforeReviewImages =
+      await this.mediaGeneralRepository.findBeforeReviewImagesWithId(review.id);
 
-      await this.insertReviewIdOnMoreThenTwoReviewImage(
-        reviewRequestDto.Image,
+    const modifyWork = reviewImages.map(async (reviewImage) => {
+      await this.mediaInsertRepository.insertReviewIdOnReviewImage(
+        reviewImage,
         review,
       );
+    });
 
-      if (beforeImages.length >= 1) {
-        await this.deleteMoreThenTwoReviewImage(beforeImages);
-      }
-    } else {
-      const beforeImage =
-        await this.mediaGeneralRepository.findBeforeReviewImageWithId(
-          review.id,
+    await Promise.all(modifyWork);
+
+    if (beforeReviewImages.length >= 1) {
+      const deleteWork = beforeReviewImages.map(async (beforeReviewImage) => {
+        await this.mediaGeneralRepository.deleteReviewImageWithId(
+          beforeReviewImage.id,
         );
+      });
 
-      await this.insertReviewIdOnOneReviewImage(
-        reviewRequestDto.Image[0],
-        review,
-      );
-
-      if (beforeImage) {
-        await this.deleteOneReviewImage(beforeImage);
-      }
+      await Promise.all(deleteWork);
     }
   }
 
   async modifyReviewVideos(
-    reviewVdoCookies: MediaDto[],
-    reviewRequestDto: ReviewDto,
     review: ReviewEntity,
-  ): Promise<void> {
-    if (reviewVdoCookies.length >= 2) {
-      const beforeVideos =
-        await this.mediaGeneralRepository.findBeforeReviewVideosWithId(
-          review.id,
-        );
-
-      await this.insertReviewIdOnMoreThenTwoReviewVideo(
-        reviewRequestDto.Video,
-        review,
-      );
-
-      if (beforeVideos.length >= 1) {
-        await this.deleteMoreThenTwoReviewVideo(beforeVideos);
-      }
-    } else {
-      const beforeVideo =
-        await this.mediaGeneralRepository.findBeforeReviewVideoWithId(
-          review.id,
-        );
-
-      await this.insertReviewIdOnOneReviewVideo(
-        reviewRequestDto.Video[0],
-        review,
-      );
-
-      if (beforeVideo) {
-        await this.deleteOneReviewVideo(beforeVideo);
-      }
-    }
-  }
-
-  async deleteReviewImages(
-    reviewImages: ReviewImageEntity[],
-    review: ReviewEntity,
-  ): Promise<void> {
-    if (reviewImages.length >= 2) {
-      const beforeImages =
-        await this.mediaGeneralRepository.findBeforeReviewImagesWithId(
-          review.id,
-        );
-
-      await this.deleteMoreThenTwoReviewImage(beforeImages);
-    } else {
-      const beforeImage =
-        await this.mediaGeneralRepository.findBeforeReviewImageWithId(
-          review.id,
-        );
-
-      await this.deleteOneReviewImage(beforeImage);
-    }
-  }
-
-  async deleteReviewVideos(
     reviewVideos: ReviewVideoEntity[],
-    review: ReviewEntity,
   ): Promise<void> {
-    if (reviewVideos.length >= 2) {
-      const beforeVideos =
-        await this.mediaGeneralRepository.findBeforeReviewVideosWithId(
-          review.id,
-        );
+    const beforeReviewVideos =
+      await this.mediaGeneralRepository.findBeforeReviewVideosWithId(review.id);
 
-      await this.deleteMoreThenTwoReviewVideo(beforeVideos);
-    } else {
-      const beforeVideo =
-        await this.mediaGeneralRepository.findBeforeReviewVideoWithId(
-          review.id,
-        );
+    const modifyWork = reviewVideos.map(async (reviewVideo) => {
+      await this.mediaInsertRepository.insertReviewIdOnReviewVideo(
+        reviewVideo,
+        review,
+      );
+    });
 
-      await this.deleteOneReviewVideo(beforeVideo);
+    await Promise.all(modifyWork);
+
+    if (beforeReviewVideos.length >= 1) {
+      const deleteWork = beforeReviewVideos.map(async (beforeReviewVideo) => {
+        await this.mediaGeneralRepository.deleteReviewVideoWithId(
+          beforeReviewVideo.id,
+        );
+      });
+
+      await Promise.all(deleteWork);
     }
+  }
+
+  async deleteReviewImages(reviewImages: ReviewImageEntity[]): Promise<void> {
+    const deleteWork = reviewImages.map(async (reviewImage) => {
+      await this.mediaGeneralRepository.deleteReviewImageWithId(reviewImage.id);
+    });
+
+    await Promise.all(deleteWork);
+  }
+
+  async deleteReviewVideos(reviewVideos: ReviewVideoEntity[]): Promise<void> {
+    const deleteWork = reviewVideos.map(async (reviewVideo) => {
+      await this.mediaGeneralRepository.deleteReviewVideoWithId(reviewVideo.id);
+    });
+
+    await Promise.all(deleteWork);
   }
 }

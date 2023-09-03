@@ -26,6 +26,7 @@ import { MediaDto } from "src/model/media/dto/media.dto";
 import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
 import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ReviewFunctionService } from "../services/review-function.service";
 
 @ApiTags("v1 고객 Review API")
 @UseGuards(IsClientGuard)
@@ -33,6 +34,7 @@ import { ApiOperation, ApiTags } from "@nestjs/swagger";
 @Controller("/api/v1/only-client/review")
 export class ReviewVersionOneOnlyClientController {
   constructor(
+    private readonly reviewFunctionService: ReviewFunctionService,
     private readonly reviewGeneralService: ReviewGeneralService,
     private readonly reviewBundleService: ReviewBundleService,
     private readonly starRateGeneralService: StarRateGeneralService,
@@ -61,25 +63,19 @@ export class ReviewVersionOneOnlyClientController {
       jwtPayload,
     });
 
-    const mediaWork = async () => {
-      await this.reviewBundleService.pushReviewMedia({
+    const mediaWork = () =>
+      Promise.all([
+        this.reviewFunctionService.insertReviewImage(review, reviewImgCookies),
+        this.reviewFunctionService.insertReviewVideo(review, reviewVdoCookies),
+      ]).then((res) => res.forEach((func) => func()));
+
+    const starRateWork = () =>
+      this.starRateGeneralService.starRating({
         reviewRequestDto,
-        reviewImgCookies,
-        reviewVdoCookies,
+        productId,
       });
 
-      await this.reviewBundleService.insertReviewMedia({
-        reviewImgCookies,
-        reviewVdoCookies,
-        reviewRequestDto,
-        review,
-      });
-    };
-
-    await Promise.all([
-      mediaWork(),
-      this.starRateGeneralService.starRating({ reviewRequestDto, productId }),
-    ]);
+    await Promise.all([mediaWork(), starRateWork()]);
 
     return {
       statusCode: 201,
@@ -112,23 +108,15 @@ export class ReviewVersionOneOnlyClientController {
       jwtPayload,
     });
 
-    const mediaWork = async () => {
-      await this.reviewBundleService.pushReviewMedia({
-        reviewRequestDto,
-        reviewImgCookies,
-      });
+    const mediaWork = () =>
+      this.reviewFunctionService
+        .insertReviewImage(review, reviewImgCookies)
+        .then((res) => res());
 
-      await this.reviewBundleService.insertReviewMedia({
-        reviewImgCookies,
-        reviewRequestDto,
-        review,
-      });
-    };
+    const starRateWork = () =>
+      this.starRateGeneralService.starRating({ reviewRequestDto, productId });
 
-    await Promise.all([
-      mediaWork(),
-      this.starRateGeneralService.starRating({ reviewRequestDto, productId }),
-    ]);
+    await Promise.all([mediaWork(), starRateWork()]);
 
     return {
       statusCode: 201,
@@ -158,23 +146,15 @@ export class ReviewVersionOneOnlyClientController {
       jwtPayload,
     });
 
-    const mediaWork = async () => {
-      await this.reviewBundleService.pushReviewMedia({
-        reviewRequestDto,
-        reviewVdoCookies,
-      });
+    const mediaWork = () =>
+      this.reviewFunctionService
+        .insertReviewVideo(review, reviewVdoCookies)
+        .then((res) => res());
 
-      await this.reviewBundleService.insertReviewMedia({
-        reviewVdoCookies,
-        reviewRequestDto,
-        review,
-      });
-    };
+    const starRateWork = () =>
+      this.starRateGeneralService.starRating({ reviewRequestDto, productId });
 
-    await Promise.all([
-      mediaWork(),
-      this.starRateGeneralService.starRating({ reviewRequestDto, productId }),
-    ]);
+    await Promise.all([mediaWork(), starRateWork()]);
 
     return {
       statusCode: 201,
@@ -195,14 +175,17 @@ export class ReviewVersionOneOnlyClientController {
     @Body() reviewRequestDto: ReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await Promise.all([
-      this.starRateGeneralService.starRating({ reviewRequestDto, productId }),
+    const createWork = () =>
       this.reviewGeneralService.createReview({
         productId,
         reviewRequestDto,
         jwtPayload,
-      }),
-    ]);
+      });
+
+    const starRateWork = () =>
+      this.starRateGeneralService.starRating({ reviewRequestDto, productId });
+
+    await Promise.all([createWork(), starRateWork()]);
 
     return {
       statusCode: 201,
@@ -240,34 +223,27 @@ export class ReviewVersionOneOnlyClientController {
 
     this.reviewBundleService.checkModifyCount(review);
 
-    const mediaWork = async () => {
-      await this.reviewBundleService.pushReviewMedia({
-        reviewRequestDto,
-        reviewImgCookies,
-        reviewVdoCookies,
-      });
-      await this.reviewBundleService.modifyReviewMedia({
-        review,
-        reviewRequestDto,
-        reviewImgCookies,
-        reviewVdoCookies,
-      });
-      await this.reviewBundleService.deleteReviewMedia(review);
-    };
+    const mediaWork = () =>
+      Promise.all([
+        this.reviewFunctionService.modifyReviewImage(review, reviewImgCookies),
+        this.reviewFunctionService.modifyReviewVideo(review, reviewVdoCookies),
+      ]).then((res) => res.forEach((func) => func()));
 
-    await Promise.all([
-      mediaWork(),
-      this.starRateGeneralService.modifyStarRate({
-        reviewRequestDto,
-        productId,
-        review,
-      }),
-      this.reviewGeneralService.modifyReview({
-        reviewRequestDto,
-        jwtPayload,
-        beforeReview: review,
-      }),
-    ]);
+    const modifyWork = () =>
+      Promise.all([
+        this.starRateGeneralService.modifyStarRate({
+          reviewRequestDto,
+          productId,
+          review,
+        }),
+        this.reviewGeneralService.modifyReview({
+          reviewRequestDto,
+          jwtPayload,
+          beforeReview: review,
+        }),
+      ]);
+
+    await Promise.all([mediaWork(), modifyWork()]);
 
     return {
       statusCode: 200,
@@ -307,32 +283,27 @@ export class ReviewVersionOneOnlyClientController {
 
     this.reviewBundleService.checkModifyCount(review);
 
-    const mediaWork = async () => {
-      await this.reviewBundleService.pushReviewMedia({
-        reviewRequestDto,
-        reviewImgCookies,
-      });
-      await this.reviewBundleService.modifyReviewMedia({
-        reviewImgCookies,
-        reviewRequestDto,
-        review,
-      });
-      await this.reviewBundleService.deleteReviewMedia(review);
-    };
+    const mediaWork = () =>
+      Promise.all([
+        this.reviewFunctionService.modifyReviewImage(review, reviewImgCookies),
+        this.reviewFunctionService.deleteReviewVideo(review.Video),
+      ]).then((res) => res.forEach((func) => func()));
 
-    await Promise.all([
-      mediaWork(),
-      this.starRateGeneralService.modifyStarRate({
-        reviewRequestDto,
-        productId,
-        review,
-      }),
-      this.reviewGeneralService.modifyReview({
-        reviewRequestDto,
-        jwtPayload,
-        beforeReview: review,
-      }),
-    ]);
+    const modifyWork = () =>
+      Promise.all([
+        this.starRateGeneralService.modifyStarRate({
+          reviewRequestDto,
+          productId,
+          review,
+        }),
+        this.reviewGeneralService.modifyReview({
+          reviewRequestDto,
+          jwtPayload,
+          beforeReview: review,
+        }),
+      ]);
+
+    await Promise.all([mediaWork(), modifyWork()]);
 
     return {
       statusCode: 200,
@@ -369,32 +340,27 @@ export class ReviewVersionOneOnlyClientController {
 
     this.reviewBundleService.checkModifyCount(review);
 
-    const mediaWork = async () => {
-      await this.reviewBundleService.pushReviewMedia({
-        reviewRequestDto,
-        reviewVdoCookies,
-      });
-      await this.reviewBundleService.modifyReviewMedia({
-        reviewVdoCookies,
-        reviewRequestDto,
-        review,
-      });
-      await this.reviewBundleService.deleteReviewMedia(review);
-    };
+    const mediaWork = () =>
+      Promise.all([
+        this.reviewFunctionService.modifyReviewVideo(review, reviewVdoCookies),
+        this.reviewFunctionService.deleteReviewImage(review.Image),
+      ]).then((res) => res.forEach((func) => func()));
 
-    await Promise.all([
-      mediaWork(),
-      this.starRateGeneralService.modifyStarRate({
-        reviewRequestDto,
-        productId,
-        review,
-      }),
-      await this.reviewGeneralService.modifyReview({
-        reviewRequestDto,
-        jwtPayload,
-        beforeReview: review,
-      }),
-    ]);
+    const modifyWork = () =>
+      Promise.all([
+        this.starRateGeneralService.modifyStarRate({
+          reviewRequestDto,
+          productId,
+          review,
+        }),
+        this.reviewGeneralService.modifyReview({
+          reviewRequestDto,
+          jwtPayload,
+          beforeReview: review,
+        }),
+      ]);
+
+    await Promise.all([mediaWork(), modifyWork()]);
 
     return {
       statusCode: 200,
@@ -429,19 +395,27 @@ export class ReviewVersionOneOnlyClientController {
 
     this.reviewBundleService.checkModifyCount(review);
 
-    await Promise.all([
-      this.starRateGeneralService.modifyStarRate({
-        reviewRequestDto,
-        productId,
-        review,
-      }),
-      this.reviewGeneralService.modifyReview({
-        reviewRequestDto,
-        jwtPayload,
-        beforeReview: review,
-      }),
-      this.reviewBundleService.deleteReviewMedia(review),
-    ]);
+    const mediaWork = () =>
+      Promise.all([
+        this.reviewFunctionService.deleteReviewImage(review.Image),
+        this.reviewFunctionService.deleteReviewVideo(review.Video),
+      ]).then((res) => res.forEach((func) => func()));
+
+    const modifyWork = () =>
+      Promise.all([
+        this.starRateGeneralService.modifyStarRate({
+          reviewRequestDto,
+          productId,
+          review,
+        }),
+        this.reviewGeneralService.modifyReview({
+          reviewRequestDto,
+          jwtPayload,
+          beforeReview: review,
+        }),
+      ]);
+
+    await Promise.all([mediaWork(), modifyWork()]);
 
     return {
       statusCode: 200,
@@ -467,7 +441,6 @@ export class ReviewVersionOneOnlyClientController {
 
     await Promise.all([
       this.reviewGeneralService.deleteReview(review),
-      this.reviewBundleService.deleteReviewMedia(review),
       this.starRateGeneralService.decreaseStarRate(review),
     ]);
 

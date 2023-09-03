@@ -31,7 +31,7 @@ export class ReviewGeneralRepository
         .createQueryBuilder()
         .select(this.select.review)
         .from(ReviewEntity, "review")
-        .innerJoin("review.Prodcut", "Product")
+        .innerJoin("review.Product", "Product")
         .leftJoin("review.Image", "Image")
         .leftJoin("review.Video", "Video")
         .where("review.id = :id", { id })

@@ -27,13 +27,13 @@ export class ReviewVersionOneOnlyAdminController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/product/:productId")
-  async findReviewFromProductById(
+  async findReviewByProductId(
     @Param("productId") id: string,
   ): Promise<JsonGeneralInterface<ReviewEntity[]>> {
     return {
       statusCode: 200,
       message: `상품아이디(${id})에 해당하는 상품의 리뷰를 가져옵니다.`,
-      result: await this.reviewGeneralService.findReviewFromProductById(id),
+      result: await this.reviewGeneralService.findReviewByProductId(id),
     };
   }
 }

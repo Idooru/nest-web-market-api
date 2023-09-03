@@ -25,10 +25,6 @@ export class ReviewGeneralService
     super();
   }
 
-  async findReviewById(id: string): Promise<ReviewEntity> {
-    return await this.reviewGeneralRepository.findReviewById(id);
-  }
-
   async findReviewByProductId(id: string): Promise<ReviewEntity[]> {
     const product = await this.productGeneralRepository.findOneProductById(id);
 
