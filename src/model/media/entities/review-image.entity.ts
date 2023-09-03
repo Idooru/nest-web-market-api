@@ -7,6 +7,6 @@ export class ReviewImageEntity extends MediaEntity {
   @ManyToOne(() => ReviewEntity, (review) => review.Image, {
     onDelete: "CASCADE",
   })
-  @JoinColumn({ name: "id" })
+  @JoinColumn({ referencedColumnName: "id", name: "reviewId" })
   Review: ReviewEntity;
 }

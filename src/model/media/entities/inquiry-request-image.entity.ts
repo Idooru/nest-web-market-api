@@ -9,6 +9,6 @@ export class InquiryRequestImageEntity extends MediaEntity {
     (inquiryRequest) => inquiryRequest.Image,
     { onDelete: "CASCADE" },
   )
-  @JoinColumn({ name: "id" })
+  @JoinColumn({ referencedColumnName: "id", name: "inquiryRequestId" })
   InquiryRequest: InquiryRequestEntity;
 }
