@@ -10,6 +10,7 @@ import { TypeOrmErrorHandlingBuilder } from "./error-handler/typeorm-error-handl
 import { LibraryErrorHandlingBuilder } from "./error-handler/library-error-handling.builder";
 import { JwtErrorHandlingBuilder } from "./error-handler/jwt-error-handling.builder";
 import { HttpExceptionHandlingBuilder } from "./error-handler/http-exception-handling.builder";
+import { ErrorLoggerLibrary } from "./logger/error-logger.library";
 
 @Module({
   imports: [DotenvConfigurationModule, MailerConfigurationModule],
@@ -23,6 +24,7 @@ import { HttpExceptionHandlingBuilder } from "./error-handler/http-exception-han
     JwtErrorHandlingBuilder,
     TimeLoggerLibrary,
     MeidaLoggerLibrary,
+    ErrorLoggerLibrary,
   ],
   exports: [
     SecurityLibrary,
@@ -33,6 +35,7 @@ import { HttpExceptionHandlingBuilder } from "./error-handler/http-exception-han
     JwtErrorHandlingBuilder,
     TimeLoggerLibrary,
     MeidaLoggerLibrary,
+    ErrorLoggerLibrary,
   ],
 })
 export class LibraryModule {}
