@@ -11,6 +11,12 @@ export class UserSearcher {
     private readonly validateLibrary: ValidateLibrary,
   ) {}
 
+  async findUserWithId(id: string): Promise<UserEntity> {
+    const user = await this.userSearchRepository.findUserWithId(id);
+    this.validateLibrary.isExistData(user);
+    return user;
+  }
+
   async findUserWithEmail(email: string): Promise<UserEntity> {
     const user = await this.userSearchRepository.findUserWithEmail(email);
     this.validateLibrary.isExistData(user);
