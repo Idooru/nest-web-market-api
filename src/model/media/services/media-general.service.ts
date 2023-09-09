@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { JwtAccessTokenPayload } from "../../auth/jwt/jwt-access-token-payload.interface";
-import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
 import { MediaGeneralRepository } from "../repositories/media-general.repository";
 import { MediaDto } from "../dto/media.dto";
 import { ProductImageEntity } from "../entities/product-image.entity";
@@ -11,12 +10,13 @@ import { ReviewVideoEntity } from "../entities/review-video.entity";
 import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
 import { IMediaGeneralService } from "../interfaces/services/media-general-service.interface";
+import { UserSearcher } from "src/model/user/logic/user.searcher";
 
 @Injectable()
 export class MediaGeneralService implements IMediaGeneralService {
   constructor(
     private readonly mediaGeneralRepository: MediaGeneralRepository,
-    private readonly userGeneralRepository: UserGeneralRepository,
+    private readonly userSearcher: UserSearcher,
   ) {}
 
   async findUploadedProductImages(
@@ -183,10 +183,9 @@ export class MediaGeneralService implements IMediaGeneralService {
     jwtPayload: JwtAccessTokenPayload,
     urls: string[],
   ): Promise<void> {
-    const user =
-      await this.userGeneralRepository.findAdminUserProfileInfoWithId(
-        jwtPayload.userId,
-      );
+    const user = await this.userSearcher.findAdminUserProfileInfoWithId(
+      jwtPayload.userId,
+    );
 
     if (files.length >= 2) {
       const promises = urls.map(async (url) => {
@@ -212,7 +211,7 @@ export class MediaGeneralService implements IMediaGeneralService {
     jwtPayload: JwtAccessTokenPayload,
     urls: string[],
   ): Promise<void> {
-    const user = await this.userGeneralRepository.findUserWithNickName(
+    const user = await this.userSearcher.findUserWithNickname(
       jwtPayload.nickname,
     );
 
@@ -240,7 +239,7 @@ export class MediaGeneralService implements IMediaGeneralService {
     jwtPayload: JwtAccessTokenPayload,
     urls: string[],
   ): Promise<void> {
-    const user = await this.userGeneralRepository.findUserWithNickName(
+    const user = await this.userSearcher.findUserWithNickname(
       jwtPayload.nickname,
     );
 
@@ -268,7 +267,7 @@ export class MediaGeneralService implements IMediaGeneralService {
     jwtPayload: JwtAccessTokenPayload,
     urls: string[],
   ): Promise<void> {
-    const user = await this.userGeneralRepository.findUserWithNickName(
+    const user = await this.userSearcher.findUserWithNickname(
       jwtPayload.nickname,
     );
 
@@ -296,7 +295,7 @@ export class MediaGeneralService implements IMediaGeneralService {
     jwtPayload: JwtAccessTokenPayload,
     urls: string[],
   ): Promise<void> {
-    const user = await this.userGeneralRepository.findUserWithNickName(
+    const user = await this.userSearcher.findUserWithNickname(
       jwtPayload.nickname,
     );
 
@@ -324,7 +323,7 @@ export class MediaGeneralService implements IMediaGeneralService {
     jwtPayload: JwtAccessTokenPayload,
     urls: string[],
   ): Promise<void> {
-    const user = await this.userGeneralRepository.findUserWithNickName(
+    const user = await this.userSearcher.findUserWithNickname(
       jwtPayload.nickname,
     );
 
@@ -352,7 +351,7 @@ export class MediaGeneralService implements IMediaGeneralService {
     jwtPayload: JwtAccessTokenPayload,
     urls: string[],
   ): Promise<void> {
-    const user = await this.userGeneralRepository.findUserWithNickName(
+    const user = await this.userSearcher.findUserWithNickname(
       jwtPayload.nickname,
     );
 

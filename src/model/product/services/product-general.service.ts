@@ -2,18 +2,18 @@ import { ProductEntity } from "../entities/product.entity";
 import { ProductGeneralRepository } from "../repositories/product-general.repository";
 import { Injectable } from "@nestjs/common";
 import { ModifyProductDto } from "../dto/modify-product.dto";
-import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
 import { ProductInsertRepository } from "../repositories/product-insert.repository";
 import { ProductAccessoryService } from "./product-accessory.service";
 import { IProductGeneralService } from "../interfaces/services/product-general-service.interface";
 import { ProductCategory } from "../types/product-category.type";
 import { CreateProductDto } from "../dto/create-product-dto";
+import { UserSearcher } from "src/model/user/logic/user.searcher";
 
 @Injectable()
 export class ProductGeneralService implements IProductGeneralService {
   constructor(
     private readonly productGeneralRepository: ProductGeneralRepository,
-    private readonly userGeneralRepository: UserGeneralRepository,
+    private readonly userSearcher: UserSearcher,
     private readonly productInsertRepository: ProductInsertRepository,
     private readonly productAccessoryService: ProductAccessoryService,
   ) {}
@@ -45,7 +45,7 @@ export class ProductGeneralService implements IProductGeneralService {
   ): Promise<ProductEntity> {
     const { productDto, jwtPayload } = createProductDto;
 
-    const admin = await this.userGeneralRepository.findAdminUserObjectWithId(
+    const admin = await this.userSearcher.findAdminUserObjectWithId(
       jwtPayload.userId,
     );
 

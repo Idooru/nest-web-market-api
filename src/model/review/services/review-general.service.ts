@@ -4,11 +4,11 @@ import { HttpStatus, Injectable } from "@nestjs/common";
 import { ModifyReviewDto } from "../dto/modify-review.dto";
 import { ReviewEntity } from "../entities/review.entity";
 import { ProductGeneralRepository } from "src/model/product/repositories/product-general.repository";
-import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
 import { ReviewInsertRepository } from "../repositories/review-insert.repository";
 import { IReviewGeneralService } from "../interfaces/services/review-general-service.interface";
 import { HttpExceptionHandlingBuilder } from "src/common/lib/error-handler/http-exception-handling.builder";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
+import { UserSearcher } from "src/model/user/logic/user.searcher";
 
 @Injectable()
 export class ReviewGeneralService
@@ -18,7 +18,7 @@ export class ReviewGeneralService
   constructor(
     private readonly reviewGeneralRepository: ReviewGeneralRepository,
     private readonly productGeneralRepository: ProductGeneralRepository,
-    private readonly userGeneralRepository: UserGeneralRepository,
+    private readonly userSearcher: UserSearcher,
     private readonly reviewInsertRepository: ReviewInsertRepository,
     private readonly httpExceptionHandlingBuilder: HttpExceptionHandlingBuilder,
   ) {
@@ -46,7 +46,7 @@ export class ReviewGeneralService
 
     const [product, client] = await Promise.all([
       this.productGeneralRepository.findOneProductById(productId),
-      this.userGeneralRepository.findClientUserObjectWithId(jwtPayload.userId),
+      this.userSearcher.findClientUserObjectWithId(jwtPayload.userId),
     ]);
 
     const reviewOutput = await this.reviewGeneralRepository.createReview({

@@ -1,10 +1,10 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
-import { UserGeneralRepository } from "src/model/user/repositories/user-general.repository";
 import { ReviewEntity } from "../entities/review.entity";
 import { ReviewGeneralRepository } from "../repositories/review-general.repository";
 import { IReviewBundleService } from "../interfaces/services/review-bundle-service.interface";
 import { ErrorHandlerProps } from "src/common/classes/abstract/error-handler-props";
 import { HttpExceptionHandlingBuilder } from "src/common/lib/error-handler/http-exception-handling.builder";
+import { UserSearcher } from "src/model/user/logic/user.searcher";
 
 @Injectable()
 export class ReviewBundleService
@@ -12,7 +12,7 @@ export class ReviewBundleService
   implements IReviewBundleService
 {
   constructor(
-    private readonly userGeneralRepository: UserGeneralRepository,
+    private readonly userSearcher: UserSearcher,
     private readonly reviewGeneralRepository: ReviewGeneralRepository,
     private readonly httpExceptionHandlingBuilder: HttpExceptionHandlingBuilder,
   ) {
@@ -37,9 +37,7 @@ export class ReviewBundleService
   ): Promise<ReviewEntity> {
     this.methodName = this.distinguishOwnReview.name;
 
-    const client = await this.userGeneralRepository.findClientUserObjectWithId(
-      userId,
-    );
+    const client = await this.userSearcher.findClientUserObjectWithId(userId);
 
     const reviews = await this.reviewGeneralRepository.findAllClientsReviews(
       client.id,
