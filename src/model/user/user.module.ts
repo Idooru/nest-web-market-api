@@ -5,22 +5,22 @@ import { AuthModule } from "../auth/auth.module";
 import { UserProfileEntity } from "./entities/user-profile.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { forwardRef, Module } from "@nestjs/common";
-import { UserGeneralService } from "./services/user-general.service";
 import { LibraryModule } from "src/common/lib/library.module";
 import { JwtModule } from "@nestjs/jwt";
 import { UserVersionOneFreeUseController } from "./controllers/v1/user-v1-free-use.controller";
 import { UserVersionOneOnlyAdminController } from "./controllers/v1/user-v1-only-admin.controller";
-import { UserGeneralRepository } from "./repositories/user-general.repository";
-import { UserVerifyService } from "./services/user-verify.service";
-import { UserVerifyRepository } from "./repositories/user-verify.repository";
-import { UserVersionOneVerifyController } from "./controllers/v1/user-v1-verify.controller";
 import { ClientUserEntity } from "./entities/client-user.entity";
 import { AdminUserEntity } from "./entities/admin-user.entity";
 import { UserEntity } from "./entities/user.entity";
-import { UserInsertRepository } from "../../deprecated/user-insert.repository";
 import { userSelectProperty } from "src/common/config/repository-select-configs/user.select";
 import { userVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/user-verify-cookie.key";
-import { UserAccessoryService } from "./services/user-accessory.service";
+import { UserTransaction } from "./logic/user.transaction";
+import { UserRepositoryVO } from "./logic/user-repository.vo";
+import { UserSearcher } from "./logic/user.searcher";
+import { UserSecurity } from "./logic/user.security";
+import { UserOperationRepository } from "./repositories/user-operation.repository";
+import { UserSearchRepository } from "./repositories/user-search.repository";
+import { UserOperationService } from "./services/user-operation.service";
 
 @Module({
   imports: [
@@ -40,7 +40,6 @@ import { UserAccessoryService } from "./services/user-accessory.service";
   controllers: [
     UserVersionOneFreeUseController,
     UserVersionOneOnlyAdminController,
-    UserVersionOneVerifyController,
   ],
   providers: [
     {
@@ -51,20 +50,14 @@ import { UserAccessoryService } from "./services/user-accessory.service";
       provide: "UserSelectProperty",
       useValue: userSelectProperty,
     },
-    UserGeneralService,
-    UserVerifyService,
-    UserAccessoryService,
-    UserGeneralRepository,
-    UserVerifyRepository,
-    UserInsertRepository,
+    UserSearcher,
+    UserSecurity,
+    UserTransaction,
+    UserRepositoryVO,
+    UserOperationService,
+    UserSearchRepository,
+    UserOperationRepository,
   ],
-  exports: [
-    UserGeneralService,
-    UserVerifyService,
-    UserAccessoryService,
-    UserGeneralRepository,
-    UserVerifyRepository,
-    UserInsertRepository,
-  ],
+  exports: [UserSearcher],
 })
 export class UserModule {}

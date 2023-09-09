@@ -12,8 +12,6 @@ import {
 } from "@nestjs/common";
 import { JwtAccessTokenPayload } from "../../../auth/jwt/jwt-access-token-payload.interface";
 import { IsLoginGuard } from "../../../../common/guards/authenticate/is-login.guard";
-import { AuthGeneralService } from "../../../auth/services/auth-general.service";
-import { UserGeneralService } from "../../services/user-general.service";
 import { LoginUserDto } from "../../dtos/login-user.dto";
 import { ModifyUserDto } from "../../dtos/modify-user.dto";
 import { ResetPasswordDto } from "../../dtos/reset-password.dto";
@@ -29,24 +27,24 @@ import { JsonJwtLogoutInterceptor } from "src/common/interceptors/general/json-j
 import { JsonJwtLogoutInterface } from "src/common/interceptors/interface/json-jwt-logout.interface";
 import { RegisterUserDto } from "../../dtos/register-user.dto";
 import { UserEntity } from "../../entities/user.entity";
-import { VerifyDataGuard } from "src/common/guards/verify/verify-data.guard";
-import { userVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/user-verify-cookie.key";
-import { UserAccessoryService } from "../../services/user-accessory.service";
-import { EmailSenderLibrary } from "src/common/lib/email/email-sender.library";
 import { ModifyUserEmailDto } from "../../dtos/modify-user-email.dto";
 import { ModifyUserNicknameDto } from "../../dtos/modify-user-nickname.dto";
 import { ModifyUserPhonenumberDto } from "../../dtos/modify-user-phonenumber.dto";
 import { ModifyUserPasswordDto } from "../../dtos/modify-user-password.dto";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { UserTransaction } from "../../logic/user.transaction";
+import { UserSecurity } from "../../logic/user.security";
+import { UserSearcher } from "../../logic/user.searcher";
+import { UserOperationService } from "../../services/user-operation.service";
 
 @ApiTags("v1 공용 User API")
 @Controller("/api/v1/free-use/user")
 export class UserVersionOneFreeUseController {
   constructor(
-    private readonly userGeneralService: UserGeneralService,
-    private readonly authGeneralService: AuthGeneralService,
-    private readonly userAccessorySrevice: UserAccessoryService,
-    private readonly emailSenderLibrary: EmailSenderLibrary,
+    private readonly userTransaction: UserTransaction,
+    private readonly userSearcher: UserSearcher,
+    private readonly userSecurity: UserSecurity,
+    private readonly userOperationService: UserOperationService,
   ) {}
 
   @ApiOperation({
@@ -55,28 +53,12 @@ export class UserVersionOneFreeUseController {
       "회원 가입을 합니다. 회원가입을 할 때 사용된 이메일, 닉네임, 전화번호등이 이미 데이터베이스에 존재하면 에러를 반환합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(
-    new VerifyDataGuard(
-      userVerifyCookieKey.is_not_exist.email_executed,
-      userVerifyCookieKey.is_not_exist.nickname_executed,
-      userVerifyCookieKey.is_not_exist.phonenumber_executed,
-    ),
-  )
   @UseGuards(IsNotLoginGuard)
   @Post("/register")
   async register(
     @Body() registerUserDto: RegisterUserDto,
   ): Promise<JsonGeneralInterface<void>> {
-    const user = await this.userGeneralService.createUserEntity(
-      registerUserDto.role,
-    );
-
-    const authInfo = await this.userGeneralService.createUserBase(
-      user,
-      registerUserDto,
-    );
-
-    // await this.emailSenderLibrary.sendMailToClientAboutRegister(authInfo);
+    await this.userTransaction.register(registerUserDto);
 
     return {
       statusCode: 201,
@@ -95,22 +77,14 @@ export class UserVersionOneFreeUseController {
   async whoAmI(
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<UserEntity>> {
-    if (jwtPayload.userRole.toString() === "admin") {
-      return {
-        statusCode: 200,
-        message: "관리자 사용자의 정보를 가져옵니다.",
-        result: await this.userGeneralService.findAdminUserProfileInfoWithId(
-          jwtPayload.userId,
-        ),
-      };
-    }
+    const [message, result] = await this.userSearcher.findUserProfile(
+      jwtPayload,
+    );
 
     return {
       statusCode: 200,
-      message: "고객 사용자의 정보를 가져옵니다.",
-      result: await this.userGeneralService.findClientUserProfileInfoWithId(
-        jwtPayload.userId,
-      ),
+      message,
+      result,
     };
   }
 
@@ -125,10 +99,9 @@ export class UserVersionOneFreeUseController {
   async login(
     @Body() loginUserDto: LoginUserDto,
   ): Promise<JsonJwtAuthInterface> {
-    const user = await this.authGeneralService.validateUser(loginUserDto);
-
-    const { accessToken, refreshToken } =
-      await this.authGeneralService.signToken(user);
+    const { accessToken, refreshToken } = await this.userSecurity.login(
+      loginUserDto,
+    );
 
     return {
       statusCode: 201,
@@ -149,8 +122,9 @@ export class UserVersionOneFreeUseController {
   async refreshToken(
     @GetJWT() jwtPayload: JwtRefreshTokenPayload,
   ): Promise<JsonJwtAuthInterface> {
-    const { accessToken, refreshToken } =
-      await this.authGeneralService.refreshToken(jwtPayload);
+    const { accessToken, refreshToken } = await this.userSecurity.refreshToken(
+      jwtPayload,
+    );
 
     return {
       statusCode: 200,
@@ -182,20 +156,13 @@ export class UserVersionOneFreeUseController {
       "로그인을 했을 때 본인의 사용자 전체 column을 수정합니다. 수정하려는 이메일, 닉네임, 전화번호가 이미 데이터베이스에 존재 한다면 에러를 반환합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(
-    new VerifyDataGuard(
-      userVerifyCookieKey.is_not_exist.email_executed,
-      userVerifyCookieKey.is_not_exist.nickname_executed,
-      userVerifyCookieKey.is_not_exist.phonenumber_executed,
-    ),
-  )
   @UseGuards(IsLoginGuard)
   @Put("/me")
   async modifyUser(
     @Body() modifyUserDto: ModifyUserDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userGeneralService.modifyUser(modifyUserDto, jwtPayload.userId);
+    await this.userTransaction.modifyUser(modifyUserDto, jwtPayload.userId);
 
     return {
       statusCode: 201,
@@ -209,16 +176,13 @@ export class UserVersionOneFreeUseController {
       "로그인을 했을 때 본인의 사용자 이메일 column을 수정합니다. 수정하려는 사용자의 이메일이 이미 데이터베이스에 존재한다면 에러를 반환합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(
-    new VerifyDataGuard(userVerifyCookieKey.is_not_exist.email_executed),
-  )
   @UseGuards(IsLoginGuard)
   @Patch("/me/email")
   async modifyUserEmail(
     @Body() { email }: ModifyUserEmailDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userGeneralService.modifyUserEmail(email, jwtPayload.userId);
+    await this.userOperationService.modifyUserEmail(email, jwtPayload.userId);
 
     return {
       statusCode: 201,
@@ -232,16 +196,13 @@ export class UserVersionOneFreeUseController {
       "로그인을 했을 때 본인의 사용자 닉네임 column을 수정합니다. 수정하려는 사용자의 닉네임이 이미 데이터베이스에 존재한다면 에러를 반환합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(
-    new VerifyDataGuard(userVerifyCookieKey.is_not_exist.nickname_executed),
-  )
   @UseGuards(IsLoginGuard)
   @Patch("/me/nickname")
   async modifyUserNickName(
     @Body() { nickname }: ModifyUserNicknameDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userGeneralService.modifyUserNickName(
+    await this.userOperationService.modifyUserNickname(
       nickname,
       jwtPayload.userId,
     );
@@ -258,16 +219,13 @@ export class UserVersionOneFreeUseController {
       "로그인을 했을 때 본인의 사용자 전화번호 column을 수정합니다. 수정하려는 사용자의 전화번호가 이미 데이터베이스에 존재한다면 에러를 반환합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(
-    new VerifyDataGuard(userVerifyCookieKey.is_not_exist.phonenumber_executed),
-  )
   @UseGuards(IsLoginGuard)
   @Patch("/me/phonenumber")
   async modifyUserPhoneNumber(
     @Body() { phonenumber }: ModifyUserPhonenumberDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userGeneralService.modifyUserPhoneNumber(
+    await this.userOperationService.modifyUserPhonenumber(
       phonenumber,
       jwtPayload.userId,
     );
@@ -289,7 +247,7 @@ export class UserVersionOneFreeUseController {
     @Body() { password }: ModifyUserPasswordDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userGeneralService.modifyUserPassword(
+    await this.userOperationService.modifyUserPassword(
       password,
       jwtPayload.userId,
     );
@@ -302,13 +260,12 @@ export class UserVersionOneFreeUseController {
 
   @ApiOperation({ summary: "secession", description: "회원 탈퇴를 합니다." })
   @UseInterceptors(JsonJwtLogoutInterceptor)
-  @UseGuards(new VerifyDataGuard(userVerifyCookieKey.is_exist.id_executed))
   @UseGuards(IsLoginGuard)
   @Delete("/secession")
   async secession(
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonJwtLogoutInterface> {
-    await this.userGeneralService.deleteUser(jwtPayload.userId);
+    await this.userOperationService.deleteUser(jwtPayload.userId);
 
     return {
       statusCode: 203,
@@ -323,24 +280,18 @@ export class UserVersionOneFreeUseController {
       "이메일을 찾습니다. 본인 인증을 하기 위해서 실명과 전화번호를 사용합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(
-    new VerifyDataGuard(
-      userVerifyCookieKey.is_exist.realname_executed,
-      userVerifyCookieKey.is_exist.phonenumber_executed,
-    ),
-  )
   @UseGuards(IsNotLoginGuard)
   @Get("/find-email")
   async findEmail(
     @Query("realname") realname: string,
     @Query("phonenumber") phonenumber: string,
   ): Promise<JsonGeneralInterface<string>> {
-    const findEmailDto = { realname, phonenumber };
+    const result = await this.userSecurity.findEmail(realname, phonenumber);
 
     return {
       statusCode: 200,
       message: "이메일 정보를 가져옵니다.",
-      result: await this.authGeneralService.findEmail(findEmailDto),
+      result,
     };
   }
 
@@ -350,13 +301,12 @@ export class UserVersionOneFreeUseController {
       "비밀번호를 변경합니다. 본인의 이메일과 변경할 비밀번호를 사용합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(new VerifyDataGuard(userVerifyCookieKey.is_exist.email_executed))
   @UseGuards(IsNotLoginGuard)
   @Patch("/reset-password")
   async resetPassword(
     @Body() resetPasswordDto: ResetPasswordDto,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.authGeneralService.resetPassword(resetPasswordDto);
+    await this.userOperationService.resetPassword(resetPasswordDto);
 
     return {
       statusCode: 200,

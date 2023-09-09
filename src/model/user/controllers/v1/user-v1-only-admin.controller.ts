@@ -8,20 +8,22 @@ import {
 } from "@nestjs/common";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { VerifyDataGuard } from "src/common/guards/verify/verify-data.guard";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { UserEntity } from "../../entities/user.entity";
-import { UserGeneralService } from "../../services/user-general.service";
-import { userVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/user-verify-cookie.key";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { UserSearcher } from "../../logic/user.searcher";
+import { UserOperationService } from "../../services/user-operation.service";
 
 @ApiTags("v1 관리자 User API")
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
 @Controller("/api/v1/only-admin/user")
 export class UserVersionOneOnlyAdminController {
-  constructor(private readonly userGeneralService: UserGeneralService) {}
+  constructor(
+    private readonly userSearcher: UserSearcher,
+    private readonly userOperationService: UserOperationService,
+  ) {}
 
   @ApiOperation({
     summary: "find all users from latest",
@@ -31,10 +33,12 @@ export class UserVersionOneOnlyAdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/")
   async findAllUsersFromLatest(): Promise<JsonGeneralInterface<UserEntity[]>> {
+    const result = await this.userSearcher.findAllUsersFromLatest();
+
     return {
       statusCode: 200,
       message: "전체 사용자 정보를 최신 순서로 가져옵니다.",
-      result: await this.userGeneralService.findAllUsersFromLatest(),
+      result,
     };
   }
 
@@ -46,10 +50,12 @@ export class UserVersionOneOnlyAdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/oldest")
   async findAllUsersFromOldest(): Promise<JsonGeneralInterface<UserEntity[]>> {
+    const result = await this.userSearcher.findAllUsersFromOldest();
+
     return {
       statusCode: 200,
       message: "전체 사용자 정보를 오래된 순서로 가져옵니다.",
-      result: await this.userGeneralService.findAllUsersFromOldest(),
+      result,
     };
   }
 
@@ -63,10 +69,12 @@ export class UserVersionOneOnlyAdminController {
   async findClientUserInfo(
     @Param("id") userId: string,
   ): Promise<JsonGeneralInterface<UserEntity>> {
+    const result = await this.userSearcher.findClientUserInfo(userId);
+
     return {
       statusCode: 200,
       message: `${userId}에 해당하는 사용자 정보를 가져옵니다.`,
-      result: await this.userGeneralService.findClientUserInfo(userId),
+      result,
     };
   }
 
@@ -75,12 +83,11 @@ export class UserVersionOneOnlyAdminController {
     description: "사용자의 아이디에 해당하는 사용자를 추방합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(new VerifyDataGuard(userVerifyCookieKey.is_exist.id_executed))
   @Delete("/:id")
   async kickUser(
     @Param("id") userId: string,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userGeneralService.deleteUser(userId);
+    await this.userOperationService.deleteUser(userId);
 
     return {
       statusCode: 200,
