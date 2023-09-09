@@ -71,7 +71,7 @@ export class UserSecurity {
     const isValidPw = await bcrypt
       .compare(password, user.Auth.password)
       .catch((err: Error) => {
-        loggerFactory("LibraryException").error(err);
+        loggerFactory("ComparePassword").error(err);
         throw new InternalServerErrorException(err);
       });
 
