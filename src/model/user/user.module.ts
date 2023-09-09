@@ -43,10 +43,6 @@ import { UserOperationService } from "./services/user-operation.service";
   ],
   providers: [
     {
-      provide: "UserVerifyCookieKey",
-      useValue: userVerifyCookieKey,
-    },
-    {
       provide: "UserSelectProperty",
       useValue: userSelectProperty,
     },
