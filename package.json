@@ -54,6 +54,7 @@
     "helmet": "^6.0.1",
     "joi": "^17.8.3",
     "multer": "^1.4.3",
+    "mysql2": "^3.6.0",
     "nestjs-form-data": "^1.8.7",
     "nestjs-typeorm-paginate": "^4.0.3",
     "pg": "^8.9.0",
