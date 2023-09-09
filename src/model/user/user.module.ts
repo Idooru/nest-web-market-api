@@ -13,7 +13,6 @@ import { ClientUserEntity } from "./entities/client-user.entity";
 import { AdminUserEntity } from "./entities/admin-user.entity";
 import { UserEntity } from "./entities/user.entity";
 import { userSelectProperty } from "src/common/config/repository-select-configs/user.select";
-import { userVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/user-verify-cookie.key";
 import { UserTransaction } from "./logic/user.transaction";
 import { UserRepositoryVO } from "./logic/user-repository.vo";
 import { UserSearcher } from "./logic/user.searcher";
