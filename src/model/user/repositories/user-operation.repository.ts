@@ -100,6 +100,6 @@ export class UserOperationRepository {
 
   // General
   async deleteUser(id: string): Promise<void> {
-    await this.queryRunner.getUserRepository().delete({ id });
+    await this.userRepository.delete({ id });
   }
 }
