@@ -106,7 +106,7 @@ export class UserSearchRepository {
       .getOne();
   }
 
-  async findUserWithNickName(nickname: string): Promise<UserEntity> {
+  async findUserWithNickname(nickname: string): Promise<UserEntity> {
     return await this.userRepository
       .createQueryBuilder()
       .select(this.select.userBase)
