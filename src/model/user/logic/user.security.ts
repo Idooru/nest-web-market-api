@@ -24,6 +24,15 @@ export class UserSecurity {
     private readonly securityLibrary: SecurityLibrary,
   ) {}
 
+  async hashPassword(password: string): Promise<string> {
+    return await bcrypt
+      .hash(password, this.securityLibrary.getHashSalt())
+      .catch((err: Error) => {
+        loggerFactory("HashPassword").error(err);
+        throw new InternalServerErrorException(err);
+      });
+  }
+
   async signToken(user: UserEntity): Promise<JwtPayload> {
     const jwtAccessTokenPayload: JwtAccessTokenPayload = {
       userId: user.id,
