@@ -3,6 +3,8 @@ import { UserSearchRepository } from "../repositories/user-search.repository";
 import { UserEntity } from "../entities/user.entity";
 import { ValidateLibrary } from "src/common/lib/util/validate.library";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
+import { ClientUserEntity } from "../entities/client-user.entity";
+import { AdminUserEntity } from "../entities/admin-user.entity";
 
 @Injectable()
 export class UserSearcher {
@@ -23,6 +25,24 @@ export class UserSearcher {
     return user;
   }
 
+  async findUserWithNickname(nickname: string): Promise<UserEntity> {
+    const user = await this.userSearchRepository.findUserWithNickname(nickname);
+    this.validateLibrary.isExistData(user);
+    return user;
+  }
+
+  async findClientUserWithId(id: string): Promise<UserEntity> {
+    const clientUser = await this.userSearchRepository.findClientUserWithId(id);
+    this.validateLibrary.isExistData(clientUser);
+    return clientUser;
+  }
+
+  async findAdminUserWithId(id: string): Promise<UserEntity> {
+    const adminUser = await this.userSearchRepository.findAdminUserWithId(id);
+    this.validateLibrary.isExistData(adminUser);
+    return adminUser;
+  }
+
   async findAllUsersFromLatest(): Promise<UserEntity[]> {
     const users = await this.userSearchRepository.findAllUsersFromLatest();
     this.validateLibrary.isExistArray(users);
@@ -39,6 +59,27 @@ export class UserSearcher {
     const clientUser = await this.userSearchRepository.findClientUserInfo(id);
     this.validateLibrary.isExistData(clientUser);
     return clientUser;
+  }
+
+  async findClientUserObjectWithId(id: string): Promise<ClientUserEntity> {
+    const clientObject =
+      await this.userSearchRepository.findClientUserObjectWithId(id);
+    this.validateLibrary.isExistData(clientObject);
+    return clientObject;
+  }
+
+  async findAdminUserObjectWithId(id: string): Promise<AdminUserEntity> {
+    const adminObject =
+      await this.userSearchRepository.findAdminUserObjectWithId(id);
+    this.validateLibrary.isExistData(adminObject);
+    return adminObject;
+  }
+
+  async findAdminUserProfileInfoWithId(id: string): Promise<UserEntity> {
+    const adminUser =
+      await this.userSearchRepository.findAdminUserProfileInfoWithId(id);
+    this.validateLibrary.isExistData(adminUser);
+    return adminUser;
   }
 
   async findUserProfile(
