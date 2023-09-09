@@ -11,6 +11,7 @@ import { LibraryErrorHandlingBuilder } from "./error-handler/library-error-handl
 import { JwtErrorHandlingBuilder } from "./error-handler/jwt-error-handling.builder";
 import { HttpExceptionHandlingBuilder } from "./error-handler/http-exception-handling.builder";
 import { ErrorLoggerLibrary } from "./logger/error-logger.library";
+import { ValidateLibrary } from "./util/validate.library";
 
 @Module({
   imports: [DotenvConfigurationModule, MailerConfigurationModule],
@@ -25,6 +26,7 @@ import { ErrorLoggerLibrary } from "./logger/error-logger.library";
     TimeLoggerLibrary,
     MeidaLoggerLibrary,
     ErrorLoggerLibrary,
+    ValidateLibrary,
   ],
   exports: [
     SecurityLibrary,
@@ -36,6 +38,7 @@ import { ErrorLoggerLibrary } from "./logger/error-logger.library";
     TimeLoggerLibrary,
     MeidaLoggerLibrary,
     ErrorLoggerLibrary,
+    ValidateLibrary,
   ],
 })
 export class LibraryModule {}
