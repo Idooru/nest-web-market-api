@@ -6,8 +6,7 @@ import { AdminUserEntity } from "../entities/admin-user.entity";
 import { ClientUserEntity } from "../entities/client-user.entity";
 import { UserProfileEntity } from "../entities/user-profile.entity";
 import { UserAuthEntity } from "../entities/user-auth.entity";
-import { UserRepositoryVO } from "./user-repository.vo";
-import { RepositoryPayload } from "../interfaces/repository-payload";
+import { UserRepositoryPayload, UserRepositoryVO } from "./user-repository.vo";
 import { TypeOrmException } from "src/common/errors/typeorm.exception";
 import { ModifyUserDto } from "../dtos/modify-user.dto";
 import { EmailSenderLibrary } from "src/common/lib/email/email-sender.library";
@@ -26,7 +25,7 @@ export class UserTransaction {
   ) {}
 
   async init(queryRunner: QueryRunner): Promise<void> {
-    const repositoryPayload: RepositoryPayload = {
+    const repositoryPayload: UserRepositoryPayload = {
       userRepository: queryRunner.manager.getRepository(UserEntity),
       adminUserRepository: queryRunner.manager.getRepository(AdminUserEntity),
       clientUserRepository: queryRunner.manager.getRepository(ClientUserEntity),

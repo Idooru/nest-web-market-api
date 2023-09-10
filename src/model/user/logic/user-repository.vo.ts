@@ -5,7 +5,7 @@ import { ClientUserEntity } from "../entities/client-user.entity";
 import { UserProfileEntity } from "../entities/user-profile.entity";
 import { UserAuthEntity } from "../entities/user-auth.entity";
 
-interface RepositoryPayload {
+export interface UserRepositoryPayload {
   userRepository: Repository<UserEntity>;
   adminUserRepository: Repository<AdminUserEntity>;
   clientUserRepository: Repository<ClientUserEntity>;
@@ -20,7 +20,7 @@ export class UserRepositoryVO {
   private userProfileRepository: Repository<UserProfileEntity>;
   private userAuthRepository: Repository<UserAuthEntity>;
 
-  public setRepositoryPayload(repositoryPayload: RepositoryPayload): void {
+  public setRepositoryPayload(repositoryPayload: UserRepositoryPayload): void {
     const {
       userRepository,
       adminUserRepository,
