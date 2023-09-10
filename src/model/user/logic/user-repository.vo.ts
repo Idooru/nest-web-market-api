@@ -4,7 +4,14 @@ import { AdminUserEntity } from "../entities/admin-user.entity";
 import { ClientUserEntity } from "../entities/client-user.entity";
 import { UserProfileEntity } from "../entities/user-profile.entity";
 import { UserAuthEntity } from "../entities/user-auth.entity";
-import { RepositoryPayload } from "../interfaces/repository-payload";
+
+interface RepositoryPayload {
+  userRepository: Repository<UserEntity>;
+  adminUserRepository: Repository<AdminUserEntity>;
+  clientUserRepository: Repository<ClientUserEntity>;
+  userProfileRepository: Repository<UserProfileEntity>;
+  userAuthRepository: Repository<UserAuthEntity>;
+}
 
 export class UserRepositoryVO {
   private userRepository: Repository<UserEntity>;
