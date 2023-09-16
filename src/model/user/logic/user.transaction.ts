@@ -41,7 +41,7 @@ export class UserTransaction {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
-    this.init(queryRunner);
+    await this.init(queryRunner);
 
     try {
       const user = await this.userOperationService.createUserEntity(
@@ -72,7 +72,7 @@ export class UserTransaction {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
-    this.init(queryRunner);
+    await this.init(queryRunner);
 
     const user = await this.userSearcher.findUserWithId(userId);
 
