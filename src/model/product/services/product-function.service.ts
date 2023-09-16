@@ -1,53 +1,37 @@
 import { Injectable } from "@nestjs/common";
-import { ProductAccessoryService } from "./product-accessory.service";
 import { ProductEntity } from "../entities/product.entity";
-import { MediaDto } from "src/model/media/dto/media.dto";
-import { ProductGeneralService } from "./product-general.service";
-import { IProductFunctionService } from "../interfaces/services/product-function-service.interface";
+import { ProductOperationService } from "./product-operation.service";
+import { InsertProductImageDto } from "../dto/insert-product-image.dto";
+import { ModifyProductImageDto } from "../dto/modify-product-image.dto";
 
 @Injectable()
-export class ProductFunctionService implements IProductFunctionService {
+export class ProductFunctionService {
   constructor(
-    private readonly productGeneralService: ProductGeneralService,
-    private readonly productAccessoryService: ProductAccessoryService,
+    private readonly productOperationService: ProductOperationService,
   ) {}
 
-  async getCreateStarRate(product: ProductEntity): Promise<() => void> {
+  async getCreateStarRateFunc(product: ProductEntity): Promise<() => void> {
     return async () => {
-      await this.productAccessoryService.createStarRate(product);
+      await this.productOperationService.createStarRate(product);
     };
   }
 
-  async getInsertProductImage(
-    productImgCookies: MediaDto[],
-    product: ProductEntity,
+  async getInsertProductImageFunc(
+    insertProductImageDto: InsertProductImageDto,
   ): Promise<() => void> {
     return async () => {
-      const productImages = await this.productAccessoryService.getProductImages(
-        productImgCookies,
-      );
-
-      await this.productAccessoryService.insertProductImages(
-        productImages,
-        product,
+      await this.productOperationService.insertProductImages(
+        insertProductImageDto,
       );
     };
   }
 
-  async getModifyProductImage(
-    id: string,
-    productImgCookies: MediaDto[],
+  async getModifyProductImageFunc(
+    modifyProductImageDto: ModifyProductImageDto,
   ): Promise<() => void> {
     return async () => {
-      const product = await this.productGeneralService.findProductById(id);
-
-      const productImages = await this.productAccessoryService.getProductImages(
-        productImgCookies,
-      );
-
-      await this.productAccessoryService.modifyProductImages(
-        product,
-        productImages,
+      await this.productOperationService.modifyProductImages(
+        modifyProductImageDto,
       );
     };
   }
