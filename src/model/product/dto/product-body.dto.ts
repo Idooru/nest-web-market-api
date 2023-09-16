@@ -2,14 +2,13 @@ import { ProductEntity } from "../entities/product.entity";
 import { ApiProperty, PickType } from "@nestjs/swagger";
 import { ProductCategory } from "../types/product-category.type";
 
-export class ProductDto extends PickType(ProductEntity, [
+export class ProductBodyDto extends PickType(ProductEntity, [
   "name",
   "price",
   "origin",
   "category",
   "description",
   "quantity",
-  "Image",
 ] as const) {
   @ApiProperty({
     description: "상품 이름",
