@@ -5,6 +5,8 @@ import { Repository } from "typeorm";
 import { UserSelectProperty } from "src/common/config/repository-select-configs/user.select";
 import { ClientUserEntity } from "../entities/client-user.entity";
 import { AdminUserEntity } from "../entities/admin-user.entity";
+import { UserAuthEntity } from "../entities/user-auth.entity";
+import { UserProfileEntity } from "../entities/user-profile.entity";
 
 @Injectable()
 export class UserSearchRepository {
@@ -15,8 +17,26 @@ export class UserSearchRepository {
     private readonly clientUserRepository: Repository<ClientUserEntity>,
     @InjectRepository(AdminUserEntity)
     private readonly adminUserRepository: Repository<AdminUserEntity>,
+    @InjectRepository(UserAuthEntity)
+    private readonly userAuthRepository: Repository<UserAuthEntity>,
+    @InjectRepository(UserProfileEntity)
+    private readonly userProfileRepository: Repository<UserProfileEntity>,
     @Inject("UserSelectProperty") private readonly select: UserSelectProperty,
   ) {}
+
+  async isInvalidUserEmail(email: string): Promise<boolean> {
+    return !(await this.userAuthRepository.exist({ where: { email } }));
+  }
+
+  async isInvalidUserNickName(nickname: string): Promise<boolean> {
+    return !(await this.userAuthRepository.exist({ where: { nickname } }));
+  }
+
+  async isInvalidUserPhoneNumber(phonenumber: string): Promise<boolean> {
+    return !(await this.userProfileRepository.exist({
+      where: { phonenumber },
+    }));
+  }
 
   async findAllUsersFromLatest(): Promise<UserEntity[]> {
     return await this.userRepository

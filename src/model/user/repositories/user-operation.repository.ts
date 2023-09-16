@@ -11,6 +11,8 @@ import {
 } from "../dtos/modify-user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { UserProfileEntity } from "../entities/user-profile.entity";
+import { UserAuthEntity } from "../entities/user-auth.entity";
 
 @Injectable()
 export class UserOperationRepository {
@@ -18,6 +20,10 @@ export class UserOperationRepository {
     private readonly queryRunner: UserRepositoryVO,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(UserProfileEntity)
+    private readonly userProfileRepository: Repository<UserProfileEntity>,
+    @InjectRepository(UserAuthEntity)
+    private readonly userAuthRepository: Repository<UserAuthEntity>,
   ) {}
 
   // Transaction
@@ -54,48 +60,41 @@ export class UserOperationRepository {
   // Transaction
   async modifyUserProfile(
     modifyUserProfileDto: ModifyUserProfileDto,
-    user: UserEntity,
+    id: string,
   ): Promise<void> {
-    user.Profile.phonenumber = modifyUserProfileDto.phonenumber;
-    await this.queryRunner.getUserRepository().save(user);
+    await this.queryRunner
+      .getUserProfileRepository()
+      .update(id, { ...modifyUserProfileDto });
   }
 
   // Transaction
   async modifyUserAuth(
     modifyUserAuthDto: ModifyUserAuthDto,
-    user: UserEntity,
+    id: string,
   ): Promise<void> {
-    user.Auth.email = modifyUserAuthDto.email;
-    user.Auth.nickname = modifyUserAuthDto.nickname;
-    user.Auth.password = modifyUserAuthDto.password;
-    await this.queryRunner.getUserRepository().save(user);
+    await this.queryRunner
+      .getUserAuthRepository()
+      .update(id, { ...modifyUserAuthDto });
   }
 
   // General
-  async modifyUserEmail(email: string, user: UserEntity): Promise<void> {
-    user.Auth.email = email;
-    await this.queryRunner.getUserRepository().save(user);
+  async modifyUserEmail(email: string, id: string): Promise<void> {
+    await this.userAuthRepository.update(id, { email });
   }
 
   // General
-  async modifyUserNickname(nickname: string, user: UserEntity): Promise<void> {
-    user.Auth.nickname = nickname;
-    await this.queryRunner.getUserRepository().save(user);
+  async modifyUserNickname(nickname: string, id: string): Promise<void> {
+    await this.userAuthRepository.update(id, { nickname });
   }
 
   // General
-  async modifyUserPhonenumber(
-    phonenumber: string,
-    user: UserEntity,
-  ): Promise<void> {
-    user.Profile.phonenumber = phonenumber;
-    await this.userRepository.save(user);
+  async modifyUserPhonenumber(phonenumber: string, id: string): Promise<void> {
+    await this.userProfileRepository.update(id, { phonenumber });
   }
 
   // General
-  async modifyUserPassword(password: string, user: UserEntity): Promise<void> {
-    user.Auth.password = password;
-    await this.userRepository.save(user);
+  async modifyUserPassword(password: string, email: string): Promise<void> {
+    await this.userAuthRepository.update(email, { password });
   }
 
   // General

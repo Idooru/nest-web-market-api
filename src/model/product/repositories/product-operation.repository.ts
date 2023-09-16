@@ -58,65 +58,45 @@ export class ProductOperationRepository {
   async modifyProduct(modifyProductDto: ModifyProductDto): Promise<void> {
     const { product, productBodyDto } = modifyProductDto;
 
-    product.name = productBodyDto.name;
-    product.price = productBodyDto.price;
-    product.origin = productBodyDto.origin;
-    product.category = productBodyDto.category;
-    product.description = productBodyDto.description;
-    product.quantity = productBodyDto.quantity;
-
-    await this.queryRunner.getProductRepository().save(product);
+    await this.queryRunner
+      .getProductRepository()
+      .update(product.id, { ...productBodyDto });
   }
 
   // General
-  async modifyProductName(product: ProductEntity, name: string): Promise<void> {
-    product.name = name;
-    await this.productRepository.save(product);
+  async modifyProductName(id: string, name: string): Promise<void> {
+    await this.productRepository.update(id, { name });
   }
 
   // General
-  async modifyProductPrice(
-    product: ProductEntity,
-    price: number,
-  ): Promise<void> {
-    product.price = price;
-    await this.productRepository.save(product);
+  async modifyProductPrice(id: string, price: number): Promise<void> {
+    await this.productRepository.update(id, { price });
   }
 
   // General
-  async modifyProductOrigin(
-    product: ProductEntity,
-    origin: string,
-  ): Promise<void> {
-    product.origin = origin;
-    await this.productRepository.save(product);
+  async modifyProductOrigin(id: string, origin: string): Promise<void> {
+    await this.productRepository.update(id, { origin });
   }
 
   // General
   async modifyProductCategory(
-    product: ProductEntity,
+    id: string,
     category: ProductCategory,
   ): Promise<void> {
-    product.category = category;
-    await this.productRepository.save(product);
+    await this.productRepository.update(id, { category });
   }
 
   // General
   async modifyProductDescription(
-    product: ProductEntity,
+    id: string,
     description: string,
   ): Promise<void> {
-    product.description = description;
-    await this.productRepository.save(product);
+    await this.productRepository.update(id, { description });
   }
 
   // General
-  async modifyProductQuantity(
-    product: ProductEntity,
-    quantity: number,
-  ): Promise<void> {
-    product.quantity = quantity;
-    await this.productRepository.save(product);
+  async modifyProductQuantity(id: string, quantity: number): Promise<void> {
+    await this.productRepository.update(id, { quantity });
   }
 
   // General
