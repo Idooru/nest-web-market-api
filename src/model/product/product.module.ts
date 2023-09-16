@@ -1,9 +1,11 @@
-import { MediaModule } from "./../media/media.module";
-import { ProductGeneralRepository } from "./repositories/product-general.repository";
-import { ProductEntity } from "../product/entities/product.entity";
-import { Module, forwardRef } from "@nestjs/common";
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  forwardRef,
+} from "@nestjs/common";
+import { MediaModule } from "../media/media.module";
 import { ProductVersionOneFreeUseController } from "./controllers/v1/product-v1-free-use.controller";
-import { ProductGeneralService } from "./services/product-general.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserModule } from "../user/user.module";
 import { ReviewModule } from "../review/review.module";
@@ -13,14 +15,17 @@ import { LibraryModule } from "src/common/lib/library.module";
 import { ProductVersionOneOnlyAdminController } from "./controllers/v1/product-v1-only-admin.controller";
 import { JwtModule } from "@nestjs/jwt";
 import { ProductVersionOneVerfiyController } from "./controllers/v1/product-v1-verify.controller";
-import { ProductVerifyService } from "./services/product-verify.service";
-import { ProductVerifyRepository } from "./repositories/product-verify.repository";
-import { ProductInsertRepository } from "./repositories/product-insert.repository";
-import { ProductAccessoryService } from "./services/product-accessory.service";
 import { productSelectProperty } from "src/common/config/repository-select-configs/product.select";
 import { productMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
 import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
 import { ProductFunctionService } from "./services/product-function.service";
+import { ProductSearcher } from "./logic/product.searcher";
+import { ProductSearchRepository } from "./repositories/product-search.repository";
+import { ProductRepositoryVO } from "./logic/product-repository.vo";
+import { ProductTransaction } from "./logic/product.transaction";
+import { ProductOperationService } from "./services/product-operation.service";
+import { ProductOperationRepository } from "./repositories/product-operation.repository";
+import { ProductEntity } from "./entities/product.entity";
 
 @Module({
   imports: [
@@ -50,21 +55,20 @@ import { ProductFunctionService } from "./services/product-function.service";
       provide: "ProductsSelectProperty",
       useValue: productSelectProperty,
     },
-    ProductGeneralService,
-    ProductVerifyService,
-    ProductAccessoryService,
+    ProductSearcher,
+    ProductTransaction,
+    ProductRepositoryVO,
+    ProductOperationService,
+    ProductOperationRepository,
     ProductFunctionService,
-    ProductGeneralRepository,
-    ProductVerifyRepository,
-    ProductInsertRepository,
+    ProductSearchRepository,
   ],
-  exports: [
-    ProductGeneralService,
-    ProductVerifyService,
-    ProductAccessoryService,
-    ProductGeneralRepository,
-    ProductVerifyRepository,
-    ProductInsertRepository,
-  ],
+  exports: [ProductSearcher],
 })
-export class ProductModule {}
+export class ProductModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    // consumer.apply(TestMiddleware).forRoutes("/api/v1/verify/product");
+    // consumer.apply(TestMiddleware).forRoutes("/api/v1/free-use/product");
+    // consumer.apply(TestMiddleware).forRoutes("/api/v1/only-admin/product");
+  }
+}

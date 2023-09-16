@@ -17,9 +17,7 @@ import { VerifyDataGuard } from "src/common/guards/verify/verify-data.guard";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { ProductDto } from "../../dto/product.dto";
 import { ProductEntity } from "../../entities/product.entity";
-import { ProductGeneralService } from "../../services/product-general.service";
 import { MediaDto } from "src/model/media/dto/media.dto";
 import { productMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
 import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
@@ -33,7 +31,10 @@ import { ModifyProductCategoryDto } from "../../dto/modify-product-category.dto"
 import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { JsonClearCookiesInterface } from "src/common/interceptors/interface/json-clear-cookies.interface";
-import { ProductFunctionService } from "../../services/product-function.service";
+import { ProductTransaction } from "../../logic/product.transaction";
+import { ProductSearcher } from "../../logic/product.searcher";
+import { ProductBodyDto } from "../../dto/product-body.dto";
+import { ProductOperationService } from "../../services/product-operation.service";
 
 @ApiTags("v1 관리자 Product API")
 @UseGuards(IsAdminGuard)
@@ -41,10 +42,10 @@ import { ProductFunctionService } from "../../services/product-function.service"
 @Controller("/api/v1/only-admin/product")
 export class ProductVersionOneOnlyAdminController {
   constructor(
-    private readonly productGeneralService: ProductGeneralService,
-    private readonly productFunctionService: ProductFunctionService,
+    private readonly productSearcher: ProductSearcher,
+    private readonly productTransaction: ProductTransaction,
+    private readonly productOperationService: ProductOperationService,
   ) {}
-
   @ApiOperation({
     summary: "find product by id",
     description:
@@ -52,13 +53,15 @@ export class ProductVersionOneOnlyAdminController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/:id")
-  async findProductById(
+  async findProductWithId(
     @Param("id") id: string,
   ): Promise<JsonGeneralInterface<ProductEntity>> {
+    const result = await this.productSearcher.findProductWithId(id);
+
     return {
       statusCode: 200,
       message: `${id}에 해당하는 상품 정보를 가져옵니다.`,
-      result: await this.productGeneralService.findProductById(id),
+      result,
     };
   }
 
@@ -68,32 +71,18 @@ export class ProductVersionOneOnlyAdminController {
       "상품을 생성합니다. 생성하려는 상품의 이름이 이미 데이터베이스에 존재하거나 가격, 수량을 양의 정수 이외의 숫자로 지정하면 에러를 반환합니다. 이 api를 실행하기 전에 무조건 상품 이미지를 하나 업로드해야 합니다.",
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @UseGuards(
-    new VerifyDataGuard(productVerifyCookieKey.is_not_exist.name_executed),
-  )
   @Post("/")
   async createProduct(
     @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
     productImgCookies: MediaDto[],
-    @Body() productDto: ProductDto,
+    @Body() productBodyDto: ProductBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
-    const product = await this.productGeneralService.createProduct({
-      productDto,
+    await this.productTransaction.createProduct({
+      productBodyDto,
       jwtPayload,
+      productImgCookies,
     });
-
-    const createStarRate = await this.productFunctionService.getCreateStarRate(
-      product,
-    );
-
-    const insertProductImage =
-      await this.productFunctionService.getInsertProductImage(
-        productImgCookies,
-        product,
-      );
-
-    await Promise.all([createStarRate(), insertProductImage()]);
 
     return {
       statusCode: 201,
@@ -119,17 +108,13 @@ export class ProductVersionOneOnlyAdminController {
     @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
     productImgCookies: MediaDto[],
     @Param("id") id: string,
-    @Body() productDto: ProductDto,
+    @Body() productBodyDto: ProductBodyDto,
   ): Promise<JsonClearCookiesInterface> {
-    await this.productGeneralService.modifyProduct({ id, productDto });
-
-    const modifyProductImage =
-      await this.productFunctionService.getModifyProductImage(
-        id,
-        productImgCookies,
-      );
-
-    modifyProductImage();
+    await this.productTransaction.modifyProduct({
+      id,
+      productBodyDto,
+      productImgCookies,
+    });
 
     return {
       statusCode: 201,
@@ -144,20 +129,13 @@ export class ProductVersionOneOnlyAdminController {
       "상품의 아이디에 해당하는 상품에 사용되는 이미지를 수정합니다. 이 api를 실행하기 전에 무조건 상품 이미지를 생성해야 합니다.",
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Patch("/:id/image")
   async modifyProductImage(
     @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
     productImgCookies: MediaDto[],
     @Param("id") id: string,
   ): Promise<JsonClearCookiesInterface> {
-    const modifyProductImage =
-      await this.productFunctionService.getModifyProductImage(
-        id,
-        productImgCookies,
-      );
-
-    modifyProductImage();
+    await this.productTransaction.modifyProductImage(id, productImgCookies);
 
     return {
       statusCode: 201,
@@ -172,19 +150,12 @@ export class ProductVersionOneOnlyAdminController {
       "상품의 아이디에 해당하는 상품의 이름 column을 수정합니다. 수정하려는 상품의 이름이 이미 데이터베이스에 존재 한다면 에러를 반환합니다. ",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(
-    new VerifyDataGuard(
-      productVerifyCookieKey.is_exist.id_executed,
-      productVerifyCookieKey.is_not_exist.name_executed,
-    ),
-  )
   @Patch("/:id/name")
   async modifyProductName(
     @Param("id") id: string,
     @Body() { name }: ModifyProductNameDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productGeneralService.modifyProductName(id, name);
-
+    await this.productOperationService.modifyProductName(id, name);
     return {
       statusCode: 201,
       message: `id(${id})에 해당하는 상품의 이름을 수정하였습니다.`,
@@ -197,13 +168,12 @@ export class ProductVersionOneOnlyAdminController {
       "상품의 아이디에 해당하는 상품의 가격 column을 수정합니다. 수정하려는 상품의 가격을 양의 정수 이외의 숫자로 지정하면 에러를 반환합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Patch("/:id/price")
   async modifyProductPrice(
     @Param("id") id: string,
     @Body() { price }: ModifyProductPriceDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productGeneralService.modifyProductPrice(id, price);
+    await this.productOperationService.modifyProductPrice(id, price);
 
     return {
       statusCode: 201,
@@ -216,13 +186,12 @@ export class ProductVersionOneOnlyAdminController {
     description: "상품의 아이디에 해당하는 상품의 원산지 column을 수정합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Patch("/:id/origin")
   async modifyProductOrigin(
     @Param("id") id: string,
     @Body() { origin }: ModifyProductOriginDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productGeneralService.modifyProductOrigin(id, origin);
+    await this.productOperationService.modifyProductOrigin(id, origin);
 
     return {
       statusCode: 201,
@@ -235,13 +204,12 @@ export class ProductVersionOneOnlyAdminController {
     description: "상품 아이디에 해당하는 상품의 카테고리 column을 수정합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Patch("/:id/category")
   async modifyProductCategory(
     @Param("id") id: string,
     @Body() { category }: ModifyProductCategoryDto,
   ) {
-    await this.productGeneralService.modifyProductCategory(id, category);
+    await this.productOperationService.modifyProductCategory(id, category);
 
     return {
       statusCode: 201,
@@ -254,13 +222,15 @@ export class ProductVersionOneOnlyAdminController {
     description: "상품의 아이디에 해당하는 상품의 설명 column을 수정합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Patch("/:id/description")
   async modifyProductDescription(
     @Param("id") id: string,
     @Body() { description }: ModifyProductDesctiptionDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productGeneralService.modifyProductDescription(id, description);
+    await this.productOperationService.modifyProductDescription(
+      id,
+      description,
+    );
 
     return {
       statusCode: 201,
@@ -274,13 +244,12 @@ export class ProductVersionOneOnlyAdminController {
       "상품의 아이디에 해당하는 상품의 수량 column을 수정합니다. 수정하려는 상품의 수량을 양의 정수 이외의 숫자로 지정하면 에러를 반환합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Patch("/:id/quantity")
   async modifyProductQuantity(
     @Param("id") id: string,
     @Body() { quantity }: ModifyProductQuantityDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productGeneralService.modifyProductQuantity(id, quantity);
+    await this.productOperationService.modifyProductQuantity(id, quantity);
 
     return {
       statusCode: 201,
@@ -293,12 +262,11 @@ export class ProductVersionOneOnlyAdminController {
     description: "상품의 아이디에 해당하는 상품을 제거합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Delete("/:id")
   async removeProduct(
     @Param("id") id: string,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productGeneralService.removeProduct(id);
+    await this.productOperationService.removeProduct(id);
 
     return {
       statusCode: 201,

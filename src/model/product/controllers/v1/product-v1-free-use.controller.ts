@@ -1,14 +1,14 @@
 import { Controller, Get, UseInterceptors, Param } from "@nestjs/common";
-import { ProductGeneralService } from "../../services/product-general.service";
 import { ProductEntity } from "../../entities/product.entity";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ProductSearcher } from "../../logic/product.searcher";
 
 @ApiTags("v1 공용 Product API")
 @Controller("/api/v1/free-use/product")
 export class ProductVersionOneFreeUseController {
-  constructor(private readonly productGeneralService: ProductGeneralService) {}
+  constructor(private readonly productSearcher: ProductSearcher) {}
 
   @ApiOperation({
     summary: "find all products from latest",
@@ -20,10 +20,12 @@ export class ProductVersionOneFreeUseController {
   async findAllProductsFromLatest(): Promise<
     JsonGeneralInterface<ProductEntity[]>
   > {
+    const result = await this.productSearcher.findAllProductsFromLatest();
+
     return {
       statusCode: 200,
       message: "전체 상품 정보를 최신 순서로 가져옵니다.",
-      result: await this.productGeneralService.findAllProductsFromLatest(),
+      result,
     };
   }
 
@@ -37,10 +39,12 @@ export class ProductVersionOneFreeUseController {
   async findAllProductsFromOldest(): Promise<
     JsonGeneralInterface<ProductEntity[]>
   > {
+    const result = await this.productSearcher.findAllProductsFromOldest();
+
     return {
       statusCode: 200,
       message: "전체 상품 정보를 오래된 순서로 가져옵니다.",
-      result: await this.productGeneralService.findAllProductsFromOldest(),
+      result,
     };
   }
 
@@ -52,12 +56,14 @@ export class ProductVersionOneFreeUseController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/:name")
   async findProductByName(
-    @Param("name") productName: string,
+    @Param("name") name: string,
   ): Promise<JsonGeneralInterface<ProductEntity>> {
+    const result = await this.productSearcher.findProductWithName(name);
+
     return {
       statusCode: 200,
-      message: `${productName}에 해당하는 상품 정보를 가져옵니다.`,
-      result: await this.productGeneralService.findProductByName(productName),
+      message: `${name}에 해당하는 상품 정보를 가져옵니다.`,
+      result,
     };
   }
 }
