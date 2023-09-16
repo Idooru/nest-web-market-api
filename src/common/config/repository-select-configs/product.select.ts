@@ -3,6 +3,7 @@ export interface ProductSelectProperty {
   products: string[];
   product: string[];
   productWhenNeedStarRate: string[];
+  productImages: string[];
 }
 
 export const productSelectProperty: ProductSelectProperty = {
@@ -47,4 +48,9 @@ export const productSelectProperty: ProductSelectProperty = {
     "InquiryRequestVideo.url",
   ],
   productWhenNeedStarRate: ["product", "StarRate.id"],
+  productImages: [
+    "productImage.id",
+    "productImage.url",
+    "productImage.uploader",
+  ],
 };
