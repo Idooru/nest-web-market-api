@@ -54,57 +54,51 @@ export class UserOperationService {
   }
 
   // Transaction
-  async modifyUser(
-    modifyUserDto: ModifyUserDto,
-    user: UserEntity,
-  ): Promise<void> {
+  async modifyUser(modifyUserDto: ModifyUserDto, id: string): Promise<void> {
     const { password, phonenumber, email, nickname } = modifyUserDto;
 
     const hashed = await this.userSecurity.hashPassword(password);
 
     await Promise.all([
-      this.userOperationRepository.modifyUserProfile({ phonenumber }, user),
+      this.userOperationRepository.modifyUserProfile({ phonenumber }, id),
       this.userOperationRepository.modifyUserAuth(
         { email, nickname, password: hashed },
-        user,
+        id,
       ),
     ]);
   }
 
   // General
   async modifyUserEmail(email: string, id: string): Promise<void> {
-    const user = await this.userSearcher.findUserWithId(id);
-    await this.userOperationRepository.modifyUserEmail(email, user);
+    await this.userSearcher.isInvalidUserEmail(email);
+    await this.userOperationRepository.modifyUserEmail(email, id);
   }
 
   // General
   async modifyUserNickname(nickname: string, id: string): Promise<void> {
-    const user = await this.userSearcher.findUserWithId(id);
-    await this.userOperationRepository.modifyUserNickname(nickname, user);
+    await this.userSearcher.isInvalidNickName(nickname);
+    await this.userOperationRepository.modifyUserNickname(nickname, id);
   }
 
   // General
   async modifyUserPhonenumber(phonenumber: string, id: string): Promise<void> {
-    const user = await this.userSearcher.findUserWithId(id);
-    await this.userOperationRepository.modifyUserPhonenumber(phonenumber, user);
+    await this.userSearcher.isInvalidUserPhoneNumber(phonenumber);
+    await this.userOperationRepository.modifyUserPhonenumber(phonenumber, id);
   }
 
   // General
   async modifyUserPassword(password: string, id: string): Promise<void> {
-    const user = await this.userSearcher.findUserWithId(id);
     const hashed = await this.userSecurity.hashPassword(password);
 
-    await this.userOperationRepository.modifyUserPassword(hashed, user);
+    await this.userOperationRepository.modifyUserPassword(hashed, id);
   }
 
   // General
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
     const { email, password } = resetPasswordDto;
-
-    const user = await this.userSearcher.findUserWithEmail(email);
     const hashed = await this.userSecurity.hashPassword(password);
 
-    await this.userOperationRepository.modifyUserPassword(hashed, user);
+    await this.userOperationRepository.modifyUserPassword(hashed, email);
   }
 
   // General

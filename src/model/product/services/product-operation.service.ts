@@ -77,20 +77,18 @@ export class ProductOperationService {
 
   // General
   async modifyProductName(id: string, name: string): Promise<void> {
-    const product = await this.productSearcher.findProductWithId(id);
-    await this.productOperationRepository.modifyProductName(product, name);
+    await this.productSearcher.isInvalidProductName(name);
+    await this.productOperationRepository.modifyProductName(id, name);
   }
 
   // General
   async modifyProductPrice(id: string, price: number): Promise<void> {
-    const product = await this.productSearcher.findProductWithId(id);
-    await this.productOperationRepository.modifyProductPrice(product, price);
+    await this.productOperationRepository.modifyProductPrice(id, price);
   }
 
   // General
   async modifyProductOrigin(id: string, origin: string): Promise<void> {
-    const product = await this.productSearcher.findProductWithId(id);
-    await this.productOperationRepository.modifyProductOrigin(product, origin);
+    await this.productOperationRepository.modifyProductOrigin(id, origin);
   }
 
   // General
@@ -98,11 +96,7 @@ export class ProductOperationService {
     id: string,
     category: ProductCategory,
   ): Promise<void> {
-    const product = await this.productSearcher.findProductWithId(id);
-    await this.productOperationRepository.modifyProductCategory(
-      product,
-      category,
-    );
+    await this.productOperationRepository.modifyProductCategory(id, category);
   }
 
   // General
@@ -110,20 +104,15 @@ export class ProductOperationService {
     id: string,
     description: string,
   ): Promise<void> {
-    const product = await this.productSearcher.findProductWithId(id);
     await this.productOperationRepository.modifyProductDescription(
-      product,
+      id,
       description,
     );
   }
 
   // General
   async modifyProductQuantity(id: string, quantity: number): Promise<void> {
-    const product = await this.productSearcher.findProductWithId(id);
-    await this.productOperationRepository.modifyProductQuantity(
-      product,
-      quantity,
-    );
+    await this.productOperationRepository.modifyProductQuantity(id, quantity);
   }
 
   // General
