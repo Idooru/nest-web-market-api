@@ -1,13 +1,11 @@
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { ProductDto } from "./product.dto";
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
+import { MediaDto } from "src/model/media/dto/media.dto";
+import { ProductBodyDto } from "./product-body.dto";
 
 export class CreateProductDto {
-  productDto: ProductDto;
-  jwtPayload: JwtAccessTokenPayload;
-}
-
-export class CreateProductDao {
-  productDto: ProductDto;
-  admin: AdminUserEntity;
+  productBodyDto: ProductBodyDto;
+  jwtPayload?: JwtAccessTokenPayload;
+  productImgCookies?: MediaDto[];
+  admin?: AdminUserEntity;
 }

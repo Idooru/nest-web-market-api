@@ -1,9 +1,7 @@
-import { MediaDto } from "src/model/media/dto/media.dto";
-import { ProductDto } from "./product.dto";
 import { ProductEntity } from "../entities/product.entity";
+import { ProductImageEntity } from "../../media/entities/product-image.entity";
 
 export class InsertProductImageDto {
-  productImgCookies: MediaDto[];
-  productDto: ProductDto;
+  productImages: ProductImageEntity[];
   product: ProductEntity;
 }
