@@ -21,11 +21,11 @@ import { ProductFunctionService } from "./services/product-function.service";
 import { ProductSearcher } from "./logic/product.searcher";
 import { ProductSearchRepository } from "./repositories/product-search.repository";
 import { ProductRepositoryVO } from "./logic/product-repository.vo";
-import { ProductTransaction } from "./logic/product.transaction";
+import { ProductTransaction } from "./logic/transaction/product.transaction";
 import { ProductOperationService } from "./services/product-operation.service";
 import { ProductOperationRepository } from "./repositories/product-operation.repository";
 import { ProductEntity } from "./entities/product.entity";
-import { ProductValidator } from "./logic/product.validator";
+import { ProductValidator } from "./logic/transaction/product.validator";
 
 @Module({
   imports: [

@@ -32,7 +32,7 @@ import { ModifyUserNicknameDto } from "../../dtos/modify-user-nickname.dto";
 import { ModifyUserPhonenumberDto } from "../../dtos/modify-user-phonenumber.dto";
 import { ModifyUserPasswordDto } from "../../dtos/modify-user-password.dto";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { UserTransaction } from "../../logic/user.transaction";
+import { UserTransaction } from "../../logic/transaction/user.transaction";
 import { UserSecurity } from "../../logic/user.security";
 import { UserSearcher } from "../../logic/user.searcher";
 import { UserOperationService } from "../../services/user-operation.service";

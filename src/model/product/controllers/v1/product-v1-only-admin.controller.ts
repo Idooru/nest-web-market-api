@@ -31,7 +31,7 @@ import { ModifyProductCategoryDto } from "../../dto/modify-product-category.dto"
 import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { JsonClearCookiesInterface } from "src/common/interceptors/interface/json-clear-cookies.interface";
-import { ProductTransaction } from "../../logic/product.transaction";
+import { ProductTransaction } from "../../logic/transaction/product.transaction";
 import { ProductSearcher } from "../../logic/product.searcher";
 import { ProductBodyDto } from "../../dto/product-body.dto";
 import { ProductOperationService } from "../../services/product-operation.service";

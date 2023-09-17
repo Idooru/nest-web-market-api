@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { ProductSearcher } from "./product.searcher";
+import { ProductSearcher } from "../product.searcher";
 
 @Injectable()
 export class ProductValidator {

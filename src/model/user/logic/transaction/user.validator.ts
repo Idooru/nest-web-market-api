@@ -1,6 +1,6 @@
-import { UserSearcher } from "./user.searcher";
+import { UserSearcher } from "../user.searcher";
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { UserValidateDto } from "../dtos/user-validate.dto";
+import { UserValidateDto } from "../../dtos/user-validate.dto";
 
 @Injectable()
 export class UserValidator {

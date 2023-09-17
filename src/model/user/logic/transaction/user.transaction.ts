@@ -1,18 +1,18 @@
 import { Injectable } from "@nestjs/common";
-import { RegisterUserDto } from "../dtos/register-user.dto";
+import { RegisterUserDto } from "../../dtos/register-user.dto";
 import { DataSource, QueryRunner } from "typeorm";
-import { UserEntity } from "../entities/user.entity";
-import { AdminUserEntity } from "../entities/admin-user.entity";
-import { ClientUserEntity } from "../entities/client-user.entity";
-import { UserProfileEntity } from "../entities/user-profile.entity";
-import { UserAuthEntity } from "../entities/user-auth.entity";
-import { UserRepositoryPayload, UserRepositoryVO } from "./user-repository.vo";
+import { UserEntity } from "../../entities/user.entity";
+import { AdminUserEntity } from "../../entities/admin-user.entity";
+import { ClientUserEntity } from "../../entities/client-user.entity";
+import { UserProfileEntity } from "../../entities/user-profile.entity";
+import { UserAuthEntity } from "../../entities/user-auth.entity";
+import { UserRepositoryPayload, UserRepositoryVO } from "../user-repository.vo";
 import { TypeOrmException } from "src/common/errors/typeorm.exception";
-import { ModifyUserDto } from "../dtos/modify-user.dto";
+import { ModifyUserDto } from "../../dtos/modify-user.dto";
 import { EmailSenderLibrary } from "src/common/lib/email/email-sender.library";
-import { UserSearcher } from "./user.searcher";
+import { UserSearcher } from "../user.searcher";
 import { loggerFactory } from "src/common/functions/logger.factory";
-import { UserOperationService } from "../services/user-operation.service";
+import { UserOperationService } from "../../services/user-operation.service";
 import { UserValidator } from "./user.validator";
 
 @Injectable()

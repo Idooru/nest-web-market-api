@@ -3,20 +3,20 @@ import { DataSource, QueryRunner } from "typeorm";
 import {
   ProductRepositoryPayload,
   ProductRepositoryVO,
-} from "./product-repository.vo";
-import { ProductEntity } from "../entities/product.entity";
-import { CreateProductDto } from "../dto/create-product-dto";
+} from "../product-repository.vo";
+import { ProductEntity } from "../../entities/product.entity";
+import { CreateProductDto } from "../../dto/create-product-dto";
 import { UserSearcher } from "src/model/user/logic/user.searcher";
-import { ProductOperationService } from "../services/product-operation.service";
-import { ProductFunctionService } from "../services/product-function.service";
+import { ProductOperationService } from "../../services/product-operation.service";
+import { ProductFunctionService } from "../../services/product-function.service";
 import { StarRateEntity } from "src/model/review/entities/star-rate.entity";
 import { ProductImageEntity } from "src/model/media/entities/product-image.entity";
 import { loggerFactory } from "src/common/functions/logger.factory";
 import { TypeOrmException } from "src/common/errors/typeorm.exception";
 import { MediaSearcher } from "src/model/media/logic/media.searcher";
-import { ModifyProductDto } from "../dto/modify-product.dto";
-import { ProductSearcher } from "./product.searcher";
-import { MediaDto } from "../../media/dto/media.dto";
+import { ModifyProductDto } from "../../dto/modify-product.dto";
+import { ProductSearcher } from "../product.searcher";
+import { MediaDto } from "../../../media/dto/media.dto";
 import { ProductValidator } from "./product.validator";
 
 @Injectable()

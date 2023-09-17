@@ -13,14 +13,14 @@ import { ClientUserEntity } from "./entities/client-user.entity";
 import { AdminUserEntity } from "./entities/admin-user.entity";
 import { UserEntity } from "./entities/user.entity";
 import { userSelectProperty } from "src/common/config/repository-select-configs/user.select";
-import { UserTransaction } from "./logic/user.transaction";
+import { UserTransaction } from "./logic/transaction/user.transaction";
 import { UserRepositoryVO } from "./logic/user-repository.vo";
 import { UserSearcher } from "./logic/user.searcher";
 import { UserSecurity } from "./logic/user.security";
 import { UserOperationRepository } from "./repositories/user-operation.repository";
 import { UserSearchRepository } from "./repositories/user-search.repository";
 import { UserOperationService } from "./services/user-operation.service";
-import { UserValidator } from "./logic/user.validator";
+import { UserValidator } from "./logic/transaction/user.validator";
 
 @Module({
   imports: [
