@@ -26,6 +26,7 @@ import { ProductOperationService } from "./services/product-operation.service";
 import { ProductOperationRepository } from "./repositories/product-operation.repository";
 import { ProductEntity } from "./entities/product.entity";
 import { ProductValidator } from "./logic/transaction/product.validator";
+ㅖimport { ProductInit } from "./logic/transaction/product.init";
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { ProductValidator } from "./logic/transaction/product.validator";
       useValue: productSelectProperty,
     },
     ProductSearcher,
+    ProductInit,
     ProductTransaction,
     ProductValidator,
     ProductRepositoryVO,
