@@ -1,5 +1,5 @@
 import { UserSearcher } from "./user.searcher";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { UserValidateDto } from "../dtos/user-validate.dto";
 
 @Injectable()
@@ -19,7 +19,7 @@ export class UserValidator {
     const errors = validResult.filter((item) => item.status === "rejected");
 
     if (errors.length) {
-      throw new NotFoundException(errors);
+      throw new BadRequestException(errors);
     }
   }
 }

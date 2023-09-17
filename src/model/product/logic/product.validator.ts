@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { ProductSearcher } from "./product.searcher";
 
 @Injectable()
@@ -14,7 +14,7 @@ export class ProductValidator {
     const errors = validResult.filter((item) => item.status === "rejected");
 
     if (errors.length) {
-      throw new NotFoundException(errors);
+      throw new BadRequestException(errors);
     }
   }
 }
