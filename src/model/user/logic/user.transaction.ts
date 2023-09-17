@@ -13,6 +13,7 @@ import { EmailSenderLibrary } from "src/common/lib/email/email-sender.library";
 import { UserSearcher } from "./user.searcher";
 import { loggerFactory } from "src/common/functions/logger.factory";
 import { UserOperationService } from "../services/user-operation.service";
+import { UserValidator } from "./user.validator";
 
 @Injectable()
 export class UserTransaction {
@@ -20,6 +21,7 @@ export class UserTransaction {
     private readonly dataSource: DataSource,
     private readonly userRepositoryVO: UserRepositoryVO,
     private readonly userSearcher: UserSearcher,
+    private readonly userValidator: UserValidator,
     private readonly userOperationService: UserOperationService,
     private readonly emailSenderLibrary: EmailSenderLibrary,
   ) {}
@@ -43,6 +45,14 @@ export class UserTransaction {
     await queryRunner.startTransaction();
     await this.init(queryRunner);
 
+    const { email, nickname, phonenumber } = registerUserDto;
+
+    await this.userValidator.validate(this.userSearcher, {
+      email,
+      nickname,
+      phonenumber,
+    });
+
     try {
       const user = await this.userOperationService.createUserEntity(
         registerUserDto.role,
@@ -65,19 +75,22 @@ export class UserTransaction {
     }
   }
 
-  async modifyUser(
-    modifyUserDto: ModifyUserDto,
-    userId: string,
-  ): Promise<void> {
+  async modifyUser(modifyUserDto: ModifyUserDto, id: string): Promise<void> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
     await this.init(queryRunner);
 
-    const user = await this.userSearcher.findUserWithId(userId);
+    const { email, nickname, phonenumber } = modifyUserDto;
+
+    await this.userValidator.validate(this.userSearcher, {
+      email,
+      nickname,
+      phonenumber,
+    });
 
     try {
-      await this.userOperationService.modifyUser(modifyUserDto, user);
+      await this.userOperationService.modifyUser(modifyUserDto, id);
 
       await queryRunner.commitTransaction();
     } catch (err) {
