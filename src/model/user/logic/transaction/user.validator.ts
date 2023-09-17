@@ -4,16 +4,15 @@ import { UserValidateDto } from "../../dtos/user-validate.dto";
 
 @Injectable()
 export class UserValidator {
-  async validate(
-    userSearcher: UserSearcher,
-    userValidateDto: UserValidateDto,
-  ): Promise<void> {
+  constructor(private readonly userSearcher: UserSearcher) {}
+
+  async validate(userValidateDto: UserValidateDto): Promise<void> {
     const { email, nickname, phonenumber } = userValidateDto;
 
     const validResult = await Promise.allSettled([
-      userSearcher.isInvalidUserEmail(email),
-      userSearcher.isInvalidNickName(nickname),
-      userSearcher.isInvalidUserPhoneNumber(phonenumber),
+      this.userSearcher.isInvalidUserEmail(email),
+      this.userSearcher.isInvalidNickName(nickname),
+      this.userSearcher.isInvalidUserPhoneNumber(phonenumber),
     ]);
 
     const errors = validResult.filter((item) => item.status === "rejected");

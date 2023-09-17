@@ -3,12 +3,11 @@ import { ProductSearcher } from "../product.searcher";
 
 @Injectable()
 export class ProductValidator {
-  async validate(
-    productSearcher: ProductSearcher,
-    name: string,
-  ): Promise<void> {
+  constructor(private readonly productSearcher: ProductSearcher) {}
+
+  async validate(name: string): Promise<void> {
     const validResult = await Promise.allSettled([
-      productSearcher.isInvalidProductName(name),
+      this.productSearcher.isInvalidProductName(name),
     ]);
 
     const errors = validResult.filter((item) => item.status === "rejected");

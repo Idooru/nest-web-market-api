@@ -51,10 +51,7 @@ export class ProductTransaction {
 
     const { productBodyDto, jwtPayload, productImgCookies } = createProductDto;
 
-    await this.productValidator.validate(
-      this.productSearcher,
-      productBodyDto.name,
-    );
+    await this.productValidator.validate(productBodyDto.name);
 
     const [admin, productImages] = await Promise.all([
       this.userSearcher.findAdminUserObjectWithId(jwtPayload.userId),
@@ -95,10 +92,7 @@ export class ProductTransaction {
 
     const { id, productBodyDto, productImgCookies } = modifyProductDto;
 
-    await this.productValidator.validate(
-      this.productSearcher,
-      productBodyDto.name,
-    );
+    await this.productValidator.validate(productBodyDto.name);
 
     const [product, beforeProductImages, newProductImages] = await Promise.all([
       this.productSearcher.findProductWithId(id),

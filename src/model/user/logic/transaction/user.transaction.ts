@@ -10,7 +10,6 @@ import { UserRepositoryPayload, UserRepositoryVO } from "../user-repository.vo";
 import { TypeOrmException } from "src/common/errors/typeorm.exception";
 import { ModifyUserDto } from "../../dtos/modify-user.dto";
 import { EmailSenderLibrary } from "src/common/lib/email/email-sender.library";
-import { UserSearcher } from "../user.searcher";
 import { loggerFactory } from "src/common/functions/logger.factory";
 import { UserOperationService } from "../../services/user-operation.service";
 import { UserValidator } from "./user.validator";
@@ -20,7 +19,6 @@ export class UserTransaction {
   constructor(
     private readonly dataSource: DataSource,
     private readonly userRepositoryVO: UserRepositoryVO,
-    private readonly userSearcher: UserSearcher,
     private readonly userValidator: UserValidator,
     private readonly userOperationService: UserOperationService,
     private readonly emailSenderLibrary: EmailSenderLibrary,
@@ -47,7 +45,7 @@ export class UserTransaction {
 
     const { email, nickname, phonenumber } = registerUserDto;
 
-    await this.userValidator.validate(this.userSearcher, {
+    await this.userValidator.validate({
       email,
       nickname,
       phonenumber,
@@ -83,7 +81,7 @@ export class UserTransaction {
 
     const { email, nickname, phonenumber } = modifyUserDto;
 
-    await this.userValidator.validate(this.userSearcher, {
+    await this.userValidator.validate({
       email,
       nickname,
       phonenumber,
