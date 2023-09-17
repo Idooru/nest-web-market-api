@@ -98,7 +98,9 @@ export class UserOperationService {
     const { email, password } = resetPasswordDto;
     const hashed = await this.userSecurity.hashPassword(password);
 
-    await this.userOperationRepository.modifyUserPassword(hashed, email);
+    const user = await this.userSearcher.findUserWithEmail(email);
+
+    await this.userOperationRepository.modifyUserPassword(hashed, user.id);
   }
 
   // General

@@ -93,8 +93,8 @@ export class UserOperationRepository {
   }
 
   // General
-  async modifyUserPassword(password: string, email: string): Promise<void> {
-    await this.userAuthRepository.update(email, { password });
+  async modifyUserPassword(password: string, id: string): Promise<void> {
+    await this.userAuthRepository.update(id, { password });
   }
 
   // General
