@@ -25,17 +25,17 @@ export class UserSearchRepository {
   ) {}
 
   async isInvalidUserEmail(email: string): Promise<boolean> {
-    return !(await this.userAuthRepository.exist({ where: { email } }));
+    return await this.userAuthRepository.exist({ where: { email } });
   }
 
   async isInvalidUserNickName(nickname: string): Promise<boolean> {
-    return !(await this.userAuthRepository.exist({ where: { nickname } }));
+    return await this.userAuthRepository.exist({ where: { nickname } });
   }
 
   async isInvalidUserPhoneNumber(phonenumber: string): Promise<boolean> {
-    return !(await this.userProfileRepository.exist({
+    return await this.userProfileRepository.exist({
       where: { phonenumber },
-    }));
+    });
   }
 
   async findAllUsersFromLatest(): Promise<UserEntity[]> {

@@ -17,7 +17,7 @@ export class ProductSearchRepository {
   ) {}
 
   async isInvalidProductName(name: string): Promise<boolean> {
-    return !(await this.productRepository.exist({ where: { name } }));
+    return await this.productRepository.exist({ where: { name } });
   }
 
   async findAllProductsFromLatest(): Promise<ProductEntity[]> {
