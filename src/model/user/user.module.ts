@@ -21,6 +21,7 @@ import { UserOperationRepository } from "./repositories/user-operation.repositor
 import { UserSearchRepository } from "./repositories/user-search.repository";
 import { UserOperationService } from "./services/user-operation.service";
 import { UserValidator } from "./logic/transaction/user.validator";
+import { UserInit } from "./logic/transaction/user.init";
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { UserValidator } from "./logic/transaction/user.validator";
     UserSecurity,
     UserTransaction,
     UserValidator,
+    UserInit,
     UserRepositoryVO,
     UserOperationService,
     UserSearchRepository,
