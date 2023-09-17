@@ -13,6 +13,25 @@ export class UserSearcher {
     private readonly validateLibrary: ValidateLibrary,
   ) {}
 
+  async isInvalidUserEmail(email: string): Promise<void> {
+    const boolean = await this.userSearchRepository.isInvalidUserEmail(email);
+    this.validateLibrary.isExistData(boolean);
+  }
+
+  async isInvalidNickName(nickname: string): Promise<void> {
+    const boolean = await this.userSearchRepository.isInvalidUserNickName(
+      nickname,
+    );
+    this.validateLibrary.isExistData(boolean);
+  }
+
+  async isInvalidUserPhoneNumber(phonenumber: string): Promise<void> {
+    const boolean = await this.userSearchRepository.isInvalidUserPhoneNumber(
+      phonenumber,
+    );
+    this.validateLibrary.isExistData(boolean);
+  }
+
   async findUserWithId(id: string): Promise<UserEntity> {
     const user = await this.userSearchRepository.findUserWithId(id);
     this.validateLibrary.isExistData(user);

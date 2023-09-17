@@ -2,8 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { ProductSearchRepository } from "../repositories/product-search.repository";
 import { ValidateLibrary } from "src/common/lib/util/validate.library";
 import { ProductEntity } from "../entities/product.entity";
-import { MediaDto } from "../../media/dto/media.dto";
-import { ProductImageEntity } from "../../media/entities/product-image.entity";
 
 @Injectable()
 export class ProductSearcher {
@@ -11,6 +9,13 @@ export class ProductSearcher {
     private readonly productSearchRepository: ProductSearchRepository,
     private readonly validateLibrary: ValidateLibrary,
   ) {}
+
+  async isInvalidProductName(name: string): Promise<void> {
+    const boolean = await this.productSearchRepository.isInvalidProductName(
+      name,
+    );
+    this.validateLibrary.isExistData(boolean);
+  }
 
   async findAllProductsFromLatest(): Promise<ProductEntity[]> {
     const products =
@@ -45,19 +50,5 @@ export class ProductSearcher {
       await this.productSearchRepository.findProductHavingStarRate(id);
     this.validateLibrary.isExistData(product);
     return product;
-  }
-
-  async findProductImagesWithUrl(
-    productImgCookies: MediaDto[],
-  ): Promise<ProductImageEntity[]> {
-    const findWork = productImgCookies.map(async (productImgCookie) => {
-      return await this.productSearchRepository.findProductImageWithUrl(
-        productImgCookie.url,
-      );
-    });
-
-    const productImages = await Promise.all(findWork);
-    this.validateLibrary.isExistArray(productImages);
-    return productImages;
   }
 }
