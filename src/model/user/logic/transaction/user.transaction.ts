@@ -1,48 +1,24 @@
 import { Injectable } from "@nestjs/common";
 import { RegisterUserDto } from "../../dtos/register-user.dto";
-import { DataSource, QueryRunner } from "typeorm";
-import { UserEntity } from "../../entities/user.entity";
-import { AdminUserEntity } from "../../entities/admin-user.entity";
-import { ClientUserEntity } from "../../entities/client-user.entity";
-import { UserProfileEntity } from "../../entities/user-profile.entity";
-import { UserAuthEntity } from "../../entities/user-auth.entity";
-import { UserRepositoryPayload, UserRepositoryVO } from "../user-repository.vo";
 import { TypeOrmException } from "src/common/errors/typeorm.exception";
 import { ModifyUserDto } from "../../dtos/modify-user.dto";
 import { EmailSenderLibrary } from "src/common/lib/email/email-sender.library";
 import { loggerFactory } from "src/common/functions/logger.factory";
 import { UserOperationService } from "../../services/user-operation.service";
 import { UserValidator } from "./user.validator";
+import { UserInit } from "./user.init";
 
 @Injectable()
 export class UserTransaction {
   constructor(
-    private readonly dataSource: DataSource,
-    private readonly userRepositoryVO: UserRepositoryVO,
+    private readonly userInit: UserInit,
     private readonly userValidator: UserValidator,
     private readonly userOperationService: UserOperationService,
     private readonly emailSenderLibrary: EmailSenderLibrary,
   ) {}
 
-  async init(queryRunner: QueryRunner): Promise<void> {
-    const repositoryPayload: UserRepositoryPayload = {
-      userRepository: queryRunner.manager.getRepository(UserEntity),
-      adminUserRepository: queryRunner.manager.getRepository(AdminUserEntity),
-      clientUserRepository: queryRunner.manager.getRepository(ClientUserEntity),
-      userProfileRepository:
-        queryRunner.manager.getRepository(UserProfileEntity),
-      userAuthRepository: queryRunner.manager.getRepository(UserAuthEntity),
-    };
-
-    this.userRepositoryVO.setRepositoryPayload(repositoryPayload);
-  }
-
   async register(registerUserDto: RegisterUserDto): Promise<void> {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-    await this.init(queryRunner);
-
+    const queryRunner = await this.userInit.init();
     const { email, nickname, phonenumber } = registerUserDto;
 
     await this.userValidator.validate({
@@ -74,10 +50,7 @@ export class UserTransaction {
   }
 
   async modifyUser(modifyUserDto: ModifyUserDto, id: string): Promise<void> {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-    await this.init(queryRunner);
+    const queryRunner = await this.userInit.init();
 
     const { email, nickname, phonenumber } = modifyUserDto;
 
