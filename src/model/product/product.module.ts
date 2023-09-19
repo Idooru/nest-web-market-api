@@ -25,7 +25,6 @@ import { ProductTransaction } from "./logic/transaction/product.transaction";
 import { ProductOperationService } from "./services/product-operation.service";
 import { ProductOperationRepository } from "./repositories/product-operation.repository";
 import { ProductEntity } from "./entities/product.entity";
-import { ProductValidator } from "./logic/transaction/product.validator";
 import { ProductInit } from "./logic/transaction/product.init";
 
 @Module({
@@ -58,7 +57,6 @@ import { ProductInit } from "./logic/transaction/product.init";
     ProductSearcher,
     ProductInit,
     ProductTransaction,
-    ProductValidator,
     ProductRepositoryVO,
     ProductOperationService,
     ProductFunctionService,
