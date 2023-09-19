@@ -36,6 +36,7 @@ import { UserTransaction } from "../../logic/transaction/user.transaction";
 import { UserSecurity } from "../../logic/user.security";
 import { UserSearcher } from "../../logic/user.searcher";
 import { UserOperationService } from "../../services/user-operation.service";
+import { UserValidationPipe } from "../../pipe/user-validation.pipe";
 
 @ApiTags("v1 공용 User API")
 @Controller("/api/v1/free-use/user")
@@ -56,7 +57,7 @@ export class UserVersionOneFreeUseController {
   @UseGuards(IsNotLoginGuard)
   @Post("/register")
   async register(
-    @Body() registerUserDto: RegisterUserDto,
+    @Body(UserValidationPipe<RegisterUserDto>) registerUserDto: RegisterUserDto,
   ): Promise<JsonGeneralInterface<void>> {
     await this.userTransaction.register(registerUserDto);
 
@@ -159,7 +160,7 @@ export class UserVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Put("/me")
   async modifyUser(
-    @Body() modifyUserDto: ModifyUserDto,
+    @Body(UserValidationPipe<ModifyUserDto>) modifyUserDto: ModifyUserDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
     await this.userTransaction.modifyUser(modifyUserDto, jwtPayload.userId);
@@ -179,7 +180,7 @@ export class UserVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Patch("/me/email")
   async modifyUserEmail(
-    @Body() { email }: ModifyUserEmailDto,
+    @Body(UserValidationPipe<ModifyUserEmailDto>) { email }: ModifyUserEmailDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
     await this.userOperationService.modifyUserEmail(email, jwtPayload.userId);
@@ -198,8 +199,9 @@ export class UserVersionOneFreeUseController {
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/nickname")
-  async modifyUserNickName(
-    @Body() { nickname }: ModifyUserNicknameDto,
+  async modifyUserNickname(
+    @Body(UserValidationPipe<ModifyUserNicknameDto>)
+    { nickname }: ModifyUserNicknameDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
     await this.userOperationService.modifyUserNickname(
@@ -222,7 +224,8 @@ export class UserVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Patch("/me/phonenumber")
   async modifyUserPhoneNumber(
-    @Body() { phonenumber }: ModifyUserPhonenumberDto,
+    @Body(UserValidationPipe<ModifyUserPhonenumberDto>)
+    { phonenumber }: ModifyUserPhonenumberDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
     await this.userOperationService.modifyUserPhonenumber(
