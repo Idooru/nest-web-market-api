@@ -35,6 +35,7 @@ import { ProductTransaction } from "../../logic/transaction/product.transaction"
 import { ProductSearcher } from "../../logic/product.searcher";
 import { ProductBodyDto } from "../../dto/product-body.dto";
 import { ProductOperationService } from "../../services/product-operation.service";
+import { ProductValidationPipe } from "../../pipe/product-validation.pipe";
 
 @ApiTags("v1 관리자 Product API")
 @UseGuards(IsAdminGuard)
@@ -75,7 +76,7 @@ export class ProductVersionOneOnlyAdminController {
   async createProduct(
     @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
     productImgCookies: MediaDto[],
-    @Body() productBodyDto: ProductBodyDto,
+    @Body(ProductValidationPipe<ProductBodyDto>) productBodyDto: ProductBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
     await this.productTransaction.createProduct({
@@ -108,7 +109,7 @@ export class ProductVersionOneOnlyAdminController {
     @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
     productImgCookies: MediaDto[],
     @Param("id") id: string,
-    @Body() productBodyDto: ProductBodyDto,
+    @Body(ProductValidationPipe<ProductBodyDto>) productBodyDto: ProductBodyDto,
   ): Promise<JsonClearCookiesInterface> {
     await this.productTransaction.modifyProduct({
       id,
@@ -153,7 +154,8 @@ export class ProductVersionOneOnlyAdminController {
   @Patch("/:id/name")
   async modifyProductName(
     @Param("id") id: string,
-    @Body() { name }: ModifyProductNameDto,
+    @Body(ProductValidationPipe<ModifyProductNameDto>)
+    { name }: ModifyProductNameDto,
   ): Promise<JsonGeneralInterface<null>> {
     await this.productOperationService.modifyProductName(id, name);
     return {
