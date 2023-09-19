@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { ProductOperationRepository } from "../repositories/product-operation.repository";
-import { ProductSearcher } from "../logic/product.searcher";
 import { ProductEntity } from "../entities/product.entity";
 import { CreateProductDto } from "../dto/create-product-dto";
 import { ModifyProductDto } from "../dto/modify-product.dto";
@@ -12,7 +11,6 @@ import { ProductCategory } from "../types/product-category.type";
 export class ProductOperationService {
   constructor(
     private readonly productOperationRepository: ProductOperationRepository,
-    private readonly productSearcher: ProductSearcher,
   ) {}
 
   // Transaction
@@ -77,7 +75,6 @@ export class ProductOperationService {
 
   // General
   async modifyProductName(id: string, name: string): Promise<void> {
-    await this.productSearcher.isInvalidProductName(name);
     await this.productOperationRepository.modifyProductName(id, name);
   }
 

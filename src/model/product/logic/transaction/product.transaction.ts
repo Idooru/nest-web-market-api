@@ -9,7 +9,6 @@ import { MediaSearcher } from "src/model/media/logic/media.searcher";
 import { ModifyProductDto } from "../../dto/modify-product.dto";
 import { ProductSearcher } from "../product.searcher";
 import { MediaDto } from "../../../media/dto/media.dto";
-import { ProductValidator } from "./product.validator";
 import { ProductInit } from "./product.init";
 
 @Injectable()
@@ -19,7 +18,6 @@ export class ProductTransaction {
     private readonly productSearcher: ProductSearcher,
     private readonly userSearcher: UserSearcher,
     private readonly mediaSearcher: MediaSearcher,
-    private readonly productValidator: ProductValidator,
     private readonly productOperationService: ProductOperationService,
     private readonly productFunctionService: ProductFunctionService,
   ) {}
@@ -27,8 +25,6 @@ export class ProductTransaction {
   async createProduct(createProductDto: CreateProductDto): Promise<void> {
     const queryRunner = await this.productInit.init();
     const { productBodyDto, jwtPayload, productImgCookies } = createProductDto;
-
-    await this.productValidator.validate(productBodyDto.name);
 
     const [admin, productImages] = await Promise.all([
       this.userSearcher.findAdminUserObjectWithId(jwtPayload.userId),
@@ -64,8 +60,6 @@ export class ProductTransaction {
   async modifyProduct(modifyProductDto: ModifyProductDto): Promise<void> {
     const queryRunner = await this.productInit.init();
     const { id, productBodyDto, productImgCookies } = modifyProductDto;
-
-    await this.productValidator.validate(productBodyDto.name);
 
     const [product, beforeProductImages, newProductImages] = await Promise.all([
       this.productSearcher.findProductWithId(id),
