@@ -8,7 +8,9 @@ type UserFeild = {
 };
 
 @Injectable()
-export class UserValidationPipe<T extends UserFeild> implements PipeTransform {
+export class UserValidateNoneExistPipe<T extends UserFeild>
+  implements PipeTransform
+{
   constructor(private readonly userSearcher: UserSearcher) {}
 
   public async transform(value: T): Promise<T> {
