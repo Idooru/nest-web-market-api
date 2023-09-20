@@ -1,5 +1,5 @@
-import { UserSearcher } from "../logic/user.searcher";
 import { BadRequestException, Injectable, PipeTransform } from "@nestjs/common";
+import { UserValidator } from "../logic/user.validator";
 
 type UserFeild = {
   email?: string;
@@ -11,7 +11,7 @@ type UserFeild = {
 export class UserValidateNoneExistPipe<T extends UserFeild>
   implements PipeTransform
 {
-  constructor(private readonly userSearcher: UserSearcher) {}
+  constructor(private readonly userValidator: UserValidator) {}
 
   public async transform(value: T): Promise<T> {
     if (value.email && value.nickname && value.phonenumber) {
@@ -31,9 +31,9 @@ export class UserValidateNoneExistPipe<T extends UserFeild>
     const { email, nickname, phonenumber } = value;
 
     const validResult = await Promise.allSettled([
-      this.userSearcher.isInvalidUserEmail(email),
-      this.userSearcher.isInvalidNickName(nickname),
-      this.userSearcher.isInvalidUserPhoneNumber(phonenumber),
+      this.userValidator.isNoneExistEmail(email),
+      this.userValidator.isNoneExistNickname(nickname),
+      this.userValidator.isNoneExistPhonenumber(phonenumber),
     ]);
 
     const errors = validResult.filter((item) => item.status === "rejected");
@@ -44,14 +44,14 @@ export class UserValidateNoneExistPipe<T extends UserFeild>
   }
 
   private async validateEmail({ email }: T): Promise<void> {
-    await this.userSearcher.isInvalidUserEmail(email);
+    await this.userValidator.isNoneExistEmail(email);
   }
 
   private async validateNickname({ nickname }: T): Promise<void> {
-    await this.userSearcher.isInvalidNickName(nickname);
+    await this.userValidator.isNoneExistNickname(nickname);
   }
 
   private async validatePhonenumber({ phonenumber }: T): Promise<void> {
-    await this.userSearcher.isInvalidUserPhoneNumber(phonenumber);
+    await this.userValidator.isNoneExistPhonenumber(phonenumber);
   }
 }
