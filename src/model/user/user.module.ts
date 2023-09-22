@@ -21,6 +21,8 @@ import { UserOperationRepository } from "./repositories/user-operation.repositor
 import { UserSearchRepository } from "./repositories/user-search.repository";
 import { UserOperationService } from "./services/user-operation.service";
 import { UserInit } from "./logic/transaction/user.init";
+import { UserValidateRepository } from "./repositories/user-validate.repository";
+import { UserValidator } from "./logic/user.validator";
 
 @Module({
   imports: [
@@ -47,6 +49,7 @@ import { UserInit } from "./logic/transaction/user.init";
       useValue: userSelectProperty,
     },
     UserSearcher,
+    UserValidator,
     UserSecurity,
     UserTransaction,
     UserInit,
@@ -54,6 +57,7 @@ import { UserInit } from "./logic/transaction/user.init";
     UserOperationService,
     UserSearchRepository,
     UserOperationRepository,
+    UserValidateRepository,
   ],
   exports: [UserSearcher],
 })
