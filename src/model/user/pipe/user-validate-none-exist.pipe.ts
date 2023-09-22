@@ -14,14 +14,16 @@ export class UserValidateNoneExistPipe<T extends UserFeild>
   constructor(private readonly userValidator: UserValidator) {}
 
   public async transform(value: T): Promise<T> {
-    if (value.email && value.nickname && value.phonenumber) {
+    const { email, nickname, phonenumber } = value;
+
+    if (email && nickname && phonenumber) {
       await this.validateAll(value);
-    } else if (value.email) {
-      await this.validateEmail(value);
-    } else if (value.nickname) {
-      await this.validateNickname(value);
-    } else if (value.phonenumber) {
-      await this.validatePhonenumber(value);
+    } else if (email) {
+      await this.validateEmail(email);
+    } else if (nickname) {
+      await this.validateNickname(nickname);
+    } else if (phonenumber) {
+      await this.validatePhonenumber(phonenumber);
     }
 
     return value;
@@ -43,15 +45,15 @@ export class UserValidateNoneExistPipe<T extends UserFeild>
     }
   }
 
-  private async validateEmail({ email }: T): Promise<void> {
+  private async validateEmail(email: string): Promise<void> {
     await this.userValidator.isNoneExistEmail(email);
   }
 
-  private async validateNickname({ nickname }: T): Promise<void> {
+  private async validateNickname(nickname: string): Promise<void> {
     await this.userValidator.isNoneExistNickname(nickname);
   }
 
-  private async validatePhonenumber({ phonenumber }: T): Promise<void> {
+  private async validatePhonenumber(phonenumber: string): Promise<void> {
     await this.userValidator.isNoneExistPhonenumber(phonenumber);
   }
 }

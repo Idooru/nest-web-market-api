@@ -15,32 +15,34 @@ export class UserValidateExistPipe<T extends UserFeild>
   constructor(private readonly userValidator: UserValidator) {}
 
   public async transform(value: T): Promise<T> {
-    if (value.id) {
-      await this.validateId(value);
-    } else if (value.email) {
-      await this.validateEmail(value);
-    } else if (value.nickname) {
-      await this.validateNickanme(value);
-    } else if (value.phonenumber) {
-      await this.validatePhonenumber(value);
+    const { id, email, nickname, phonenumber } = value;
+
+    if (id) {
+      await this.validateId(id);
+    } else if (email) {
+      await this.validateEmail(email);
+    } else if (nickname) {
+      await this.validateNickanme(nickname);
+    } else if (phonenumber) {
+      await this.validatePhonenumber(phonenumber);
     }
 
     return value;
   }
 
-  private async validateId({ id }: T): Promise<void> {
+  private async validateId(id: string): Promise<void> {
     await this.userValidator.isExistId(id);
   }
 
-  private async validateEmail({ email }: T): Promise<void> {
+  private async validateEmail(email: string): Promise<void> {
     await this.userValidator.isExistEmail(email);
   }
 
-  private async validateNickanme({ nickname }: T): Promise<void> {
+  private async validateNickanme(nickname: string): Promise<void> {
     await this.userValidator.isExistNickname(nickname);
   }
 
-  private async validatePhonenumber({ phonenumber }: T): Promise<void> {
+  private async validatePhonenumber(phonenumber: string): Promise<void> {
     await this.userValidator.isExistPhoneNumber(phonenumber);
   }
 }
