@@ -10,45 +10,23 @@ export class ProductSearcher {
     private readonly validateLibrary: ValidateLibrary,
   ) {}
 
-  async isInvalidProductName(name: string): Promise<void> {
-    const boolean = await this.productSearchRepository.isInvalidProductName(
-      name,
-    );
-    this.validateLibrary.isNoneExistData(boolean, "product name");
-  }
-
   async findAllProductsFromLatest(): Promise<ProductEntity[]> {
-    const products =
-      await this.productSearchRepository.findAllProductsFromLatest();
-    this.validateLibrary.isExistArray(products, "products");
-    return products;
+    return await this.productSearchRepository.findAllProductsFromLatest();
   }
 
   async findAllProductsFromOldest(): Promise<ProductEntity[]> {
-    const products =
-      await this.productSearchRepository.findAllProductsFromOldest();
-    this.validateLibrary.isExistArray(products, "products");
-    return products;
+    return await this.productSearchRepository.findAllProductsFromOldest();
   }
 
   async findProductWithId(id: string): Promise<ProductEntity> {
-    const product = await this.productSearchRepository.findProductWithId(id);
-    this.validateLibrary.isExistData(product, "product id");
-    return product;
+    return await this.productSearchRepository.findProductWithId(id);
   }
 
   async findProductWithName(name: string): Promise<ProductEntity> {
-    const product = await this.productSearchRepository.findProductWithName(
-      name,
-    );
-    this.validateLibrary.isExistData(product, "product name");
-    return product;
+    return await this.productSearchRepository.findProductWithName(name);
   }
 
   async findProductHavingStarRate(id: string): Promise<ProductEntity> {
-    const product =
-      await this.productSearchRepository.findProductHavingStarRate(id);
-    this.validateLibrary.isExistData(product, "product id");
-    return product;
+    return await this.productSearchRepository.findProductHavingStarRate(id);
   }
 }
