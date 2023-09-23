@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "../entities/user.entity";
 import { Repository } from "typeorm";
@@ -24,38 +24,36 @@ export class UserSearchRepository {
     @Inject("UserSelectProperty") private readonly select: UserSelectProperty,
   ) {}
 
-  async isInvalidUserEmail(email: string): Promise<boolean> {
-    return await this.userAuthRepository.exist({ where: { email } });
-  }
-
-  async isInvalidUserNickName(nickname: string): Promise<boolean> {
-    return await this.userAuthRepository.exist({ where: { nickname } });
-  }
-
-  async isInvalidUserPhoneNumber(phonenumber: string): Promise<boolean> {
-    return await this.userProfileRepository.exist({
-      where: { phonenumber },
-    });
-  }
-
   async findAllUsersFromLatest(): Promise<UserEntity[]> {
-    return await this.userRepository
+    const users = await this.userRepository
       .createQueryBuilder()
       .select(this.select.clientUserSimple)
       .from(UserEntity, "user")
       .innerJoin("user.Auth", "Auth")
       .orderBy("user.createdAt", "DESC")
       .getMany();
+
+    if (!users.length) {
+      throw new NotFoundException("사용자가 없습니다.");
+    }
+
+    return users;
   }
 
   async findAllUsersFromOldest(): Promise<UserEntity[]> {
-    return await this.userRepository
+    const users = await this.userRepository
       .createQueryBuilder()
       .select(this.select.clientUserSimple)
       .from(UserEntity, "user")
       .innerJoin("user.Auth", "Auth")
       .orderBy("user.createdAt", "ASC")
       .getMany();
+
+    if (!users.length) {
+      throw new NotFoundException("사용자가 없습니다.");
+    }
+
+    return users;
   }
 
   async findUserWithId(id: string): Promise<UserEntity> {

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ProductEntity } from "../entities/product.entity";
 import { Repository } from "typeorm";
@@ -21,7 +21,7 @@ export class ProductSearchRepository {
   }
 
   async findAllProductsFromLatest(): Promise<ProductEntity[]> {
-    return await this.productRepository
+    const products = await this.productRepository
       .createQueryBuilder()
       .select(this.productSelect.products)
       .from(ProductEntity, "product")
@@ -41,10 +41,16 @@ export class ProductSearchRepository {
       .leftJoin("InquiryRequest.Video", "InquiryRequsetVideo")
       .orderBy("product.createdAt", "DESC")
       .getMany();
+
+    if (!products.length) {
+      throw new NotFoundException("전체 상품을 찾을수가 없습니다.");
+    }
+
+    return products;
   }
 
   async findAllProductsFromOldest(): Promise<ProductEntity[]> {
-    return await this.productRepository
+    const products = await this.productRepository
       .createQueryBuilder()
       .select(this.productSelect.products)
       .from(ProductEntity, "product")
@@ -64,6 +70,12 @@ export class ProductSearchRepository {
       .leftJoin("InquiryRequest.Video", "InquiryRequsetVideo")
       .orderBy("product.createdAt", "ASC")
       .getMany();
+
+    if (!products.length) {
+      throw new NotFoundException("전체 상품을 찾을수가 없습니다.");
+    }
+
+    return products;
   }
 
   async findProductWithId(id: string): Promise<ProductEntity> {
