@@ -1,6 +1,6 @@
 import { loggerFactory } from "src/common/functions/logger.factory";
 
-export class MeidaLoggerLibrary {
+export class MediaValidateLibrary {
   private readonly logger = loggerFactory("Media");
 
   public log(mediaType: string, files: Express.Multer.File[]): void {
