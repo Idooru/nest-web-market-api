@@ -35,7 +35,8 @@ import { ProductTransaction } from "../../logic/transaction/product.transaction"
 import { ProductSearcher } from "../../logic/product.searcher";
 import { ProductBodyDto } from "../../dto/product-body.dto";
 import { ProductOperationService } from "../../services/product-operation.service";
-import { ProductValidationPipe } from "../../pipe/product-validation.pipe";
+import { ProductNameValidatePipe } from "../../pipe/none-exist/product-name-validate.pipe";
+import { ProductIdValidatePipe } from "../../pipe/exist/product-id-validate.pipe";
 
 @ApiTags("v1 관리자 Product API")
 @UseGuards(IsAdminGuard)
@@ -55,7 +56,7 @@ export class ProductVersionOneOnlyAdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/:id")
   async findProductWithId(
-    @Param("id") id: string,
+    @Param("id", ProductIdValidatePipe) id: string,
   ): Promise<JsonGeneralInterface<ProductEntity>> {
     const result = await this.productSearcher.findProductWithId(id);
 
@@ -76,7 +77,7 @@ export class ProductVersionOneOnlyAdminController {
   async createProduct(
     @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
     productImgCookies: MediaDto[],
-    @Body(ProductValidationPipe<ProductBodyDto>) productBodyDto: ProductBodyDto,
+    @Body(ProductNameValidatePipe) productBodyDto: ProductBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
     await this.productTransaction.createProduct({
@@ -108,8 +109,8 @@ export class ProductVersionOneOnlyAdminController {
   async modifyProduct(
     @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
     productImgCookies: MediaDto[],
-    @Param("id") id: string,
-    @Body(ProductValidationPipe<ProductBodyDto>) productBodyDto: ProductBodyDto,
+    @Param("id", ProductIdValidatePipe) id: string,
+    @Body(ProductNameValidatePipe) productBodyDto: ProductBodyDto,
   ): Promise<JsonClearCookiesInterface> {
     await this.productTransaction.modifyProduct({
       id,
@@ -134,7 +135,7 @@ export class ProductVersionOneOnlyAdminController {
   async modifyProductImage(
     @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
     productImgCookies: MediaDto[],
-    @Param("id") id: string,
+    @Param("id", ProductIdValidatePipe) id: string,
   ): Promise<JsonClearCookiesInterface> {
     await this.productTransaction.modifyProductImage(id, productImgCookies);
 
@@ -153,9 +154,8 @@ export class ProductVersionOneOnlyAdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Patch("/:id/name")
   async modifyProductName(
-    @Param("id") id: string,
-    @Body(ProductValidationPipe<ModifyProductNameDto>)
-    { name }: ModifyProductNameDto,
+    @Param("id", ProductIdValidatePipe) id: string,
+    @Body(ProductNameValidatePipe) { name }: ModifyProductNameDto,
   ): Promise<JsonGeneralInterface<null>> {
     await this.productOperationService.modifyProductName(id, name);
     return {
@@ -172,7 +172,7 @@ export class ProductVersionOneOnlyAdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Patch("/:id/price")
   async modifyProductPrice(
-    @Param("id") id: string,
+    @Param("id", ProductIdValidatePipe) id: string,
     @Body() { price }: ModifyProductPriceDto,
   ): Promise<JsonGeneralInterface<null>> {
     await this.productOperationService.modifyProductPrice(id, price);
@@ -190,7 +190,7 @@ export class ProductVersionOneOnlyAdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Patch("/:id/origin")
   async modifyProductOrigin(
-    @Param("id") id: string,
+    @Param("id", ProductIdValidatePipe) id: string,
     @Body() { origin }: ModifyProductOriginDto,
   ): Promise<JsonGeneralInterface<null>> {
     await this.productOperationService.modifyProductOrigin(id, origin);
@@ -208,7 +208,7 @@ export class ProductVersionOneOnlyAdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Patch("/:id/category")
   async modifyProductCategory(
-    @Param("id") id: string,
+    @Param("id", ProductIdValidatePipe) id: string,
     @Body() { category }: ModifyProductCategoryDto,
   ) {
     await this.productOperationService.modifyProductCategory(id, category);
@@ -226,7 +226,7 @@ export class ProductVersionOneOnlyAdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Patch("/:id/description")
   async modifyProductDescription(
-    @Param("id") id: string,
+    @Param("id", ProductIdValidatePipe) id: string,
     @Body() { description }: ModifyProductDesctiptionDto,
   ): Promise<JsonGeneralInterface<null>> {
     await this.productOperationService.modifyProductDescription(
@@ -248,7 +248,7 @@ export class ProductVersionOneOnlyAdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Patch("/:id/quantity")
   async modifyProductQuantity(
-    @Param("id") id: string,
+    @Param("id", ProductIdValidatePipe) id: string,
     @Body() { quantity }: ModifyProductQuantityDto,
   ): Promise<JsonGeneralInterface<null>> {
     await this.productOperationService.modifyProductQuantity(id, quantity);
@@ -266,7 +266,7 @@ export class ProductVersionOneOnlyAdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Delete("/:id")
   async removeProduct(
-    @Param("id") id: string,
+    @Param("id", ProductIdValidatePipe) id: string,
   ): Promise<JsonGeneralInterface<null>> {
     await this.productOperationService.removeProduct(id);
 

@@ -14,6 +14,7 @@ import { UserEntity } from "../../entities/user.entity";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { UserSearcher } from "../../logic/user.searcher";
 import { UserOperationService } from "../../services/user-operation.service";
+import { UserIdValidatePipe } from "../../pipe/exist/user-id-validate.pipe";
 
 @ApiTags("v1 관리자 User API")
 @UseGuards(IsAdminGuard)
@@ -67,13 +68,13 @@ export class UserVersionOneOnlyAdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/:id")
   async findClientUserInfo(
-    @Param("id") userId: string,
+    @Param("id", UserIdValidatePipe) id: string,
   ): Promise<JsonGeneralInterface<UserEntity>> {
-    const result = await this.userSearcher.findClientUserInfo(userId);
+    const result = await this.userSearcher.findClientUserInfo(id);
 
     return {
       statusCode: 200,
-      message: `${userId}에 해당하는 사용자 정보를 가져옵니다.`,
+      message: `${id}에 해당하는 사용자 정보를 가져옵니다.`,
       result,
     };
   }
@@ -85,13 +86,13 @@ export class UserVersionOneOnlyAdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Delete("/:id")
   async kickUser(
-    @Param("id") userId: string,
+    @Param("id", UserIdValidatePipe) id: string,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userOperationService.deleteUser(userId);
+    await this.userOperationService.deleteUser(id);
 
     return {
       statusCode: 200,
-      message: `${userId}에 해당하는 사용자를 추방합니다.`,
+      message: `${id}에 해당하는 사용자를 추방합니다.`,
     };
   }
 }

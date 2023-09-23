@@ -36,7 +36,10 @@ import { UserTransaction } from "../../logic/transaction/user.transaction";
 import { UserSecurity } from "../../logic/user.security";
 import { UserSearcher } from "../../logic/user.searcher";
 import { UserOperationService } from "../../services/user-operation.service";
-import { UserValidateNoneExistPipe } from "../../pipe/user-validate-none-exist.pipe";
+import { UserOperationValidatePipe } from "../../pipe/none-exist/user-operation-validate.pipe";
+import { UserEmailValidatePipe } from "../../pipe/none-exist/user-email-validate.pipe";
+import { UserPhonenumberValidatePipe } from "../../pipe/none-exist/user-phonenumber-validate.pipe";
+import { UserNicknameValidatePipe } from "../../pipe/none-exist/user-nickname-validate.pipe";
 
 @ApiTags("v1 공용 User API")
 @Controller("/api/v1/free-use/user")
@@ -57,7 +60,7 @@ export class UserVersionOneFreeUseController {
   @UseGuards(IsNotLoginGuard)
   @Post("/register")
   async register(
-    @Body(UserValidateNoneExistPipe<RegisterUserDto>)
+    @Body(UserOperationValidatePipe<RegisterUserDto>)
     registerUserDto: RegisterUserDto,
   ): Promise<JsonGeneralInterface<void>> {
     await this.userTransaction.register(registerUserDto);
@@ -161,7 +164,7 @@ export class UserVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Put("/me")
   async modifyUser(
-    @Body(UserValidateNoneExistPipe<ModifyUserDto>)
+    @Body(UserOperationValidatePipe<ModifyUserDto>)
     modifyUserDto: ModifyUserDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
@@ -182,8 +185,7 @@ export class UserVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Patch("/me/email")
   async modifyUserEmail(
-    @Body(UserValidateNoneExistPipe<ModifyUserEmailDto>)
-    { email }: ModifyUserEmailDto,
+    @Body(UserEmailValidatePipe) { email }: ModifyUserEmailDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
     await this.userOperationService.modifyUserEmail(email, jwtPayload.userId);
@@ -203,8 +205,7 @@ export class UserVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Patch("/me/nickname")
   async modifyUserNickname(
-    @Body(UserValidateNoneExistPipe<ModifyUserNicknameDto>)
-    { nickname }: ModifyUserNicknameDto,
+    @Body(UserNicknameValidatePipe) { nickname }: ModifyUserNicknameDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
     await this.userOperationService.modifyUserNickname(
@@ -227,7 +228,7 @@ export class UserVersionOneFreeUseController {
   @UseGuards(IsLoginGuard)
   @Patch("/me/phonenumber")
   async modifyUserPhoneNumber(
-    @Body(UserValidateNoneExistPipe<ModifyUserPhonenumberDto>)
+    @Body(UserPhonenumberValidatePipe)
     { phonenumber }: ModifyUserPhonenumberDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
@@ -290,7 +291,7 @@ export class UserVersionOneFreeUseController {
   @Get("/find-email")
   async findEmail(
     @Query("realname") realname: string,
-    @Query("phonenumber") phonenumber: string,
+    @Query("phonenumber", UserPhonenumberValidatePipe) phonenumber: string,
   ): Promise<JsonGeneralInterface<string>> {
     const result = await this.userSecurity.findEmail(realname, phonenumber);
 
