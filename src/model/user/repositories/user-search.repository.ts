@@ -21,13 +21,14 @@ export class UserSearchRepository {
     private readonly userAuthRepository: Repository<UserAuthEntity>,
     @InjectRepository(UserProfileEntity)
     private readonly userProfileRepository: Repository<UserProfileEntity>,
-    @Inject("UserSelectProperty") private readonly select: UserSelectProperty,
+    @Inject("UserSelectProperty")
+    private readonly userSelect: UserSelectProperty,
   ) {}
 
   async findAllUsersFromLatest(): Promise<UserEntity[]> {
     const users = await this.userRepository
       .createQueryBuilder()
-      .select(this.select.clientUserSimple)
+      .select(this.userSelect.clientUserSimple)
       .from(UserEntity, "user")
       .innerJoin("user.Auth", "Auth")
       .orderBy("user.createdAt", "DESC")
@@ -43,7 +44,7 @@ export class UserSearchRepository {
   async findAllUsersFromOldest(): Promise<UserEntity[]> {
     const users = await this.userRepository
       .createQueryBuilder()
-      .select(this.select.clientUserSimple)
+      .select(this.userSelect.clientUserSimple)
       .from(UserEntity, "user")
       .innerJoin("user.Auth", "Auth")
       .orderBy("user.createdAt", "ASC")
@@ -59,7 +60,7 @@ export class UserSearchRepository {
   async findUserWithId(id: string): Promise<UserEntity> {
     return await this.userRepository
       .createQueryBuilder()
-      .select(this.select.userBase)
+      .select(this.userSelect.userBase)
       .from(UserEntity, "user")
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
@@ -70,7 +71,7 @@ export class UserSearchRepository {
   async findClientUserWithId(id: string): Promise<UserEntity> {
     return await this.userRepository
       .createQueryBuilder()
-      .select(this.select.clientUser)
+      .select(this.userSelect.clientUser)
       .from(UserEntity, "user")
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
@@ -82,7 +83,7 @@ export class UserSearchRepository {
   async findAdminUserWithId(id: string): Promise<UserEntity> {
     return await this.userRepository
       .createQueryBuilder()
-      .select(this.select.adminUser)
+      .select(this.userSelect.adminUser)
       .from(UserEntity, "user")
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
@@ -116,7 +117,7 @@ export class UserSearchRepository {
   async findUserWithEmail(email: string): Promise<UserEntity> {
     return await this.userRepository
       .createQueryBuilder()
-      .select(this.select.userBase)
+      .select(this.userSelect.userBase)
       .from(UserEntity, "user")
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
@@ -127,7 +128,7 @@ export class UserSearchRepository {
   async findUserWithNickname(nickname: string): Promise<UserEntity> {
     return await this.userRepository
       .createQueryBuilder()
-      .select(this.select.userBase)
+      .select(this.userSelect.userBase)
       .from(UserEntity, "user")
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
@@ -141,7 +142,7 @@ export class UserSearchRepository {
   ): Promise<UserEntity> {
     return await this.userRepository
       .createQueryBuilder()
-      .select(this.select.userBase)
+      .select(this.userSelect.userBase)
       .from(UserEntity, "user")
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
@@ -153,7 +154,7 @@ export class UserSearchRepository {
   async findClientUserProfileInfoWithId(id: string): Promise<UserEntity> {
     const client = await this.userRepository
       .createQueryBuilder()
-      .select(this.select.clientUserProfile)
+      .select(this.userSelect.clientUserProfile)
       .from(UserEntity, "user")
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
@@ -179,7 +180,7 @@ export class UserSearchRepository {
   async findAdminUserProfileInfoWithId(id: string): Promise<UserEntity> {
     const admin = await this.userRepository
       .createQueryBuilder()
-      .select(this.select.adminUserProfile)
+      .select(this.userSelect.adminUserProfile)
       .from(UserEntity, "user")
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
@@ -209,7 +210,7 @@ export class UserSearchRepository {
   async findClientUserInfo(id: string): Promise<UserEntity> {
     return await this.userRepository
       .createQueryBuilder()
-      .select(this.select.whenAdminClientUser)
+      .select(this.userSelect.whenAdminClientUser)
       .from(UserEntity, "user")
       .innerJoin("user.Auth", "Auth")
       .innerJoin("user.clientActions", "Client")
