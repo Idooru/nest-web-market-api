@@ -9,45 +9,41 @@ export interface MediaSelectProperty {
 }
 
 export const mediaSelectProperty: MediaSelectProperty = {
-  productImages: [
-    "productImage.id",
-    "productImage.url",
-    "productImage.uploader",
-  ],
+  productImages: ["productImage.id", "productImage.url", "productImage.size"],
   reviewImages: [
     "reviewImage.id",
     "reviewImage.url",
     "reviewImage.Review",
-    "reviewImage.uploader",
+    "reviewImage.size",
   ],
   reviewVideos: [
     "reviewVideo.id",
     "reviewVideo.url",
     "reviewVideo.Review",
-    "reviewVideo.uploader",
+    "reviewVideo.size",
   ],
   inquiryRequestImages: [
     "inquiryRequestImage.id",
     "inquiryRequestImage.url",
     "inquiryRequestImage.InquiryRequest",
-    "inquiryRequestImage.uploader",
+    "inquiryRequestImage.size",
   ],
   inquiryRequestVideos: [
     "inquiryRequestVideo.id",
     "inquiryRequestVideo.url",
     "inquiryRequestVideo.InquiryRequest",
-    "inquiryRequestVideo.uploader",
+    "inquiryRequestVideo.size",
   ],
   inquiryResponseImages: [
     "inquiryResponseImage.id",
     "inquiryResponseImage.url",
     "inquiryResponseImage.InquiryResponse",
-    "inquiryResponseImage.uploader",
+    "inquiryResponseImage.size",
   ],
   inquiryResponseVideos: [
     "inquiryResponseVideo.id",
     "inquiryResponseVideo.url",
     "inquiryResponseVideo.InquiryResponse",
-    "inquiryResponseVideo.uploader",
+    "inquiryResponseVideo.size",
   ],
 };
