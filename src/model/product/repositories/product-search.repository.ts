@@ -16,10 +16,6 @@ export class ProductSearchRepository {
     private readonly productSelect: ProductSelectProperty,
   ) {}
 
-  async isInvalidProductName(name: string): Promise<boolean> {
-    return await this.productRepository.exist({ where: { name } });
-  }
-
   async findAllProductsFromLatest(): Promise<ProductEntity[]> {
     const products = await this.productRepository
       .createQueryBuilder()
