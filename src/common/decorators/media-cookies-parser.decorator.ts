@@ -12,6 +12,7 @@ export const MediaCookiesParser = createParamDecorator(
     return Object.entries(req.signedCookies)
       .filter((mediaCookie: MediaCookies) => mediaCookie[0].includes(data))
       .map((mediaCookie: MediaCookies) => ({
+        id: mediaCookie[1].id,
         whatCookie: mediaCookie[0],
         url: mediaCookie[1].url,
         fileName: mediaCookie[1].fileName,
