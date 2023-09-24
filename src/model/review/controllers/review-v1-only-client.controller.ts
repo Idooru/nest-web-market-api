@@ -22,7 +22,7 @@ import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
 import { VerifyDataGuard } from "src/common/guards/verify/verify-data.guard";
 import { ReviewDto } from "../dto/review.dto";
 import { ReviewBundleService } from "../services/review-bundle.service";
-import { MediaDto } from "src/model/media/dto/media.dto";
+import { MediaCookieDto } from "src/model/media/dto/media-cookie.dto";
 import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
 import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
@@ -51,9 +51,9 @@ export class ReviewVersionOneOnlyClientController {
   async createReviewWithImageAndVideo(
     @Param("productId") productId: string,
     @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
-    reviewImgCookies: MediaDto[],
+    reviewImgCookies: MediaCookieDto[],
     @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
-    reviewVdoCookies: MediaDto[],
+    reviewVdoCookies: MediaCookieDto[],
     @Body() reviewRequestDto: ReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
@@ -98,7 +98,7 @@ export class ReviewVersionOneOnlyClientController {
   async createReviewWithImage(
     @Param("productId") productId: string,
     @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
-    reviewImgCookies: MediaDto[],
+    reviewImgCookies: MediaCookieDto[],
     @Body() reviewRequestDto: ReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
@@ -136,7 +136,7 @@ export class ReviewVersionOneOnlyClientController {
   async createReviewWithVideo(
     @Param("productId") productId: string,
     @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
-    reviewVdoCookies: MediaDto[],
+    reviewVdoCookies: MediaCookieDto[],
     @Body() reviewRequestDto: ReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
@@ -210,9 +210,9 @@ export class ReviewVersionOneOnlyClientController {
     @Param("productId") productId: string,
     @Param("reviewId") reviewId: string,
     @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
-    reviewImgCookies: MediaDto[],
+    reviewImgCookies: MediaCookieDto[],
     @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
-    reviewVdoCookies: MediaDto[],
+    reviewVdoCookies: MediaCookieDto[],
     @Body() reviewRequestDto: ReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
@@ -272,7 +272,7 @@ export class ReviewVersionOneOnlyClientController {
     @Param("productId") productId: string,
     @Param("reviewId") reviewId: string,
     @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
-    reviewImgCookies: MediaDto[],
+    reviewImgCookies: MediaCookieDto[],
     @Body() reviewRequestDto: ReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
@@ -329,7 +329,7 @@ export class ReviewVersionOneOnlyClientController {
     @Param("productId") productId: string,
     @Param("reviewId") reviewId: string,
     @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
-    reviewVdoCookies: MediaDto[],
+    reviewVdoCookies: MediaCookieDto[],
     @Body() reviewRequestDto: ReviewDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {

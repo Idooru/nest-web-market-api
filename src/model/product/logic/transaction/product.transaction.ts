@@ -8,7 +8,7 @@ import { TypeOrmException } from "src/common/errors/typeorm.exception";
 import { MediaSearcher } from "src/model/media/logic/media.searcher";
 import { ModifyProductDto } from "../../dto/modify-product.dto";
 import { ProductSearcher } from "../product.searcher";
-import { MediaDto } from "../../../media/dto/media.dto";
+import { MediaCookieDto } from "../../../media/dto/media-cookie.dto";
 import { ProductInit } from "./product.init";
 
 @Injectable()
@@ -28,7 +28,7 @@ export class ProductTransaction {
 
     const [admin, productImages] = await Promise.all([
       this.userSearcher.findAdminUserObjectWithId(jwtPayload.userId),
-      this.mediaSearcher.findProductImageWithUrl(productImgCookies),
+      this.mediaSearcher.findProductImagesWithId(productImgCookies),
     ]);
 
     try {
@@ -64,7 +64,7 @@ export class ProductTransaction {
     const [product, beforeProductImages, newProductImages] = await Promise.all([
       this.productSearcher.findProductWithId(id),
       this.mediaSearcher.findBeforeProductImageWithId(id),
-      this.mediaSearcher.findProductImageWithUrl(productImgCookies),
+      this.mediaSearcher.findProductImagesWithId(productImgCookies),
     ]);
 
     try {
@@ -93,13 +93,13 @@ export class ProductTransaction {
 
   async modifyProductImage(
     id: string,
-    productImgCookies: MediaDto[],
+    productImgCookies: MediaCookieDto[],
   ): Promise<void> {
     const queryRunner = await this.productInit.init();
     const [product, beforeProductImages, newProductImages] = await Promise.all([
       this.productSearcher.findProductWithId(id),
       this.mediaSearcher.findBeforeProductImageWithId(id),
-      this.mediaSearcher.findProductImageWithUrl(productImgCookies),
+      this.mediaSearcher.findProductImagesWithId(productImgCookies),
     ]);
 
     try {
