@@ -1,5 +1,5 @@
-import { MediaDto } from "../../dto/media.dto";
+import { MediaCookieDto } from "../../dto/media-cookie.dto";
 
 export interface IMediaBundleService {
-  deleteMediaFile(mediaCookies: MediaDto[], mediaPath: string): void;
+  deleteMediaFile(mediaCookies: MediaCookieDto[], mediaPath: string): void;
 }

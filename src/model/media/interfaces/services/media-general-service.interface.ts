@@ -6,7 +6,7 @@ import { InquiryResponseVideoEntity } from "../../entities/inquiry-response-vide
 import { ProductImageEntity } from "../../entities/product-image.entity";
 import { ReviewImageEntity } from "../../entities/review-image.entity";
 import { ReviewVideoEntity } from "../../entities/review-video.entity";
-import { MediaDto } from "../../dto/media.dto";
+import { MediaCookieDto } from "../../dto/media-cookie.dto";
 
 export interface IMediaGeneralService {
   findUploadedProductImages(
@@ -72,19 +72,25 @@ export interface IMediaGeneralService {
     jwtPayload: JwtAccessTokenPayload,
     urls: string[],
   ): Promise<void>;
-  deleteProductImageWithCookies(productImgCookies: MediaDto[]): Promise<void>;
-  deleteReviewImagesWithCookies(reviewImgCookies: MediaDto[]): Promise<void>;
-  deleteReviewVideosWithCookies(reviewVdoCookies: MediaDto[]): Promise<void>;
+  deleteProductImageWithCookies(
+    productImgCookies: MediaCookieDto[],
+  ): Promise<void>;
+  deleteReviewImagesWithCookies(
+    reviewImgCookies: MediaCookieDto[],
+  ): Promise<void>;
+  deleteReviewVideosWithCookies(
+    reviewVdoCookies: MediaCookieDto[],
+  ): Promise<void>;
   deleteInquiryRequestImagesWithCookies(
-    inquiryRequestImgCookies: MediaDto[],
+    inquiryRequestImgCookies: MediaCookieDto[],
   ): Promise<void>;
   deleteInquiryRequestVideosWithCookies(
-    inquiryRequestVdoCookies: MediaDto[],
+    inquiryRequestVdoCookies: MediaCookieDto[],
   ): Promise<void>;
   deleteInquiryResponseImagesWithCookies(
-    inquiryResponseImgCookies: MediaDto[],
+    inquiryResponseImgCookies: MediaCookieDto[],
   ): Promise<void>;
   deleteInquiryResponseVideosWithCookies(
-    inquiryResponseVdoCookies: MediaDto[],
+    inquiryResponseVdoCookies: MediaCookieDto[],
   ): Promise<void>;
 }

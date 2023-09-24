@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { JwtAccessTokenPayload } from "../../auth/jwt/jwt-access-token-payload.interface";
 import { MediaGeneralRepository } from "../repositories/media-general.repository";
-import { MediaDto } from "../dto/media.dto";
+import { MediaCookieDto } from "../dto/media-cookie.dto";
 import { ProductImageEntity } from "../entities/product-image.entity";
 import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
 import { InquiryResponseVideoEntity } from "../entities/inquiry-response-video.entity";
@@ -187,23 +187,23 @@ export class MediaGeneralService implements IMediaGeneralService {
       jwtPayload.userId,
     );
 
-    if (files.length >= 2) {
-      const promises = urls.map(async (url) => {
-        await this.mediaGeneralRepository.uploadProductImage({
-          url,
-          uploader: user.Auth.email,
-        });
-      });
-
-      await Promise.all(promises);
-    } else {
-      const url = urls[0];
-
-      await this.mediaGeneralRepository.uploadProductImage({
-        url,
-        uploader: user.Auth.email,
-      });
-    }
+    // if (files.length >= 2) {
+    //   const promises = urls.map(async (url) => {
+    //     await this.mediaGeneralRepository.uploadProductImage({
+    //       url,
+    //       uploader: user.Auth.email,
+    //     });
+    //   });
+    //
+    //   await Promise.all(promises);
+    // } else {
+    //   const url = urls[0];
+    //
+    //   await this.mediaGeneralRepository.uploadProductImage({
+    //     url,
+    //     uploader: user.Auth.email,
+    //   });
+    // }
   }
 
   async uploadReviewImage(
@@ -215,23 +215,23 @@ export class MediaGeneralService implements IMediaGeneralService {
       jwtPayload.nickname,
     );
 
-    if (files.length >= 2) {
-      const promises = urls.map(async (url: string) => {
-        await this.mediaGeneralRepository.uploadReviewImage({
-          url,
-          uploader: user.Auth.email,
-        });
-      });
-
-      await Promise.all(promises);
-    } else {
-      const url = urls[0];
-
-      await this.mediaGeneralRepository.uploadReviewImage({
-        url,
-        uploader: user.Auth.email,
-      });
-    }
+    // if (files.length >= 2) {
+    //   const promises = urls.map(async (url: string) => {
+    //     await this.mediaGeneralRepository.uploadReviewImage({
+    //       url,
+    //       uploader: user.Auth.email,
+    //     });
+    //   });
+    //
+    //   await Promise.all(promises);
+    // } else {
+    //   const url = urls[0];
+    //
+    //   await this.mediaGeneralRepository.uploadReviewImage({
+    //     url,
+    //     uploader: user.Auth.email,
+    //   });
+    // }
   }
 
   async uploadReviewVideo(
@@ -243,23 +243,23 @@ export class MediaGeneralService implements IMediaGeneralService {
       jwtPayload.nickname,
     );
 
-    if (files.length >= 2) {
-      const promoises = urls.map(async (url: string) => {
-        await this.mediaGeneralRepository.uploadReviewVideo({
-          url,
-          uploader: user.Auth.email,
-        });
-      });
-
-      await Promise.all(promoises);
-    } else {
-      const url = urls[0];
-
-      await this.mediaGeneralRepository.uploadReviewVideo({
-        url,
-        uploader: user.Auth.email,
-      });
-    }
+    // if (files.length >= 2) {
+    //   const promoises = urls.map(async (url: string) => {
+    //     await this.mediaGeneralRepository.uploadReviewVideo({
+    //       url,
+    //       uploader: user.Auth.email,
+    //     });
+    //   });
+    //
+    //   await Promise.all(promoises);
+    // } else {
+    //   const url = urls[0];
+    //
+    //   await this.mediaGeneralRepository.uploadReviewVideo({
+    //     url,
+    //     uploader: user.Auth.email,
+    //   });
+    // }
   }
 
   async uploadInquiryRequestImage(
@@ -271,23 +271,23 @@ export class MediaGeneralService implements IMediaGeneralService {
       jwtPayload.nickname,
     );
 
-    if (files.length >= 2) {
-      const promises = urls.map(async (url: string) => {
-        await this.mediaGeneralRepository.uploadInquiryRequestImage({
-          url,
-          uploader: user.Auth.email,
-        });
-      });
-
-      await Promise.all(promises);
-    } else {
-      const url = urls[0];
-
-      await this.mediaGeneralRepository.uploadInquiryRequestImage({
-        url,
-        uploader: user.Auth.email,
-      });
-    }
+    // if (files.length >= 2) {
+    //   const promises = urls.map(async (url: string) => {
+    //     await this.mediaGeneralRepository.uploadInquiryRequestImage({
+    //       url,
+    //       uploader: user.Auth.email,
+    //     });
+    //   });
+    //
+    //   await Promise.all(promises);
+    // } else {
+    //   const url = urls[0];
+    //
+    //   await this.mediaGeneralRepository.uploadInquiryRequestImage({
+    //     url,
+    //     uploader: user.Auth.email,
+    //   });
+    // }
   }
 
   async uploadInquiryRequestVideo(
@@ -299,23 +299,23 @@ export class MediaGeneralService implements IMediaGeneralService {
       jwtPayload.nickname,
     );
 
-    if (files.length >= 2) {
-      const promises = urls.map(async (url: string) => {
-        await this.mediaGeneralRepository.uploadInquiryRequestVideo({
-          url,
-          uploader: user.Auth.email,
-        });
-      });
-
-      await Promise.all(promises);
-    } else {
-      const url = urls[0];
-
-      await this.mediaGeneralRepository.uploadInquiryRequestVideo({
-        url,
-        uploader: user.Auth.email,
-      });
-    }
+    // if (files.length >= 2) {
+    //   const promises = urls.map(async (url: string) => {
+    //     await this.mediaGeneralRepository.uploadInquiryRequestVideo({
+    //       url,
+    //       uploader: user.Auth.email,
+    //     });
+    //   });
+    //
+    //   await Promise.all(promises);
+    // } else {
+    //   const url = urls[0];
+    //
+    //   await this.mediaGeneralRepository.uploadInquiryRequestVideo({
+    //     url,
+    //     uploader: user.Auth.email,
+    //   });
+    // }
   }
 
   async uploadInquiryResponseImage(
@@ -327,23 +327,23 @@ export class MediaGeneralService implements IMediaGeneralService {
       jwtPayload.nickname,
     );
 
-    if (files.length >= 2) {
-      const promises = urls.map(async (url: string) => {
-        await this.mediaGeneralRepository.uploadInquiryResponseImage({
-          url,
-          uploader: user.Auth.email,
-        });
-      });
-
-      await Promise.all(promises);
-    } else {
-      const url = urls[0];
-
-      await this.mediaGeneralRepository.uploadInquiryResponseImage({
-        url,
-        uploader: user.Auth.email,
-      });
-    }
+    // if (files.length >= 2) {
+    //   const promises = urls.map(async (url: string) => {
+    //     await this.mediaGeneralRepository.uploadInquiryResponseImage({
+    //       url,
+    //       uploader: user.Auth.email,
+    //     });
+    //   });
+    //
+    //   await Promise.all(promises);
+    // } else {
+    //   const url = urls[0];
+    //
+    //   await this.mediaGeneralRepository.uploadInquiryResponseImage({
+    //     url,
+    //     uploader: user.Auth.email,
+    //   });
+    // }
   }
 
   async uploadInquiryResponseVideo(
@@ -355,27 +355,27 @@ export class MediaGeneralService implements IMediaGeneralService {
       jwtPayload.nickname,
     );
 
-    if (files.length >= 2) {
-      const promises = urls.map(async (url: string) => {
-        await this.mediaGeneralRepository.uploadInquiryResponseVideo({
-          url,
-          uploader: user.Auth.email,
-        });
-
-        await Promise.all(promises);
-      });
-    } else {
-      const url = urls[0];
-
-      await this.mediaGeneralRepository.uploadInquiryResponseVideo({
-        url,
-        uploader: user.Auth.email,
-      });
-    }
+    // if (files.length >= 2) {
+    //   const promises = urls.map(async (url: string) => {
+    //     await this.mediaGeneralRepository.uploadInquiryResponseVideo({
+    //       url,
+    //       uploader: user.Auth.email,
+    //     });
+    //
+    //     await Promise.all(promises);
+    //   });
+    // } else {
+    //   const url = urls[0];
+    //
+    //   await this.mediaGeneralRepository.uploadInquiryResponseVideo({
+    //     url,
+    //     uploader: user.Auth.email,
+    //   });
+    // }
   }
 
   async deleteProductImageWithCookies(
-    productImgCookies: MediaDto[],
+    productImgCookies: MediaCookieDto[],
   ): Promise<void> {
     if (productImgCookies.length >= 2) {
       const promises = productImgCookies.map(async (cookie) => {
@@ -396,7 +396,7 @@ export class MediaGeneralService implements IMediaGeneralService {
   }
 
   async deleteReviewImagesWithCookies(
-    reviewImgCookies: MediaDto[],
+    reviewImgCookies: MediaCookieDto[],
   ): Promise<void> {
     if (reviewImgCookies.length >= 2) {
       const promises = reviewImgCookies.map(async (cookie) => {
@@ -417,7 +417,7 @@ export class MediaGeneralService implements IMediaGeneralService {
   }
 
   async deleteReviewVideosWithCookies(
-    reviewVdoCookies: MediaDto[],
+    reviewVdoCookies: MediaCookieDto[],
   ): Promise<void> {
     if (reviewVdoCookies.length >= 2) {
       const promises = reviewVdoCookies.map(async (cookie) => {
@@ -438,7 +438,7 @@ export class MediaGeneralService implements IMediaGeneralService {
   }
 
   async deleteInquiryRequestImagesWithCookies(
-    inquiryRequestImgCookies: MediaDto[],
+    inquiryRequestImgCookies: MediaCookieDto[],
   ): Promise<void> {
     if (inquiryRequestImgCookies.length >= 2) {
       const promises = inquiryRequestImgCookies.map(async (cookie) => {
@@ -465,7 +465,7 @@ export class MediaGeneralService implements IMediaGeneralService {
   }
 
   async deleteInquiryRequestVideosWithCookies(
-    inquiryRequestVdoCookies: MediaDto[],
+    inquiryRequestVdoCookies: MediaCookieDto[],
   ): Promise<void> {
     if (inquiryRequestVdoCookies.length >= 2) {
       const promises = inquiryRequestVdoCookies.map(async (cookie) => {
@@ -492,7 +492,7 @@ export class MediaGeneralService implements IMediaGeneralService {
   }
 
   async deleteInquiryResponseImagesWithCookies(
-    inquiryResponseImgCookies: MediaDto[],
+    inquiryResponseImgCookies: MediaCookieDto[],
   ): Promise<void> {
     if (inquiryResponseImgCookies.length >= 2) {
       const promises = inquiryResponseImgCookies.map(async (cookie) => {
@@ -519,7 +519,7 @@ export class MediaGeneralService implements IMediaGeneralService {
   }
 
   async deleteInquiryResponseVideosWithCookies(
-    inquiryResponseVdoCookies: MediaDto[],
+    inquiryResponseVdoCookies: MediaCookieDto[],
   ): Promise<void> {
     if (inquiryResponseVdoCookies.length >= 2) {
       const promises = inquiryResponseVdoCookies.map(async (cookie) => {

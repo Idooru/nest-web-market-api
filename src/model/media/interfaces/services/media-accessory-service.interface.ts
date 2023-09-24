@@ -1,4 +1,4 @@
-import { MediaDto } from "../../dto/media.dto";
+import { MediaCookieDto } from "../../dto/media-cookie.dto";
 import { InquiryRequestImageEntity } from "../../entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "../../entities/inquiry-request-video.entity";
 import { InquiryResponseImageEntity } from "../../entities/inquiry-response-image.entity";
@@ -13,20 +13,24 @@ export interface IMediaAccessoryService {
     cookieKey: string,
     files: Express.Multer.File[],
     urls: string[],
-  ): MediaDto[];
+  ): MediaCookieDto[];
   deleteMediaFilesOnServerDisk(mediaFileName: string, mediaPath: string): void;
-  findReviewImages(reviewImgCookies: MediaDto[]): Promise<ReviewImageEntity[]>;
-  findReviewVideos(reviewVdoCookies: MediaDto[]): Promise<ReviewVideoEntity[]>;
+  findReviewImages(
+    reviewImgCookies: MediaCookieDto[],
+  ): Promise<ReviewImageEntity[]>;
+  findReviewVideos(
+    reviewVdoCookies: MediaCookieDto[],
+  ): Promise<ReviewVideoEntity[]>;
   findInquiryRequestImages(
-    inquiryRequestImgCookies: MediaDto[],
+    inquiryRequestImgCookies: MediaCookieDto[],
   ): Promise<InquiryRequestImageEntity[]>;
   findInquiryRequestVideos(
-    inquiryRequestVdoCookies: MediaDto[],
+    inquiryRequestVdoCookies: MediaCookieDto[],
   ): Promise<InquiryRequestVideoEntity[]>;
   findInquiryResponseImages(
-    inquiryResponseImgCookies: MediaDto[],
+    inquiryResponseImgCookies: MediaCookieDto[],
   ): Promise<InquiryResponseImageEntity[]>;
   findInquiryResponseVideos(
-    inquiryResponseVdoCookies: MediaDto[],
+    inquiryResponseVdoCookies: MediaCookieDto[],
   ): Promise<InquiryResponseVideoEntity[]>;
 }

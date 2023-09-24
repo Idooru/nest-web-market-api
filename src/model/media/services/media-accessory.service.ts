@@ -2,7 +2,7 @@ import { HttpStatus, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import * as fs from "fs";
 import * as path from "path";
-import { MediaDto } from "../dto/media.dto";
+import { MediaCookieDto } from "../dto/media-cookie.dto";
 import { MediaGeneralRepository } from "../repositories/media-general.repository";
 import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
 import { InquiryResponseVideoEntity } from "../entities/inquiry-response-video.entity";
@@ -53,8 +53,9 @@ export class MediaAccessoryService
     cookieKey: string,
     files: Express.Multer.File[],
     urls: string[],
-  ): MediaDto[] {
+  ): MediaCookieDto[] {
     return files.map((file, idx) => ({
+      id: "1",
       whatCookie: cookieKey,
       url: urls[idx],
       fileName: file.filename,
@@ -67,7 +68,7 @@ export class MediaAccessoryService
     );
   }
 
-  async findProductImages(productImgCookies: MediaDto[]) {
+  async findProductImages(productImgCookies: MediaCookieDto[]) {
     if (productImgCookies.length >= 2) {
       const promises = productImgCookies.map(async (productImgCookie) => {
         return await this.mediaGeneralRepository.findProductImageWithUrl(
@@ -86,7 +87,7 @@ export class MediaAccessoryService
   }
 
   async findReviewImages(
-    reviewImgCookies: MediaDto[],
+    reviewImgCookies: MediaCookieDto[],
   ): Promise<ReviewImageEntity[]> {
     if (reviewImgCookies.length >= 2) {
       const promises = reviewImgCookies.map(async (reviewImgCookie) => {
@@ -106,7 +107,7 @@ export class MediaAccessoryService
   }
 
   async findReviewVideos(
-    reviewVdoCookies: MediaDto[],
+    reviewVdoCookies: MediaCookieDto[],
   ): Promise<ReviewVideoEntity[]> {
     if (reviewVdoCookies.length >= 2) {
       const promises = reviewVdoCookies.map(async (reviewVdoCookie) => {
@@ -126,7 +127,7 @@ export class MediaAccessoryService
   }
 
   async findInquiryRequestImages(
-    inquiryRequestImgCookies: MediaDto[],
+    inquiryRequestImgCookies: MediaCookieDto[],
   ): Promise<InquiryRequestImageEntity[]> {
     if (inquiryRequestImgCookies.length >= 2) {
       const promises = inquiryRequestImgCookies.map(
@@ -148,7 +149,7 @@ export class MediaAccessoryService
   }
 
   async findInquiryRequestVideos(
-    inquiryRequestVdoCookies: MediaDto[],
+    inquiryRequestVdoCookies: MediaCookieDto[],
   ): Promise<InquiryRequestVideoEntity[]> {
     if (inquiryRequestVdoCookies.length >= 2) {
       const promises = inquiryRequestVdoCookies.map(
@@ -170,7 +171,7 @@ export class MediaAccessoryService
   }
 
   async findInquiryResponseImages(
-    inquiryResponseImgCookies: MediaDto[],
+    inquiryResponseImgCookies: MediaCookieDto[],
   ): Promise<InquiryResponseImageEntity[]> {
     if (inquiryResponseImgCookies.length >= 2) {
       const promises = inquiryResponseImgCookies.map(
@@ -192,7 +193,7 @@ export class MediaAccessoryService
   }
 
   async findInquiryResponseVideos(
-    inquiryResponseVdoCookies: MediaDto[],
+    inquiryResponseVdoCookies: MediaCookieDto[],
   ): Promise<InquiryResponseVideoEntity[]> {
     if (inquiryResponseVdoCookies.length >= 2) {
       const promises = inquiryResponseVdoCookies.map(

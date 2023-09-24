@@ -14,16 +14,12 @@ import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-paylo
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { MediaGeneralService } from "../services/media-general.service";
-import { MediaAccessoryService } from "../services/media-accessory.service";
 import { JsonSendCookiesInterface } from "src/common/interceptors/interface/json-send-cookies.interface";
 import { JsonSendCookiesInterceptor } from "src/common/interceptors/general/json-send-cookies.interceptor";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
-import { MediaBundleService } from "../services/media-bundle.service";
 import { JsonClearCookiesInterface } from "src/common/interceptors/interface/json-clear-cookies.interface";
-import { MediaDto } from "../dto/media.dto";
-import { MeidaLoggerLibrary } from "src/common/lib/logger/media-logger.library";
+import { MediaCookieDto } from "../dto/media-cookie.dto";
 import {
   InquiryMediaCookieKey,
   inquiryMediaCookieKey,
@@ -38,6 +34,11 @@ import { ProductImageEntity } from "../entities/product-image.entity";
 import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { InquiryResponseVideoEntity } from "../entities/inquiry-response-video.entity";
+import { ProductImagesValidatePipe } from "../pipe/exist/product-images-validate.pipe";
+import { MediaOperationService } from "../services/media-operation.service";
+import { InquiryResponseImageValidatePipe } from "../pipe/exist/inquiry-response-image-validate.pipe";
+import { MediaSearcher } from "../logic/media.searcher";
+import { InquiryResponseVideoValidatePipe } from "../pipe/exist/inquiry-response-video-validate.pipe";
 
 @ApiTags("v1 관리자 Media API")
 @UseGuards(IsAdminGuard)
@@ -45,14 +46,12 @@ import { InquiryResponseVideoEntity } from "../entities/inquiry-response-video.e
 @Controller("/api/v1/only-admin/media")
 export class MediaVersionOneOnlyAdminController {
   constructor(
+    private readonly mediaSearcher: MediaSearcher,
+    private readonly mediaOperationService: MediaOperationService,
     @Inject("ProductMediaCookieKey")
     private readonly productMedia: ProductMediaCookieKey,
     @Inject("InquiryMediaCookieKey")
     private readonly inquiryMedia: InquiryMediaCookieKey,
-    private readonly mediaGeneralService: MediaGeneralService,
-    private readonly mediaAccessoryService: MediaAccessoryService,
-    private readonly mediaBundleService: MediaBundleService,
-    private readonly mediaLoggerLibrary: MeidaLoggerLibrary,
   ) {}
 
   @ApiOperation({
@@ -65,22 +64,16 @@ export class MediaVersionOneOnlyAdminController {
   async findUploadedProductImage(
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
     @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
-    productImgCookies: MediaDto[],
+    productImgCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<ProductImageEntity[]>> {
-    const productImages = await this.mediaAccessoryService.findProductImages(
+    const result = await this.mediaSearcher.findProductImagesWithId(
       productImgCookies,
     );
-
-    const uploadedProductImages =
-      await this.mediaGeneralService.findUploadedProductImages(
-        jwtPayload.email,
-        productImages,
-      );
 
     return {
       statusCode: 200,
       message: "현재 업로드된 상품 이미지를 가져옵니다.",
-      result: uploadedProductImages,
+      result,
     };
   }
 
@@ -94,23 +87,16 @@ export class MediaVersionOneOnlyAdminController {
   async findUploadedInquiryResponseImages(
     @GetJWT() jwtPaylaod: JwtAccessTokenPayload,
     @MediaCookiesParser(inquiryMediaCookieKey.response.image_url_cookie)
-    inquiryResponseImgCookies: MediaDto[],
+    inquiryResponseImgCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<InquiryResponseImageEntity[]>> {
-    const inquiryResponseImages =
-      await this.mediaAccessoryService.findInquiryResponseImages(
-        inquiryResponseImgCookies,
-      );
-
-    const uploadedInquiryResponseImages =
-      await this.mediaGeneralService.findUploadedInquiryResponseImages(
-        jwtPaylaod.email,
-        inquiryResponseImages,
-      );
+    const result = await this.mediaSearcher.findInquiryResponseImagesWithId(
+      inquiryResponseImgCookies,
+    );
 
     return {
       statusCode: 200,
       message: "현재 업로드된 문의 응답 이미지를 가져옵니다.",
-      result: uploadedInquiryResponseImages,
+      result,
     };
   }
 
@@ -124,23 +110,16 @@ export class MediaVersionOneOnlyAdminController {
   async findUploadedInquiryResponseVideos(
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
     @MediaCookiesParser(inquiryMediaCookieKey.response.video_url_cookie)
-    inquiryResponseVdoCookies: MediaDto[],
+    inquiryResponseVdoCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<InquiryResponseVideoEntity[]>> {
-    const inquiryResponseVideos =
-      await this.mediaAccessoryService.findInquiryResponseVideos(
-        inquiryResponseVdoCookies,
-      );
-
-    const uploadedInquiryResponseVideos =
-      await this.mediaGeneralService.findUploadedInquiryResponseVideos(
-        jwtPayload.email,
-        inquiryResponseVideos,
-      );
+    const result = await this.mediaSearcher.findInquiryResponseVideosWithId(
+      inquiryResponseVdoCookies,
+    );
 
     return {
       statusCode: 200,
       message: "현재 업로드된 문의 응답 동영상을 가져옵니다.",
-      result: uploadedInquiryResponseVideos,
+      result,
     };
   }
 
@@ -159,22 +138,11 @@ export class MediaVersionOneOnlyAdminController {
   )
   @Post("/product/image")
   async uploadProductImage(
-    @UploadedFiles() files: Array<Express.Multer.File>,
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookiesInterface<MediaDto>> {
-    this.mediaAccessoryService.isExistMediaFiles("product image", files);
-    this.mediaLoggerLibrary.log("product image", files);
-
-    const urls = files.map((file) =>
-      this.mediaAccessoryService.setUrl(file.filename, "product/images"),
-    );
-
-    await this.mediaGeneralService.uploadProductsImage(files, jwtPayload, urls);
-
-    const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
-      this.productMedia.image_url_cookie,
+    @UploadedFiles(ProductImagesValidatePipe)
+    files: Express.Multer.File[],
+  ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
+    const cookieValues = await this.mediaOperationService.uploadProductImages(
       files,
-      urls,
     );
 
     return {
@@ -200,33 +168,11 @@ export class MediaVersionOneOnlyAdminController {
   )
   @Post("/inquiry/response/image")
   async uploadInquiryResponseImage(
-    @UploadedFiles() files: Array<Express.Multer.File>,
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookiesInterface<MediaDto>> {
-    this.mediaAccessoryService.isExistMediaFiles(
-      "inquiry response image",
-      files,
-    );
-    this.mediaLoggerLibrary.log("inquiry response images", files);
-
-    const urls = files.map((file) =>
-      this.mediaAccessoryService.setUrl(
-        file.filename,
-        "inquiry/response/images",
-      ),
-    );
-
-    await this.mediaGeneralService.uploadInquiryResponseImage(
-      files,
-      jwtPayload,
-      urls,
-    );
-
-    const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
-      this.inquiryMedia.response.image_url_cookie,
-      files,
-      urls,
-    );
+    @UploadedFiles(InquiryResponseImageValidatePipe)
+    files: Express.Multer.File[],
+  ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
+    const cookieValues =
+      await this.mediaOperationService.uploadInquiryResponseImages(files);
 
     return {
       statusCode: 201,
@@ -251,33 +197,11 @@ export class MediaVersionOneOnlyAdminController {
   )
   @Post("/inquiry/response/video")
   async uploadInquiryResponseVideo(
-    @UploadedFiles() files: Array<Express.Multer.File>,
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonSendCookiesInterface<MediaDto>> {
-    this.mediaAccessoryService.isExistMediaFiles(
-      "inquiry response video",
-      files,
-    );
-    this.mediaLoggerLibrary.log("inquiry response video", files);
-
-    const urls = files.map((file) =>
-      this.mediaAccessoryService.setUrl(
-        file.filename,
-        "inquiry/response/videos",
-      ),
-    );
-
-    await this.mediaGeneralService.uploadInquiryResponseVideo(
-      files,
-      jwtPayload,
-      urls,
-    );
-
-    const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
-      this.inquiryMedia.response.video_url_cookie,
-      files,
-      urls,
-    );
+    @UploadedFiles(InquiryResponseVideoValidatePipe)
+    files: Array<Express.Multer.File>,
+  ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
+    const cookieValues =
+      await this.mediaOperationService.uploadInquiryResponseVideos(files);
 
     return {
       statusCode: 201,
@@ -296,18 +220,12 @@ export class MediaVersionOneOnlyAdminController {
   @Delete("/product/image")
   async cancelImageUploadForProduct(
     @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
-    productImgCookies: MediaDto[],
+    productImgCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
-    await this.mediaGeneralService.deleteProductImageWithCookies(
-      productImgCookies,
-    );
-
-    this.mediaBundleService.deleteMediaFile(
-      productImgCookies,
-      "images/product",
-    );
-
-    const cookieKey = productImgCookies.map((cookie) => cookie.whatCookie);
+    const cookieKey =
+      await this.mediaOperationService.deleteProductImagesWithIds(
+        productImgCookies,
+      );
 
     return {
       statusCode: 200,
@@ -325,20 +243,12 @@ export class MediaVersionOneOnlyAdminController {
   @Delete("/inquiry/response/image")
   async cancelInquiryResponseImageUpload(
     @MediaCookiesParser(inquiryMediaCookieKey.response.image_url_cookie)
-    inquiryResponseImgCookies: MediaDto[],
+    inquiryResponseImgCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
-    await this.mediaGeneralService.deleteInquiryResponseImagesWithCookies(
-      inquiryResponseImgCookies,
-    );
-
-    this.mediaBundleService.deleteMediaFile(
-      inquiryResponseImgCookies,
-      "images/inquiry/response",
-    );
-
-    const cookieKey = inquiryResponseImgCookies.map(
-      (cookie) => cookie.whatCookie,
-    );
+    const cookieKey =
+      await this.mediaOperationService.deleteInquiryResponseImagesWithIds(
+        inquiryResponseImgCookies,
+      );
 
     return {
       statusCode: 200,
@@ -356,20 +266,12 @@ export class MediaVersionOneOnlyAdminController {
   @Delete("/inquiry/response/video")
   async cancelInquiryResponseVideoUpload(
     @MediaCookiesParser(inquiryMediaCookieKey.response.video_url_cookie)
-    inquiryResponseVdoCookies: MediaDto[],
+    inquiryResponseVdoCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
-    await this.mediaGeneralService.deleteInquiryResponseVideosWithCookies(
-      inquiryResponseVdoCookies,
-    );
-
-    this.mediaBundleService.deleteMediaFile(
-      inquiryResponseVdoCookies,
-      "videos/inquiry/response",
-    );
-
-    const cookieKey = inquiryResponseVdoCookies.map(
-      (cookie) => cookie.whatCookie,
-    );
+    const cookieKey =
+      await this.mediaOperationService.deleteInquiryResponseVideosWithIds(
+        inquiryResponseVdoCookies,
+      );
 
     return {
       statusCode: 200,
