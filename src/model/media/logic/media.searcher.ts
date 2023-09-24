@@ -1,36 +1,56 @@
 import { Injectable } from "@nestjs/common";
-import { MediaSearchRepository } from "../repositories/media-search.repository";
-import { ValidateLibrary } from "src/common/lib/util/validate.library";
 import { ProductImageEntity } from "../entities/product-image.entity";
-import { MediaDto } from "../dto/media.dto";
+import { MediaCookieDto } from "../dto/media-cookie.dto";
+import { MediaSearchRepository } from "../repositories/media-search.repository";
+import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
 
 @Injectable()
 export class MediaSearcher {
-  constructor(
-    private readonly mediaSearchRepository: MediaSearchRepository,
-    private readonly validateLibrary: ValidateLibrary,
-  ) {}
+  constructor(private readonly mediaSearchRepository: MediaSearchRepository) {}
 
-  async findProductImageWithUrl(
-    productImgCookies: MediaDto[],
+  async findProductImagesWithId(
+    productImgCookies: MediaCookieDto[],
   ): Promise<ProductImageEntity[]> {
-    const findWork = productImgCookies.map(async (productImgCookie) => {
-      return await this.mediaSearchRepository.findProductImageWithUrl(
-        productImgCookie.url,
+    const finding = productImgCookies.map(async (productImgCookie) => {
+      return await this.mediaSearchRepository.findProductImageWithId(
+        productImgCookie.id,
       );
     });
 
-    const productImages = await Promise.all(findWork);
-    this.validateLibrary.isExistArray(productImages);
-    return productImages;
+    return await Promise.all(finding);
   }
 
   async findBeforeProductImageWithId(
     id: string,
   ): Promise<ProductImageEntity[]> {
-    const productImages =
-      await this.mediaSearchRepository.findBeforeProductImagesWithId(id);
-    this.validateLibrary.isExistArray(productImages);
-    return productImages;
+    return await this.mediaSearchRepository.findBeforeProductImagesWithId(id);
+  }
+
+  async findInquiryResponseImagesWithId(
+    inquiryResponseImgCookies: MediaCookieDto[],
+  ): Promise<InquiryResponseImageEntity[]> {
+    const finding = inquiryResponseImgCookies.map(
+      async (inquiryResponseImgCookie) => {
+        return await this.mediaSearchRepository.findInquiryResponseImageWithId(
+          inquiryResponseImgCookie.id,
+        );
+      },
+    );
+
+    return await Promise.all(finding);
+  }
+
+  async findInquiryResponseVideosWithId(
+    inquiryResponseVdoCookies: MediaCookieDto[],
+  ): Promise<InquiryResponseImageEntity[]> {
+    const finding = inquiryResponseVdoCookies.map(
+      async (inquiryResponseVdoCookie) => {
+        return await this.mediaSearchRepository.findInquiryResponseVideoWithId(
+          inquiryResponseVdoCookie.id,
+        );
+      },
+    );
+
+    return await Promise.all(finding);
   }
 }
