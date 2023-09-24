@@ -18,7 +18,7 @@ import { JsonGeneralInterface } from "src/common/interceptors/interface/json-gen
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ProductEntity } from "../../entities/product.entity";
-import { MediaDto } from "src/model/media/dto/media.dto";
+import { MediaCookieDto } from "src/model/media/dto/media-cookie.dto";
 import { productMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
 import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
 import { ModifyProductNameDto } from "../../dto/modify-product-name.dto";
@@ -76,7 +76,7 @@ export class ProductVersionOneOnlyAdminController {
   @Post("/")
   async createProduct(
     @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
-    productImgCookies: MediaDto[],
+    productImgCookies: MediaCookieDto[],
     @Body(ProductNameValidatePipe) productBodyDto: ProductBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
@@ -108,7 +108,7 @@ export class ProductVersionOneOnlyAdminController {
   @Put("/:id")
   async modifyProduct(
     @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
-    productImgCookies: MediaDto[],
+    productImgCookies: MediaCookieDto[],
     @Param("id", ProductIdValidatePipe) id: string,
     @Body(ProductNameValidatePipe) productBodyDto: ProductBodyDto,
   ): Promise<JsonClearCookiesInterface> {
@@ -134,7 +134,7 @@ export class ProductVersionOneOnlyAdminController {
   @Patch("/:id/image")
   async modifyProductImage(
     @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
-    productImgCookies: MediaDto[],
+    productImgCookies: MediaCookieDto[],
     @Param("id", ProductIdValidatePipe) id: string,
   ): Promise<JsonClearCookiesInterface> {
     await this.productTransaction.modifyProductImage(id, productImgCookies);
