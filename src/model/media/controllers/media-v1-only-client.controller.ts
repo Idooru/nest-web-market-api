@@ -39,6 +39,12 @@ import { ReviewVideoEntity } from "../entities/review-video.entity";
 import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { MediaSearcher } from "../logic/media.searcher";
+import { MediaOperationService } from "../services/media-operation.service";
+import { ReviewImageValidatePipe } from "../pipe/exist/review-image-validate.pipe";
+import { ReviewVideoValidatePipe } from "../pipe/exist/review-video-validate.pipe";
+import { InquiryRequestImageValidatePipe } from "../pipe/exist/inquiry-request-image-validate.pipe";
+import { InquiryRequestVideoValidatePipe } from "../pipe/exist/inquiry-request-video-validate.pipe";
 
 @ApiTags("v1 고객 Media API")
 @UseGuards(IsClientGuard)
@@ -46,14 +52,16 @@ import { ApiOperation, ApiTags } from "@nestjs/swagger";
 @Controller("/api/v1/only-client/media")
 export class MediaVersionOneOnlyClientController {
   constructor(
-    @Inject("ReviewMediaCookieKey")
-    private readonly reviewMedia: ReviewMediaCookieKey,
-    @Inject("InquiryMediaCookieKey")
-    private readonly inquiryMedia: InquiryMediaCookieKey,
+    private readonly mediaSearcher: MediaSearcher,
+    private readonly mediaOperationService: MediaOperationService,
     private readonly mediaGeneralService: MediaGeneralService,
     private readonly mediaAccessoryService: MediaAccessoryService,
     private readonly mediaBundleService: MediaBundleService,
     private readonly mediaLoggerLibrary: MediaLoggerLibrary,
+    @Inject("ReviewMediaCookieKey")
+    private readonly reviewMedia: ReviewMediaCookieKey,
+    @Inject("InquiryMediaCookieKey")
+    private readonly inquiryMedia: InquiryMediaCookieKey,
   ) {}
 
   @ApiOperation({
@@ -68,20 +76,14 @@ export class MediaVersionOneOnlyClientController {
     @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
     reviewImgCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<ReviewImageEntity[]>> {
-    const reviewImages = await this.mediaAccessoryService.findReviewImages(
+    const result = await this.mediaSearcher.findReviewImagesWithId(
       reviewImgCookies,
     );
-
-    const uploadedReviewImages =
-      await this.mediaGeneralService.findUploadedReviewImages(
-        jwtPayload.email,
-        reviewImages,
-      );
 
     return {
       statusCode: 200,
       message: "현재 업로드된 리뷰 이미지를 가져옵니다.",
-      result: uploadedReviewImages,
+      result,
     };
   }
 
@@ -97,20 +99,14 @@ export class MediaVersionOneOnlyClientController {
     @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
     reviewVdoCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<ReviewVideoEntity[]>> {
-    const reviewVideos = await this.mediaAccessoryService.findReviewVideos(
+    const result = await this.mediaSearcher.findReviewVideoWithId(
       reviewVdoCookies,
     );
-
-    const uploadedReviewVideos =
-      await this.mediaGeneralService.findUploadedReviewVideos(
-        jwtPayload.email,
-        reviewVideos,
-      );
 
     return {
       statusCode: 200,
       message: "현재 업로드된 리뷰 동영상을 가져옵니다.",
-      result: uploadedReviewVideos,
+      result,
     };
   }
 
@@ -126,21 +122,14 @@ export class MediaVersionOneOnlyClientController {
     @MediaCookiesParser(inquiryMediaCookieKey.request.image_url_cookie)
     inquiryRequestImgCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<InquiryRequestImageEntity[]>> {
-    const inquiryRequestImages =
-      await this.mediaAccessoryService.findInquiryRequestImages(
-        inquiryRequestImgCookies,
-      );
-
-    const uploadedInquiryRequestImages =
-      await this.mediaGeneralService.findUploadedInquiryRequestImages(
-        jwtPayload.email,
-        inquiryRequestImages,
-      );
+    const result = await this.mediaSearcher.findInquiryRequestImagesWithId(
+      inquiryRequestImgCookies,
+    );
 
     return {
       statusCode: 200,
       message: "현재 업로드된 문의 요청 이미지를 가져옵니다.",
-      result: uploadedInquiryRequestImages,
+      result,
     };
   }
 
@@ -156,21 +145,14 @@ export class MediaVersionOneOnlyClientController {
     @MediaCookiesParser(inquiryMediaCookieKey.request.video_url_cookie)
     inquiryRequestVdoCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<InquiryRequestVideoEntity[]>> {
-    const inquiryRequestVideos =
-      await this.mediaAccessoryService.findInquiryRequestVideos(
-        inquiryRequestVdoCookies,
-      );
-
-    const uploadedInquiryRequestVideos =
-      await this.mediaGeneralService.findUploadedInquiryRequestVideos(
-        jwtPayload.email,
-        inquiryRequestVideos,
-      );
+    const result = await this.mediaSearcher.findInquiryRequestVideosWithId(
+      inquiryRequestVdoCookies,
+    );
 
     return {
       statusCode: 200,
       message: "현재 업로드된 문의 요청 동영상을 가져옵니다.",
-      result: uploadedInquiryRequestVideos,
+      result,
     };
   }
 
@@ -189,22 +171,10 @@ export class MediaVersionOneOnlyClientController {
   )
   @Post("/review/image")
   async uploadReviewImage(
-    @UploadedFiles() files: Array<Express.Multer.File>,
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
+    @UploadedFiles(ReviewImageValidatePipe) files: Express.Multer.File[],
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
-    this.mediaAccessoryService.isExistMediaFiles("review image", files);
-    this.mediaLoggerLibrary.log("review images", files);
-
-    const urls = files.map((file) =>
-      this.mediaAccessoryService.setUrl(file.filename, "review/images"),
-    );
-
-    await this.mediaGeneralService.uploadReviewImage(files, jwtPayload, urls);
-
-    const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
-      this.reviewMedia.image_url_cookie,
+    const cookieValues = await this.mediaOperationService.uploadReviewImages(
       files,
-      urls,
     );
 
     return {
@@ -230,22 +200,10 @@ export class MediaVersionOneOnlyClientController {
   )
   @Post("/review/video")
   async uploadReviewVideo(
-    @UploadedFiles() files: Array<Express.Multer.File>,
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
+    @UploadedFiles(ReviewVideoValidatePipe) files: Express.Multer.File[],
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
-    this.mediaAccessoryService.isExistMediaFiles("review video", files);
-    this.mediaLoggerLibrary.log("review videos", files);
-
-    const urls = files.map((file) =>
-      this.mediaAccessoryService.setUrl(file.filename, "review/videos"),
-    );
-
-    await this.mediaGeneralService.uploadReviewVideo(files, jwtPayload, urls);
-
-    const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
-      this.reviewMedia.video_url_cookie,
+    const cookieValues = await this.mediaOperationService.uploadReviewVideos(
       files,
-      urls,
     );
 
     return {
@@ -271,33 +229,11 @@ export class MediaVersionOneOnlyClientController {
   )
   @Post("/inquiry/request/image")
   async uploadInquiryRequestImage(
-    @UploadedFiles() files: Array<Express.Multer.File>,
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
+    @UploadedFiles(InquiryRequestImageValidatePipe)
+    files: Express.Multer.File[],
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
-    this.mediaAccessoryService.isExistMediaFiles(
-      "inquiry request image",
-      files,
-    );
-    this.mediaLoggerLibrary.log("inquiry request images", files);
-
-    const urls = files.map((file) =>
-      this.mediaAccessoryService.setUrl(
-        file.filename,
-        "inquiry/request/images",
-      ),
-    );
-
-    await this.mediaGeneralService.uploadInquiryRequestImage(
-      files,
-      jwtPayload,
-      urls,
-    );
-
-    const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
-      this.inquiryMedia.request.image_url_cookie,
-      files,
-      urls,
-    );
+    const cookieValues =
+      await this.mediaOperationService.uploadInquiryRequestImages(files);
 
     return {
       statusCode: 201,
@@ -322,33 +258,11 @@ export class MediaVersionOneOnlyClientController {
   )
   @Post("/inquiry/request/video")
   async uploadInquiryRequestVideo(
-    @UploadedFiles() files: Array<Express.Multer.File>,
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
+    @UploadedFiles(InquiryRequestVideoValidatePipe)
+    files: Express.Multer.File[],
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
-    this.mediaAccessoryService.isExistMediaFiles(
-      "inquiry request video",
-      files,
-    );
-    this.mediaLoggerLibrary.log("inquiry request videos", files);
-
-    const urls = files.map((file) =>
-      this.mediaAccessoryService.setUrl(
-        file.filename,
-        "inquiry/request/videos",
-      ),
-    );
-
-    await this.mediaGeneralService.uploadInquiryRequestVideo(
-      files,
-      jwtPayload,
-      urls,
-    );
-
-    const cookieValues = this.mediaAccessoryService.createMediaCookieValues(
-      this.inquiryMedia.request.video_url_cookie,
-      files,
-      urls,
-    );
+    const cookieValues =
+      await this.mediaOperationService.uploadInquiryRequestVideos(files);
 
     return {
       statusCode: 201,
@@ -369,13 +283,9 @@ export class MediaVersionOneOnlyClientController {
     @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
     reviewImgCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
-    await this.mediaGeneralService.deleteReviewImagesWithCookies(
+    const cookieKey = await this.mediaOperationService.deleteReviewImagesWithId(
       reviewImgCookies,
     );
-
-    this.mediaBundleService.deleteMediaFile(reviewImgCookies, "images/review");
-
-    const cookieKey = reviewImgCookies.map((cookie) => cookie.whatCookie);
 
     return {
       statusCode: 200,
@@ -395,13 +305,9 @@ export class MediaVersionOneOnlyClientController {
     @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
     reviewVdoCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
-    await this.mediaGeneralService.deleteReviewVideosWithCookies(
+    const cookieKey = await this.mediaOperationService.deleteReviewVideosWithId(
       reviewVdoCookies,
     );
-
-    this.mediaBundleService.deleteMediaFile(reviewVdoCookies, "videos/review");
-
-    const cookieKey = reviewVdoCookies.map((cookie) => cookie.whatCookie);
 
     return {
       statusCode: 200,
@@ -421,18 +327,10 @@ export class MediaVersionOneOnlyClientController {
     @MediaCookiesParser(inquiryMediaCookieKey.request.image_url_cookie)
     inquiryRequestImgCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
-    await this.mediaGeneralService.deleteInquiryRequestImagesWithCookies(
-      inquiryRequestImgCookies,
-    );
-
-    this.mediaBundleService.deleteMediaFile(
-      inquiryRequestImgCookies,
-      "images/inquiry/request",
-    );
-
-    const cookieKey = inquiryRequestImgCookies.map(
-      (cookie) => cookie.whatCookie,
-    );
+    const cookieKey =
+      await this.mediaOperationService.deleteInquiryRequestImagesWithId(
+        inquiryRequestImgCookies,
+      );
 
     return {
       statusCode: 200,
@@ -452,18 +350,10 @@ export class MediaVersionOneOnlyClientController {
     @MediaCookiesParser(inquiryMediaCookieKey.request.video_url_cookie)
     inquiryRequestVdoCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
-    await this.mediaGeneralService.deleteInquiryRequestVideosWithCookies(
-      inquiryRequestVdoCookies,
-    );
-
-    this.mediaBundleService.deleteMediaFile(
-      inquiryRequestVdoCookies,
-      "videos/inquiry/request",
-    );
-
-    const cookieKey = inquiryRequestVdoCookies.map(
-      (cookie) => cookie.whatCookie,
-    );
+    const cookieKey =
+      await this.mediaOperationService.deleteInquiryRequestVideosWithId(
+        inquiryRequestVdoCookies,
+      );
 
     return {
       statusCode: 200,
