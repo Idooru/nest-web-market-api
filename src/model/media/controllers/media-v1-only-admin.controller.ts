@@ -223,7 +223,7 @@ export class MediaVersionOneOnlyAdminController {
     productImgCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
     const cookieKey =
-      await this.mediaOperationService.deleteProductImagesWithIds(
+      await this.mediaOperationService.deleteProductImagesWithId(
         productImgCookies,
       );
 
@@ -246,7 +246,7 @@ export class MediaVersionOneOnlyAdminController {
     inquiryResponseImgCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
     const cookieKey =
-      await this.mediaOperationService.deleteInquiryResponseImagesWithIds(
+      await this.mediaOperationService.deleteInquiryResponseImagesWithId(
         inquiryResponseImgCookies,
       );
 
@@ -269,7 +269,7 @@ export class MediaVersionOneOnlyAdminController {
     inquiryResponseVdoCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
     const cookieKey =
-      await this.mediaOperationService.deleteInquiryResponseVideosWithIds(
+      await this.mediaOperationService.deleteInquiryResponseVideosWithId(
         inquiryResponseVdoCookies,
       );
 
