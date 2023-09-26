@@ -23,6 +23,13 @@ import { mediaSelectProperty } from "src/common/config/repository-select-configs
 import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
 import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 import { productMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
+import { MediaSearcher } from "./logic/media.searcher";
+import { MediaSearchRepository } from "./repositories/media-search.repository";
+import { productSelectProperty } from "../../common/config/repository-select-configs/product.select";
+import { MediaValidator } from "./logic/media.validator";
+import { MediaOperationService } from "./services/media-operation.service";
+import { MediaUtils } from "./logic/media.utils";
+import { MediaOperationRepository } from "./repositories/media-operation.repository";
 
 @Module({
   imports: [
@@ -46,22 +53,17 @@ import { productMediaCookieKey } from "src/common/config/cookie-key-configs/medi
     MediaVersionOneOnlyAdminController,
   ],
   providers: [
-    {
-      provide: "ProductMediaCookieKey",
-      useValue: productMediaCookieKey,
-    },
-    {
-      provide: "ReviewMediaCookieKey",
-      useValue: reviewMediaCookieKey,
-    },
-    {
-      provide: "InquiryMediaCookieKey",
-      useValue: inquiryMediaCookieKey,
-    },
-    {
-      provide: "MediaSelectProperty",
-      useValue: mediaSelectProperty,
-    },
+    { provide: "ProductMediaCookieKey", useValue: productMediaCookieKey },
+    { provide: "ReviewMediaCookieKey", useValue: reviewMediaCookieKey },
+    { provide: "InquiryMediaCookieKey", useValue: inquiryMediaCookieKey },
+    { provide: "MediaSelectProperty", useValue: mediaSelectProperty },
+    { provide: "ProductsSelectProperty", useValue: productSelectProperty },
+    MediaSearcher,
+    MediaValidator,
+    MediaUtils,
+    MediaOperationService,
+    MediaOperationRepository,
+    MediaSearchRepository,
     MediaGeneralService,
     MediaAccessoryService,
     MediaBundleService,
@@ -69,6 +71,11 @@ import { productMediaCookieKey } from "src/common/config/cookie-key-configs/medi
     MediaInsertRepository,
   ],
   exports: [
+    {
+      provide: "ProductMediaCookieKey",
+      useValue: productMediaCookieKey,
+    },
+    MediaSearcher,
     MediaGeneralService,
     MediaAccessoryService,
     MediaBundleService,
