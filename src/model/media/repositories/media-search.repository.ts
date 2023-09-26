@@ -51,6 +51,46 @@ export class MediaSearchRepository {
       .getMany();
   }
 
+  async findReviewImageWithId(id: string): Promise<ReviewImageEntity> {
+    return await this.reviewImageRepository
+      .createQueryBuilder()
+      .select(this.mediaSelect.reviewImages)
+      .from(ReviewImageEntity, "reviewImage")
+      .where("reviewImage.id = :id", { id })
+      .getOne();
+  }
+
+  async findReviewVideoWithId(id: string): Promise<ReviewVideoEntity> {
+    return await this.reviewVideoRepository
+      .createQueryBuilder()
+      .select(this.mediaSelect.reviewVideos)
+      .from(ReviewVideoEntity, "reviewVideo")
+      .where("reviewVideo.id = :id", { id })
+      .getOne();
+  }
+
+  async findInquiryRequestImageWithId(
+    id: string,
+  ): Promise<InquiryRequestImageEntity> {
+    return await this.inquiryRequestImageRepository
+      .createQueryBuilder()
+      .select(this.mediaSelect.inquiryRequestImages)
+      .from(InquiryRequestImageEntity, "inquiryRequestImage")
+      .where("inquiryRequestImage.id = :id", { id })
+      .getOne();
+  }
+
+  async findInquiryRequestVideoWithId(
+    id: string,
+  ): Promise<InquiryRequestVideoEntity> {
+    return await this.inquiryRequestVideoRepository
+      .createQueryBuilder()
+      .select(this.mediaSelect.inquiryRequestVideos)
+      .from(InquiryRequestVideoEntity, "inquiryRequestVideo")
+      .where("inquiryRequestVideo.id = :id", { id })
+      .getOne();
+  }
+
   async findInquiryResponseImageWithId(
     id: string,
   ): Promise<InquiryResponseImageEntity> {
