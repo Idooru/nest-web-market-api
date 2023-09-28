@@ -32,12 +32,12 @@ export class ProductOperationService {
     insertProductImageDto: InsertProductImageDto,
   ): Promise<void> {
     const { productImages, product } = insertProductImageDto;
-    const insertWork = productImages.map(async (productImage) => {
-      await this.productOperationRepository.insertProductIdOnProductImage(
+    const insertWork = productImages.map((productImage) =>
+      this.productOperationRepository.insertProductIdOnProductImage(
         productImage,
         product,
-      );
-    });
+      ),
+    );
 
     await Promise.all(insertWork);
   }
@@ -53,21 +53,21 @@ export class ProductOperationService {
   ): Promise<void> {
     const { beforeProductImages, newProductImages, product } =
       modifyProductImageDto;
-    const modifyWork = newProductImages.map(async (productImage) => {
-      await this.productOperationRepository.insertProductIdOnProductImage(
+    const modifyWork = newProductImages.map((productImage) =>
+      this.productOperationRepository.insertProductIdOnProductImage(
         productImage,
         product,
-      );
-    });
+      ),
+    );
 
     await Promise.all(modifyWork);
 
     if (beforeProductImages.length >= 1) {
-      const deleteWork = beforeProductImages.map(async (productImage) => {
-        await this.productOperationRepository.deleteProductImageWithId(
+      const deleteWork = beforeProductImages.map((productImage) =>
+        this.productOperationRepository.deleteProductImageWithId(
           productImage.id,
-        );
-      });
+        ),
+      );
 
       await Promise.all(deleteWork);
     }

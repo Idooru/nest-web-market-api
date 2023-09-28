@@ -38,10 +38,10 @@ export class ProductTransaction {
       });
 
       const createStarRate =
-        await this.productFunctionService.getCreateStarRateFunc(product);
+        this.productFunctionService.getCreateStarRateFunc(product);
 
       const insertProductImage =
-        await this.productFunctionService.getInsertProductImageFunc({
+        this.productFunctionService.getInsertProductImageFunc({
           productImages,
           product,
         });
@@ -74,7 +74,7 @@ export class ProductTransaction {
       });
 
       const modifyProductImage =
-        await this.productFunctionService.getModifyProductImageFunc({
+        this.productFunctionService.getModifyProductImageFunc({
           beforeProductImages,
           newProductImages,
           product,
@@ -104,7 +104,7 @@ export class ProductTransaction {
 
     try {
       const modifyProductImage =
-        await this.productFunctionService.getModifyProductImageFunc({
+        this.productFunctionService.getModifyProductImageFunc({
           beforeProductImages,
           newProductImages,
           product,

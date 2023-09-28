@@ -10,15 +10,15 @@ export class ProductFunctionService {
     private readonly productOperationService: ProductOperationService,
   ) {}
 
-  async getCreateStarRateFunc(product: ProductEntity): Promise<() => void> {
+  getCreateStarRateFunc(product: ProductEntity): () => void {
     return async () => {
       await this.productOperationService.createStarRate(product);
     };
   }
 
-  async getInsertProductImageFunc(
+  getInsertProductImageFunc(
     insertProductImageDto: InsertProductImageDto,
-  ): Promise<() => void> {
+  ): () => void {
     return async () => {
       await this.productOperationService.insertProductImages(
         insertProductImageDto,
@@ -26,9 +26,9 @@ export class ProductFunctionService {
     };
   }
 
-  async getModifyProductImageFunc(
+  getModifyProductImageFunc(
     modifyProductImageDto: ModifyProductImageDto,
-  ): Promise<() => void> {
+  ): () => void {
     return async () => {
       await this.productOperationService.modifyProductImages(
         modifyProductImageDto,

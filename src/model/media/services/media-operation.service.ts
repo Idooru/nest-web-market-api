@@ -26,12 +26,12 @@ export class MediaOperationService {
     const path = "product/images";
     const stuffs = this.mediaUtils.createStuffs(files, path);
 
-    const uploading = stuffs.map(async ({ url, size }) => {
-      return await this.mediaOperationRepository.uploadProductImages({
+    const uploading = stuffs.map(({ url, size }) =>
+      this.mediaOperationRepository.uploadProductImages({
         url,
         size,
-      });
-    });
+      }),
+    );
 
     const productImages = await Promise.all(uploading);
 
@@ -52,12 +52,12 @@ export class MediaOperationService {
     const path = "review/images";
     const stuffs = this.mediaUtils.createStuffs(files, path);
 
-    const uploading = stuffs.map(async ({ url, size }) => {
-      return await this.mediaOperationRepository.uploadReviewImage({
+    const uploading = stuffs.map(({ url, size }) =>
+      this.mediaOperationRepository.uploadReviewImage({
         url,
         size,
-      });
-    });
+      }),
+    );
 
     const reviewImages = await Promise.all(uploading);
 
@@ -78,12 +78,12 @@ export class MediaOperationService {
     const path = "review/videos";
     const stuffs = this.mediaUtils.createStuffs(files, path);
 
-    const uploading = stuffs.map(async ({ url, size }) => {
-      return await this.mediaOperationRepository.uploadReviewVideo({
+    const uploading = stuffs.map(({ url, size }) =>
+      this.mediaOperationRepository.uploadReviewVideo({
         url,
         size,
-      });
-    });
+      }),
+    );
 
     const reviewVideos = await Promise.all(uploading);
 
@@ -104,12 +104,12 @@ export class MediaOperationService {
     const path = "inquiry/request/images";
     const stuffs = this.mediaUtils.createStuffs(files, path);
 
-    const uploading = stuffs.map(async ({ url, size }) => {
-      return await this.mediaOperationRepository.uploadInquiryRequestImage({
+    const uploading = stuffs.map(({ url, size }) =>
+      this.mediaOperationRepository.uploadInquiryRequestImage({
         url,
         size,
-      });
-    });
+      }),
+    );
 
     const inquiryRequestImages = await Promise.all(uploading);
 
@@ -132,12 +132,12 @@ export class MediaOperationService {
     const path = "inquiry/request/videos";
     const stuffs = this.mediaUtils.createStuffs(files, path);
 
-    const uploading = stuffs.map(async ({ url, size }) => {
-      return await this.mediaOperationRepository.uploadInquiryRequestVideo({
+    const uploading = stuffs.map(({ url, size }) =>
+      this.mediaOperationRepository.uploadInquiryRequestVideo({
         url,
         size,
-      });
-    });
+      }),
+    );
 
     const inquiryRequestVideos = await Promise.all(uploading);
 
@@ -160,12 +160,12 @@ export class MediaOperationService {
     const path = "inquiry/response/images";
     const stuffs = this.mediaUtils.createStuffs(files, path);
 
-    const uploading = stuffs.map(async ({ url, size }) => {
-      return await this.mediaOperationRepository.uploadInquiryResponseImages({
+    const uploading = stuffs.map(({ url, size }) =>
+      this.mediaOperationRepository.uploadInquiryResponseImages({
         url,
         size,
-      });
-    });
+      }),
+    );
 
     const inquiryResponseImages = await Promise.all(uploading);
 
@@ -188,12 +188,12 @@ export class MediaOperationService {
     const path = "inquiry/response/videos";
     const stuffs = this.mediaUtils.createStuffs(files, path);
 
-    const uploading = stuffs.map(async ({ url, size }) => {
-      return await this.mediaOperationRepository.uploadInquiryResponseVideos({
+    const uploading = stuffs.map(({ url, size }) =>
+      this.mediaOperationRepository.uploadInquiryResponseVideos({
         url,
         size,
-      });
-    });
+      }),
+    );
 
     const inquiryResponseVideos = await Promise.all(uploading);
 
@@ -213,11 +213,11 @@ export class MediaOperationService {
   public async deleteProductImagesWithId(
     productImgCookies: MediaCookieDto[],
   ): Promise<string[]> {
-    const deleting = productImgCookies.map(async (productImgCookie) => {
-      await this.mediaOperationRepository.deleteProductImageWithId(
+    const deleting = productImgCookies.map((productImgCookie) =>
+      this.mediaOperationRepository.deleteProductImageWithId(
         productImgCookie.id,
-      );
-    });
+      ),
+    );
 
     // this.mediaBundleService.deleteMediaFile(
     //   productImgCookies,
@@ -235,12 +235,8 @@ export class MediaOperationService {
   public async deleteReviewImagesWithId(
     reviewImgCookies: MediaCookieDto[],
   ): Promise<string[]> {
-    const deleting = reviewImgCookies.map(
-      async (reviewImgCookie: MediaCookieDto) => {
-        await this.mediaOperationRepository.deleteReviewImageWithId(
-          reviewImgCookie.id,
-        );
-      },
+    const deleting = reviewImgCookies.map((reviewImgCookie) =>
+      this.mediaOperationRepository.deleteReviewImageWithId(reviewImgCookie.id),
     );
 
     // this.mediaBundleService.deleteMediaFile(
@@ -259,12 +255,8 @@ export class MediaOperationService {
   public async deleteReviewVideosWithId(
     reviewVdoCookies: MediaCookieDto[],
   ): Promise<string[]> {
-    const deleting = reviewVdoCookies.map(
-      async (reviewVdoCookie: MediaCookieDto) => {
-        await this.mediaOperationRepository.deleteReviewVideoWithId(
-          reviewVdoCookie.id,
-        );
-      },
+    const deleting = reviewVdoCookies.map((reviewVdoCookie) =>
+      this.mediaOperationRepository.deleteReviewVideoWithId(reviewVdoCookie.id),
     );
 
     // this.mediaBundleService.deleteMediaFile(
@@ -283,12 +275,10 @@ export class MediaOperationService {
   public async deleteInquiryRequestImagesWithId(
     inquiryRequestImgCookies: MediaCookieDto[],
   ): Promise<string[]> {
-    const deleting = inquiryRequestImgCookies.map(
-      async (inquiryRequestImgCookie) => {
-        await this.mediaOperationRepository.deleteInquiryRequestImageWithId(
-          inquiryRequestImgCookie.id,
-        );
-      },
+    const deleting = inquiryRequestImgCookies.map((inquiryRequestImgCookie) =>
+      this.mediaOperationRepository.deleteInquiryRequestImageWithId(
+        inquiryRequestImgCookie.id,
+      ),
     );
 
     // this.mediaBundleService.deleteMediaFile(
@@ -307,12 +297,10 @@ export class MediaOperationService {
   public async deleteInquiryRequestVideosWithId(
     inquiryRequestVdoCookies: MediaCookieDto[],
   ): Promise<string[]> {
-    const deleting = inquiryRequestVdoCookies.map(
-      async (inquiryRequestVdoCookie) => {
-        await this.mediaOperationRepository.deleteInquiryRequestVideoWithId(
-          inquiryRequestVdoCookie.id,
-        );
-      },
+    const deleting = inquiryRequestVdoCookies.map((inquiryRequestVdoCookie) =>
+      this.mediaOperationRepository.deleteInquiryRequestVideoWithId(
+        inquiryRequestVdoCookie.id,
+      ),
     );
 
     // this.mediaBundleService.deleteMediaFile(
@@ -331,12 +319,10 @@ export class MediaOperationService {
   public async deleteInquiryResponseImagesWithId(
     inquiryResponseImgCookies: MediaCookieDto[],
   ): Promise<string[]> {
-    const deleting = inquiryResponseImgCookies.map(
-      async (inquiryResponseImgCookie) => {
-        await this.mediaOperationRepository.deleteInquiryResponseImageWithId(
-          inquiryResponseImgCookie.id,
-        );
-      },
+    const deleting = inquiryResponseImgCookies.map((inquiryResponseImgCookie) =>
+      this.mediaOperationRepository.deleteInquiryResponseImageWithId(
+        inquiryResponseImgCookie.id,
+      ),
     );
 
     // this.mediaBundleService.deleteMediaFile(
@@ -355,12 +341,10 @@ export class MediaOperationService {
   public async deleteInquiryResponseVideosWithId(
     inquiryResponseVdoCookies: MediaCookieDto[],
   ): Promise<string[]> {
-    const deleting = inquiryResponseVdoCookies.map(
-      async (inquiryResponseVdoCookie) => {
-        await this.mediaOperationRepository.deleteInquiryResponseVideoWithId(
-          inquiryResponseVdoCookie.id,
-        );
-      },
+    const deleting = inquiryResponseVdoCookies.map((inquiryResponseVdoCookie) =>
+      this.mediaOperationRepository.deleteInquiryResponseVideoWithId(
+        inquiryResponseVdoCookie.id,
+      ),
     );
 
     // this.mediaBundleService.deleteMediaFile(
