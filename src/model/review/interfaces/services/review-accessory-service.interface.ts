@@ -1,24 +1,24 @@
-import { MediaDto } from "src/model/media/dto/media.dto";
+import { MediaCookieDto } from "src/model/media/dto/media-cookie.dto";
 import { ReviewEntity } from "../../entities/review.entity";
 import { ReviewImageEntity } from "src/model/media/entities/review-image.entity";
 import { ReviewVideoEntity } from "src/model/media/entities/review-video.entity";
 
 export interface IReviewAccessoryService {
   // pushMoreThenTwoReviewImageInDto(
-  //   reviewImgCookies: MediaDto[],
-  //   reviewRequestDto: ReviewDto,
+  //   reviewImgCookies: MediaCookieDto[],
+  //   reviewRequestDto: ReviewBodyDto,
   // ): Promise<void>;
   // pushOneReviewImageInDto(
-  //   reviewImgCookies: MediaDto[],
-  //   reviewRequestDto: ReviewDto,
+  //   reviewImgCookies: MediaCookieDto[],
+  //   reviewRequestDto: ReviewBodyDto,
   // ): Promise<void>;
   // pushMoreThenTwoReviewVideoInDto(
-  //   reviewVdoCookies: MediaDto[],
-  //   reviewRequestDto: ReviewDto,
+  //   reviewVdoCookies: MediaCookieDto[],
+  //   reviewRequestDto: ReviewBodyDto,
   // ): Promise<void>;
   // pushOneReviewVideoInDto(
-  //   reviewVdoCookies: MediaDto[],
-  //   reviewRequestDto: ReviewDto,
+  //   reviewVdoCookies: MediaCookieDto[],
+  //   reviewRequestDto: ReviewBodyDto,
   // ): Promise<void>;
   // insertReviewIdOnMoreThenTwoReviewImage(
   //   reviewImages: ReviewImageEntity[],
@@ -46,8 +46,12 @@ export interface IReviewAccessoryService {
   // deleteOneReviewVideo(beforeReviewVideo: ReviewVideoEntity): Promise<void>;
   // pushReviewImages(pushReviewImageDto: PushReviewImageDto): Promise<void>;
   // pushReviewVideos(pushReviewVideoDto: PushReviewVideoDto): Promise<void>;
-  getReviewImages(reviewImgCookies: MediaDto[]): Promise<ReviewImageEntity[]>;
-  getReviewVideos(reviewVdoCookies: MediaDto[]): Promise<ReviewVideoEntity[]>;
+  getReviewImages(
+    reviewImgCookies: MediaCookieDto[],
+  ): Promise<ReviewImageEntity[]>;
+  getReviewVideos(
+    reviewVdoCookies: MediaCookieDto[],
+  ): Promise<ReviewVideoEntity[]>;
   insertReviewImages(
     review: ReviewEntity,
     reviewImages: ReviewImageEntity[],

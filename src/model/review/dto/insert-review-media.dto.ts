@@ -1,10 +1,10 @@
-import { MediaDto } from "src/model/media/dto/media.dto";
+import { MediaCookieDto } from "src/model/media/dto/media-cookie.dto";
 import { ReviewEntity } from "../entities/review.entity";
-import { ReviewDto } from "./review.dto";
+import { ReviewBodyDto } from "./review.dto";
 
 export class InsertReviewMediaDto {
-  reviewRequestDto: ReviewDto;
+  reviewRequestDto: ReviewBodyDto;
   review: ReviewEntity;
-  reviewImgCookies?: MediaDto[];
-  reviewVdoCookies?: MediaDto[];
+  reviewImgCookies?: MediaCookieDto[];
+  reviewVdoCookies?: MediaCookieDto[];
 }

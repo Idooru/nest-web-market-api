@@ -1,8 +1,8 @@
-import { MediaDto } from "src/model/media/dto/media.dto";
-import { ReviewDto } from "./review.dto";
+import { MediaCookieDto } from "src/model/media/dto/media-cookie.dto";
+import { ReviewBodyDto } from "./review.dto";
 
 export class PushReviewMediaDto {
-  reviewRequestDto: ReviewDto;
-  reviewImgCookies?: MediaDto[];
-  reviewVdoCookies?: MediaDto[];
+  reviewRequestDto: ReviewBodyDto;
+  reviewImgCookies?: MediaCookieDto[];
+  reviewVdoCookies?: MediaCookieDto[];
 }

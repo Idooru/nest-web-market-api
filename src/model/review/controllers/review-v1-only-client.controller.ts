@@ -20,7 +20,7 @@ import { StarRateGeneralService } from "../services/star-rate-general.service";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
 import { VerifyDataGuard } from "src/common/guards/verify/verify-data.guard";
-import { ReviewDto } from "../dto/review.dto";
+import { ReviewBodyDto } from "../dto/review.dto";
 import { ReviewBundleService } from "../services/review-bundle.service";
 import { MediaCookieDto } from "src/model/media/dto/media-cookie.dto";
 import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
@@ -54,7 +54,7 @@ export class ReviewVersionOneOnlyClientController {
     reviewImgCookies: MediaCookieDto[],
     @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
     reviewVdoCookies: MediaCookieDto[],
-    @Body() reviewRequestDto: ReviewDto,
+    @Body() reviewRequestDto: ReviewBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
     const review = await this.reviewGeneralService.createReview({
@@ -99,7 +99,7 @@ export class ReviewVersionOneOnlyClientController {
     @Param("productId") productId: string,
     @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
     reviewImgCookies: MediaCookieDto[],
-    @Body() reviewRequestDto: ReviewDto,
+    @Body() reviewRequestDto: ReviewBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
     const review = await this.reviewGeneralService.createReview({
@@ -137,7 +137,7 @@ export class ReviewVersionOneOnlyClientController {
     @Param("productId") productId: string,
     @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
     reviewVdoCookies: MediaCookieDto[],
-    @Body() reviewRequestDto: ReviewDto,
+    @Body() reviewRequestDto: ReviewBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
     const review = await this.reviewGeneralService.createReview({
@@ -172,7 +172,7 @@ export class ReviewVersionOneOnlyClientController {
   @Post("/product/:productId")
   async createReviewWithoutMedia(
     @Param("productId") productId: string,
-    @Body() reviewRequestDto: ReviewDto,
+    @Body() reviewRequestDto: ReviewBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
     const createWork = () =>
@@ -213,7 +213,7 @@ export class ReviewVersionOneOnlyClientController {
     reviewImgCookies: MediaCookieDto[],
     @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
     reviewVdoCookies: MediaCookieDto[],
-    @Body() reviewRequestDto: ReviewDto,
+    @Body() reviewRequestDto: ReviewBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
     const review = await this.reviewBundleService.distinguishOwnReview(
@@ -273,7 +273,7 @@ export class ReviewVersionOneOnlyClientController {
     @Param("reviewId") reviewId: string,
     @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
     reviewImgCookies: MediaCookieDto[],
-    @Body() reviewRequestDto: ReviewDto,
+    @Body() reviewRequestDto: ReviewBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
     const review = await this.reviewBundleService.distinguishOwnReview(
@@ -330,7 +330,7 @@ export class ReviewVersionOneOnlyClientController {
     @Param("reviewId") reviewId: string,
     @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
     reviewVdoCookies: MediaCookieDto[],
-    @Body() reviewRequestDto: ReviewDto,
+    @Body() reviewRequestDto: ReviewBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
     const review = await this.reviewBundleService.distinguishOwnReview(
@@ -385,7 +385,7 @@ export class ReviewVersionOneOnlyClientController {
   async modifyReviewWithoutMedia(
     @Param("productId") productId: string,
     @Param("reviewId") reviewId: string,
-    @Body() reviewRequestDto: ReviewDto,
+    @Body() reviewRequestDto: ReviewBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
     const review = await this.reviewBundleService.distinguishOwnReview(

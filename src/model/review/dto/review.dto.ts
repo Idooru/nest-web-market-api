@@ -1,7 +1,7 @@
 import { ApiProperty, PickType } from "@nestjs/swagger";
 import { ReviewEntity } from "../entities/review.entity";
 
-export class ReviewDto extends PickType(ReviewEntity, [
+export class ReviewBodyDto extends PickType(ReviewEntity, [
   "title",
   "content",
   "scoreChosenByClient",
