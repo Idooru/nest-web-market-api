@@ -5,12 +5,12 @@ import { ModifyUserDto } from "../../dtos/modify-user.dto";
 import { EmailSenderLibrary } from "src/common/lib/email/email-sender.library";
 import { loggerFactory } from "src/common/functions/logger.factory";
 import { UserOperationService } from "../../services/user-operation.service";
-import { UserInit } from "./user.init";
+import { UserQueryRunnerInit } from "./user-query-runner.init";
 
 @Injectable()
 export class UserTransaction {
   constructor(
-    private readonly userInit: UserInit,
+    private readonly userInit: UserQueryRunnerInit,
     private readonly userOperationService: UserOperationService,
     private readonly emailSenderLibrary: EmailSenderLibrary,
   ) {}

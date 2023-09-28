@@ -20,7 +20,7 @@ import { UserSecurity } from "./logic/user.security";
 import { UserOperationRepository } from "./repositories/user-operation.repository";
 import { UserSearchRepository } from "./repositories/user-search.repository";
 import { UserOperationService } from "./services/user-operation.service";
-import { UserInit } from "./logic/transaction/user.init";
+import { UserQueryRunnerInit } from "./logic/transaction/user-query-runner.init";
 import { UserValidateRepository } from "./repositories/user-validate.repository";
 import { UserValidator } from "./logic/user.validator";
 
@@ -52,7 +52,7 @@ import { UserValidator } from "./logic/user.validator";
     UserValidator,
     UserSecurity,
     UserTransaction,
-    UserInit,
+    UserQueryRunnerInit,
     UserRepositoryVO,
     UserOperationService,
     UserSearchRepository,

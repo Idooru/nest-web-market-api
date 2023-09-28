@@ -9,7 +9,7 @@ import { StarRateEntity } from "../../../review/entities/star-rate.entity";
 import { ProductImageEntity } from "../../../media/entities/product-image.entity";
 
 @Injectable()
-export class ProductInit {
+export class ProductQueryRunnerInit {
   constructor(
     private readonly dataSource: DataSource,
     private readonly productRepositoryVO: ProductRepositoryVO,

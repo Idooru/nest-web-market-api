@@ -9,12 +9,12 @@ import { MediaSearcher } from "src/model/media/logic/media.searcher";
 import { ModifyProductDto } from "../../dto/modify-product.dto";
 import { ProductSearcher } from "../product.searcher";
 import { MediaCookieDto } from "../../../media/dto/media-cookie.dto";
-import { ProductInit } from "./product.init";
+import { ProductQueryRunnerInit } from "./product-query-runner.init";
 
 @Injectable()
 export class ProductTransaction {
   constructor(
-    private readonly productInit: ProductInit,
+    private readonly productInit: ProductQueryRunnerInit,
     private readonly productSearcher: ProductSearcher,
     private readonly userSearcher: UserSearcher,
     private readonly mediaSearcher: MediaSearcher,
