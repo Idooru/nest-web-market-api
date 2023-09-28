@@ -9,12 +9,12 @@ import { MediaSearcher } from "src/model/media/logic/media.searcher";
 import { ModifyProductDto } from "../../dto/modify-product.dto";
 import { ProductSearcher } from "../product.searcher";
 import { MediaCookieDto } from "../../../media/dto/media-cookie.dto";
-import { ProductQueryRunnerInit } from "./product-query-runner.init";
+import { ProductQueryRunnerProvider } from "./product-query-runner.provider";
 
 @Injectable()
 export class ProductTransaction {
   constructor(
-    private readonly productInit: ProductQueryRunnerInit,
+    private readonly productQueryRunnerProvider: ProductQueryRunnerProvider,
     private readonly productSearcher: ProductSearcher,
     private readonly userSearcher: UserSearcher,
     private readonly mediaSearcher: MediaSearcher,
@@ -23,7 +23,7 @@ export class ProductTransaction {
   ) {}
 
   async createProduct(createProductDto: CreateProductDto): Promise<void> {
-    const queryRunner = await this.productInit.init();
+    const queryRunner = await this.productQueryRunnerProvider.init();
     const { productBodyDto, jwtPayload, productImgCookies } = createProductDto;
 
     const [admin, productImages] = await Promise.all([
@@ -58,7 +58,7 @@ export class ProductTransaction {
   }
 
   async modifyProduct(modifyProductDto: ModifyProductDto): Promise<void> {
-    const queryRunner = await this.productInit.init();
+    const queryRunner = await this.productQueryRunnerProvider.init();
     const { id, productBodyDto, productImgCookies } = modifyProductDto;
 
     const [product, beforeProductImages, newProductImages] = await Promise.all([
@@ -95,7 +95,7 @@ export class ProductTransaction {
     id: string,
     productImgCookies: MediaCookieDto[],
   ): Promise<void> {
-    const queryRunner = await this.productInit.init();
+    const queryRunner = await this.productQueryRunnerProvider.init();
     const [product, beforeProductImages, newProductImages] = await Promise.all([
       this.productSearcher.findProductWithId(id),
       this.mediaSearcher.findBeforeProductImageWithId(id),

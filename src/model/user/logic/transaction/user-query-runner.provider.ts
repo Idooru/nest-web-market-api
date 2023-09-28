@@ -8,7 +8,7 @@ import { UserAuthEntity } from "../../entities/user-auth.entity";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
-export class UserQueryRunnerInit {
+export class UserQueryRunnerProvider {
   constructor(
     private readonly dataSource: DataSource,
     private readonly userRepositoryVO: UserRepositoryVO,

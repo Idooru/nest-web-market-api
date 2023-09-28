@@ -25,7 +25,7 @@ import { ProductTransaction } from "./logic/transaction/product.transaction";
 import { ProductOperationService } from "./services/product-operation.service";
 import { ProductOperationRepository } from "./repositories/product-operation.repository";
 import { ProductEntity } from "./entities/product.entity";
-import { ProductQueryRunnerInit } from "./logic/transaction/product-query-runner.init";
+import { ProductQueryRunnerProvider } from "./logic/transaction/product-query-runner.provider";
 import { ProductValidator } from "./logic/product.validator";
 import { ProductValidateRepository } from "./repositories/product-validate.repository";
 
@@ -58,7 +58,7 @@ import { ProductValidateRepository } from "./repositories/product-validate.repos
     },
     ProductSearcher,
     ProductValidator,
-    ProductQueryRunnerInit,
+    ProductQueryRunnerProvider,
     ProductTransaction,
     ProductRepositoryVO,
     ProductOperationService,

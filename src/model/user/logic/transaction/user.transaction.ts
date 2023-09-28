@@ -5,18 +5,18 @@ import { ModifyUserDto } from "../../dtos/modify-user.dto";
 import { EmailSenderLibrary } from "src/common/lib/email/email-sender.library";
 import { loggerFactory } from "src/common/functions/logger.factory";
 import { UserOperationService } from "../../services/user-operation.service";
-import { UserQueryRunnerInit } from "./user-query-runner.init";
+import { UserQueryRunnerProvider } from "./user-query-runner.provider";
 
 @Injectable()
 export class UserTransaction {
   constructor(
-    private readonly userInit: UserQueryRunnerInit,
+    private readonly userQueryRunnerProvider: UserQueryRunnerProvider,
     private readonly userOperationService: UserOperationService,
     private readonly emailSenderLibrary: EmailSenderLibrary,
   ) {}
 
   async register(registerUserDto: RegisterUserDto): Promise<void> {
-    const queryRunner = await this.userInit.init();
+    const queryRunner = await this.userQueryRunnerProvider.init();
 
     try {
       const user = await this.userOperationService.createUserEntity(
@@ -41,7 +41,7 @@ export class UserTransaction {
   }
 
   async modifyUser(modifyUserDto: ModifyUserDto, id: string): Promise<void> {
-    const queryRunner = await this.userInit.init();
+    const queryRunner = await this.userQueryRunnerProvider.init();
 
     try {
       await this.userOperationService.modifyUser(modifyUserDto, id);
