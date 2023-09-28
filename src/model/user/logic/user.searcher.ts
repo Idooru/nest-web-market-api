@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { UserSearchRepository } from "../repositories/user-search.repository";
 import { UserEntity } from "../entities/user.entity";
-import { ValidateLibrary } from "src/common/lib/util/validate.library";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ClientUserEntity } from "../entities/client-user.entity";
 import { AdminUserEntity } from "../entities/admin-user.entity";
