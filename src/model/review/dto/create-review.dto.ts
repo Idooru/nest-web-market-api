@@ -1,12 +1,14 @@
-import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { ReviewBodyDto } from "./review-body.dto";
+import { MediaCookieDto } from "../../media/dto/media-cookie.dto";
 
 export class CreateReviewDto {
   reviewRequestDto: ReviewBodyDto;
-  jwtPayload: JwtAccessTokenPayload;
+  userId?: string;
   productId: string;
+  reviewImgCookies?: MediaCookieDto[];
+  reviewVdoCookies?: MediaCookieDto[];
 }
 
 export class CreateReviewDao {

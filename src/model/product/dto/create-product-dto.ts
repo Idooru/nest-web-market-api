@@ -5,7 +5,7 @@ import { ProductBodyDto } from "./product-body.dto";
 
 export class CreateProductDto {
   productBodyDto: ProductBodyDto;
-  jwtPayload?: JwtAccessTokenPayload;
+  userId?: string;
   productImgCookies?: MediaCookieDto[];
   admin?: AdminUserEntity;
 }

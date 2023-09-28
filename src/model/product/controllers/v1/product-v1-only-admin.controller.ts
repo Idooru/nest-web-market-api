@@ -82,7 +82,7 @@ export class ProductVersionOneOnlyAdminController {
   ): Promise<JsonClearCookiesInterface> {
     await this.productTransaction.createProduct({
       productBodyDto,
-      jwtPayload,
+      userId: jwtPayload.userId,
       productImgCookies,
     });
 

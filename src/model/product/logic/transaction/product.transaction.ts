@@ -24,10 +24,10 @@ export class ProductTransaction {
 
   async createProduct(createProductDto: CreateProductDto): Promise<void> {
     const queryRunner = await this.productQueryRunnerProvider.init();
-    const { productBodyDto, jwtPayload, productImgCookies } = createProductDto;
+    const { productBodyDto, userId, productImgCookies } = createProductDto;
 
     const [admin, productImages] = await Promise.all([
-      this.userSearcher.findAdminUserObjectWithId(jwtPayload.userId),
+      this.userSearcher.findAdminUserObjectWithId(userId),
       this.mediaSearcher.findProductImagesWithId(productImgCookies),
     ]);
 
