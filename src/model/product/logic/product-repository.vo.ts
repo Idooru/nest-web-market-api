@@ -10,9 +10,9 @@ export interface ProductRepositoryPayload {
 }
 
 export class ProductRepositoryVO {
-  private productRepository: Repository<ProductEntity>;
-  starRateRepository: Repository<StarRateEntity>;
-  productImageRepository: Repository<ProductImageEntity>;
+  private _productRepository: Repository<ProductEntity>;
+  private _starRateRepository: Repository<StarRateEntity>;
+  private _productImageRepository: Repository<ProductImageEntity>;
 
   public setRepositoryPayload(
     repositoryPayload: ProductRepositoryPayload,
@@ -20,38 +20,32 @@ export class ProductRepositoryVO {
     const { productRepository, starRateRepository, productImageRepository } =
       repositoryPayload;
 
-    this.setProductRepository(productRepository);
-    this.setStarRateRepository(starRateRepository);
-    this.setProductImageRepository(productImageRepository);
-  }
-
-  public getProductRepository(): Repository<ProductEntity> {
-    return this.productRepository;
-  }
-
-  public setProductRepository(
-    productRepository: Repository<ProductEntity>,
-  ): void {
     this.productRepository = productRepository;
-  }
-
-  public getStarRateRepository(): Repository<StarRateEntity> {
-    return this.starRateRepository;
-  }
-
-  public setStarRateRepository(
-    starRateRepository: Repository<StarRateEntity>,
-  ): void {
     this.starRateRepository = starRateRepository;
-  }
-
-  public getProductImageRepository(): Repository<ProductImageEntity> {
-    return this.productImageRepository;
-  }
-
-  public setProductImageRepository(
-    productImageRepository: Repository<ProductImageEntity>,
-  ): void {
     this.productImageRepository = productImageRepository;
+  }
+
+  get productRepository(): Repository<ProductEntity> {
+    return this._productRepository;
+  }
+
+  set productRepository(value: Repository<ProductEntity>) {
+    this._productRepository = value;
+  }
+
+  get starRateRepository(): Repository<StarRateEntity> {
+    return this._starRateRepository;
+  }
+
+  set starRateRepository(value: Repository<StarRateEntity>) {
+    this._starRateRepository = value;
+  }
+
+  get productImageRepository(): Repository<ProductImageEntity> {
+    return this._productImageRepository;
+  }
+
+  set productImageRepository(value: Repository<ProductImageEntity>) {
+    this._productImageRepository = value;
   }
 }

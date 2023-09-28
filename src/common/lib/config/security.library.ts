@@ -13,85 +13,85 @@ import { Injectable } from "@nestjs/common";
 export class SecurityLibrary {
   constructor(private readonly configService: ConfigService) {}
 
-  private readonly cookieOption: CookieOptions = {
+  private readonly _cookieOption: CookieOptions = {
     httpOnly: true,
     signed: true,
     expires: new Date(Date.now() + 100000000),
   };
 
-  public getCookieOption(): CookieOptions {
-    return this.cookieOption;
+  public get cookieOption(): CookieOptions {
+    return this._cookieOption;
   }
 
-  public getHashSalt(): number {
+  public get hashSalt(): number {
     return +this.configService.get("HASH_SALT");
   }
 
-  private readonly jwtAccessTokenSignOption: JwtSignOptions = {
+  private readonly _jwtAccessTokenSignOption: JwtSignOptions = {
     secret: this.configService.get("JWT_ACCESSTOKEN_SECRET"),
     expiresIn: this.configService.get("JWT_ACCESSTOKEN_EXPIRES"),
   };
 
-  private readonly jwtAccessTokenVerifyOption: JwtVerifyOptions = {
+  private readonly _jwtAccessTokenVerifyOption: JwtVerifyOptions = {
     secret: this.configService.get("JWT_ACCESSTOKEN_SECRET"),
   };
 
-  private readonly jwtRefreshTokenSignOption: JwtSignOptions = {
+  private readonly _jwtRefreshTokenSignOption: JwtSignOptions = {
     secret: this.configService.get("JWT_REFRESHTOKEN_SECRET"),
     expiresIn: this.configService.get("JWT_REFRESHTOKEN_EXPIRES"),
   };
 
-  private readonly jwtRefreshTokenVerifyOption: JwtVerifyOptions = {
+  private readonly _jwtRefreshTokenVerifyOption: JwtVerifyOptions = {
     secret: this.configService.get("JWT_REFRESHTOKEN_SECRET"),
   };
 
-  private readonly jwtAccessTokenModuleOption: JwtModuleOptions = {
+  private readonly _jwtAccessTokenModuleOption: JwtModuleOptions = {
     secret: this.configService.get("JWT_ACCESSTOKEN_SECRET"),
     signOptions: {
       expiresIn: this.configService.get("JWT_ACCESSTOKEN_EXPIRES"),
     },
   };
 
-  private readonly jwtRefreshTokenModuleOption: JwtModuleOptions = {
+  private readonly _jwtRefreshTokenModuleOption: JwtModuleOptions = {
     secret: this.configService.get("JWT_REFRESHTOKEN_SECRET"),
     signOptions: {
       expiresIn: this.configService.get("JWT_REFRESHTOKEN_EXPIRES"),
     },
   };
 
-  public getJwtAceessTokenSignOption(): JwtSignOptions {
-    return this.jwtAccessTokenSignOption;
+  public get jwtAccessTokenSignOption(): JwtSignOptions {
+    return this._jwtAccessTokenSignOption;
   }
 
-  public getJwtAcessTokenVerifyOption(): JwtVerifyOptions {
-    return this.jwtAccessTokenVerifyOption;
+  public get jwtAccessTokenVerifyOption(): JwtVerifyOptions {
+    return this._jwtAccessTokenVerifyOption;
   }
 
-  public getJwtRefreshTokenSignOption(): JwtSignOptions {
-    return this.jwtRefreshTokenSignOption;
+  public get jwtRefreshTokenSignOption(): JwtSignOptions {
+    return this._jwtRefreshTokenSignOption;
   }
 
-  public getJwtRefreshTokenVerifyOption(): JwtVerifyOptions {
-    return this.jwtRefreshTokenVerifyOption;
+  public get jwtRefreshTokenVerifyOption(): JwtVerifyOptions {
+    return this._jwtRefreshTokenVerifyOption;
   }
 
-  public getJwtAccessTokenModuleOption(): JwtModuleOptions {
-    return this.jwtAccessTokenModuleOption;
+  public get jwtAccessTokenModuleOption(): JwtModuleOptions {
+    return this._jwtAccessTokenModuleOption;
   }
 
-  public getJwtRefreshTokenModuleOption(): JwtModuleOptions {
-    return this.jwtRefreshTokenModuleOption;
+  public get jwtRefreshTokenModuleOption(): JwtModuleOptions {
+    return this._jwtRefreshTokenModuleOption;
   }
 
-  public getJwtAccessTokenForJwtModule(): JwtModuleAsyncOptions {
+  public get jwtAccessTokenForJwtModule(): JwtModuleAsyncOptions {
     return {
-      useFactory: () => this.getJwtAccessTokenModuleOption(),
+      useFactory: () => this.jwtAccessTokenModuleOption,
     };
   }
 
-  public getJwtRefreshTokenForJwtModule(): JwtModuleAsyncOptions {
+  public get jwtRefreshTokenForJwtModule(): JwtModuleAsyncOptions {
     return {
-      useFactory: () => this.getJwtRefreshTokenModuleOption(),
+      useFactory: () => this.jwtRefreshTokenModuleOption,
     };
   }
 }

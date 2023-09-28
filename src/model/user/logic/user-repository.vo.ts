@@ -14,11 +14,11 @@ export interface UserRepositoryPayload {
 }
 
 export class UserRepositoryVO {
-  private userRepository: Repository<UserEntity>;
-  private adminUserRepository: Repository<AdminUserEntity>;
-  private clientUserRepository: Repository<ClientUserEntity>;
-  private userProfileRepository: Repository<UserProfileEntity>;
-  private userAuthRepository: Repository<UserAuthEntity>;
+  private _userRepository: Repository<UserEntity>;
+  private _adminUserRepository: Repository<AdminUserEntity>;
+  private _clientUserRepository: Repository<ClientUserEntity>;
+  private _userProfileRepository: Repository<UserProfileEntity>;
+  private _userAuthRepository: Repository<UserAuthEntity>;
 
   public setRepositoryPayload(repositoryPayload: UserRepositoryPayload): void {
     const {
@@ -29,58 +29,50 @@ export class UserRepositoryVO {
       userAuthRepository,
     } = repositoryPayload;
 
-    this.setUserRepository(userRepository);
-    this.setAdminUserRepository(adminUserRepository);
-    this.setClientUserRepository(clientUserRepository);
-    this.setUserProfileRepository(userProfileRepository);
-    this.setUserAuthRepository(userAuthRepository);
-  }
-
-  public getUserRepository(): Repository<UserEntity> {
-    return this.userRepository;
-  }
-
-  public setUserRepository(userRepository: Repository<UserEntity>): void {
     this.userRepository = userRepository;
-  }
-
-  public getAdminUserRepository(): Repository<AdminUserEntity> {
-    return this.adminUserRepository;
-  }
-
-  public setAdminUserRepository(
-    adminUserRepository: Repository<AdminUserEntity>,
-  ): void {
     this.adminUserRepository = adminUserRepository;
-  }
-
-  public getClientUserRepository(): Repository<ClientUserEntity> {
-    return this.clientUserRepository;
-  }
-
-  public setClientUserRepository(
-    clientUserRepository: Repository<ClientUserEntity>,
-  ): void {
     this.clientUserRepository = clientUserRepository;
-  }
-
-  public getUserProfileRepository(): Repository<UserProfileEntity> {
-    return this.userProfileRepository;
-  }
-
-  public setUserProfileRepository(
-    userProfileRepository: Repository<UserProfileEntity>,
-  ): void {
     this.userProfileRepository = userProfileRepository;
-  }
-
-  public getUserAuthRepository(): Repository<UserAuthEntity> {
-    return this.userAuthRepository;
-  }
-
-  public setUserAuthRepository(
-    userAuthRepository: Repository<UserAuthEntity>,
-  ): void {
     this.userAuthRepository = userAuthRepository;
+  }
+
+  public get userRepository(): Repository<UserEntity> {
+    return this._userRepository;
+  }
+
+  public set userRepository(value: Repository<UserEntity>) {
+    this._userRepository = value;
+  }
+
+  public get adminUserRepository(): Repository<AdminUserEntity> {
+    return this._adminUserRepository;
+  }
+
+  public set adminUserRepository(value: Repository<AdminUserEntity>) {
+    this._adminUserRepository = value;
+  }
+
+  public get clientUserRepository(): Repository<ClientUserEntity> {
+    return this._clientUserRepository;
+  }
+
+  public set clientUserRepository(value: Repository<ClientUserEntity>) {
+    this._clientUserRepository = value;
+  }
+
+  public get userProfileRepository(): Repository<UserProfileEntity> {
+    return this._userProfileRepository;
+  }
+
+  public set userProfileRepository(value: Repository<UserProfileEntity>) {
+    this._userProfileRepository = value;
+  }
+
+  public get userAuthRepository(): Repository<UserAuthEntity> {
+    return this._userAuthRepository;
+  }
+
+  public set userAuthRepository(value: Repository<UserAuthEntity>) {
+    this._userAuthRepository = value;
   }
 }

@@ -51,7 +51,7 @@ export class IsRefreshTokenAvailableGuard
     try {
       return await this.jwtService.verifyAsync(
         refresh_token,
-        this.securityLibrary.getJwtRefreshTokenVerifyOption(),
+        this.securityLibrary.jwtRefreshTokenVerifyOption,
       );
     } catch (err) {
       this.methodName = this.validateToken.name;

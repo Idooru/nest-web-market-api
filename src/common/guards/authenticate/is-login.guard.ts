@@ -48,7 +48,7 @@ export class IsLoginGuard extends ErrorHandlerProps implements CanActivate {
     try {
       return await this.jwtService.verifyAsync(
         access_token,
-        this.securityLibrary.getJwtAcessTokenVerifyOption(),
+        this.securityLibrary.jwtAccessTokenVerifyOption,
       );
     } catch (err) {
       this.methodName = this.validateToken.name;

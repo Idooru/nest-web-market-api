@@ -26,7 +26,7 @@ export class UserSecurity {
 
   async hashPassword(password: string): Promise<string> {
     return await bcrypt
-      .hash(password, this.securityLibrary.getHashSalt())
+      .hash(password, this.securityLibrary.hashSalt)
       .catch((err: Error) => {
         loggerFactory("HashPassword").error(err);
         throw new InternalServerErrorException(err);
@@ -50,11 +50,11 @@ export class UserSecurity {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         jwtAccessTokenPayload,
-        this.securityLibrary.getJwtAceessTokenSignOption(),
+        this.securityLibrary.jwtAccessTokenSignOption,
       ),
       this.jwtService.signAsync(
         jwtRefreshTokenPayload,
-        this.securityLibrary.getJwtRefreshTokenSignOption(),
+        this.securityLibrary.jwtRefreshTokenSignOption,
       ),
     ]).catch((err: Error) => {
       loggerFactory("JwtTokenSign").error(err);

@@ -24,7 +24,7 @@ export class ProductOperationRepository {
     const { name, price, origin, category, description, quantity } =
       productBodyDto;
 
-    return await this.queryRunner.getProductRepository().save({
+    return await this.queryRunner.productRepository.save({
       name,
       price,
       origin,
@@ -37,7 +37,7 @@ export class ProductOperationRepository {
 
   // Transaction
   async createStarRate(product: ProductEntity): Promise<void> {
-    await this.queryRunner.getStarRateRepository().save({ id: product.id });
+    await this.queryRunner.starRateRepository.save({ id: product.id });
   }
 
   // Transaction
@@ -46,21 +46,21 @@ export class ProductOperationRepository {
     product: ProductEntity,
   ): Promise<void> {
     productImage.Product = product;
-    await this.queryRunner.getProductImageRepository().save(productImage);
+    await this.queryRunner.productImageRepository.save(productImage);
   }
 
   // Transaction
   async deleteProductImageWithId(id: string): Promise<void> {
-    await this.queryRunner.getProductImageRepository().delete({ id });
+    await this.queryRunner.productImageRepository.delete({ id });
   }
 
   // Transaction
   async modifyProduct(modifyProductDto: ModifyProductDto): Promise<void> {
     const { product, productBodyDto } = modifyProductDto;
 
-    await this.queryRunner
-      .getProductRepository()
-      .update(product.id, { ...productBodyDto });
+    await this.queryRunner.productRepository.update(product.id, {
+      ...productBodyDto,
+    });
   }
 
   // General

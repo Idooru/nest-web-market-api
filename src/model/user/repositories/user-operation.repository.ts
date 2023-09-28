@@ -28,33 +28,31 @@ export class UserOperationRepository {
 
   // Transaction
   async createUserEntity(role: ["client", "admin"]): Promise<UserEntity> {
-    return await this.queryRunner.getUserRepository().save({ role });
+    return await this.queryRunner.userRepository.save({ role });
   }
 
   // Transaction
   async createClientUser(user: UserEntity): Promise<void> {
-    await this.queryRunner.getClientUserRepository().save({ User: user });
+    await this.queryRunner.clientUserRepository.save({ User: user });
   }
 
   // Transaction
   async createAdminUser(user: UserEntity): Promise<void> {
-    await this.queryRunner.getAdminUserRepository().save({ User: user });
+    await this.queryRunner.adminUserRepository.save({ User: user });
   }
 
   // Transaction
   async createUserProfile(
     createUserProfileDto: CreateUserProfileDto,
   ): Promise<void> {
-    await this.queryRunner
-      .getUserProfileRepository()
-      .save({ ...createUserProfileDto });
+    await this.queryRunner.userProfileRepository.save({
+      ...createUserProfileDto,
+    });
   }
 
   // Transaction
   async createUserAuth(createUserAuthDto: CreateUserAuthDto): Promise<void> {
-    await this.queryRunner
-      .getUserAuthRepository()
-      .save({ ...createUserAuthDto });
+    await this.queryRunner.userAuthRepository.save({ ...createUserAuthDto });
   }
 
   // Transaction
@@ -62,9 +60,9 @@ export class UserOperationRepository {
     modifyUserProfileDto: ModifyUserProfileDto,
     id: string,
   ): Promise<void> {
-    await this.queryRunner
-      .getUserProfileRepository()
-      .update(id, { ...modifyUserProfileDto });
+    await this.queryRunner.userProfileRepository.update(id, {
+      ...modifyUserProfileDto,
+    });
   }
 
   // Transaction
@@ -72,9 +70,9 @@ export class UserOperationRepository {
     modifyUserAuthDto: ModifyUserAuthDto,
     id: string,
   ): Promise<void> {
-    await this.queryRunner
-      .getUserAuthRepository()
-      .update(id, { ...modifyUserAuthDto });
+    await this.queryRunner.userAuthRepository.update(id, {
+      ...modifyUserAuthDto,
+    });
   }
 
   // General

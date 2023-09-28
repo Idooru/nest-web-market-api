@@ -20,7 +20,7 @@ export class JsonJwtAuthInterceptor implements NestInterceptor {
   intercept(context: ArgumentsHost, next: CallHandler<any>): Observable<any> {
     const req = context.switchToHttp().getRequest<Request>();
     const res = context.switchToHttp().getResponse<Response>();
-    const cookieOption = this.securityLibrary.getCookieOption();
+    const cookieOption = this.securityLibrary.cookieOption;
 
     this.timeLoggerLibrary.receiveRequest(req);
 

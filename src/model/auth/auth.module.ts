@@ -22,10 +22,10 @@ import { UserEntity } from "../user/entities/user.entity";
     ]),
     forwardRef(() => UserModule),
     JwtModule.registerAsync(
-      new SecurityLibrary(new ConfigService()).getJwtAccessTokenForJwtModule(),
+      new SecurityLibrary(new ConfigService()).jwtAccessTokenForJwtModule,
     ),
     JwtModule.registerAsync(
-      new SecurityLibrary(new ConfigService()).getJwtRefreshTokenForJwtModule(),
+      new SecurityLibrary(new ConfigService()).jwtRefreshTokenForJwtModule,
     ),
     LibraryModule,
   ],
