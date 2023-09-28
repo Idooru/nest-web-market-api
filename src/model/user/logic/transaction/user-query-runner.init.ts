@@ -1,5 +1,5 @@
 import { DataSource, QueryRunner } from "typeorm";
-import { UserRepositoryPayload, UserRepositoryVO } from "../user-repository.vo";
+import { UserRepositoryPayload, UserRepositoryVO } from "./user-repository.vo";
 import { UserEntity } from "../../entities/user.entity";
 import { AdminUserEntity } from "../../entities/admin-user.entity";
 import { ClientUserEntity } from "../../entities/client-user.entity";

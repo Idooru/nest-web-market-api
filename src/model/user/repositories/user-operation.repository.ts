@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { UserRepositoryVO } from "../logic/user-repository.vo";
+import { UserRepositoryVO } from "../logic/transaction/user-repository.vo";
 import { UserEntity } from "../entities/user.entity";
 import {
   CreateUserAuthDto,

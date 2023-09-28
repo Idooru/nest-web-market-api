@@ -20,7 +20,7 @@ import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/ver
 import { ProductFunctionService } from "./services/product-function.service";
 import { ProductSearcher } from "./logic/product.searcher";
 import { ProductSearchRepository } from "./repositories/product-search.repository";
-import { ProductRepositoryVO } from "./logic/product-repository.vo";
+import { ProductRepositoryVO } from "./logic/transaction/product-repository.vo";
 import { ProductTransaction } from "./logic/transaction/product.transaction";
 import { ProductOperationService } from "./services/product-operation.service";
 import { ProductOperationRepository } from "./repositories/product-operation.repository";

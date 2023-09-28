@@ -14,7 +14,7 @@ import { AdminUserEntity } from "./entities/admin-user.entity";
 import { UserEntity } from "./entities/user.entity";
 import { userSelectProperty } from "src/common/config/repository-select-configs/user.select";
 import { UserTransaction } from "./logic/transaction/user.transaction";
-import { UserRepositoryVO } from "./logic/user-repository.vo";
+import { UserRepositoryVO } from "./logic/transaction/user-repository.vo";
 import { UserSearcher } from "./logic/user.searcher";
 import { UserSecurity } from "./logic/user.security";
 import { UserOperationRepository } from "./repositories/user-operation.repository";

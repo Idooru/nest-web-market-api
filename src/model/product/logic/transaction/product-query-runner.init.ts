@@ -3,7 +3,7 @@ import { DataSource, QueryRunner } from "typeorm";
 import {
   ProductRepositoryPayload,
   ProductRepositoryVO,
-} from "../product-repository.vo";
+} from "./product-repository.vo";
 import { ProductEntity } from "../../entities/product.entity";
 import { StarRateEntity } from "../../../review/entities/star-rate.entity";
 import { ProductImageEntity } from "../../../media/entities/product-image.entity";
