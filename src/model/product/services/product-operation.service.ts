@@ -4,7 +4,7 @@ import { ProductEntity } from "../entities/product.entity";
 import { CreateProductDto } from "../dto/create-product-dto";
 import { ModifyProductDto } from "../dto/modify-product.dto";
 import { InsertProductImageDto } from "../dto/insert-product-image.dto";
-import { ModifyProductImageDto } from "../dto/modify-product-image.dto";
+import { ChangeProductImageDto } from "../dto/modify-product-image.dto";
 import { ProductCategory } from "../types/product-category.type";
 
 @Injectable()
@@ -32,14 +32,14 @@ export class ProductOperationService {
     insertProductImageDto: InsertProductImageDto,
   ): Promise<void> {
     const { productImages, product } = insertProductImageDto;
-    const insertWork = productImages.map((productImage) =>
+    const inserting = productImages.map((productImage) =>
       this.productOperationRepository.insertProductIdOnProductImage(
         productImage,
         product,
       ),
     );
 
-    await Promise.all(insertWork);
+    await Promise.all(inserting);
   }
 
   // Transaction
@@ -48,28 +48,29 @@ export class ProductOperationService {
   }
 
   // Transaction
-  async modifyProductImages(
-    modifyProductImageDto: ModifyProductImageDto,
+  async changeProductImages(
+    changeProductImageDto: ChangeProductImageDto,
   ): Promise<void> {
     const { beforeProductImages, newProductImages, product } =
-      modifyProductImageDto;
-    const modifyWork = newProductImages.map((productImage) =>
+      changeProductImageDto;
+
+    const inserting = newProductImages.map((productImage) =>
       this.productOperationRepository.insertProductIdOnProductImage(
         productImage,
         product,
       ),
     );
 
-    await Promise.all(modifyWork);
+    await Promise.all(inserting);
 
     if (beforeProductImages.length >= 1) {
-      const deleteWork = beforeProductImages.map((productImage) =>
+      const deleting = beforeProductImages.map((productImage) =>
         this.productOperationRepository.deleteProductImageWithId(
           productImage.id,
         ),
       );
 
-      await Promise.all(deleteWork);
+      await Promise.all(deleting);
     }
   }
 
