@@ -23,13 +23,14 @@ export class ProductTransaction {
   ) {}
 
   async createProduct(createProductDto: CreateProductDto): Promise<void> {
-    const queryRunner = await this.productQueryRunnerProvider.init();
     const { productBodyDto, userId, productImgCookies } = createProductDto;
 
     const [admin, productImages] = await Promise.all([
       this.userSearcher.findAdminUserObjectWithId(userId),
       this.mediaSearcher.findProductImagesWithId(productImgCookies),
     ]);
+
+    const queryRunner = await this.productQueryRunnerProvider.init();
 
     try {
       const product = await this.productOperationService.createProduct({
@@ -58,14 +59,15 @@ export class ProductTransaction {
   }
 
   async modifyProduct(modifyProductDto: ModifyProductDto): Promise<void> {
-    const queryRunner = await this.productQueryRunnerProvider.init();
     const { id, productBodyDto, productImgCookies } = modifyProductDto;
 
     const [product, beforeProductImages, newProductImages] = await Promise.all([
       this.productSearcher.findProductWithId(id),
-      this.mediaSearcher.findBeforeProductImageWithId(id),
+      this.mediaSearcher.findBeforeProductImagesWithId(id),
       this.mediaSearcher.findProductImagesWithId(productImgCookies),
     ]);
+
+    const queryRunner = await this.productQueryRunnerProvider.init();
 
     try {
       await this.productOperationService.modifyProduct({
@@ -95,12 +97,13 @@ export class ProductTransaction {
     id: string,
     productImgCookies: MediaCookieDto[],
   ): Promise<void> {
-    const queryRunner = await this.productQueryRunnerProvider.init();
     const [product, beforeProductImages, newProductImages] = await Promise.all([
       this.productSearcher.findProductWithId(id),
-      this.mediaSearcher.findBeforeProductImageWithId(id),
+      this.mediaSearcher.findBeforeProductImagesWithId(id),
       this.mediaSearcher.findProductImagesWithId(productImgCookies),
     ]);
+
+    const queryRunner = await this.productQueryRunnerProvider.init();
 
     try {
       const modifyProductImage =
