@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ProductEntity } from "../entities/product.entity";
 import { ProductOperationService } from "./product-operation.service";
 import { InsertProductImageDto } from "../dto/insert-product-image.dto";
-import { ChangeProductImageDto } from "../dto/modify-product-image.dto";
+import { ChangeProductImageDto } from "../dto/change-product-image.dto";
 
 @Injectable()
 export class ProductFunctionService {

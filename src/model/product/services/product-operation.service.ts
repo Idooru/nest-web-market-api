@@ -4,7 +4,7 @@ import { ProductEntity } from "../entities/product.entity";
 import { CreateProductDto } from "../dto/create-product-dto";
 import { ModifyProductDto } from "../dto/modify-product.dto";
 import { InsertProductImageDto } from "../dto/insert-product-image.dto";
-import { ChangeProductImageDto } from "../dto/modify-product-image.dto";
+import { ChangeProductImageDto } from "../dto/change-product-image.dto";
 import { ProductCategory } from "../types/product-category.type";
 
 @Injectable()
