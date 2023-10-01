@@ -2,7 +2,6 @@ export interface ProductSelectProperty {
   productsId: string[];
   products: string[];
   product: string[];
-  productWhenNeedStarRate: string[];
   productImages: string[];
 }
 
@@ -14,7 +13,7 @@ export const productSelectProperty: ProductSelectProperty = {
     "product.price",
     "product.category",
     "Image.url",
-    "StarRate.averageScore",
+    "StarRate",
     "Review",
     "Reviewer",
     "ReviewUser",
@@ -33,7 +32,7 @@ export const productSelectProperty: ProductSelectProperty = {
     "product.description",
     "product.quantity",
     "Image.url",
-    "StarRate.averageScore",
+    "StarRate",
     "Review",
     "Reviewer",
     "ReviewUser",
@@ -47,7 +46,6 @@ export const productSelectProperty: ProductSelectProperty = {
     "InquiryRequestImage.url",
     "InquiryRequestVideo.url",
   ],
-  productWhenNeedStarRate: ["product", "StarRate.id"],
   productImages: [
     "productImage.id",
     "productImage.url",
