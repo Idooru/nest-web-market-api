@@ -38,10 +38,10 @@ export class ProductTransaction {
         admin,
       });
 
-      const createStarRate = async () =>
+      const createStarRate =
         this.productFunctionService.getCreateStarRateFunc(product);
 
-      const insertProductImage = async () =>
+      const insertProductImage =
         this.productFunctionService.getInsertProductImageFunc({
           productImages,
           product,
