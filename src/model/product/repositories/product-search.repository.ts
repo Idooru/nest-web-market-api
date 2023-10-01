@@ -119,23 +119,4 @@ export class ProductSearchRepository {
       .where("product.name = :name", { name })
       .getOne();
   }
-
-  async findProductHavingStarRate(id: string): Promise<ProductEntity> {
-    return await this.productRepository
-      .createQueryBuilder()
-      .select(this.productSelect.productWhenNeedStarRate)
-      .from(ProductEntity, "product")
-      .innerJoin("product.StarRate", "StarRate")
-      .where("product.id = :id", { id })
-      .getOne();
-  }
-
-  async findProductImageWithUrl(url: string): Promise<ProductImageEntity> {
-    return await this.productImageRepository
-      .createQueryBuilder()
-      .select(this.productSelect.productImages)
-      .from(ProductImageEntity, "productImage")
-      .where("productImage.url = :url", { url })
-      .getOne();
-  }
 }
