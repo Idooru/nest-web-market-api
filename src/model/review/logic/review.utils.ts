@@ -6,6 +6,7 @@ import { UserSearcher } from "../../user/logic/user.searcher";
 import { ReviewEntity } from "../entities/review.entity";
 import { ReviewSearcher } from "./review.searcher";
 import { StarRateEntity } from "../entities/star-rate.entity";
+import { loggerFactory } from "../../../common/functions/logger.factory";
 
 @Injectable()
 export class ReviewUtils {
@@ -25,6 +26,9 @@ export class ReviewUtils {
 
     if (!review) {
       // 만약 리뷰를 하나도 작성하지 않은 사용자가 다른 사용자의 리뷰를 수정하려고 시도할시 아래 예외가 발생한다.
+      loggerFactory("Another Writer").warn(
+        `다른 사용자가 임의로 리뷰 수정을 시도합니다. 작성자 아이디: ${client.id}`,
+      );
       throw new ForbiddenException(
         `고객 사용자의 아이디(${client.id})로 작성된 리뷰중에 reviewId(${reviewId})와 같은 리뷰를 찾을 수 없습니다.`,
       );
