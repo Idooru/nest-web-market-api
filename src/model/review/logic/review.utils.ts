@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
+import { ForbiddenException, Injectable } from "@nestjs/common";
 import { ProductEntity } from "../../product/entities/product.entity";
 import { ClientUserEntity } from "../../user/entities/client-user.entity";
 import { ProductSearcher } from "../../product/logic/product.searcher";
@@ -25,13 +21,6 @@ export class ReviewUtils {
   ): Promise<ReviewEntity> {
     const client = await this.userSearcher.findClientUserObjectWithId(userId);
     const reviews = await this.reviewSearcher.findAllClientsReviews(client.id);
-
-    if (!reviews.length) {
-      throw new NotFoundException(
-        `고객 사용자의 아이디(${userId})로 작성된 리뷰가 없습니다.`,
-      );
-    }
-
     const review = reviews.find((review) => review.id === reviewId);
 
     if (!review) {
@@ -55,7 +44,7 @@ export class ReviewUtils {
     userId: string,
   ): Promise<[ProductEntity, ClientUserEntity]> {
     return await Promise.all([
-      this.productSearcher.findProductWithId(productId),
+      this.productSearcher.findProductHavingStarRate(productId),
       this.userSearcher.findClientUserObjectWithId(userId),
     ]);
   }
