@@ -66,7 +66,7 @@ export class ReviewOperationService {
     );
 
     const updatedStarRate = await this.reviewUtils.calculateStarRate(starRate);
-    await this.reviewOperationRepository.renewTotalScore(updatedStarRate);
+    await this.reviewOperationRepository.renewAverage(updatedStarRate);
   }
 
   // Transaction
@@ -81,21 +81,21 @@ export class ReviewOperationService {
     const { beforeReviewImages, newReviewImages, review } =
       changeReviewImageDto;
 
-    const modifyWork = newReviewImages.map((reviewImage) =>
+    const inserting = newReviewImages.map((reviewImage) =>
       this.reviewOperationRepository.insertReviewIdOnReviewImage(
         reviewImage,
         review,
       ),
     );
 
-    await Promise.all(modifyWork);
+    await Promise.all(inserting);
 
     if (beforeReviewImages.length >= 1) {
-      const deleteWork = beforeReviewImages.map((reviewImage) =>
+      const deleting = beforeReviewImages.map((reviewImage) =>
         this.reviewOperationRepository.deleteReviewImageWithId(reviewImage.id),
       );
 
-      await Promise.all(deleteWork);
+      await Promise.all(deleting);
     }
   }
 
@@ -106,21 +106,21 @@ export class ReviewOperationService {
     const { beforeReviewVideos, newReviewVideos, review } =
       changeReviewVideoDto;
 
-    const modifyWork = newReviewVideos.map((reviewVideo) =>
+    const inserting = newReviewVideos.map((reviewVideo) =>
       this.reviewOperationRepository.insertReviewIdOnReviewVideo(
         reviewVideo,
         review,
       ),
     );
 
-    await Promise.all(modifyWork);
+    await Promise.all(inserting);
 
     if (beforeReviewVideos.length >= 1) {
-      const deleteWork = beforeReviewVideos.map((reviewVideo) =>
+      const deleting = beforeReviewVideos.map((reviewVideo) =>
         this.reviewOperationRepository.deleteReviewVideoWithId(reviewVideo.id),
       );
 
-      await Promise.all(deleteWork);
+      await Promise.all(deleting);
     }
   }
 
@@ -140,6 +140,9 @@ export class ReviewOperationService {
         starRate,
       ),
     ]);
+
+    const updatedStarRate = await this.reviewUtils.calculateStarRate(starRate);
+    await this.reviewOperationRepository.renewAverage(updatedStarRate);
   }
 
   // Transaction
@@ -158,5 +161,8 @@ export class ReviewOperationService {
       starRate,
       beforeScore,
     );
+
+    const updatedStarRate = await this.reviewUtils.calculateStarRate(starRate);
+    await this.reviewOperationRepository.renewAverage(updatedStarRate);
   }
 }
