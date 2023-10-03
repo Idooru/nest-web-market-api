@@ -60,6 +60,15 @@ export class MediaSearchRepository {
       .getOne();
   }
 
+  async findBeforeReviewImagesWithId(id: string): Promise<ReviewImageEntity[]> {
+    return await this.reviewImageRepository
+      .createQueryBuilder()
+      .select(this.mediaSelect.reviewImages)
+      .from(ReviewImageEntity, "reviewImage")
+      .where("reviewImage.reviewId = :reviewId", { reviewId: id })
+      .getMany();
+  }
+
   async findReviewVideoWithId(id: string): Promise<ReviewVideoEntity> {
     return await this.reviewVideoRepository
       .createQueryBuilder()
@@ -67,6 +76,15 @@ export class MediaSearchRepository {
       .from(ReviewVideoEntity, "reviewVideo")
       .where("reviewVideo.id = :id", { id })
       .getOne();
+  }
+
+  async findBeforeReviewVideosWithId(id: string): Promise<ReviewVideoEntity[]> {
+    return await this.reviewVideoRepository
+      .createQueryBuilder()
+      .select(this.mediaSelect.reviewVideos)
+      .from(ReviewVideoEntity, "reviewVideo")
+      .where("reviewVideo.reviewId = :reviewId", { reviewId: id })
+      .getMany();
   }
 
   async findInquiryRequestImageWithId(
