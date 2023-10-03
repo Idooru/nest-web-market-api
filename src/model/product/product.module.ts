@@ -28,6 +28,7 @@ import { ProductEntity } from "./entities/product.entity";
 import { ProductQueryRunnerProvider } from "./logic/transaction/product-query-runner.provider";
 import { ProductValidator } from "./logic/product.validator";
 import { ProductValidateRepository } from "./repositories/product-validate.repository";
+import { ProductIdValidatePipe } from "./pipe/exist/product-id-validate.pipe";
 
 @Module({
   imports: [
@@ -66,8 +67,14 @@ import { ProductValidateRepository } from "./repositories/product-validate.repos
     ProductOperationRepository,
     ProductSearchRepository,
     ProductValidateRepository,
+    ProductIdValidatePipe,
   ],
-  exports: [ProductSearcher],
+  exports: [
+    ProductSearcher,
+    ProductSearchRepository,
+    ProductIdValidatePipe,
+    ProductValidator,
+  ],
 })
 export class ProductModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
