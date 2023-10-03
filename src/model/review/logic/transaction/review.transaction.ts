@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { ReviewQueryRunnerProvider } from "./review-query-runner.init";
+import { ReviewQueryRunnerProvider } from "./review-query-runner.provider";
 import { ReviewOperationService } from "../../services/review-operation.service";
 import { ReviewSearcher } from "../review.searcher";
 import { MediaSearcher } from "../../../media/logic/media.searcher";
@@ -21,6 +21,7 @@ import {
 import { ReviewUtils } from "../review.utils";
 import { ReviewEntity } from "../../entities/review.entity";
 import { DeleteReviewDto } from "../../dto/delete-review.dto";
+import { ProductSearcher } from "../../../product/logic/product.searcher";
 
 @Injectable()
 export class ReviewTransaction {
@@ -28,6 +29,7 @@ export class ReviewTransaction {
     private readonly reviewQueryRunnerProvider: ReviewQueryRunnerProvider,
     private readonly reviewSearcher: ReviewSearcher,
     private readonly mediaSearcher: MediaSearcher,
+    private readonly productSearcher: ProductSearcher,
     private readonly reviewOperationService: ReviewOperationService,
     private readonly reviewFunctionService: ReviewFunctionService,
     private readonly reviewUtils: ReviewUtils,
@@ -49,6 +51,8 @@ export class ReviewTransaction {
       userId,
     );
 
+    this.reviewUtils.checkBeforeCreate(product, client);
+
     const [reviewImages, reviewVideos, starRate] = await Promise.all([
       this.mediaSearcher.findReviewImagesWithId(reviewImgCookies),
       this.mediaSearcher.findReviewVideosWithId(reviewVdoCookies),
@@ -64,24 +68,22 @@ export class ReviewTransaction {
         client,
       });
 
-      const mediaWork = async () => [
-        this.reviewFunctionService.getInsertReviewImagesFunc({
-          reviewImages,
-          review,
-        }),
-        this.reviewFunctionService.getInsertReviewVideosFunc({
-          reviewVideos,
-          review,
-        }),
-      ];
+      const imageWork = this.reviewFunctionService.getInsertReviewImagesFunc({
+        reviewImages,
+        review,
+      });
 
-      const starRateWork = async () =>
-        this.reviewFunctionService.getIncreaseStarRateFunc({
-          scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
-          starRate,
-        });
+      const videoWork = this.reviewFunctionService.getInsertReviewVideosFunc({
+        reviewVideos,
+        review,
+      });
 
-      await Promise.all([mediaWork(), starRateWork()]);
+      const starRateWork = this.reviewFunctionService.getIncreaseStarRateFunc({
+        scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
+        starRate,
+      });
+
+      await Promise.all([imageWork(), videoWork(), starRateWork()]);
       await queryRunner.commitTransaction();
     } catch (err) {
       loggerFactory("Transaction").error(err);
@@ -102,6 +104,9 @@ export class ReviewTransaction {
       productId,
       userId,
     );
+
+    this.reviewUtils.checkBeforeCreate(product, client);
+
     const [reviewImages, starRate] = await Promise.all([
       this.mediaSearcher.findReviewImagesWithId(reviewImgCookies),
       this.reviewSearcher.findStarRateWithId(product.StarRate.id),
@@ -116,19 +121,17 @@ export class ReviewTransaction {
         client,
       });
 
-      const mediaWork = async () =>
-        this.reviewFunctionService.getInsertReviewImagesFunc({
-          reviewImages,
-          review,
-        });
+      const imageWork = this.reviewFunctionService.getInsertReviewImagesFunc({
+        reviewImages,
+        review,
+      });
 
-      const starRateWork = async () =>
-        this.reviewFunctionService.getIncreaseStarRateFunc({
-          scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
-          starRate,
-        });
+      const starRateWork = this.reviewFunctionService.getIncreaseStarRateFunc({
+        scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
+        starRate,
+      });
 
-      await Promise.all([mediaWork(), starRateWork()]);
+      await Promise.all([imageWork(), starRateWork()]);
       await queryRunner.commitTransaction();
     } catch (err) {
       loggerFactory("Transaction").error(err);
@@ -150,6 +153,8 @@ export class ReviewTransaction {
       userId,
     );
 
+    this.reviewUtils.checkBeforeCreate(product, client);
+
     const [reviewVideos, starRate] = await Promise.all([
       this.mediaSearcher.findReviewVideosWithId(reviewVdoCookies),
       this.reviewSearcher.findStarRateWithId(product.StarRate.id),
@@ -164,19 +169,17 @@ export class ReviewTransaction {
         client,
       });
 
-      const mediaWork = async () =>
-        this.reviewFunctionService.getInsertReviewVideosFunc({
-          reviewVideos,
-          review,
-        });
+      const videoWork = this.reviewFunctionService.getInsertReviewVideosFunc({
+        reviewVideos,
+        review,
+      });
 
-      const starRateWork = async () =>
-        this.reviewFunctionService.getIncreaseStarRateFunc({
-          scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
-          starRate,
-        });
+      const starRateWork = this.reviewFunctionService.getIncreaseStarRateFunc({
+        scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
+        starRate,
+      });
 
-      await Promise.all([mediaWork(), starRateWork()]);
+      await Promise.all([videoWork(), starRateWork()]);
       await queryRunner.commitTransaction();
     } catch (err) {
       loggerFactory("Transaction").error(err);
@@ -191,10 +194,13 @@ export class ReviewTransaction {
     reviewNoMediaDto: CreateReviewNoMediaDto,
   ): Promise<void> {
     const { reviewBodyDto, userId, productId } = reviewNoMediaDto;
+
     const [product, client] = await this.reviewUtils.getProductAndClient(
       productId,
       userId,
     );
+
+    this.reviewUtils.checkBeforeCreate(product, client);
 
     const starRate = await this.reviewSearcher.findStarRateWithId(
       product.StarRate.id,
@@ -209,11 +215,10 @@ export class ReviewTransaction {
         client,
       });
 
-      const starRateWork = async () =>
-        this.reviewFunctionService.getIncreaseStarRateFunc({
-          scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
-          starRate,
-        });
+      const starRateWork = this.reviewFunctionService.getIncreaseStarRateFunc({
+        scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
+        starRate,
+      });
 
       await starRateWork();
       await queryRunner.commitTransaction();
@@ -238,12 +243,8 @@ export class ReviewTransaction {
       reviewVdoCookies,
     } = reviewAllMediaDto;
 
-    const review = await this.reviewUtils.checkBeforeModify(userId, reviewId);
-
-    const [product] = await this.reviewUtils.getProductAndClient(
-      productId,
-      userId,
-    );
+    const review = await this.reviewUtils.checkBeforeModify(reviewId, userId);
+    const product = await this.productSearcher.findProductWithId(productId);
 
     const [
       beforeReviewImages,
@@ -264,27 +265,25 @@ export class ReviewTransaction {
     try {
       await this.reviewOperationService.modifyReview({ reviewBodyDto, review });
 
-      const mediaWork = async () => [
-        this.reviewFunctionService.getChangeReviewImagesFunc({
-          beforeReviewImages,
-          newReviewImages,
-          review,
-        }),
-        this.reviewFunctionService.getChangeReviewVideosFunc({
-          beforeReviewVideos,
-          newReviewVideos,
-          review,
-        }),
-      ];
+      const imageWork = this.reviewFunctionService.getChangeReviewImagesFunc({
+        beforeReviewImages,
+        newReviewImages,
+        review,
+      });
 
-      const starRateWork = async () =>
-        this.reviewFunctionService.getModifyStarRateFunc({
-          review,
-          starRate,
-          scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
-        });
+      const videoWork = this.reviewFunctionService.getChangeReviewVideosFunc({
+        beforeReviewVideos,
+        newReviewVideos,
+        review,
+      });
 
-      await Promise.all([mediaWork(), starRateWork()]);
+      const starRateWork = this.reviewFunctionService.getModifyStarRateFunc({
+        review,
+        starRate,
+        scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
+      });
+
+      await Promise.all([imageWork(), videoWork(), starRateWork()]);
       await queryRunner.commitTransaction();
 
       return review;
@@ -303,12 +302,8 @@ export class ReviewTransaction {
     const { reviewBodyDto, userId, productId, reviewId, reviewImgCookies } =
       reviewImageDto;
 
-    const review = await this.reviewUtils.checkBeforeModify(userId, reviewId);
-
-    const [product] = await this.reviewUtils.getProductAndClient(
-      userId,
-      productId,
-    );
+    const review = await this.reviewUtils.checkBeforeModify(reviewId, userId);
+    const product = await this.productSearcher.findProductWithId(productId);
 
     const [beforeReviewImages, newReviewImages, starRate] = await Promise.all([
       this.mediaSearcher.findBeforeReviewImagesWithId(review.id),
@@ -321,21 +316,19 @@ export class ReviewTransaction {
     try {
       await this.reviewOperationService.modifyReview({ reviewBodyDto, review });
 
-      const mediaWork = async () =>
-        this.reviewFunctionService.getChangeReviewImagesFunc({
-          beforeReviewImages,
-          newReviewImages,
-          review,
-        });
+      const imageWork = this.reviewFunctionService.getChangeReviewImagesFunc({
+        beforeReviewImages,
+        newReviewImages,
+        review,
+      });
 
-      const starRateWork = async () =>
-        this.reviewFunctionService.getModifyStarRateFunc({
-          review,
-          starRate,
-          scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
-        });
+      const starRateWork = this.reviewFunctionService.getModifyStarRateFunc({
+        review,
+        starRate,
+        scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
+      });
 
-      await Promise.all([mediaWork(), starRateWork()]);
+      await Promise.all([imageWork(), starRateWork()]);
       await queryRunner.commitTransaction();
 
       return review;
@@ -354,12 +347,8 @@ export class ReviewTransaction {
     const { reviewBodyDto, userId, productId, reviewId, reviewVdoCookies } =
       reviewVideoDto;
 
-    const review = await this.reviewUtils.checkBeforeModify(userId, reviewId);
-
-    const [product] = await this.reviewUtils.getProductAndClient(
-      userId,
-      productId,
-    );
+    const review = await this.reviewUtils.checkBeforeModify(reviewId, userId);
+    const product = await this.productSearcher.findProductWithId(productId);
 
     const [beforeReviewVideos, newReviewVideos, starRate] = await Promise.all([
       this.mediaSearcher.findBeforeReviewVideosWithId(review.id),
@@ -372,21 +361,19 @@ export class ReviewTransaction {
     try {
       await this.reviewOperationService.modifyReview({ reviewBodyDto, review });
 
-      const mediaWork = async () =>
-        this.reviewFunctionService.getChangeReviewVideosFunc({
-          beforeReviewVideos,
-          newReviewVideos,
-          review,
-        });
+      const videoWork = this.reviewFunctionService.getChangeReviewVideosFunc({
+        beforeReviewVideos,
+        newReviewVideos,
+        review,
+      });
 
-      const starRateWork = async () =>
-        this.reviewFunctionService.getModifyStarRateFunc({
-          review,
-          starRate,
-          scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
-        });
+      const starRateWork = this.reviewFunctionService.getModifyStarRateFunc({
+        review,
+        starRate,
+        scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
+      });
 
-      await Promise.all([mediaWork(), starRateWork()]);
+      await Promise.all([videoWork(), starRateWork()]);
       await queryRunner.commitTransaction();
 
       return review;
@@ -404,13 +391,8 @@ export class ReviewTransaction {
   ): Promise<ReviewEntity> {
     const { reviewBodyDto, userId, productId, reviewId } = reviewNoMediaDto;
 
-    const review = await this.reviewUtils.checkBeforeModify(userId, reviewId);
-
-    const [product] = await this.reviewUtils.getProductAndClient(
-      productId,
-      userId,
-    );
-
+    const review = await this.reviewUtils.checkBeforeModify(reviewId, userId);
+    const product = await this.productSearcher.findProductWithId(productId);
     const starRate = await this.reviewSearcher.findStarRateWithId(
       product.StarRate.id,
     );
@@ -420,14 +402,13 @@ export class ReviewTransaction {
     try {
       await this.reviewOperationService.modifyReview({ reviewBodyDto, review });
 
-      const starRateWork = async () =>
-        this.reviewFunctionService.getModifyStarRateFunc({
-          review,
-          starRate,
-          scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
-        });
+      const starRateWork = this.reviewFunctionService.getModifyStarRateFunc({
+        review,
+        starRate,
+        scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
+      });
 
-      await starRateWork();
+      await Promise.all([starRateWork()]);
       await queryRunner.commitTransaction();
 
       return review;
@@ -443,7 +424,7 @@ export class ReviewTransaction {
   public async deleteReview(deleteReviewDto: DeleteReviewDto): Promise<void> {
     const { reviewId, productId, userId } = deleteReviewDto;
 
-    const review = await this.reviewUtils.checkBeforeModify(userId, reviewId);
+    const review = await this.reviewUtils.checkBeforeModify(reviewId, userId);
     const [product] = await this.reviewUtils.getProductAndClient(
       productId,
       userId,
