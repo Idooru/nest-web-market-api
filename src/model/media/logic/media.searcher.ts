@@ -24,7 +24,7 @@ export class MediaSearcher {
     return await Promise.all(finding);
   }
 
-  async findBeforeProductImageWithId(
+  async findBeforeProductImagesWithId(
     id: string,
   ): Promise<ProductImageEntity[]> {
     return await this.mediaSearchRepository.findBeforeProductImagesWithId(id);
@@ -42,7 +42,11 @@ export class MediaSearcher {
     return await Promise.all(finding);
   }
 
-  async findReviewVideoWithId(
+  async findBeforeReviewImagesWithId(id: string): Promise<ReviewImageEntity[]> {
+    return await this.mediaSearchRepository.findBeforeReviewImagesWithId(id);
+  }
+
+  async findReviewVideosWithId(
     reviewVdoCookies: MediaCookieDto[],
   ): Promise<ReviewVideoEntity[]> {
     const finding = reviewVdoCookies.map(async (reviewVdoCookie) => {
@@ -52,6 +56,10 @@ export class MediaSearcher {
     });
 
     return await Promise.all(finding);
+  }
+
+  async findBeforeReviewVideosWithId(id: string): Promise<ReviewVideoEntity[]> {
+    return await this.mediaSearchRepository.findBeforeReviewVideosWithId(id);
   }
 
   async findInquiryRequestImagesWithId(

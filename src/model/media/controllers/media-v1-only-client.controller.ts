@@ -17,11 +17,8 @@ import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { JsonSendCookiesInterface } from "src/common/interceptors/interface/json-send-cookies.interface";
 import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
 import { JsonClearCookiesInterface } from "src/common/interceptors/interface/json-clear-cookies.interface";
-import { MediaGeneralService } from "../services/media-general.service";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
-import { MediaAccessoryService } from "../services/media-accessory.service";
-import { MediaBundleService } from "../services/media-bundle.service";
 import { MediaCookieDto } from "../dto/media-cookie.dto";
 import { MediaLoggerLibrary } from "src/common/lib/logger/media-logger.library";
 import {
@@ -54,9 +51,6 @@ export class MediaVersionOneOnlyClientController {
   constructor(
     private readonly mediaSearcher: MediaSearcher,
     private readonly mediaOperationService: MediaOperationService,
-    private readonly mediaGeneralService: MediaGeneralService,
-    private readonly mediaAccessoryService: MediaAccessoryService,
-    private readonly mediaBundleService: MediaBundleService,
     private readonly mediaLoggerLibrary: MediaLoggerLibrary,
     @Inject("ReviewMediaCookieKey")
     private readonly reviewMedia: ReviewMediaCookieKey,
@@ -99,7 +93,7 @@ export class MediaVersionOneOnlyClientController {
     @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
     reviewVdoCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<ReviewVideoEntity[]>> {
-    const result = await this.mediaSearcher.findReviewVideoWithId(
+    const result = await this.mediaSearcher.findReviewVideosWithId(
       reviewVdoCookies,
     );
 
