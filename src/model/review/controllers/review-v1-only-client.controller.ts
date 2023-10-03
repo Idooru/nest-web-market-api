@@ -7,7 +7,6 @@ import {
   Put,
   Delete,
 } from "@nestjs/common";
-import { ReviewGeneralService } from "../services/review-general.service";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { UseInterceptors } from "@nestjs/common";
@@ -16,66 +15,49 @@ import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { JsonClearCookiesInterface } from "src/common/interceptors/interface/json-clear-cookies.interface";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
-import { StarRateGeneralService } from "../services/star-rate-general.service";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
 import { VerifyDataGuard } from "src/common/guards/verify/verify-data.guard";
 import { ReviewBodyDto } from "../dto/review-body.dto";
-import { ReviewBundleService } from "../services/review-bundle.service";
 import { MediaCookieDto } from "src/model/media/dto/media-cookie.dto";
 import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
 import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { ReviewFunctionService } from "../services/review-function.service";
+import { ReviewTransaction } from "../logic/transaction/review.transaction";
+import { ProductIdValidatePipe } from "../../product/pipe/exist/product-id-validate.pipe";
+import { ReviewIdValidatePipe } from "../pipe/review-id-validate.pipe";
 
 @ApiTags("v1 고객 Review API")
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)
 @Controller("/api/v1/only-client/review")
 export class ReviewVersionOneOnlyClientController {
-  constructor(
-    private readonly reviewFunctionService: ReviewFunctionService,
-    private readonly reviewGeneralService: ReviewGeneralService,
-    private readonly reviewBundleService: ReviewBundleService,
-    private readonly starRateGeneralService: StarRateGeneralService,
-  ) {}
+  constructor(private readonly reviewTransaction: ReviewTransaction) {}
 
   @ApiOperation({
-    summary: "create review with image and video",
+    summary: "create review with all medias",
     description:
       "이미지와 비디오가 포함된 리뷰를 생성합니다. 이 api를 실행하기 전에 무조건 리뷰 이미지 혹은 비디오를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 리뷰 이미지, 비디오 쿠키를 사용합니다.",
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Post("/product/:productId/image&video")
-  async createReviewWithImageAndVideo(
-    @Param("productId") productId: string,
+  async createReviewWithAllMedias(
+    @Param("productId", ProductIdValidatePipe) productId: string,
     @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
     reviewImgCookies: MediaCookieDto[],
     @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
     reviewVdoCookies: MediaCookieDto[],
-    @Body() reviewRequestDto: ReviewBodyDto,
+    @Body() reviewBodyDto: ReviewBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
-    const review = await this.reviewGeneralService.createReview({
+    await this.reviewTransaction.createReviewWithAllMedias({
+      reviewBodyDto,
       productId,
-      reviewRequestDto,
-      jwtPayload,
+      userId: jwtPayload.userId,
+      reviewImgCookies,
+      reviewVdoCookies,
     });
-
-    const mediaWork = () =>
-      Promise.all([
-        this.reviewFunctionService.insertReviewImage(review, reviewImgCookies),
-        this.reviewFunctionService.insertReviewVideo(review, reviewVdoCookies),
-      ]).then((res) => res.forEach((func) => func()));
-
-    const starRateWork = () =>
-      this.starRateGeneralService.starRating({
-        reviewRequestDto,
-        productId,
-      });
-
-    await Promise.all([mediaWork(), starRateWork()]);
 
     return {
       statusCode: 201,
@@ -96,27 +78,18 @@ export class ReviewVersionOneOnlyClientController {
   @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Post("/product/:productId/image")
   async createReviewWithImage(
-    @Param("productId") productId: string,
+    @Param("productId", ProductIdValidatePipe) productId: string,
     @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
     reviewImgCookies: MediaCookieDto[],
-    @Body() reviewRequestDto: ReviewBodyDto,
+    @Body() reviewBodyDto: ReviewBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
-    const review = await this.reviewGeneralService.createReview({
+    await this.reviewTransaction.createReviewWithImages({
+      reviewBodyDto,
       productId,
-      reviewRequestDto,
-      jwtPayload,
+      userId: jwtPayload.userId,
+      reviewImgCookies,
     });
-
-    const mediaWork = () =>
-      this.reviewFunctionService
-        .insertReviewImage(review, reviewImgCookies)
-        .then((res) => res());
-
-    const starRateWork = () =>
-      this.starRateGeneralService.starRating({ reviewRequestDto, productId });
-
-    await Promise.all([mediaWork(), starRateWork()]);
 
     return {
       statusCode: 201,
@@ -134,27 +107,18 @@ export class ReviewVersionOneOnlyClientController {
   @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Post("/product/:productId/video")
   async createReviewWithVideo(
-    @Param("productId") productId: string,
+    @Param("productId", ProductIdValidatePipe) productId: string,
     @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
     reviewVdoCookies: MediaCookieDto[],
-    @Body() reviewRequestDto: ReviewBodyDto,
+    @Body() reviewBodyDto: ReviewBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
-    const review = await this.reviewGeneralService.createReview({
+    await this.reviewTransaction.createReviewWithVideos({
+      reviewBodyDto,
       productId,
-      reviewRequestDto,
-      jwtPayload,
+      userId: jwtPayload.userId,
+      reviewVdoCookies,
     });
-
-    const mediaWork = () =>
-      this.reviewFunctionService
-        .insertReviewVideo(review, reviewVdoCookies)
-        .then((res) => res());
-
-    const starRateWork = () =>
-      this.starRateGeneralService.starRating({ reviewRequestDto, productId });
-
-    await Promise.all([mediaWork(), starRateWork()]);
 
     return {
       statusCode: 201,
@@ -164,28 +128,22 @@ export class ReviewVersionOneOnlyClientController {
   }
 
   @ApiOperation({
-    summary: "create review without media",
+    summary: "create review no media",
     description: "미디어 없이 리뷰를 생성합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Post("/product/:productId")
-  async createReviewWithoutMedia(
-    @Param("productId") productId: string,
-    @Body() reviewRequestDto: ReviewBodyDto,
+  async createReviewNoMedia(
+    @Param("productId", ProductIdValidatePipe) productId: string,
+    @Body() reviewBodyDto: ReviewBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    const createWork = () =>
-      this.reviewGeneralService.createReview({
-        productId,
-        reviewRequestDto,
-        jwtPayload,
-      });
-
-    const starRateWork = () =>
-      this.starRateGeneralService.starRating({ reviewRequestDto, productId });
-
-    await Promise.all([createWork(), starRateWork()]);
+    await this.reviewTransaction.createReviewNoMedia({
+      reviewBodyDto,
+      productId,
+      userId: jwtPayload.userId,
+    });
 
     return {
       statusCode: 201,
@@ -194,56 +152,30 @@ export class ReviewVersionOneOnlyClientController {
   }
 
   @ApiOperation({
-    summary: "modify review with image and video",
+    summary: "modify review with all medias",
     description:
       "리뷰 아이디에 해당하는 이미지와 비디오가 포함된 리뷰를 수정합니다. 이 api를 실행하기 전에 무조건 리뷰 이미지 혹은 비디오를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 리뷰 이미지, 비디오 쿠키를 사용합니다.",
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @UseGuards(
-    new VerifyDataGuard(
-      productVerifyCookieKey.is_exist.id_executed,
-      productVerifyCookieKey.is_exist.id_executed,
-    ),
-  )
   @Put("/:reviewId/product/:productId/image&video")
-  async modifyReviewWithImageAndVideo(
-    @Param("productId") productId: string,
-    @Param("reviewId") reviewId: string,
+  async modifyReviewWithAllMedias(
+    @Param("productId", ProductIdValidatePipe) productId: string,
+    @Param("reviewId", ReviewIdValidatePipe) reviewId: string,
     @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
     reviewImgCookies: MediaCookieDto[],
     @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
     reviewVdoCookies: MediaCookieDto[],
-    @Body() reviewRequestDto: ReviewBodyDto,
+    @Body() reviewBodyDto: ReviewBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
-    const review = await this.reviewBundleService.distinguishOwnReview(
+    const review = await this.reviewTransaction.modifyReviewWithAllMedias({
+      reviewBodyDto,
+      productId,
       reviewId,
-      jwtPayload.userId,
-    );
-
-    this.reviewBundleService.checkModifyCount(review);
-
-    const mediaWork = () =>
-      Promise.all([
-        this.reviewFunctionService.modifyReviewImage(review, reviewImgCookies),
-        this.reviewFunctionService.modifyReviewVideo(review, reviewVdoCookies),
-      ]).then((res) => res.forEach((func) => func()));
-
-    const modifyWork = () =>
-      Promise.all([
-        this.starRateGeneralService.modifyStarRate({
-          reviewRequestDto,
-          productId,
-          review,
-        }),
-        this.reviewGeneralService.modifyReview({
-          reviewRequestDto,
-          jwtPayload,
-          beforeReview: review,
-        }),
-      ]);
-
-    await Promise.all([mediaWork(), modifyWork()]);
+      userId: jwtPayload.userId,
+      reviewImgCookies,
+      reviewVdoCookies,
+    });
 
     return {
       statusCode: 200,
@@ -261,49 +193,22 @@ export class ReviewVersionOneOnlyClientController {
       "리뷰 아이디에 해당하는 이미지가 포함된 리뷰를 생성합니다. 이 api를 실행하기 전에 무조건 리뷰 이미지를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 리뷰 이미지 쿠키를 사용합니다.",
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @UseGuards(
-    new VerifyDataGuard(
-      productVerifyCookieKey.is_exist.id_executed,
-      productVerifyCookieKey.is_exist.id_executed,
-    ),
-  )
   @Put("/:reviewId/product/:productId/image")
   async modifyReviewWithImage(
-    @Param("productId") productId: string,
-    @Param("reviewId") reviewId: string,
+    @Param("productId", ProductIdValidatePipe) productId: string,
+    @Param("reviewId", ReviewIdValidatePipe) reviewId: string,
     @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
     reviewImgCookies: MediaCookieDto[],
-    @Body() reviewRequestDto: ReviewBodyDto,
+    @Body() reviewBodyDto: ReviewBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
-    const review = await this.reviewBundleService.distinguishOwnReview(
+    const review = await this.reviewTransaction.modifyReviewWithImages({
+      reviewBodyDto,
+      productId,
       reviewId,
-      jwtPayload.userId,
-    );
-
-    this.reviewBundleService.checkModifyCount(review);
-
-    const mediaWork = () =>
-      Promise.all([
-        this.reviewFunctionService.modifyReviewImage(review, reviewImgCookies),
-        this.reviewFunctionService.deleteReviewVideo(review.Video),
-      ]).then((res) => res.forEach((func) => func()));
-
-    const modifyWork = () =>
-      Promise.all([
-        this.starRateGeneralService.modifyStarRate({
-          reviewRequestDto,
-          productId,
-          review,
-        }),
-        this.reviewGeneralService.modifyReview({
-          reviewRequestDto,
-          jwtPayload,
-          beforeReview: review,
-        }),
-      ]);
-
-    await Promise.all([mediaWork(), modifyWork()]);
+      userId: jwtPayload.userId,
+      reviewImgCookies,
+    });
 
     return {
       statusCode: 200,
@@ -318,49 +223,22 @@ export class ReviewVersionOneOnlyClientController {
       "리뷰 아이디에 해당하는 비디오가 포함된 리뷰를 생성합니다. 이 api를 실행하기 전에 무조건 리뷰 비디오를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 리뷰 비디오 쿠키를 사용합니다.",
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @UseGuards(
-    new VerifyDataGuard(
-      productVerifyCookieKey.is_exist.id_executed,
-      productVerifyCookieKey.is_exist.id_executed,
-    ),
-  )
   @Put("/:reviewId/product/:productId/video")
   async modifyReviewWithVideo(
-    @Param("productId") productId: string,
-    @Param("reviewId") reviewId: string,
+    @Param("productId", ProductIdValidatePipe) productId: string,
+    @Param("reviewId", ReviewIdValidatePipe) reviewId: string,
     @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
     reviewVdoCookies: MediaCookieDto[],
-    @Body() reviewRequestDto: ReviewBodyDto,
+    @Body() reviewBodyDto: ReviewBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
-    const review = await this.reviewBundleService.distinguishOwnReview(
+    const review = await this.reviewTransaction.modifyReviewWithVideos({
+      reviewBodyDto,
+      productId,
       reviewId,
-      jwtPayload.userId,
-    );
-
-    this.reviewBundleService.checkModifyCount(review);
-
-    const mediaWork = () =>
-      Promise.all([
-        this.reviewFunctionService.modifyReviewVideo(review, reviewVdoCookies),
-        this.reviewFunctionService.deleteReviewImage(review.Image),
-      ]).then((res) => res.forEach((func) => func()));
-
-    const modifyWork = () =>
-      Promise.all([
-        this.starRateGeneralService.modifyStarRate({
-          reviewRequestDto,
-          productId,
-          review,
-        }),
-        this.reviewGeneralService.modifyReview({
-          reviewRequestDto,
-          jwtPayload,
-          beforeReview: review,
-        }),
-      ]);
-
-    await Promise.all([mediaWork(), modifyWork()]);
+      userId: jwtPayload.userId,
+      reviewVdoCookies,
+    });
 
     return {
       statusCode: 200,
@@ -370,52 +248,24 @@ export class ReviewVersionOneOnlyClientController {
   }
 
   @ApiOperation({
-    summary: "modify review without media",
+    summary: "modify review no media",
     description:
       "리뷰 아이디에 해당하는 미디어가 포함되지 않은 리뷰를 수정합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(
-    new VerifyDataGuard(
-      productVerifyCookieKey.is_exist.id_executed,
-      productVerifyCookieKey.is_exist.id_executed,
-    ),
-  )
   @Put("/:reviewId/product/:productId")
-  async modifyReviewWithoutMedia(
-    @Param("productId") productId: string,
-    @Param("reviewId") reviewId: string,
-    @Body() reviewRequestDto: ReviewBodyDto,
+  async modifyReviewNoMedia(
+    @Param("productId", ProductIdValidatePipe) productId: string,
+    @Param("reviewId", ReviewIdValidatePipe) reviewId: string,
+    @Body() reviewBodyDto: ReviewBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    const review = await this.reviewBundleService.distinguishOwnReview(
+    const review = await this.reviewTransaction.modifyReviewNoMedia({
+      reviewBodyDto,
+      productId,
       reviewId,
-      jwtPayload.userId,
-    );
-
-    this.reviewBundleService.checkModifyCount(review);
-
-    const mediaWork = () =>
-      Promise.all([
-        this.reviewFunctionService.deleteReviewImage(review.Image),
-        this.reviewFunctionService.deleteReviewVideo(review.Video),
-      ]).then((res) => res.forEach((func) => func()));
-
-    const modifyWork = () =>
-      Promise.all([
-        this.starRateGeneralService.modifyStarRate({
-          reviewRequestDto,
-          productId,
-          review,
-        }),
-        this.reviewGeneralService.modifyReview({
-          reviewRequestDto,
-          jwtPayload,
-          beforeReview: review,
-        }),
-      ]);
-
-    await Promise.all([mediaWork(), modifyWork()]);
+      userId: jwtPayload.userId,
+    });
 
     return {
       statusCode: 200,
@@ -429,20 +279,17 @@ export class ReviewVersionOneOnlyClientController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
-  @Delete("/:reviewId")
+  @Delete("/:reviewId/product/:productId")
   async deleteReview(
-    @Param("reviewId") id: string,
+    @Param("productId", ProductIdValidatePipe) productId: string,
+    @Param("reviewId", ReviewIdValidatePipe) reviewId: string,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    const review = await this.reviewBundleService.distinguishOwnReview(
-      id,
-      jwtPayload.userId,
-    );
-
-    await Promise.all([
-      this.reviewGeneralService.deleteReview(review),
-      this.starRateGeneralService.decreaseStarRate(review),
-    ]);
+    await this.reviewTransaction.deleteReview({
+      reviewId,
+      productId,
+      userId: jwtPayload.userId,
+    });
 
     return {
       statusCode: 200,

@@ -10,15 +10,16 @@ import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { ReviewEntity } from "../entities/review.entity";
-import { ReviewGeneralService } from "../services/review-general.service";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ReviewSearcher } from "../logic/review.searcher";
+import { ProductIdValidatePipe } from "../../product/pipe/exist/product-id-validate.pipe";
 
 @ApiTags("v1 관리자 Review API")
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
 @Controller("/api/v1/only-admin/review")
 export class ReviewVersionOneOnlyAdminController {
-  constructor(private readonly reviewGeneralService: ReviewGeneralService) {}
+  constructor(private readonly reviewSearcher: ReviewSearcher) {}
 
   @ApiOperation({
     summary: "find review from product id",
@@ -28,12 +29,14 @@ export class ReviewVersionOneOnlyAdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/product/:productId")
   async findReviewByProductId(
-    @Param("productId") id: string,
+    @Param("productId", ProductIdValidatePipe) id: string,
   ): Promise<JsonGeneralInterface<ReviewEntity[]>> {
+    const result = await this.reviewSearcher.findReviewsWithProductId(id);
+
     return {
       statusCode: 200,
       message: `상품아이디(${id})에 해당하는 상품의 리뷰를 가져옵니다.`,
-      result: await this.reviewGeneralService.findReviewByProductId(id),
+      result,
     };
   }
 }

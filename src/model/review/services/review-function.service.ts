@@ -1,73 +1,63 @@
-import { MediaDto } from "src/model/media/dto/media.dto";
-import { ReviewAccessoryService } from "./review-accessory.service";
-import { ReviewEntity } from "../entities/review.entity";
 import { Injectable } from "@nestjs/common";
-import { ReviewImageEntity } from "src/model/media/entities/review-image.entity";
-import { ReviewVideoEntity } from "src/model/media/entities/review-video.entity";
+import { ReviewOperationService } from "./review-operation.service";
+import { InsertReviewImageDto } from "../dto/insert-review-image.dto";
+import { InsertReviewVideoDto } from "../dto/insert-review-video.dto";
+import { StarRatingDto1 } from "../dto/star-rating.dto";
+import { ChangeReviewImageDto } from "../dto/change-review-image.dto";
+import { ChangeReviewVideoDto } from "../dto/change-review-video.dto";
+import { ModifyStarRateDto1 } from "../dto/modify-star-rate.dto";
 
 @Injectable()
 export class ReviewFunctionService {
   constructor(
-    private readonly reviewAccessoryService: ReviewAccessoryService,
+    private readonly reviewOperationService: ReviewOperationService,
   ) {}
 
-  async insertReviewImage(
-    review: ReviewEntity,
-    reviewImgCookies: MediaDto[],
-  ): Promise<() => void> {
-    return () =>
-      this.reviewAccessoryService
-        .getReviewImages(reviewImgCookies)
-        .then((reviewImages) =>
-          this.reviewAccessoryService.insertReviewImages(review, reviewImages),
-        );
+  public getInsertReviewImagesFunc(
+    insertReviewImageDto: InsertReviewImageDto,
+  ): () => void {
+    return async () =>
+      await this.reviewOperationService.insertReviewImages(
+        insertReviewImageDto,
+      );
   }
 
-  async insertReviewVideo(
-    review: ReviewEntity,
-    reviewVdoCookies: MediaDto[],
-  ): Promise<() => void> {
-    return () =>
-      this.reviewAccessoryService
-        .getReviewVideos(reviewVdoCookies)
-        .then((reviewVideos) =>
-          this.reviewAccessoryService.insertReviewVideos(review, reviewVideos),
-        );
+  public getInsertReviewVideosFunc(
+    insertReviewVideoDto: InsertReviewVideoDto,
+  ): () => void {
+    return async () =>
+      await this.reviewOperationService.insertReviewVideos(
+        insertReviewVideoDto,
+      );
   }
 
-  async modifyReviewImage(
-    review: ReviewEntity,
-    reviewImgCookies: MediaDto[],
-  ): Promise<() => void> {
-    return () =>
-      this.reviewAccessoryService
-        .getReviewImages(reviewImgCookies)
-        .then((reviewImages) =>
-          this.reviewAccessoryService.modifyReviewImages(review, reviewImages),
-        );
+  public getIncreaseStarRateFunc(starRatingDto: StarRatingDto1): () => void {
+    return async () =>
+      await this.reviewOperationService.increaseStarRate(starRatingDto);
   }
 
-  async modifyReviewVideo(
-    review: ReviewEntity,
-    reviewVdoCookis: MediaDto[],
-  ): Promise<() => void> {
-    return () =>
-      this.reviewAccessoryService
-        .getReviewVideos(reviewVdoCookis)
-        .then((reviewVideos) =>
-          this.reviewAccessoryService.modifyReviewVideos(review, reviewVideos),
-        );
+  public getChangeReviewImagesFunc(
+    changeReviewImageDto: ChangeReviewImageDto,
+  ): () => void {
+    return async () =>
+      await this.reviewOperationService.changeReviewImages(
+        changeReviewImageDto,
+      );
   }
 
-  async deleteReviewImage(
-    reviewImage: ReviewImageEntity[],
-  ): Promise<() => void> {
-    return () => this.reviewAccessoryService.deleteReviewImages(reviewImage);
+  public getChangeReviewVideosFunc(
+    changeReviewVideoDto: ChangeReviewVideoDto,
+  ): () => void {
+    return async () =>
+      await this.reviewOperationService.changeReviewVideos(
+        changeReviewVideoDto,
+      );
   }
 
-  async deleteReviewVideo(
-    reviewVideo: ReviewVideoEntity[],
-  ): Promise<() => void> {
-    return () => this.reviewAccessoryService.deleteReviewVideos(reviewVideo);
+  public getModifyStarRateFunc(
+    modifyStarRateDto: ModifyStarRateDto1,
+  ): () => void {
+    return async () =>
+      await this.reviewOperationService.modifyStarRate(modifyStarRateDto);
   }
 }
