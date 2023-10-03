@@ -142,7 +142,7 @@ export class ReviewOperationRepository {
   }
 
   // Transaction
-  public async renewTotalScore(starRate: StarRateEntity): Promise<void> {
+  public async renewAverage(starRate: StarRateEntity): Promise<void> {
     const { id } = starRate;
     await this.queryRunner.starRateRepository.update(id, { ...starRate });
   }
