@@ -4,6 +4,7 @@ import { UserAuthEntity } from "../entities/user-auth.entity";
 import { Repository } from "typeorm";
 import { UserProfileEntity } from "../entities/user-profile.entity";
 import { UserEntity } from "../entities/user.entity";
+import { ClientUserEntity } from "../entities/client-user.entity";
 
 @Injectable()
 export class UserValidateRepository {
@@ -14,33 +15,39 @@ export class UserValidateRepository {
     private readonly userAuthRepository: Repository<UserAuthEntity>,
     @InjectRepository(UserProfileEntity)
     private readonly userProfileRepository: Repository<UserProfileEntity>,
+    @InjectRepository(ClientUserEntity)
+    private readonly clientUserRepository: Repository<ClientUserEntity>,
   ) {}
 
-  async isExistId(id: string): Promise<boolean> {
+  public async isExistId(id: string): Promise<boolean> {
     return await this.userRepository.exist({ where: { id } });
   }
 
-  async isExistEmail(email: string): Promise<boolean> {
+  public async isExistEmail(email: string): Promise<boolean> {
     return await this.userAuthRepository.exist({ where: { email } });
   }
 
-  async isExistNickname(nickname: string): Promise<boolean> {
+  public async isExistNickname(nickname: string): Promise<boolean> {
     return await this.userAuthRepository.exist({ where: { nickname } });
   }
 
-  async isExistPhoneNumber(phonenumber: string): Promise<boolean> {
+  public async isExistPhoneNumber(phonenumber: string): Promise<boolean> {
     return await this.userProfileRepository.exist({ where: { phonenumber } });
   }
 
-  async isNoneExistEmail(email: string): Promise<boolean> {
+  public async isExistClientUserId(id: string): Promise<boolean> {
+    return await this.clientUserRepository.exist({ where: { id } });
+  }
+
+  public async isNoneExistEmail(email: string): Promise<boolean> {
     return await this.userAuthRepository.exist({ where: { email } });
   }
 
-  async isNoneExistNickname(nickname: string): Promise<boolean> {
+  public async isNoneExistNickname(nickname: string): Promise<boolean> {
     return await this.userAuthRepository.exist({ where: { nickname } });
   }
 
-  async isNoneExistPhonenumber(phonenumber: string): Promise<boolean> {
+  public async isNoneExistPhonenumber(phonenumber: string): Promise<boolean> {
     return await this.userProfileRepository.exist({
       where: { phonenumber },
     });

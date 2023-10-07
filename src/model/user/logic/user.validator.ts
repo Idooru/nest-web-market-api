@@ -9,41 +9,46 @@ export class UserValidator {
     private readonly validateLibrary: ValidateLibrary,
   ) {}
 
-  async isExistId(id: string): Promise<void> {
+  public async isExistId(id: string): Promise<void> {
     const result = await this.userValidateRepository.isExistId(id);
     this.validateLibrary.isExistData(result, "id", id);
   }
 
-  async isExistEmail(email: string): Promise<void> {
+  public async isExistEmail(email: string): Promise<void> {
     const result = await this.userValidateRepository.isExistEmail(email);
     this.validateLibrary.isExistData(result, "email", email);
   }
 
-  async isExistNickname(nickname: string): Promise<void> {
+  public async isExistNickname(nickname: string): Promise<void> {
     const result = await this.userValidateRepository.isExistNickname(nickname);
     this.validateLibrary.isExistData(result, "nickname", nickname);
   }
 
-  async isExistPhoneNumber(phonenumber: string): Promise<void> {
+  public async isExistPhoneNumber(phonenumber: string): Promise<void> {
     const result = await this.userValidateRepository.isExistPhoneNumber(
       phonenumber,
     );
     this.validateLibrary.isExistData(result, "phonenumber", phonenumber);
   }
 
-  async isNoneExistEmail(email: string): Promise<void> {
+  public async isExistClientUserId(id: string): Promise<void> {
+    const result = await this.userValidateRepository.isExistClientUserId(id);
+    this.validateLibrary.isExistData(result, "id", id);
+  }
+
+  public async isNoneExistEmail(email: string): Promise<void> {
     const result = await this.userValidateRepository.isNoneExistEmail(email);
     this.validateLibrary.isNoneExistData(result, "email", email);
   }
 
-  async isNoneExistNickname(nickname: string): Promise<void> {
+  public async isNoneExistNickname(nickname: string): Promise<void> {
     const result = await this.userValidateRepository.isNoneExistNickname(
       nickname,
     );
     this.validateLibrary.isNoneExistData(result, "nickname", nickname);
   }
 
-  async isNoneExistPhonenumber(phonenumber: string): Promise<void> {
+  public async isNoneExistPhonenumber(phonenumber: string): Promise<void> {
     const result = await this.userValidateRepository.isNoneExistPhonenumber(
       phonenumber,
     );
