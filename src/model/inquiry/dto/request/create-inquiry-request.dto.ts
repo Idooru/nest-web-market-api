@@ -1,16 +1,31 @@
-import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
-import { InquiryRequestDto } from "./inquiry-request.dto";
+import { InquiryRequestBodyDto } from "./inquiry-request-body.dto";
+import { MediaCookieDto } from "../../../media/dto/media-cookie.dto";
 
-export class CreateInquiryRequestDto {
-  inquiryRequestDto: InquiryRequestDto;
-  jwtPayload: JwtAccessTokenPayload;
+class InquiryRequestBasicDto {
+  inquiryRequestBodyDto: InquiryRequestBodyDto;
+  userId: string;
   productId: string;
 }
 
-export class CreateInquiryRequestDao {
-  inquiryRequestDto: InquiryRequestDto;
+export class CreateInquiryRequestAllMediaDto extends InquiryRequestBasicDto {
+  inquiryRequestImgCookies: MediaCookieDto[];
+  inquiryRequestVdoCookies: MediaCookieDto[];
+}
+
+export class CreateInquiryRequestWithImageDto extends InquiryRequestBasicDto {
+  inquiryRequestImgCookies: MediaCookieDto[];
+}
+
+export class CreateInquiryRequestWithVideoDto extends InquiryRequestBasicDto {
+  inquiryRequestVdoCookies: MediaCookieDto[];
+}
+
+export class CreateInquiryRequestNoMediaDto extends InquiryRequestBasicDto {}
+
+export class CreateInquiryRequestDto {
+  inquiryRequestBodyDto: InquiryRequestBodyDto;
   client: ClientUserEntity;
   product: ProductEntity;
 }
