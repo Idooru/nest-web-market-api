@@ -11,11 +11,6 @@ import { InquiryRequestImageEntity } from "./entities/inquiry-request-image.enti
 import { InquiryRequestVideoEntity } from "./entities/inquiry-request-video.entity";
 import { MediaVersionOneOnlyClientController } from "./controllers/media-v1-only-client.controller";
 import { MediaVersionOneOnlyAdminController } from "./controllers/media-v1-only-admin.controller";
-import { MediaGeneralService } from "./services/media-general.service";
-import { MediaGeneralRepository } from "./repositories/media-general.repository";
-import { MediaInsertRepository } from "./repositories/media-insert.repository";
-import { MediaAccessoryService } from "./services/media-accessory.service";
-import { MediaBundleService } from "./services/media-bundle.service";
 import { InquiryModule } from "../inquiry/inquiry.module";
 import { InquiryResponseImageEntity } from "./entities/inquiry-response-image.entity";
 import { InquiryResponseVideoEntity } from "./entities/inquiry-response-video.entity";
@@ -64,23 +59,7 @@ import { MediaOperationRepository } from "./repositories/media-operation.reposit
     MediaOperationService,
     MediaOperationRepository,
     MediaSearchRepository,
-    MediaGeneralService,
-    MediaAccessoryService,
-    MediaBundleService,
-    MediaGeneralRepository,
-    MediaInsertRepository,
   ],
-  exports: [
-    {
-      provide: "ProductMediaCookieKey",
-      useValue: productMediaCookieKey,
-    },
-    MediaSearcher,
-    MediaGeneralService,
-    MediaAccessoryService,
-    MediaBundleService,
-    MediaGeneralRepository,
-    MediaInsertRepository,
-  ],
+  exports: [MediaSearcher],
 })
 export class MediaModule {}
