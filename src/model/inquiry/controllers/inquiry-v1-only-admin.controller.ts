@@ -16,25 +16,21 @@ import { JsonGeneralInterface } from "src/common/interceptors/interface/json-gen
 import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { MediaDto } from "src/model/media/dto/media.dto";
-import { InquiryResponseDto } from "../dto/response/inquiry-response.dto";
-import { InquiryResponseBundleService } from "../services/response/inquiry-response-bundle.service";
-import { InquiryResponseGeneralService } from "../services/response/inquiry-response-general.service";
-import { EmailSenderLibrary } from "src/common/lib/email/email-sender.library";
+import { MediaCookieDto } from "src/model/media/dto/media-cookie.dto";
+import { InquiryResponseBodyDto } from "../dto/response/inquiry-response-body.dto";
 import { inquiryVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/inquiry-verify-cookie.key";
 import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { InquiryTransaction } from "../logic/transaction/inquiry.transaction";
+import { InquiryRequestIdValidatePipe } from "../pipe/exist/inquiry-request-id-validate.pipe";
+import { InquiryRequesterIdValidatePipe } from "../pipe/exist/inquiry-requester-id-validate.pipe";
 
 @ApiTags("v1 관리자 Inquiry API")
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
 @Controller("/api/v1/only-admin/inquiry")
 export class InquiryVersionOneOnlyAdminController {
-  constructor(
-    private readonly inquiryResponseGeneralService: InquiryResponseGeneralService,
-    private readonly inquiryResponseBundleService: InquiryResponseBundleService,
-    private readonly emailSenderLibrary: EmailSenderLibrary,
-  ) {}
+  constructor(private readonly inquiryTransaction: InquiryTransaction) {}
 
   @ApiOperation({
     summary: "create inquiry response with image and video",
@@ -42,61 +38,29 @@ export class InquiryVersionOneOnlyAdminController {
       "이미지와 비디오가 포함된 문의 응답을 생성합니다. 이 api를 실행하기 전에 무조건 문의 응답 이미지 혹은 비디오를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 문의 응답 이미지, 비디오 쿠키를 사용합니다.",
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @UseGuards(
-    new VerifyDataGuard(inquiryVerifyCookieKey.response.is_exist.id_executed),
+  @Post(
+    "/inquiry-request/:inquiryRequestId/client-user/:inquiryRequesterId/image&video",
   )
-  @Post("/inquiry-request/:inquiryRequestId/user/:userId/image&video")
   async createInquiryResponseWithImageAndVideo(
-    @Param("inquiryRequestId") inquiryRequestId: string,
-    @Param("userId") userId: string,
+    @Param("inquiryRequestId", InquiryRequestIdValidatePipe)
+    inquiryRequestId: string,
+    @Param("inquiryRequesterId", InquiryRequesterIdValidatePipe)
+    inquiryRequesterId: string,
     @MediaCookiesParser(inquiryMediaCookieKey.response.image_url_cookie)
-    inquiryResponseImgCookies: MediaDto[],
+    inquiryResponseImgCookies: MediaCookieDto[],
     @MediaCookiesParser(inquiryMediaCookieKey.response.video_url_cookie)
-    inquiryResponseVdoCookies: MediaDto[],
+    inquiryResponseVdoCookies: MediaCookieDto[],
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-    @Body() inquiryResponseDto: InquiryResponseDto,
+    @Body() inquiryResponseBodyDto: InquiryResponseBodyDto,
   ): Promise<JsonClearCookiesInterface> {
-    const inquiryResponse =
-      await this.inquiryResponseGeneralService.createInquiry({
-        userId,
-        inquiryRequestId,
-        inquiryResponseDto,
-        jwtPayload,
-      });
-
-    const inquiryResponseId = inquiryResponse.id;
-
-    const mediaWork = async () => {
-      await this.inquiryResponseBundleService.pushInquiryMedia({
-        inquiryResponseDto,
-        inquiryResponseImgCookies,
-        inquiryResponseVdoCookies,
-      });
-
-      await this.inquiryResponseBundleService.insertInquiryMedia({
-        inquiryResponseDto,
-        inquiryResponse,
-        inquiryResponseImgCookies,
-        inquiryResponseVdoCookies,
-      });
-    };
-
-    const mailWork = async () => {
-      const [user, inquiryRequest, inquiryResponse] =
-        await this.inquiryResponseBundleService.findStuffForEmail(
-          userId,
-          inquiryRequestId,
-          inquiryResponseId,
-        );
-
-      await this.emailSenderLibrary.sendMailToClientAboutInquiryResponse({
-        user,
-        inquiryRequest,
-        inquiryResponse,
-      });
-    };
-
-    await Promise.all([mediaWork, mailWork]);
+    await this.inquiryTransaction.createInquiryResponseAllMedias({
+      inquiryResponseBodyDto,
+      inquiryRequestId,
+      inquiryRequesterId,
+      inquiryResponserId: jwtPayload.userId,
+      inquiryResponseImgCookies,
+      inquiryResponseVdoCookies,
+    });
 
     return {
       statusCode: 201,
@@ -114,57 +78,26 @@ export class InquiryVersionOneOnlyAdminController {
       "이미지가 포함된 문의 응답을 생성합니다. 이 api를 실행하기 전에 무조건 문의 응답 이미지를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 문의 응답 이미지 쿠키를 사용합니다.",
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @UseGuards(
-    new VerifyDataGuard(inquiryVerifyCookieKey.response.is_exist.id_executed),
+  @Post(
+    "/inquiry-request/:inquiryRequestId/client-user/:inquiryRequesterId/image",
   )
-  @Post("/inquiry-request/:inquiryRequestId/user/:userId/image")
   async createInquiryResponseWithImage(
-    @Param("inquiryRequestId") inquiryRequestId: string,
-    @Param("userId") userId: string,
+    @Param("inquiryRequestId", InquiryRequestIdValidatePipe)
+    inquiryRequestId: string,
+    @Param("inquiryRequesterId", InquiryRequesterIdValidatePipe)
+    inquiryRequesterId: string,
     @MediaCookiesParser(inquiryMediaCookieKey.response.image_url_cookie)
-    inquiryResponseImgCookies: MediaDto[],
+    inquiryResponseImgCookies: MediaCookieDto[],
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-    @Body() inquiryResponseDto: InquiryResponseDto,
+    @Body() inquiryResponseBodyDto: InquiryResponseBodyDto,
   ): Promise<JsonClearCookiesInterface> {
-    const inquiryResponse =
-      await this.inquiryResponseGeneralService.createInquiry({
-        userId,
-        inquiryRequestId,
-        inquiryResponseDto,
-        jwtPayload,
-      });
-
-    const inquiryResponseId = inquiryResponse.id;
-
-    const mediaWork = async () => {
-      await this.inquiryResponseBundleService.pushInquiryMedia({
-        inquiryResponseDto,
-        inquiryResponseImgCookies,
-      });
-
-      await this.inquiryResponseBundleService.insertInquiryMedia({
-        inquiryResponseDto,
-        inquiryResponse,
-        inquiryResponseImgCookies,
-      });
-    };
-
-    const mailWork = async () => {
-      const [user, inquiryRequest, inquiryResponse] =
-        await this.inquiryResponseBundleService.findStuffForEmail(
-          userId,
-          inquiryRequestId,
-          inquiryResponseId,
-        );
-
-      await this.emailSenderLibrary.sendMailToClientAboutInquiryResponse({
-        user,
-        inquiryRequest,
-        inquiryResponse,
-      });
-    };
-
-    await Promise.all([mediaWork, mailWork]);
+    await this.inquiryTransaction.createInquiryResponseWithImages({
+      inquiryResponseBodyDto,
+      inquiryRequestId,
+      inquiryRequesterId,
+      inquiryResponserId: jwtPayload.userId,
+      inquiryResponseImgCookies,
+    });
 
     return {
       statusCode: 201,
@@ -181,57 +114,26 @@ export class InquiryVersionOneOnlyAdminController {
       "비디오가 포함된 문의 응답을 생성합니다. 이 api를 실행하기 전에 무조건 문의 응답 비디오를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 문의 응답 비디오 쿠키를 사용합니다.",
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @UseGuards(
-    new VerifyDataGuard(inquiryVerifyCookieKey.response.is_exist.id_executed),
+  @Post(
+    "/inquiry-request/:inquiryRequestId/client-user/:inquiryRequesterId/video",
   )
-  @Post("/inquiry-request/:inquiryRequestId/user/:userId/video")
   async createInquiryResponseWithVideo(
-    @Param("inquiryRequestId") inquiryRequestId: string,
-    @Param("userId") userId: string,
+    @Param("inquiryRequestId", InquiryRequestIdValidatePipe)
+    inquiryRequestId: string,
+    @Param("inquiryRequesterId", InquiryRequesterIdValidatePipe)
+    inquiryRequesterId: string,
     @MediaCookiesParser(inquiryMediaCookieKey.response.video_url_cookie)
-    inquiryResponseVdoCookies: MediaDto[],
+    inquiryResponseVdoCookies: MediaCookieDto[],
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-    @Body() inquiryResponseDto: InquiryResponseDto,
+    @Body() inquiryResponseBodyDto: InquiryResponseBodyDto,
   ): Promise<JsonClearCookiesInterface> {
-    const inquiryResponse =
-      await this.inquiryResponseGeneralService.createInquiry({
-        userId,
-        inquiryRequestId,
-        inquiryResponseDto,
-        jwtPayload,
-      });
-
-    const inquiryResponseId = inquiryResponse.id;
-
-    const mediaWork = async () => {
-      await this.inquiryResponseBundleService.pushInquiryMedia({
-        inquiryResponseDto,
-        inquiryResponseVdoCookies,
-      });
-
-      await this.inquiryResponseBundleService.insertInquiryMedia({
-        inquiryResponseDto,
-        inquiryResponse,
-        inquiryResponseVdoCookies,
-      });
-    };
-
-    const mailWork = async () => {
-      const [user, inquiryRequest, inquiryResponse] =
-        await this.inquiryResponseBundleService.findStuffForEmail(
-          userId,
-          inquiryRequestId,
-          inquiryResponseId,
-        );
-
-      await this.emailSenderLibrary.sendMailToClientAboutInquiryResponse({
-        user,
-        inquiryRequest,
-        inquiryResponse,
-      });
-    };
-
-    await Promise.all([mediaWork, mailWork]);
+    await this.inquiryTransaction.createInquiryResponseWithVideos({
+      inquiryResponseBodyDto,
+      inquiryRequestId,
+      inquiryRequesterId,
+      inquiryResponserId: jwtPayload.userId,
+      inquiryResponseVdoCookies,
+    });
 
     return {
       statusCode: 201,
@@ -250,37 +152,21 @@ export class InquiryVersionOneOnlyAdminController {
   @UseGuards(
     new VerifyDataGuard(inquiryVerifyCookieKey.response.is_exist.id_executed),
   )
-  @Post("/inquiry-request/:inquiryRequestId/user/:userId")
+  @Post("/inquiry-request/:inquiryRequestId/client-user/:inquiryRequesterId")
   async createInquiryResponseWithoutMedia(
-    @Param("inquiryRequestId") inquiryRequestId: string,
-    @Param("userId") userId: string,
+    @Param("inquiryRequestId", InquiryRequestIdValidatePipe)
+    inquiryRequestId: string,
+    @Param("inquiryRequesterId", InquiryRequesterIdValidatePipe)
+    inquiryRequesterId: string,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-    @Body() inquiryResponseDto: InquiryResponseDto,
+    @Body() inquiryResponseBodyDto: InquiryResponseBodyDto,
   ): Promise<JsonGeneralInterface<void>> {
-    const inquiryResponse =
-      await this.inquiryResponseGeneralService.createInquiry({
-        userId,
-        inquiryRequestId,
-        inquiryResponseDto,
-        jwtPayload,
-      });
-
-    const inquiryResponseId = inquiryResponse.id;
-
-    (async () => {
-      const [user, inquiryRequest, inquiryResponse] =
-        await this.inquiryResponseBundleService.findStuffForEmail(
-          userId,
-          inquiryRequestId,
-          inquiryResponseId,
-        );
-
-      await this.emailSenderLibrary.sendMailToClientAboutInquiryResponse({
-        user,
-        inquiryRequest,
-        inquiryResponse,
-      });
-    })();
+    await this.inquiryTransaction.createInquiryResponseNoMedia({
+      inquiryResponseBodyDto,
+      inquiryRequestId,
+      inquiryRequesterId,
+      inquiryResponserId: jwtPayload.userId,
+    });
 
     return {
       statusCode: 201,
