@@ -23,6 +23,7 @@ import { UserOperationService } from "./services/user-operation.service";
 import { UserQueryRunnerProvider } from "./logic/transaction/user-query-runner.provider";
 import { UserValidateRepository } from "./repositories/user-validate.repository";
 import { UserValidator } from "./logic/user.validator";
+import { UserFunctionService } from "./services/user-function.service";
 
 @Module({
   imports: [
@@ -55,10 +56,11 @@ import { UserValidator } from "./logic/user.validator";
     UserQueryRunnerProvider,
     UserRepositoryVO,
     UserOperationService,
+    UserFunctionService,
     UserSearchRepository,
     UserOperationRepository,
     UserValidateRepository,
   ],
-  exports: [UserSearcher],
+  exports: [UserSearcher, UserValidator],
 })
 export class UserModule {}
