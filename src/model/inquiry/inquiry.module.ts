@@ -1,6 +1,5 @@
 import { Module, forwardRef } from "@nestjs/common";
 import { InquiryVersionOneOnlyClientController } from "./controllers/inquiry-v1-only-client.controller";
-import { InquiryGeneralRepository } from "./repositories/inquiry-general.repository";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { InquiryRequestEntity } from "src/model/inquiry/entities/inquiry-request.entity";
 import { MediaModule } from "../media/media.module";
@@ -9,22 +8,24 @@ import { ProductModule } from "../product/product.module";
 import { JwtModule } from "@nestjs/jwt";
 import { LibraryModule } from "src/common/lib/library.module";
 import { InquiryVersionOneOnlyAdminController } from "./controllers/inquiry-v1-only-admin.controller";
-import { InquiryVersionOneVerifyController } from "./controllers/inquiry-v1-verify.controller";
-import { InquiryVerifyService } from "./services/inquiry-verify.service";
-import { InquiryVerifyRepository } from "./repositories/inquiry-verify.repository";
-import { InquiryInsertRepository } from "./repositories/inquiry-insert.repository";
 import { MailerConfigurationModule } from "src/common/config/mailer.config";
 import { DotenvConfigurationModule } from "src/common/config/dotenv.config";
-import { InquiryRequestAccessoryService } from "./services/request/inquiry-request-accessory.service";
-import { InquiryRequestBundleService } from "./services/request/inquiry-request-bundle.service";
-import { InquiryRequestGeneralService } from "./services/request/inquiry-request-general.service";
-import { InquiryResponseAccessoryService } from "./services/response/inquiry-response-accessory.service";
-import { InquiryResponseBundleService } from "./services/response/inquiry-response-bundle.service";
-import { InquiryResponseGeneralService } from "./services/response/inquiry-response-general.service";
 import { InquiryResponseEntity } from "./entities/inquiry-response.entity";
 import { inquirySelectProperty } from "src/common/config/repository-select-configs/inquiry.select";
 import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 import { inquiryVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/inquiry-verify-cookie.key";
+import { InquirySearcher } from "./logic/inquiry.searcher";
+import { InquiryOperationService } from "./services/inquiry-operation.service";
+import { InquirySearchRepository } from "./repositories/inquiry-search.repository";
+import { InquiryTransaction } from "./logic/transaction/inquiry.transaction";
+import { InquiryOperationRepository } from "./repositories/inquiry-operation.repository";
+import { InquiryQueryRunnerProvider } from "./logic/transaction/inquiry-query-runner.provider";
+import { InquiryUtils } from "./logic/inquiry.utils";
+import { InquiryFunctionService } from "./services/inquiry-function.service";
+import { InquiryRepositoryVO } from "./logic/transaction/inquiry-repository.vo";
+import { InquiryRequestIdValidatePipe } from "./pipe/exist/inquiry-request-id-validate.pipe";
+import { InquiryValidator } from "./logic/inquiry.validator";
+import { InquiryValidateRepository } from "./repositories/inquiry-validate.repository";
 
 @Module({
   imports: [
@@ -40,7 +41,6 @@ import { inquiryVerifyCookieKey } from "src/common/config/cookie-key-configs/ver
   controllers: [
     InquiryVersionOneOnlyClientController,
     InquiryVersionOneOnlyAdminController,
-    InquiryVersionOneVerifyController,
   ],
   providers: [
     {
@@ -55,28 +55,18 @@ import { inquiryVerifyCookieKey } from "src/common/config/cookie-key-configs/ver
       provide: "InquirySelectProperty",
       useValue: inquirySelectProperty,
     },
-    InquiryRequestAccessoryService,
-    InquiryRequestBundleService,
-    InquiryRequestGeneralService,
-    InquiryResponseAccessoryService,
-    InquiryResponseBundleService,
-    InquiryResponseGeneralService,
-    InquiryVerifyService,
-    InquiryGeneralRepository,
-    InquiryVerifyRepository,
-    InquiryInsertRepository,
-  ],
-  exports: [
-    InquiryRequestAccessoryService,
-    InquiryRequestBundleService,
-    InquiryRequestGeneralService,
-    InquiryResponseAccessoryService,
-    InquiryResponseBundleService,
-    InquiryResponseGeneralService,
-    InquiryVerifyService,
-    InquiryGeneralRepository,
-    InquiryVerifyRepository,
-    InquiryInsertRepository,
+    InquirySearcher,
+    InquirySearchRepository,
+    InquiryTransaction,
+    InquiryQueryRunnerProvider,
+    InquiryOperationService,
+    InquiryOperationRepository,
+    InquiryFunctionService,
+    InquiryUtils,
+    InquiryRepositoryVO,
+    InquiryRequestIdValidatePipe,
+    InquiryValidator,
+    InquiryValidateRepository,
   ],
 })
 export class InquiryModule {}
