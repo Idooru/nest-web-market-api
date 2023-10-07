@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { CreateProductDto } from "../../dto/create-product-dto";
 import { UserSearcher } from "src/model/user/logic/user.searcher";
-import { ProductOperationService } from "../../services/product-operation.service";
-import { ProductFunctionService } from "../../services/product-function.service";
+import { ProductUpdateService } from "../../services/product-update.service";
+import { ProductFactoryService } from "../../services/product-factory.service";
 import { loggerFactory } from "src/common/functions/logger.factory";
 import { TypeOrmException } from "src/common/errors/typeorm.exception";
 import { MediaSearcher } from "src/model/media/logic/media.searcher";
@@ -18,8 +18,8 @@ export class ProductTransaction {
     private readonly productSearcher: ProductSearcher,
     private readonly userSearcher: UserSearcher,
     private readonly mediaSearcher: MediaSearcher,
-    private readonly productOperationService: ProductOperationService,
-    private readonly productFunctionService: ProductFunctionService,
+    private readonly productUpdateService: ProductUpdateService,
+    private readonly productFactoryService: ProductFactoryService,
   ) {}
 
   async createProduct(createProductDto: CreateProductDto): Promise<void> {
@@ -33,16 +33,16 @@ export class ProductTransaction {
     const queryRunner = await this.productQueryRunnerProvider.init();
 
     try {
-      const product = await this.productOperationService.createProduct({
+      const product = await this.productUpdateService.createProduct({
         productBodyDto,
         admin,
       });
 
       const createStarRate =
-        this.productFunctionService.getCreateStarRateFunc(product);
+        this.productFactoryService.getCreateStarRateFunc(product);
 
       const insertProductImage =
-        this.productFunctionService.getInsertProductImageFunc({
+        this.productFactoryService.getInsertProductImageFunc({
           productImages,
           product,
         });
@@ -70,13 +70,13 @@ export class ProductTransaction {
     const queryRunner = await this.productQueryRunnerProvider.init();
 
     try {
-      await this.productOperationService.modifyProduct({
+      await this.productUpdateService.modifyProduct({
         productBodyDto,
         product,
       });
 
       const modifyProductImage =
-        this.productFunctionService.getModifyProductImageFunc({
+        this.productFactoryService.getModifyProductImageFunc({
           beforeProductImages,
           newProductImages,
           product,
@@ -107,7 +107,7 @@ export class ProductTransaction {
 
     try {
       const modifyProductImage =
-        this.productFunctionService.getModifyProductImageFunc({
+        this.productFactoryService.getModifyProductImageFunc({
           beforeProductImages,
           newProductImages,
           product,
