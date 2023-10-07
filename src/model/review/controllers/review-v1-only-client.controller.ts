@@ -25,7 +25,7 @@ import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { ReviewTransaction } from "../logic/transaction/review.transaction";
 import { ProductIdValidatePipe } from "../../product/pipe/exist/product-id-validate.pipe";
-import { ReviewIdValidatePipe } from "../pipe/review-id-validate.pipe";
+import { ReviewIdValidatePipe } from "../pipe/exist/review-id-validate.pipe";
 
 @ApiTags("v1 고객 Review API")
 @UseGuards(IsClientGuard)

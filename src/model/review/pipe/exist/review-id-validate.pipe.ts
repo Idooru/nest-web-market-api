@@ -1,5 +1,5 @@
 import { Injectable, PipeTransform } from "@nestjs/common";
-import { ReviewValidator } from "../logic/review.validator";
+import { ReviewValidator } from "../../logic/review.validator";
 
 @Injectable()
 export class ReviewIdValidatePipe implements PipeTransform {
