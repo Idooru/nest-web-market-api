@@ -3,12 +3,12 @@ import { ReviewEntity } from "../entities/review.entity";
 import { ReviewOperationRepository } from "../repositories/review-operation.repository";
 import { InsertReviewImageDto } from "../dto/insert-review-image.dto";
 import { InsertReviewVideoDto } from "../dto/insert-review-video.dto";
-import { StarRatingDto1 } from "../dto/star-rating.dto";
+import { StarRatingDto } from "../dto/star-rating.dto";
 import { CreateReviewDto } from "../dto/create-review.dto";
 import { ModifyReviewDto } from "../dto/modify-review.dto";
 import { ChangeReviewImageDto } from "../dto/change-review-image.dto";
 import { ChangeReviewVideoDto } from "../dto/change-review-video.dto";
-import { ModifyStarRateDto1 } from "../dto/modify-star-rate.dto";
+import { ModifyStarRateDto } from "../dto/modify-star-rate.dto";
 import { StarRateEntity } from "../entities/star-rate.entity";
 import { ReviewUtils } from "../logic/review.utils";
 
@@ -57,7 +57,7 @@ export class ReviewOperationService {
   }
 
   // Transaction
-  public async increaseStarRate(starRatingDto: StarRatingDto1): Promise<void> {
+  public async increaseStarRate(starRatingDto: StarRatingDto): Promise<void> {
     const { scoreChosenByClient, starRate } = starRatingDto;
 
     await this.reviewOperationRepository.increaseStarRate(
@@ -126,7 +126,7 @@ export class ReviewOperationService {
 
   // Transaction
   public async modifyStarRate(
-    modifyStarRateDto: ModifyStarRateDto1,
+    modifyStarRateDto: ModifyStarRateDto,
   ): Promise<void> {
     const { scoreChosenByClient, starRate, review } = modifyStarRateDto;
     const beforeScore = review.scoreChosenByClient;

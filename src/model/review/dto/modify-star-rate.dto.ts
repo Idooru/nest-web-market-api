@@ -1,6 +1,8 @@
 import { ReviewEntity } from "../entities/review.entity";
-import { StarRatingDto } from "./star-rating.dto";
+import { StarRateEntity } from "../entities/star-rate.entity";
 
-export class ModifyStarRateDto extends StarRatingDto {
+export class ModifyStarRateDto {
+  scoreChosenByClient: 1 | 2 | 3 | 4 | 5;
+  starRate: StarRateEntity;
   review: ReviewEntity;
 }

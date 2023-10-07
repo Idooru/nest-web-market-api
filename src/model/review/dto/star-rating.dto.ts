@@ -1,6 +1,6 @@
-import { ReviewBodyDto } from "./review-body.dto";
+import { StarRateEntity } from "../entities/star-rate.entity";
 
 export class StarRatingDto {
-  reviewRequestDto: ReviewBodyDto;
-  productId: string;
+  scoreChosenByClient: 1 | 2 | 3 | 4 | 5;
+  starRate: StarRateEntity;
 }

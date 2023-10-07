@@ -2,10 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { ReviewOperationService } from "./review-operation.service";
 import { InsertReviewImageDto } from "../dto/insert-review-image.dto";
 import { InsertReviewVideoDto } from "../dto/insert-review-video.dto";
-import { StarRatingDto1 } from "../dto/star-rating.dto";
+import { StarRatingDto } from "../dto/star-rating.dto";
 import { ChangeReviewImageDto } from "../dto/change-review-image.dto";
 import { ChangeReviewVideoDto } from "../dto/change-review-video.dto";
-import { ModifyStarRateDto1 } from "../dto/modify-star-rate.dto";
+import { ModifyStarRateDto } from "../dto/modify-star-rate.dto";
 
 @Injectable()
 export class ReviewFunctionService {
@@ -31,7 +31,7 @@ export class ReviewFunctionService {
       );
   }
 
-  public getIncreaseStarRateFunc(starRatingDto: StarRatingDto1): () => void {
+  public getIncreaseStarRateFunc(starRatingDto: StarRatingDto): () => void {
     return async () =>
       await this.reviewOperationService.increaseStarRate(starRatingDto);
   }
@@ -55,7 +55,7 @@ export class ReviewFunctionService {
   }
 
   public getModifyStarRateFunc(
-    modifyStarRateDto: ModifyStarRateDto1,
+    modifyStarRateDto: ModifyStarRateDto,
   ): () => void {
     return async () =>
       await this.reviewOperationService.modifyStarRate(modifyStarRateDto);
