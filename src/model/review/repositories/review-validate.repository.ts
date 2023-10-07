@@ -10,7 +10,7 @@ export class ReviewValidateRepository {
     private readonly reviewRepository: Repository<ReviewEntity>,
   ) {}
 
-  async isExistId(id: string): Promise<boolean> {
+  public async isExistId(id: string): Promise<boolean> {
     return await this.reviewRepository.exist({ where: { id } });
   }
 }
