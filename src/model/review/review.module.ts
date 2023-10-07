@@ -1,29 +1,29 @@
 import { ProductModule } from "../product/product.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Module, forwardRef } from "@nestjs/common";
-import { ReviewGeneralService } from "./services/review-general.service";
 import { ReviewEntity } from "./entities/review.entity";
 import { UserModule } from "../user/user.module";
-import { ReviewGeneralRepository } from "./repositories/review-general.repository";
 import { StarRateEntity } from "./entities/star-rate.entity";
-import { StarRateGeneralRepository } from "./repositories/star-rate-general.repository";
-import { StarRateGeneralService } from "./services/star-rate-general.service";
 import { LibraryModule } from "src/common/lib/library.module";
 import { JwtModule } from "@nestjs/jwt";
-import { ReviewVersionOneVerifyController } from "./controllers/review-v1-verify.controller";
-import { ReviewVerifyService } from "./services/review-verify.service";
-import { ReviewVerifyRepository } from "./repositories/review-verify.repository";
 import { MediaModule } from "../media/media.module";
 import { ReviewVersionOneOnlyAdminController } from "./controllers/review-v1-only-admin.controller";
 import { ReviewVersionOneOnlyClientController } from "./controllers/review-v1-only-client.controller";
-import { StarRateInsertRepository } from "./repositories/star-rate-insert.repository";
-import { ReviewInsertRepository } from "./repositories/review-insert.repository";
-import { ReviewAccessoryService } from "./services/review-accessory.service";
-import { ReviewBundleService } from "./services/review-bundle.service";
 import { reviewSelectProperty } from "src/common/config/repository-select-configs/review.select";
 import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
 import { reviewVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/review-verify-cookie.key";
 import { ReviewFunctionService } from "./services/review-function.service";
+import { ReviewOperationRepository } from "./repositories/review-operation.repository";
+import { ReviewOperationService } from "./services/review-operation.service";
+import { ReviewQueryRunnerProvider } from "./logic/transaction/review-query-runner.provider";
+import { ReviewTransaction } from "./logic/transaction/review.transaction";
+import { ReviewSearcher } from "./logic/review.searcher";
+import { ReviewRepositoryVO } from "./logic/transaction/review-repository.vo";
+import { ReviewSearchRepository } from "./repositories/review-search.repository";
+import { ReviewUtils } from "./logic/review.utils";
+import { ReviewIdValidatePipe } from "./pipe/exist/review-id-validate.pipe";
+import { ReviewValidator } from "./logic/review.validator";
+import { ReviewValidateRepository } from "./repositories/review-validate.repository";
 
 @Module({
   imports: [
@@ -37,7 +37,6 @@ import { ReviewFunctionService } from "./services/review-function.service";
   controllers: [
     ReviewVersionOneOnlyAdminController,
     ReviewVersionOneOnlyClientController,
-    ReviewVersionOneVerifyController,
   ],
   providers: [
     {
@@ -52,31 +51,19 @@ import { ReviewFunctionService } from "./services/review-function.service";
       provide: "ReviewSelectProperty",
       useValue: reviewSelectProperty,
     },
-    ReviewGeneralService,
-    ReviewVerifyService,
-    ReviewBundleService,
-    ReviewAccessoryService,
+    ReviewSearcher,
+    ReviewTransaction,
     ReviewFunctionService,
-    StarRateGeneralService,
-    ReviewVerifyRepository,
-    ReviewGeneralRepository,
-    StarRateGeneralRepository,
-    ReviewInsertRepository,
-    ReviewVerifyRepository,
-    StarRateInsertRepository,
+    ReviewOperationService,
+    ReviewOperationRepository,
+    ReviewQueryRunnerProvider,
+    ReviewSearchRepository,
+    ReviewRepositoryVO,
+    ReviewUtils,
+    ReviewValidator,
+    ReviewIdValidatePipe,
+    ReviewValidateRepository,
   ],
-  exports: [
-    ReviewGeneralService,
-    ReviewVerifyService,
-    ReviewBundleService,
-    ReviewAccessoryService,
-    StarRateGeneralService,
-    ReviewVerifyRepository,
-    ReviewGeneralRepository,
-    StarRateGeneralRepository,
-    ReviewInsertRepository,
-    ReviewVerifyRepository,
-    StarRateInsertRepository,
-  ],
+  exports: [],
 })
 export class ReviewModule {}
