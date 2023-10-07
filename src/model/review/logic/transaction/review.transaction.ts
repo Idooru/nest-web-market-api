@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { ReviewQueryRunnerProvider } from "./review-query-runner.provider";
-import { ReviewOperationService } from "../../services/review-operation.service";
+import { ReviewUpdateService } from "../../services/review-update.service";
 import { ReviewSearcher } from "../review.searcher";
 import { MediaSearcher } from "../../../media/logic/media.searcher";
-import { ReviewFunctionService } from "../../services/review-function.service";
+import { ReviewFactoryService } from "../../services/review-factory.service";
 import { loggerFactory } from "../../../../common/functions/logger.factory";
 import { TypeOrmException } from "../../../../common/errors/typeorm.exception";
 import {
@@ -30,8 +30,8 @@ export class ReviewTransaction {
     private readonly reviewSearcher: ReviewSearcher,
     private readonly mediaSearcher: MediaSearcher,
     private readonly productSearcher: ProductSearcher,
-    private readonly reviewOperationService: ReviewOperationService,
-    private readonly reviewFunctionService: ReviewFunctionService,
+    private readonly reviewUpdateService: ReviewUpdateService,
+    private readonly reviewFactoryService: ReviewFactoryService,
     private readonly reviewUtils: ReviewUtils,
   ) {}
 
@@ -62,23 +62,23 @@ export class ReviewTransaction {
     const queryRunner = await this.reviewQueryRunnerProvider.init();
 
     try {
-      const review = await this.reviewOperationService.createReview({
+      const review = await this.reviewUpdateService.createReview({
         reviewBodyDto,
         product,
         client,
       });
 
-      const imageWork = this.reviewFunctionService.getInsertReviewImagesFunc({
+      const imageWork = this.reviewFactoryService.getInsertReviewImagesFunc({
         reviewImages,
         review,
       });
 
-      const videoWork = this.reviewFunctionService.getInsertReviewVideosFunc({
+      const videoWork = this.reviewFactoryService.getInsertReviewVideosFunc({
         reviewVideos,
         review,
       });
 
-      const starRateWork = this.reviewFunctionService.getIncreaseStarRateFunc({
+      const starRateWork = this.reviewFactoryService.getIncreaseStarRateFunc({
         scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
         starRate,
       });
@@ -115,18 +115,18 @@ export class ReviewTransaction {
     const queryRunner = await this.reviewQueryRunnerProvider.init();
 
     try {
-      const review = await this.reviewOperationService.createReview({
+      const review = await this.reviewUpdateService.createReview({
         reviewBodyDto,
         product,
         client,
       });
 
-      const imageWork = this.reviewFunctionService.getInsertReviewImagesFunc({
+      const imageWork = this.reviewFactoryService.getInsertReviewImagesFunc({
         reviewImages,
         review,
       });
 
-      const starRateWork = this.reviewFunctionService.getIncreaseStarRateFunc({
+      const starRateWork = this.reviewFactoryService.getIncreaseStarRateFunc({
         scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
         starRate,
       });
@@ -163,18 +163,18 @@ export class ReviewTransaction {
     const queryRunner = await this.reviewQueryRunnerProvider.init();
 
     try {
-      const review = await this.reviewOperationService.createReview({
+      const review = await this.reviewUpdateService.createReview({
         reviewBodyDto,
         product,
         client,
       });
 
-      const videoWork = this.reviewFunctionService.getInsertReviewVideosFunc({
+      const videoWork = this.reviewFactoryService.getInsertReviewVideosFunc({
         reviewVideos,
         review,
       });
 
-      const starRateWork = this.reviewFunctionService.getIncreaseStarRateFunc({
+      const starRateWork = this.reviewFactoryService.getIncreaseStarRateFunc({
         scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
         starRate,
       });
@@ -209,13 +209,13 @@ export class ReviewTransaction {
     const queryRunner = await this.reviewQueryRunnerProvider.init();
 
     try {
-      await this.reviewOperationService.createReview({
+      await this.reviewUpdateService.createReview({
         reviewBodyDto,
         product,
         client,
       });
 
-      const starRateWork = this.reviewFunctionService.getIncreaseStarRateFunc({
+      const starRateWork = this.reviewFactoryService.getIncreaseStarRateFunc({
         scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
         starRate,
       });
@@ -263,21 +263,21 @@ export class ReviewTransaction {
     const queryRunner = await this.reviewQueryRunnerProvider.init();
 
     try {
-      await this.reviewOperationService.modifyReview({ reviewBodyDto, review });
+      await this.reviewUpdateService.modifyReview({ reviewBodyDto, review });
 
-      const imageWork = this.reviewFunctionService.getChangeReviewImagesFunc({
+      const imageWork = this.reviewFactoryService.getChangeReviewImagesFunc({
         beforeReviewImages,
         newReviewImages,
         review,
       });
 
-      const videoWork = this.reviewFunctionService.getChangeReviewVideosFunc({
+      const videoWork = this.reviewFactoryService.getChangeReviewVideosFunc({
         beforeReviewVideos,
         newReviewVideos,
         review,
       });
 
-      const starRateWork = this.reviewFunctionService.getModifyStarRateFunc({
+      const starRateWork = this.reviewFactoryService.getModifyStarRateFunc({
         review,
         starRate,
         scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
@@ -314,15 +314,15 @@ export class ReviewTransaction {
     const queryRunner = await this.reviewQueryRunnerProvider.init();
 
     try {
-      await this.reviewOperationService.modifyReview({ reviewBodyDto, review });
+      await this.reviewUpdateService.modifyReview({ reviewBodyDto, review });
 
-      const imageWork = this.reviewFunctionService.getChangeReviewImagesFunc({
+      const imageWork = this.reviewFactoryService.getChangeReviewImagesFunc({
         beforeReviewImages,
         newReviewImages,
         review,
       });
 
-      const starRateWork = this.reviewFunctionService.getModifyStarRateFunc({
+      const starRateWork = this.reviewFactoryService.getModifyStarRateFunc({
         review,
         starRate,
         scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
@@ -359,15 +359,15 @@ export class ReviewTransaction {
     const queryRunner = await this.reviewQueryRunnerProvider.init();
 
     try {
-      await this.reviewOperationService.modifyReview({ reviewBodyDto, review });
+      await this.reviewUpdateService.modifyReview({ reviewBodyDto, review });
 
-      const videoWork = this.reviewFunctionService.getChangeReviewVideosFunc({
+      const videoWork = this.reviewFactoryService.getChangeReviewVideosFunc({
         beforeReviewVideos,
         newReviewVideos,
         review,
       });
 
-      const starRateWork = this.reviewFunctionService.getModifyStarRateFunc({
+      const starRateWork = this.reviewFactoryService.getModifyStarRateFunc({
         review,
         starRate,
         scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
@@ -400,9 +400,9 @@ export class ReviewTransaction {
     const queryRunner = await this.reviewQueryRunnerProvider.init();
 
     try {
-      await this.reviewOperationService.modifyReview({ reviewBodyDto, review });
+      await this.reviewUpdateService.modifyReview({ reviewBodyDto, review });
 
-      const starRateWork = this.reviewFunctionService.getModifyStarRateFunc({
+      const starRateWork = this.reviewFactoryService.getModifyStarRateFunc({
         review,
         starRate,
         scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
@@ -438,8 +438,8 @@ export class ReviewTransaction {
 
     try {
       await Promise.all([
-        this.reviewOperationService.deleteReviewWithId(review.id),
-        this.reviewOperationService.decreaseStarRate(review, starRate),
+        this.reviewUpdateService.deleteReviewWithId(review.id),
+        this.reviewUpdateService.decreaseStarRate(review, starRate),
       ]);
 
       await queryRunner.commitTransaction();

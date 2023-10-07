@@ -15,13 +15,13 @@ import { inquirySelectProperty } from "src/common/config/repository-select-confi
 import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 import { inquiryVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/inquiry-verify-cookie.key";
 import { InquirySearcher } from "./logic/inquiry.searcher";
-import { InquiryOperationService } from "./services/inquiry-operation.service";
+import { InquiryUpdateService } from "./services/inquiry-update.service";
 import { InquirySearchRepository } from "./repositories/inquiry-search.repository";
 import { InquiryTransaction } from "./logic/transaction/inquiry.transaction";
-import { InquiryOperationRepository } from "./repositories/inquiry-operation.repository";
+import { InquiryUpdateRepository } from "./repositories/inquiry-update.repository";
 import { InquiryQueryRunnerProvider } from "./logic/transaction/inquiry-query-runner.provider";
 import { InquiryUtils } from "./logic/inquiry.utils";
-import { InquiryFunctionService } from "./services/inquiry-function.service";
+import { InquiryFactoryService } from "./services/inquiry-factory.service";
 import { InquiryRepositoryVO } from "./logic/transaction/inquiry-repository.vo";
 import { InquiryRequestIdValidatePipe } from "./pipe/exist/inquiry-request-id-validate.pipe";
 import { InquiryValidator } from "./logic/inquiry.validator";
@@ -59,9 +59,9 @@ import { InquiryValidateRepository } from "./repositories/inquiry-validate.repos
     InquirySearchRepository,
     InquiryTransaction,
     InquiryQueryRunnerProvider,
-    InquiryOperationService,
-    InquiryOperationRepository,
-    InquiryFunctionService,
+    InquiryUpdateService,
+    InquiryUpdateRepository,
+    InquiryFactoryService,
     InquiryUtils,
     InquiryRepositoryVO,
     InquiryRequestIdValidatePipe,

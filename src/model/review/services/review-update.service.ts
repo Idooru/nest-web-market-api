@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { ReviewEntity } from "../entities/review.entity";
-import { ReviewOperationRepository } from "../repositories/review-operation.repository";
+import { ReviewUpdateRepository } from "../repositories/review-update.repository";
 import { InsertReviewImageDto } from "../dto/insert-review-image.dto";
 import { InsertReviewVideoDto } from "../dto/insert-review-video.dto";
 import { StarRatingDto } from "../dto/star-rating.dto";
@@ -13,10 +13,10 @@ import { StarRateEntity } from "../entities/star-rate.entity";
 import { ReviewUtils } from "../logic/review.utils";
 
 @Injectable()
-export class ReviewOperationService {
+export class ReviewUpdateService {
   constructor(
     private readonly reviewUtils: ReviewUtils,
-    private readonly reviewOperationRepository: ReviewOperationRepository,
+    private readonly reviewOperationRepository: ReviewUpdateRepository,
   ) {}
 
   // Transaction

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { InquiryOperationService } from "./inquiry-operation.service";
+import { InquiryUpdateService } from "./inquiry-update.service";
 import { InsertInquiryRequestImageDto } from "../dto/request/insert-inquiry-request-image.dto";
 import { InsertInquiryRequestVideoDto } from "../dto/request/insert-inquiry-request-video.dto";
 import { InsertInquiryResponseImageDto } from "../dto/response/insert-inquiry-response-image.dto";
@@ -9,9 +9,9 @@ import { EmailSenderLibrary } from "../../../common/lib/email/email-sender.libra
 import { SendMailToClientAboutInquiryResponseDto } from "../dto/response/send-mail-to-client-about-inquiry-response.dto";
 
 @Injectable()
-export class InquiryFunctionService {
+export class InquiryFactoryService {
   constructor(
-    private readonly inquiryOpeartionService: InquiryOperationService,
+    private readonly inquiryOpeartionService: InquiryUpdateService,
     private readonly emailSenderLibrary: EmailSenderLibrary,
   ) {}
 

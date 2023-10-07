@@ -1,4 +1,4 @@
-import { UserOperationRepository } from "../repositories/user-operation.repository";
+import { UserUpdateRepository } from "../repositories/user-update.repository";
 import { Injectable } from "@nestjs/common";
 import { UserEntity } from "../entities/user.entity";
 import { RegisterUserDto } from "../dtos/register-user.dto";
@@ -8,9 +8,9 @@ import { UserSecurity } from "../logic/user.security";
 import { ResetPasswordDto } from "../dtos/reset-password.dto";
 
 @Injectable()
-export class UserOperationService {
+export class UserUpdateService {
   constructor(
-    private readonly userOperationRepository: UserOperationRepository,
+    private readonly userOperationRepository: UserUpdateRepository,
     private readonly userSearcher: UserSearcher,
     private readonly userSecurity: UserSecurity,
   ) {}

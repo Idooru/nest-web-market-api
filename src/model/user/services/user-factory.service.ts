@@ -3,7 +3,7 @@ import { EmailSenderLibrary } from "../../../common/lib/email/email-sender.libra
 import { SendMailToClientAboutRegisterDto } from "../dtos/send-mail-to-client-about-register.dto";
 
 @Injectable()
-export class UserFunctionService {
+export class UserFactoryService {
   constructor(private readonly emailSenderLibrary: EmailSenderLibrary) {}
 
   public getSendMailToClientAboutRegister(

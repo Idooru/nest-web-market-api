@@ -9,7 +9,7 @@ import { ProductCategory } from "../types/product-category.type";
 import { ProductImageEntity } from "../../media/entities/product-image.entity";
 
 @Injectable()
-export class ProductOperationRepository {
+export class ProductUpdateRepository {
   constructor(
     private readonly queryRunner: ProductRepositoryVO,
     @InjectRepository(ProductEntity)

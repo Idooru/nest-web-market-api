@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { CreateInquiryRequestDto } from "../dto/request/create-inquiry-request.dto";
-import { InquiryOperationRepository } from "../repositories/inquiry-operation.repository";
+import { InquiryUpdateRepository } from "../repositories/inquiry-update.repository";
 import { InquiryRequestEntity } from "../entities/inquiry-request.entity";
 import { InsertInquiryRequestImageDto } from "../dto/request/insert-inquiry-request-image.dto";
 import { InsertInquiryRequestVideoDto } from "../dto/request/insert-inquiry-request-video.dto";
@@ -10,9 +10,9 @@ import { CreateInquiryResponseDto } from "../dto/response/create-inquiry-respons
 import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
 
 @Injectable()
-export class InquiryOperationService {
+export class InquiryUpdateService {
   constructor(
-    private readonly inquiryOperationRepository: InquiryOperationRepository,
+    private readonly inquiryOperationRepository: InquiryUpdateRepository,
   ) {}
 
   // Transaction

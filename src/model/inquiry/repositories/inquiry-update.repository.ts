@@ -10,7 +10,7 @@ import { InquiryResponseVideoEntity } from "../../media/entities/inquiry-respons
 import { CreateInquiryResponseDto } from "../dto/response/create-inquiry-response.dto";
 
 @Injectable()
-export class InquiryOperationRepository {
+export class InquiryUpdateRepository {
   constructor(private readonly queryRunner: InquiryRepositoryVO) {}
 
   // Transaction

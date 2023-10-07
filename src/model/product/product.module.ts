@@ -17,13 +17,13 @@ import { JwtModule } from "@nestjs/jwt";
 import { productSelectProperty } from "src/common/config/repository-select-configs/product.select";
 import { productMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
 import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
-import { ProductFunctionService } from "./services/product-function.service";
+import { ProductFactoryService } from "./services/product-factory.service";
 import { ProductSearcher } from "./logic/product.searcher";
 import { ProductSearchRepository } from "./repositories/product-search.repository";
 import { ProductRepositoryVO } from "./logic/transaction/product-repository.vo";
 import { ProductTransaction } from "./logic/transaction/product.transaction";
-import { ProductOperationService } from "./services/product-operation.service";
-import { ProductOperationRepository } from "./repositories/product-operation.repository";
+import { ProductUpdateService } from "./services/product-update.service";
+import { ProductUpdateRepository } from "./repositories/product-update.repository";
 import { ProductEntity } from "./entities/product.entity";
 import { ProductQueryRunnerProvider } from "./logic/transaction/product-query-runner.provider";
 import { ProductValidator } from "./logic/product.validator";
@@ -62,9 +62,9 @@ import { ProductIdValidatePipe } from "./pipe/exist/product-id-validate.pipe";
     ProductQueryRunnerProvider,
     ProductTransaction,
     ProductRepositoryVO,
-    ProductOperationService,
-    ProductFunctionService,
-    ProductOperationRepository,
+    ProductUpdateService,
+    ProductFactoryService,
+    ProductUpdateRepository,
     ProductSearchRepository,
     ProductValidateRepository,
     ProductIdValidatePipe,

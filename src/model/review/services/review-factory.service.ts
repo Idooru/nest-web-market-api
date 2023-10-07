@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { ReviewOperationService } from "./review-operation.service";
+import { ReviewUpdateService } from "./review-update.service";
 import { InsertReviewImageDto } from "../dto/insert-review-image.dto";
 import { InsertReviewVideoDto } from "../dto/insert-review-video.dto";
 import { StarRatingDto } from "../dto/star-rating.dto";
@@ -8,9 +8,9 @@ import { ChangeReviewVideoDto } from "../dto/change-review-video.dto";
 import { ModifyStarRateDto } from "../dto/modify-star-rate.dto";
 
 @Injectable()
-export class ReviewFunctionService {
+export class ReviewFactoryService {
   constructor(
-    private readonly reviewOperationService: ReviewOperationService,
+    private readonly reviewOperationService: ReviewUpdateService,
   ) {}
 
   public getInsertReviewImagesFunc(

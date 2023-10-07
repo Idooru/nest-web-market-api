@@ -3,33 +3,33 @@ import { RegisterUserDto } from "../../dtos/register-user.dto";
 import { TypeOrmException } from "src/common/errors/typeorm.exception";
 import { ModifyUserDto } from "../../dtos/modify-user.dto";
 import { loggerFactory } from "src/common/functions/logger.factory";
-import { UserOperationService } from "../../services/user-operation.service";
+import { UserUpdateService } from "../../services/user-update.service";
 import { UserQueryRunnerProvider } from "./user-query-runner.provider";
-import { UserFunctionService } from "../../services/user-function.service";
+import { UserFactoryService } from "../../services/user-factory.service";
 
 @Injectable()
 export class UserTransaction {
   constructor(
     private readonly userQueryRunnerProvider: UserQueryRunnerProvider,
-    private readonly userOperationService: UserOperationService,
-    private readonly userFunctionService: UserFunctionService,
+    private readonly userUpdateService: UserUpdateService,
+    private readonly userFactoryService: UserFactoryService,
   ) {}
 
   async register(registerUserDto: RegisterUserDto): Promise<void> {
     const queryRunner = await this.userQueryRunnerProvider.init();
 
     try {
-      const user = await this.userOperationService.createUserEntity(
+      const user = await this.userUpdateService.createUserEntity(
         registerUserDto.role,
       );
 
-      const authInfo = await this.userOperationService.createUserBase(
+      const authInfo = await this.userUpdateService.createUserBase(
         user,
         registerUserDto,
       );
 
       const emailWork =
-        this.userFunctionService.getSendMailToClientAboutRegister(authInfo);
+        this.userFactoryService.getSendMailToClientAboutRegister(authInfo);
 
       await emailWork();
       await queryRunner.commitTransaction();
@@ -46,7 +46,7 @@ export class UserTransaction {
     const queryRunner = await this.userQueryRunnerProvider.init();
 
     try {
-      await this.userOperationService.modifyUser(modifyUserDto, id);
+      await this.userUpdateService.modifyUser(modifyUserDto, id);
 
       await queryRunner.commitTransaction();
     } catch (err) {

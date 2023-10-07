@@ -15,7 +15,7 @@ import { UserProfileEntity } from "../entities/user-profile.entity";
 import { UserAuthEntity } from "../entities/user-auth.entity";
 
 @Injectable()
-export class UserOperationRepository {
+export class UserUpdateRepository {
   constructor(
     private readonly queryRunner: UserRepositoryVO,
     @InjectRepository(UserEntity)

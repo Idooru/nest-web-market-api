@@ -17,13 +17,13 @@ import { UserTransaction } from "./logic/transaction/user.transaction";
 import { UserRepositoryVO } from "./logic/transaction/user-repository.vo";
 import { UserSearcher } from "./logic/user.searcher";
 import { UserSecurity } from "./logic/user.security";
-import { UserOperationRepository } from "./repositories/user-operation.repository";
+import { UserUpdateRepository } from "./repositories/user-update.repository";
 import { UserSearchRepository } from "./repositories/user-search.repository";
-import { UserOperationService } from "./services/user-operation.service";
+import { UserUpdateService } from "./services/user-update.service";
 import { UserQueryRunnerProvider } from "./logic/transaction/user-query-runner.provider";
 import { UserValidateRepository } from "./repositories/user-validate.repository";
 import { UserValidator } from "./logic/user.validator";
-import { UserFunctionService } from "./services/user-function.service";
+import { UserFactoryService } from "./services/user-factory.service";
 
 @Module({
   imports: [
@@ -55,10 +55,10 @@ import { UserFunctionService } from "./services/user-function.service";
     UserTransaction,
     UserQueryRunnerProvider,
     UserRepositoryVO,
-    UserOperationService,
-    UserFunctionService,
+    UserUpdateService,
+    UserFactoryService,
     UserSearchRepository,
-    UserOperationRepository,
+    UserUpdateRepository,
     UserValidateRepository,
   ],
   exports: [UserSearcher, UserValidator],

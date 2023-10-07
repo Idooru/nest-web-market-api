@@ -3,8 +3,8 @@ import { InquiryQueryRunnerProvider } from "./inquiry-query-runner.provider";
 import { InquirySearcher } from "../inquiry.searcher";
 import { MediaSearcher } from "../../../media/logic/media.searcher";
 import { ProductSearcher } from "../../../product/logic/product.searcher";
-import { InquiryOperationService } from "../../services/inquiry-operation.service";
-import { InquiryFunctionService } from "../../services/inquiry-function.service";
+import { InquiryUpdateService } from "../../services/inquiry-update.service";
+import { InquiryFactoryService } from "../../services/inquiry-factory.service";
 import { InquiryUtils } from "../inquiry.utils";
 import {
   CreateInquiryRequestAllMediaDto,
@@ -28,8 +28,8 @@ export class InquiryTransaction {
     private readonly inquirySearcher: InquirySearcher,
     private readonly mediaSearcher: MediaSearcher,
     private readonly productSearcher: ProductSearcher,
-    private readonly inquiryOperationService: InquiryOperationService,
-    private readonly inquiryFunctionService: InquiryFunctionService,
+    private readonly inquiryUpdateService: InquiryUpdateService,
+    private readonly inquiryFactoryService: InquiryFactoryService,
     private readonly inquiryUtils: InquiryUtils,
   ) {}
 
@@ -62,26 +62,26 @@ export class InquiryTransaction {
 
     try {
       const inquiryRequest =
-        await this.inquiryOperationService.createInquiryRequest({
+        await this.inquiryUpdateService.createInquiryRequest({
           inquiryRequestBodyDto,
           product,
           client,
         });
 
       const imageWork =
-        this.inquiryFunctionService.getInsertInquiryRequestImagesFunc({
+        this.inquiryFactoryService.getInsertInquiryRequestImagesFunc({
           inquiryRequestImages,
           inquiryRequest,
         });
 
       const videoWork =
-        this.inquiryFunctionService.getInsertInquiryRequestVideosFunc({
+        this.inquiryFactoryService.getInsertInquiryRequestVideosFunc({
           inquiryRequestVideos,
           inquiryRequest,
         });
 
       const mailWork =
-        this.inquiryFunctionService.getSendMailToAdminAboutInquiryRequestFunc({
+        this.inquiryFactoryService.getSendMailToAdminAboutInquiryRequestFunc({
           product,
           inquiryRequest,
           client,
@@ -122,20 +122,20 @@ export class InquiryTransaction {
 
     try {
       const inquiryRequest =
-        await this.inquiryOperationService.createInquiryRequest({
+        await this.inquiryUpdateService.createInquiryRequest({
           inquiryRequestBodyDto,
           product,
           client,
         });
 
       const imageWork =
-        this.inquiryFunctionService.getInsertInquiryRequestImagesFunc({
+        this.inquiryFactoryService.getInsertInquiryRequestImagesFunc({
           inquiryRequestImages,
           inquiryRequest,
         });
 
       const emailWork =
-        this.inquiryFunctionService.getSendMailToAdminAboutInquiryRequestFunc({
+        this.inquiryFactoryService.getSendMailToAdminAboutInquiryRequestFunc({
           product,
           inquiryRequest,
           client,
@@ -176,20 +176,20 @@ export class InquiryTransaction {
 
     try {
       const inquiryRequest =
-        await this.inquiryOperationService.createInquiryRequest({
+        await this.inquiryUpdateService.createInquiryRequest({
           inquiryRequestBodyDto,
           product,
           client,
         });
 
       const videoWork =
-        this.inquiryFunctionService.getInsertInquiryRequestVideosFunc({
+        this.inquiryFactoryService.getInsertInquiryRequestVideosFunc({
           inquiryRequestVideos,
           inquiryRequest,
         });
 
       const emailWork =
-        this.inquiryFunctionService.getSendMailToAdminAboutInquiryRequestFunc({
+        this.inquiryFactoryService.getSendMailToAdminAboutInquiryRequestFunc({
           product,
           inquiryRequest,
           client,
@@ -221,14 +221,14 @@ export class InquiryTransaction {
 
     try {
       const inquiryRequest =
-        await this.inquiryOperationService.createInquiryRequest({
+        await this.inquiryUpdateService.createInquiryRequest({
           inquiryRequestBodyDto,
           product,
           client,
         });
 
       const emailWork =
-        this.inquiryFunctionService.getSendMailToAdminAboutInquiryRequestFunc({
+        this.inquiryFactoryService.getSendMailToAdminAboutInquiryRequestFunc({
           product,
           inquiryRequest,
           client,
@@ -277,28 +277,30 @@ export class InquiryTransaction {
 
     try {
       const inquiryResponse =
-        await this.inquiryOperationService.createInquiryResponse({
+        await this.inquiryUpdateService.createInquiryResponse({
           inquiryResponseBodyDto,
           admin: inquiryResponser,
           inquiryRequest,
         });
 
       const imageWork =
-        this.inquiryFunctionService.getInsertInquiryResponseImagesFunc({
+        this.inquiryFactoryService.getInsertInquiryResponseImagesFunc({
           inquiryResponseImages,
           inquiryResponse,
         });
 
       const videoWork =
-        this.inquiryFunctionService.getInsertInquiryResponseVideosFunc({
+        this.inquiryFactoryService.getInsertInquiryResponseVideosFunc({
           inquiryResponseVideos,
           inquiryResponse,
         });
 
       const emailWork =
-        this.inquiryFunctionService.getSendMailToClientAboutInquiryResponseFunc(
-          { inquiryRequester, inquiryRequest, inquiryResponse },
-        );
+        this.inquiryFactoryService.getSendMailToClientAboutInquiryResponseFunc({
+          inquiryRequester,
+          inquiryRequest,
+          inquiryResponse,
+        });
 
       await Promise.all([imageWork(), videoWork(), emailWork()]);
       await queryRunner.commitTransaction();
@@ -338,22 +340,24 @@ export class InquiryTransaction {
 
     try {
       const inquiryResponse =
-        await this.inquiryOperationService.createInquiryResponse({
+        await this.inquiryUpdateService.createInquiryResponse({
           inquiryResponseBodyDto,
           admin: inquiryResponser,
           inquiryRequest,
         });
 
       const imageWork =
-        this.inquiryFunctionService.getInsertInquiryResponseImagesFunc({
+        this.inquiryFactoryService.getInsertInquiryResponseImagesFunc({
           inquiryResponseImages,
           inquiryResponse,
         });
 
       const emailWork =
-        this.inquiryFunctionService.getSendMailToClientAboutInquiryResponseFunc(
-          { inquiryRequester, inquiryRequest, inquiryResponse },
-        );
+        this.inquiryFactoryService.getSendMailToClientAboutInquiryResponseFunc({
+          inquiryRequester,
+          inquiryRequest,
+          inquiryResponse,
+        });
 
       await Promise.all([imageWork(), emailWork()]);
 
@@ -394,22 +398,24 @@ export class InquiryTransaction {
 
     try {
       const inquiryResponse =
-        await this.inquiryOperationService.createInquiryResponse({
+        await this.inquiryUpdateService.createInquiryResponse({
           inquiryResponseBodyDto,
           admin: inquiryResponser,
           inquiryRequest,
         });
 
       const videoWork =
-        this.inquiryFunctionService.getInsertInquiryResponseVideosFunc({
+        this.inquiryFactoryService.getInsertInquiryResponseVideosFunc({
           inquiryResponseVideos,
           inquiryResponse,
         });
 
       const emailWork =
-        this.inquiryFunctionService.getSendMailToClientAboutInquiryResponseFunc(
-          { inquiryRequester, inquiryRequest, inquiryResponse },
-        );
+        this.inquiryFactoryService.getSendMailToClientAboutInquiryResponseFunc({
+          inquiryRequester,
+          inquiryRequest,
+          inquiryResponse,
+        });
 
       await Promise.all([videoWork(), emailWork()]);
       await queryRunner.commitTransaction();
@@ -443,16 +449,18 @@ export class InquiryTransaction {
 
     try {
       const inquiryResponse =
-        await this.inquiryOperationService.createInquiryResponse({
+        await this.inquiryUpdateService.createInquiryResponse({
           inquiryResponseBodyDto,
           admin: inquiryResponser,
           inquiryRequest,
         });
 
       const emailWork =
-        this.inquiryFunctionService.getSendMailToClientAboutInquiryResponseFunc(
-          { inquiryRequester, inquiryRequest, inquiryResponse },
-        );
+        this.inquiryFactoryService.getSendMailToClientAboutInquiryResponseFunc({
+          inquiryRequester,
+          inquiryRequest,
+          inquiryResponse,
+        });
 
       await emailWork();
       await queryRunner.commitTransaction();

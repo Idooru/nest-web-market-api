@@ -8,7 +8,7 @@ import { CreateReviewDto } from "../dto/create-review.dto";
 import { ModifyReviewDto } from "../dto/modify-review.dto";
 
 @Injectable()
-export class ReviewOperationRepository {
+export class ReviewUpdateRepository {
   constructor(private readonly queryRunner: ReviewRepositoryVO) {}
 
   // Transaction

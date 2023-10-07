@@ -12,9 +12,9 @@ import { ReviewVersionOneOnlyClientController } from "./controllers/review-v1-on
 import { reviewSelectProperty } from "src/common/config/repository-select-configs/review.select";
 import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
 import { reviewVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/review-verify-cookie.key";
-import { ReviewFunctionService } from "./services/review-function.service";
-import { ReviewOperationRepository } from "./repositories/review-operation.repository";
-import { ReviewOperationService } from "./services/review-operation.service";
+import { ReviewFactoryService } from "./services/review-factory.service";
+import { ReviewUpdateRepository } from "./repositories/review-update.repository";
+import { ReviewUpdateService } from "./services/review-update.service";
 import { ReviewQueryRunnerProvider } from "./logic/transaction/review-query-runner.provider";
 import { ReviewTransaction } from "./logic/transaction/review.transaction";
 import { ReviewSearcher } from "./logic/review.searcher";
@@ -53,9 +53,9 @@ import { ReviewValidateRepository } from "./repositories/review-validate.reposit
     },
     ReviewSearcher,
     ReviewTransaction,
-    ReviewFunctionService,
-    ReviewOperationService,
-    ReviewOperationRepository,
+    ReviewFactoryService,
+    ReviewUpdateService,
+    ReviewUpdateRepository,
     ReviewQueryRunnerProvider,
     ReviewSearchRepository,
     ReviewRepositoryVO,
