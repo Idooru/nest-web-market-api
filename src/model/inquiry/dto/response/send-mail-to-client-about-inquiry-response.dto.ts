@@ -1,9 +1,9 @@
-import { UserEntity } from "src/model/user/entities/user.entity";
 import { InquiryRequestEntity } from "../../entities/inquiry-request.entity";
 import { InquiryResponseEntity } from "../../entities/inquiry-response.entity";
+import { ClientUserEntity } from "../../../user/entities/client-user.entity";
 
 export class SendMailToClientAboutInquiryResponseDto {
-  user: UserEntity;
+  inquiryRequester: ClientUserEntity;
   inquiryRequest: InquiryRequestEntity;
   inquiryResponse: InquiryResponseEntity;
 }
