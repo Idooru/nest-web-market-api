@@ -1,8 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { ReviewRepositoryVO } from "../logic/transaction/review-repository.vo";
-import { InjectRepository } from "@nestjs/typeorm";
 import { ReviewEntity } from "../entities/review.entity";
-import { Repository } from "typeorm";
 import { ReviewImageEntity } from "../../media/entities/review-image.entity";
 import { ReviewVideoEntity } from "../../media/entities/review-video.entity";
 import { StarRateEntity } from "../entities/star-rate.entity";
@@ -11,11 +9,7 @@ import { ModifyReviewDto } from "../dto/modify-review.dto";
 
 @Injectable()
 export class ReviewOperationRepository {
-  constructor(
-    private readonly queryRunner: ReviewRepositoryVO,
-    @InjectRepository(ReviewEntity)
-    private readonly reviewRepository: Repository<ReviewEntity>,
-  ) {}
+  constructor(private readonly queryRunner: ReviewRepositoryVO) {}
 
   // Transaction
   public async createReview(
