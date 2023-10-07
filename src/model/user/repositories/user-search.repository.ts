@@ -97,8 +97,10 @@ export class UserSearchRepository {
 
     return await this.clientUserRepository
       .createQueryBuilder()
-      .select(["client"])
+      .select(["client", "User", "Auth"])
       .from(ClientUserEntity, "client")
+      .innerJoin("client.User", "User")
+      .innerJoin("User.Auth", "Auth")
       .where("client.id = :id", { id: user.clientActions.id })
       .getOne();
   }
