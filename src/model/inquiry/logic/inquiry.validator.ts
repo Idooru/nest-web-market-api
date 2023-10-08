@@ -11,6 +11,6 @@ export class InquiryValidator {
 
   public async isExistRequestId(id: string): Promise<void> {
     const result = await this.inquiryValidateRepository.isExistRequestId(id);
-    this.validateLibrary.isExistData(result, "id", id);
+    this.validateLibrary.isExistData(result, "inquiry request id", id);
   }
 }

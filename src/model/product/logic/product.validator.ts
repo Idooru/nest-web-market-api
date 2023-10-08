@@ -11,11 +11,11 @@ export class ProductValidator {
 
   async isExistId(id: string): Promise<void> {
     const result = await this.productValidateRepository.isExistId(id);
-    this.validateLibrary.isExistData(result, "id", id);
+    this.validateLibrary.isExistData(result, "product id", id);
   }
 
   async isNoneExistName(name: string): Promise<void> {
     const result = await this.productValidateRepository.isNoneExistName(name);
-    this.validateLibrary.isNoneExistData(result, "name", name);
+    this.validateLibrary.isNoneExistData(result, "product name", name);
   }
 }
