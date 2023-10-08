@@ -1,10 +1,15 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
+import { LibraryError } from "./library.error";
 
 export class LibraryException extends HttpException {
-  constructor(error: Error, libraryName: string) {
-    super(
-      { error, libraryName, statusCode: 500 },
-      HttpStatus.INTERNAL_SERVER_ERROR,
-    );
+  private readonly _error: LibraryError;
+
+  constructor(error: LibraryError) {
+    super({ error, statusCode: 500 }, HttpStatus.INTERNAL_SERVER_ERROR);
+    this._error = error;
+  }
+
+  public get error() {
+    return this._error;
   }
 }
