@@ -1,4 +1,4 @@
-export class JwtAccessTokenPayload {
+export interface JwtAccessTokenPayload {
   userId: string;
   email?: string;
   nickname: string;
