@@ -22,9 +22,9 @@ import { MediaSearcher } from "./logic/media.searcher";
 import { MediaSearchRepository } from "./repositories/media-search.repository";
 import { productSelectProperty } from "../../common/config/repository-select-configs/product.select";
 import { MediaValidator } from "./logic/media.validator";
-import { MediaOperationService } from "./services/media-operation.service";
 import { MediaUtils } from "./logic/media.utils";
-import { MediaOperationRepository } from "./repositories/media-operation.repository";
+import { MediaUpdateRepository } from "./repositories/media-update.repository";
+import { MediaUpdateService } from "./services/media-update.service";
 
 @Module({
   imports: [
@@ -56,8 +56,8 @@ import { MediaOperationRepository } from "./repositories/media-operation.reposit
     MediaSearcher,
     MediaValidator,
     MediaUtils,
-    MediaOperationService,
-    MediaOperationRepository,
+    MediaUpdateService,
+    MediaUpdateRepository,
     MediaSearchRepository,
   ],
   exports: [MediaSearcher],

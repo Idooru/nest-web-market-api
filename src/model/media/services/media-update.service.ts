@@ -1,13 +1,13 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { MediaUtils } from "../logic/media.utils";
 import { MediaCookieDto } from "../dto/media-cookie.dto";
-import { MediaOperationRepository } from "../repositories/media-operation.repository";
+import { MediaUpdateRepository } from "../repositories/media-update.repository";
 import { ProductMediaCookieKey } from "../../../common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
 import { InquiryMediaCookieKey } from "../../../common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 import { ReviewMediaCookieKey } from "../../../common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
 
 @Injectable()
-export class MediaOperationService {
+export class MediaUpdateService {
   constructor(
     @Inject("ProductMediaCookieKey")
     private readonly productMedia: ProductMediaCookieKey,
@@ -16,7 +16,7 @@ export class MediaOperationService {
     @Inject("InquiryMediaCookieKey")
     private readonly inquiryMedia: InquiryMediaCookieKey,
     private readonly mediaUtils: MediaUtils,
-    private readonly mediaOperationRepository: MediaOperationRepository,
+    private readonly mediaOperationRepository: MediaUpdateRepository,
   ) {}
 
   // General

@@ -37,7 +37,7 @@ import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.ent
 import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { MediaSearcher } from "../logic/media.searcher";
-import { MediaOperationService } from "../services/media-operation.service";
+import { MediaUpdateService } from "../services/media-update.service";
 import { ReviewImageValidatePipe } from "../pipe/exist/review-image-validate.pipe";
 import { ReviewVideoValidatePipe } from "../pipe/exist/review-video-validate.pipe";
 import { InquiryRequestImageValidatePipe } from "../pipe/exist/inquiry-request-image-validate.pipe";
@@ -50,7 +50,7 @@ import { InquiryRequestVideoValidatePipe } from "../pipe/exist/inquiry-request-v
 export class MediaVersionOneOnlyClientController {
   constructor(
     private readonly mediaSearcher: MediaSearcher,
-    private readonly mediaOperationService: MediaOperationService,
+    private readonly mediaUpdateService: MediaUpdateService,
     private readonly mediaLoggerLibrary: MediaLoggerLibrary,
     @Inject("ReviewMediaCookieKey")
     private readonly reviewMedia: ReviewMediaCookieKey,
@@ -167,7 +167,7 @@ export class MediaVersionOneOnlyClientController {
   async uploadReviewImage(
     @UploadedFiles(ReviewImageValidatePipe) files: Express.Multer.File[],
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
-    const cookieValues = await this.mediaOperationService.uploadReviewImages(
+    const cookieValues = await this.mediaUpdateService.uploadReviewImages(
       files,
     );
 
@@ -196,7 +196,7 @@ export class MediaVersionOneOnlyClientController {
   async uploadReviewVideo(
     @UploadedFiles(ReviewVideoValidatePipe) files: Express.Multer.File[],
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
-    const cookieValues = await this.mediaOperationService.uploadReviewVideos(
+    const cookieValues = await this.mediaUpdateService.uploadReviewVideos(
       files,
     );
 
@@ -227,7 +227,7 @@ export class MediaVersionOneOnlyClientController {
     files: Express.Multer.File[],
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
     const cookieValues =
-      await this.mediaOperationService.uploadInquiryRequestImages(files);
+      await this.mediaUpdateService.uploadInquiryRequestImages(files);
 
     return {
       statusCode: 201,
@@ -256,7 +256,7 @@ export class MediaVersionOneOnlyClientController {
     files: Express.Multer.File[],
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
     const cookieValues =
-      await this.mediaOperationService.uploadInquiryRequestVideos(files);
+      await this.mediaUpdateService.uploadInquiryRequestVideos(files);
 
     return {
       statusCode: 201,
@@ -277,7 +277,7 @@ export class MediaVersionOneOnlyClientController {
     @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
     reviewImgCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
-    const cookieKey = await this.mediaOperationService.deleteReviewImagesWithId(
+    const cookieKey = await this.mediaUpdateService.deleteReviewImagesWithId(
       reviewImgCookies,
     );
 
@@ -299,7 +299,7 @@ export class MediaVersionOneOnlyClientController {
     @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
     reviewVdoCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
-    const cookieKey = await this.mediaOperationService.deleteReviewVideosWithId(
+    const cookieKey = await this.mediaUpdateService.deleteReviewVideosWithId(
       reviewVdoCookies,
     );
 
@@ -322,7 +322,7 @@ export class MediaVersionOneOnlyClientController {
     inquiryRequestImgCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
     const cookieKey =
-      await this.mediaOperationService.deleteInquiryRequestImagesWithId(
+      await this.mediaUpdateService.deleteInquiryRequestImagesWithId(
         inquiryRequestImgCookies,
       );
 
@@ -345,7 +345,7 @@ export class MediaVersionOneOnlyClientController {
     inquiryRequestVdoCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
     const cookieKey =
-      await this.mediaOperationService.deleteInquiryRequestVideosWithId(
+      await this.mediaUpdateService.deleteInquiryRequestVideosWithId(
         inquiryRequestVdoCookies,
       );
 

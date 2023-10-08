@@ -35,7 +35,7 @@ import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.e
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { InquiryResponseVideoEntity } from "../entities/inquiry-response-video.entity";
 import { ProductImagesValidatePipe } from "../pipe/exist/product-images-validate.pipe";
-import { MediaOperationService } from "../services/media-operation.service";
+import { MediaUpdateService } from "../services/media-update.service";
 import { InquiryResponseImageValidatePipe } from "../pipe/exist/inquiry-response-image-validate.pipe";
 import { MediaSearcher } from "../logic/media.searcher";
 import { InquiryResponseVideoValidatePipe } from "../pipe/exist/inquiry-response-video-validate.pipe";
@@ -47,7 +47,7 @@ import { InquiryResponseVideoValidatePipe } from "../pipe/exist/inquiry-response
 export class MediaVersionOneOnlyAdminController {
   constructor(
     private readonly mediaSearcher: MediaSearcher,
-    private readonly mediaOperationService: MediaOperationService,
+    private readonly mediaUpdateService: MediaUpdateService,
     @Inject("ProductMediaCookieKey")
     private readonly productMedia: ProductMediaCookieKey,
     @Inject("InquiryMediaCookieKey")
@@ -141,7 +141,7 @@ export class MediaVersionOneOnlyAdminController {
     @UploadedFiles(ProductImagesValidatePipe)
     files: Express.Multer.File[],
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
-    const cookieValues = await this.mediaOperationService.uploadProductImages(
+    const cookieValues = await this.mediaUpdateService.uploadProductImages(
       files,
     );
 
@@ -172,7 +172,7 @@ export class MediaVersionOneOnlyAdminController {
     files: Express.Multer.File[],
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
     const cookieValues =
-      await this.mediaOperationService.uploadInquiryResponseImages(files);
+      await this.mediaUpdateService.uploadInquiryResponseImages(files);
 
     return {
       statusCode: 201,
@@ -201,7 +201,7 @@ export class MediaVersionOneOnlyAdminController {
     files: Array<Express.Multer.File>,
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
     const cookieValues =
-      await this.mediaOperationService.uploadInquiryResponseVideos(files);
+      await this.mediaUpdateService.uploadInquiryResponseVideos(files);
 
     return {
       statusCode: 201,
@@ -222,10 +222,9 @@ export class MediaVersionOneOnlyAdminController {
     @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
     productImgCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
-    const cookieKey =
-      await this.mediaOperationService.deleteProductImagesWithId(
-        productImgCookies,
-      );
+    const cookieKey = await this.mediaUpdateService.deleteProductImagesWithId(
+      productImgCookies,
+    );
 
     return {
       statusCode: 200,
@@ -246,7 +245,7 @@ export class MediaVersionOneOnlyAdminController {
     inquiryResponseImgCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
     const cookieKey =
-      await this.mediaOperationService.deleteInquiryResponseImagesWithId(
+      await this.mediaUpdateService.deleteInquiryResponseImagesWithId(
         inquiryResponseImgCookies,
       );
 
@@ -269,7 +268,7 @@ export class MediaVersionOneOnlyAdminController {
     inquiryResponseVdoCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
     const cookieKey =
-      await this.mediaOperationService.deleteInquiryResponseVideosWithId(
+      await this.mediaUpdateService.deleteInquiryResponseVideosWithId(
         inquiryResponseVdoCookies,
       );
 

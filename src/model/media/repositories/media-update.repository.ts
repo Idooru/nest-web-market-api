@@ -11,7 +11,7 @@ import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.ent
 import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
 
 @Injectable()
-export class MediaOperationRepository {
+export class MediaUpdateRepository {
   constructor(
     @InjectRepository(ProductImageEntity)
     private readonly productImageRepository: Repository<ProductImageEntity>,
