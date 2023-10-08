@@ -13,14 +13,12 @@ import {
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { VerifyDataGuard } from "src/common/guards/verify/verify-data.guard";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ProductEntity } from "../../entities/product.entity";
 import { MediaCookieDto } from "src/model/media/dto/media-cookie.dto";
 import { productMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
-import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
 import { ModifyProductNameDto } from "../../dto/modify-product-name.dto";
 import { ModifyProductPriceDto } from "../../dto/modify-product-price.dto";
 import { ModifyProductOriginDto } from "../../dto/modify-product-origin.dto";
@@ -34,7 +32,7 @@ import { JsonClearCookiesInterface } from "src/common/interceptors/interface/jso
 import { ProductTransaction } from "../../logic/transaction/product.transaction";
 import { ProductSearcher } from "../../logic/product.searcher";
 import { ProductBodyDto } from "../../dto/product-body.dto";
-import { ProductOperationService } from "../../services/product-operation.service";
+import { ProductUpdateService } from "../../services/product-update.service";
 import { ProductNameValidatePipe } from "../../pipe/none-exist/product-name-validate.pipe";
 import { ProductIdValidatePipe } from "../../pipe/exist/product-id-validate.pipe";
 
@@ -46,7 +44,7 @@ export class ProductVersionOneOnlyAdminController {
   constructor(
     private readonly productSearcher: ProductSearcher,
     private readonly productTransaction: ProductTransaction,
-    private readonly productOperationService: ProductOperationService,
+    private readonly productOperationService: ProductUpdateService,
   ) {}
   @ApiOperation({
     summary: "find product by id",
@@ -99,12 +97,6 @@ export class ProductVersionOneOnlyAdminController {
       "상품의 아이디에 해당하는 상품의 전체 column, 상품에 사용되는 이미지를 수정합니다. 수정하려는 상품의 가격, 수량을 양의 정수 이외의 숫자로 지정하거나 수정하려는 상품의 이름이 이미 데이터베이스에 존재 한다면 에러를 반환합니다. 이 api를 실행하기 전에 무조건 상품 이미지를 업로드해야 합니다.",
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @UseGuards(
-    new VerifyDataGuard(
-      productVerifyCookieKey.is_exist.id_executed,
-      productVerifyCookieKey.is_not_exist.name_executed,
-    ),
-  )
   @Put("/:id")
   async modifyProduct(
     @MediaCookiesParser(productMediaCookieKey.image_url_cookie)

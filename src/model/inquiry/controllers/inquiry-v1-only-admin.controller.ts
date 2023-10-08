@@ -10,7 +10,6 @@ import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
-import { VerifyDataGuard } from "src/common/guards/verify/verify-data.guard";
 import { JsonClearCookiesInterface } from "src/common/interceptors/interface/json-clear-cookies.interface";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
@@ -18,7 +17,6 @@ import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-gen
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { MediaCookieDto } from "src/model/media/dto/media-cookie.dto";
 import { InquiryResponseBodyDto } from "../dto/response/inquiry-response-body.dto";
-import { inquiryVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/inquiry-verify-cookie.key";
 import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { InquiryTransaction } from "../logic/transaction/inquiry.transaction";
@@ -149,9 +147,6 @@ export class InquiryVersionOneOnlyAdminController {
     description: "미디어 없이 문의 응답을 생성합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(
-    new VerifyDataGuard(inquiryVerifyCookieKey.response.is_exist.id_executed),
-  )
   @Post("/inquiry-request/:inquiryRequestId/client-user/:inquiryRequesterId")
   async createInquiryResponseWithoutMedia(
     @Param("inquiryRequestId", InquiryRequestIdValidatePipe)

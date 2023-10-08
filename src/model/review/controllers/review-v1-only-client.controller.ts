@@ -17,10 +17,8 @@ import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-gen
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
-import { VerifyDataGuard } from "src/common/guards/verify/verify-data.guard";
 import { ReviewBodyDto } from "../dto/review-body.dto";
 import { MediaCookieDto } from "src/model/media/dto/media-cookie.dto";
-import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
 import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { ReviewTransaction } from "../logic/transaction/review.transaction";
@@ -40,7 +38,6 @@ export class ReviewVersionOneOnlyClientController {
       "이미지와 비디오가 포함된 리뷰를 생성합니다. 이 api를 실행하기 전에 무조건 리뷰 이미지 혹은 비디오를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 리뷰 이미지, 비디오 쿠키를 사용합니다.",
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Post("/product/:productId/image&video")
   async createReviewWithAllMedias(
     @Param("productId", ProductIdValidatePipe) productId: string,
@@ -75,7 +72,6 @@ export class ReviewVersionOneOnlyClientController {
       "이미지가 포함된 리뷰를 생성합니다. 이 api를 실행하기 전에 무조건 리뷰 이미지를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 리뷰 이미지 쿠키를 사용합니다.",
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Post("/product/:productId/image")
   async createReviewWithImage(
     @Param("productId", ProductIdValidatePipe) productId: string,
@@ -104,7 +100,6 @@ export class ReviewVersionOneOnlyClientController {
       "비디오가 포함된 리뷰를 생성합니다. 이 api를 실행하기 전에 무조건 리뷰 비디오를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 리뷰 비디오 쿠키를 사용합니다.",
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Post("/product/:productId/video")
   async createReviewWithVideo(
     @Param("productId", ProductIdValidatePipe) productId: string,
@@ -132,7 +127,6 @@ export class ReviewVersionOneOnlyClientController {
     description: "미디어 없이 리뷰를 생성합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Post("/product/:productId")
   async createReviewNoMedia(
     @Param("productId", ProductIdValidatePipe) productId: string,
@@ -278,7 +272,6 @@ export class ReviewVersionOneOnlyClientController {
     description: "리뷰 아이디에 해당하는 모든 형태의 리뷰를 제거합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @UseGuards(new VerifyDataGuard(productVerifyCookieKey.is_exist.id_executed))
   @Delete("/:reviewId/product/:productId")
   async deleteReview(
     @Param("productId", ProductIdValidatePipe) productId: string,
