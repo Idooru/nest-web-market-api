@@ -13,7 +13,7 @@ import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-gen
 import { UserEntity } from "../../entities/user.entity";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { UserSearcher } from "../../logic/user.searcher";
-import { UserOperationService } from "../../services/user-operation.service";
+import { UserUpdateService } from "../../services/user-update.service";
 import { UserIdValidatePipe } from "../../pipe/exist/user-id-validate.pipe";
 
 @ApiTags("v1 관리자 User API")
@@ -23,7 +23,7 @@ import { UserIdValidatePipe } from "../../pipe/exist/user-id-validate.pipe";
 export class UserVersionOneOnlyAdminController {
   constructor(
     private readonly userSearcher: UserSearcher,
-    private readonly userOperationService: UserOperationService,
+    private readonly userUpdateService: UserUpdateService,
   ) {}
 
   @ApiOperation({
@@ -88,7 +88,7 @@ export class UserVersionOneOnlyAdminController {
   async kickUser(
     @Param("id", UserIdValidatePipe) id: string,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userOperationService.deleteUser(id);
+    await this.userUpdateService.deleteUser(id);
 
     return {
       statusCode: 200,

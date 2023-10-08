@@ -35,7 +35,7 @@ import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { UserTransaction } from "../../logic/transaction/user.transaction";
 import { UserSecurity } from "../../logic/user.security";
 import { UserSearcher } from "../../logic/user.searcher";
-import { UserOperationService } from "../../services/user-operation.service";
+import { UserUpdateService } from "../../services/user-update.service";
 import { UserOperationValidatePipe } from "../../pipe/none-exist/user-operation-validate.pipe";
 import { UserEmailValidatePipe } from "../../pipe/none-exist/user-email-validate.pipe";
 import { UserPhonenumberValidatePipe } from "../../pipe/none-exist/user-phonenumber-validate.pipe";
@@ -48,7 +48,7 @@ export class UserVersionOneFreeUseController {
     private readonly userTransaction: UserTransaction,
     private readonly userSearcher: UserSearcher,
     private readonly userSecurity: UserSecurity,
-    private readonly userOperationService: UserOperationService,
+    private readonly userUpdateService: UserUpdateService,
   ) {}
 
   @ApiOperation({
@@ -188,7 +188,7 @@ export class UserVersionOneFreeUseController {
     @Body(UserEmailValidatePipe) { email }: ModifyUserEmailDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userOperationService.modifyUserEmail(email, jwtPayload.userId);
+    await this.userUpdateService.modifyUserEmail(email, jwtPayload.userId);
 
     return {
       statusCode: 201,
@@ -208,7 +208,7 @@ export class UserVersionOneFreeUseController {
     @Body(UserNicknameValidatePipe) { nickname }: ModifyUserNicknameDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userOperationService.modifyUserNickname(
+    await this.userUpdateService.modifyUserNickname(
       nickname,
       jwtPayload.userId,
     );
@@ -232,7 +232,7 @@ export class UserVersionOneFreeUseController {
     { phonenumber }: ModifyUserPhonenumberDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userOperationService.modifyUserPhonenumber(
+    await this.userUpdateService.modifyUserPhonenumber(
       phonenumber,
       jwtPayload.userId,
     );
@@ -254,7 +254,7 @@ export class UserVersionOneFreeUseController {
     @Body() { password }: ModifyUserPasswordDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userOperationService.modifyUserPassword(
+    await this.userUpdateService.modifyUserPassword(
       password,
       jwtPayload.userId,
     );
@@ -272,7 +272,7 @@ export class UserVersionOneFreeUseController {
   async secession(
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonJwtLogoutInterface> {
-    await this.userOperationService.deleteUser(jwtPayload.userId);
+    await this.userUpdateService.deleteUser(jwtPayload.userId);
 
     return {
       statusCode: 203,
@@ -313,7 +313,7 @@ export class UserVersionOneFreeUseController {
   async resetPassword(
     @Body() resetPasswordDto: ResetPasswordDto,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userOperationService.resetPassword(resetPasswordDto);
+    await this.userUpdateService.resetPassword(resetPasswordDto);
 
     return {
       statusCode: 200,
