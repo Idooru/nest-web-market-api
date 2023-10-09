@@ -37,7 +37,7 @@ export class UserUpdateService {
     const { realname, nickname, birth, gender, email, phonenumber, password } =
       registerUserDto;
 
-    const hashed = await this.userSecurity.hashPassword(password);
+    const hashed = await this.userSecurity.hashPassword(password, true);
 
     const userProfileColumn = { id, realname, birth, gender, phonenumber };
     const userAuthColumn = { id, nickname, email, password: hashed };
@@ -57,7 +57,7 @@ export class UserUpdateService {
   async modifyUser(modifyUserDto: ModifyUserDto, id: string): Promise<void> {
     const { password, phonenumber, email, nickname } = modifyUserDto;
 
-    const hashed = await this.userSecurity.hashPassword(password);
+    const hashed = await this.userSecurity.hashPassword(password, true);
 
     await Promise.all([
       this.userOperationRepository.modifyUserProfile({ phonenumber }, id),
@@ -85,7 +85,7 @@ export class UserUpdateService {
 
   // General
   async modifyUserPassword(password: string, id: string): Promise<void> {
-    const hashed = await this.userSecurity.hashPassword(password);
+    const hashed = await this.userSecurity.hashPassword(password, false);
 
     await this.userOperationRepository.modifyUserPassword(hashed, id);
   }
@@ -93,7 +93,7 @@ export class UserUpdateService {
   // General
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
     const { email, password } = resetPasswordDto;
-    const hashed = await this.userSecurity.hashPassword(password);
+    const hashed = await this.userSecurity.hashPassword(password, false);
 
     const user = await this.userSearcher.findUserWithEmail(email);
 
