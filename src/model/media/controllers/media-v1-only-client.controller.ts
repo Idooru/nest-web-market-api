@@ -20,7 +20,6 @@ import { JsonClearCookiesInterface } from "src/common/interceptors/interface/jso
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
 import { MediaCookieDto } from "../dto/media-cookie.dto";
-import { MediaLoggerLibrary } from "src/common/lib/logger/media-logger.library";
 import {
   ReviewMediaCookieKey,
   reviewMediaCookieKey,
@@ -51,7 +50,6 @@ export class MediaVersionOneOnlyClientController {
   constructor(
     private readonly mediaSearcher: MediaSearcher,
     private readonly mediaUpdateService: MediaUpdateService,
-    private readonly mediaLoggerLibrary: MediaLoggerLibrary,
     @Inject("ReviewMediaCookieKey")
     private readonly reviewMedia: ReviewMediaCookieKey,
     @Inject("InquiryMediaCookieKey")
