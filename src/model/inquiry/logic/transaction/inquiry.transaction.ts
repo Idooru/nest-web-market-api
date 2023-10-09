@@ -18,8 +18,7 @@ import {
   CreateInquiryResponseWithImageDto,
   CreateInquiryResponseWithVideoDto,
 } from "../../dto/response/create-inquiry-response.dto";
-import { loggerFactory } from "../../../../common/functions/logger.factory";
-import { TypeOrmException } from "../../../../common/errors/typeorm.exception";
+import { TransactionErrorHandler } from "../../../../common/lib/error-handler/transaction-error.handler";
 
 @Injectable()
 export class InquiryTransaction {
@@ -31,6 +30,7 @@ export class InquiryTransaction {
     private readonly inquiryUpdateService: InquiryUpdateService,
     private readonly inquiryFactoryService: InquiryFactoryService,
     private readonly inquiryUtils: InquiryUtils,
+    private readonly transactionErrorHandler: TransactionErrorHandler,
   ) {}
 
   public async createInquiryRequestAllMedias(
@@ -90,9 +90,8 @@ export class InquiryTransaction {
       await Promise.all([imageWork(), videoWork(), mailWork()]);
       await queryRunner.commitTransaction();
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }
@@ -144,9 +143,8 @@ export class InquiryTransaction {
       await Promise.all([imageWork(), emailWork()]);
       await queryRunner.commitTransaction();
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }
@@ -198,9 +196,8 @@ export class InquiryTransaction {
       await Promise.all([videoWork(), emailWork()]);
       await queryRunner.commitTransaction();
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }
@@ -237,9 +234,8 @@ export class InquiryTransaction {
       await emailWork();
       await queryRunner.commitTransaction();
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }
@@ -305,9 +301,8 @@ export class InquiryTransaction {
       await Promise.all([imageWork(), videoWork(), emailWork()]);
       await queryRunner.commitTransaction();
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }
@@ -363,9 +358,8 @@ export class InquiryTransaction {
 
       await queryRunner.commitTransaction();
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }
@@ -420,9 +414,8 @@ export class InquiryTransaction {
       await Promise.all([videoWork(), emailWork()]);
       await queryRunner.commitTransaction();
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }
@@ -465,9 +458,8 @@ export class InquiryTransaction {
       await emailWork();
       await queryRunner.commitTransaction();
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }

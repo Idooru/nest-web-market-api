@@ -4,8 +4,6 @@ import { ReviewUpdateService } from "../../services/review-update.service";
 import { ReviewSearcher } from "../review.searcher";
 import { MediaSearcher } from "../../../media/logic/media.searcher";
 import { ReviewFactoryService } from "../../services/review-factory.service";
-import { loggerFactory } from "../../../../common/functions/logger.factory";
-import { TypeOrmException } from "../../../../common/errors/typeorm.exception";
 import {
   CreateReviewAllMediaDto,
   CreateReviewImageDto,
@@ -22,6 +20,7 @@ import { ReviewUtils } from "../review.utils";
 import { ReviewEntity } from "../../entities/review.entity";
 import { DeleteReviewDto } from "../../dto/delete-review.dto";
 import { ProductSearcher } from "../../../product/logic/product.searcher";
+import { TransactionErrorHandler } from "../../../../common/lib/error-handler/transaction-error.handler";
 
 @Injectable()
 export class ReviewTransaction {
@@ -33,6 +32,7 @@ export class ReviewTransaction {
     private readonly reviewUpdateService: ReviewUpdateService,
     private readonly reviewFactoryService: ReviewFactoryService,
     private readonly reviewUtils: ReviewUtils,
+    private readonly transactionErrorHandler: TransactionErrorHandler,
   ) {}
 
   public async createReviewWithAllMedias(
@@ -86,9 +86,8 @@ export class ReviewTransaction {
       await Promise.all([imageWork(), videoWork(), starRateWork()]);
       await queryRunner.commitTransaction();
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }
@@ -134,9 +133,8 @@ export class ReviewTransaction {
       await Promise.all([imageWork(), starRateWork()]);
       await queryRunner.commitTransaction();
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }
@@ -182,9 +180,8 @@ export class ReviewTransaction {
       await Promise.all([videoWork(), starRateWork()]);
       await queryRunner.commitTransaction();
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }
@@ -223,9 +220,8 @@ export class ReviewTransaction {
       await starRateWork();
       await queryRunner.commitTransaction();
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }
@@ -288,9 +284,8 @@ export class ReviewTransaction {
 
       return review;
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }
@@ -333,9 +328,8 @@ export class ReviewTransaction {
 
       return review;
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }
@@ -378,9 +372,8 @@ export class ReviewTransaction {
 
       return review;
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }
@@ -413,9 +406,8 @@ export class ReviewTransaction {
 
       return review;
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }
@@ -444,9 +436,8 @@ export class ReviewTransaction {
 
       await queryRunner.commitTransaction();
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }

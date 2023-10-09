@@ -1,11 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { RegisterUserDto } from "../../dtos/register-user.dto";
-import { TypeOrmException } from "src/common/errors/typeorm.exception";
 import { ModifyUserDto } from "../../dtos/modify-user.dto";
-import { loggerFactory } from "src/common/functions/logger.factory";
 import { UserUpdateService } from "../../services/user-update.service";
 import { UserQueryRunnerProvider } from "./user-query-runner.provider";
 import { UserFactoryService } from "../../services/user-factory.service";
+import { TransactionErrorHandler } from "../../../../common/lib/error-handler/transaction-error.handler";
 
 @Injectable()
 export class UserTransaction {
@@ -13,6 +12,7 @@ export class UserTransaction {
     private readonly userQueryRunnerProvider: UserQueryRunnerProvider,
     private readonly userUpdateService: UserUpdateService,
     private readonly userFactoryService: UserFactoryService,
+    private readonly transactionErrorHandler: TransactionErrorHandler,
   ) {}
 
   async register(registerUserDto: RegisterUserDto): Promise<void> {
@@ -34,9 +34,8 @@ export class UserTransaction {
       await emailWork();
       await queryRunner.commitTransaction();
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }
@@ -50,9 +49,8 @@ export class UserTransaction {
 
       await queryRunner.commitTransaction();
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }

@@ -3,13 +3,12 @@ import { CreateProductDto } from "../../dto/create-product-dto";
 import { UserSearcher } from "src/model/user/logic/user.searcher";
 import { ProductUpdateService } from "../../services/product-update.service";
 import { ProductFactoryService } from "../../services/product-factory.service";
-import { loggerFactory } from "src/common/functions/logger.factory";
-import { TypeOrmException } from "src/common/errors/typeorm.exception";
 import { MediaSearcher } from "src/model/media/logic/media.searcher";
 import { ModifyProductDto } from "../../dto/modify-product.dto";
 import { ProductSearcher } from "../product.searcher";
 import { MediaCookieDto } from "../../../media/dto/media-cookie.dto";
 import { ProductQueryRunnerProvider } from "./product-query-runner.provider";
+import { TransactionErrorHandler } from "../../../../common/lib/error-handler/transaction-error.handler";
 
 @Injectable()
 export class ProductTransaction {
@@ -20,6 +19,7 @@ export class ProductTransaction {
     private readonly mediaSearcher: MediaSearcher,
     private readonly productUpdateService: ProductUpdateService,
     private readonly productFactoryService: ProductFactoryService,
+    private readonly transactionErrorHandler: TransactionErrorHandler,
   ) {}
 
   async createProduct(createProductDto: CreateProductDto): Promise<void> {
@@ -50,9 +50,8 @@ export class ProductTransaction {
       await Promise.all([createStarRate(), insertProductImage()]);
       await queryRunner.commitTransaction();
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }
@@ -85,9 +84,8 @@ export class ProductTransaction {
       await modifyProductImage();
       await queryRunner.commitTransaction();
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }
@@ -116,9 +114,8 @@ export class ProductTransaction {
       await modifyProductImage();
       await queryRunner.commitTransaction();
     } catch (err) {
-      loggerFactory("Transaction").error(err);
       await queryRunner.rollbackTransaction();
-      throw new TypeOrmException(err);
+      this.transactionErrorHandler.handle(err);
     } finally {
       await queryRunner.release();
     }
