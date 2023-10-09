@@ -6,13 +6,14 @@ import { Response } from "express";
 export class TypeOrmExceptionFilter implements ExceptionFilter {
   catch(exception: TypeOrmException, host: ArgumentsHost) {
     const res = host.switchToHttp().getResponse<Response>();
+    const { error } = exception.getResponse() as TypeOrmException;
 
     return res.status(exception.getStatus()).json({
       success: false,
-      error: exception.name,
+      error: error.name,
       statusCode: exception.getStatus(),
       timestamp: new Date().toString(),
-      reason: exception.message,
+      message: error.message,
       info: "Typeorm Config, Entity, 요청 쿼리, SQL 서버의 상태를 확인하세요.",
     });
   }
