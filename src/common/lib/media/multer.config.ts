@@ -1,20 +1,20 @@
 import { Module, UnsupportedMediaTypeException } from "@nestjs/common";
-import { MulterModule } from "@nestjs/platform-express";
+import { MulterModule, MulterOptionsFactory } from "@nestjs/platform-express";
 import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 import { promises as fsPromises } from "fs";
+import { loggerFactory } from "../../functions/logger.factory";
 import * as path from "path";
 import * as multer from "multer";
-import { loggerFactory } from "../functions/logger.factory";
 
-export class MulterConfigService {
-  public createMulterOptions(): MulterOptions | Promise<MulterOptions> {
-    this.createFolder();
-    return { storage: MulterConfigService.storage, dest: "../../../uploads" };
-  }
-
+export class MulterConfigService implements MulterOptionsFactory {
   static maxContentsCount = 5;
   private readonly logger = loggerFactory("MulterConfiguration");
   private readonly inquiry = ["request", "response"];
+
+  public async createMulterOptions(): Promise<MulterOptions> {
+    await this.createFolder();
+    return { storage: MulterConfigService.storage, dest: "../../../uploads" };
+  }
 
   private async createUploadFolder() {
     try {
@@ -77,13 +77,15 @@ export class MulterConfigService {
     }
   }
 
-  private createFolder(): void {
-    this.createUploadFolder();
-    this.createImageFolder();
-    this.createVideoFolder();
+  private async createFolder(): Promise<void> {
+    await Promise.all([
+      this.createUploadFolder(),
+      this.createImageFolder(),
+      this.createVideoFolder(),
+    ]);
   }
 
-  static storage(folder: string): multer.StorageEngine {
+  private static storage(folder: string): multer.StorageEngine {
     return multer.diskStorage({
       destination(req, file, cb) {
         if (!file.mimetype.match(/\/(jpg|jpeg|png|mp4|MOV|AVI)$/)) {
@@ -111,7 +113,7 @@ export class MulterConfigService {
     });
   }
 
-  static upload(folder: string): MulterOptions {
+  public static upload(folder: string): MulterOptions {
     return { storage: this.storage(folder) };
   }
 }
