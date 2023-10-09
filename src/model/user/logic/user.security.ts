@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-} from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { JwtPayload } from "src/model/auth/jwt/jwt-payload.interface";
 import { LoginUserDto } from "../dtos/login-user.dto";
 import { UserSearcher } from "./user.searcher";
@@ -13,6 +9,7 @@ import { v4 } from "uuid";
 import { JwtService } from "@nestjs/jwt";
 import { SecurityLibrary } from "src/common/lib/config/security.library";
 import { UserEntity } from "../entities/user.entity";
+import { CatchCallbackFactoryLibrary } from "../../../common/lib/util/catch-callback-factory.library";
 
 import bcrypt from "bcrypt";
 
@@ -22,15 +19,16 @@ export class UserSecurity {
     private readonly userSearcher: UserSearcher,
     private readonly jwtService: JwtService,
     private readonly securityLibrary: SecurityLibrary,
+    private readonly callbackFactory: CatchCallbackFactoryLibrary,
   ) {}
 
-  async hashPassword(password: string): Promise<string> {
+  async hashPassword(
+    password: string,
+    hasTransaction: boolean,
+  ): Promise<string> {
     return await bcrypt
-      .hash(password, this.securityLibrary.hashSalt)
-      .catch((err: Error) => {
-        loggerFactory("HashPassword").error(err);
-        throw new InternalServerErrorException(err);
-      });
+      .hash(password, null)
+      .catch(this.callbackFactory.getCatchHashPasswordFunc(hasTransaction));
   }
 
   async signToken(user: UserEntity): Promise<JwtPayload> {
@@ -56,10 +54,7 @@ export class UserSecurity {
         jwtRefreshTokenPayload,
         this.securityLibrary.jwtRefreshTokenSignOption,
       ),
-    ]).catch((err: Error) => {
-      loggerFactory("JwtTokenSign").error(err);
-      throw new InternalServerErrorException(err);
-    });
+    ]).catch(this.callbackFactory.getCatchJwtTokenSignFunc());
 
     return { accessToken, refreshToken };
   }
@@ -77,10 +72,7 @@ export class UserSecurity {
 
     const isValidPw = await bcrypt
       .compare(password, user.Auth.password)
-      .catch((err: Error) => {
-        loggerFactory("ComparePassword").error(err);
-        throw new InternalServerErrorException(err);
-      });
+      .catch(this.callbackFactory.getCatchComparePasswordFunc());
 
     if (!isValidPw) {
       const message = "아이디 혹은 비밀번호가 일치하지 않습니다.";
