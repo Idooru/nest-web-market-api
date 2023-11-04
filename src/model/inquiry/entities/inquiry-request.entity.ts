@@ -14,7 +14,9 @@ export class InquiryRequestEntity extends PostEntity {
   @Column({ type: "enum", enum: ["product status", "delivery status"] })
   categories: "product status" | "delivery status";
 
-  @ManyToOne(() => ClientUserEntity, (client) => client.writtenInquiryRequest)
+  @ManyToOne(() => ClientUserEntity, (client) => client.writtenInquiryRequest, {
+    onDelete: "CASCADE",
+  })
   inquiryRequestWritter: ClientUserEntity;
 
   @IsBoolean()

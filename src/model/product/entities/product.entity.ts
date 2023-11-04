@@ -54,7 +54,9 @@ export class ProductEntity extends CommonEntity {
   })
   Image: ProductImageEntity[];
 
-  @ManyToOne(() => AdminUserEntity, (admin) => admin.createdProduct)
+  @ManyToOne(() => AdminUserEntity, (admin) => admin.createdProduct, {
+    onDelete: "CASCADE",
+  })
   creater: AdminUserEntity;
 
   @ManyToOne(() => ClientUserEntity, (client) => client.purchasedProduct)

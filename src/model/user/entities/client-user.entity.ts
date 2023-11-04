@@ -22,6 +22,7 @@ export class ClientUserEntity extends ChildEntity {
   @OneToMany(
     () => InquiryRequestEntity,
     (inquiryRequest) => inquiryRequest.inquiryRequestWritter,
+    { cascade: true },
   )
   writtenInquiryRequest: InquiryRequestEntity[];
 }

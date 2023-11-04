@@ -20,7 +20,9 @@ export class InquiryResponseEntity extends PostEntity {
   @Column({ type: "enum", enum: ["product status", "delivery status"] })
   categories: "product status" | "delivery status";
 
-  @ManyToOne(() => AdminUserEntity, (admin) => admin.writtenInquiryResponse)
+  @ManyToOne(() => AdminUserEntity, (admin) => admin.writtenInquiryResponse, {
+    onDelete: "CASCADE",
+  })
   inquiryResponseWritter: AdminUserEntity;
 
   @OneToMany(
