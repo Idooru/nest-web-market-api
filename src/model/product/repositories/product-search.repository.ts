@@ -4,14 +4,13 @@ import { ProductEntity } from "../entities/product.entity";
 import { Repository } from "typeorm";
 import { ProductSelectProperty } from "src/common/config/repository-select-configs/product.select";
 import { ProductImageEntity } from "src/model/media/entities/product-image.entity";
+import { loggerFactory } from "../../../common/functions/logger.factory";
 
 @Injectable()
 export class ProductSearchRepository {
   constructor(
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
-    @InjectRepository(ProductImageEntity)
-    private readonly productImageRepository: Repository<ProductImageEntity>,
     @Inject("ProductsSelectProperty")
     private readonly productSelect: ProductSelectProperty,
   ) {}
@@ -39,7 +38,9 @@ export class ProductSearchRepository {
       .getMany();
 
     if (!products.length) {
-      throw new NotFoundException("전체 상품을 찾을수가 없습니다.");
+      const message = "전체 상품을 찾을수가 없습니다.";
+      loggerFactory("None Exist").error(message);
+      throw new NotFoundException(message);
     }
 
     return products;
@@ -68,7 +69,9 @@ export class ProductSearchRepository {
       .getMany();
 
     if (!products.length) {
-      throw new NotFoundException("전체 상품을 찾을수가 없습니다.");
+      const message = "전체 상품을 찾을수가 없습니다.";
+      loggerFactory("None Exist").error(message);
+      throw new NotFoundException(message);
     }
 
     return products;
@@ -97,8 +100,8 @@ export class ProductSearchRepository {
       .getOne();
   }
 
-  async findProductWithName(name: string): Promise<ProductEntity> {
-    return await this.productRepository
+  async findProductWithName(name: string): Promise<ProductEntity[]> {
+    const products = await this.productRepository
       .createQueryBuilder()
       .select(this.productSelect.product)
       .from(ProductEntity, "product")
@@ -116,7 +119,15 @@ export class ProductSearchRepository {
       .leftJoin("InquiryUser.Auth", "InquiryAuth")
       .leftJoin("InquiryRequest.Image", "InquiryRequestImage")
       .leftJoin("InquiryRequest.Video", "InquiryRequestVideo")
-      .where("product.name = :name", { name })
-      .getOne();
+      .where("product.name like :name", { name: `%${name}%` })
+      .getMany();
+
+    if (!products.length) {
+      const message = `상품이름(${name})으로 검색을 시도하였으나 결과가 없습니다.`;
+      loggerFactory("None Exist").error(message);
+      throw new NotFoundException(message);
+    }
+
+    return products;
   }
 }

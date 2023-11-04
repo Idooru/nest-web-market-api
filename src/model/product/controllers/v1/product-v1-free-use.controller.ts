@@ -57,7 +57,7 @@ export class ProductVersionOneFreeUseController {
   @Get("/:name")
   async findProductByName(
     @Param("name") name: string,
-  ): Promise<JsonGeneralInterface<ProductEntity>> {
+  ): Promise<JsonGeneralInterface<ProductEntity[]>> {
     const result = await this.productSearcher.findProductWithName(name);
 
     return {

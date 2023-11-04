@@ -20,7 +20,7 @@ export class ProductSearcher {
     return await this.productSearchRepository.findProductWithId(id);
   }
 
-  async findProductWithName(name: string): Promise<ProductEntity> {
+  async findProductWithName(name: string): Promise<ProductEntity[]> {
     return await this.productSearchRepository.findProductWithName(name);
   }
 }
