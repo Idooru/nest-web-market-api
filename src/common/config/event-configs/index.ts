@@ -3,3 +3,5 @@ export const eventConfigs = {
   sendMailInquiryResponse: "send-mail-inquiry-response",
   sendMailRegister: "send-mail-register",
 };
+
+export const eventMap = new Map<string, any>();
