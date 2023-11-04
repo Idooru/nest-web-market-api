@@ -1,4 +1,9 @@
-import { Module, forwardRef } from "@nestjs/common";
+import {
+  Module,
+  forwardRef,
+  NestModule,
+  MiddlewareConsumer,
+} from "@nestjs/common";
 import { InquiryVersionOneOnlyClientController } from "./controllers/inquiry-v1-only-client.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { InquiryRequestEntity } from "src/model/inquiry/entities/inquiry-request.entity";
@@ -24,6 +29,10 @@ import { InquiryRepositoryVO } from "./logic/transaction/inquiry-repository.vo";
 import { InquiryRequestIdValidatePipe } from "./pipe/exist/inquiry-request-id-validate.pipe";
 import { InquiryValidator } from "./logic/inquiry.validator";
 import { InquiryValidateRepository } from "./repositories/inquiry-validate.repository";
+import { eventMap } from "../../common/config/event-configs";
+import { InquiryEventMapSetter } from "./logic/inquiry-event-map.setter";
+import { InquiryClientEventMiddleware } from "./middleware/inquiry-client-event.middleware";
+import { InquiryAdminEventMiddleware } from "./middleware/inquiry-admin-event.middleware";
 
 @Module({
   imports: [
@@ -48,9 +57,16 @@ import { InquiryValidateRepository } from "./repositories/inquiry-validate.repos
       provide: "InquirySelectProperty",
       useValue: inquirySelectProperty,
     },
+    {
+      provide: "InquiryEventMap",
+      useValue: eventMap,
+    },
     InquirySearcher,
     InquirySearchRepository,
     InquiryTransaction,
+    InquiryEventMapSetter,
+    InquiryClientEventMiddleware,
+    InquiryAdminEventMiddleware,
     InquiryQueryRunnerProvider,
     InquiryUpdateService,
     InquiryUpdateRepository,
@@ -62,4 +78,12 @@ import { InquiryValidateRepository } from "./repositories/inquiry-validate.repos
     InquiryValidateRepository,
   ],
 })
-export class InquiryModule {}
+export class InquiryModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer
+      .apply(InquiryClientEventMiddleware)
+      .forRoutes(InquiryVersionOneOnlyClientController)
+      .apply(InquiryAdminEventMiddleware)
+      .forRoutes(InquiryVersionOneOnlyAdminController);
+  }
+}

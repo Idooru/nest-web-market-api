@@ -5,6 +5,8 @@ import { SendMailToClientAboutInquiryResponseDto } from "src/model/inquiry/dto/r
 import { SendMailToAdminAboutInquiryRequestDto } from "src/model/inquiry/dto/request/send-mail-to-admin-about-inquiry-request.dto";
 import { SendMailToClientAboutRegisterDto } from "../../../model/user/dtos/send-mail-to-client-about-register.dto";
 import { CatchCallbackFactoryLibrary } from "../util/catch-callback-factory.library";
+import { OnEvent } from "@nestjs/event-emitter";
+import { eventConfigs } from "../../config/event-configs";
 
 @Injectable()
 export class EmailSenderLibrary {
@@ -14,6 +16,7 @@ export class EmailSenderLibrary {
     private readonly callbackFactory: CatchCallbackFactoryLibrary,
   ) {}
 
+  @OnEvent(eventConfigs.sendMailInquiryRequest, { async: true })
   async sendMailToAdminAboutInquiryRequest(
     sendMailToAdminAboutInquiryRequestDto: SendMailToAdminAboutInquiryRequestDto,
   ): Promise<void> {
@@ -39,6 +42,7 @@ export class EmailSenderLibrary {
       .catch(this.callbackFactory.getCatchSendMailFunc());
   }
 
+  @OnEvent(eventConfigs.sendMailInquiryResponse, { async: true })
   async sendMailToClientAboutInquiryResponse(
     sendMailToClientAboutInquiryResponseDto: SendMailToClientAboutInquiryResponseDto,
   ): Promise<void> {
@@ -66,10 +70,12 @@ export class EmailSenderLibrary {
       .catch(this.callbackFactory.getCatchSendMailFunc());
   }
 
+  @OnEvent(eventConfigs.sendMailRegister, { async: true })
   async sendMailToClientAboutRegister(
     sendMailToClientAboutRegisterDto: SendMailToClientAboutRegisterDto,
   ): Promise<void> {
     const { email, nickname } = sendMailToClientAboutRegisterDto;
+
     await this.mailerService
       .sendMail({
         to: email,

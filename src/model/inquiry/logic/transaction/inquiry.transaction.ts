@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { InquiryQueryRunnerProvider } from "./inquiry-query-runner.provider";
 import { InquirySearcher } from "../inquiry.searcher";
 import { MediaSearcher } from "../../../media/logic/media.searcher";
-import { ProductSearcher } from "../../../product/logic/product.searcher";
 import { InquiryUpdateService } from "../../services/inquiry-update.service";
 import { InquiryFactoryService } from "../../services/inquiry-factory.service";
 import { InquiryUtils } from "../inquiry.utils";
@@ -19,6 +18,7 @@ import {
   CreateInquiryResponseWithVideoDto,
 } from "../../dto/response/create-inquiry-response.dto";
 import { TransactionErrorHandler } from "../../../../common/lib/error-handler/transaction-error.handler";
+import { InquiryEventMapSetter } from "../inquiry-event-map.setter";
 
 @Injectable()
 export class InquiryTransaction {
@@ -26,11 +26,11 @@ export class InquiryTransaction {
     private readonly inquiryQueryRunnerProvider: InquiryQueryRunnerProvider,
     private readonly inquirySearcher: InquirySearcher,
     private readonly mediaSearcher: MediaSearcher,
-    private readonly productSearcher: ProductSearcher,
     private readonly inquiryUpdateService: InquiryUpdateService,
     private readonly inquiryFactoryService: InquiryFactoryService,
     private readonly inquiryUtils: InquiryUtils,
     private readonly transactionErrorHandler: TransactionErrorHandler,
+    private readonly inquiryEventMapSetter: InquiryEventMapSetter,
   ) {}
 
   public async createInquiryRequestAllMedias(
@@ -80,14 +80,13 @@ export class InquiryTransaction {
           inquiryRequest,
         });
 
-      const mailWork =
-        this.inquiryFactoryService.getSendMailToAdminAboutInquiryRequestFunc({
-          product,
-          inquiryRequest,
-          client,
-        });
+      this.inquiryEventMapSetter.setClientEventParam({
+        product,
+        inquiryRequest,
+        client,
+      });
 
-      await Promise.all([imageWork(), videoWork(), mailWork()]);
+      await Promise.all([imageWork(), videoWork()]);
       await queryRunner.commitTransaction();
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -133,14 +132,13 @@ export class InquiryTransaction {
           inquiryRequest,
         });
 
-      const emailWork =
-        this.inquiryFactoryService.getSendMailToAdminAboutInquiryRequestFunc({
-          product,
-          inquiryRequest,
-          client,
-        });
+      this.inquiryEventMapSetter.setClientEventParam({
+        product,
+        inquiryRequest,
+        client,
+      });
 
-      await Promise.all([imageWork(), emailWork()]);
+      await imageWork();
       await queryRunner.commitTransaction();
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -186,14 +184,13 @@ export class InquiryTransaction {
           inquiryRequest,
         });
 
-      const emailWork =
-        this.inquiryFactoryService.getSendMailToAdminAboutInquiryRequestFunc({
-          product,
-          inquiryRequest,
-          client,
-        });
+      this.inquiryEventMapSetter.setClientEventParam({
+        product,
+        inquiryRequest,
+        client,
+      });
 
-      await Promise.all([videoWork(), emailWork()]);
+      await videoWork();
       await queryRunner.commitTransaction();
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -224,14 +221,12 @@ export class InquiryTransaction {
           client,
         });
 
-      const emailWork =
-        this.inquiryFactoryService.getSendMailToAdminAboutInquiryRequestFunc({
-          product,
-          inquiryRequest,
-          client,
-        });
+      this.inquiryEventMapSetter.setClientEventParam({
+        product,
+        inquiryRequest,
+        client,
+      });
 
-      await emailWork();
       await queryRunner.commitTransaction();
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -291,14 +286,13 @@ export class InquiryTransaction {
           inquiryResponse,
         });
 
-      const emailWork =
-        this.inquiryFactoryService.getSendMailToClientAboutInquiryResponseFunc({
-          inquiryRequester,
-          inquiryRequest,
-          inquiryResponse,
-        });
+      this.inquiryEventMapSetter.setAdminEventParam({
+        inquiryRequester,
+        inquiryRequest,
+        inquiryResponse,
+      });
 
-      await Promise.all([imageWork(), videoWork(), emailWork()]);
+      await Promise.all([imageWork(), videoWork()]);
       await queryRunner.commitTransaction();
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -347,15 +341,13 @@ export class InquiryTransaction {
           inquiryResponse,
         });
 
-      const emailWork =
-        this.inquiryFactoryService.getSendMailToClientAboutInquiryResponseFunc({
-          inquiryRequester,
-          inquiryRequest,
-          inquiryResponse,
-        });
+      this.inquiryEventMapSetter.setAdminEventParam({
+        inquiryRequester,
+        inquiryRequest,
+        inquiryResponse,
+      });
 
-      await Promise.all([imageWork(), emailWork()]);
-
+      await imageWork();
       await queryRunner.commitTransaction();
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -404,14 +396,13 @@ export class InquiryTransaction {
           inquiryResponse,
         });
 
-      const emailWork =
-        this.inquiryFactoryService.getSendMailToClientAboutInquiryResponseFunc({
-          inquiryRequester,
-          inquiryRequest,
-          inquiryResponse,
-        });
+      this.inquiryEventMapSetter.setAdminEventParam({
+        inquiryRequester,
+        inquiryRequest,
+        inquiryResponse,
+      });
 
-      await Promise.all([videoWork(), emailWork()]);
+      await videoWork();
       await queryRunner.commitTransaction();
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -448,14 +439,12 @@ export class InquiryTransaction {
           inquiryRequest,
         });
 
-      const emailWork =
-        this.inquiryFactoryService.getSendMailToClientAboutInquiryResponseFunc({
-          inquiryRequester,
-          inquiryRequest,
-          inquiryResponse,
-        });
+      this.inquiryEventMapSetter.setAdminEventParam({
+        inquiryRequester,
+        inquiryRequest,
+        inquiryResponse,
+      });
 
-      await emailWork();
       await queryRunner.commitTransaction();
     } catch (err) {
       await queryRunner.rollbackTransaction();

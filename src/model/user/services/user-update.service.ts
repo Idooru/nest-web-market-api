@@ -6,6 +6,7 @@ import { ModifyUserDto } from "../dtos/modify-user.dto";
 import { UserSearcher } from "../logic/user.searcher";
 import { UserSecurity } from "../logic/user.security";
 import { ResetPasswordDto } from "../dtos/reset-password.dto";
+import { UserEventMapSetter } from "../logic/user-event-map.setter";
 
 @Injectable()
 export class UserUpdateService {
@@ -13,6 +14,7 @@ export class UserUpdateService {
     private readonly userOperationRepository: UserUpdateRepository,
     private readonly userSearcher: UserSearcher,
     private readonly userSecurity: UserSecurity,
+    private readonly userEventMapSetter: UserEventMapSetter,
   ) {}
 
   // Transaction
@@ -32,7 +34,7 @@ export class UserUpdateService {
   async createUserBase(
     user: UserEntity,
     registerUserDto: RegisterUserDto,
-  ): Promise<{ email: string; nickname: string }> {
+  ): Promise<void> {
     const { id } = user;
     const { realname, nickname, birth, gender, email, phonenumber, password } =
       registerUserDto;
@@ -47,10 +49,7 @@ export class UserUpdateService {
       this.userOperationRepository.createUserAuth(userAuthColumn),
     ]);
 
-    return {
-      email,
-      nickname,
-    };
+    this.userEventMapSetter.setRegisterEventParam({ email, nickname });
   }
 
   // Transaction

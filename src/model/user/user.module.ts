@@ -4,7 +4,12 @@ import { MediaModule } from "../media/media.module";
 import { AuthModule } from "../auth/auth.module";
 import { UserProfileEntity } from "./entities/user-profile.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { forwardRef, Module } from "@nestjs/common";
+import {
+  forwardRef,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+} from "@nestjs/common";
 import { LibraryModule } from "src/common/lib/library.module";
 import { JwtModule } from "@nestjs/jwt";
 import { UserVersionOneFreeUseController } from "./controllers/v1/user-v1-free-use.controller";
@@ -24,6 +29,9 @@ import { UserQueryRunnerProvider } from "./logic/transaction/user-query-runner.p
 import { UserValidateRepository } from "./repositories/user-validate.repository";
 import { UserValidator } from "./logic/user.validator";
 import { UserFactoryService } from "./services/user-factory.service";
+import { UserRegisterEventMiddleware } from "./middleware/user-event.middleware";
+import { UserEventMapSetter } from "./logic/user-event-map.setter";
+import { eventMap } from "../../common/config/event-configs";
 
 @Module({
   imports: [
@@ -49,10 +57,16 @@ import { UserFactoryService } from "./services/user-factory.service";
       provide: "UserSelectProperty",
       useValue: userSelectProperty,
     },
+    {
+      provide: "UserEventMap",
+      useValue: eventMap,
+    },
     UserSearcher,
     UserValidator,
     UserSecurity,
     UserTransaction,
+    UserEventMapSetter,
+    UserRegisterEventMiddleware,
     UserQueryRunnerProvider,
     UserRepositoryVO,
     UserUpdateService,
@@ -63,4 +77,10 @@ import { UserFactoryService } from "./services/user-factory.service";
   ],
   exports: [UserSearcher, UserValidator],
 })
-export class UserModule {}
+export class UserModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer
+      .apply(UserRegisterEventMiddleware)
+      .forRoutes("/api/v1/free-use/user/register");
+  }
+}
