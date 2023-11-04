@@ -9,13 +9,11 @@ import { ModifyStarRateDto } from "../dto/modify-star-rate.dto";
 
 @Injectable()
 export class ReviewFactoryService {
-  constructor(
-    private readonly reviewOperationService: ReviewUpdateService,
-  ) {}
+  constructor(private readonly reviewOperationService: ReviewUpdateService) {}
 
   public getInsertReviewImagesFunc(
     insertReviewImageDto: InsertReviewImageDto,
-  ): () => void {
+  ): () => Promise<void> {
     return async () =>
       await this.reviewOperationService.insertReviewImages(
         insertReviewImageDto,
@@ -24,21 +22,23 @@ export class ReviewFactoryService {
 
   public getInsertReviewVideosFunc(
     insertReviewVideoDto: InsertReviewVideoDto,
-  ): () => void {
+  ): () => Promise<void> {
     return async () =>
       await this.reviewOperationService.insertReviewVideos(
         insertReviewVideoDto,
       );
   }
 
-  public getIncreaseStarRateFunc(starRatingDto: StarRatingDto): () => void {
+  public getIncreaseStarRateFunc(
+    starRatingDto: StarRatingDto,
+  ): () => Promise<void> {
     return async () =>
       await this.reviewOperationService.increaseStarRate(starRatingDto);
   }
 
   public getChangeReviewImagesFunc(
     changeReviewImageDto: ChangeReviewImageDto,
-  ): () => void {
+  ): () => Promise<void> {
     return async () =>
       await this.reviewOperationService.changeReviewImages(
         changeReviewImageDto,
@@ -47,7 +47,7 @@ export class ReviewFactoryService {
 
   public getChangeReviewVideosFunc(
     changeReviewVideoDto: ChangeReviewVideoDto,
-  ): () => void {
+  ): () => Promise<void> {
     return async () =>
       await this.reviewOperationService.changeReviewVideos(
         changeReviewVideoDto,
@@ -56,7 +56,7 @@ export class ReviewFactoryService {
 
   public getModifyStarRateFunc(
     modifyStarRateDto: ModifyStarRateDto,
-  ): () => void {
+  ): () => Promise<void> {
     return async () =>
       await this.reviewOperationService.modifyStarRate(modifyStarRateDto);
   }

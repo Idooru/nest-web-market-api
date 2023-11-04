@@ -8,15 +8,15 @@ import { ChangeProductImageDto } from "../dto/change-product-image.dto";
 export class ProductFactoryService {
   constructor(private readonly productOperationService: ProductUpdateService) {}
 
-  getCreateStarRateFunc(product: ProductEntity): () => void {
+  public getCreateStarRateFunc(product: ProductEntity): () => Promise<void> {
     return async () => {
       await this.productOperationService.createStarRate(product);
     };
   }
 
-  getInsertProductImageFunc(
+  public getInsertProductImageFunc(
     insertProductImageDto: InsertProductImageDto,
-  ): () => void {
+  ): () => Promise<void> {
     return async () => {
       await this.productOperationService.insertProductImages(
         insertProductImageDto,
@@ -24,9 +24,9 @@ export class ProductFactoryService {
     };
   }
 
-  getModifyProductImageFunc(
+  public getModifyProductImageFunc(
     modifyProductImageDto: ChangeProductImageDto,
-  ): () => void {
+  ): () => Promise<void> {
     return async () => {
       await this.productOperationService.changeProductImages(
         modifyProductImageDto,
