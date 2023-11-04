@@ -5,7 +5,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { UserAuthEntity } from "../user/entities/user-auth.entity";
 import { ConfigService } from "@nestjs/config";
 import { LibraryModule } from "src/common/lib/library.module";
-import { SecurityLibrary } from "src/common/lib/config/security.library";
+import { SecurityLibrary } from "src/common/lib/security/security.library";
 import { UserModule } from "../user/user.module";
 import { AdminUserEntity } from "../user/entities/admin-user.entity";
 import { ClientUserEntity } from "../user/entities/client-user.entity";
