@@ -10,8 +10,6 @@ import {
 } from "@nestjs/common";
 import { MulterConfigService } from "src/common/lib/media/multer-adapt.module";
 import { FilesInterceptor } from "@nestjs/platform-express";
-import { GetJWT } from "src/common/decorators/get.jwt.decorator";
-import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { JsonSendCookiesInterceptor } from "src/common/interceptors/general/json-send-cookies.interceptor";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { JsonSendCookiesInterface } from "src/common/interceptors/interface/json-send-cookies.interface";
@@ -64,7 +62,6 @@ export class MediaVersionOneOnlyClientController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/review/image")
   async findUploadedReviewImage(
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
     @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
     reviewImgCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<ReviewImageEntity[]>> {
@@ -87,7 +84,6 @@ export class MediaVersionOneOnlyClientController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/review/video")
   async findUploadedReviewVideo(
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
     @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
     reviewVdoCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<ReviewVideoEntity[]>> {
@@ -110,7 +106,6 @@ export class MediaVersionOneOnlyClientController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/inquiry/request/image")
   async findUploadedInquiryRequestImage(
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
     @MediaCookiesParser(inquiryMediaCookieKey.request.image_url_cookie)
     inquiryRequestImgCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<InquiryRequestImageEntity[]>> {
@@ -133,7 +128,6 @@ export class MediaVersionOneOnlyClientController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/inquiry/request/video")
   async findUploadedInquiryRequestVideo(
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
     @MediaCookiesParser(inquiryMediaCookieKey.request.video_url_cookie)
     inquiryRequestVdoCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<InquiryRequestVideoEntity[]>> {

@@ -9,8 +9,6 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { MulterConfigService } from "src/common/lib/media/multer-adapt.module";
-import { GetJWT } from "src/common/decorators/get.jwt.decorator";
-import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
@@ -62,7 +60,6 @@ export class MediaVersionOneOnlyAdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/product/image")
   async findUploadedProductImage(
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
     @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
     productImgCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<ProductImageEntity[]>> {
@@ -85,7 +82,6 @@ export class MediaVersionOneOnlyAdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/inquiry/response/image")
   async findUploadedInquiryResponseImages(
-    @GetJWT() jwtPaylaod: JwtAccessTokenPayload,
     @MediaCookiesParser(inquiryMediaCookieKey.response.image_url_cookie)
     inquiryResponseImgCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<InquiryResponseImageEntity[]>> {
@@ -108,7 +104,6 @@ export class MediaVersionOneOnlyAdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/inquiry/response/video")
   async findUploadedInquiryResponseVideos(
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
     @MediaCookiesParser(inquiryMediaCookieKey.response.video_url_cookie)
     inquiryResponseVdoCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<InquiryResponseVideoEntity[]>> {
