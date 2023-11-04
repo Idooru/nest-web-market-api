@@ -21,4 +21,4 @@ import { ConfigService } from "@nestjs/config";
     }),
   ],
 })
-export class MailerConfigurationModule {}
+export class MailerAdaptModule {}

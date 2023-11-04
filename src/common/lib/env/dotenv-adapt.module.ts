@@ -22,4 +22,4 @@ const returnEnviromentPath = () => {
     }),
   ],
 })
-export class DotenvConfigurationModule {}
+export class DotenvAdaptModule {}
