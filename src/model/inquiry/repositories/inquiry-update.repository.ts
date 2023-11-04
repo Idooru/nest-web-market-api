@@ -63,6 +63,13 @@ export class InquiryUpdateRepository {
   }
 
   // Transaction
+  public async modifyInquiryRequestAnswerState(id: string): Promise<void> {
+    await this.queryRunner.inquiryRequestRepository.update(id, {
+      isAnswerd: true,
+    });
+  }
+
+  // Transaction
   public async insertInquiryResponseIdOnInquiryResponseImage(
     inquiryResponseImage: InquiryResponseImageEntity,
     inquiryResponse: InquiryResponseEntity,

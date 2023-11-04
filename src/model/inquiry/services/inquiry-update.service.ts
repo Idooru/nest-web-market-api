@@ -68,6 +68,11 @@ export class InquiryUpdateService {
   }
 
   // Transaction
+  public async modifyInquiryRequestAnswerState(id: string): Promise<void> {
+    await this.inquiryOperationRepository.modifyInquiryRequestAnswerState(id);
+  }
+
+  // Transaction
   public async insertInquiryResponseImages(
     insertInquiryResponseImageDto: InsertInquiryResponseImageDto,
   ): Promise<void> {

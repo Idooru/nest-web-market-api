@@ -274,6 +274,10 @@ export class InquiryTransaction {
           inquiryRequest,
         });
 
+      await this.inquiryUpdateService.modifyInquiryRequestAnswerState(
+        inquiryRequest.id,
+      );
+
       const imageWork =
         this.inquiryFactoryService.getInsertInquiryResponseImagesFunc({
           inquiryResponseImages,
@@ -335,6 +339,10 @@ export class InquiryTransaction {
           inquiryRequest,
         });
 
+      await this.inquiryUpdateService.modifyInquiryRequestAnswerState(
+        inquiryRequest.id,
+      );
+
       const imageWork =
         this.inquiryFactoryService.getInsertInquiryResponseImagesFunc({
           inquiryResponseImages,
@@ -390,6 +398,10 @@ export class InquiryTransaction {
           inquiryRequest,
         });
 
+      await this.inquiryUpdateService.modifyInquiryRequestAnswerState(
+        inquiryRequest.id,
+      );
+
       const videoWork =
         this.inquiryFactoryService.getInsertInquiryResponseVideosFunc({
           inquiryResponseVideos,
@@ -438,6 +450,10 @@ export class InquiryTransaction {
           admin: inquiryResponser,
           inquiryRequest,
         });
+
+      await this.inquiryUpdateService.modifyInquiryRequestAnswerState(
+        inquiryRequest.id,
+      );
 
       this.inquiryEventMapSetter.setAdminEventParam({
         inquiryRequester,
