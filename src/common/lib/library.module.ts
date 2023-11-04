@@ -1,44 +1,44 @@
 import { Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { DotenvConfigurationModule } from "../config/dotenv.config";
+import { DotenvAdaptModule } from "./env/dotenv-adapt.module";
 import { MediaLoggerLibrary } from "./logger/media-logger.library";
-import { SecurityLibrary } from "./config/security.library";
+import { SecurityLibrary } from "./security/security.library";
 import { TimeLoggerLibrary } from "./logger/time-logger.library";
 import { EmailSenderLibrary } from "./email/email-sender.library";
-import { MailerConfigurationModule } from "../config/mailer.config";
-import { TypeOrmErrorHandlingBuilder } from "./error-handler/typeorm-error-handling.builder";
-import { JwtErrorHandlingBuilder } from "./error-handler/jwt-error-handling.builder";
-import { HttpExceptionHandlingBuilder } from "./error-handler/http-exception-handling.builder";
-import { ErrorLoggerLibrary } from "./logger/error-logger.library";
 import { ValidateLibrary } from "./util/validate.library";
 import { TransactionErrorHandler } from "./error-handler/transaction-error.handler";
+import { CatchCallbackFactoryLibrary } from "./util/catch-callback-factory.library";
+import { TypeormAdaptModule } from "./database/typeorm-adapt.module";
+import { MailerAdaptModule } from "./email/mailer-adapt.module";
+import { EventAdaptModule } from "./event/event-adapt.module";
+import { MulterAdaptModule } from "./media/multer-adapt.module";
 
 @Module({
-  imports: [DotenvConfigurationModule, MailerConfigurationModule],
+  imports: [
+    TypeormAdaptModule,
+    MailerAdaptModule,
+    DotenvAdaptModule,
+    EventAdaptModule,
+    MulterAdaptModule,
+  ],
   providers: [
     ConfigService,
     SecurityLibrary,
     EmailSenderLibrary,
-    HttpExceptionHandlingBuilder,
-    TypeOrmErrorHandlingBuilder,
-    JwtErrorHandlingBuilder,
     TimeLoggerLibrary,
     MediaLoggerLibrary,
-    ErrorLoggerLibrary,
     ValidateLibrary,
     TransactionErrorHandler,
+    CatchCallbackFactoryLibrary,
   ],
   exports: [
     SecurityLibrary,
     EmailSenderLibrary,
-    HttpExceptionHandlingBuilder,
-    TypeOrmErrorHandlingBuilder,
-    JwtErrorHandlingBuilder,
     TimeLoggerLibrary,
     MediaLoggerLibrary,
-    ErrorLoggerLibrary,
     ValidateLibrary,
     TransactionErrorHandler,
+    CatchCallbackFactoryLibrary,
   ],
 })
 export class LibraryModule {}

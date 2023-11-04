@@ -13,13 +13,16 @@ export class MulterConfigService implements MulterOptionsFactory {
 
   public async createMulterOptions(): Promise<MulterOptions> {
     await this.createFolder();
-    return { storage: MulterConfigService.storage, dest: "../../../uploads" };
+    return {
+      storage: MulterConfigService.storage,
+      dest: "../../../../uploads",
+    };
   }
 
   private async createUploadFolder() {
     try {
       this.logger.log("Create uploads folder");
-      await fsPromises.mkdir(path.join(__dirname, "../../../uploads"));
+      await fsPromises.mkdir(path.join(__dirname, "../../../../uploads"));
     } catch (err) {
       this.logger.log("uploads folder is already exist");
     }
@@ -30,17 +33,19 @@ export class MulterConfigService implements MulterOptionsFactory {
 
     this.logger.log("Create folders about image into uploads folder");
     try {
-      await fsPromises.mkdir(path.join(__dirname, "../../../uploads/images"));
+      await fsPromises.mkdir(
+        path.join(__dirname, "../../../../uploads/images"),
+      );
 
       const modelPromises = stuffForImages.map(async (model) => {
         return await fsPromises.mkdir(
-          path.join(__dirname, `../../../uploads/images/${model}`),
+          path.join(__dirname, `../../../../uploads/images/${model}`),
         );
       });
 
       const inquiryPromises = this.inquiry.map(async (val) => {
         return await fsPromises.mkdir(
-          path.join(__dirname, `../../../uploads/images/inquiry/${val}`),
+          path.join(__dirname, `../../../../uploads/images/inquiry/${val}`),
         );
       });
 
@@ -56,17 +61,19 @@ export class MulterConfigService implements MulterOptionsFactory {
 
     this.logger.log("Create folders about video into uploads folder");
     try {
-      await fsPromises.mkdir(path.join(__dirname, "../../../uploads/videos"));
+      await fsPromises.mkdir(
+        path.join(__dirname, "../../../../uploads/videos"),
+      );
 
       const modelPromises = stuffForVideos.map(async (model) => {
         return await fsPromises.mkdir(
-          path.join(__dirname, `../../../uploads/videos/${model}`),
+          path.join(__dirname, `../../../../uploads/videos/${model}`),
         );
       });
 
       const inquiryPromises = this.inquiry.map(async (val) => {
         return await fsPromises.mkdir(
-          path.join(__dirname, `../../../uploads/videos/inquiry/${val}`),
+          path.join(__dirname, `../../../../uploads/videos/inquiry/${val}`),
         );
       });
 
@@ -96,7 +103,10 @@ export class MulterConfigService implements MulterOptionsFactory {
             null,
           );
         }
-        const folderName = path.join(__dirname, `../../../uploads/${folder}`);
+        const folderName = path.join(
+          __dirname,
+          `../../../../uploads/${folder}`,
+        );
 
         cb(null, folderName);
       },
@@ -125,4 +135,4 @@ export class MulterConfigService implements MulterOptionsFactory {
     }),
   ],
 })
-export class MulterConfigurationModule {}
+export class MulterAdaptModule {}
