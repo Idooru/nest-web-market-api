@@ -29,7 +29,7 @@ import { UserQueryRunnerProvider } from "./logic/transaction/user-query-runner.p
 import { UserValidateRepository } from "./repositories/user-validate.repository";
 import { UserValidator } from "./logic/user.validator";
 import { UserFactoryService } from "./services/user-factory.service";
-import { UserRegisterEventMiddleware } from "./middleware/user-event.middleware";
+import { UserRegisterEventMiddleware } from "./middleware/user-register-event.middleware";
 import { UserEventMapSetter } from "./logic/user-event-map.setter";
 import { eventMap } from "../../common/config/event-configs";
 
