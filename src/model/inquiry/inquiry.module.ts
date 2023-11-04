@@ -8,12 +8,10 @@ import { ProductModule } from "../product/product.module";
 import { JwtModule } from "@nestjs/jwt";
 import { LibraryModule } from "src/common/lib/library.module";
 import { InquiryVersionOneOnlyAdminController } from "./controllers/inquiry-v1-only-admin.controller";
-import { MailerConfigurationModule } from "src/common/config/mailer.config";
-import { DotenvConfigurationModule } from "src/common/config/dotenv.config";
+import { DotenvAdaptModule } from "src/common/lib/env/dotenv-adapt.module";
 import { InquiryResponseEntity } from "./entities/inquiry-response.entity";
 import { inquirySelectProperty } from "src/common/config/repository-select-configs/inquiry.select";
 import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
-import { inquiryVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/inquiry-verify-cookie.key";
 import { InquirySearcher } from "./logic/inquiry.searcher";
 import { InquiryUpdateService } from "./services/inquiry-update.service";
 import { InquirySearchRepository } from "./repositories/inquiry-search.repository";
@@ -35,8 +33,7 @@ import { InquiryValidateRepository } from "./repositories/inquiry-validate.repos
     forwardRef(() => ProductModule),
     forwardRef(() => LibraryModule),
     JwtModule,
-    MailerConfigurationModule,
-    DotenvConfigurationModule,
+    DotenvAdaptModule,
   ],
   controllers: [
     InquiryVersionOneOnlyClientController,
@@ -46,10 +43,6 @@ import { InquiryValidateRepository } from "./repositories/inquiry-validate.repos
     {
       provide: "InquiryMediaCookieKey",
       useValue: inquiryMediaCookieKey,
-    },
-    {
-      provide: "InquiryVerifyCookieKey",
-      useValue: inquiryVerifyCookieKey,
     },
     {
       provide: "InquirySelectProperty",

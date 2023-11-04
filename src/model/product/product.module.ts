@@ -16,7 +16,6 @@ import { ProductVersionOneOnlyAdminController } from "./controllers/v1/product-v
 import { JwtModule } from "@nestjs/jwt";
 import { productSelectProperty } from "src/common/config/repository-select-configs/product.select";
 import { productMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
-import { productVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/product-verify-cookie.key";
 import { ProductFactoryService } from "./services/product-factory.service";
 import { ProductSearcher } from "./logic/product.searcher";
 import { ProductSearchRepository } from "./repositories/product-search.repository";
@@ -45,10 +44,6 @@ import { ProductIdValidatePipe } from "./pipe/exist/product-id-validate.pipe";
     ProductVersionOneOnlyAdminController,
   ],
   providers: [
-    {
-      provide: "ProductVerifyCookieKey",
-      useValue: productVerifyCookieKey,
-    },
     {
       provide: "ProductMediaCookieKey",
       useValue: productMediaCookieKey,

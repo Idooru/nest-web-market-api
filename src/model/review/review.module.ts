@@ -11,7 +11,6 @@ import { ReviewVersionOneOnlyAdminController } from "./controllers/review-v1-onl
 import { ReviewVersionOneOnlyClientController } from "./controllers/review-v1-only-client.controller";
 import { reviewSelectProperty } from "src/common/config/repository-select-configs/review.select";
 import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
-import { reviewVerifyCookieKey } from "src/common/config/cookie-key-configs/verify-cookie-keys/review-verify-cookie.key";
 import { ReviewFactoryService } from "./services/review-factory.service";
 import { ReviewUpdateRepository } from "./repositories/review-update.repository";
 import { ReviewUpdateService } from "./services/review-update.service";
@@ -42,10 +41,6 @@ import { ReviewValidateRepository } from "./repositories/review-validate.reposit
     {
       provide: "ReviewMediaCookieKey",
       useValue: reviewMediaCookieKey,
-    },
-    {
-      provide: "ReviewVerifyCookieKey",
-      useValue: reviewVerifyCookieKey,
     },
     {
       provide: "ReviewSelectProperty",
