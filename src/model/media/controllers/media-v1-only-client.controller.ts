@@ -8,7 +8,7 @@ import {
   Inject,
   Get,
 } from "@nestjs/common";
-import { MulterConfigService } from "src/common/config/multer.config";
+import { MulterConfigService } from "src/common/lib/media/multer-adapt.module";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";

@@ -7,7 +7,7 @@ import { JwtRefreshTokenPayload } from "src/model/auth/jwt/jwt-refresh-token-pay
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { v4 } from "uuid";
 import { JwtService } from "@nestjs/jwt";
-import { SecurityLibrary } from "src/common/lib/config/security.library";
+import { SecurityLibrary } from "src/common/lib/security/security.library";
 import { UserEntity } from "../entities/user.entity";
 import { CatchCallbackFactoryLibrary } from "../../../common/lib/util/catch-callback-factory.library";
 
@@ -27,7 +27,7 @@ export class UserSecurity {
     hasTransaction: boolean,
   ): Promise<string> {
     return await bcrypt
-      .hash(password, null)
+      .hash(password, this.securityLibrary.hashSalt)
       .catch(this.callbackFactory.getCatchHashPasswordFunc(hasTransaction));
   }
 

@@ -7,7 +7,7 @@ import {
 import { JwtService } from "@nestjs/jwt";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { Request } from "express";
-import { SecurityLibrary } from "../../lib/config/security.library";
+import { SecurityLibrary } from "../../lib/security/security.library";
 import { CatchCallbackFactoryLibrary } from "../../lib/util/catch-callback-factory.library";
 import { loggerFactory } from "../../functions/logger.factory";
 
