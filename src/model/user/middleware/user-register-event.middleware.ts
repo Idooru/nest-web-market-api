@@ -17,6 +17,8 @@ export class UserRegisterEventMiddleware implements NestMiddleware {
       const sendMailToClientAboutRegisterDto: SendMailToClientAboutRegisterDto =
         this.userEventMap.get("register");
 
+      this.userEventMap.clear();
+
       if (!sendMailToClientAboutRegisterDto) return;
 
       this.eventEmitter.emit(

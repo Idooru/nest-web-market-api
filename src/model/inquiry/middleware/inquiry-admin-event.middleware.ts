@@ -17,6 +17,8 @@ export class InquiryAdminEventMiddleware implements NestMiddleware {
       const sendMailToClientAboutInquiryResponseDto: SendMailToClientAboutInquiryResponseDto =
         this.inquiryEventMap.get("admin");
 
+      this.inquiryEventMap.clear();
+
       if (!sendMailToClientAboutInquiryResponseDto) return;
 
       this.eventEmitter.emit(
