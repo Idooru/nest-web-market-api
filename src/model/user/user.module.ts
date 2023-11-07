@@ -28,7 +28,6 @@ import { UserUpdateService } from "./services/user-update.service";
 import { UserQueryRunnerProvider } from "./logic/transaction/user-query-runner.provider";
 import { UserValidateRepository } from "./repositories/user-validate.repository";
 import { UserValidator } from "./logic/user.validator";
-import { UserFactoryService } from "./services/user-factory.service";
 import { UserRegisterEventMiddleware } from "./middleware/user-register-event.middleware";
 import { UserEventMapSetter } from "./logic/user-event-map.setter";
 import { eventMap } from "../../common/config/event-configs";
@@ -70,7 +69,6 @@ import { eventMap } from "../../common/config/event-configs";
     UserQueryRunnerProvider,
     UserRepositoryVO,
     UserUpdateService,
-    UserFactoryService,
     UserSearchRepository,
     UserUpdateRepository,
     UserValidateRepository,
