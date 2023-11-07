@@ -5,6 +5,7 @@ import { MediaUpdateRepository } from "../repositories/media-update.repository";
 import { ProductMediaCookieKey } from "../../../common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
 import { InquiryMediaCookieKey } from "../../../common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 import { ReviewMediaCookieKey } from "../../../common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
+import { MediaEventMapSetter } from "../logic/media-event-map.setter";
 
 @Injectable()
 export class MediaUpdateService {
@@ -17,6 +18,7 @@ export class MediaUpdateService {
     private readonly inquiryMedia: InquiryMediaCookieKey,
     private readonly mediaUtils: MediaUtils,
     private readonly mediaOperationRepository: MediaUpdateRepository,
+    private readonly mediaEventMapSetter: MediaEventMapSetter,
   ) {}
 
   // General
@@ -219,10 +221,13 @@ export class MediaUpdateService {
       ),
     );
 
-    // this.mediaBundleService.deleteMediaFile(
-    //   productImgCookies,
-    //   "images/product",
-    // );
+    this.mediaEventMapSetter.setDeleteMediaFilesEventParam(
+      "delete-product-images",
+      {
+        mediaCookiesDto: productImgCookies,
+        prefix: "images/product",
+      },
+    );
 
     await Promise.all(deleting);
 
@@ -239,10 +244,13 @@ export class MediaUpdateService {
       this.mediaOperationRepository.deleteReviewImageWithId(reviewImgCookie.id),
     );
 
-    // this.mediaBundleService.deleteMediaFile(
-    //   reviewImgCookies,
-    //   "images/review",
-    // );
+    this.mediaEventMapSetter.setDeleteMediaFilesEventParam(
+      "delete-review-images",
+      {
+        mediaCookiesDto: reviewImgCookies,
+        prefix: "images/review",
+      },
+    );
 
     await Promise.all(deleting);
 
@@ -259,10 +267,13 @@ export class MediaUpdateService {
       this.mediaOperationRepository.deleteReviewVideoWithId(reviewVdoCookie.id),
     );
 
-    // this.mediaBundleService.deleteMediaFile(
-    //   reviewVdoCookies,
-    //   "videos/review",
-    // );
+    this.mediaEventMapSetter.setDeleteMediaFilesEventParam(
+      "delete-review-videos",
+      {
+        mediaCookiesDto: reviewVdoCookies,
+        prefix: "videos/review",
+      },
+    );
 
     await Promise.all(deleting);
 
@@ -281,10 +292,13 @@ export class MediaUpdateService {
       ),
     );
 
-    // this.mediaBundleService.deleteMediaFile(
-    //   inquiryRequestImgCookies,
-    //   "images/inquiry/request",
-    // );
+    this.mediaEventMapSetter.setDeleteMediaFilesEventParam(
+      "delete-inquiry-request-images",
+      {
+        mediaCookiesDto: inquiryRequestImgCookies,
+        prefix: "images/inquiry/request",
+      },
+    );
 
     await Promise.all(deleting);
 
@@ -303,10 +317,13 @@ export class MediaUpdateService {
       ),
     );
 
-    // this.mediaBundleService.deleteMediaFile(
-    //   inquiryRequestVdoCookies,
-    //   "videos/inquiry/request",
-    // );
+    this.mediaEventMapSetter.setDeleteMediaFilesEventParam(
+      "delete-inquiry-request-videos",
+      {
+        mediaCookiesDto: inquiryRequestVdoCookies,
+        prefix: "videos/inquiry/request",
+      },
+    );
 
     await Promise.all(deleting);
 
@@ -325,10 +342,13 @@ export class MediaUpdateService {
       ),
     );
 
-    // this.mediaBundleService.deleteMediaFile(
-    //   inquiryResponseImgCookies,
-    //   "images/inquiry/response",
-    // );
+    this.mediaEventMapSetter.setDeleteMediaFilesEventParam(
+      "delete-inquiry-response-images",
+      {
+        mediaCookiesDto: inquiryResponseImgCookies,
+        prefix: "images/inquiry/response",
+      },
+    );
 
     await Promise.all(deleting);
 
@@ -347,10 +367,13 @@ export class MediaUpdateService {
       ),
     );
 
-    // this.mediaBundleService.deleteMediaFile(
-    //   inquiryResponseVdoCookies,
-    //   "videos/inquiry/response",
-    // );
+    this.mediaEventMapSetter.setDeleteMediaFilesEventParam(
+      "delete-inquiry-response-videos",
+      {
+        mediaCookiesDto: inquiryResponseVdoCookies,
+        prefix: "videos/inquiry/response",
+      },
+    );
 
     await Promise.all(deleting);
 
