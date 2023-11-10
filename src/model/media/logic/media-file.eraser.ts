@@ -9,10 +9,9 @@ import path from "path";
 export class MediaFileEraser {
   @OnEvent(eventConfigs.deleteMediaFile, { async: true })
   async deleteMediaFile(deleteMediaFilesDto: DeleteMediaFilesDto) {
-    deleteMediaFilesDto.mediaCookiesDto.forEach((mediaFile) => {
-      const { fileName } = mediaFile;
+    deleteMediaFilesDto.mediaFiles.forEach((mediaFile) => {
       const { prefix } = deleteMediaFilesDto;
-      const mediaFilePrefix = prefix.concat("/").concat(fileName);
+      const mediaFilePrefix = prefix.concat("/").concat(mediaFile);
       const mediaFileUrl = path.join(
         __dirname,
         "../../../../uploads",
