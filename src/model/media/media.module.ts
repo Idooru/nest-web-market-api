@@ -87,6 +87,7 @@ import { MediaFileEraser } from "./logic/media-file.eraser";
   ],
   exports: [
     MediaSearcher,
+    MediaEventMapSetter,
     MediaDeleteProductImageMiddleware,
     MediaDeleteReviewImageMiddleware,
     MediaDeleteReviewImageMiddleware,
@@ -94,6 +95,7 @@ import { MediaFileEraser } from "./logic/media-file.eraser";
     MediaDeleteInquiryRequestVideoMiddleware,
     MediaDeleteInquiryResponseImageMiddleware,
     MediaDeleteInquiryResponseVideoMiddleware,
+    { provide: "MediaEventMap", useValue: eventMap },
   ],
 })
 export class MediaModule implements NestModule {
