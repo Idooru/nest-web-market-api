@@ -44,7 +44,7 @@ export class ProductVersionOneOnlyAdminController {
   constructor(
     private readonly productSearcher: ProductSearcher,
     private readonly productTransaction: ProductTransaction,
-    private readonly productOperationService: ProductUpdateService,
+    private readonly productUpdateService: ProductUpdateService,
   ) {}
   @ApiOperation({
     summary: "find product by id",
@@ -149,7 +149,7 @@ export class ProductVersionOneOnlyAdminController {
     @Param("id", ProductIdValidatePipe) id: string,
     @Body(ProductNameValidatePipe) { name }: ModifyProductNameDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productOperationService.modifyProductName(id, name);
+    await this.productUpdateService.modifyProductName(id, name);
     return {
       statusCode: 201,
       message: `id(${id})에 해당하는 상품의 이름을 수정하였습니다.`,
@@ -167,7 +167,7 @@ export class ProductVersionOneOnlyAdminController {
     @Param("id", ProductIdValidatePipe) id: string,
     @Body() { price }: ModifyProductPriceDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productOperationService.modifyProductPrice(id, price);
+    await this.productUpdateService.modifyProductPrice(id, price);
 
     return {
       statusCode: 201,
@@ -185,7 +185,7 @@ export class ProductVersionOneOnlyAdminController {
     @Param("id", ProductIdValidatePipe) id: string,
     @Body() { origin }: ModifyProductOriginDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productOperationService.modifyProductOrigin(id, origin);
+    await this.productUpdateService.modifyProductOrigin(id, origin);
 
     return {
       statusCode: 201,
@@ -203,7 +203,7 @@ export class ProductVersionOneOnlyAdminController {
     @Param("id", ProductIdValidatePipe) id: string,
     @Body() { category }: ModifyProductCategoryDto,
   ) {
-    await this.productOperationService.modifyProductCategory(id, category);
+    await this.productUpdateService.modifyProductCategory(id, category);
 
     return {
       statusCode: 201,
@@ -221,10 +221,7 @@ export class ProductVersionOneOnlyAdminController {
     @Param("id", ProductIdValidatePipe) id: string,
     @Body() { description }: ModifyProductDesctiptionDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productOperationService.modifyProductDescription(
-      id,
-      description,
-    );
+    await this.productUpdateService.modifyProductDescription(id, description);
 
     return {
       statusCode: 201,
@@ -243,7 +240,7 @@ export class ProductVersionOneOnlyAdminController {
     @Param("id", ProductIdValidatePipe) id: string,
     @Body() { quantity }: ModifyProductQuantityDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productOperationService.modifyProductQuantity(id, quantity);
+    await this.productUpdateService.modifyProductQuantity(id, quantity);
 
     return {
       statusCode: 201,
@@ -260,7 +257,7 @@ export class ProductVersionOneOnlyAdminController {
   async removeProduct(
     @Param("id", ProductIdValidatePipe) id: string,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productOperationService.removeProduct(id);
+    await this.productUpdateService.removeProduct(id);
 
     return {
       statusCode: 201,
