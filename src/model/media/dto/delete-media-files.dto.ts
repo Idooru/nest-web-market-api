@@ -1,6 +1,4 @@
-import { MediaCookieDto } from "./media-cookie.dto";
-
 export class DeleteMediaFilesDto {
-  mediaCookiesDto: MediaCookieDto[];
+  mediaFiles: string[];
   prefix: string;
 }
