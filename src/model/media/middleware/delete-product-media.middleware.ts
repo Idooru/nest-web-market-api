@@ -1,32 +1,28 @@
 import { Inject, Injectable, NestMiddleware } from "@nestjs/common";
 import { NextFunction, Request, Response } from "express";
 import { EventEmitter2 } from "@nestjs/event-emitter";
-import { DeleteMediaFilesDto } from "../dto/delete-media-files.dto";
 import { eventConfigs } from "../../../common/config/event-configs";
+import { DeleteMediaFilesDto } from "../dto/delete-media-files.dto";
 
 @Injectable()
-export class MediaDeleteInquiryRequestVideoMiddleware
-  implements NestMiddleware
-{
+export class DeleteProductMediaMiddleware implements NestMiddleware {
   constructor(
-    @Inject("MediaEventMap")
+    @Inject("DeleteMediaEventMap")
     private readonly mediaEventMap: Map<string, any>,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
   use(req: Request, res: Response, next: NextFunction): void {
     res.on("finish", () => {
-      const deleteInquiryRequestVideoFilesDto: DeleteMediaFilesDto =
-        this.mediaEventMap.get("delete-inquiry-request-videos");
+      const deleteMediaFilesDto: DeleteMediaFilesDto = this.mediaEventMap.get(
+        "delete-product-medias",
+      );
 
       this.mediaEventMap.clear();
 
-      if (!deleteInquiryRequestVideoFilesDto) return;
+      if (!deleteMediaFilesDto) return;
 
-      this.eventEmitter.emit(
-        eventConfigs.deleteMediaFile,
-        deleteInquiryRequestVideoFilesDto,
-      );
+      this.eventEmitter.emit(eventConfigs.deleteMediaFile, deleteMediaFilesDto);
     });
 
     next();
