@@ -11,12 +11,16 @@ import { ChangeReviewVideoDto } from "../dto/change-review-video.dto";
 import { ModifyStarRateDto } from "../dto/modify-star-rate.dto";
 import { StarRateEntity } from "../entities/star-rate.entity";
 import { ReviewUtils } from "../logic/review.utils";
+import { ReviewSearcher } from "../logic/review.searcher";
+import { MediaUtils } from "../../media/logic/media.utils";
 
 @Injectable()
 export class ReviewUpdateService {
   constructor(
     private readonly reviewUtils: ReviewUtils,
     private readonly reviewOperationRepository: ReviewUpdateRepository,
+    private readonly reviewSearcher: ReviewSearcher,
+    private readonly mediaUtils: MediaUtils,
   ) {}
 
   // Transaction
@@ -147,6 +151,15 @@ export class ReviewUpdateService {
 
   // Transaction
   public async deleteReviewWithId(id: string): Promise<void> {
+    const review = await this.reviewSearcher.findReviewWithId(id);
+
+    this.mediaUtils.deleteMediaFiles({
+      images: review.Image,
+      videos: review.Video,
+      mediaEntity: "review",
+      callWhere: "remove media entity",
+    });
+
     await this.reviewOperationRepository.deleteReviewWithId(id);
   }
 

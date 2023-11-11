@@ -5,7 +5,6 @@ import { MediaUpdateRepository } from "../repositories/media-update.repository";
 import { ProductMediaCookieKey } from "../../../common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
 import { InquiryMediaCookieKey } from "../../../common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 import { ReviewMediaCookieKey } from "../../../common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
-import { MediaEventMapSetter } from "../logic/media-event-map.setter";
 
 @Injectable()
 export class MediaUpdateService {
@@ -18,7 +17,6 @@ export class MediaUpdateService {
     private readonly inquiryMedia: InquiryMediaCookieKey,
     private readonly mediaUtils: MediaUtils,
     private readonly mediaOperationRepository: MediaUpdateRepository,
-    private readonly mediaEventMapSetter: MediaEventMapSetter,
   ) {}
 
   // General
@@ -221,13 +219,11 @@ export class MediaUpdateService {
       ),
     );
 
-    this.mediaEventMapSetter.setDeleteMediaFilesEventParam(
-      "delete-product-images",
-      {
-        mediaCookiesDto: productImgCookies,
-        prefix: "images/product",
-      },
-    );
+    this.mediaUtils.deleteMediaFiles({
+      images: productImgCookies.map((img) => ({ url: img.fileName })),
+      mediaEntity: "product",
+      callWhere: "cancel upload",
+    });
 
     await Promise.all(deleting);
 
@@ -244,13 +240,11 @@ export class MediaUpdateService {
       this.mediaOperationRepository.deleteReviewImageWithId(reviewImgCookie.id),
     );
 
-    this.mediaEventMapSetter.setDeleteMediaFilesEventParam(
-      "delete-review-images",
-      {
-        mediaCookiesDto: reviewImgCookies,
-        prefix: "images/review",
-      },
-    );
+    this.mediaUtils.deleteMediaFiles({
+      images: reviewImgCookies.map((img) => ({ url: img.fileName })),
+      mediaEntity: "review",
+      callWhere: "cancel upload",
+    });
 
     await Promise.all(deleting);
 
@@ -267,13 +261,11 @@ export class MediaUpdateService {
       this.mediaOperationRepository.deleteReviewVideoWithId(reviewVdoCookie.id),
     );
 
-    this.mediaEventMapSetter.setDeleteMediaFilesEventParam(
-      "delete-review-videos",
-      {
-        mediaCookiesDto: reviewVdoCookies,
-        prefix: "videos/review",
-      },
-    );
+    this.mediaUtils.deleteMediaFiles({
+      videos: reviewVdoCookies.map((vdo) => ({ url: vdo.fileName })),
+      mediaEntity: "review",
+      callWhere: "cancel upload",
+    });
 
     await Promise.all(deleting);
 
@@ -292,13 +284,12 @@ export class MediaUpdateService {
       ),
     );
 
-    this.mediaEventMapSetter.setDeleteMediaFilesEventParam(
-      "delete-inquiry-request-images",
-      {
-        mediaCookiesDto: inquiryRequestImgCookies,
-        prefix: "images/inquiry/request",
-      },
-    );
+    this.mediaUtils.deleteMediaFiles({
+      images: inquiryRequestImgCookies.map((img) => ({ url: img.fileName })),
+      mediaEntity: "inquiry",
+      option: "request",
+      callWhere: "cancel upload",
+    });
 
     await Promise.all(deleting);
 
@@ -317,13 +308,12 @@ export class MediaUpdateService {
       ),
     );
 
-    this.mediaEventMapSetter.setDeleteMediaFilesEventParam(
-      "delete-inquiry-request-videos",
-      {
-        mediaCookiesDto: inquiryRequestVdoCookies,
-        prefix: "videos/inquiry/request",
-      },
-    );
+    this.mediaUtils.deleteMediaFiles({
+      videos: inquiryRequestVdoCookies.map((vdo) => ({ url: vdo.fileName })),
+      mediaEntity: "inquiry",
+      option: "request",
+      callWhere: "cancel upload",
+    });
 
     await Promise.all(deleting);
 
@@ -342,13 +332,12 @@ export class MediaUpdateService {
       ),
     );
 
-    this.mediaEventMapSetter.setDeleteMediaFilesEventParam(
-      "delete-inquiry-response-images",
-      {
-        mediaCookiesDto: inquiryResponseImgCookies,
-        prefix: "images/inquiry/response",
-      },
-    );
+    this.mediaUtils.deleteMediaFiles({
+      images: inquiryResponseImgCookies.map((img) => ({ url: img.fileName })),
+      mediaEntity: "inquiry",
+      option: "response",
+      callWhere: "cancel upload",
+    });
 
     await Promise.all(deleting);
 
@@ -367,13 +356,12 @@ export class MediaUpdateService {
       ),
     );
 
-    this.mediaEventMapSetter.setDeleteMediaFilesEventParam(
-      "delete-inquiry-response-videos",
-      {
-        mediaCookiesDto: inquiryResponseVdoCookies,
-        prefix: "videos/inquiry/response",
-      },
-    );
+    this.mediaUtils.deleteMediaFiles({
+      videos: inquiryResponseVdoCookies.map((vdo) => ({ url: vdo.fileName })),
+      mediaEntity: "inquiry",
+      option: "response",
+      callWhere: "cancel upload",
+    });
 
     await Promise.all(deleting);
 

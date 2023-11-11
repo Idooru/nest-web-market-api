@@ -6,11 +6,15 @@ import { ModifyProductDto } from "../dto/modify-product.dto";
 import { InsertProductImageDto } from "../dto/insert-product-image.dto";
 import { ChangeProductImageDto } from "../dto/change-product-image.dto";
 import { ProductCategory } from "../types/product-category.type";
+import { ProductSearcher } from "../logic/product.searcher";
+import { MediaUtils } from "../../media/logic/media.utils";
 
 @Injectable()
 export class ProductUpdateService {
   constructor(
     private readonly productOperationRepository: ProductUpdateRepository,
+    private readonly productSearcher: ProductSearcher,
+    private readonly mediaUtils: MediaUtils,
   ) {}
 
   // Transaction
@@ -70,6 +74,12 @@ export class ProductUpdateService {
         ),
       );
 
+      this.mediaUtils.deleteMediaFiles({
+        images: beforeProductImages,
+        mediaEntity: "product",
+        callWhere: "remove media entity",
+      });
+
       await Promise.all(deleting);
     }
   }
@@ -115,6 +125,14 @@ export class ProductUpdateService {
 
   // General
   async removeProduct(id: string): Promise<void> {
+    const product = await this.productSearcher.findProductWithId(id);
+
+    this.mediaUtils.deleteMediaFiles({
+      images: product.Image,
+      mediaEntity: "product",
+      callWhere: "remove media entity",
+    });
+
     await this.productOperationRepository.removeProduct(id);
   }
 }
