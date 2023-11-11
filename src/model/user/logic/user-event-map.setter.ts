@@ -4,13 +4,13 @@ import { SendMailToClientAboutRegisterDto } from "../dtos/send-mail-to-client-ab
 @Injectable()
 export class UserEventMapSetter {
   constructor(
-    @Inject("UserEventMap")
-    private readonly userEventMap: Map<string, any>,
+    @Inject("MailEventMap")
+    private readonly mailEventMap: Map<string, any>,
   ) {}
 
   public setRegisterEventParam(
     sendMailToClientAboutRegisterDto: SendMailToClientAboutRegisterDto,
   ): void {
-    this.userEventMap.set("register", sendMailToClientAboutRegisterDto);
+    this.mailEventMap.set("register", sendMailToClientAboutRegisterDto);
   }
 }

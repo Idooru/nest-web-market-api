@@ -30,7 +30,7 @@ import { UserValidateRepository } from "./repositories/user-validate.repository"
 import { UserValidator } from "./logic/user.validator";
 import { UserRegisterEventMiddleware } from "./middleware/user-register-event.middleware";
 import { UserEventMapSetter } from "./logic/user-event-map.setter";
-import { eventMap } from "../../common/config/event-configs";
+import { mailEventMap } from "../../common/config/event-configs";
 
 @Module({
   imports: [
@@ -57,8 +57,8 @@ import { eventMap } from "../../common/config/event-configs";
       useValue: userSelectProperty,
     },
     {
-      provide: "UserEventMap",
-      useValue: eventMap,
+      provide: "MailEventMap",
+      useValue: mailEventMap,
     },
     UserSearcher,
     UserValidator,

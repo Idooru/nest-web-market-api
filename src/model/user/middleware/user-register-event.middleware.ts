@@ -7,17 +7,17 @@ import { eventConfigs } from "../../../common/config/event-configs";
 @Injectable()
 export class UserRegisterEventMiddleware implements NestMiddleware {
   constructor(
-    @Inject("UserEventMap")
-    private readonly userEventMap: Map<string, any>,
+    @Inject("MailEventMap")
+    private readonly mailEventMap: Map<string, any>,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
   use(req: Request, res: Response, next: NextFunction): void {
     res.on("finish", () => {
       const sendMailToClientAboutRegisterDto: SendMailToClientAboutRegisterDto =
-        this.userEventMap.get("register");
+        this.mailEventMap.get("register");
 
-      this.userEventMap.clear();
+      this.mailEventMap.clear();
 
       if (!sendMailToClientAboutRegisterDto) return;
 
