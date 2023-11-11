@@ -7,17 +7,17 @@ import { eventConfigs } from "../../../common/config/event-configs";
 @Injectable()
 export class InquiryAdminEventMiddleware implements NestMiddleware {
   constructor(
-    @Inject("InquiryEventMap")
-    private readonly inquiryEventMap: Map<string, any>,
+    @Inject("MailEventMap")
+    private readonly mailEventMap: Map<string, any>,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
   use(req: Request, res: Response, next: NextFunction): void {
     res.on("finish", () => {
       const sendMailToClientAboutInquiryResponseDto: SendMailToClientAboutInquiryResponseDto =
-        this.inquiryEventMap.get("admin");
+        this.mailEventMap.get("admin");
 
-      this.inquiryEventMap.clear();
+      this.mailEventMap.clear();
 
       if (!sendMailToClientAboutInquiryResponseDto) return;
 
