@@ -19,6 +19,10 @@ export class ReviewSearcher {
     return await this.reviewSearchRepository.findStarRateWithId(id);
   }
 
+  async findReviewWithId(id: string): Promise<ReviewEntity> {
+    return await this.reviewSearchRepository.findReviewWithId(id);
+  }
+
   async findReviewsWithProductId(id: string): Promise<ReviewEntity[]> {
     const product = await this.productSearcher.findProductWithId(id);
 

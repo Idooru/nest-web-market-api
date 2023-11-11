@@ -37,4 +37,17 @@ export class ReviewSearchRepository {
       .where("starRate.id = :id", { id })
       .getOne();
   }
+
+  async findReviewWithId(id: string): Promise<ReviewEntity> {
+    return await this.reviewRepository
+      .createQueryBuilder()
+      .select(this.select.review)
+      .from(ReviewEntity, "review")
+      .innerJoin("review.Product", "Product")
+      .innerJoin("review.reviewer", "Client")
+      .leftJoin("review.Image", "Image")
+      .leftJoin("review.Video", "Video")
+      .where("review.id = :id", { id })
+      .getOne();
+  }
 }
