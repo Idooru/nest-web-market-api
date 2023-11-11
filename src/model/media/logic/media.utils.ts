@@ -1,10 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { MediaCookieDto } from "../dto/media-cookie.dto";
+import { MediaEventMapSetter } from "./media-event-map.setter";
+import { SetDeleteMediaFilesDto } from "../dto/set-delete-media-files.dto";
+import { DeleteMediaFilesDto } from "../dto/delete-media-files.dto";
 
 @Injectable()
 export class MediaUtils {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly mediaEventMapSetter: MediaEventMapSetter,
+  ) {}
 
   public setUrl(mediaFileName: string, path: string): string {
     return `${this.configService.get(
@@ -54,5 +60,60 @@ export class MediaUtils {
     const urls = files.map((file) => this.setUrl(file.filename, path));
 
     return this.createMediaCookieValues(ids, files, urls, whatCookie);
+  }
+
+  public deleteMediaFiles<I extends { url: string }, V extends { url: string }>(
+    setDeleteMediaFilesDto: SetDeleteMediaFilesDto<I, V>,
+  ): void {
+    const { images, videos, mediaEntity, option, callWhere } =
+      setDeleteMediaFilesDto;
+
+    let imagePattern: RegExp;
+    let videoPattern: RegExp;
+    let imagePrefix: string;
+    let videoPrefix: string;
+    let event: string;
+
+    if (option) {
+      imagePattern = new RegExp(`/${mediaEntity}/${option}/images/([^/]+)`);
+      videoPattern = new RegExp(`/${mediaEntity}/${option}/videos/([^/]+)`);
+      imagePrefix = `images/${mediaEntity}/${option}`;
+      videoPrefix = `videos/${mediaEntity}/${option}`;
+      event = `delete-${mediaEntity}-${option}-medias`;
+    } else {
+      imagePattern = new RegExp(`/${mediaEntity}/images/([^/]+)`);
+      videoPattern = new RegExp(`/${mediaEntity}/videos/([^/]+)`);
+      imagePrefix = `images/${mediaEntity}`;
+      videoPrefix = `videos/${mediaEntity}`;
+      event = `delete-${mediaEntity}-medias`;
+    }
+
+    let imageFileNames: string[];
+    let videoFileNames: string[];
+
+    if (callWhere === "cancel upload") {
+      imageFileNames = images ? images.map((image) => image.url) : [];
+      videoFileNames = videos ? videos.map((video) => video.url) : [];
+    } else {
+      imageFileNames = images
+        ? images.map((image) => image.url.match(imagePattern)[1])
+        : [];
+      videoFileNames = videos
+        ? videos.map((video) => video.url.match(videoPattern)[1])
+        : [];
+    }
+
+    const mediaFiles: DeleteMediaFilesDto = {
+      imageFiles: {
+        fileName: imageFileNames,
+        imagePrefix,
+      },
+      videoFiles: {
+        fileName: videoFileNames,
+        videoPrefix,
+      },
+    };
+
+    this.mediaEventMapSetter.setDeleteMediaFilesEventParam(event, mediaFiles);
   }
 }
