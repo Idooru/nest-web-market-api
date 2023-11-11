@@ -29,10 +29,11 @@ import { InquiryRepositoryVO } from "./logic/transaction/inquiry-repository.vo";
 import { InquiryRequestIdValidatePipe } from "./pipe/exist/inquiry-request-id-validate.pipe";
 import { InquiryValidator } from "./logic/inquiry.validator";
 import { InquiryValidateRepository } from "./repositories/inquiry-validate.repository";
-import { eventMap } from "../../common/config/event-configs";
+import { mailEventMap } from "../../common/config/event-configs";
 import { InquiryEventMapSetter } from "./logic/inquiry-event-map.setter";
 import { InquiryClientEventMiddleware } from "./middleware/inquiry-client-event.middleware";
 import { InquiryAdminEventMiddleware } from "./middleware/inquiry-admin-event.middleware";
+import { DeleteInquiryRequestMediaMiddleware } from "../media/middleware/delete-inquiry-request-media.middleware";
 
 @Module({
   imports: [
@@ -58,8 +59,8 @@ import { InquiryAdminEventMiddleware } from "./middleware/inquiry-admin-event.mi
       useValue: inquirySelectProperty,
     },
     {
-      provide: "InquiryEventMap",
-      useValue: eventMap,
+      provide: "MailEventMap",
+      useValue: mailEventMap,
     },
     InquirySearcher,
     InquirySearchRepository,
@@ -84,6 +85,10 @@ export class InquiryModule implements NestModule {
       .apply(InquiryClientEventMiddleware)
       .forRoutes(InquiryVersionOneOnlyClientController)
       .apply(InquiryAdminEventMiddleware)
-      .forRoutes(InquiryVersionOneOnlyAdminController);
+      .forRoutes(InquiryVersionOneOnlyAdminController)
+      .apply(DeleteInquiryRequestMediaMiddleware)
+      .forRoutes("")
+      .apply(DeleteInquiryRequestMediaMiddleware)
+      .forRoutes("");
   }
 }
