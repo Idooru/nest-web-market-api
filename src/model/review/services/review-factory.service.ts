@@ -9,55 +9,47 @@ import { ModifyStarRateDto } from "../dto/modify-star-rate.dto";
 
 @Injectable()
 export class ReviewFactoryService {
-  constructor(private readonly reviewOperationService: ReviewUpdateService) {}
+  constructor(private readonly reviewUpdateService: ReviewUpdateService) {}
 
   public getInsertReviewImagesFunc(
     insertReviewImageDto: InsertReviewImageDto,
   ): () => Promise<void> {
     return async () =>
-      await this.reviewOperationService.insertReviewImages(
-        insertReviewImageDto,
-      );
+      await this.reviewUpdateService.insertReviewImages(insertReviewImageDto);
   }
 
   public getInsertReviewVideosFunc(
     insertReviewVideoDto: InsertReviewVideoDto,
   ): () => Promise<void> {
     return async () =>
-      await this.reviewOperationService.insertReviewVideos(
-        insertReviewVideoDto,
-      );
+      await this.reviewUpdateService.insertReviewVideos(insertReviewVideoDto);
   }
 
   public getIncreaseStarRateFunc(
     starRatingDto: StarRatingDto,
   ): () => Promise<void> {
     return async () =>
-      await this.reviewOperationService.increaseStarRate(starRatingDto);
+      await this.reviewUpdateService.increaseStarRate(starRatingDto);
   }
 
   public getChangeReviewImagesFunc(
     changeReviewImageDto: ChangeReviewImageDto,
   ): () => Promise<void> {
     return async () =>
-      await this.reviewOperationService.changeReviewImages(
-        changeReviewImageDto,
-      );
+      await this.reviewUpdateService.changeReviewImages(changeReviewImageDto);
   }
 
   public getChangeReviewVideosFunc(
     changeReviewVideoDto: ChangeReviewVideoDto,
   ): () => Promise<void> {
     return async () =>
-      await this.reviewOperationService.changeReviewVideos(
-        changeReviewVideoDto,
-      );
+      await this.reviewUpdateService.changeReviewVideos(changeReviewVideoDto);
   }
 
   public getModifyStarRateFunc(
     modifyStarRateDto: ModifyStarRateDto,
   ): () => Promise<void> {
     return async () =>
-      await this.reviewOperationService.modifyStarRate(modifyStarRateDto);
+      await this.reviewUpdateService.modifyStarRate(modifyStarRateDto);
   }
 }
