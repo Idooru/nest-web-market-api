@@ -32,6 +32,7 @@ export const productSelectProperty: ProductSelectProperty = {
     "product.description",
     "product.quantity",
     "Image.url",
+    "StarRate.id",
     "StarRate.averageScore",
     "Review",
     "Reviewer",
