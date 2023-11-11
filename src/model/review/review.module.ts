@@ -1,6 +1,12 @@
 import { ProductModule } from "../product/product.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { Module, forwardRef } from "@nestjs/common";
+import {
+  forwardRef,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from "@nestjs/common";
 import { ReviewEntity } from "./entities/review.entity";
 import { UserModule } from "../user/user.module";
 import { StarRateEntity } from "./entities/star-rate.entity";
@@ -23,6 +29,7 @@ import { ReviewUtils } from "./logic/review.utils";
 import { ReviewIdValidatePipe } from "./pipe/exist/review-id-validate.pipe";
 import { ReviewValidator } from "./logic/review.validator";
 import { ReviewValidateRepository } from "./repositories/review-validate.repository";
+import { DeleteReviewMediaMiddleware } from "../media/middleware/delete-review-media.middleware";
 
 @Module({
   imports: [
@@ -61,4 +68,18 @@ import { ReviewValidateRepository } from "./repositories/review-validate.reposit
   ],
   exports: [],
 })
-export class ReviewModule {}
+export class ReviewModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer
+      .apply(DeleteReviewMediaMiddleware)
+      .forRoutes({
+        path: "/api/v1/only-client/review/*",
+        method: RequestMethod.DELETE,
+      })
+      .apply(DeleteReviewMediaMiddleware)
+      .forRoutes({
+        path: "/api/v1/only-client/review/*",
+        method: RequestMethod.PUT,
+      });
+  }
+}

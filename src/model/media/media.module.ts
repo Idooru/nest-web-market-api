@@ -1,9 +1,10 @@
 import { TypeOrmModule } from "@nestjs/typeorm";
 import {
-  Module,
   forwardRef,
-  NestModule,
   MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
 } from "@nestjs/common";
 import { ProductImageEntity } from "./entities/product-image.entity";
 import { ReviewImageEntity } from "./entities/review-image.entity";
@@ -30,16 +31,13 @@ import { MediaValidator } from "./logic/media.validator";
 import { MediaUtils } from "./logic/media.utils";
 import { MediaUpdateRepository } from "./repositories/media-update.repository";
 import { MediaUpdateService } from "./services/media-update.service";
-import { eventMap } from "../../common/config/event-configs";
+import { deleteMediaEventMap } from "../../common/config/event-configs";
 import { MediaEventMapSetter } from "./logic/media-event-map.setter";
-import { MediaDeleteProductImageMiddleware } from "./middleware/media-delete-product-image.middleware";
-import { MediaDeleteReviewImageMiddleware } from "./middleware/media-delete-review-image.middleware";
-import { MediaDeleteInquiryRequestImageMiddleware } from "./middleware/media-delete-inquiry-request-image.middleware";
-import { MediaDeleteInquiryRequestVideoMiddleware } from "./middleware/media-delete-inquiry-request-video.middleware";
-import { MediaDeleteInquiryResponseImageMiddleware } from "./middleware/media-delete-inquiry-response-image.middleware";
-import { MediaDeleteInquiryResponseVideoMiddleware } from "./middleware/media-delete-inquiry-response-video.middleware";
-import { MediaDeleteReviewVideoMiddleware } from "./middleware/media-delete-review-video.middleware";
+import { DeleteProductMediaMiddleware } from "./middleware/delete-product-media.middleware";
 import { MediaFileEraser } from "./logic/media-file.eraser";
+import { DeleteReviewMediaMiddleware } from "./middleware/delete-review-media.middleware";
+import { DeleteInquiryRequestMediaMiddleware } from "./middleware/delete-inquiry-request-media.middleware";
+import { DeleteInquiryResponseMediaMiddleware } from "./middleware/delete-inquiry-response-media.middleware";
 
 @Module({
   imports: [
@@ -68,18 +66,15 @@ import { MediaFileEraser } from "./logic/media-file.eraser";
     { provide: "InquiryMediaCookieKey", useValue: inquiryMediaCookieKey },
     { provide: "MediaSelectProperty", useValue: mediaSelectProperty },
     { provide: "ProductsSelectProperty", useValue: productSelectProperty },
-    { provide: "MediaEventMap", useValue: eventMap },
+    { provide: "DeleteMediaEventMap", useValue: deleteMediaEventMap },
     MediaSearcher,
     MediaValidator,
     MediaUtils,
     MediaEventMapSetter,
-    MediaDeleteProductImageMiddleware,
-    MediaDeleteReviewImageMiddleware,
-    MediaDeleteReviewImageMiddleware,
-    MediaDeleteInquiryRequestImageMiddleware,
-    MediaDeleteInquiryRequestVideoMiddleware,
-    MediaDeleteInquiryResponseImageMiddleware,
-    MediaDeleteInquiryResponseVideoMiddleware,
+    DeleteProductMediaMiddleware,
+    DeleteReviewMediaMiddleware,
+    DeleteInquiryRequestMediaMiddleware,
+    DeleteInquiryResponseMediaMiddleware,
     MediaFileEraser,
     MediaUpdateService,
     MediaUpdateRepository,
@@ -88,32 +83,36 @@ import { MediaFileEraser } from "./logic/media-file.eraser";
   exports: [
     MediaSearcher,
     MediaEventMapSetter,
-    MediaDeleteProductImageMiddleware,
-    MediaDeleteReviewImageMiddleware,
-    MediaDeleteReviewImageMiddleware,
-    MediaDeleteInquiryRequestImageMiddleware,
-    MediaDeleteInquiryRequestVideoMiddleware,
-    MediaDeleteInquiryResponseImageMiddleware,
-    MediaDeleteInquiryResponseVideoMiddleware,
-    { provide: "MediaEventMap", useValue: eventMap },
+    DeleteProductMediaMiddleware,
+    DeleteReviewMediaMiddleware,
+    DeleteInquiryRequestMediaMiddleware,
+    DeleteInquiryResponseMediaMiddleware,
+    { provide: "DeleteMediaEventMap", useValue: deleteMediaEventMap },
+    MediaUtils,
   ],
 })
 export class MediaModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
     consumer
-      .apply(MediaDeleteProductImageMiddleware)
-      .forRoutes("/api/v1/only-admin/media/product/image")
-      .apply(MediaDeleteReviewImageMiddleware)
-      .forRoutes("/api/v1/only-client/media/review/image")
-      .apply(MediaDeleteReviewVideoMiddleware)
-      .forRoutes("/api/v1/only-client/media/review/video")
-      .apply(MediaDeleteInquiryRequestImageMiddleware)
-      .forRoutes("/api/v1/only-client/media/inquiry/request/image")
-      .apply(MediaDeleteInquiryRequestVideoMiddleware)
-      .forRoutes("/api/v1/only-client/media/inquiry/request/video")
-      .apply(MediaDeleteInquiryResponseImageMiddleware)
-      .forRoutes("/api/v1/only-admin/media/inquiry/response/image")
-      .apply(MediaDeleteInquiryResponseVideoMiddleware)
-      .forRoutes("/api/v1/only-admin/media/inquiry/response/video");
+      .apply(DeleteProductMediaMiddleware)
+      .forRoutes({
+        path: "/api/v1/only-admin/media/product/*",
+        method: RequestMethod.DELETE,
+      })
+      .apply(DeleteReviewMediaMiddleware)
+      .forRoutes({
+        path: "/api/v1/only-client/media/review/*",
+        method: RequestMethod.DELETE,
+      })
+      .apply(DeleteInquiryRequestMediaMiddleware)
+      .forRoutes({
+        path: "/api/v1/only-client/media/inquiry/request/*",
+        method: RequestMethod.DELETE,
+      })
+      .apply(DeleteInquiryResponseMediaMiddleware)
+      .forRoutes({
+        path: "/api/v1/only-admin/media/inquiry/response/*",
+        method: RequestMethod.DELETE,
+      });
   }
 }

@@ -1,8 +1,9 @@
 import {
+  forwardRef,
   MiddlewareConsumer,
   Module,
   NestModule,
-  forwardRef,
+  RequestMethod,
 } from "@nestjs/common";
 import { MediaModule } from "../media/media.module";
 import { ProductVersionOneFreeUseController } from "./controllers/v1/product-v1-free-use.controller";
@@ -28,6 +29,7 @@ import { ProductQueryRunnerProvider } from "./logic/transaction/product-query-ru
 import { ProductValidator } from "./logic/product.validator";
 import { ProductValidateRepository } from "./repositories/product-validate.repository";
 import { ProductIdValidatePipe } from "./pipe/exist/product-id-validate.pipe";
+import { DeleteProductMediaMiddleware } from "../media/middleware/delete-product-media.middleware";
 
 @Module({
   imports: [
@@ -73,8 +75,21 @@ import { ProductIdValidatePipe } from "./pipe/exist/product-id-validate.pipe";
 })
 export class ProductModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    // consumer.apply(TestMiddleware).forRoutes("/api/v1/verify/product");
-    // consumer.apply(TestMiddleware).forRoutes("/api/v1/free-use/product");
-    // consumer.apply(TestMiddleware).forRoutes("/api/v1/only-admin/product");
+    consumer
+      .apply(DeleteProductMediaMiddleware)
+      .forRoutes({
+        path: "/api/v1/only-admin/product/*",
+        method: RequestMethod.DELETE,
+      })
+      .apply(DeleteProductMediaMiddleware)
+      .forRoutes({
+        path: "/api/v1/only-admin/product/*",
+        method: RequestMethod.PUT,
+      })
+      .apply(DeleteProductMediaMiddleware)
+      .forRoutes({
+        path: "/api/v1/only-admin/product/*",
+        method: RequestMethod.PATCH,
+      });
   }
 }
