@@ -67,7 +67,7 @@ export class ReviewVersionOneOnlyClientController {
   }
 
   @ApiOperation({
-    summary: "modify review with all medias",
+    summary: "modify review",
     description:
       "리뷰를 수정합니다. 리뷰에는 이미지 혹은 비디오가 포함될 수 있습니다.",
   })
