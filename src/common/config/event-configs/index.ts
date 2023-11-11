@@ -5,4 +5,5 @@ export const eventConfigs = {
   deleteMediaFile: "delete-media-file",
 };
 
-export const eventMap = new Map<string, any>();
+export const mailEventMap = new Map<string, any>();
+export const deleteMediaEventMap = new Map<string, any>();
