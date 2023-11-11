@@ -33,13 +33,13 @@ export class ReviewVersionOneOnlyClientController {
   constructor(private readonly reviewTransaction: ReviewTransaction) {}
 
   @ApiOperation({
-    summary: "create review with all medias",
+    summary: "create review",
     description:
-      "이미지와 비디오가 포함된 리뷰를 생성합니다. 이 api를 실행하기 전에 무조건 리뷰 이미지 혹은 비디오를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 리뷰 이미지, 비디오 쿠키를 사용합니다.",
+      "리뷰를 생성합니다. 리뷰에는 이미지 혹은 비디오가 포함될 수 있습니다.",
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @Post("/product/:productId/image&video")
-  async createReviewWithAllMedias(
+  @Post("/product/:productId")
+  public async createReview(
     @Param("productId", ProductIdValidatePipe) productId: string,
     @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
     reviewImgCookies: MediaCookieDto[],
@@ -48,7 +48,7 @@ export class ReviewVersionOneOnlyClientController {
     @Body() reviewBodyDto: ReviewBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
-    await this.reviewTransaction.createReviewWithAllMedias({
+    await this.reviewTransaction.createReview({
       reviewBodyDto,
       productId,
       userId: jwtPayload.userId,
@@ -63,96 +63,17 @@ export class ReviewVersionOneOnlyClientController {
         ...reviewImgCookies.map((cookie) => cookie.whatCookie),
         ...reviewVdoCookies.map((cookie) => cookie.whatCookie),
       ],
-    };
-  }
-
-  @ApiOperation({
-    summary: "create review with image",
-    description:
-      "이미지가 포함된 리뷰를 생성합니다. 이 api를 실행하기 전에 무조건 리뷰 이미지를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 리뷰 이미지 쿠키를 사용합니다.",
-  })
-  @UseInterceptors(JsonClearCookiesInterceptor)
-  @Post("/product/:productId/image")
-  async createReviewWithImage(
-    @Param("productId", ProductIdValidatePipe) productId: string,
-    @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
-    reviewImgCookies: MediaCookieDto[],
-    @Body() reviewBodyDto: ReviewBodyDto,
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonClearCookiesInterface> {
-    await this.reviewTransaction.createReviewWithImages({
-      reviewBodyDto,
-      productId,
-      userId: jwtPayload.userId,
-      reviewImgCookies,
-    });
-
-    return {
-      statusCode: 201,
-      message: "리뷰를 생성하였습니다.",
-      cookieKey: [...reviewImgCookies.map((cookie) => cookie.whatCookie)],
-    };
-  }
-
-  @ApiOperation({
-    summary: "create review with video",
-    description:
-      "비디오가 포함된 리뷰를 생성합니다. 이 api를 실행하기 전에 무조건 리뷰 비디오를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 리뷰 비디오 쿠키를 사용합니다.",
-  })
-  @UseInterceptors(JsonClearCookiesInterceptor)
-  @Post("/product/:productId/video")
-  async createReviewWithVideo(
-    @Param("productId", ProductIdValidatePipe) productId: string,
-    @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
-    reviewVdoCookies: MediaCookieDto[],
-    @Body() reviewBodyDto: ReviewBodyDto,
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonClearCookiesInterface> {
-    await this.reviewTransaction.createReviewWithVideos({
-      reviewBodyDto,
-      productId,
-      userId: jwtPayload.userId,
-      reviewVdoCookies,
-    });
-
-    return {
-      statusCode: 201,
-      message: "리뷰를 생성하였습니다.",
-      cookieKey: [...reviewVdoCookies.map((cookie) => cookie.whatCookie)],
-    };
-  }
-
-  @ApiOperation({
-    summary: "create review no media",
-    description: "미디어 없이 리뷰를 생성합니다.",
-  })
-  @UseInterceptors(JsonGeneralInterceptor)
-  @Post("/product/:productId")
-  async createReviewNoMedia(
-    @Param("productId", ProductIdValidatePipe) productId: string,
-    @Body() reviewBodyDto: ReviewBodyDto,
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonGeneralInterface<void>> {
-    await this.reviewTransaction.createReviewNoMedia({
-      reviewBodyDto,
-      productId,
-      userId: jwtPayload.userId,
-    });
-
-    return {
-      statusCode: 201,
-      message: "리뷰를 생성하였습니다.",
     };
   }
 
   @ApiOperation({
     summary: "modify review with all medias",
     description:
-      "리뷰 아이디에 해당하는 이미지와 비디오가 포함된 리뷰를 수정합니다. 이 api를 실행하기 전에 무조건 리뷰 이미지 혹은 비디오를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 리뷰 이미지, 비디오 쿠키를 사용합니다.",
+      "리뷰를 수정합니다. 리뷰에는 이미지 혹은 비디오가 포함될 수 있습니다.",
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
-  @Put("/:reviewId/product/:productId/image&video")
-  async modifyReviewWithAllMedias(
+  @Put("/:reviewId/product/:productId")
+  public async modifyReview(
     @Param("productId", ProductIdValidatePipe) productId: string,
     @Param("reviewId", ReviewIdValidatePipe) reviewId: string,
     @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
@@ -162,7 +83,7 @@ export class ReviewVersionOneOnlyClientController {
     @Body() reviewBodyDto: ReviewBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
-    const review = await this.reviewTransaction.modifyReviewWithAllMedias({
+    const review = await this.reviewTransaction.modifyReview({
       reviewBodyDto,
       productId,
       reviewId,
@@ -178,92 +99,6 @@ export class ReviewVersionOneOnlyClientController {
         ...reviewImgCookies.map((cookie) => cookie.whatCookie),
         ...reviewVdoCookies.map((cookie) => cookie.whatCookie),
       ],
-    };
-  }
-
-  @ApiOperation({
-    summary: "modify review with image",
-    description:
-      "리뷰 아이디에 해당하는 이미지가 포함된 리뷰를 생성합니다. 이 api를 실행하기 전에 무조건 리뷰 이미지를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 리뷰 이미지 쿠키를 사용합니다.",
-  })
-  @UseInterceptors(JsonClearCookiesInterceptor)
-  @Put("/:reviewId/product/:productId/image")
-  async modifyReviewWithImage(
-    @Param("productId", ProductIdValidatePipe) productId: string,
-    @Param("reviewId", ReviewIdValidatePipe) reviewId: string,
-    @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
-    reviewImgCookies: MediaCookieDto[],
-    @Body() reviewBodyDto: ReviewBodyDto,
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonClearCookiesInterface> {
-    const review = await this.reviewTransaction.modifyReviewWithImages({
-      reviewBodyDto,
-      productId,
-      reviewId,
-      userId: jwtPayload.userId,
-      reviewImgCookies,
-    });
-
-    return {
-      statusCode: 200,
-      message: `리뷰를 수정하였습니다. 해당 리뷰의 수정 횟수가 ${(review.countForModify += 1)}만큼 남았습니다.`,
-      cookieKey: [...reviewImgCookies.map((cookie) => cookie.whatCookie)],
-    };
-  }
-
-  @ApiOperation({
-    summary: "modify review with video",
-    description:
-      "리뷰 아이디에 해당하는 비디오가 포함된 리뷰를 생성합니다. 이 api를 실행하기 전에 무조건 리뷰 비디오를 하나 이상 업로드해야 합니다. 업로드 api를 호출할 때 생성된 리뷰 비디오 쿠키를 사용합니다.",
-  })
-  @UseInterceptors(JsonClearCookiesInterceptor)
-  @Put("/:reviewId/product/:productId/video")
-  async modifyReviewWithVideo(
-    @Param("productId", ProductIdValidatePipe) productId: string,
-    @Param("reviewId", ReviewIdValidatePipe) reviewId: string,
-    @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
-    reviewVdoCookies: MediaCookieDto[],
-    @Body() reviewBodyDto: ReviewBodyDto,
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonClearCookiesInterface> {
-    const review = await this.reviewTransaction.modifyReviewWithVideos({
-      reviewBodyDto,
-      productId,
-      reviewId,
-      userId: jwtPayload.userId,
-      reviewVdoCookies,
-    });
-
-    return {
-      statusCode: 200,
-      message: `리뷰를 수정하였습니다. 해당 리뷰의 수정 횟수가 ${(review.countForModify += 1)}만큼 남았습니다.`,
-      cookieKey: [...reviewVdoCookies.map((cookie) => cookie.whatCookie)],
-    };
-  }
-
-  @ApiOperation({
-    summary: "modify review no media",
-    description:
-      "리뷰 아이디에 해당하는 미디어가 포함되지 않은 리뷰를 수정합니다.",
-  })
-  @UseInterceptors(JsonGeneralInterceptor)
-  @Put("/:reviewId/product/:productId")
-  async modifyReviewNoMedia(
-    @Param("productId", ProductIdValidatePipe) productId: string,
-    @Param("reviewId", ReviewIdValidatePipe) reviewId: string,
-    @Body() reviewBodyDto: ReviewBodyDto,
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonGeneralInterface<void>> {
-    const review = await this.reviewTransaction.modifyReviewNoMedia({
-      reviewBodyDto,
-      productId,
-      reviewId,
-      userId: jwtPayload.userId,
-    });
-
-    return {
-      statusCode: 200,
-      message: `리뷰를 수정하였습니다. 해당 리뷰의 수정 횟수가 ${(review.countForModify += 1)}만큼 남았습니다.`,
     };
   }
 
