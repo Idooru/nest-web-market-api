@@ -42,8 +42,8 @@ import { UserPhonenumberValidatePipe } from "../../pipe/none-exist/user-phonenum
 import { UserNicknameValidatePipe } from "../../pipe/none-exist/user-nickname-validate.pipe";
 
 @ApiTags("v1 공용 User API")
-@Controller("/api/v1/free-use/user")
-export class UserVersionOneFreeUseController {
+@Controller({ path: "/user", version: "1" })
+export class UserV1Controller {
   constructor(
     private readonly userTransaction: UserTransaction,
     private readonly userSearcher: UserSearcher,

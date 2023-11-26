@@ -19,8 +19,8 @@ import { UserIdValidatePipe } from "../../pipe/exist/user-id-validate.pipe";
 @ApiTags("v1 관리자 User API")
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
-@Controller("/api/v1/only-admin/user")
-export class UserVersionOneOnlyAdminController {
+@Controller({ path: "/admin/user", version: "1" })
+export class UserV1AdminController {
   constructor(
     private readonly userSearcher: UserSearcher,
     private readonly userUpdateService: UserUpdateService,

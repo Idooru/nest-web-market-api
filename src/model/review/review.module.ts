@@ -13,8 +13,7 @@ import { StarRateEntity } from "./entities/star-rate.entity";
 import { LibraryModule } from "src/common/lib/library.module";
 import { JwtModule } from "@nestjs/jwt";
 import { MediaModule } from "../media/media.module";
-import { ReviewVersionOneOnlyAdminController } from "./controllers/review-v1-only-admin.controller";
-import { ReviewVersionOneOnlyClientController } from "./controllers/review-v1-only-client.controller";
+import { ReviewV1ClientController } from "./controllers/v1/review-v1-client.controller";
 import { reviewSelectProperty } from "src/common/config/repository-select-configs/review.select";
 import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
 import { ReviewFactoryService } from "./services/review-factory.service";
@@ -30,6 +29,7 @@ import { ReviewIdValidatePipe } from "./pipe/exist/review-id-validate.pipe";
 import { ReviewValidator } from "./logic/review.validator";
 import { ReviewValidateRepository } from "./repositories/review-validate.repository";
 import { DeleteReviewMediaMiddleware } from "../media/middleware/delete-review-media.middleware";
+import { ReviewV1AdminController } from "./controllers/v1/review-v1-admin.controller";
 
 @Module({
   imports: [
@@ -40,10 +40,7 @@ import { DeleteReviewMediaMiddleware } from "../media/middleware/delete-review-m
     JwtModule,
     LibraryModule,
   ],
-  controllers: [
-    ReviewVersionOneOnlyAdminController,
-    ReviewVersionOneOnlyClientController,
-  ],
+  controllers: [ReviewV1AdminController, ReviewV1ClientController],
   providers: [
     {
       provide: "ReviewMediaCookieKey",
@@ -73,12 +70,12 @@ export class ReviewModule implements NestModule {
     consumer
       .apply(DeleteReviewMediaMiddleware)
       .forRoutes({
-        path: "/api/v1/only-client/review/*",
+        path: "/api/v1/client/review/*",
         method: RequestMethod.DELETE,
       })
       .apply(DeleteReviewMediaMiddleware)
       .forRoutes({
-        path: "/api/v1/only-client/review/*",
+        path: "/api/v1/client/review/*",
         method: RequestMethod.PUT,
       });
   }

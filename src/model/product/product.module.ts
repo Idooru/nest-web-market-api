@@ -6,14 +6,14 @@ import {
   RequestMethod,
 } from "@nestjs/common";
 import { MediaModule } from "../media/media.module";
-import { ProductVersionOneFreeUseController } from "./controllers/v1/product-v1-free-use.controller";
+import { ProductV1Controller } from "./controllers/v1/product-v1.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserModule } from "../user/user.module";
 import { ReviewModule } from "../review/review.module";
 import { InquiryModule } from "../inquiry/inquiry.module";
 import { ProductImageEntity } from "../media/entities/product-image.entity";
 import { LibraryModule } from "src/common/lib/library.module";
-import { ProductVersionOneOnlyAdminController } from "./controllers/v1/product-v1-only-admin.controller";
+import { ProductV1AdminController } from "./controllers/v1/product-v1-admin.controller";
 import { JwtModule } from "@nestjs/jwt";
 import { productSelectProperty } from "src/common/config/repository-select-configs/product.select";
 import { productMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
@@ -41,10 +41,7 @@ import { DeleteProductMediaMiddleware } from "../media/middleware/delete-product
     JwtModule,
     LibraryModule,
   ],
-  controllers: [
-    ProductVersionOneFreeUseController,
-    ProductVersionOneOnlyAdminController,
-  ],
+  controllers: [ProductV1Controller, ProductV1AdminController],
   providers: [
     {
       provide: "ProductMediaCookieKey",
@@ -78,17 +75,17 @@ export class ProductModule implements NestModule {
     consumer
       .apply(DeleteProductMediaMiddleware)
       .forRoutes({
-        path: "/api/v1/only-admin/product/*",
+        path: "/api/v1/admin/product/*",
         method: RequestMethod.DELETE,
       })
       .apply(DeleteProductMediaMiddleware)
       .forRoutes({
-        path: "/api/v1/only-admin/product/*",
+        path: "/api/v1/admin/product/*",
         method: RequestMethod.PUT,
       })
       .apply(DeleteProductMediaMiddleware)
       .forRoutes({
-        path: "/api/v1/only-admin/product/*",
+        path: "/api/v1/admin/product/*",
         method: RequestMethod.PATCH,
       });
   }

@@ -4,7 +4,7 @@ import {
   NestModule,
   MiddlewareConsumer,
 } from "@nestjs/common";
-import { InquiryVersionOneOnlyClientController } from "./controllers/inquiry-v1-only-client.controller";
+import { InquiryV1ClientController } from "./controllers/inquiry-v1-client.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { InquiryRequestEntity } from "src/model/inquiry/entities/inquiry-request.entity";
 import { MediaModule } from "../media/media.module";
@@ -12,7 +12,7 @@ import { UserModule } from "../user/user.module";
 import { ProductModule } from "../product/product.module";
 import { JwtModule } from "@nestjs/jwt";
 import { LibraryModule } from "src/common/lib/library.module";
-import { InquiryVersionOneOnlyAdminController } from "./controllers/inquiry-v1-only-admin.controller";
+import { InquiryV1AdminController } from "./controllers/inquiry-v1-admin.controller";
 import { DotenvAdaptModule } from "src/common/lib/env/dotenv-adapt.module";
 import { InquiryResponseEntity } from "./entities/inquiry-response.entity";
 import { inquirySelectProperty } from "src/common/config/repository-select-configs/inquiry.select";
@@ -45,10 +45,7 @@ import { DeleteInquiryRequestMediaMiddleware } from "../media/middleware/delete-
     JwtModule,
     DotenvAdaptModule,
   ],
-  controllers: [
-    InquiryVersionOneOnlyClientController,
-    InquiryVersionOneOnlyAdminController,
-  ],
+  controllers: [InquiryV1ClientController, InquiryV1AdminController],
   providers: [
     {
       provide: "InquiryMediaCookieKey",
@@ -83,9 +80,9 @@ export class InquiryModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
     consumer
       .apply(InquiryClientEventMiddleware)
-      .forRoutes(InquiryVersionOneOnlyClientController)
+      .forRoutes(InquiryV1ClientController)
       .apply(InquiryAdminEventMiddleware)
-      .forRoutes(InquiryVersionOneOnlyAdminController)
+      .forRoutes(InquiryV1AdminController)
       .apply(DeleteInquiryRequestMediaMiddleware)
       .forRoutes("")
       .apply(DeleteInquiryRequestMediaMiddleware)

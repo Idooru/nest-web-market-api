@@ -6,8 +6,8 @@ import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { ProductSearcher } from "../../logic/product.searcher";
 
 @ApiTags("v1 공용 Product API")
-@Controller("/api/v1/free-use/product")
-export class ProductVersionOneFreeUseController {
+@Controller({ path: "/product", version: "1" })
+export class ProductV1Controller {
   constructor(private readonly productSearcher: ProductSearcher) {}
 
   @ApiOperation({

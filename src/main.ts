@@ -1,4 +1,8 @@
-import { ValidationError, ValidationPipe } from "@nestjs/common";
+import {
+  ValidationError,
+  ValidationPipe,
+  VersioningType,
+} from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { AppModule } from "./app.module";
@@ -25,6 +29,7 @@ class NestCoreConfig {
     this.setGlobals();
     this.setMiddlewares();
     this.setStaticAssets();
+    this.setApiVersioning();
   }
 
   public async run() {
@@ -108,6 +113,11 @@ class NestCoreConfig {
         );
       }
     });
+  }
+
+  private setApiVersioning() {
+    this.app.setGlobalPrefix("api");
+    this.app.enableVersioning({ type: VersioningType.URI });
   }
 }
 

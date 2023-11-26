@@ -12,8 +12,8 @@ import {
 } from "@nestjs/common";
 import { LibraryModule } from "src/common/lib/library.module";
 import { JwtModule } from "@nestjs/jwt";
-import { UserVersionOneFreeUseController } from "./controllers/v1/user-v1-free-use.controller";
-import { UserVersionOneOnlyAdminController } from "./controllers/v1/user-v1-only-admin.controller";
+import { UserV1Controller } from "./controllers/v1/user-v1.controller";
+import { UserV1AdminController } from "./controllers/v1/user-v1-admin.controller";
 import { ClientUserEntity } from "./entities/client-user.entity";
 import { AdminUserEntity } from "./entities/admin-user.entity";
 import { UserEntity } from "./entities/user.entity";
@@ -47,10 +47,7 @@ import { mailEventMap } from "../../common/config/event-configs";
     JwtModule,
     LibraryModule,
   ],
-  controllers: [
-    UserVersionOneFreeUseController,
-    UserVersionOneOnlyAdminController,
-  ],
+  controllers: [UserV1Controller, UserV1AdminController],
   providers: [
     {
       provide: "UserSelectProperty",
@@ -79,6 +76,6 @@ export class UserModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
     consumer
       .apply(UserRegisterEventMiddleware)
-      .forRoutes("/api/v1/free-use/user/register");
+      .forRoutes("/api/v1/user/register");
   }
 }

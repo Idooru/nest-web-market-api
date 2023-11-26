@@ -9,16 +9,16 @@ import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
-import { ReviewEntity } from "../entities/review.entity";
+import { ReviewEntity } from "../../entities/review.entity";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { ReviewSearcher } from "../logic/review.searcher";
-import { ProductIdValidatePipe } from "../../product/pipe/exist/product-id-validate.pipe";
+import { ReviewSearcher } from "../../logic/review.searcher";
+import { ProductIdValidatePipe } from "../../../product/pipe/exist/product-id-validate.pipe";
 
 @ApiTags("v1 관리자 Review API")
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
-@Controller("/api/v1/only-admin/review")
-export class ReviewVersionOneOnlyAdminController {
+@Controller({ path: "/admin/review", version: "1" })
+export class ReviewV1AdminController {
   constructor(private readonly reviewSearcher: ReviewSearcher) {}
 
   @ApiOperation({

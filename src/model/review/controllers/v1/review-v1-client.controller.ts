@@ -17,19 +17,19 @@ import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-gen
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
-import { ReviewBodyDto } from "../dto/review-body.dto";
+import { ReviewBodyDto } from "../../dto/review-body.dto";
 import { MediaCookieDto } from "src/model/media/dto/media-cookie.dto";
 import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { ReviewTransaction } from "../logic/transaction/review.transaction";
-import { ProductIdValidatePipe } from "../../product/pipe/exist/product-id-validate.pipe";
-import { ReviewIdValidatePipe } from "../pipe/exist/review-id-validate.pipe";
+import { ReviewTransaction } from "../../logic/transaction/review.transaction";
+import { ProductIdValidatePipe } from "../../../product/pipe/exist/product-id-validate.pipe";
+import { ReviewIdValidatePipe } from "../../pipe/exist/review-id-validate.pipe";
 
 @ApiTags("v1 고객 Review API")
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)
-@Controller("/api/v1/only-client/review")
-export class ReviewVersionOneOnlyClientController {
+@Controller({ path: "client/review", version: "1" })
+export class ReviewV1ClientController {
   constructor(private readonly reviewTransaction: ReviewTransaction) {}
 
   @ApiOperation({

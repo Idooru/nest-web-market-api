@@ -39,8 +39,8 @@ import { ProductIdValidatePipe } from "../../pipe/exist/product-id-validate.pipe
 @ApiTags("v1 관리자 Product API")
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
-@Controller("/api/v1/only-admin/product")
-export class ProductVersionOneOnlyAdminController {
+@Controller("/api/v1/admin/product")
+export class ProductV1AdminController {
   constructor(
     private readonly productSearcher: ProductSearcher,
     private readonly productTransaction: ProductTransaction,
