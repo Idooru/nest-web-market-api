@@ -15,8 +15,8 @@ import { LibraryModule } from "src/common/lib/library.module";
 import { JwtModule } from "@nestjs/jwt";
 import { InquiryRequestImageEntity } from "./entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "./entities/inquiry-request-video.entity";
-import { MediaVersionOneOnlyClientController } from "./controllers/media-v1-only-client.controller";
-import { MediaVersionOneOnlyAdminController } from "./controllers/media-v1-only-admin.controller";
+import { MediaV1ClientController } from "./controllers/media-v1-client.controller";
+import { MediaV1AdminController } from "./controllers/media-v1-admin.controller";
 import { InquiryModule } from "../inquiry/inquiry.module";
 import { InquiryResponseImageEntity } from "./entities/inquiry-response-image.entity";
 import { InquiryResponseVideoEntity } from "./entities/inquiry-response-video.entity";
@@ -56,10 +56,7 @@ import { DeleteInquiryResponseMediaMiddleware } from "./middleware/delete-inquir
     JwtModule,
     LibraryModule,
   ],
-  controllers: [
-    MediaVersionOneOnlyClientController,
-    MediaVersionOneOnlyAdminController,
-  ],
+  controllers: [MediaV1ClientController, MediaV1AdminController],
   providers: [
     { provide: "ProductMediaCookieKey", useValue: productMediaCookieKey },
     { provide: "ReviewMediaCookieKey", useValue: reviewMediaCookieKey },

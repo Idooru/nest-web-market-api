@@ -43,8 +43,8 @@ import { InquiryRequestVideoValidatePipe } from "../pipe/exist/inquiry-request-v
 @ApiTags("v1 고객 Media API")
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)
-@Controller("/api/v1/only-client/media")
-export class MediaVersionOneOnlyClientController {
+@Controller({ path: "/client/media", version: "1" })
+export class MediaV1ClientController {
   constructor(
     private readonly mediaSearcher: MediaSearcher,
     private readonly mediaUpdateService: MediaUpdateService,

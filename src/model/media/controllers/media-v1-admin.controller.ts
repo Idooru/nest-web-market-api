@@ -41,8 +41,8 @@ import { InquiryResponseVideoValidatePipe } from "../pipe/exist/inquiry-response
 @ApiTags("v1 관리자 Media API")
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
-@Controller("/api/v1/only-admin/media")
-export class MediaVersionOneOnlyAdminController {
+@Controller({ path: "/admin/media", version: "1" })
+export class MediaV1AdminController {
   constructor(
     private readonly mediaSearcher: MediaSearcher,
     private readonly mediaUpdateService: MediaUpdateService,
