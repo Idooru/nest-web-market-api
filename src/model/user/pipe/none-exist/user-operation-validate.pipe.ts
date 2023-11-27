@@ -2,9 +2,9 @@ import { BadRequestException, Injectable, PipeTransform } from "@nestjs/common";
 import { UserValidator } from "../../logic/user.validator";
 
 type UserBody = {
-  email?: string;
-  nickname?: string;
-  phonenumber?: string;
+  email: string;
+  nickname: string;
+  phonenumber: string;
 };
 
 @Injectable()
