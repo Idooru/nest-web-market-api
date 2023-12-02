@@ -21,10 +21,8 @@ import { IsRefreshTokenAvailableGuard } from "src/common/guards/authenticate/is-
 import { JwtRefreshTokenPayload } from "src/model/auth/jwt/jwt-refresh-token-payload.interface";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
-import { JsonJwtAuthInterface } from "src/common/interceptors/interface/json-jwt-auth.interface";
-import { JsonJwtAuthInterceptor } from "src/common/interceptors/general/json-jwt-auth.interceptor";
-import { JsonJwtLogoutInterceptor } from "src/common/interceptors/general/json-jwt-logout.interceptor";
-import { JsonJwtLogoutInterface } from "src/common/interceptors/interface/json-jwt-logout.interface";
+import { LoginInterface } from "src/common/interceptors/interface/login.interface";
+import { LogoutInterface } from "src/common/interceptors/interface/logout.interface";
 import { RegisterUserDto } from "../../dtos/register-user.dto";
 import { UserEntity } from "../../entities/user.entity";
 import { ModifyUserEmailDto } from "../../dtos/modify-user-email.dto";
@@ -40,6 +38,10 @@ import { UserOperationValidatePipe } from "../../pipe/none-exist/user-operation-
 import { UserEmailValidatePipe } from "../../pipe/none-exist/user-email-validate.pipe";
 import { UserPhonenumberValidatePipe } from "../../pipe/none-exist/user-phonenumber-validate.pipe";
 import { UserNicknameValidatePipe } from "../../pipe/none-exist/user-nickname-validate.pipe";
+import { LoginInterceptor } from "../../../../common/interceptors/general/login.interceptor";
+import { RefreshTokenInterceptor } from "../../../../common/interceptors/general/refresh-token.interceptor";
+import { LogoutInterceptor } from "../../../../common/interceptors/general/logout.interceptor";
+import { RefreshTokenInterface } from "../../../../common/interceptors/interface/refresh-token.interface";
 
 @ApiTags("v1 공용 User API")
 @Controller({ path: "/user", version: "1" })
@@ -98,12 +100,10 @@ export class UserV1Controller {
     description:
       "로그인을 합니다. 계정에 해당하는 이메일과 비밀번호가 일치하지 않다면 에러를 반환합니다. 로그인이 성공하면 access token과 refresh token이 담겨진 쿠키를 얻습니다.",
   })
-  @UseInterceptors(JsonJwtAuthInterceptor)
+  @UseInterceptors(LoginInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Post("/login")
-  async login(
-    @Body() loginUserDto: LoginUserDto,
-  ): Promise<JsonJwtAuthInterface> {
+  async login(@Body() loginUserDto: LoginUserDto): Promise<LoginInterface> {
     const { accessToken, refreshToken } = await this.userSecurity.login(
       loginUserDto,
     );
@@ -119,23 +119,21 @@ export class UserV1Controller {
   @ApiOperation({
     summary: "refresh token",
     description:
-      "토큰을 재발급 받습니다. access token의 유효기간이 끝났다고 클라이언트에서 판단하면 이 api를 호출 할 수 있도록 합니다. 만약 refresh token의 유효기간이 끝났을 때 이 api를 호출 하면 access token, refresh token이 담긴 쿠키를 제거하여 로그아웃 됩니다.",
+      "access token을 재발급 받습니다. access token의 유효기간이 끝났다고 클라이언트에서 판단하면 이 api를 호출 할 수 있도록 합니다. 만약 refresh token의 유효기간이 끝났을 때 이 api를 호출 하면 access token, refresh token이 담긴 쿠키를 제거하여 로그아웃 됩니다.",
   })
-  @UseInterceptors(JsonJwtAuthInterceptor)
+  @UseInterceptors(RefreshTokenInterceptor)
   @UseGuards(IsRefreshTokenAvailableGuard)
   @Get("/refresh-token")
   async refreshToken(
     @GetJWT() jwtPayload: JwtRefreshTokenPayload,
-  ): Promise<JsonJwtAuthInterface> {
-    const { accessToken, refreshToken } = await this.userSecurity.refreshToken(
-      jwtPayload,
-    );
+  ): Promise<RefreshTokenInterface> {
+    const accessToken = await this.userSecurity.refreshToken(jwtPayload);
 
     return {
       statusCode: 200,
       message: "토큰을 재발급 받았습니다. 쿠키를 확인하세요.",
-      cookieKey: ["access_token", "refresh_token"],
-      cookieValue: [accessToken, refreshToken],
+      cookieKey: "access_token",
+      cookieValue: accessToken,
     };
   }
 
@@ -144,10 +142,14 @@ export class UserV1Controller {
     description:
       "로그아웃을 합니다. access token, refresh token이 담긴 쿠키를 제거합니다.",
   })
-  @UseInterceptors(JsonJwtLogoutInterceptor)
+  @UseInterceptors(LogoutInterceptor)
   @UseGuards(IsLoginGuard)
   @Delete("/logout")
-  logout(): JsonJwtLogoutInterface {
+  async logout(
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
+  ): Promise<LogoutInterface> {
+    await this.userSecurity.logout(jwtPayload);
+
     return {
       statusCode: 200,
       message: "로그아웃을 완료하였습니다.",
@@ -266,12 +268,12 @@ export class UserV1Controller {
   }
 
   @ApiOperation({ summary: "secession", description: "회원 탈퇴를 합니다." })
-  @UseInterceptors(JsonJwtLogoutInterceptor)
+  @UseInterceptors(LogoutInterceptor)
   @UseGuards(IsLoginGuard)
   @Delete("/secession")
   async secession(
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonJwtLogoutInterface> {
+  ): Promise<LogoutInterface> {
     await this.userUpdateService.deleteUser(jwtPayload.userId);
 
     return {
