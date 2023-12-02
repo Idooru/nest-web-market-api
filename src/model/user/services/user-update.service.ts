@@ -1,5 +1,5 @@
 import { UserUpdateRepository } from "../repositories/user-update.repository";
-import { Injectable } from "@nestjs/common";
+import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { UserEntity } from "../entities/user.entity";
 import { RegisterUserDto } from "../dtos/register-user.dto";
 import { ModifyUserDto } from "../dtos/modify-user.dto";
@@ -7,24 +7,26 @@ import { UserSearcher } from "../logic/user.searcher";
 import { UserSecurity } from "../logic/user.security";
 import { ResetPasswordDto } from "../dtos/reset-password.dto";
 import { UserEventMapSetter } from "../logic/user-event-map.setter";
+import { UserAuthEntity } from "../entities/user-auth.entity";
 
 @Injectable()
 export class UserUpdateService {
   constructor(
-    private readonly userOperationRepository: UserUpdateRepository,
+    private readonly userUpdateRepository: UserUpdateRepository,
     private readonly userSearcher: UserSearcher,
+    @Inject(forwardRef(() => UserSecurity))
     private readonly userSecurity: UserSecurity,
     private readonly userEventMapSetter: UserEventMapSetter,
   ) {}
 
   // Transaction
   async createUserEntity(role: ["client", "admin"]): Promise<UserEntity> {
-    const user = await this.userOperationRepository.createUserEntity(role);
+    const user = await this.userUpdateRepository.createUserEntity(role);
 
     if (role.toString() === "admin") {
-      await this.userOperationRepository.createAdminUser(user);
+      await this.userUpdateRepository.createAdminUser(user);
     } else {
-      await this.userOperationRepository.createClientUser(user);
+      await this.userUpdateRepository.createClientUser(user);
     }
 
     return user;
@@ -45,8 +47,8 @@ export class UserUpdateService {
     const userAuthColumn = { id, nickname, email, password: hashed };
 
     await Promise.all([
-      this.userOperationRepository.createUserProfile(userProfileColumn),
-      this.userOperationRepository.createUserAuth(userAuthColumn),
+      this.userUpdateRepository.createUserProfile(userProfileColumn),
+      this.userUpdateRepository.createUserAuth(userAuthColumn),
     ]);
 
     this.userEventMapSetter.setRegisterEventParam({ email, nickname });
@@ -59,8 +61,8 @@ export class UserUpdateService {
     const hashed = await this.userSecurity.hashPassword(password, true);
 
     await Promise.all([
-      this.userOperationRepository.modifyUserProfile({ phonenumber }, id),
-      this.userOperationRepository.modifyUserAuth(
+      this.userUpdateRepository.modifyUserProfile({ phonenumber }, id),
+      this.userUpdateRepository.modifyUserAuth(
         { email, nickname, password: hashed },
         id,
       ),
@@ -69,24 +71,24 @@ export class UserUpdateService {
 
   // General
   async modifyUserEmail(email: string, id: string): Promise<void> {
-    await this.userOperationRepository.modifyUserEmail(email, id);
+    await this.userUpdateRepository.modifyUserEmail(email, id);
   }
 
   // General
   async modifyUserNickname(nickname: string, id: string): Promise<void> {
-    await this.userOperationRepository.modifyUserNickname(nickname, id);
+    await this.userUpdateRepository.modifyUserNickname(nickname, id);
   }
 
   // General
   async modifyUserPhonenumber(phonenumber: string, id: string): Promise<void> {
-    await this.userOperationRepository.modifyUserPhonenumber(phonenumber, id);
+    await this.userUpdateRepository.modifyUserPhonenumber(phonenumber, id);
   }
 
   // General
   async modifyUserPassword(password: string, id: string): Promise<void> {
     const hashed = await this.userSecurity.hashPassword(password, false);
 
-    await this.userOperationRepository.modifyUserPassword(hashed, id);
+    await this.userUpdateRepository.modifyUserPassword(hashed, id);
   }
 
   // General
@@ -96,11 +98,21 @@ export class UserUpdateService {
 
     const user = await this.userSearcher.findUserWithEmail(email);
 
-    await this.userOperationRepository.modifyUserPassword(hashed, user.id);
+    await this.userUpdateRepository.modifyUserPassword(hashed, user.id);
   }
 
   // General
   async deleteUser(id: string): Promise<void> {
-    await this.userOperationRepository.deleteUser(id);
+    await this.userUpdateRepository.deleteUser(id);
+  }
+
+  // General
+  async initRefreshToken(refreshToken: string, id: string): Promise<void> {
+    await this.userUpdateRepository.initRefreshToken(refreshToken, id);
+  }
+
+  // General
+  async removeRefreshToken(id: string): Promise<void> {
+    await this.userUpdateRepository.removeRefreshToken(id);
   }
 }
