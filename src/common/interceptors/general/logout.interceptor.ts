@@ -1,26 +1,26 @@
 import {
-  ArgumentsHost,
   CallHandler,
+  ExecutionContext,
   Injectable,
   NestInterceptor,
 } from "@nestjs/common";
-import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { map, Observable } from "rxjs";
 import { Request, Response } from "express";
-import { JsonJwtLogoutInterface } from "../interface/json-jwt-logout.interface";
+import { LogoutInterface } from "../interface/logout.interface";
+import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 
 @Injectable()
-export class JsonJwtLogoutInterceptor implements NestInterceptor {
+export class LogoutInterceptor implements NestInterceptor {
   constructor(private readonly timeLoggerLibrary: TimeLoggerLibrary) {}
 
-  intercept(context: ArgumentsHost, next: CallHandler<any>): Observable<any> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const req = context.switchToHttp().getRequest<Request>();
     const res = context.switchToHttp().getResponse<Response>();
 
     this.timeLoggerLibrary.receiveRequest(req);
 
     return next.handle().pipe(
-      map((data: JsonJwtLogoutInterface) => {
+      map((data: LogoutInterface) => {
         const { cookieKey, statusCode, message } = data;
 
         this.timeLoggerLibrary.sendResponse(req);

@@ -1,23 +1,23 @@
 import {
-  ArgumentsHost,
   CallHandler,
+  ExecutionContext,
   Injectable,
   NestInterceptor,
 } from "@nestjs/common";
 import { map, Observable } from "rxjs";
+import { Request, Response } from "express";
+import { LoginInterface } from "../interface/login.interface";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { SecurityLibrary } from "../../lib/security/security.library";
-import { JsonJwtAuthInterface } from "../interface/json-jwt-auth.interface";
-import { Request, Response } from "express";
 
 @Injectable()
-export class JsonJwtAuthInterceptor implements NestInterceptor {
+export class LoginInterceptor implements NestInterceptor {
   constructor(
     private readonly timeLoggerLibrary: TimeLoggerLibrary,
     private readonly securityLibrary: SecurityLibrary,
   ) {}
 
-  intercept(context: ArgumentsHost, next: CallHandler<any>): Observable<any> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const req = context.switchToHttp().getRequest<Request>();
     const res = context.switchToHttp().getResponse<Response>();
     const cookieOption = this.securityLibrary.cookieOption;
@@ -25,7 +25,7 @@ export class JsonJwtAuthInterceptor implements NestInterceptor {
     this.timeLoggerLibrary.receiveRequest(req);
 
     return next.handle().pipe(
-      map((data: JsonJwtAuthInterface) => {
+      map((data: LoginInterface) => {
         const { statusCode, message, cookieKey, cookieValue } = data;
         this.timeLoggerLibrary.sendResponse(req);
 
