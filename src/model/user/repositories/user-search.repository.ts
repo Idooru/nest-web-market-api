@@ -227,4 +227,13 @@ export class UserSearchRepository {
       .where("user.id = :id", { id })
       .getOne();
   }
+
+  async findRefreshTokenWithId(id: string): Promise<UserAuthEntity> {
+    return await this.userAuthRepository
+      .createQueryBuilder()
+      .select("auth.refreshToken")
+      .from(UserAuthEntity, "auth")
+      .where("auth.id = :id", { id })
+      .getOne();
+  }
 }

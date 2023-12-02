@@ -4,6 +4,7 @@ import { UserEntity } from "../entities/user.entity";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ClientUserEntity } from "../entities/client-user.entity";
 import { AdminUserEntity } from "../entities/admin-user.entity";
+import { UserAuthEntity } from "../entities/user-auth.entity";
 
 @Injectable()
 export class UserSearcher {
@@ -71,10 +72,17 @@ export class UserSearcher {
     }
   }
 
-  async findUserForgotten(realname: string, phonenumber: string) {
+  async findUserForgotten(
+    realname: string,
+    phonenumber: string,
+  ): Promise<UserEntity> {
     return await this.userSearchRepository.findUserForgotten(
       realname,
       phonenumber,
     );
+  }
+
+  async findRefreshTokenWithId(id: string): Promise<UserAuthEntity> {
+    return await this.userSearchRepository.findRefreshTokenWithId(id);
   }
 }
