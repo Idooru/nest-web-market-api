@@ -12,14 +12,14 @@ import { Injectable } from "@nestjs/common";
 export class SecurityLibrary {
   constructor(private readonly configService: ConfigService) {}
 
-  private readonly _cookieOption: CookieOptions = {
+  private readonly _defaultCookieOption: CookieOptions = {
     httpOnly: true,
     signed: true,
     expires: new Date(Date.now() + 100000000),
   };
 
-  public get cookieOption(): CookieOptions {
-    return this._cookieOption;
+  public get defaultCookieOption(): CookieOptions {
+    return this._defaultCookieOption;
   }
 
   public get hashSalt(): number {
