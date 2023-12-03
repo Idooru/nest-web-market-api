@@ -15,6 +15,7 @@ import { JwtService } from "@nestjs/jwt";
 import { SecurityLibrary } from "src/common/lib/security/security.library";
 import { CatchCallbackFactoryLibrary } from "../../../common/lib/util/catch-callback-factory.library";
 import { UserUpdateService } from "../services/user-update.service";
+import { JwtErrorHandlerLibrary } from "../../../common/lib/util/jwt-error-handler.library";
 
 import bcrypt from "bcrypt";
 
@@ -27,6 +28,7 @@ export class UserSecurity {
     private readonly callbackFactory: CatchCallbackFactoryLibrary,
     @Inject(forwardRef(() => UserUpdateService))
     private readonly userUpdateService: UserUpdateService,
+    private readonly jwtErrorHandlerLibrary: JwtErrorHandlerLibrary,
   ) {}
 
   async hashPassword(
@@ -77,16 +79,19 @@ export class UserSecurity {
       isRefreshToken: true,
     };
 
-    const [accessToken, refreshToken] = await Promise.all([
-      this.jwtService.signAsync(
+    const accessToken = await this.jwtService
+      .signAsync(
         jwtAccessTokenPayload,
         this.securityLibrary.jwtAccessTokenSignOption,
-      ),
-      this.jwtService.signAsync(
+      )
+      .catch(this.jwtErrorHandlerLibrary.catchSignAccessTokenError);
+
+    const refreshToken = await this.jwtService
+      .signAsync(
         jwtRefreshTokenPayload,
         this.securityLibrary.jwtRefreshTokenSignOption,
-      ),
-    ]).catch(this.callbackFactory.getCatchJwtTokenSignFunc());
+      )
+      .catch(this.jwtErrorHandlerLibrary.catchSignRefreshTokenError);
 
     await this.userUpdateService.initRefreshToken(refreshToken, user.id);
 
@@ -111,10 +116,12 @@ export class UserSecurity {
       userRole: user.role,
     };
 
-    return await this.jwtService.signAsync(
-      jwtAccessTokenPayload,
-      this.securityLibrary.jwtAccessTokenSignOption,
-    );
+    return await this.jwtService
+      .signAsync(
+        jwtAccessTokenPayload,
+        this.securityLibrary.jwtAccessTokenSignOption,
+      )
+      .catch(this.jwtErrorHandlerLibrary.catchSignAccessTokenError);
   }
 
   async findEmail(realname: string, phonenumber: string): Promise<string> {

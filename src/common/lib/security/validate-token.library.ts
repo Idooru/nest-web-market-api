@@ -1,16 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { SecurityLibrary } from "./security.library";
-import { CatchCallbackFactoryLibrary } from "../util/catch-callback-factory.library";
 import { JwtAccessTokenPayload } from "../../../model/auth/jwt/jwt-access-token-payload.interface";
 import { JwtRefreshTokenPayload } from "../../../model/auth/jwt/jwt-refresh-token-payload.interface";
+import { JwtErrorHandlerLibrary } from "../util/jwt-error-handler.library";
 
 @Injectable()
 export class ValidateTokenLibrary {
   constructor(
     private readonly jwtService: JwtService,
     private readonly securityLibrary: SecurityLibrary,
-    private readonly callbackFactory: CatchCallbackFactoryLibrary,
+    private readonly jwtErrorHandlerLibrary: JwtErrorHandlerLibrary,
   ) {}
 
   public async validateAccessToken(
@@ -18,7 +18,7 @@ export class ValidateTokenLibrary {
   ): Promise<JwtAccessTokenPayload> {
     return await this.jwtService
       .verifyAsync(accessToken, this.securityLibrary.jwtAccessTokenVerifyOption)
-      .catch(this.callbackFactory.getCatchJwtTokenVerifyFunc());
+      .catch(this.jwtErrorHandlerLibrary.catchVerifyAccessTokenError);
   }
 
   public async validateRefreshToken(
@@ -29,6 +29,6 @@ export class ValidateTokenLibrary {
         refreshToken,
         this.securityLibrary.jwtRefreshTokenVerifyOption,
       )
-      .catch(this.callbackFactory.getCatchJwtTokenVerifyFunc());
+      .catch(this.jwtErrorHandlerLibrary.catchVerifyRefreshTokenError);
   }
 }
