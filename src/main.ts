@@ -16,6 +16,7 @@ import { loggerFactory } from "./common/functions/logger.factory";
 import { EnvData } from "./common/classes/env-data";
 import { envKeys } from "./common/security/env-keys";
 import { staticMediaConfigs } from "./common/config/static-media-configs";
+import { JwtExceptionFilter } from "./common/filters/jwt-exception.filter";
 
 import path from "path";
 import helmet from "helmet";
@@ -69,6 +70,7 @@ class NestCoreConfig {
       new LibraryExceptionFilter(),
       new TypeOrmExceptionFilter(),
       new ValidationExceptionFilter(),
+      new JwtExceptionFilter(),
     );
     this.app.useGlobalPipes(
       new ValidationPipe({
