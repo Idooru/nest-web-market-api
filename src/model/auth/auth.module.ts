@@ -21,13 +21,14 @@ import { UserEntity } from "../user/entities/user.entity";
       UserAuthEntity,
     ]),
     forwardRef(() => UserModule),
+    forwardRef(() => LibraryModule),
     JwtModule.registerAsync(
       new SecurityLibrary(new ConfigService()).jwtAccessTokenForJwtModule,
     ),
     JwtModule.registerAsync(
       new SecurityLibrary(new ConfigService()).jwtRefreshTokenForJwtModule,
     ),
-    LibraryModule,
   ],
+  exports: [JwtModule],
 })
 export class AuthModule {}

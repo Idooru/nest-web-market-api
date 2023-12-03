@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { DotenvAdaptModule } from "./env/dotenv-adapt.module";
 import { MediaLoggerLibrary } from "./logger/media-logger.library";
@@ -13,8 +13,8 @@ import { MailerAdaptModule } from "./email/mailer-adapt.module";
 import { EventAdaptModule } from "./event/event-adapt.module";
 import { MulterAdaptModule } from "./media/multer-adapt.module";
 import { ValidateTokenLibrary } from "./security/validate-token.library";
-import { JwtModule } from "@nestjs/jwt";
 import { JwtErrorHandlerLibrary } from "./util/jwt-error-handler.library";
+import { AuthModule } from "../../model/auth/auth.module";
 
 @Module({
   imports: [
@@ -23,7 +23,7 @@ import { JwtErrorHandlerLibrary } from "./util/jwt-error-handler.library";
     DotenvAdaptModule,
     EventAdaptModule,
     MulterAdaptModule,
-    JwtModule,
+    forwardRef(() => AuthModule),
   ],
   providers: [
     ConfigService,
