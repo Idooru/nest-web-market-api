@@ -14,6 +14,7 @@ import { EventAdaptModule } from "./event/event-adapt.module";
 import { MulterAdaptModule } from "./media/multer-adapt.module";
 import { ValidateTokenLibrary } from "./security/validate-token.library";
 import { JwtModule } from "@nestjs/jwt";
+import { JwtErrorHandlerLibrary } from "./util/jwt-error-handler.library";
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { JwtModule } from "@nestjs/jwt";
     TransactionErrorHandler,
     CatchCallbackFactoryLibrary,
     ValidateTokenLibrary,
+    JwtErrorHandlerLibrary,
   ],
   exports: [
     SecurityLibrary,
@@ -44,6 +46,7 @@ import { JwtModule } from "@nestjs/jwt";
     TransactionErrorHandler,
     CatchCallbackFactoryLibrary,
     ValidateTokenLibrary,
+    JwtErrorHandlerLibrary,
   ],
 })
 export class LibraryModule {}
