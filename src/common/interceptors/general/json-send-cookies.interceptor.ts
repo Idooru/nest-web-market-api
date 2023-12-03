@@ -20,7 +20,7 @@ export class JsonSendCookiesInterceptor<T> implements NestInterceptor {
   intercept(context: ArgumentsHost, next: CallHandler<any>): Observable<any> {
     const req = context.switchToHttp().getRequest<Request>();
     const res = context.switchToHttp().getResponse<Response>();
-    const defaultCookieOption = this.securityLibrary.defaultCookieOption;
+    const cookieOption = this.securityLibrary.cookieOption;
 
     this.timeLoggerLibrary.receiveRequest(req);
 
@@ -31,10 +31,10 @@ export class JsonSendCookiesInterceptor<T> implements NestInterceptor {
 
         if (cookieValues.length >= 2) {
           cookieValues.forEach((cookieValue, idx) => {
-            res.cookie(cookieKey + (idx + 1), cookieValue, defaultCookieOption);
+            res.cookie(cookieKey + (idx + 1), cookieValue, cookieOption);
           });
         } else {
-          res.cookie(cookieKey, cookieValues[0], defaultCookieOption);
+          res.cookie(cookieKey, cookieValues[0], cookieOption);
         }
 
         res.status(data.statusCode).setHeader("X-Powered-By", "");
