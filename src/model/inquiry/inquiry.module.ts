@@ -10,7 +10,6 @@ import { InquiryRequestEntity } from "src/model/inquiry/entities/inquiry-request
 import { MediaModule } from "../media/media.module";
 import { UserModule } from "../user/user.module";
 import { ProductModule } from "../product/product.module";
-import { JwtModule } from "@nestjs/jwt";
 import { LibraryModule } from "src/common/lib/library.module";
 import { InquiryV1AdminController } from "./controllers/inquiry-v1-admin.controller";
 import { DotenvAdaptModule } from "src/common/lib/env/dotenv-adapt.module";
@@ -42,7 +41,6 @@ import { DeleteInquiryRequestMediaMiddleware } from "../media/middleware/delete-
     forwardRef(() => UserModule),
     forwardRef(() => ProductModule),
     forwardRef(() => LibraryModule),
-    JwtModule,
     DotenvAdaptModule,
   ],
   controllers: [InquiryV1ClientController, InquiryV1AdminController],

@@ -12,7 +12,6 @@ import { ReviewVideoEntity } from "./entities/review-video.entity";
 import { UserModule } from "../user/user.module";
 import { ProductEntity } from "../product/entities/product.entity";
 import { LibraryModule } from "src/common/lib/library.module";
-import { JwtModule } from "@nestjs/jwt";
 import { InquiryRequestImageEntity } from "./entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "./entities/inquiry-request-video.entity";
 import { MediaV1ClientController } from "./controllers/media-v1-client.controller";
@@ -53,7 +52,6 @@ import { DeleteInquiryResponseMediaMiddleware } from "./middleware/delete-inquir
     ]),
     forwardRef(() => UserModule),
     forwardRef(() => InquiryModule),
-    JwtModule,
     LibraryModule,
   ],
   controllers: [MediaV1ClientController, MediaV1AdminController],

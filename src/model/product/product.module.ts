@@ -14,7 +14,6 @@ import { InquiryModule } from "../inquiry/inquiry.module";
 import { ProductImageEntity } from "../media/entities/product-image.entity";
 import { LibraryModule } from "src/common/lib/library.module";
 import { ProductV1AdminController } from "./controllers/v1/product-v1-admin.controller";
-import { JwtModule } from "@nestjs/jwt";
 import { productSelectProperty } from "src/common/config/repository-select-configs/product.select";
 import { productMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
 import { ProductFactoryService } from "./services/product-factory.service";
@@ -38,7 +37,6 @@ import { DeleteProductMediaMiddleware } from "../media/middleware/delete-product
     forwardRef(() => MediaModule),
     forwardRef(() => ReviewModule),
     forwardRef(() => InquiryModule),
-    JwtModule,
     LibraryModule,
   ],
   controllers: [ProductV1Controller, ProductV1AdminController],

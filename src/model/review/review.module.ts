@@ -11,7 +11,6 @@ import { ReviewEntity } from "./entities/review.entity";
 import { UserModule } from "../user/user.module";
 import { StarRateEntity } from "./entities/star-rate.entity";
 import { LibraryModule } from "src/common/lib/library.module";
-import { JwtModule } from "@nestjs/jwt";
 import { MediaModule } from "../media/media.module";
 import { ReviewV1ClientController } from "./controllers/v1/review-v1-client.controller";
 import { reviewSelectProperty } from "src/common/config/repository-select-configs/review.select";
@@ -37,7 +36,6 @@ import { ReviewV1AdminController } from "./controllers/v1/review-v1-admin.contro
     forwardRef(() => MediaModule),
     forwardRef(() => UserModule),
     forwardRef(() => ProductModule),
-    JwtModule,
     LibraryModule,
   ],
   controllers: [ReviewV1AdminController, ReviewV1ClientController],
