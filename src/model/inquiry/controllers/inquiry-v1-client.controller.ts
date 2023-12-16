@@ -23,7 +23,7 @@ import { ProductIdValidatePipe } from "../../product/pipe/exist/product-id-valid
 @ApiTags("v1 고객 Inquiry API")
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)
-@Controller("/api/v1/only-client/inquiry")
+@Controller({ path: "/client/inquiry", version: "1" })
 export class InquiryV1ClientController {
   constructor(private readonly inquiryTransaction: InquiryTransaction) {}
 

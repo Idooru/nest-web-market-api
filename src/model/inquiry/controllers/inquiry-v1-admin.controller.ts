@@ -24,7 +24,7 @@ import { InquiryRequesterIdValidatePipe } from "../pipe/exist/inquiry-requester-
 @ApiTags("v1 관리자 Inquiry API")
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
-@Controller("/api/v1/only-admin/inquiry")
+@Controller({ path: "admin/inquiry", version: "1" })
 export class InquiryV1AdminController {
   constructor(private readonly inquiryTransaction: InquiryTransaction) {}
 
