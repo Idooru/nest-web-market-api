@@ -13,8 +13,8 @@ import { MailerAdaptModule } from "./email/mailer-adapt.module";
 import { EventAdaptModule } from "./event/event-adapt.module";
 import { MulterAdaptModule } from "./media/multer-adapt.module";
 import { ValidateTokenLibrary } from "./security/validate-token.library";
-import { JwtErrorHandlerLibrary } from "./util/jwt-error-handler.library";
 import { AuthModule } from "../../model/auth/auth.module";
+import { JwtErrorHandlerLibrary } from "./jwt/jwt-error-handler.library";
 
 @Module({
   imports: [
