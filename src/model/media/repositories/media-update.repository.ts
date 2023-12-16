@@ -33,53 +33,49 @@ export class MediaUpdateRepository {
   async uploadProductImages(
     uploadMediaDto: UploadMediaDto,
   ): Promise<ProductImageEntity> {
-    return await this.productImageRepository.save({ ...uploadMediaDto });
+    return await this.productImageRepository.save(uploadMediaDto);
   }
 
   // General
   async uploadReviewImage(
     uploadMediaDto: UploadMediaDto,
   ): Promise<ReviewImageEntity> {
-    return await this.reviewImageRepository.save({ ...uploadMediaDto });
+    return await this.reviewImageRepository.save(uploadMediaDto);
   }
 
   // General
   async uploadReviewVideo(
     uploadMediaDto: UploadMediaDto,
   ): Promise<ReviewVideoEntity> {
-    return await this.reviewVideoRepository.save({ ...uploadMediaDto });
+    return await this.reviewVideoRepository.save(uploadMediaDto);
   }
 
   // General
   async uploadInquiryRequestImage(
     uploadMediaDto: UploadMediaDto,
   ): Promise<InquiryRequestImageEntity> {
-    return await this.inquiryRequestImageRepository.save({ ...uploadMediaDto });
+    return await this.inquiryRequestImageRepository.save(uploadMediaDto);
   }
 
   // General
   async uploadInquiryRequestVideo(
     uploadMediaDto: UploadMediaDto,
   ): Promise<InquiryRequestVideoEntity> {
-    return await this.inquiryRequestVideoRepository.save({ ...uploadMediaDto });
+    return await this.inquiryRequestVideoRepository.save(uploadMediaDto);
   }
 
   // General
   async uploadInquiryResponseImages(
     uploadMediaDto: UploadMediaDto,
   ): Promise<InquiryResponseImageEntity> {
-    return await this.inquiryResponseImageRepository.save({
-      ...uploadMediaDto,
-    });
+    return await this.inquiryResponseImageRepository.save(uploadMediaDto);
   }
 
   // General
   async uploadInquiryResponseVideos(
     uploadMediaDto: UploadMediaDto,
   ): Promise<InquiryResponseVideoEntity> {
-    return await this.inquiryResponseVideoRepository.save({
-      ...uploadMediaDto,
-    });
+    return await this.inquiryResponseVideoRepository.save(uploadMediaDto);
   }
 
   // General
