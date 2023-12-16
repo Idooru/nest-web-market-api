@@ -145,11 +145,7 @@ export class UserV1Controller {
   @UseInterceptors(LogoutInterceptor)
   @UseGuards(IsLoginGuard)
   @Delete("/logout")
-  async logout(
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<LogoutInterface> {
-    await this.userSecurity.logout(jwtPayload);
-
+  async logout(): Promise<LogoutInterface> {
     return {
       statusCode: 200,
       message: "로그아웃을 완료하였습니다.",

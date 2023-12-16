@@ -7,7 +7,6 @@ import { UserSearcher } from "../logic/user.searcher";
 import { UserSecurity } from "../logic/user.security";
 import { ResetPasswordDto } from "../dtos/reset-password.dto";
 import { UserEventMapSetter } from "../logic/user-event-map.setter";
-import { UserAuthEntity } from "../entities/user-auth.entity";
 
 @Injectable()
 export class UserUpdateService {
@@ -104,15 +103,5 @@ export class UserUpdateService {
   // General
   async deleteUser(id: string): Promise<void> {
     await this.userUpdateRepository.deleteUser(id);
-  }
-
-  // General
-  async initRefreshToken(refreshToken: string, id: string): Promise<void> {
-    await this.userUpdateRepository.initRefreshToken(refreshToken, id);
-  }
-
-  // General
-  async removeRefreshToken(id: string): Promise<void> {
-    await this.userUpdateRepository.removeRefreshToken(id);
   }
 }

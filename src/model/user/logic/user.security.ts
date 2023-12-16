@@ -1,10 +1,4 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  forwardRef,
-  Inject,
-  Injectable,
-} from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { JwtPayload } from "src/model/auth/jwt/jwt-payload.interface";
 import { LoginUserDto } from "../dtos/login-user.dto";
 import { UserSearcher } from "./user.searcher";
@@ -14,8 +8,7 @@ import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-paylo
 import { JwtService } from "@nestjs/jwt";
 import { SecurityLibrary } from "src/common/lib/security/security.library";
 import { CatchCallbackFactoryLibrary } from "../../../common/lib/util/catch-callback-factory.library";
-import { UserUpdateService } from "../services/user-update.service";
-import { JwtErrorHandlerLibrary } from "../../../common/lib/util/jwt-error-handler.library";
+import { JwtErrorHandlerLibrary } from "../../../common/lib/jwt/jwt-error-handler.library";
 
 import bcrypt from "bcrypt";
 
@@ -26,8 +19,6 @@ export class UserSecurity {
     private readonly jwtService: JwtService,
     private readonly securityLibrary: SecurityLibrary,
     private readonly callbackFactory: CatchCallbackFactoryLibrary,
-    @Inject(forwardRef(() => UserUpdateService))
-    private readonly userUpdateService: UserUpdateService,
     private readonly jwtErrorHandlerLibrary: JwtErrorHandlerLibrary,
   ) {}
 
@@ -44,12 +35,6 @@ export class UserSecurity {
     const { email, password } = loginUserDto;
 
     const user = await this.userSearcher.findUserWithEmail(email);
-
-    if (user.Auth.refreshToken) {
-      const message = "이미 로그인한 계정입니다.";
-      loggerFactory("AlreadyLogin").error(message);
-      throw new ForbiddenException(message);
-    }
 
     if (!user) {
       const message = "아이디 혹은 비밀번호가 일치하지 않습니다.";
@@ -93,17 +78,7 @@ export class UserSecurity {
       )
       .catch(this.jwtErrorHandlerLibrary.catchSignRefreshTokenError);
 
-    await this.userUpdateService.initRefreshToken(refreshToken, user.id);
-
     return { accessToken, refreshToken };
-  }
-
-  async isRefreshTokenAvailable(
-    id: string,
-    myRefreshToken: string,
-  ): Promise<boolean> {
-    const { refreshToken } = await this.userSearcher.findRefreshTokenWithId(id);
-    return myRefreshToken === refreshToken;
   }
 
   async refreshToken(jwtPaylaod: JwtRefreshTokenPayload): Promise<string> {
@@ -131,9 +106,5 @@ export class UserSecurity {
     );
 
     return user.Auth.email;
-  }
-
-  async logout(jwtPayload: JwtAccessTokenPayload): Promise<void> {
-    await this.userUpdateService.removeRefreshToken(jwtPayload.userId);
   }
 }

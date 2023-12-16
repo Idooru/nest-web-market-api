@@ -99,14 +99,4 @@ export class UserUpdateRepository {
   async deleteUser(id: string): Promise<void> {
     await this.userRepository.delete({ id });
   }
-
-  // General
-  async initRefreshToken(refreshToken: string, id: string): Promise<void> {
-    await this.userAuthRepository.update(id, { refreshToken });
-  }
-
-  // General
-  async removeRefreshToken(id: string): Promise<void> {
-    await this.userAuthRepository.update(id, { refreshToken: "" });
-  }
 }
