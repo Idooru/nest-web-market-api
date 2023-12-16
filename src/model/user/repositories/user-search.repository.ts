@@ -161,6 +161,7 @@ export class UserSearchRepository {
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
       .innerJoin("user.clientActions", "Client")
+      .leftJoin("Client.cart", "Cart")
       .leftJoin("Client.purchasedProduct", "Product")
       .leftJoin("Product.Image", "ProductImage")
       .leftJoin("Client.writtenReview", "Review")
