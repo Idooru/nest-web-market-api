@@ -91,22 +91,22 @@ export class MediaModule implements NestModule {
     consumer
       .apply(DeleteProductMediaMiddleware)
       .forRoutes({
-        path: "/api/v1/only-admin/media/product/*",
+        path: "/api/v1/admin/media/product/*",
         method: RequestMethod.DELETE,
       })
       .apply(DeleteReviewMediaMiddleware)
       .forRoutes({
-        path: "/api/v1/only-client/media/review/*",
+        path: "/api/v1/client/media/review/*",
         method: RequestMethod.DELETE,
       })
       .apply(DeleteInquiryRequestMediaMiddleware)
       .forRoutes({
-        path: "/api/v1/only-client/media/inquiry/request/*",
+        path: "/api/v1/client/media/inquiry/request/*",
         method: RequestMethod.DELETE,
       })
       .apply(DeleteInquiryResponseMediaMiddleware)
       .forRoutes({
-        path: "/api/v1/only-admin/media/inquiry/response/*",
+        path: "/api/v1/admin/media/inquiry/response/*",
         method: RequestMethod.DELETE,
       });
   }
