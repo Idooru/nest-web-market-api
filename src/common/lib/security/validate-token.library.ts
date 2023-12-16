@@ -3,7 +3,7 @@ import { JwtService } from "@nestjs/jwt";
 import { SecurityLibrary } from "./security.library";
 import { JwtAccessTokenPayload } from "../../../model/auth/jwt/jwt-access-token-payload.interface";
 import { JwtRefreshTokenPayload } from "../../../model/auth/jwt/jwt-refresh-token-payload.interface";
-import { JwtErrorHandlerLibrary } from "../util/jwt-error-handler.library";
+import { JwtErrorHandlerLibrary } from "../jwt/jwt-error-handler.library";
 
 @Injectable()
 export class ValidateTokenLibrary {
