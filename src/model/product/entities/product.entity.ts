@@ -42,7 +42,7 @@ export class ProductEntity extends CommonEntity {
   description: string;
 
   @IsPositive()
-  @Column({ type: "int", unsigned: true })
+  @Column({ type: "int", unsigned: true, default: 100 })
   quantity: number;
 
   @OneToOne(() => StarRateEntity, (starRate) => starRate.Product, {
