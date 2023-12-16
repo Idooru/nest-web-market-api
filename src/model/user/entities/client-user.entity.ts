@@ -4,6 +4,7 @@ import { ReviewEntity } from "src/model/review/entities/review.entity";
 import { Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
 import { UserEntity } from "./user.entity";
 import { ChildEntity } from "src/common/entities/child.entity";
+import { CartEntity } from "../../cart/entities/cart.entity";
 
 @Entity({ name: "client_users", synchronize: true })
 export class ClientUserEntity extends ChildEntity {
@@ -12,6 +13,9 @@ export class ClientUserEntity extends ChildEntity {
   })
   @JoinColumn({ name: "id" })
   User: UserEntity;
+
+  @OneToMany(() => CartEntity, (cart) => cart.client)
+  cart: CartEntity[];
 
   @OneToMany(() => ProductEntity, (product) => product.purchaser)
   purchasedProduct: ProductEntity[];

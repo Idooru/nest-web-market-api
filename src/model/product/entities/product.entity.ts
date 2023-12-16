@@ -11,6 +11,7 @@ import {
   ProductCategory,
   productCategory,
 } from "../types/product-category.type";
+import { CartEntity } from "../../cart/entities/cart.entity";
 
 @Entity({ name: "products", synchronize: true })
 export class ProductEntity extends CommonEntity {
@@ -58,6 +59,9 @@ export class ProductEntity extends CommonEntity {
     onDelete: "CASCADE",
   })
   creater: AdminUserEntity;
+
+  @OneToMany(() => CartEntity, (cart) => cart.product)
+  cart: CartEntity[];
 
   @ManyToOne(() => ClientUserEntity, (client) => client.purchasedProduct)
   purchaser: ClientUserEntity;
