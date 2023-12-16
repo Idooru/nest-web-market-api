@@ -14,7 +14,7 @@ export class ClientUserEntity extends ChildEntity {
   @JoinColumn({ name: "id" })
   User: UserEntity;
 
-  @OneToMany(() => CartEntity, (cart) => cart.client)
+  @OneToMany(() => CartEntity, (cart) => cart.clientUser)
   cart: CartEntity[];
 
   @OneToMany(() => ProductEntity, (product) => product.purchaser)
