@@ -8,6 +8,7 @@ import { MediaModule } from "./model/media/media.module";
 import { AppController } from "./app.controller";
 import { LibraryModule } from "./common/lib/library.module";
 import { InquiryModule } from "./model/inquiry/inquiry.module";
+import { CartModule } from "./model/cart/cart.module";
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { InquiryModule } from "./model/inquiry/inquiry.module";
     MediaModule,
     ReviewModule,
     InquiryModule,
+    CartModule,
     LibraryModule,
   ],
   controllers: [AppController],
