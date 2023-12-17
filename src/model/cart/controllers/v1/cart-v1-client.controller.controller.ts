@@ -62,7 +62,7 @@ export class CartV1ClientControllerController {
     await this.cartUpdateService.createCart(
       productId,
       jwtPaylaod.userId,
-      cartBodyDto.quantity,
+      cartBodyDto,
     );
 
     return {
