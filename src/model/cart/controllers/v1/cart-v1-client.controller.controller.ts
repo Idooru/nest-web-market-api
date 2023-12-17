@@ -21,6 +21,7 @@ import { JsonGeneralInterceptor } from "../../../../common/interceptors/general/
 import { JsonGeneralInterface } from "../../../../common/interceptors/interface/json-general-interface";
 import { CartSearcher } from "../../logic/cart.searcher";
 import { CartEntity } from "../../entities/cart.entity";
+import { CartIdValidatePipe } from "../../pipe/cart-id-validate.pipe";
 
 @ApiTags("v1 고객 Cart API")
 @UseGuards(IsClientGuard)
@@ -78,7 +79,7 @@ export class CartV1ClientControllerController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Put("/:cartId")
   public async modifyCartWithId(
-    @Param("cartId") id: string,
+    @Param("cartId", CartIdValidatePipe) id: string,
     @Body() cartBodyDto: CartBodyDto,
   ): Promise<JsonGeneralInterface<null>> {
     await this.cartUpdateService.modifyCartWithId({ id, cartBodyDto });
@@ -96,7 +97,7 @@ export class CartV1ClientControllerController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Delete("/:cartId")
   public async deleteCartWithId(
-    @Param("cartId") id: string,
+    @Param("cartId", CartIdValidatePipe) id: string,
   ): Promise<JsonGeneralInterface<null>> {
     await this.cartUpdateService.deleteCartWithId(id);
 
