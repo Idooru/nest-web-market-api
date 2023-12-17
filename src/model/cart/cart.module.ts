@@ -10,6 +10,8 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { CartEntity } from "./entities/cart.entity";
 import { UserModule } from "../user/user.module";
 import { cartSelectProperty } from "../../common/config/repository-select-configs/cart.select";
+import { CartValidator } from "./logic/cart.validator";
+import { CartValidateRepository } from "./repositories/cart-validate.repository";
 
 @Module({
   imports: [
@@ -24,7 +26,9 @@ import { cartSelectProperty } from "../../common/config/repository-select-config
     CartUpdateService,
     CartSearchRepository,
     CartUpdateRepository,
+    CartValidateRepository,
     CartSearcher,
+    CartValidator,
   ],
 })
 export class CartModule {}
