@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -85,6 +86,23 @@ export class CartV1ClientControllerController {
     return {
       statusCode: 200,
       message: "장바구니를 수정합니다.",
+    };
+  }
+
+  @ApiOperation({
+    summary: "delete cart with id",
+    description: "장바구니를 제거합니다.",
+  })
+  @UseInterceptors(JsonGeneralInterceptor)
+  @Delete("/:cartId")
+  public async deleteCartWithId(
+    @Param("cartId") id: string,
+  ): Promise<JsonGeneralInterface<null>> {
+    await this.cartUpdateService.deleteCartWithId(id);
+
+    return {
+      statusCode: 200,
+      message: "장바구니를 제거합니다.",
     };
   }
 }

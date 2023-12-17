@@ -38,4 +38,8 @@ export class CartUpdateService {
   public async modifyCartWithId(modifyCartDto: ModifyCartDto): Promise<void> {
     await this.cartUpdateRepository.modifyCartWithId(modifyCartDto);
   }
+
+  public async deleteCartWithId(id: string): Promise<void> {
+    await this.cartUpdateRepository.deleteCartWithId(id);
+  }
 }

@@ -26,4 +26,8 @@ export class CartUpdateRepository {
     const { id, cartBodyDto } = modifyCartDto;
     await this.cartRepository.update(id, cartBodyDto);
   }
+
+  public async deleteCartWithId(id: string): Promise<void> {
+    await this.cartRepository.delete({ id });
+  }
 }
