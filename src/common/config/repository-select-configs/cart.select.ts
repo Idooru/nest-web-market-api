@@ -8,6 +8,7 @@ export const cartSelectProperty: CartSelectProperty = {
     "cart.product",
     "cart.quantity",
     "cart.totalPrice",
+    "cart.deliveryOption",
     "Product.name",
     "Product.price",
     "Product.origin",
