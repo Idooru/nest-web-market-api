@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   Post,
   UseGuards,
@@ -17,6 +18,7 @@ import { CartUpdateService } from "../../services/cart-update.service";
 import { JsonGeneralInterceptor } from "../../../../common/interceptors/general/json-general.interceptor";
 import { JsonGeneralInterface } from "../../../../common/interceptors/interface/json-general-interface";
 import { CartSearcher } from "../../logic/cart.searcher";
+import { CartEntity } from "../../entities/cart.entity";
 
 @ApiTags("v1 고객 Cart API")
 @UseGuards(IsClientGuard)
@@ -27,6 +29,24 @@ export class CartV1ClientControllerController {
     private readonly cartSearcher: CartSearcher,
     private readonly cartUpdateService: CartUpdateService,
   ) {}
+
+  @ApiOperation({
+    summary: "find carts with id",
+    description: "장바구니를 가져옵니다.",
+  })
+  @UseInterceptors(JsonGeneralInterceptor)
+  @Get("/")
+  public async findCartsWithId(
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
+  ): Promise<JsonGeneralInterface<CartEntity[]>> {
+    const result = await this.cartSearcher.findCartsWithId(jwtPayload.userId);
+
+    return {
+      statusCode: 200,
+      message: `사용자아이디(${jwtPayload.userId})에 해당하는 장바구니 정보를 가져옵니다.`,
+      result,
+    };
+  }
 
   @ApiOperation({
     summary: "create cart",
