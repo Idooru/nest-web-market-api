@@ -14,7 +14,7 @@ export class CartSearchRepository {
     private readonly cartSelect: CartSelectProperty,
   ) {}
 
-  public async findCartsWithId(id: string): Promise<CartEntity[]> {
+  public async findCartsWithUserId(id: string): Promise<CartEntity[]> {
     const carts = await this.cartRepository
       .createQueryBuilder()
       .select(this.cartSelect.carts)

@@ -36,10 +36,12 @@ export class CartV1ClientControllerController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/")
-  public async findCartsWithId(
+  public async findCartsWithUserId(
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<CartEntity[]>> {
-    const result = await this.cartSearcher.findCartsWithId(jwtPayload.userId);
+    const result = await this.cartSearcher.findCartsWithUserId(
+      jwtPayload.userId,
+    );
 
     return {
       statusCode: 200,
