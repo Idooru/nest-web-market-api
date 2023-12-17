@@ -13,6 +13,11 @@ export class CartUpdateRepository {
 
   // General
   public async createCart(createCartDto: CreateCartDto): Promise<CartEntity> {
-    return await this.cartRepository.save(createCartDto);
+    const { product, clientUser, cartBodyDto } = createCartDto;
+    return await this.cartRepository.save({
+      product,
+      clientUser,
+      ...cartBodyDto,
+    });
   }
 }

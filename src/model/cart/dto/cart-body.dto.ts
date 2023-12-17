@@ -4,6 +4,7 @@ import { CartEntity } from "../entities/cart.entity";
 export class CartBodyDto extends PickType(CartEntity, [
   "deliveryOption",
   "quantity",
+  "totalPrice",
 ] as const) {
   @ApiProperty({
     description: "배송 옵션",
@@ -20,4 +21,12 @@ export class CartBodyDto extends PickType(CartEntity, [
     uniqueItems: false,
   })
   quantity: number;
+
+  @ApiProperty({
+    description: "장바구니 총금액",
+    example: 5000,
+    required: true,
+    uniqueItems: false,
+  })
+  totalPrice: number;
 }

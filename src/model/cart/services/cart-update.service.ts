@@ -20,7 +20,6 @@ export class CartUpdateService {
     clientUserId: string,
     cartBodyDto: CartBodyDto,
   ): Promise<void> {
-    const { quantity, deliveryOption } = cartBodyDto;
     await this.cartSearcher.validateProduct(productId);
 
     const [clientUser, product] = await Promise.all([
@@ -28,13 +27,10 @@ export class CartUpdateService {
       this.productSearcher.findProductWithId(productId),
     ]);
 
-    const totalPrice = product.price * cartBodyDto.quantity;
     await this.cartUpdateRepository.createCart({
       product,
       clientUser,
-      quantity,
-      totalPrice,
-      deliveryOption,
+      cartBodyDto,
     });
   }
 }
