@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
@@ -57,19 +58,33 @@ export class CartV1ClientControllerController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Post("/product/:productId")
   public async createCart(
-    @Param("productId", ProductIdValidatePipe) productId: string,
+    @Param("productId", ProductIdValidatePipe) id: string,
     @GetJWT() jwtPaylaod: JwtAccessTokenPayload,
     @Body() cartBodyDto: CartBodyDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.cartUpdateService.createCart(
-      productId,
-      jwtPaylaod.userId,
-      cartBodyDto,
-    );
+    await this.cartUpdateService.createCart(id, jwtPaylaod.userId, cartBodyDto);
 
     return {
       statusCode: 201,
       message: "장바구니를 생성하였습니다.",
+    };
+  }
+
+  @ApiOperation({
+    summary: "modify cart with id",
+    description: "장바구니를 수정합니다.",
+  })
+  @UseInterceptors(JsonGeneralInterceptor)
+  @Put("/:cartId")
+  public async modifyCartWithId(
+    @Param("cartId") id: string,
+    @Body() cartBodyDto: CartBodyDto,
+  ): Promise<JsonGeneralInterface<null>> {
+    await this.cartUpdateService.modifyCartWithId({ id, cartBodyDto });
+
+    return {
+      statusCode: 200,
+      message: "장바구니를 수정합니다.",
     };
   }
 }

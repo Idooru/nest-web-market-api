@@ -4,6 +4,7 @@ import { UserSearcher } from "../../user/logic/user.searcher";
 import { ProductSearcher } from "../../product/logic/product.searcher";
 import { CartSearcher } from "../logic/cart.searcher";
 import { CartBodyDto } from "../dto/cart-body.dto";
+import { ModifyCartDto } from "../dto/modify-cart.dto";
 
 @Injectable()
 export class CartUpdateService {
@@ -32,5 +33,9 @@ export class CartUpdateService {
       clientUser,
       cartBodyDto,
     });
+  }
+
+  public async modifyCartWithId(modifyCartDto: ModifyCartDto): Promise<void> {
+    await this.cartUpdateRepository.modifyCartWithId(modifyCartDto);
   }
 }

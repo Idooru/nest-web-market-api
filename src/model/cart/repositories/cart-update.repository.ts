@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { CartEntity } from "../entities/cart.entity";
 import { Repository } from "typeorm";
 import { CreateCartDto } from "../dto/create-cart.dto";
+import { ModifyCartDto } from "../dto/modify-cart.dto";
 
 @Injectable()
 export class CartUpdateRepository {
@@ -19,5 +20,10 @@ export class CartUpdateRepository {
       clientUser,
       ...cartBodyDto,
     });
+  }
+
+  public async modifyCartWithId(modifyCartDto: ModifyCartDto): Promise<void> {
+    const { id, cartBodyDto } = modifyCartDto;
+    await this.cartRepository.update(id, cartBodyDto);
   }
 }
