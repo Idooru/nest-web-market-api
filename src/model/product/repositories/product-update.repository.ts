@@ -56,11 +56,9 @@ export class ProductUpdateRepository {
 
   // Transaction
   async modifyProduct(modifyProductDto: ModifyProductDto): Promise<void> {
-    const { product, productBodyDto } = modifyProductDto;
+    const { id, productBodyDto } = modifyProductDto;
 
-    await this.queryRunner.productRepository.update(product.id, {
-      ...productBodyDto,
-    });
+    await this.queryRunner.productRepository.update(id, productBodyDto);
   }
 
   // General
