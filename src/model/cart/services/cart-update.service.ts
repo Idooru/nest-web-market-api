@@ -39,6 +39,10 @@ export class CartUpdateService {
     await this.cartUpdateRepository.modifyCartWithId(modifyCartDto);
   }
 
+  public async deleteAllCartWithUserId(id: string): Promise<void> {
+    await this.cartUpdateRepository.deleteAllCartWithUserId(id);
+  }
+
   public async deleteCartWithId(id: string): Promise<void> {
     await this.cartUpdateRepository.deleteCartWithId(id);
   }

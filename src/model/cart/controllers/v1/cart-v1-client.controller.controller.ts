@@ -35,7 +35,7 @@ export class CartV1ClientControllerController {
 
   @ApiOperation({
     summary: "find carts with id",
-    description: "장바구니를 가져옵니다.",
+    description: "사용자의 장바구니를 모두 가져옵니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/")
@@ -74,7 +74,7 @@ export class CartV1ClientControllerController {
 
   @ApiOperation({
     summary: "modify cart with id",
-    description: "장바구니를 수정합니다.",
+    description: "아이디에 해당하는 장바구니를 수정합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Put("/:cartId")
@@ -86,13 +86,29 @@ export class CartV1ClientControllerController {
 
     return {
       statusCode: 200,
-      message: "장바구니를 수정합니다.",
+      message: `id(${id})에 해당하는 장바구니를 수정합니다.`,
+    };
+  }
+
+  @ApiOperation({
+    summary: "사용자의 장바구니를 모두 비웁니다.",
+  })
+  @UseInterceptors(JsonGeneralInterceptor)
+  @Delete("/")
+  public async deleteAllCartWithUserId(
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
+  ): Promise<JsonGeneralInterface<null>> {
+    await this.cartUpdateService.deleteAllCartWithUserId(jwtPayload.userId);
+
+    return {
+      statusCode: 200,
+      message: "장바구니를 모두 비웁니다.",
     };
   }
 
   @ApiOperation({
     summary: "delete cart with id",
-    description: "장바구니를 제거합니다.",
+    description: "아이디에 해당하는 장바구니를 제거합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Delete("/:cartId")
@@ -103,7 +119,7 @@ export class CartV1ClientControllerController {
 
     return {
       statusCode: 200,
-      message: "장바구니를 제거합니다.",
+      message: `id(${id})에 해당하는 장바구니를 제거합니다.`,
     };
   }
 }

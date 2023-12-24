@@ -27,6 +27,14 @@ export class CartUpdateRepository {
     await this.cartRepository.update(id, cartBodyDto);
   }
 
+  public async deleteAllCartWithUserId(id: string): Promise<void> {
+    await this.cartRepository
+      .createQueryBuilder()
+      .delete()
+      .where("clientId = :id", { id })
+      .execute();
+  }
+
   public async deleteCartWithId(id: string): Promise<void> {
     await this.cartRepository.delete({ id });
   }
