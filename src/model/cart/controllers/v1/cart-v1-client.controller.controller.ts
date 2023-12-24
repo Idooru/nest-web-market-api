@@ -91,7 +91,8 @@ export class CartV1ClientControllerController {
   }
 
   @ApiOperation({
-    summary: "사용자의 장바구니를 모두 비웁니다.",
+    summary: "delete all cart with user id",
+    description: "사용자의 장바구니를 모두 비웁니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Delete("/")
