@@ -11,7 +11,7 @@ import {
   productCategory,
 } from "../types/product-category.type";
 import { CartEntity } from "../../cart/entities/cart.entity";
-import { PayEntity } from "../../pay/entities/pay.entity";
+import { PaymentEntity } from "../../payment/entities/payment.entity";
 
 @Entity({ name: "products", synchronize: true })
 export class ProductEntity extends CommonEntity {
@@ -63,8 +63,8 @@ export class ProductEntity extends CommonEntity {
   @OneToMany(() => CartEntity, (cart) => cart.Product)
   Cart: CartEntity[];
 
-  @OneToMany(() => PayEntity, (pay) => pay.Product)
-  Pay: PayEntity[];
+  @OneToMany(() => PaymentEntity, (pay) => pay.Product)
+  Pay: PaymentEntity[];
 
   @OneToMany(() => ReviewEntity, (review) => review.Product, { cascade: true })
   Review: ReviewEntity[];
