@@ -27,7 +27,7 @@ import { CartIdValidatePipe } from "../../pipe/cart-id-validate.pipe";
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)
 @Controller({ path: "/client/cart", version: "1" })
-export class CartV1ClientControllerController {
+export class CartV1ClientController {
   constructor(
     private readonly cartSearcher: CartSearcher,
     private readonly cartUpdateService: CartUpdateService,

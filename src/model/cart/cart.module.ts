@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { CartV1ClientControllerController } from "./controllers/v1/cart-v1-client.controller.controller";
+import { CartV1ClientController } from "./controllers/v1/cart-v1-client.controller";
 import { CartUpdateService } from "./services/cart-update.service";
 import { CartSearchRepository } from "./repositories/cart-search.repository";
 import { CartUpdateRepository } from "./repositories/cart-update.repository";
@@ -20,7 +20,7 @@ import { CartValidateRepository } from "./repositories/cart-validate.repository"
     UserModule,
     ProductModule,
   ],
-  controllers: [CartV1ClientControllerController],
+  controllers: [CartV1ClientController],
   providers: [
     { provide: "CartsSelectProperty", useValue: cartSelectProperty },
     CartUpdateService,
