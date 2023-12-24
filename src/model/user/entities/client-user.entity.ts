@@ -1,10 +1,10 @@
 import { InquiryRequestEntity } from "src/model/inquiry/entities/inquiry-request.entity";
-import { ProductEntity } from "src/model/product/entities/product.entity";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
 import { Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
 import { UserEntity } from "./user.entity";
 import { ChildEntity } from "src/common/entities/child.entity";
 import { CartEntity } from "../../cart/entities/cart.entity";
+import { PayEntity } from "../../pay/entities/pay.entity";
 
 @Entity({ name: "client_users", synchronize: true })
 export class ClientUserEntity extends ChildEntity {
@@ -14,11 +14,11 @@ export class ClientUserEntity extends ChildEntity {
   @JoinColumn({ name: "id" })
   User: UserEntity;
 
-  @OneToMany(() => CartEntity, (cart) => cart.clientUser)
-  cart: CartEntity[];
+  @OneToMany(() => CartEntity, (cart) => cart.ClientUser)
+  Cart: CartEntity[];
 
-  @OneToMany(() => ProductEntity, (product) => product.purchaser)
-  purchasedProduct: ProductEntity[];
+  @OneToMany(() => PayEntity, (pay) => pay.ClientUser)
+  Pay: PayEntity[];
 
   @OneToMany(() => ReviewEntity, (review) => review.reviewer)
   writtenReview: ReviewEntity[];

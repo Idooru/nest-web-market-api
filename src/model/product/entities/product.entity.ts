@@ -5,13 +5,13 @@ import { ReviewEntity } from "src/model/review/entities/review.entity";
 import { StarRateEntity } from "../../review/entities/star-rate.entity";
 import { ProductImageEntity } from "src/model/media/entities/product-image.entity";
 import { InquiryRequestEntity } from "../../inquiry/entities/inquiry-request.entity";
-import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
 import {
   ProductCategory,
   productCategory,
 } from "../types/product-category.type";
 import { CartEntity } from "../../cart/entities/cart.entity";
+import { PayEntity } from "../../pay/entities/pay.entity";
 
 @Entity({ name: "products", synchronize: true })
 export class ProductEntity extends CommonEntity {
@@ -60,11 +60,11 @@ export class ProductEntity extends CommonEntity {
   })
   creater: AdminUserEntity;
 
-  @OneToMany(() => CartEntity, (cart) => cart.product)
-  cart: CartEntity[];
+  @OneToMany(() => CartEntity, (cart) => cart.Product)
+  Cart: CartEntity[];
 
-  @ManyToOne(() => ClientUserEntity, (client) => client.purchasedProduct)
-  purchaser: ClientUserEntity;
+  @OneToMany(() => PayEntity, (pay) => pay.Product)
+  Pay: PayEntity[];
 
   @OneToMany(() => ReviewEntity, (review) => review.Product, { cascade: true })
   Review: ReviewEntity[];

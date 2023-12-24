@@ -17,11 +17,11 @@ export class CartEntity extends CommonEntity {
   @Column({ type: "int", unsigned: true, nullable: false })
   totalPrice: number;
 
-  @ManyToOne(() => ClientUserEntity, (clientUser) => clientUser.cart)
+  @ManyToOne(() => ClientUserEntity, (clientUser) => clientUser.Cart)
   @JoinColumn({ name: "clientId" })
-  clientUser: ClientUserEntity;
+  ClientUser: ClientUserEntity;
 
-  @ManyToOne(() => ProductEntity, (product) => product.cart)
+  @ManyToOne(() => ProductEntity, (product) => product.Cart)
   @JoinColumn({ name: "productId" })
-  product: ProductEntity;
+  Product: ProductEntity;
 }
