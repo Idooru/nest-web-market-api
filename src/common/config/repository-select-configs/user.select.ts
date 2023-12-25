@@ -22,6 +22,7 @@ export const userSelectProperty: UserSelectProperty = {
     "Auth.email",
     "Client",
     "Cart",
+    "Payment",
     "Product",
     "ProductImage.url",
     "Review",

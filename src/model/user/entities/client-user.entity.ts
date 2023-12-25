@@ -17,8 +17,8 @@ export class ClientUserEntity extends ChildEntity {
   @OneToMany(() => CartEntity, (cart) => cart.ClientUser)
   Cart: CartEntity[];
 
-  @OneToMany(() => PaymentEntity, (pay) => pay.ClientUser)
-  Pay: PaymentEntity[];
+  @OneToMany(() => PaymentEntity, (payment) => payment.ClientUser)
+  Payment: PaymentEntity[];
 
   @OneToMany(() => ReviewEntity, (review) => review.reviewer)
   writtenReview: ReviewEntity[];

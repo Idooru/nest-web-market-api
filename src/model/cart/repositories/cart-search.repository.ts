@@ -19,7 +19,7 @@ export class CartSearchRepository {
       .createQueryBuilder()
       .select(this.cartSelect.carts)
       .from(CartEntity, "cart")
-      .innerJoin("cart.product", "Product")
+      .innerJoin("cart.Product", "Product")
       .innerJoin("Product.Image", "Image")
       .where("cart.clientId = :id", { id })
       .getMany();

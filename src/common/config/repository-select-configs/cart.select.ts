@@ -5,10 +5,9 @@ export interface CartSelectProperty {
 export const cartSelectProperty: CartSelectProperty = {
   carts: [
     "cart.id",
-    "cart.product",
+    "cart.Product",
     "cart.quantity",
     "cart.totalPrice",
-    "cart.deliveryOption",
     "Product.name",
     "Product.price",
     "Product.origin",
