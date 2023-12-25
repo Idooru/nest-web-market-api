@@ -14,14 +14,14 @@ export class CartSearchRepository {
     private readonly cartSelect: CartSelectProperty,
   ) {}
 
-  public async findCartsWithUserId(id: string): Promise<CartEntity[]> {
+  public async findCartsWithUserId(clientId: string): Promise<CartEntity[]> {
     const carts = await this.cartRepository
       .createQueryBuilder()
       .select(this.cartSelect.carts)
       .from(CartEntity, "cart")
       .innerJoin("cart.Product", "Product")
       .innerJoin("Product.Image", "Image")
-      .where("cart.clientId = :id", { id })
+      .where("cart.clientId = :clientId", { clientId })
       .getMany();
 
     if (!carts.length) {
@@ -33,12 +33,16 @@ export class CartSearchRepository {
     return carts;
   }
 
-  public async findProductOnCart(id: string): Promise<CartEntity> {
+  public async findProductOnCart(
+    clientId: string,
+    productId: string,
+  ): Promise<CartEntity> {
     return await this.cartRepository
       .createQueryBuilder()
       .select("cart.id")
       .from(CartEntity, "cart")
-      .where("cart.productId = :id", { id })
+      .where("cart.clientId = :clientId", { clientId })
+      .andWhere("cart.productId = :productId", { productId })
       .getOne();
   }
 }

@@ -21,7 +21,7 @@ export class CartUpdateService {
     clientUserId: string,
     cartBodyDto: CartBodyDto,
   ): Promise<void> {
-    await this.cartSearcher.validateProduct(productId);
+    await this.cartSearcher.validateProduct(clientUserId, productId);
 
     const [clientUser, product] = await Promise.all([
       this.userSearcher.findClientUserObjectWithId(clientUserId),
