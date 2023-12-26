@@ -12,7 +12,7 @@ import { MediaUtils } from "../../media/logic/media.utils";
 @Injectable()
 export class ProductUpdateService {
   constructor(
-    private readonly productOperationRepository: ProductUpdateRepository,
+    private readonly productUpdateRepository: ProductUpdateRepository,
     private readonly productSearcher: ProductSearcher,
     private readonly mediaUtils: MediaUtils,
   ) {}
@@ -21,14 +21,12 @@ export class ProductUpdateService {
   async createProduct(
     createProductDto: CreateProductDto,
   ): Promise<ProductEntity> {
-    return await this.productOperationRepository.createProduct(
-      createProductDto,
-    );
+    return await this.productUpdateRepository.createProduct(createProductDto);
   }
 
   // Transaction
   async createStarRate(product: ProductEntity): Promise<void> {
-    await this.productOperationRepository.createStarRate(product);
+    await this.productUpdateRepository.createStarRate(product);
   }
 
   // Transaction
@@ -37,7 +35,7 @@ export class ProductUpdateService {
   ): Promise<void> {
     const { productImages, product } = insertProductImageDto;
     const inserting = productImages.map((productImage) =>
-      this.productOperationRepository.insertProductIdOnProductImage(
+      this.productUpdateRepository.insertProductIdOnProductImage(
         productImage,
         product,
       ),
@@ -48,7 +46,7 @@ export class ProductUpdateService {
 
   // Transaction
   async modifyProduct(modifyProductDto: ModifyProductDto): Promise<void> {
-    await this.productOperationRepository.modifyProduct(modifyProductDto);
+    await this.productUpdateRepository.modifyProduct(modifyProductDto);
   }
 
   // Transaction
@@ -59,7 +57,7 @@ export class ProductUpdateService {
       changeProductImageDto;
 
     const inserting = newProductImages.map((productImage) =>
-      this.productOperationRepository.insertProductIdOnProductImage(
+      this.productUpdateRepository.insertProductIdOnProductImage(
         productImage,
         product,
       ),
@@ -69,9 +67,7 @@ export class ProductUpdateService {
 
     if (beforeProductImages.length >= 1) {
       const deleting = beforeProductImages.map((productImage) =>
-        this.productOperationRepository.deleteProductImageWithId(
-          productImage.id,
-        ),
+        this.productUpdateRepository.deleteProductImageWithId(productImage.id),
       );
 
       this.mediaUtils.deleteMediaFiles({
@@ -84,19 +80,30 @@ export class ProductUpdateService {
     }
   }
 
+  // Transaction
+  async decreaseProductQuantities(
+    productQuantities: { product: ProductEntity; quantity: number }[],
+  ): Promise<void> {
+    const decreasing = productQuantities.map((productQuantitiy) =>
+      this.productUpdateRepository.decreaseProductQuantity(productQuantitiy),
+    );
+
+    await Promise.all(decreasing);
+  }
+
   // General
   async modifyProductName(id: string, name: string): Promise<void> {
-    await this.productOperationRepository.modifyProductName(id, name);
+    await this.productUpdateRepository.modifyProductName(id, name);
   }
 
   // General
   async modifyProductPrice(id: string, price: number): Promise<void> {
-    await this.productOperationRepository.modifyProductPrice(id, price);
+    await this.productUpdateRepository.modifyProductPrice(id, price);
   }
 
   // General
   async modifyProductOrigin(id: string, origin: string): Promise<void> {
-    await this.productOperationRepository.modifyProductOrigin(id, origin);
+    await this.productUpdateRepository.modifyProductOrigin(id, origin);
   }
 
   // General
@@ -104,7 +111,7 @@ export class ProductUpdateService {
     id: string,
     category: ProductCategory,
   ): Promise<void> {
-    await this.productOperationRepository.modifyProductCategory(id, category);
+    await this.productUpdateRepository.modifyProductCategory(id, category);
   }
 
   // General
@@ -112,7 +119,7 @@ export class ProductUpdateService {
     id: string,
     description: string,
   ): Promise<void> {
-    await this.productOperationRepository.modifyProductDescription(
+    await this.productUpdateRepository.modifyProductDescription(
       id,
       description,
     );
@@ -120,7 +127,7 @@ export class ProductUpdateService {
 
   // General
   async modifyProductQuantity(id: string, quantity: number): Promise<void> {
-    await this.productOperationRepository.modifyProductQuantity(id, quantity);
+    await this.productUpdateRepository.modifyProductQuantity(id, quantity);
   }
 
   // General
@@ -133,6 +140,6 @@ export class ProductUpdateService {
       callWhere: "remove media entity",
     });
 
-    await this.productOperationRepository.removeProduct(id);
+    await this.productUpdateRepository.removeProduct(id);
   }
 }
