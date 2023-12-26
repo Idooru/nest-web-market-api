@@ -99,7 +99,7 @@ export class CartV1ClientController {
   public async deleteAllCartWithUserId(
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.cartUpdateService.deleteAllCartWithUserId(jwtPayload.userId);
+    await this.cartUpdateService.deleteAllCartsWithUserId(jwtPayload.userId);
 
     return {
       statusCode: 200,
