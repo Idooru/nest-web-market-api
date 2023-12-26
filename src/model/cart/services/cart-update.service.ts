@@ -15,6 +15,11 @@ export class CartUpdateService {
     private readonly productSearcher: ProductSearcher,
   ) {}
 
+  // Transaction
+  public async deleteAllCartsOnTransaction(id: string) {
+    await this.cartUpdateRepository.deleteAllCartsOnTransaction(id);
+  }
+
   // General
   public async createCart(
     productId: string,
@@ -35,14 +40,17 @@ export class CartUpdateService {
     });
   }
 
+  // General
   public async modifyCartWithId(modifyCartDto: ModifyCartDto): Promise<void> {
     await this.cartUpdateRepository.modifyCartWithId(modifyCartDto);
   }
 
-  public async deleteAllCartWithUserId(id: string): Promise<void> {
-    await this.cartUpdateRepository.deleteAllCartWithUserId(id);
+  // General
+  public async deleteAllCartsWithUserId(id: string): Promise<void> {
+    await this.cartUpdateRepository.deleteAllCartsWithUserId(id);
   }
 
+  // General
   public async deleteCartWithId(id: string): Promise<void> {
     await this.cartUpdateRepository.deleteCartWithId(id);
   }
