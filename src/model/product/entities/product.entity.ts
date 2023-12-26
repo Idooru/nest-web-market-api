@@ -63,9 +63,6 @@ export class ProductEntity extends CommonEntity {
   @OneToMany(() => CartEntity, (cart) => cart.Product)
   Cart: CartEntity[];
 
-  @OneToMany(() => PaymentEntity, (payment) => payment.Product)
-  Payment: PaymentEntity[];
-
   @OneToMany(() => ReviewEntity, (review) => review.Product, { cascade: true })
   Review: ReviewEntity[];
 
