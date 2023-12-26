@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { CartV1ClientController } from "./controllers/v1/cart-v1-client.controller";
 import { CartUpdateService } from "./services/cart-update.service";
 import { CartSearchRepository } from "./repositories/cart-search.repository";
@@ -12,11 +12,13 @@ import { UserModule } from "../user/user.module";
 import { cartSelectProperty } from "../../common/config/repository-select-configs/cart.select";
 import { CartValidator } from "./logic/cart.validator";
 import { CartValidateRepository } from "./repositories/cart-validate.repository";
+import { PaymentModule } from "../payment/payment.module";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([CartEntity]),
     LibraryModule,
+    forwardRef(() => PaymentModule),
     UserModule,
     ProductModule,
   ],
@@ -30,5 +32,6 @@ import { CartValidateRepository } from "./repositories/cart-validate.repository"
     CartSearcher,
     CartValidator,
   ],
+  exports: [CartSearcher, CartUpdateService],
 })
 export class CartModule {}
