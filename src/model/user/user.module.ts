@@ -70,7 +70,7 @@ import { mailEventMap } from "../../common/config/event-configs";
     UserUpdateRepository,
     UserValidateRepository,
   ],
-  exports: [UserSearcher, UserValidator],
+  exports: [UserSearcher, UserValidator, UserUpdateService],
 })
 export class UserModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
