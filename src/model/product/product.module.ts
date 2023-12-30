@@ -64,7 +64,6 @@ import { DeleteProductMediaMiddleware } from "../media/middleware/delete-product
   exports: [
     ProductSearcher,
     ProductSearchRepository,
-    ProductUpdateService,
     ProductIdValidatePipe,
     ProductValidator,
   ],
