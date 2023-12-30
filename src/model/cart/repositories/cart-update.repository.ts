@@ -4,12 +4,10 @@ import { CartEntity } from "../entities/cart.entity";
 import { Repository } from "typeorm";
 import { CreateCartDto } from "../dto/create-cart.dto";
 import { ModifyCartDto } from "../dto/modify-cart.dto";
-import { PaymentRepositoryVo } from "../../payment/logic/transaction/payment-repository.vo";
 
 @Injectable()
 export class CartUpdateRepository {
   constructor(
-    private readonly queryRunner: PaymentRepositoryVo,
     @InjectRepository(CartEntity)
     private readonly cartRepository: Repository<CartEntity>,
   ) {}
