@@ -8,10 +8,7 @@ export const cartSelectProperty: CartSelectProperty = {
     "cart.Product",
     "cart.quantity",
     "cart.totalPrice",
-    "Product.name",
-    "Product.price",
-    "Product.origin",
-    "Product.category",
+    "Product",
     "Image.url",
   ],
 };
