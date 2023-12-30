@@ -80,17 +80,6 @@ export class ProductUpdateService {
     }
   }
 
-  // Transaction
-  async decreaseProductQuantities(
-    productQuantities: { product: ProductEntity; quantity: number }[],
-  ): Promise<void> {
-    const decreasing = productQuantities.map((productQuantitiy) =>
-      this.productUpdateRepository.decreaseProductQuantity(productQuantitiy),
-    );
-
-    await Promise.all(decreasing);
-  }
-
   // General
   async modifyProductName(id: string, name: string): Promise<void> {
     await this.productUpdateRepository.modifyProductName(id, name);

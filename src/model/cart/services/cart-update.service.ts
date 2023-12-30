@@ -15,11 +15,6 @@ export class CartUpdateService {
     private readonly productSearcher: ProductSearcher,
   ) {}
 
-  // Transaction
-  public async deleteAllCartsOnTransaction(id: string) {
-    await this.cartUpdateRepository.deleteAllCartsOnTransaction(id);
-  }
-
   // General
   public async createCart(
     productId: string,

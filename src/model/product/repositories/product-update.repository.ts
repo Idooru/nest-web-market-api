@@ -61,20 +61,6 @@ export class ProductUpdateRepository {
     await this.queryRunner.productRepository.update(id, productBodyDto);
   }
 
-  // Transaction
-  async decreaseProductQuantity(productQuantity: {
-    product: ProductEntity;
-    quantity: number;
-  }): Promise<void> {
-    const { product, quantity } = productQuantity;
-    await this.queryRunner.productRepository
-      .createQueryBuilder()
-      .update(ProductEntity)
-      .set({ quantity: () => `quantity - ${quantity}` })
-      .where("id = :id", { id: product.id })
-      .execute();
-  }
-
   // General
   async modifyProductName(id: string, name: string): Promise<void> {
     await this.productRepository.update(id, { name });

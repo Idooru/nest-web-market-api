@@ -14,15 +14,6 @@ export class CartUpdateRepository {
     private readonly cartRepository: Repository<CartEntity>,
   ) {}
 
-  // Transaction
-  public async deleteAllCartsOnTransaction(id: string): Promise<void> {
-    await this.queryRunner.paymentRepository
-      .createQueryBuilder()
-      .delete()
-      .where("clientId = :id", { id })
-      .execute();
-  }
-
   // General
   public async createCart(createCartDto: CreateCartDto): Promise<void> {
     const { product, clientUser, cartBodyDto } = createCartDto;
@@ -33,11 +24,13 @@ export class CartUpdateRepository {
     });
   }
 
+  // General
   public async modifyCartWithId(modifyCartDto: ModifyCartDto): Promise<void> {
     const { id, cartBodyDto } = modifyCartDto;
     await this.cartRepository.update(id, cartBodyDto);
   }
 
+  // General
   public async deleteAllCartsWithUserId(id: string): Promise<void> {
     await this.cartRepository
       .createQueryBuilder()
@@ -46,6 +39,7 @@ export class CartUpdateRepository {
       .execute();
   }
 
+  // General
   public async deleteCartWithId(id: string): Promise<void> {
     await this.cartRepository.delete({ id });
   }
