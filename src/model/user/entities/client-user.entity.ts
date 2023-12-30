@@ -4,7 +4,7 @@ import { Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
 import { UserEntity } from "./user.entity";
 import { ChildEntity } from "src/common/entities/child.entity";
 import { CartEntity } from "../../cart/entities/cart.entity";
-import { PaymentEntity } from "../../payment/entities/payment.entity";
+import { OrderEntity } from "../../order/entities/order.entity";
 
 @Entity({ name: "client_users", synchronize: true })
 export class ClientUserEntity extends ChildEntity {
@@ -17,8 +17,8 @@ export class ClientUserEntity extends ChildEntity {
   @OneToMany(() => CartEntity, (cart) => cart.ClientUser)
   Cart: CartEntity[];
 
-  @OneToMany(() => PaymentEntity, (payment) => payment.ClientUser)
-  Payment: PaymentEntity[];
+  @OneToMany(() => OrderEntity, (order) => order.ClientUser)
+  Order: OrderEntity[];
 
   @OneToMany(() => ReviewEntity, (review) => review.reviewer)
   writtenReview: ReviewEntity[];

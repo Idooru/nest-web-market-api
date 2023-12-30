@@ -11,7 +11,6 @@ import {
   productCategory,
 } from "../types/product-category.type";
 import { CartEntity } from "../../cart/entities/cart.entity";
-import { PaymentEntity } from "../../payment/entities/payment.entity";
 
 @Entity({ name: "products", synchronize: true })
 export class ProductEntity extends CommonEntity {

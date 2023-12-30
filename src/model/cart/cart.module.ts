@@ -12,13 +12,13 @@ import { UserModule } from "../user/user.module";
 import { cartSelectProperty } from "../../common/config/repository-select-configs/cart.select";
 import { CartValidator } from "./logic/cart.validator";
 import { CartValidateRepository } from "./repositories/cart-validate.repository";
-import { PaymentModule } from "../payment/payment.module";
+import { OrderModule } from "../order/order.module";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([CartEntity]),
     LibraryModule,
-    forwardRef(() => PaymentModule),
+    forwardRef(() => OrderModule),
     UserModule,
     ProductModule,
   ],
