@@ -5,6 +5,7 @@ import { UserEntity } from "./user.entity";
 import { ChildEntity } from "src/common/entities/child.entity";
 import { CartEntity } from "../../cart/entities/cart.entity";
 import { OrderEntity } from "../../order/entities/order.entity";
+import { PaymentEntitiy } from "../../order/entities/payment.entitiy";
 
 @Entity({ name: "client_users", synchronize: true })
 export class ClientUserEntity extends ChildEntity {
@@ -19,6 +20,9 @@ export class ClientUserEntity extends ChildEntity {
 
   @OneToMany(() => OrderEntity, (order) => order.ClientUser)
   Order: OrderEntity[];
+
+  @OneToMany(() => PaymentEntitiy, (payment) => payment.ClientUser)
+  Payment: PaymentEntitiy[];
 
   @OneToMany(() => ReviewEntity, (review) => review.reviewer)
   writtenReview: ReviewEntity[];
