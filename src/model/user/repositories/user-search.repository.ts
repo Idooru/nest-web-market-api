@@ -165,7 +165,7 @@ export class UserSearchRepository {
       .leftJoin("Cart.Product", "Product")
       .leftJoin("Product.Image", "ProductImage")
       .leftJoin("Client.Order", "Order")
-      .leftJoin("Client.Payment", "Payment")
+      .leftJoin("Order.Payment", "Payment")
       .leftJoin("Client.writtenReview", "Review")
       .leftJoin("Review.Image", "ReviewImage")
       .leftJoin("Review.Video", "ReviewVideo")
