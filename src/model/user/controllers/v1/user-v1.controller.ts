@@ -42,6 +42,7 @@ import { LoginInterceptor } from "../../../../common/interceptors/general/login.
 import { RefreshTokenInterceptor } from "../../../../common/interceptors/general/refresh-token.interceptor";
 import { LogoutInterceptor } from "../../../../common/interceptors/general/logout.interceptor";
 import { RefreshTokenInterface } from "../../../../common/interceptors/interface/refresh-token.interface";
+import { ModifyUserAddressDto } from "../../dtos/modify-user-address.dto";
 
 @ApiTags("v1 공용 User API")
 @Controller({ path: "/user", version: "1" })
@@ -260,6 +261,25 @@ export class UserV1Controller {
     return {
       statusCode: 201,
       message: "사용자의 비밀번호를 수정합니다.",
+    };
+  }
+
+  @ApiOperation({
+    summary: "modify user password",
+    description: "로그인을 했을 때 본인의 사용자 비밀번호 column을 수정합니다.",
+  })
+  @UseInterceptors(JsonGeneralInterceptor)
+  @UseGuards(IsLoginGuard)
+  @Patch("/me/address")
+  async modifyUserAddress(
+    @Body() { address }: ModifyUserAddressDto,
+    @GetJWT() jwtPayload: JwtAccessTokenPayload,
+  ): Promise<JsonGeneralInterface<void>> {
+    await this.userUpdateService.modifyUserAddress(address, jwtPayload.userId);
+
+    return {
+      statusCode: 201,
+      message: "사용자의 집주소를 수정합니다.",
     };
   }
 

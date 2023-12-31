@@ -37,12 +37,27 @@ export class UserUpdateService {
     registerUserDto: RegisterUserDto,
   ): Promise<void> {
     const { id } = user;
-    const { realname, nickname, birth, gender, email, phonenumber, password } =
-      registerUserDto;
+    const {
+      realname,
+      nickname,
+      birth,
+      gender,
+      email,
+      phonenumber,
+      password,
+      address,
+    } = registerUserDto;
 
     const hashed = await this.userSecurity.hashPassword(password, true);
 
-    const userProfileColumn = { id, realname, birth, gender, phonenumber };
+    const userProfileColumn = {
+      id,
+      realname,
+      birth,
+      gender,
+      phonenumber,
+      address,
+    };
     const userAuthColumn = { id, nickname, email, password: hashed };
 
     await Promise.all([
@@ -55,12 +70,12 @@ export class UserUpdateService {
 
   // Transaction
   async modifyUser(modifyUserDto: ModifyUserDto, id: string): Promise<void> {
-    const { password, phonenumber, email, nickname } = modifyUserDto;
+    const { password, phonenumber, email, nickname, address } = modifyUserDto;
 
     const hashed = await this.userSecurity.hashPassword(password, true);
 
     await Promise.all([
-      this.userUpdateRepository.modifyUserProfile({ phonenumber }, id),
+      this.userUpdateRepository.modifyUserProfile({ phonenumber, address }, id),
       this.userUpdateRepository.modifyUserAuth(
         { email, nickname, password: hashed },
         id,
@@ -88,6 +103,11 @@ export class UserUpdateService {
     const hashed = await this.userSecurity.hashPassword(password, false);
 
     await this.userUpdateRepository.modifyUserPassword(hashed, id);
+  }
+
+  // General
+  async modifyUserAddress(address: string, id: string): Promise<void> {
+    await this.userUpdateRepository.modifyUserAddress(address, id);
   }
 
   // General

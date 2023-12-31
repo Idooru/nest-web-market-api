@@ -96,6 +96,11 @@ export class UserUpdateRepository {
   }
 
   // General
+  async modifyUserAddress(address: string, id: string): Promise<void> {
+    await this.userProfileRepository.update(id, { address });
+  }
+
+  // General
   async deleteUser(id: string): Promise<void> {
     await this.userRepository.delete({ id });
   }
