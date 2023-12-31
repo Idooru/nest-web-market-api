@@ -10,6 +10,7 @@ export class RegisterUserProfileDto extends PickType(UserProfileEntity, [
   "birth",
   "gender",
   "phonenumber",
+  "address",
 ] as const) {
   @ApiProperty({
     description: "사용자 본인 이름(실명)",
@@ -43,6 +44,14 @@ export class RegisterUserProfileDto extends PickType(UserProfileEntity, [
     uniqueItems: true,
   })
   phonenumber: string;
+
+  @ApiProperty({
+    description: "사용자 주소",
+    example: "경기도 하남시 신장동 569번지",
+    required: true,
+    uniqueItems: false,
+  })
+  address: string;
 }
 
 export class CreateUserProfileDto extends PickType(UserProfileEntity, [

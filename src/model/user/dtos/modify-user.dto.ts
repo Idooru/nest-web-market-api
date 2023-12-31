@@ -4,6 +4,7 @@ import { UserProfileEntity } from "../entities/user-profile.entity";
 
 export class ModifyUserProfileDto extends PickType(UserProfileEntity, [
   "phonenumber",
+  "address",
 ] as const) {
   @ApiProperty({
     description: "사용자 전화번호",
@@ -12,6 +13,14 @@ export class ModifyUserProfileDto extends PickType(UserProfileEntity, [
     uniqueItems: true,
   })
   phonenumber: string;
+
+  @ApiProperty({
+    description: "사용자 집주소",
+    example: "경기도 하남시 신장동 569번지",
+    required: true,
+    uniqueItems: false,
+  })
+  address: string;
 }
 
 export class ModifyUserAuthDto extends PickType(UserAuthEntity, [

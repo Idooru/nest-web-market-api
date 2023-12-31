@@ -18,6 +18,7 @@ export const userSelectProperty: UserSelectProperty = {
     "Profile.birth",
     "Profile.gender",
     "Profile.phonenumber",
+    "Profile.address",
     "Auth.nickname",
     "Auth.email",
     "Client",
