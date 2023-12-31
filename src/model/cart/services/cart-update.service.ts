@@ -1,10 +1,11 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { CartUpdateRepository } from "../repositories/cart-update.repository";
 import { UserSearcher } from "../../user/logic/user.searcher";
 import { ProductSearcher } from "../../product/logic/product.searcher";
 import { CartSearcher } from "../logic/cart.searcher";
 import { CartBodyDto } from "../dto/cart-body.dto";
 import { ModifyCartDto } from "../dto/modify-cart.dto";
+import { loggerFactory } from "../../../common/functions/logger.factory";
 
 @Injectable()
 export class CartUpdateService {
@@ -21,12 +22,19 @@ export class CartUpdateService {
     clientUserId: string,
     cartBodyDto: CartBodyDto,
   ): Promise<void> {
+    const { quantity, totalPrice } = cartBodyDto;
     await this.cartSearcher.validateProduct(clientUserId, productId);
 
     const [clientUser, product] = await Promise.all([
       this.userSearcher.findClientUserObjectWithId(clientUserId),
       this.productSearcher.findProductWithId(productId),
     ]);
+
+    if (product.price * quantity !== totalPrice) {
+      const message = `상품의 총 가격이 가격과 수량의 곱과 같지 않습니다.`;
+      loggerFactory("Not Same").error(message);
+      throw new BadRequestException(message);
+    }
 
     await this.cartUpdateRepository.createCart({
       product,
