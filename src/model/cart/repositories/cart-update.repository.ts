@@ -24,8 +24,8 @@ export class CartUpdateRepository {
 
   // General
   public async modifyCartWithId(modifyCartDto: ModifyCartDto): Promise<void> {
-    const { id, cartBodyDto } = modifyCartDto;
-    await this.cartRepository.update(id, cartBodyDto);
+    const { cartId, cartBodyDto } = modifyCartDto;
+    await this.cartRepository.update(cartId, cartBodyDto);
   }
 
   // General
