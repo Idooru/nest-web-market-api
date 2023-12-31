@@ -45,6 +45,16 @@ export class CartUpdateService {
 
   // General
   public async modifyCartWithId(modifyCartDto: ModifyCartDto): Promise<void> {
+    const { productId } = modifyCartDto;
+    const { quantity, totalPrice } = modifyCartDto.cartBodyDto;
+    const product = await this.productSearcher.findProductWithId(productId);
+
+    if (product.price * quantity !== totalPrice) {
+      const message = `상품의 총 가격이 가격과 수량의 곱과 같지 않습니다.`;
+      loggerFactory("Not Same").error(message);
+      throw new BadRequestException(message);
+    }
+
     await this.cartUpdateRepository.modifyCartWithId(modifyCartDto);
   }
 

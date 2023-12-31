@@ -77,16 +77,21 @@ export class CartV1ClientController {
     description: "아이디에 해당하는 장바구니를 수정합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @Put("/:cartId")
+  @Put("/:cartId/product/:productId")
   public async modifyCartWithId(
-    @Param("cartId", CartIdValidatePipe) id: string,
+    @Param("cartId", CartIdValidatePipe) cartId: string,
+    @Param("productId", ProductIdValidatePipe) productId: string,
     @Body() cartBodyDto: CartBodyDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.cartUpdateService.modifyCartWithId({ id, cartBodyDto });
+    await this.cartUpdateService.modifyCartWithId({
+      cartId,
+      productId,
+      cartBodyDto,
+    });
 
     return {
       statusCode: 200,
-      message: `id(${id})에 해당하는 장바구니를 수정합니다.`,
+      message: `id(${cartId})에 해당하는 장바구니를 수정합니다.`,
     };
   }
 
