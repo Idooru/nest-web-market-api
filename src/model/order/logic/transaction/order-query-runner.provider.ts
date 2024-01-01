@@ -8,6 +8,7 @@ import {
 } from "./order-repository.vo";
 import { OrderEntity } from "../../entities/order.entity";
 import { PaymentEntitiy } from "../../entities/payment.entitiy";
+import { AccountEntity } from "../../../account/entities/account.entity";
 
 @Injectable()
 export class OrderQueryRunnerProvider {
@@ -26,6 +27,7 @@ export class OrderQueryRunnerProvider {
       cartRepository: queryRunner.manager.getRepository(CartEntity),
       productRepository: queryRunner.manager.getRepository(ProductEntity),
       paymentRepository: queryRunner.manager.getRepository(PaymentEntitiy),
+      accountRepository: queryRunner.manager.getRepository(AccountEntity),
     };
     this.orderRepositoryVo.setRepositoryPayload(repositoryPayload);
 

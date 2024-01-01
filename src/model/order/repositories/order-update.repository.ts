@@ -1,10 +1,15 @@
-import { Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable } from "@nestjs/common";
 import { ProductEntity } from "../../product/entities/product.entity";
 import { CartEntity } from "../../cart/entities/cart.entity";
 import { OrderRepositoryVo } from "../logic/transaction/order-repository.vo";
 import { CreateOrderDto } from "../dto/create-order.dto";
 import { CreatePaymentDto } from "../dto/create-payment.dto";
 import { OrderEntity } from "../entities/order.entity";
+import { MoneyTransactionDto } from "../../account/dtos/money-transaction.dto";
+import { AccountEntity } from "../../account/entities/account.entity";
+import { QueryFailedError } from "typeorm";
+import { loggerFactory } from "../../../common/functions/logger.factory";
+import { DepositAdminBalanceDto } from "../dto/deposit-admin-balance.dto";
 
 @Injectable()
 export class OrderUpdateRepository {
@@ -64,5 +69,42 @@ export class OrderUpdateRepository {
       Order: order,
       Product: product,
     });
+  }
+
+  // Transaction
+  public async withdrawClientBalance(withdrawDto: MoneyTransactionDto) {
+    const { accountId, balance } = withdrawDto;
+    await this.queryRunner.accountRepository
+      .createQueryBuilder()
+      .update(AccountEntity)
+      .set({ balance: () => `balance - ${balance}` })
+      .where("id = :id", { id: accountId })
+      .execute()
+      .catch((err: QueryFailedError) => {
+        if (err.message.includes("BIGINT UNSIGNED value is out of range in")) {
+          const message = "현재 잔액보다 더 많은 금액을 출금 할 수 없습니다.";
+          loggerFactory("overflow withdraw").error(message);
+          throw new ForbiddenException(message);
+        }
+      });
+
+    return await this.queryRunner.accountRepository.findOneBy({
+      id: accountId,
+    });
+  }
+
+  // Transaction
+  public async depositAdminBalance(
+    depositDto: DepositAdminBalanceDto,
+  ): Promise<void> {
+    const { userId, balance, totalPrice } = depositDto;
+    const depositBalance = balance + totalPrice;
+
+    await this.queryRunner.accountRepository
+      .createQueryBuilder()
+      .update(AccountEntity)
+      .set({ balance: depositBalance })
+      .where("userId = :userId", { userId })
+      .execute();
   }
 }

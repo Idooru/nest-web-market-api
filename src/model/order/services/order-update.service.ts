@@ -4,6 +4,8 @@ import { CreateOrderDto } from "../dto/create-order.dto";
 import { OrderUpdateRepository } from "../repositories/order-update.repository";
 import { CreatePaymentsDto } from "../dto/create-payments.dto";
 import { OrderEntity } from "../entities/order.entity";
+import { DepositAdminBalanceDto } from "../dto/deposit-admin-balance.dto";
+import { MoneyTransactionDto } from "../../account/dtos/money-transaction.dto";
 
 @Injectable()
 export class OrderUpdateService {
@@ -46,5 +48,50 @@ export class OrderUpdateService {
     );
 
     await Promise.all(creating);
+  }
+
+  // Transaction
+  public async withdrawClientBalance(
+    withdrawDto: MoneyTransactionDto,
+  ): Promise<void> {
+    await this.orderUpdateRepository.withdrawClientBalance(withdrawDto);
+  }
+
+  // Transaction
+  public async depositAdminBalance(
+    productQuantities: { product: ProductEntity; quantity: number }[],
+  ): Promise<void> {
+    const adminUserBalances = productQuantities
+      .map((productQuantity) => productQuantity.product.creater.User)
+      .map((user) => ({ userId: user.id, balance: user.Account[0].balance }));
+
+    const adminUserTotalPrice = productQuantities.map(
+      ({ product, quantity }) => ({
+        userId: product.creater.User.id,
+        totalPrice: product.price * quantity,
+      }),
+    );
+
+    const groups = [...adminUserBalances, ...adminUserTotalPrice].reduce(
+      (result, item) => {
+        const key = item.userId;
+
+        if (!result[key]) {
+          result[key] = {};
+        }
+
+        Object.assign(result[key], item);
+
+        return result;
+      },
+      {},
+    );
+
+    const depositing = Object.values(groups).map(
+      async (group: DepositAdminBalanceDto) =>
+        await this.orderUpdateRepository.depositAdminBalance(group),
+    );
+
+    await Promise.all(depositing);
   }
 }

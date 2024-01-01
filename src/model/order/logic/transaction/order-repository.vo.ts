@@ -3,12 +3,14 @@ import { Repository } from "typeorm";
 import { ProductEntity } from "../../../product/entities/product.entity";
 import { OrderEntity } from "../../entities/order.entity";
 import { PaymentEntitiy } from "../../entities/payment.entitiy";
+import { AccountEntity } from "../../../account/entities/account.entity";
 
 export interface OrderRepositoryPayload {
   orderRepository: Repository<OrderEntity>;
   cartRepository: Repository<CartEntity>;
   productRepository: Repository<ProductEntity>;
   paymentRepository: Repository<PaymentEntitiy>;
+  accountRepository: Repository<AccountEntity>;
 }
 
 export class OrderRepositoryVo {
@@ -16,6 +18,7 @@ export class OrderRepositoryVo {
   private _cartRepository: Repository<CartEntity>;
   private _productRepository: Repository<ProductEntity>;
   private _paymentRepository: Repository<PaymentEntitiy>;
+  private _accountRepository: Repository<AccountEntity>;
 
   public setRepositoryPayload(repositoryPayload: OrderRepositoryPayload): void {
     const {
@@ -23,12 +26,14 @@ export class OrderRepositoryVo {
       cartRepository,
       productRepository,
       paymentRepository,
+      accountRepository,
     } = repositoryPayload;
 
     this.orderRepository = orderRepository;
     this.cartRepository = cartRepository;
     this.productRepository = productRepository;
     this.paymentRepository = paymentRepository;
+    this.accountRepository = accountRepository;
   }
 
   get orderRepository(): Repository<OrderEntity> {
@@ -61,5 +66,13 @@ export class OrderRepositoryVo {
 
   set paymentRepository(value: Repository<PaymentEntitiy>) {
     this._paymentRepository = value;
+  }
+
+  get accountRepository(): Repository<AccountEntity> {
+    return this._accountRepository;
+  }
+
+  set accountRepository(value: Repository<AccountEntity>) {
+    this._accountRepository = value;
   }
 }
