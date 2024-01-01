@@ -102,10 +102,11 @@ export class UserSearchRepository {
 
     return await this.clientUserRepository
       .createQueryBuilder()
-      .select(["client", "User", "Auth"])
+      .select(["client", "User", "Auth", "Account"])
       .from(ClientUserEntity, "client")
       .innerJoin("client.User", "User")
       .innerJoin("User.Auth", "Auth")
+      .leftJoin("User.Account", "Account")
       .where("client.id = :id", { id: user.clientActions.id })
       .getOne();
   }
@@ -115,8 +116,10 @@ export class UserSearchRepository {
 
     return await this.adminUserRepository
       .createQueryBuilder()
-      .select(["admin"])
+      .select(["admin", "User", "Account"])
       .from(AdminUserEntity, "admin")
+      .innerJoin("admin.User", "User")
+      .leftJoin("User.Account", "Account")
       .where("admin.id = :id", { id: user.adminActions.id })
       .getOne();
   }
