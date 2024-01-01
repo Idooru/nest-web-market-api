@@ -7,6 +7,7 @@ import { ClientUserEntity } from "../entities/client-user.entity";
 import { AdminUserEntity } from "../entities/admin-user.entity";
 import { UserAuthEntity } from "../entities/user-auth.entity";
 import { UserProfileEntity } from "../entities/user-profile.entity";
+import { loggerFactory } from "../../../common/functions/logger.factory";
 
 @Injectable()
 export class UserSearchRepository {
@@ -35,7 +36,9 @@ export class UserSearchRepository {
       .getMany();
 
     if (!users.length) {
-      throw new NotFoundException("사용자가 없습니다.");
+      const message = "사용자가 없습니다.";
+      loggerFactory("None Exist").error(message);
+      throw new NotFoundException(message);
     }
 
     return users;
@@ -51,7 +54,9 @@ export class UserSearchRepository {
       .getMany();
 
     if (!users.length) {
-      throw new NotFoundException("사용자가 없습니다.");
+      const message = "사용자가 없습니다.";
+      loggerFactory("None Exist").error(message);
+      throw new NotFoundException(message);
     }
 
     return users;
