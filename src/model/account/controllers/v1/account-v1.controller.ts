@@ -20,6 +20,7 @@ import { AccountValidatePipe } from "../../pipe/none-exist/account-validate.pipe
 import { MoneyTransactionDto } from "../../dtos/money-transaction.dto";
 import { WithdrawResultDto } from "../../dtos/withdraw-result.dto";
 import { DepositResultDto } from "../../dtos/deposit-result.dto";
+import { IsClientGuard } from "../../../../common/guards/authenticate/is-client.guard";
 
 @ApiTags("v1 User Account API")
 @UseGuards(IsLoginGuard)
@@ -70,6 +71,7 @@ export class AccountV1Controller {
     description: "계좌에 일정 금액을 입금합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
+  @UseGuards(IsClientGuard)
   @Patch("/deposit")
   public async deposit(
     @Body() depositBodyDto: MoneyTransactionDto,
