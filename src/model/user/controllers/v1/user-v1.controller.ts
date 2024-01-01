@@ -265,8 +265,8 @@ export class UserV1Controller {
   }
 
   @ApiOperation({
-    summary: "modify user password",
-    description: "로그인을 했을 때 본인의 사용자 비밀번호 column을 수정합니다.",
+    summary: "modify user address",
+    description: "로그인을 했을 때 본인의 사용자 집주소 column을 수정합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
