@@ -39,12 +39,13 @@ export class OrderUpdateRepository {
     createOrderDto: CreateOrderDto,
   ): Promise<OrderEntity> {
     const { orderBodyDto, clientUser, totalPrice } = createOrderDto;
-    const { deliveryOption } = orderBodyDto;
+    const { deliveryOption, deliveryAddress } = orderBodyDto;
 
     return await this.queryRunner.orderRepository.save({
       deliveryOption,
-      ClientUser: clientUser,
+      deliveryAddress,
       totalPrice,
+      ClientUser: clientUser,
     });
   }
 
