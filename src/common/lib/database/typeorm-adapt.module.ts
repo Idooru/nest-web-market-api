@@ -21,7 +21,7 @@ import { InquiryResponseVideoEntity } from "src/model/media/entities/inquiry-res
 import { CartEntity } from "../../../model/cart/entities/cart.entity";
 import { OrderEntity } from "../../../model/order/entities/order.entity";
 import { PaymentEntitiy } from "../../../model/order/entities/payment.entitiy";
-import { UserAccountEntity } from "../../../model/user/entities/user-account.entity";
+import { AccountEntity } from "../../../model/account/entities/account.entity";
 
 const isNodeEnvDev = (): boolean => process.env.NODE_ENV === "dev";
 const isNodeEnvProd = (): boolean => process.env.NODE_ENV === "prod";
@@ -40,7 +40,6 @@ const isNodeEnvProd = (): boolean => process.env.NODE_ENV === "prod";
           UserEntity,
           UserProfileEntity,
           UserAuthEntity,
-          UserAccountEntity,
           ClientUserEntity,
           AdminUserEntity,
           ProductEntity,
@@ -58,6 +57,7 @@ const isNodeEnvProd = (): boolean => process.env.NODE_ENV === "prod";
           CartEntity,
           OrderEntity,
           PaymentEntitiy,
+          AccountEntity,
         ],
         synchronize: isNodeEnvDev(),
         migrationsRun: isNodeEnvProd(),
