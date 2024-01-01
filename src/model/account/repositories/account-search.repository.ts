@@ -10,12 +10,18 @@ export class AccountSearchRepository {
     private readonly accountRepository: Repository<AccountEntity>,
   ) {}
 
-  public async findAccountsWithUserId(
-    userId: string,
-  ): Promise<AccountEntity[]> {
+  public async findAccountsWithUserId(id: string): Promise<AccountEntity[]> {
     return await this.accountRepository
       .createQueryBuilder("account")
-      .where("account.userId = :userId", { userId })
+      .where("account.userId = :id", { id })
       .getMany();
+  }
+
+  public async findMainAccountWithUserId(id: string): Promise<AccountEntity> {
+    return await this.accountRepository
+      .createQueryBuilder("account")
+      .where("account.userId = :id", { id })
+      .andWhere("account.isMainAccount = :flag", { flag: 1 })
+      .getOne();
   }
 }
