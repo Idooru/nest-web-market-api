@@ -1,10 +1,11 @@
 import { IsEnum, IsNotEmpty } from "class-validator";
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
-import { Column, Entity, OneToOne } from "typeorm";
+import { Column, Entity, OneToMany, OneToOne } from "typeorm";
 import { UserAuthEntity } from "./user-auth.entity";
 import { UserProfileEntity } from "./user-profile.entity";
 import { CommonEntity } from "../../../common/entities/common.entity";
+import { AccountEntity } from "../../account/entities/account.entity";
 
 @Entity({ name: "users", synchronize: true })
 export class UserEntity extends CommonEntity {
@@ -22,6 +23,11 @@ export class UserEntity extends CommonEntity {
     cascade: true,
   })
   Auth: UserAuthEntity;
+
+  @OneToMany(() => AccountEntity, (account) => account.User, {
+    cascade: true,
+  })
+  Account: AccountEntity[];
 
   @OneToOne(() => ClientUserEntity, (client) => client.User, {
     cascade: true,
