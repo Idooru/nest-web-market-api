@@ -9,6 +9,9 @@ export const cartSelectProperty: CartSelectProperty = {
     "cart.quantity",
     "cart.totalPrice",
     "Product",
+    "Admin",
+    "User",
+    "Account.balance",
     "Image.url",
   ],
 };

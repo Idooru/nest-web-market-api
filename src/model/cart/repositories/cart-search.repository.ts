@@ -21,6 +21,9 @@ export class CartSearchRepository {
       .from(CartEntity, "cart")
       .innerJoin("cart.Product", "Product")
       .innerJoin("Product.Image", "Image")
+      .innerJoin("Product.creater", "Admin")
+      .innerJoin("Admin.User", "User")
+      .innerJoin("User.Account", "Account")
       .where("cart.clientId = :clientId", { clientId })
       .getMany();
 
