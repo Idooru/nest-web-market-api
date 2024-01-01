@@ -168,7 +168,7 @@ Nest is [MIT licensed](LICENSE).
 2. 데이터를 변경하는 모든 서비스로직에 트랜잭션 적용하기 // 완료
 3. 미디어관련 엔티티가 데이터베이스에서 삭제 되면 서버 폴더내에 미디어 파일 물리적으로 삭제하기 // 완료
 4. 2, 3을 모두 수행하게 될 때 장바구니, 결제 구현하기 // 장바구니 완료 
-5. 결제 로직 만들기
+5. 결제 로직 만들기 // 완료
 6. repository.vo, query-runner.provider에 공통으로 들어있는 메서드로 인터페이스 만들기
 7. query-runner.provider -> query-runner.initializer로 이름 바꾸기
 8. .transaction 로직 파일에 있는 try catch finally문을 프로미스에서 처리하게 바꿔보기 
