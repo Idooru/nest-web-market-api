@@ -11,6 +11,7 @@ import { OrderTransaction } from "./logic/transaction/order.transaction";
 import { OrderUpdateService } from "./services/order-update.service";
 import { OrderUpdateRepository } from "./repositories/order-update.repository";
 import { PaymentEntitiy } from "./entities/payment.entitiy";
+import { AccountModule } from "../account/account.module";
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { PaymentEntitiy } from "./entities/payment.entitiy";
     LibraryModule,
     forwardRef(() => CartModule),
     UserModule,
+    AccountModule,
   ],
   controllers: [OrderV1ClientContoller],
   providers: [
