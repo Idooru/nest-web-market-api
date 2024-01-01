@@ -26,5 +26,6 @@ import { AccountValidator } from "./logic/account.validator";
     AccountSearchRepository,
     AccountValidateRepository,
   ],
+  exports: [AccountSearcher],
 })
 export class AccountModule {}
