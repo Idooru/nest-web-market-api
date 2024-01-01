@@ -87,7 +87,7 @@ export class AccountV1Controller {
 
   @ApiOperation({
     summary: "withdraw",
-    description: "계좌에 일정 금액을 입금합니다.",
+    description: "계좌에 일정 금액을 출금합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Patch("/withdraw")
