@@ -9,6 +9,8 @@ import { AppController } from "./app.controller";
 import { LibraryModule } from "./common/lib/library.module";
 import { InquiryModule } from "./model/inquiry/inquiry.module";
 import { CartModule } from "./model/cart/cart.module";
+import { OrderModule } from "./model/order/order.module";
+import { AccountModule } from "./model/account/account.module";
 
 @Module({
   imports: [
@@ -19,7 +21,9 @@ import { CartModule } from "./model/cart/cart.module";
     ReviewModule,
     InquiryModule,
     CartModule,
+    OrderModule,
     LibraryModule,
+    AccountModule,
   ],
   controllers: [AppController],
   providers: [],
