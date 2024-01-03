@@ -21,7 +21,6 @@ import { ReviewUpdateService } from "./services/review-update.service";
 import { ReviewQueryRunnerProvider } from "./logic/transaction/review-query-runner.provider";
 import { ReviewTransaction } from "./logic/transaction/review.transaction";
 import { ReviewSearcher } from "./logic/review.searcher";
-import { ReviewRepositoryVO } from "./logic/transaction/review-repository.vo";
 import { ReviewSearchRepository } from "./repositories/review-search.repository";
 import { ReviewUtils } from "./logic/review.utils";
 import { ReviewIdValidatePipe } from "./pipe/exist/review-id-validate.pipe";
@@ -29,6 +28,7 @@ import { ReviewValidator } from "./logic/review.validator";
 import { ReviewValidateRepository } from "./repositories/review-validate.repository";
 import { DeleteReviewMediaMiddleware } from "../media/middleware/delete-review-media.middleware";
 import { ReviewV1AdminController } from "./controllers/v1/review-v1-admin.controller";
+import { Transactional } from "../../common/interfaces/initializer/transactional";
 
 @Module({
   imports: [
@@ -40,14 +40,9 @@ import { ReviewV1AdminController } from "./controllers/v1/review-v1-admin.contro
   ],
   controllers: [ReviewV1AdminController, ReviewV1ClientController],
   providers: [
-    {
-      provide: "ReviewMediaCookieKey",
-      useValue: reviewMediaCookieKey,
-    },
-    {
-      provide: "ReviewSelectProperty",
-      useValue: reviewSelectProperty,
-    },
+    { provide: "ReviewMediaCookieKey", useValue: reviewMediaCookieKey },
+    { provide: "ReviewSelectProperty", useValue: reviewSelectProperty },
+    { provide: Transactional, useClass: ReviewQueryRunnerProvider },
     ReviewSearcher,
     ReviewTransaction,
     ReviewFactoryService,
@@ -55,7 +50,6 @@ import { ReviewV1AdminController } from "./controllers/v1/review-v1-admin.contro
     ReviewUpdateRepository,
     ReviewQueryRunnerProvider,
     ReviewSearchRepository,
-    ReviewRepositoryVO,
     ReviewUtils,
     ReviewValidator,
     ReviewIdValidatePipe,

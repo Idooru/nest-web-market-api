@@ -24,7 +24,6 @@ import { InquiryUpdateRepository } from "./repositories/inquiry-update.repositor
 import { InquiryQueryRunnerProvider } from "./logic/transaction/inquiry-query-runner.provider";
 import { InquiryUtils } from "./logic/inquiry.utils";
 import { InquiryFactoryService } from "./services/inquiry-factory.service";
-import { InquiryRepositoryVO } from "./logic/transaction/inquiry-repository.vo";
 import { InquiryRequestIdValidatePipe } from "./pipe/exist/inquiry-request-id-validate.pipe";
 import { InquiryValidator } from "./logic/inquiry.validator";
 import { InquiryValidateRepository } from "./repositories/inquiry-validate.repository";
@@ -33,6 +32,7 @@ import { InquiryEventMapSetter } from "./logic/inquiry-event-map.setter";
 import { InquiryClientEventMiddleware } from "./middleware/inquiry-client-event.middleware";
 import { InquiryAdminEventMiddleware } from "./middleware/inquiry-admin-event.middleware";
 import { DeleteInquiryRequestMediaMiddleware } from "../media/middleware/delete-inquiry-request-media.middleware";
+import { Transactional } from "../../common/interfaces/initializer/transactional";
 
 @Module({
   imports: [
@@ -45,18 +45,10 @@ import { DeleteInquiryRequestMediaMiddleware } from "../media/middleware/delete-
   ],
   controllers: [InquiryV1ClientController, InquiryV1AdminController],
   providers: [
-    {
-      provide: "InquiryMediaCookieKey",
-      useValue: inquiryMediaCookieKey,
-    },
-    {
-      provide: "InquirySelectProperty",
-      useValue: inquirySelectProperty,
-    },
-    {
-      provide: "MailEventMap",
-      useValue: mailEventMap,
-    },
+    { provide: "InquiryMediaCookieKey", useValue: inquiryMediaCookieKey },
+    { provide: "InquirySelectProperty", useValue: inquirySelectProperty },
+    { provide: "MailEventMap", useValue: mailEventMap },
+    { provide: Transactional, useClass: InquiryQueryRunnerProvider },
     InquirySearcher,
     InquirySearchRepository,
     InquiryTransaction,
@@ -68,7 +60,6 @@ import { DeleteInquiryRequestMediaMiddleware } from "../media/middleware/delete-
     InquiryUpdateRepository,
     InquiryFactoryService,
     InquiryUtils,
-    InquiryRepositoryVO,
     InquiryRequestIdValidatePipe,
     InquiryValidator,
     InquiryValidateRepository,
