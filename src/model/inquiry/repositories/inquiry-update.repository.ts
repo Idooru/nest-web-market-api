@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { InquiryRepositoryVO } from "../logic/transaction/inquiry-repository.vo";
 import { CreateInquiryRequestDto } from "../dto/request/create-inquiry-request.dto";
 import { InquiryRequestEntity } from "../entities/inquiry-request.entity";
 import { InquiryRequestImageEntity } from "../../media/entities/inquiry-request-image.entity";
@@ -8,10 +7,14 @@ import { InquiryResponseImageEntity } from "../../media/entities/inquiry-respons
 import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
 import { InquiryResponseVideoEntity } from "../../media/entities/inquiry-response-video.entity";
 import { CreateInquiryResponseDto } from "../dto/response/create-inquiry-response.dto";
+import { Transactional } from "../../../common/interfaces/initializer/transactional";
+import { InquiryRepositoryPayload } from "../logic/transaction/inquiry-repository.payload";
 
 @Injectable()
 export class InquiryUpdateRepository {
-  constructor(private readonly queryRunner: InquiryRepositoryVO) {}
+  constructor(
+    private readonly transaction: Transactional<InquiryRepositoryPayload>,
+  ) {}
 
   // Transaction
   public async createInquiryRequest(
@@ -19,7 +22,7 @@ export class InquiryUpdateRepository {
   ): Promise<InquiryRequestEntity> {
     const { inquiryRequestBodyDto, product, client } = createInquiryRequestDto;
 
-    return await this.queryRunner.inquiryRequestRepository.save({
+    return await this.transaction.getRepository().inquiryRequest.save({
       ...inquiryRequestBodyDto,
       Product: product,
       inquiryRequestWritter: client,
@@ -32,9 +35,9 @@ export class InquiryUpdateRepository {
     inquiryRequest: InquiryRequestEntity,
   ): Promise<void> {
     inquiryRequestImage.InquiryRequest = inquiryRequest;
-    await this.queryRunner.inquiryRequestImageRepository.save(
-      inquiryRequestImage,
-    );
+    await this.transaction
+      .getRepository()
+      .inquiryRequestImage.save(inquiryRequestImage);
   }
 
   // Transaction
@@ -43,9 +46,9 @@ export class InquiryUpdateRepository {
     inquiryRequest: InquiryRequestEntity,
   ): Promise<void> {
     inquiryRequestVideo.InquiryRequest = inquiryRequest;
-    await this.queryRunner.inquiryRequestVideoRepository.save(
-      inquiryRequestVideo,
-    );
+    await this.transaction
+      .getRepository()
+      .inquiryRequestVideo.save(inquiryRequestVideo);
   }
 
   // Transaction
@@ -55,7 +58,7 @@ export class InquiryUpdateRepository {
     const { inquiryResponseBodyDto, inquiryRequest, admin } =
       createInquiryResponseDto;
 
-    return await this.queryRunner.inquiryResponseRepository.save({
+    return await this.transaction.getRepository().inquiryResponse.save({
       ...inquiryResponseBodyDto,
       InquiryRequest: inquiryRequest,
       inquiryResponseWritter: admin,
@@ -64,7 +67,7 @@ export class InquiryUpdateRepository {
 
   // Transaction
   public async modifyInquiryRequestAnswerState(id: string): Promise<void> {
-    await this.queryRunner.inquiryRequestRepository.update(id, {
+    await this.transaction.getRepository().inquiryRequest.update(id, {
       isAnswerd: true,
     });
   }
@@ -75,9 +78,9 @@ export class InquiryUpdateRepository {
     inquiryResponse: InquiryResponseEntity,
   ): Promise<void> {
     inquiryResponseImage.InquiryResponse = inquiryResponse;
-    await this.queryRunner.inquiryResponseImageRepository.save(
-      inquiryResponseImage,
-    );
+    await this.transaction
+      .getRepository()
+      .inquiryResponseImage.save(inquiryResponseImage);
   }
 
   // Transaction
@@ -86,8 +89,8 @@ export class InquiryUpdateRepository {
     inquiryResponse: InquiryResponseEntity,
   ): Promise<void> {
     inquiryResponseVideo.InquiryResponse = inquiryResponse;
-    await this.queryRunner.inquiryResponseVideoRepository.save(
-      inquiryResponseVideo,
-    );
+    await this.transaction
+      .getRepository()
+      .inquiryResponseVideo.save(inquiryResponseVideo);
   }
 }

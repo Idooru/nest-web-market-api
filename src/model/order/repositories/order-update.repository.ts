@@ -1,24 +1,28 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import { ProductEntity } from "../../product/entities/product.entity";
 import { CartEntity } from "../../cart/entities/cart.entity";
-import { OrderRepositoryVo } from "../logic/transaction/order-repository.vo";
 import { CreateOrderDto } from "../dto/create-order.dto";
 import { CreatePaymentDto } from "../dto/create-payment.dto";
 import { OrderEntity } from "../entities/order.entity";
-import { MoneyTransactionDto } from "../../account/dtos/money-transaction.dto";
 import { AccountEntity } from "../../account/entities/account.entity";
 import { QueryFailedError } from "typeorm";
 import { loggerFactory } from "../../../common/functions/logger.factory";
 import { DepositAdminBalanceDto } from "../dto/deposit-admin-balance.dto";
+import { Transactional } from "../../../common/interfaces/initializer/transactional";
+import { OrderRepositoryPayload } from "../logic/transaction/order-repository.payload";
+import { MoneyTransactionDto } from "../../account/dtos/money-transaction.dto";
 
 @Injectable()
 export class OrderUpdateRepository {
-  constructor(private readonly queryRunner: OrderRepositoryVo) {}
+  constructor(
+    private readonly transaction: Transactional<OrderRepositoryPayload>,
+  ) {}
 
   // Transaction
   public async deleteAllCartsOnTransaction(id: string): Promise<void> {
-    await this.queryRunner.cartRepository
-      .createQueryBuilder()
+    await this.transaction
+      .getRepository()
+      .cart.createQueryBuilder()
       .delete()
       .from(CartEntity)
       .where("clientId = :id", { id })
@@ -31,8 +35,9 @@ export class OrderUpdateRepository {
     quantity: number;
   }): Promise<void> {
     const { product, quantity } = productQuantity;
-    await this.queryRunner.productRepository
-      .createQueryBuilder()
+    await this.transaction
+      .getRepository()
+      .product.createQueryBuilder()
       .update(ProductEntity)
       .set({ quantity: () => `quantity - ${quantity}` })
       .where("id = :id", { id: product.id })
@@ -46,7 +51,7 @@ export class OrderUpdateRepository {
     const { orderBodyDto, clientUser, totalPrice } = createOrderDto;
     const { deliveryOption, deliveryAddress } = orderBodyDto;
 
-    return await this.queryRunner.orderRepository.save({
+    return await this.transaction.getRepository().order.save({
       deliveryOption,
       deliveryAddress,
       totalPrice,
@@ -62,7 +67,7 @@ export class OrderUpdateRepository {
     const { product, quantity } = productQuantity;
     const totalPrice = product.price * quantity;
 
-    await this.queryRunner.paymentRepository.save({
+    await this.transaction.getRepository().payment.save({
       totalPrice,
       quantity,
       ClientUser: clientUser,
@@ -74,8 +79,9 @@ export class OrderUpdateRepository {
   // Transaction
   public async withdrawClientBalance(withdrawDto: MoneyTransactionDto) {
     const { accountId, balance } = withdrawDto;
-    await this.queryRunner.accountRepository
-      .createQueryBuilder()
+    await this.transaction
+      .getRepository()
+      .account.createQueryBuilder()
       .update(AccountEntity)
       .set({ balance: () => `balance - ${balance}` })
       .where("id = :id", { id: accountId })
@@ -88,7 +94,7 @@ export class OrderUpdateRepository {
         }
       });
 
-    return await this.queryRunner.accountRepository.findOneBy({
+    return await this.transaction.getRepository().account.findOneBy({
       id: accountId,
     });
   }
@@ -100,8 +106,9 @@ export class OrderUpdateRepository {
     const { userId, balance, totalPrice } = depositDto;
     const depositBalance = balance + totalPrice;
 
-    await this.queryRunner.accountRepository
-      .createQueryBuilder()
+    await this.transaction
+      .getRepository()
+      .account.createQueryBuilder()
       .update(AccountEntity)
       .set({ balance: depositBalance })
       .where("userId = :userId", { userId })

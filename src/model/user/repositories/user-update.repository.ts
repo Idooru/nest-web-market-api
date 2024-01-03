@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { UserRepositoryVO } from "../logic/transaction/user-repository.vo";
+import { UserRepositoryPayload } from "../logic/transaction/user-repository.payload";
 import { UserEntity } from "../entities/user.entity";
 import {
   CreateUserAuthDto,
@@ -13,11 +13,12 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { UserProfileEntity } from "../entities/user-profile.entity";
 import { UserAuthEntity } from "../entities/user-auth.entity";
+import { Transactional } from "../../../common/interfaces/initializer/transactional";
 
 @Injectable()
 export class UserUpdateRepository {
   constructor(
-    private readonly queryRunner: UserRepositoryVO,
+    private readonly transaction: Transactional<UserRepositoryPayload>,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(UserProfileEntity)
@@ -27,81 +28,90 @@ export class UserUpdateRepository {
   ) {}
 
   // Transaction
-  async createUserEntity(role: ["client", "admin"]): Promise<UserEntity> {
-    return await this.queryRunner.userRepository.save({ role });
+  public async createUserEntity(
+    role: ["client", "admin"],
+  ): Promise<UserEntity> {
+    return await this.transaction.getRepository().user.save({ role });
   }
 
   // Transaction
-  async createClientUser(user: UserEntity): Promise<void> {
-    await this.queryRunner.clientUserRepository.save({ User: user });
+  public async createClientUser(user: UserEntity): Promise<void> {
+    await this.transaction.getRepository().clientUser.save({ User: user });
   }
 
   // Transaction
-  async createAdminUser(user: UserEntity): Promise<void> {
-    await this.queryRunner.adminUserRepository.save({ User: user });
+  public async createAdminUser(user: UserEntity): Promise<void> {
+    await this.transaction.getRepository().adminUser.save({ User: user });
   }
 
   // Transaction
-  async createUserProfile(
+  public async createUserProfile(
     createUserProfileDto: CreateUserProfileDto,
   ): Promise<void> {
-    await this.queryRunner.userProfileRepository.save({
+    await this.transaction.getRepository().userProfile.save({
       ...createUserProfileDto,
     });
   }
 
   // Transaction
-  async createUserAuth(createUserAuthDto: CreateUserAuthDto): Promise<void> {
-    await this.queryRunner.userAuthRepository.save({ ...createUserAuthDto });
+  public async createUserAuth(
+    createUserAuthDto: CreateUserAuthDto,
+  ): Promise<void> {
+    await this.transaction
+      .getRepository()
+      .userAuth.save({ ...createUserAuthDto });
   }
 
   // Transaction
-  async modifyUserProfile(
+  public async modifyUserProfile(
     modifyUserProfileDto: ModifyUserProfileDto,
     id: string,
   ): Promise<void> {
-    await this.queryRunner.userProfileRepository.update(id, {
+    await this.transaction.getRepository().userProfile.update(id, {
       ...modifyUserProfileDto,
     });
   }
 
   // Transaction
-  async modifyUserAuth(
+  public async modifyUserAuth(
     modifyUserAuthDto: ModifyUserAuthDto,
     id: string,
   ): Promise<void> {
-    await this.queryRunner.userAuthRepository.update(id, {
+    await this.transaction.getRepository().userAuth.update(id, {
       ...modifyUserAuthDto,
     });
   }
 
   // General
-  async modifyUserEmail(email: string, id: string): Promise<void> {
+  public async modifyUserEmail(email: string, id: string): Promise<void> {
     await this.userAuthRepository.update(id, { email });
   }
 
   // General
-  async modifyUserNickname(nickname: string, id: string): Promise<void> {
+  public async modifyUserNickname(nickname: string, id: string): Promise<void> {
     await this.userAuthRepository.update(id, { nickname });
   }
 
   // General
-  async modifyUserPhonenumber(phonenumber: string, id: string): Promise<void> {
+  public async modifyUserPhonenumber(
+    phonenumber: string,
+    id: string,
+  ): Promise<void> {
     await this.userProfileRepository.update(id, { phonenumber });
   }
 
   // General
-  async modifyUserPassword(password: string, id: string): Promise<void> {
+  public async modifyUserPassword(password: string, id: string): Promise<void> {
     await this.userAuthRepository.update(id, { password });
   }
 
   // General
-  async modifyUserAddress(address: string, id: string): Promise<void> {
+  public async modifyUserAddress(address: string, id: string): Promise<void> {
     await this.userProfileRepository.update(id, { address });
   }
 
   // General
-  async deleteUser(id: string): Promise<void> {
+  public async deleteUser(id: string): Promise<void> {
     await this.userRepository.delete({ id });
   }
 }
