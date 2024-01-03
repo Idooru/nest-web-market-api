@@ -1,35 +1,38 @@
 import { DataSource, QueryRunner } from "typeorm";
-import { UserRepositoryPayload, UserRepositoryVO } from "./user-repository.vo";
+import { UserRepositoryPayload } from "./user-repository.payload";
 import { UserEntity } from "../../entities/user.entity";
 import { AdminUserEntity } from "../../entities/admin-user.entity";
 import { ClientUserEntity } from "../../entities/client-user.entity";
 import { UserProfileEntity } from "../../entities/user-profile.entity";
 import { UserAuthEntity } from "../../entities/user-auth.entity";
 import { Injectable } from "@nestjs/common";
+import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 
 @Injectable()
-export class UserQueryRunnerProvider {
-  constructor(
-    private readonly dataSource: DataSource,
-    private readonly userRepositoryVO: UserRepositoryVO,
-  ) {}
+export class UserQueryRunnerProvider extends Transactional<UserRepositoryPayload> {
+  private payload: UserRepositoryPayload;
 
-  async init(): Promise<QueryRunner> {
+  constructor(private readonly dataSource: DataSource) {
+    super();
+  }
+
+  public async init(): Promise<QueryRunner> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
-    const repositoryPayload: UserRepositoryPayload = {
-      userRepository: queryRunner.manager.getRepository(UserEntity),
-      adminUserRepository: queryRunner.manager.getRepository(AdminUserEntity),
-      clientUserRepository: queryRunner.manager.getRepository(ClientUserEntity),
-      userProfileRepository:
-        queryRunner.manager.getRepository(UserProfileEntity),
-      userAuthRepository: queryRunner.manager.getRepository(UserAuthEntity),
+    this.payload = {
+      user: queryRunner.manager.getRepository(UserEntity),
+      adminUser: queryRunner.manager.getRepository(AdminUserEntity),
+      clientUser: queryRunner.manager.getRepository(ClientUserEntity),
+      userProfile: queryRunner.manager.getRepository(UserProfileEntity),
+      userAuth: queryRunner.manager.getRepository(UserAuthEntity),
     };
 
-    this.userRepositoryVO.setRepositoryPayload(repositoryPayload);
-
     return queryRunner;
+  }
+
+  public getRepository(): UserRepositoryPayload {
+    return this.payload;
   }
 }

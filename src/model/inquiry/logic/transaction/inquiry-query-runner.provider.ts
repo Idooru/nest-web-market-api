@@ -1,50 +1,48 @@
 import { Injectable } from "@nestjs/common";
 import { DataSource, QueryRunner } from "typeorm";
-import {
-  InquiryRepositoryPayload,
-  InquiryRepositoryVO,
-} from "./inquiry-repository.vo";
+import { InquiryRepositoryPayload } from "./inquiry-repository.payload";
 import { InquiryRequestEntity } from "../../entities/inquiry-request.entity";
 import { InquiryRequestImageEntity } from "../../../media/entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "../../../media/entities/inquiry-request-video.entity";
 import { InquiryResponseEntity } from "../../entities/inquiry-response.entity";
 import { InquiryResponseImageEntity } from "../../../media/entities/inquiry-response-image.entity";
 import { InquiryResponseVideoEntity } from "../../../media/entities/inquiry-response-video.entity";
+import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 
 @Injectable()
-export class InquiryQueryRunnerProvider {
-  constructor(
-    private readonly dataSource: DataSource,
-    private readonly inquiryRepositoryVO: InquiryRepositoryVO,
-  ) {}
+export class InquiryQueryRunnerProvider extends Transactional<InquiryRepositoryPayload> {
+  private payload: InquiryRepositoryPayload;
 
-  async init(): Promise<QueryRunner> {
+  constructor(private readonly dataSource: DataSource) {
+    super();
+  }
+
+  public async init(): Promise<QueryRunner> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
-    const repositoryPayload: InquiryRepositoryPayload = {
-      inquiryRequestRepository:
-        queryRunner.manager.getRepository(InquiryRequestEntity),
-      inquiryRequestImageRepository: queryRunner.manager.getRepository(
+    this.payload = {
+      inquiryRequest: queryRunner.manager.getRepository(InquiryRequestEntity),
+      inquiryRequestImage: queryRunner.manager.getRepository(
         InquiryRequestImageEntity,
       ),
-      inquiryRequestVideoRepository: queryRunner.manager.getRepository(
+      inquiryRequestVideo: queryRunner.manager.getRepository(
         InquiryRequestVideoEntity,
       ),
-      inquiryResponseRepository: queryRunner.manager.getRepository(
-        InquiryResponseEntity,
-      ),
-      inquiryResponseImageRepository: queryRunner.manager.getRepository(
+      inquiryResponse: queryRunner.manager.getRepository(InquiryResponseEntity),
+      inquiryResponseImage: queryRunner.manager.getRepository(
         InquiryResponseImageEntity,
       ),
-      inquiryResponseVideoRepository: queryRunner.manager.getRepository(
+      inquiryResponseVideo: queryRunner.manager.getRepository(
         InquiryResponseVideoEntity,
       ),
     };
 
-    this.inquiryRepositoryVO.setRepositoryPayload(repositoryPayload);
-
     return queryRunner;
+  }
+
+  public getRepository(): InquiryRepositoryPayload {
+    return this.payload;
   }
 }

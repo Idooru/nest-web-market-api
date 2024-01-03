@@ -1,37 +1,36 @@
 import { Injectable } from "@nestjs/common";
 import { DataSource, QueryRunner } from "typeorm";
-import {
-  ReviewRepositoryPayload,
-  ReviewRepositoryVO,
-} from "./review-repository.vo";
+import { ReviewRepositoryPayload } from "./review-repository.payload";
 import { ReviewEntity } from "../../entities/review.entity";
 import { StarRateEntity } from "../../entities/star-rate.entity";
 import { ReviewImageEntity } from "../../../media/entities/review-image.entity";
 import { ReviewVideoEntity } from "../../../media/entities/review-video.entity";
+import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 
 @Injectable()
-export class ReviewQueryRunnerProvider {
-  constructor(
-    private readonly dataSourece: DataSource,
-    private readonly reviewRepositoryVO: ReviewRepositoryVO,
-  ) {}
+export class ReviewQueryRunnerProvider extends Transactional<ReviewRepositoryPayload> {
+  private payload: ReviewRepositoryPayload;
 
-  async init(): Promise<QueryRunner> {
+  constructor(private readonly dataSourece: DataSource) {
+    super();
+  }
+
+  public async init(): Promise<QueryRunner> {
     const queryRunner = this.dataSourece.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
-    const repositoryPayload: ReviewRepositoryPayload = {
-      reviewRepository: queryRunner.manager.getRepository(ReviewEntity),
-      starRateRepository: queryRunner.manager.getRepository(StarRateEntity),
-      reviewImageRepository:
-        queryRunner.manager.getRepository(ReviewImageEntity),
-      reviewVideoRepository:
-        queryRunner.manager.getRepository(ReviewVideoEntity),
+    this.payload = {
+      review: queryRunner.manager.getRepository(ReviewEntity),
+      starRate: queryRunner.manager.getRepository(StarRateEntity),
+      reviewImage: queryRunner.manager.getRepository(ReviewImageEntity),
+      reviewVideo: queryRunner.manager.getRepository(ReviewVideoEntity),
     };
 
-    this.reviewRepositoryVO.setRepositoryPayload(repositoryPayload);
-
     return queryRunner;
+  }
+
+  public getRepository(): ReviewRepositoryPayload {
+    return this.payload;
   }
 }

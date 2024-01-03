@@ -1,34 +1,34 @@
 import { Injectable } from "@nestjs/common";
 import { DataSource, QueryRunner } from "typeorm";
-import {
-  ProductRepositoryPayload,
-  ProductRepositoryVO,
-} from "./product-repository.vo";
+import { ProductRepositoryPayload } from "./product-repository.payload";
 import { ProductEntity } from "../../entities/product.entity";
 import { StarRateEntity } from "../../../review/entities/star-rate.entity";
 import { ProductImageEntity } from "../../../media/entities/product-image.entity";
+import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 
 @Injectable()
-export class ProductQueryRunnerProvider {
-  constructor(
-    private readonly dataSource: DataSource,
-    private readonly productRepositoryVO: ProductRepositoryVO,
-  ) {}
+export class ProductQueryRunnerProvider extends Transactional<ProductRepositoryPayload> {
+  private payload: ProductRepositoryPayload;
 
-  async init(): Promise<QueryRunner> {
+  constructor(private readonly dataSource: DataSource) {
+    super();
+  }
+
+  public async init(): Promise<QueryRunner> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
-    const repositoryPayload: ProductRepositoryPayload = {
-      productRepository: queryRunner.manager.getRepository(ProductEntity),
-      starRateRepository: queryRunner.manager.getRepository(StarRateEntity),
-      productImageRepository:
-        queryRunner.manager.getRepository(ProductImageEntity),
+    this.payload = {
+      product: queryRunner.manager.getRepository(ProductEntity),
+      starRate: queryRunner.manager.getRepository(StarRateEntity),
+      productImage: queryRunner.manager.getRepository(ProductImageEntity),
     };
 
-    this.productRepositoryVO.setRepositoryPayload(repositoryPayload);
-
     return queryRunner;
+  }
+
+  public getRepository(): ProductRepositoryPayload {
+    return this.payload;
   }
 }
