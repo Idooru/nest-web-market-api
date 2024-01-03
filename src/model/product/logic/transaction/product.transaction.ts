@@ -7,13 +7,14 @@ import { MediaSearcher } from "src/model/media/logic/media.searcher";
 import { ModifyProductDto } from "../../dto/modify-product.dto";
 import { ProductSearcher } from "../product.searcher";
 import { MediaCookieDto } from "../../../media/dto/media-cookie.dto";
-import { ProductQueryRunnerProvider } from "./product-query-runner.provider";
 import { TransactionErrorHandler } from "../../../../common/lib/error-handler/transaction-error.handler";
+import { Transactional } from "../../../../common/interfaces/initializer/transactional";
+import { ProductRepositoryPayload } from "./product-repository.payload";
 
 @Injectable()
 export class ProductTransaction {
   constructor(
-    private readonly productQueryRunnerProvider: ProductQueryRunnerProvider,
+    private readonly transaction: Transactional<ProductRepositoryPayload>,
     private readonly productSearcher: ProductSearcher,
     private readonly userSearcher: UserSearcher,
     private readonly mediaSearcher: MediaSearcher,
@@ -30,7 +31,7 @@ export class ProductTransaction {
       this.mediaSearcher.findProductImagesWithId(productImgCookies),
     ]);
 
-    const queryRunner = await this.productQueryRunnerProvider.init();
+    const queryRunner = await this.transaction.init();
 
     try {
       const product = await this.productUpdateService.createProduct({
@@ -66,7 +67,7 @@ export class ProductTransaction {
       this.mediaSearcher.findProductImagesWithId(productImgCookies),
     ]);
 
-    const queryRunner = await this.productQueryRunnerProvider.init();
+    const queryRunner = await this.transaction.init();
 
     try {
       await this.productUpdateService.modifyProduct({
@@ -101,7 +102,7 @@ export class ProductTransaction {
       this.mediaSearcher.findProductImagesWithId(productImgCookies),
     ]);
 
-    const queryRunner = await this.productQueryRunnerProvider.init();
+    const queryRunner = await this.transaction.init();
 
     try {
       const modifyProductImage =

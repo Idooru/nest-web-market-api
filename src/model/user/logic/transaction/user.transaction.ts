@@ -2,19 +2,20 @@ import { Injectable } from "@nestjs/common";
 import { RegisterUserDto } from "../../dtos/register-user.dto";
 import { ModifyUserDto } from "../../dtos/modify-user.dto";
 import { UserUpdateService } from "../../services/user-update.service";
-import { UserQueryRunnerProvider } from "./user-query-runner.provider";
 import { TransactionErrorHandler } from "../../../../common/lib/error-handler/transaction-error.handler";
+import { Transactional } from "../../../../common/interfaces/initializer/transactional";
+import { UserRepositoryPayload } from "./user-repository.payload";
 
 @Injectable()
 export class UserTransaction {
   constructor(
-    private readonly userQueryRunnerProvider: UserQueryRunnerProvider,
+    private readonly transaction: Transactional<UserRepositoryPayload>,
     private readonly userUpdateService: UserUpdateService,
     private readonly transactionErrorHandler: TransactionErrorHandler,
   ) {}
 
   async register(registerUserDto: RegisterUserDto): Promise<void> {
-    const queryRunner = await this.userQueryRunnerProvider.init();
+    const queryRunner = await this.transaction.init();
 
     try {
       const user = await this.userUpdateService.createUserEntity(
@@ -33,7 +34,7 @@ export class UserTransaction {
   }
 
   async modifyUser(modifyUserDto: ModifyUserDto, id: string): Promise<void> {
-    const queryRunner = await this.userQueryRunnerProvider.init();
+    const queryRunner = await this.transaction.init();
 
     try {
       await this.userUpdateService.modifyUser(modifyUserDto, id);

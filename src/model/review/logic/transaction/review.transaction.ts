@@ -12,11 +12,13 @@ import { DeleteReviewDto } from "../../dto/delete-review.dto";
 import { ProductSearcher } from "../../../product/logic/product.searcher";
 import { TransactionErrorHandler } from "../../../../common/lib/error-handler/transaction-error.handler";
 import { MediaUtils } from "../../../media/logic/media.utils";
+import { Transactional } from "../../../../common/interfaces/initializer/transactional";
+import { ReviewRepositoryPayload } from "./review-repository.payload";
 
 @Injectable()
 export class ReviewTransaction {
   constructor(
-    private readonly reviewQueryRunnerProvider: ReviewQueryRunnerProvider,
+    private readonly transaction: Transactional<ReviewRepositoryPayload>,
     private readonly reviewSearcher: ReviewSearcher,
     private readonly mediaSearcher: MediaSearcher,
     private readonly productSearcher: ProductSearcher,
@@ -51,7 +53,7 @@ export class ReviewTransaction {
       this.reviewSearcher.findStarRateWithId(product.StarRate.id),
     ]);
 
-    const queryRunner = await this.reviewQueryRunnerProvider.init();
+    const queryRunner = await this.transaction.init();
 
     try {
       const review = await this.reviewUpdateService.createReview({
@@ -114,7 +116,7 @@ export class ReviewTransaction {
       this.reviewSearcher.findStarRateWithId(product.StarRate.id),
     ]);
 
-    const queryRunner = await this.reviewQueryRunnerProvider.init();
+    const queryRunner = await this.transaction.init();
 
     try {
       await this.reviewUpdateService.modifyReview({ reviewBodyDto, review });
@@ -169,7 +171,7 @@ export class ReviewTransaction {
       product.StarRate.id,
     );
 
-    const queryRunner = await this.reviewQueryRunnerProvider.init();
+    const queryRunner = await this.transaction.init();
 
     try {
       await Promise.all([

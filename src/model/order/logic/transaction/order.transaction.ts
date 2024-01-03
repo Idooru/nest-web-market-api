@@ -6,16 +6,17 @@ import {
 import { CartSearcher } from "../../../cart/logic/cart.searcher";
 import { UserSearcher } from "../../../user/logic/user.searcher";
 import { TransactionErrorHandler } from "../../../../common/lib/error-handler/transaction-error.handler";
-import { OrderQueryRunnerProvider } from "./order-query-runner.provider";
 import { OrderBodyDto } from "../../dto/order-body.dto";
 import { OrderUpdateService } from "../../services/order-update.service";
 import { loggerFactory } from "../../../../common/functions/logger.factory";
 import { AccountSearcher } from "../../../account/logic/account.searcher";
+import { Transactional } from "../../../../common/interfaces/initializer/transactional";
+import { OrderRepositoryPayload } from "./order-repository.payload";
 
 @Injectable()
 export class OrderTransaction {
   constructor(
-    private readonly orderQueryRunnerProvider: OrderQueryRunnerProvider,
+    private readonly transaction: Transactional<OrderRepositoryPayload>,
     private readonly userSearcher: UserSearcher,
     private readonly cartSearcher: CartSearcher,
     private readonly accountSearcher: AccountSearcher,
@@ -59,7 +60,7 @@ export class OrderTransaction {
       quantity: cart.quantity,
     }));
 
-    const queryRunner = await this.orderQueryRunnerProvider.init();
+    const queryRunner = await this.transaction.init();
 
     try {
       await Promise.all([
