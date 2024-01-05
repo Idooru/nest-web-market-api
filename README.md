@@ -174,3 +174,7 @@ Nest is [MIT licensed](LICENSE).
 6. repository.vo, query-runner.provider에 공통으로 들어있는 메서드로 인터페이스 만들기 // 완료 
 7. query-runner.provider -> query-runner.initializer로 이름 바꾸기 // 완료
 8. .transaction 로직 파일에 있는 try catch finally문을 프로미스에서 처리하게 바꿔보기 
+9. 상품 검색을할 때 전체 상품을 다 가져오는것이 아닌 몇개씩 끊어서 페이징 처리 해보기
+10. 상품을 카테고리 별로 가져오는 api 추가하기
+11. 상품, 사용자 프로필을 가져올 때 redis적용해보기
+12. 9 ~ 11까지 모두 수행하면 aws 배포 해보기
