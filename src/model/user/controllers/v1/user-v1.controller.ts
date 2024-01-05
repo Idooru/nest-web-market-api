@@ -30,7 +30,7 @@ import { ModifyUserNicknameDto } from "../../dtos/modify-user-nickname.dto";
 import { ModifyUserPhonenumberDto } from "../../dtos/modify-user-phonenumber.dto";
 import { ModifyUserPasswordDto } from "../../dtos/modify-user-password.dto";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { UserTransaction } from "../../logic/transaction/user.transaction";
+import { UserTransactionExecutor } from "../../logic/transaction/user-transaction.executor";
 import { UserSecurity } from "../../logic/user.security";
 import { UserSearcher } from "../../logic/user.searcher";
 import { UserUpdateService } from "../../services/user-update.service";
@@ -48,7 +48,7 @@ import { ModifyUserAddressDto } from "../../dtos/modify-user-address.dto";
 @Controller({ path: "/user", version: "1" })
 export class UserV1Controller {
   constructor(
-    private readonly userTransaction: UserTransaction,
+    private readonly userTransaction: UserTransactionExecutor,
     private readonly userSearcher: UserSearcher,
     private readonly userSecurity: UserSecurity,
     private readonly userUpdateService: UserUpdateService,
@@ -167,7 +167,10 @@ export class UserV1Controller {
     modifyUserDto: ModifyUserDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userTransaction.modifyUser(modifyUserDto, jwtPayload.userId);
+    await this.userTransaction.modifyUser({
+      modifyUserDto,
+      id: jwtPayload.userId,
+    });
 
     return {
       statusCode: 201,

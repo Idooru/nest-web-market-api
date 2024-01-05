@@ -29,7 +29,7 @@ import { ModifyProductCategoryDto } from "../../dto/modify-product-category.dto"
 import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { JsonClearCookiesInterface } from "src/common/interceptors/interface/json-clear-cookies.interface";
-import { ProductTransaction } from "../../logic/transaction/product.transaction";
+import { ProductTransactionExecutor } from "../../logic/transaction/product-transaction.executor";
 import { ProductSearcher } from "../../logic/product.searcher";
 import { ProductBodyDto } from "../../dto/product-body.dto";
 import { ProductUpdateService } from "../../services/product-update.service";
@@ -43,7 +43,7 @@ import { ProductIdValidatePipe } from "../../pipe/exist/product-id-validate.pipe
 export class ProductV1AdminController {
   constructor(
     private readonly productSearcher: ProductSearcher,
-    private readonly productTransaction: ProductTransaction,
+    private readonly productTransaction: ProductTransactionExecutor,
     private readonly productUpdateService: ProductUpdateService,
   ) {}
   @ApiOperation({
@@ -129,7 +129,7 @@ export class ProductV1AdminController {
     productImgCookies: MediaCookieDto[],
     @Param("id", ProductIdValidatePipe) id: string,
   ): Promise<JsonClearCookiesInterface> {
-    await this.productTransaction.modifyProductImage(id, productImgCookies);
+    await this.productTransaction.modifyProductImage({ id, productImgCookies });
 
     return {
       statusCode: 201,

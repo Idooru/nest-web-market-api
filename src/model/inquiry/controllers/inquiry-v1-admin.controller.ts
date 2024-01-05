@@ -17,7 +17,7 @@ import { MediaCookieDto } from "src/model/media/dto/media-cookie.dto";
 import { InquiryResponseBodyDto } from "../dto/response/inquiry-response-body.dto";
 import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { InquiryTransaction } from "../logic/transaction/inquiry.transaction";
+import { InquiryTransactionExecutor } from "../logic/transaction/inquiry-transaction.executor";
 import { InquiryRequestIdValidatePipe } from "../pipe/exist/inquiry-request-id-validate.pipe";
 import { InquiryRequesterIdValidatePipe } from "../pipe/exist/inquiry-requester-id-validate.pipe";
 
@@ -26,7 +26,9 @@ import { InquiryRequesterIdValidatePipe } from "../pipe/exist/inquiry-requester-
 @UseGuards(IsLoginGuard)
 @Controller({ path: "admin/inquiry", version: "1" })
 export class InquiryV1AdminController {
-  constructor(private readonly inquiryTransaction: InquiryTransaction) {}
+  constructor(
+    private readonly inquiryTransaction: InquiryTransactionExecutor,
+  ) {}
 
   @ApiOperation({
     summary: "create inquiry response",

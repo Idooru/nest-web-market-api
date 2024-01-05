@@ -17,7 +17,7 @@ import { MediaCookieDto } from "src/model/media/dto/media-cookie.dto";
 import { InquiryRequestBodyDto } from "../dto/request/inquiry-request-body.dto";
 import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { InquiryTransaction } from "../logic/transaction/inquiry.transaction";
+import { InquiryTransactionExecutor } from "../logic/transaction/inquiry-transaction.executor";
 import { ProductIdValidatePipe } from "../../product/pipe/exist/product-id-validate.pipe";
 
 @ApiTags("v1 고객 Inquiry API")
@@ -25,7 +25,9 @@ import { ProductIdValidatePipe } from "../../product/pipe/exist/product-id-valid
 @UseGuards(IsLoginGuard)
 @Controller({ path: "/client/inquiry", version: "1" })
 export class InquiryV1ClientController {
-  constructor(private readonly inquiryTransaction: InquiryTransaction) {}
+  constructor(
+    private readonly inquiryTransaction: InquiryTransactionExecutor,
+  ) {}
 
   @ApiOperation({
     summary: "create inquiry reqeust",

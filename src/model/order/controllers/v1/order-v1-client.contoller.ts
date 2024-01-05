@@ -13,14 +13,14 @@ import { JwtAccessTokenPayload } from "../../../auth/jwt/jwt-access-token-payloa
 import { IsClientGuard } from "../../../../common/guards/authenticate/is-client.guard";
 import { IsLoginGuard } from "../../../../common/guards/authenticate/is-login.guard";
 import { OrderBodyDto } from "../../dto/order-body.dto";
-import { OrderTransaction } from "../../logic/transaction/order.transaction";
+import { OrderTransactionExecutor } from "../../logic/transaction/order-transaction.executor";
 
 @ApiTags("v1 고객 Order API")
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)
 @Controller({ path: "/client/order", version: "1" })
 export class OrderV1ClientContoller {
-  constructor(private readonly orderTransaction: OrderTransaction) {}
+  constructor(private readonly orderTransaction: OrderTransactionExecutor) {}
 
   @ApiOperation({})
   @UseInterceptors(JsonGeneralInterceptor)

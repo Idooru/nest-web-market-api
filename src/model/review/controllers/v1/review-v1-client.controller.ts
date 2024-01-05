@@ -21,7 +21,7 @@ import { ReviewBodyDto } from "../../dto/review-body.dto";
 import { MediaCookieDto } from "src/model/media/dto/media-cookie.dto";
 import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { ReviewTransaction } from "../../logic/transaction/review.transaction";
+import { ReviewTransactionExecutor } from "../../logic/transaction/review-transaction.executor";
 import { ProductIdValidatePipe } from "../../../product/pipe/exist/product-id-validate.pipe";
 import { ReviewIdValidatePipe } from "../../pipe/exist/review-id-validate.pipe";
 
@@ -30,7 +30,7 @@ import { ReviewIdValidatePipe } from "../../pipe/exist/review-id-validate.pipe";
 @UseGuards(IsLoginGuard)
 @Controller({ path: "client/review", version: "1" })
 export class ReviewV1ClientController {
-  constructor(private readonly reviewTransaction: ReviewTransaction) {}
+  constructor(private readonly reviewTransaction: ReviewTransactionExecutor) {}
 
   @ApiOperation({
     summary: "create review",
