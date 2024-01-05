@@ -21,7 +21,7 @@ import { InquiryUpdateService } from "./services/inquiry-update.service";
 import { InquirySearchRepository } from "./repositories/inquiry-search.repository";
 import { InquiryTransaction } from "./logic/transaction/inquiry.transaction";
 import { InquiryUpdateRepository } from "./repositories/inquiry-update.repository";
-import { InquiryQueryRunnerProvider } from "./logic/transaction/inquiry-query-runner.provider";
+import { InquiryTransactionInitializer } from "./logic/transaction/inquiry-transaction.initializer";
 import { InquiryUtils } from "./logic/inquiry.utils";
 import { InquiryFactoryService } from "./services/inquiry-factory.service";
 import { InquiryRequestIdValidatePipe } from "./pipe/exist/inquiry-request-id-validate.pipe";
@@ -48,14 +48,14 @@ import { Transactional } from "../../common/interfaces/initializer/transactional
     { provide: "InquiryMediaCookieKey", useValue: inquiryMediaCookieKey },
     { provide: "InquirySelectProperty", useValue: inquirySelectProperty },
     { provide: "MailEventMap", useValue: mailEventMap },
-    { provide: Transactional, useClass: InquiryQueryRunnerProvider },
+    { provide: Transactional, useClass: InquiryTransactionInitializer },
     InquirySearcher,
     InquirySearchRepository,
     InquiryTransaction,
     InquiryEventMapSetter,
     InquiryClientEventMiddleware,
     InquiryAdminEventMiddleware,
-    InquiryQueryRunnerProvider,
+    InquiryTransactionInitializer,
     InquiryUpdateService,
     InquiryUpdateRepository,
     InquiryFactoryService,

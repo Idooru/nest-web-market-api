@@ -24,7 +24,7 @@ import { UserSecurity } from "./logic/user.security";
 import { UserUpdateRepository } from "./repositories/user-update.repository";
 import { UserSearchRepository } from "./repositories/user-search.repository";
 import { UserUpdateService } from "./services/user-update.service";
-import { UserQueryRunnerProvider } from "./logic/transaction/user-query-runner.provider";
+import { UserTransactionInitializer } from "./logic/transaction/user-transaction.initializer";
 import { UserValidateRepository } from "./repositories/user-validate.repository";
 import { UserValidator } from "./logic/user.validator";
 import { UserRegisterEventMiddleware } from "./middleware/user-register-event.middleware";
@@ -51,14 +51,14 @@ import { Transactional } from "../../common/interfaces/initializer/transactional
   providers: [
     { provide: "UserSelectProperty", useValue: userSelectProperty },
     { provide: "MailEventMap", useValue: mailEventMap },
-    { provide: Transactional, useClass: UserQueryRunnerProvider },
+    { provide: Transactional, useClass: UserTransactionInitializer },
     UserSearcher,
     UserValidator,
     UserSecurity,
     UserTransaction,
     UserEventMapSetter,
     UserRegisterEventMiddleware,
-    UserQueryRunnerProvider,
+    UserTransactionInitializer,
     UserUpdateService,
     UserSearchRepository,
     UserUpdateRepository,

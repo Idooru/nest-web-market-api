@@ -10,7 +10,7 @@ import { InquiryResponseVideoEntity } from "../../../media/entities/inquiry-resp
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 
 @Injectable()
-export class InquiryQueryRunnerProvider extends Transactional<InquiryRepositoryPayload> {
+export class InquiryTransactionInitializer extends Transactional<InquiryRepositoryPayload> {
   private payload: InquiryRepositoryPayload;
 
   constructor(private readonly dataSource: DataSource) {

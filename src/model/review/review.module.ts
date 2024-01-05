@@ -18,7 +18,7 @@ import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media
 import { ReviewFactoryService } from "./services/review-factory.service";
 import { ReviewUpdateRepository } from "./repositories/review-update.repository";
 import { ReviewUpdateService } from "./services/review-update.service";
-import { ReviewQueryRunnerProvider } from "./logic/transaction/review-query-runner.provider";
+import { ReviewTransactionInitializer } from "./logic/transaction/review-transaction.initializer";
 import { ReviewTransaction } from "./logic/transaction/review.transaction";
 import { ReviewSearcher } from "./logic/review.searcher";
 import { ReviewSearchRepository } from "./repositories/review-search.repository";
@@ -42,13 +42,13 @@ import { Transactional } from "../../common/interfaces/initializer/transactional
   providers: [
     { provide: "ReviewMediaCookieKey", useValue: reviewMediaCookieKey },
     { provide: "ReviewSelectProperty", useValue: reviewSelectProperty },
-    { provide: Transactional, useClass: ReviewQueryRunnerProvider },
+    { provide: Transactional, useClass: ReviewTransactionInitializer },
     ReviewSearcher,
     ReviewTransaction,
     ReviewFactoryService,
     ReviewUpdateService,
     ReviewUpdateRepository,
-    ReviewQueryRunnerProvider,
+    ReviewTransactionInitializer,
     ReviewSearchRepository,
     ReviewUtils,
     ReviewValidator,

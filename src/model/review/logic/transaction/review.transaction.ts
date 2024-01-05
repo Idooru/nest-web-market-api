@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { ReviewQueryRunnerProvider } from "./review-query-runner.provider";
+import { ReviewTransactionInitializer } from "./review-transaction.initializer";
 import { ReviewUpdateService } from "../../services/review-update.service";
 import { ReviewSearcher } from "../review.searcher";
 import { MediaSearcher } from "../../../media/logic/media.searcher";

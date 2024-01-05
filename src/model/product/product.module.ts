@@ -23,7 +23,7 @@ import { ProductTransaction } from "./logic/transaction/product.transaction";
 import { ProductUpdateService } from "./services/product-update.service";
 import { ProductUpdateRepository } from "./repositories/product-update.repository";
 import { ProductEntity } from "./entities/product.entity";
-import { ProductQueryRunnerProvider } from "./logic/transaction/product-query-runner.provider";
+import { ProductTransactionInitializer } from "./logic/transaction/product-transaction.initializer";
 import { ProductValidator } from "./logic/product.validator";
 import { ProductValidateRepository } from "./repositories/product-validate.repository";
 import { ProductIdValidatePipe } from "./pipe/exist/product-id-validate.pipe";
@@ -43,10 +43,10 @@ import { Transactional } from "../../common/interfaces/initializer/transactional
   providers: [
     { provide: "ProductMediaCookieKey", useValue: productMediaCookieKey },
     { provide: "ProductsSelectProperty", useValue: productSelectProperty },
-    { provide: Transactional, useClass: ProductQueryRunnerProvider },
+    { provide: Transactional, useClass: ProductTransactionInitializer },
     ProductSearcher,
     ProductValidator,
-    ProductQueryRunnerProvider,
+    ProductTransactionInitializer,
     ProductTransaction,
     ProductUpdateService,
     ProductFactoryService,

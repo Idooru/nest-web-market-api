@@ -9,7 +9,7 @@ import { AccountEntity } from "../../../account/entities/account.entity";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 
 @Injectable()
-export class OrderQueryRunnerProvider extends Transactional<OrderRepositoryPayload> {
+export class OrderTransactionInitializer extends Transactional<OrderRepositoryPayload> {
   private payload: OrderRepositoryPayload;
 
   constructor(private readonly dataSource: DataSource) {

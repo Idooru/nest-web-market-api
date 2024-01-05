@@ -8,7 +8,7 @@ import { ReviewVideoEntity } from "../../../media/entities/review-video.entity";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 
 @Injectable()
-export class ReviewQueryRunnerProvider extends Transactional<ReviewRepositoryPayload> {
+export class ReviewTransactionInitializer extends Transactional<ReviewRepositoryPayload> {
   private payload: ReviewRepositoryPayload;
 
   constructor(private readonly dataSourece: DataSource) {

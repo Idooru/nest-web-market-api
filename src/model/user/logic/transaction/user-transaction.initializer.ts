@@ -9,7 +9,7 @@ import { Injectable } from "@nestjs/common";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 
 @Injectable()
-export class UserQueryRunnerProvider extends Transactional<UserRepositoryPayload> {
+export class UserTransactionInitializer extends Transactional<UserRepositoryPayload> {
   private payload: UserRepositoryPayload;
 
   constructor(private readonly dataSource: DataSource) {

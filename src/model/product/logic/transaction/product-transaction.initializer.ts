@@ -7,7 +7,7 @@ import { ProductImageEntity } from "../../../media/entities/product-image.entity
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 
 @Injectable()
-export class ProductQueryRunnerProvider extends Transactional<ProductRepositoryPayload> {
+export class ProductTransactionInitializer extends Transactional<ProductRepositoryPayload> {
   private payload: ProductRepositoryPayload;
 
   constructor(private readonly dataSource: DataSource) {
