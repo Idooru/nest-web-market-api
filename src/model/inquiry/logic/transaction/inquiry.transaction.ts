@@ -6,7 +6,7 @@ import { InquiryFactoryService } from "../../services/inquiry-factory.service";
 import { InquiryUtils } from "../inquiry.utils";
 import { PrepareToCreateInquiryRequestDto } from "../../dto/request/create-inquiry-request.dto";
 import { PrepareToCreateInquiryResponseDto } from "../../dto/response/create-inquiry-response.dto";
-import { TransactionErrorHandler } from "../../../../common/lib/error-handler/transaction-error.handler";
+import { TransactionErrorHandler } from "../../../../common/lib/transaction/transaction-error.handler";
 import { InquiryEventMapSetter } from "../inquiry-event-map.setter";
 import { InquiryRepositoryPayload } from "./inquiry-repository.payload";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";

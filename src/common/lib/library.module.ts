@@ -6,7 +6,7 @@ import { SecurityLibrary } from "./security/security.library";
 import { TimeLoggerLibrary } from "./logger/time-logger.library";
 import { EmailSenderLibrary } from "./email/email-sender.library";
 import { ValidateLibrary } from "./util/validate.library";
-import { TransactionErrorHandler } from "./error-handler/transaction-error.handler";
+import { TransactionErrorHandler } from "./transaction/transaction-error.handler";
 import { CatchCallbackFactoryLibrary } from "./util/catch-callback-factory.library";
 import { TypeormAdaptModule } from "./database/typeorm-adapt.module";
 import { MailerAdaptModule } from "./email/mailer-adapt.module";

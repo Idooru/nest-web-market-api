@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { RegisterUserDto } from "../../dtos/register-user.dto";
 import { ModifyUserDto } from "../../dtos/modify-user.dto";
 import { UserUpdateService } from "../../services/user-update.service";
-import { TransactionErrorHandler } from "../../../../common/lib/error-handler/transaction-error.handler";
+import { TransactionErrorHandler } from "../../../../common/lib/transaction/transaction-error.handler";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 import { UserRepositoryPayload } from "./user-repository.payload";
 
