@@ -164,6 +164,8 @@ Nest is [MIT licensed](LICENSE).
 25. UserSecurity 클래스에서 로그인 인증을 완료한 후, 인증이 성공되면 refreshtoken을 해당 인증이 완료된 사용자의 user_auth 테이블에 refreshToken을 저장시키려 하였다. UserUpdateService 클래스의 저장 메서드를 사용하기 위해서 의존성 주입을 시도하였는데 어째서 인지 "Nest can't resolve dependencies of the"에러가 발생하였다. UserModule 클래스에서는 두 클래스 모두 providers 배열에 잘 있는 상태였지만 원인을 해결할 수 없었다. 알고보니 두 클래스가 서로 순환 참조를 하였기 때문이었다. 이전에 nestjs모듈간에 순환참조가 이루어지면 forwardRef함수를 호출하고 인수로 () => "순환 참조 대상 모듈" 이런식으로 하면 해결되었다. 의존성 주입 역시 비슷하다. @Inject(forwardRef(() => "순환 참조 대상 클래스"))를 생성자 필드 앞에 붙혀두니 해결되었다.
 
 26. 기존에는 트랜잭션을 구현하기 위해서 queryRunner 인스턴스를 만들고 인스턴스 내부에 있는 리파지토리를 만들어서 각 도메인의 repository vo 라는 클래스 내부에서 리파지토리 필드를 관리하였다. update repository 클래스에서 트랜잭션에서 사용되는 리파지토리가 필요하다면 reposiory vo 클래스를 nestjs에 DI 컨테이너에 넣어서 (module 클래스의 provider 배열에 넣음) update repository에서 의존성 주입을 통해 사용하였다. 이 방법에는 3개의 클래스가 필요하게 된다. TO DO에서 작성한 6번을 수행하는 도중에 반복되는 메서드를 인터페이스로 묶어서 DIP를 구현하려다가 문득 query runner provider 클래스에서 repository vo를 초기화 시키고 그걸 update repository에서 사용할 필요가 있을까? 라고 생각을 하다가 repository vo 클래스를 없애고 query-runner-provider 내부에서 트랜잭션 리파지토리 초기화, 접근을 하는 메서드를 만들고 query-runner-provider에서 중복되는 메서드를 인터페이스로 묶어서 사용한다면 DIP라는 객체지향 개념을 고수하면서 불필요한 클래스(repository vo)도 줄이게되고 update repository에서도 더 깔끔한 인터페이스를 갖게 되었다. 객체지향 개념은 위대하다.  
+
+27. 트랜잭션 작업 코드의 가독성을 향상 시키기 위해서 TransactionExecutor, TransactionSearcher, TransactionContext로 클래스를 세분화 시켰다. 가독성을 지키며, SRP 원칙을 고수하고 TO DO에서 작성한 8번과 시너지를 발휘하게 되었다. 프로미스 함수를 반환하여 then, catch, finally를 붙히기 수월한 형태로 바뀌었다.
 ## TO DO
 
 1. 나중에 집가서 환경 정보 파일(.env.dev) 데이터를 내 메일로 보내기 // 완료
