@@ -1,17 +1,10 @@
 import { QueryRunner, TypeORMError } from "typeorm";
-import { Injectable } from "@nestjs/common";
-import { TransactionErrorHandler } from "../error-handler/transaction-error.handler";
 import { LibraryError } from "../../errors/library.error";
 import { LibraryException } from "../../errors/library.exception";
 import { loggerFactory } from "../../functions/logger.factory";
 import { TypeOrmException } from "../../errors/typeorm.exception";
 
-@Injectable()
 export class TransactionHandler {
-  constructor(
-    private readonly transactionErrorHandler: TransactionErrorHandler,
-  ) {}
-
   public async commit(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.commitTransaction();
   }
