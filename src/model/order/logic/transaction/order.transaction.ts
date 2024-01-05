@@ -5,7 +5,7 @@ import {
 } from "@nestjs/common";
 import { CartSearcher } from "../../../cart/logic/cart.searcher";
 import { UserSearcher } from "../../../user/logic/user.searcher";
-import { TransactionErrorHandler } from "../../../../common/lib/error-handler/transaction-error.handler";
+import { TransactionErrorHandler } from "../../../../common/lib/transaction/transaction-error.handler";
 import { OrderBodyDto } from "../../dto/order-body.dto";
 import { OrderUpdateService } from "../../services/order-update.service";
 import { loggerFactory } from "../../../../common/functions/logger.factory";

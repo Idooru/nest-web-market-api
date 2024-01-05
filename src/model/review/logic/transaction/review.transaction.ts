@@ -10,7 +10,7 @@ import { ReviewUtils } from "../review.utils";
 import { ReviewEntity } from "../../entities/review.entity";
 import { DeleteReviewDto } from "../../dto/delete-review.dto";
 import { ProductSearcher } from "../../../product/logic/product.searcher";
-import { TransactionErrorHandler } from "../../../../common/lib/error-handler/transaction-error.handler";
+import { TransactionErrorHandler } from "../../../../common/lib/transaction/transaction-error.handler";
 import { MediaUtils } from "../../../media/logic/media.utils";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 import { ReviewRepositoryPayload } from "./review-repository.payload";

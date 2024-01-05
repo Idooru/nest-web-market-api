@@ -7,7 +7,7 @@ import { MediaSearcher } from "src/model/media/logic/media.searcher";
 import { ModifyProductDto } from "../../dto/modify-product.dto";
 import { ProductSearcher } from "../product.searcher";
 import { MediaCookieDto } from "../../../media/dto/media-cookie.dto";
-import { TransactionErrorHandler } from "../../../../common/lib/error-handler/transaction-error.handler";
+import { TransactionErrorHandler } from "../../../../common/lib/transaction/transaction-error.handler";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 import { ProductRepositoryPayload } from "./product-repository.payload";
 
