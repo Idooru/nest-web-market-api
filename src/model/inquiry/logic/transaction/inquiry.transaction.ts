@@ -6,21 +6,21 @@ import { InquiryFactoryService } from "../../services/inquiry-factory.service";
 import { InquiryUtils } from "../inquiry.utils";
 import { PrepareToCreateInquiryRequestDto } from "../../dto/request/create-inquiry-request.dto";
 import { PrepareToCreateInquiryResponseDto } from "../../dto/response/create-inquiry-response.dto";
-import { TransactionErrorHandler } from "../../../../common/lib/transaction/transaction-error.handler";
 import { InquiryEventMapSetter } from "../inquiry-event-map.setter";
 import { InquiryRepositoryPayload } from "./inquiry-repository.payload";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
+import { TransactionHandler } from "../../../../common/lib/handler/transaction.handler";
 
 @Injectable()
 export class InquiryTransaction {
   constructor(
     private readonly transaction: Transactional<InquiryRepositoryPayload>,
+    private readonly handler: TransactionHandler,
     private readonly inquirySearcher: InquirySearcher,
     private readonly mediaSearcher: MediaSearcher,
     private readonly inquiryUpdateService: InquiryUpdateService,
     private readonly inquiryFactoryService: InquiryFactoryService,
     private readonly inquiryUtils: InquiryUtils,
-    private readonly transactionErrorHandler: TransactionErrorHandler,
     private readonly inquiryEventMapSetter: InquiryEventMapSetter,
   ) {}
 
@@ -51,7 +51,7 @@ export class InquiryTransaction {
 
     const queryRunner = await this.transaction.init();
 
-    try {
+    await (async () => {
       const inquiryRequest =
         await this.inquiryUpdateService.createInquiryRequest({
           inquiryRequestBodyDto,
@@ -78,13 +78,10 @@ export class InquiryTransaction {
       });
 
       await Promise.all([imageWork(), videoWork()]);
-      await queryRunner.commitTransaction();
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      this.transactionErrorHandler.handle(err);
-    } finally {
-      await queryRunner.release();
-    }
+    })()
+      .then(() => this.handler.commit(queryRunner))
+      .catch((err) => this.handler.rollback(queryRunner, err))
+      .finally(() => this.handler.release(queryRunner));
   }
 
   public async createInquiryResponse(
@@ -117,7 +114,7 @@ export class InquiryTransaction {
 
     const queryRunner = await this.transaction.init();
 
-    try {
+    await (async () => {
       const inquiryResponse =
         await this.inquiryUpdateService.createInquiryResponse({
           inquiryResponseBodyDto,
@@ -148,12 +145,9 @@ export class InquiryTransaction {
       });
 
       await Promise.all([imageWork(), videoWork()]);
-      await queryRunner.commitTransaction();
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      this.transactionErrorHandler.handle(err);
-    } finally {
-      await queryRunner.release();
-    }
+    })()
+      .then(() => this.handler.commit(queryRunner))
+      .catch((err) => this.handler.rollback(queryRunner, err))
+      .finally(() => this.handler.release(queryRunner));
   }
 }

@@ -7,20 +7,20 @@ import { MediaSearcher } from "src/model/media/logic/media.searcher";
 import { ModifyProductDto } from "../../dto/modify-product.dto";
 import { ProductSearcher } from "../product.searcher";
 import { MediaCookieDto } from "../../../media/dto/media-cookie.dto";
-import { TransactionErrorHandler } from "../../../../common/lib/transaction/transaction-error.handler";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 import { ProductRepositoryPayload } from "./product-repository.payload";
+import { TransactionHandler } from "../../../../common/lib/handler/transaction.handler";
 
 @Injectable()
 export class ProductTransaction {
   constructor(
     private readonly transaction: Transactional<ProductRepositoryPayload>,
+    private readonly handler: TransactionHandler,
     private readonly productSearcher: ProductSearcher,
     private readonly userSearcher: UserSearcher,
     private readonly mediaSearcher: MediaSearcher,
     private readonly productUpdateService: ProductUpdateService,
     private readonly productFactoryService: ProductFactoryService,
-    private readonly transactionErrorHandler: TransactionErrorHandler,
   ) {}
 
   async createProduct(createProductDto: CreateProductDto): Promise<void> {
@@ -33,7 +33,7 @@ export class ProductTransaction {
 
     const queryRunner = await this.transaction.init();
 
-    try {
+    await (async () => {
       const product = await this.productUpdateService.createProduct({
         productBodyDto,
         admin,
@@ -49,13 +49,10 @@ export class ProductTransaction {
         });
 
       await Promise.all([createStarRate(), insertProductImage()]);
-      await queryRunner.commitTransaction();
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      this.transactionErrorHandler.handle(err);
-    } finally {
-      await queryRunner.release();
-    }
+    })()
+      .then(() => this.handler.commit(queryRunner))
+      .catch((err) => this.handler.rollback(queryRunner, err))
+      .finally(() => this.handler.release(queryRunner));
   }
 
   async modifyProduct(modifyProductDto: ModifyProductDto): Promise<void> {
@@ -69,7 +66,7 @@ export class ProductTransaction {
 
     const queryRunner = await this.transaction.init();
 
-    try {
+    await (async () => {
       await this.productUpdateService.modifyProduct({
         productBodyDto,
         product,
@@ -83,13 +80,10 @@ export class ProductTransaction {
         });
 
       await modifyProductImage();
-      await queryRunner.commitTransaction();
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      this.transactionErrorHandler.handle(err);
-    } finally {
-      await queryRunner.release();
-    }
+    })()
+      .then(() => this.handler.commit(queryRunner))
+      .catch((err) => this.handler.rollback(queryRunner, err))
+      .finally(() => this.handler.release(queryRunner));
   }
 
   async modifyProductImage(
@@ -104,7 +98,7 @@ export class ProductTransaction {
 
     const queryRunner = await this.transaction.init();
 
-    try {
+    await (async () => {
       const modifyProductImage =
         this.productFactoryService.getModifyProductImageFunc({
           beforeProductImages,
@@ -113,12 +107,9 @@ export class ProductTransaction {
         });
 
       await modifyProductImage();
-      await queryRunner.commitTransaction();
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      this.transactionErrorHandler.handle(err);
-    } finally {
-      await queryRunner.release();
-    }
+    })()
+      .then(() => this.handler.commit(queryRunner))
+      .catch((err) => this.handler.rollback(queryRunner, err))
+      .finally(() => this.handler.release(queryRunner));
   }
 }

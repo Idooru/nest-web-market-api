@@ -5,23 +5,23 @@ import {
 } from "@nestjs/common";
 import { CartSearcher } from "../../../cart/logic/cart.searcher";
 import { UserSearcher } from "../../../user/logic/user.searcher";
-import { TransactionErrorHandler } from "../../../../common/lib/transaction/transaction-error.handler";
 import { OrderBodyDto } from "../../dto/order-body.dto";
 import { OrderUpdateService } from "../../services/order-update.service";
 import { loggerFactory } from "../../../../common/functions/logger.factory";
 import { AccountSearcher } from "../../../account/logic/account.searcher";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 import { OrderRepositoryPayload } from "./order-repository.payload";
+import { TransactionHandler } from "../../../../common/lib/handler/transaction.handler";
 
 @Injectable()
 export class OrderTransaction {
   constructor(
     private readonly transaction: Transactional<OrderRepositoryPayload>,
+    private readonly handler: TransactionHandler,
     private readonly userSearcher: UserSearcher,
     private readonly cartSearcher: CartSearcher,
     private readonly accountSearcher: AccountSearcher,
     private readonly orderUpdateService: OrderUpdateService,
-    private readonly transactionErrorHandler: TransactionErrorHandler,
   ) {}
 
   public async createOrder(createOrderDto: {
@@ -62,7 +62,7 @@ export class OrderTransaction {
 
     const queryRunner = await this.transaction.init();
 
-    try {
+    await (async () => {
       await Promise.all([
         this.orderUpdateService.deleteAllCarts(clientId),
         this.orderUpdateService.decreaseProductQuantities(productQuantities),
@@ -86,13 +86,10 @@ export class OrderTransaction {
       });
 
       await this.orderUpdateService.depositAdminBalance(productQuantities);
+    })()
+      .then(() => this.handler.commit(queryRunner))
+      .catch((err) => this.handler.rollback(queryRunner, err))
+      .finally(() => this.handler.release(queryRunner));
 
-      await queryRunner.commitTransaction();
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      this.transactionErrorHandler.handle(err);
-    } finally {
-      await queryRunner.release();
-    }
   }
 }
