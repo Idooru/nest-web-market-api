@@ -1,38 +1,34 @@
 import { Injectable } from "@nestjs/common";
 import { RegisterUserDto } from "../../dtos/register-user.dto";
-import { ModifyUserDto } from "../../dtos/modify-user.dto";
-import { UserUpdateService } from "../../services/user-update.service";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 import { UserRepositoryPayload } from "./user-repository.payload";
 import { TransactionHandler } from "../../../../common/lib/handler/transaction.handler";
+import { UserTransactionContext } from "./user-transaction.context";
+import { PrepareToModifyUserDto } from "../../dtos/prepare-to-modify-user.dto";
 
 @Injectable()
-export class UserTransaction {
+export class UserTransactionExecutor {
   constructor(
     private readonly transaction: Transactional<UserRepositoryPayload>,
     private readonly handler: TransactionHandler,
-    private readonly userUpdateService: UserUpdateService,
+    private readonly context: UserTransactionContext,
   ) {}
 
-  async register(registerUserDto: RegisterUserDto): Promise<void> {
+  public async register(dto: RegisterUserDto): Promise<void> {
     const queryRunner = await this.transaction.init();
 
-    await (async () => {
-      const user = await this.userUpdateService.createUserEntity(
-        registerUserDto.role,
-      );
-
-      await this.userUpdateService.createUserBase(user, registerUserDto);
-    })()
+    await this.context
+      .registerContext(dto)()
       .then(() => this.handler.commit(queryRunner))
       .catch((err) => this.handler.rollback(queryRunner, err))
       .finally(() => this.handler.release(queryRunner));
   }
 
-  async modifyUser(modifyUserDto: ModifyUserDto, id: string): Promise<void> {
+  public async modifyUser(dto: PrepareToModifyUserDto): Promise<void> {
     const queryRunner = await this.transaction.init();
 
-    await (() => this.userUpdateService.modifyUser(modifyUserDto, id))()
+    await this.context
+      .modifyUserContext(dto)()
       .then(() => this.handler.commit(queryRunner))
       .catch((err) => this.handler.rollback(queryRunner, err))
       .finally(() => this.handler.release(queryRunner));
