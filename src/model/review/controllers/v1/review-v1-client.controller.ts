@@ -83,7 +83,7 @@ export class ReviewV1ClientController {
     @Body() reviewBodyDto: ReviewBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
-    const review = await this.reviewTransaction.modifyReview({
+    await this.reviewTransaction.modifyReview({
       reviewBodyDto,
       productId,
       reviewId,
@@ -94,7 +94,7 @@ export class ReviewV1ClientController {
 
     return {
       statusCode: 200,
-      message: `리뷰를 수정하였습니다. 해당 리뷰의 수정 횟수가 ${(review.countForModify += 1)}만큼 남았습니다.`,
+      message: `리뷰를 수정하였습니다`,
       cookieKey: [
         ...reviewImgCookies.map((cookie) => cookie.whatCookie),
         ...reviewVdoCookies.map((cookie) => cookie.whatCookie),
