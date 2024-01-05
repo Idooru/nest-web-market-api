@@ -15,6 +15,7 @@ import { MulterAdaptModule } from "./media/multer-adapt.module";
 import { ValidateTokenLibrary } from "./security/validate-token.library";
 import { AuthModule } from "../../model/auth/auth.module";
 import { JwtErrorHandlerLibrary } from "./jwt/jwt-error-handler.library";
+import { TransactionHandler } from "./handler/transaction.handler";
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { JwtErrorHandlerLibrary } from "./jwt/jwt-error-handler.library";
     TimeLoggerLibrary,
     MediaLoggerLibrary,
     ValidateLibrary,
+    TransactionHandler,
     TransactionErrorHandler,
     CatchCallbackFactoryLibrary,
     ValidateTokenLibrary,
@@ -43,6 +45,7 @@ import { JwtErrorHandlerLibrary } from "./jwt/jwt-error-handler.library";
     TimeLoggerLibrary,
     MediaLoggerLibrary,
     ValidateLibrary,
+    TransactionHandler,
     TransactionErrorHandler,
     CatchCallbackFactoryLibrary,
     ValidateTokenLibrary,
