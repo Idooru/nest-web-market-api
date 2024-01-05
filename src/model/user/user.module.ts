@@ -18,7 +18,7 @@ import { ClientUserEntity } from "./entities/client-user.entity";
 import { AdminUserEntity } from "./entities/admin-user.entity";
 import { UserEntity } from "./entities/user.entity";
 import { userSelectProperty } from "src/common/config/repository-select-configs/user.select";
-import { UserTransaction } from "./logic/transaction/user.transaction";
+import { UserTransactionExecutor } from "./logic/transaction/user-transaction.executor";
 import { UserSearcher } from "./logic/user.searcher";
 import { UserSecurity } from "./logic/user.security";
 import { UserUpdateRepository } from "./repositories/user-update.repository";
@@ -31,6 +31,7 @@ import { UserRegisterEventMiddleware } from "./middleware/user-register-event.mi
 import { UserEventMapSetter } from "./logic/user-event-map.setter";
 import { mailEventMap } from "../../common/config/event-configs";
 import { Transactional } from "../../common/interfaces/initializer/transactional";
+import { UserTransactionContext } from "./logic/transaction/user-transaction.context";
 
 @Module({
   imports: [
@@ -55,10 +56,11 @@ import { Transactional } from "../../common/interfaces/initializer/transactional
     UserSearcher,
     UserValidator,
     UserSecurity,
-    UserTransaction,
+    UserTransactionInitializer,
+    UserTransactionExecutor,
+    UserTransactionContext,
     UserEventMapSetter,
     UserRegisterEventMiddleware,
-    UserTransactionInitializer,
     UserUpdateService,
     UserSearchRepository,
     UserUpdateRepository,

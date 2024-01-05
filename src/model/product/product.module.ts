@@ -19,7 +19,7 @@ import { productMediaCookieKey } from "src/common/config/cookie-key-configs/medi
 import { ProductFactoryService } from "./services/product-factory.service";
 import { ProductSearcher } from "./logic/product.searcher";
 import { ProductSearchRepository } from "./repositories/product-search.repository";
-import { ProductTransaction } from "./logic/transaction/product.transaction";
+import { ProductTransactionExecutor } from "./logic/transaction/product-transaction.executor";
 import { ProductUpdateService } from "./services/product-update.service";
 import { ProductUpdateRepository } from "./repositories/product-update.repository";
 import { ProductEntity } from "./entities/product.entity";
@@ -29,6 +29,8 @@ import { ProductValidateRepository } from "./repositories/product-validate.repos
 import { ProductIdValidatePipe } from "./pipe/exist/product-id-validate.pipe";
 import { DeleteProductMediaMiddleware } from "../media/middleware/delete-product-media.middleware";
 import { Transactional } from "../../common/interfaces/initializer/transactional";
+import { ProductTransactionSearcher } from "./logic/transaction/product-transaction.searcher";
+import { ProductTransactionContext } from "./logic/transaction/product-transaction.context";
 
 @Module({
   imports: [
@@ -47,7 +49,9 @@ import { Transactional } from "../../common/interfaces/initializer/transactional
     ProductSearcher,
     ProductValidator,
     ProductTransactionInitializer,
-    ProductTransaction,
+    ProductTransactionExecutor,
+    ProductTransactionSearcher,
+    ProductTransactionContext,
     ProductUpdateService,
     ProductFactoryService,
     ProductUpdateRepository,

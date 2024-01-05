@@ -19,7 +19,7 @@ import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/medi
 import { InquirySearcher } from "./logic/inquiry.searcher";
 import { InquiryUpdateService } from "./services/inquiry-update.service";
 import { InquirySearchRepository } from "./repositories/inquiry-search.repository";
-import { InquiryTransaction } from "./logic/transaction/inquiry.transaction";
+import { InquiryTransactionExecutor } from "./logic/transaction/inquiry-transaction.executor";
 import { InquiryUpdateRepository } from "./repositories/inquiry-update.repository";
 import { InquiryTransactionInitializer } from "./logic/transaction/inquiry-transaction.initializer";
 import { InquiryUtils } from "./logic/inquiry.utils";
@@ -33,6 +33,8 @@ import { InquiryClientEventMiddleware } from "./middleware/inquiry-client-event.
 import { InquiryAdminEventMiddleware } from "./middleware/inquiry-admin-event.middleware";
 import { DeleteInquiryRequestMediaMiddleware } from "../media/middleware/delete-inquiry-request-media.middleware";
 import { Transactional } from "../../common/interfaces/initializer/transactional";
+import { InquiryTransactionSearcher } from "./logic/transaction/inquiry-transaction.searcher";
+import { InquiryTransactionContext } from "./logic/transaction/inquiry-transaction.context";
 
 @Module({
   imports: [
@@ -51,11 +53,13 @@ import { Transactional } from "../../common/interfaces/initializer/transactional
     { provide: Transactional, useClass: InquiryTransactionInitializer },
     InquirySearcher,
     InquirySearchRepository,
-    InquiryTransaction,
     InquiryEventMapSetter,
     InquiryClientEventMiddleware,
     InquiryAdminEventMiddleware,
     InquiryTransactionInitializer,
+    InquiryTransactionExecutor,
+    InquiryTransactionSearcher,
+    InquiryTransactionContext,
     InquiryUpdateService,
     InquiryUpdateRepository,
     InquiryFactoryService,

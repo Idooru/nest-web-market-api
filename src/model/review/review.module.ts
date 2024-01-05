@@ -19,7 +19,7 @@ import { ReviewFactoryService } from "./services/review-factory.service";
 import { ReviewUpdateRepository } from "./repositories/review-update.repository";
 import { ReviewUpdateService } from "./services/review-update.service";
 import { ReviewTransactionInitializer } from "./logic/transaction/review-transaction.initializer";
-import { ReviewTransaction } from "./logic/transaction/review.transaction";
+import { ReviewTransactionExecutor } from "./logic/transaction/review-transaction.executor";
 import { ReviewSearcher } from "./logic/review.searcher";
 import { ReviewSearchRepository } from "./repositories/review-search.repository";
 import { ReviewUtils } from "./logic/review.utils";
@@ -29,6 +29,8 @@ import { ReviewValidateRepository } from "./repositories/review-validate.reposit
 import { DeleteReviewMediaMiddleware } from "../media/middleware/delete-review-media.middleware";
 import { ReviewV1AdminController } from "./controllers/v1/review-v1-admin.controller";
 import { Transactional } from "../../common/interfaces/initializer/transactional";
+import { ReviewTransactionContext } from './logic/transaction/review-transaction.context';
+import { ReviewTransactionSearcher } from './logic/transaction/review-transaction.searcher';
 
 @Module({
   imports: [
@@ -44,7 +46,7 @@ import { Transactional } from "../../common/interfaces/initializer/transactional
     { provide: "ReviewSelectProperty", useValue: reviewSelectProperty },
     { provide: Transactional, useClass: ReviewTransactionInitializer },
     ReviewSearcher,
-    ReviewTransaction,
+    ReviewTransactionExecutor,
     ReviewFactoryService,
     ReviewUpdateService,
     ReviewUpdateRepository,
@@ -54,6 +56,8 @@ import { Transactional } from "../../common/interfaces/initializer/transactional
     ReviewValidator,
     ReviewIdValidatePipe,
     ReviewValidateRepository,
+    ReviewTransactionContext,
+    ReviewTransactionSearcher,
   ],
   exports: [],
 })
