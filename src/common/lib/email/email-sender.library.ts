@@ -1,12 +1,12 @@
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { SendMailToClientAboutInquiryResponseDto } from "src/model/inquiry/dto/response/send-mail-to-client-about-inquiry-response.dto";
 import { SendMailToAdminAboutInquiryRequestDto } from "src/model/inquiry/dto/request/send-mail-to-admin-about-inquiry-request.dto";
-import { SendMailToClientAboutRegisterDto } from "../../../model/user/dtos/send-mail-to-client-about-register.dto";
 import { CatchCallbackFactoryLibrary } from "../util/catch-callback-factory.library";
 import { OnEvent } from "@nestjs/event-emitter";
 import { eventConfigs } from "../../config/event-configs";
+import { SendMailToClientAboutInquiryResponseDto } from "../../../model/inquiry/dto/response/send-mail-to-client-about-inquiry-response.dto";
+import { SendMailToClientAboutRegisterDto } from "../../../model/user/dtos/send-mail-to-client-about-register.dto";
 
 @Injectable()
 export class EmailSenderLibrary {
@@ -20,7 +20,7 @@ export class EmailSenderLibrary {
   async sendMailToAdminAboutInquiryRequest(
     sendMailToAdminAboutInquiryRequestDto: SendMailToAdminAboutInquiryRequestDto,
   ): Promise<void> {
-    const { product, inquiryRequest, client } =
+    const { product, inquiryRequest, clientUser } =
       sendMailToAdminAboutInquiryRequestDto;
     await this.mailerService
       .sendMail({
@@ -30,7 +30,7 @@ export class EmailSenderLibrary {
         text: `사용자로 부터 다음과 같은 문의가 들어왔습니다.\n
         ----------------------------------------------------------------------
         문의 요청 상품 아이디: ${product.id}
-        문의 요청 사용자 아이디: ${client.id}
+        문의 요청 사용자 아이디: ${clientUser.id}
         문의 요청 상품 이름: ${product.name}
         문의 요청 카테고리: ${inquiryRequest.categories}
         문의 요청 내용: ${inquiryRequest.title}

@@ -18,12 +18,12 @@ export class ReviewUpdateRepository {
   public async createReview(
     createReviewDto: CreateReviewDto,
   ): Promise<ReviewEntity> {
-    const { reviewBodyDto, product, client } = createReviewDto;
+    const { reviewBodyDto, product, clientUser } = createReviewDto;
 
     return await this.transaction.getRepository().review.save({
       ...reviewBodyDto,
       Product: product,
-      reviewer: client,
+      reviewer: clientUser,
     });
   }
 

@@ -162,7 +162,7 @@ export class UserSearchRepository {
   }
 
   async findClientUserProfileInfoWithId(id: string): Promise<UserEntity> {
-    const client = await this.userRepository
+    const clientUser = await this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.clientUserProfile)
       .from(UserEntity, "user")
@@ -189,8 +189,8 @@ export class UserSearchRepository {
       .where("user.id = :id", { id })
       .getOne();
 
-    client.clientActions.id = undefined;
-    return client;
+    clientUser.clientActions.id = undefined;
+    return clientUser;
   }
 
   async findAdminUserProfileInfoWithId(id: string): Promise<UserEntity> {

@@ -24,13 +24,17 @@ export class ReviewUtils {
     reviewId: string,
     userId: string,
   ): Promise<ReviewEntity> {
-    const client = await this.userSearcher.findClientUserObjectWithId(userId);
-    const reviews = await this.reviewSearcher.findAllClientsReviews(client.id);
+    const clientUser = await this.userSearcher.findClientUserObjectWithId(
+      userId,
+    );
+    const reviews = await this.reviewSearcher.findAllClientsReviews(
+      clientUser.id,
+    );
     const review = reviews.find((review) => review.id === reviewId);
 
     if (!review) {
       // 만약 리뷰를 하나도 작성하지 않은 사용자가 다른 사용자의 리뷰를 수정하려고 시도할시 아래 예외가 발생한다.
-      const message = `다른 사용자(${client.id})가 임의로 리뷰 수정을 시도합니다.`;
+      const message = `다른 사용자(${clientUser.id})가 임의로 리뷰 수정을 시도합니다.`;
       loggerFactory("Another Writer").warn(message);
       throw new ForbiddenException(message);
     }
@@ -54,13 +58,16 @@ export class ReviewUtils {
     ]);
   }
 
-  public checkBeforeCreate(product: ProductEntity, client: ClientUserEntity) {
+  public checkBeforeCreate(
+    product: ProductEntity,
+    clientUser: ClientUserEntity,
+  ) {
     const alreadyWriten = product.Review.find(
-      (review) => review.reviewer.id === client.id,
+      (review) => review.reviewer.id === clientUser.id,
     );
 
     if (alreadyWriten) {
-      const message = `해당 사용자(${client.id})는 해당 상품(${product.id})에 대한 리뷰를 이미 남겼습니다.`;
+      const message = `해당 사용자(${clientUser.id})는 해당 상품(${product.id})에 대한 리뷰를 이미 남겼습니다.`;
       loggerFactory("Already Writen").warn(message);
       throw new BadRequestException(message);
     }

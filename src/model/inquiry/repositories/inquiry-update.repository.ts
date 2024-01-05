@@ -20,12 +20,13 @@ export class InquiryUpdateRepository {
   public async createInquiryRequest(
     createInquiryRequestDto: CreateInquiryRequestDto,
   ): Promise<InquiryRequestEntity> {
-    const { inquiryRequestBodyDto, product, client } = createInquiryRequestDto;
+    const { inquiryRequestBodyDto, product, clientUser } =
+      createInquiryRequestDto;
 
     return await this.transaction.getRepository().inquiryRequest.save({
       ...inquiryRequestBodyDto,
       Product: product,
-      inquiryRequestWritter: client,
+      inquiryRequestWritter: clientUser,
     });
   }
 

@@ -13,6 +13,6 @@ export class PrepareToCreateInquiryRequestDto {
 
 export class CreateInquiryRequestDto {
   inquiryRequestBodyDto: InquiryRequestBodyDto;
-  client: ClientUserEntity;
+  clientUser: ClientUserEntity;
   product: ProductEntity;
 }

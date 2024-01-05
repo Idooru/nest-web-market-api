@@ -5,5 +5,5 @@ import { ClientUserEntity } from "../../../user/entities/client-user.entity";
 export class SendMailToAdminAboutInquiryRequestDto {
   product: ProductEntity;
   inquiryRequest: InquiryRequestEntity;
-  client: ClientUserEntity;
+  clientUser: ClientUserEntity;
 }

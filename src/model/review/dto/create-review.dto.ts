@@ -13,6 +13,6 @@ export class PrepareToCreateReviewDto {
 
 export class CreateReviewDto {
   reviewBodyDto: ReviewBodyDto;
-  client: ClientUserEntity;
+  clientUser: ClientUserEntity;
   product: ProductEntity;
 }
