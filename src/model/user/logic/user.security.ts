@@ -32,18 +32,13 @@ export class UserSecurity {
     const { email, password } = loginUserDto;
 
     const user = await this.userSearcher.findUserWithEmail(email);
+    const compared =
+      user &&
+      (await bcrypt
+        .compare(password, user.Auth.password)
+        .catch(this.callbackFactory.getCatchComparePasswordFunc()));
 
-    if (!user) {
-      const message = "아이디 혹은 비밀번호가 일치하지 않습니다.";
-      loggerFactory("Authenticate").error(message);
-      throw new BadRequestException(message);
-    }
-
-    const isValidPw = await bcrypt
-      .compare(password, user.Auth.password)
-      .catch(this.callbackFactory.getCatchComparePasswordFunc());
-
-    if (!isValidPw) {
+    if (!compared) {
       const message = "아이디 혹은 비밀번호가 일치하지 않습니다.";
       loggerFactory("Authenticate").error(message);
       throw new BadRequestException(message);
