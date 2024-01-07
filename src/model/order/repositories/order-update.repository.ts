@@ -45,13 +45,11 @@ export class OrderUpdateRepository {
   }
 
   // Transaction
-  public async createOrder(
-    createOrderDto: CreateOrderDto,
-  ): Promise<OrderEntity> {
+  public createOrder(createOrderDto: CreateOrderDto): Promise<OrderEntity> {
     const { orderBodyDto, clientUser, totalPrice } = createOrderDto;
     const { deliveryOption, deliveryAddress } = orderBodyDto;
 
-    return await this.transaction.getRepository().order.save({
+    return this.transaction.getRepository().order.save({
       deliveryOption,
       deliveryAddress,
       totalPrice,
@@ -77,7 +75,9 @@ export class OrderUpdateRepository {
   }
 
   // Transaction
-  public async withdrawClientBalance(withdrawDto: MoneyTransactionDto) {
+  public async withdrawClientBalance(
+    withdrawDto: MoneyTransactionDto,
+  ): Promise<AccountEntity> {
     const { accountId, balance } = withdrawDto;
     await this.transaction
       .getRepository()
@@ -94,7 +94,7 @@ export class OrderUpdateRepository {
         }
       });
 
-    return await this.transaction.getRepository().account.findOneBy({
+    return this.transaction.getRepository().account.findOneBy({
       id: accountId,
     });
   }

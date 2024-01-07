@@ -8,11 +8,11 @@ export class AccountSearcher {
     private readonly accountSearchRepository: AccountSearchRepository,
   ) {}
 
-  public async findAccountsWithUserId(id: string): Promise<AccountEntity[]> {
-    return await this.accountSearchRepository.findAccountsWithUserId(id);
+  public findAccountsWithUserId(id: string): Promise<AccountEntity[]> {
+    return this.accountSearchRepository.findAccountsWithUserId(id);
   }
 
-  public async findMainAccountWithUserId(id: string): Promise<AccountEntity> {
-    return await this.accountSearchRepository.findMainAccountWithUserId(id);
+  public findMainAccountWithUserId(id: string): Promise<AccountEntity> {
+    return this.accountSearchRepository.findMainAccountWithUserId(id);
   }
 }

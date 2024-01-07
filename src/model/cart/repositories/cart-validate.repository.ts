@@ -10,7 +10,7 @@ export class CartValidateRepository {
     private readonly cartRepository: Repository<CartEntity>,
   ) {}
 
-  public async isExistId(id: string): Promise<boolean> {
-    return await this.cartRepository.exist({ where: { id } });
+  public isExistId(id: string): Promise<boolean> {
+    return this.cartRepository.exist({ where: { id } });
   }
 }

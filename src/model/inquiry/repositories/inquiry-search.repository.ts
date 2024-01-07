@@ -13,10 +13,8 @@ export class InquirySearchRepository {
     private readonly select: InquirySelectProperty,
   ) {}
 
-  public async findInquiryRequestWithId(
-    id: string,
-  ): Promise<InquiryRequestEntity> {
-    return await this.inquiryRequestRepository
+  public findInquiryRequestWithId(id: string): Promise<InquiryRequestEntity> {
+    return this.inquiryRequestRepository
       .createQueryBuilder()
       .select(this.select.inquiryRequest)
       .from(InquiryRequestEntity, "inquiryRequest")

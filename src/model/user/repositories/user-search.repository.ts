@@ -62,8 +62,8 @@ export class UserSearchRepository {
     return users;
   }
 
-  async findUserWithId(id: string): Promise<UserEntity> {
-    return await this.userRepository
+  findUserWithId(id: string): Promise<UserEntity> {
+    return this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.userBase)
       .from(UserEntity, "user")
@@ -73,8 +73,8 @@ export class UserSearchRepository {
       .getOne();
   }
 
-  async findClientUserWithId(id: string): Promise<UserEntity> {
-    return await this.userRepository
+  findClientUserWithId(id: string): Promise<UserEntity> {
+    return this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.clientUser)
       .from(UserEntity, "user")
@@ -85,8 +85,8 @@ export class UserSearchRepository {
       .getOne();
   }
 
-  async findAdminUserWithId(id: string): Promise<UserEntity> {
-    return await this.userRepository
+  findAdminUserWithId(id: string): Promise<UserEntity> {
+    return this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.adminUser)
       .from(UserEntity, "user")
@@ -100,7 +100,7 @@ export class UserSearchRepository {
   async findClientUserObjectWithId(id: string): Promise<ClientUserEntity> {
     const user = await this.findClientUserWithId(id);
 
-    return await this.clientUserRepository
+    return this.clientUserRepository
       .createQueryBuilder()
       .select(["client", "User", "Auth", "Account"])
       .from(ClientUserEntity, "client")
@@ -114,7 +114,7 @@ export class UserSearchRepository {
   async findAdminUserObjectWithId(id: string): Promise<AdminUserEntity> {
     const user = await this.findAdminUserWithId(id);
 
-    return await this.adminUserRepository
+    return this.adminUserRepository
       .createQueryBuilder()
       .select(["admin", "User", "Account"])
       .from(AdminUserEntity, "admin")
@@ -124,8 +124,8 @@ export class UserSearchRepository {
       .getOne();
   }
 
-  async findUserWithEmail(email: string): Promise<UserEntity> {
-    return await this.userRepository
+  findUserWithEmail(email: string): Promise<UserEntity> {
+    return this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.userBase)
       .from(UserEntity, "user")
@@ -135,8 +135,8 @@ export class UserSearchRepository {
       .getOne();
   }
 
-  async findUserWithNickname(nickname: string): Promise<UserEntity> {
-    return await this.userRepository
+  findUserWithNickname(nickname: string): Promise<UserEntity> {
+    return this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.userBase)
       .from(UserEntity, "user")
@@ -146,11 +146,11 @@ export class UserSearchRepository {
       .getOne();
   }
 
-  async findUserForgotten(
+  findUserForgotten(
     realname: string,
     phonenumber: string,
   ): Promise<UserEntity> {
-    return await this.userRepository
+    return this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.userBase)
       .from(UserEntity, "user")
@@ -224,8 +224,8 @@ export class UserSearchRepository {
     return admin;
   }
 
-  async findClientUserInfo(id: string): Promise<UserEntity> {
-    return await this.userRepository
+  findClientUserInfo(id: string): Promise<UserEntity> {
+    return this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.whenAdminClientUser)
       .from(UserEntity, "user")
@@ -243,8 +243,8 @@ export class UserSearchRepository {
       .getOne();
   }
 
-  async findRefreshTokenWithId(id: string): Promise<UserAuthEntity> {
-    return await this.userAuthRepository
+  findRefreshTokenWithId(id: string): Promise<UserAuthEntity> {
+    return this.userAuthRepository
       .createQueryBuilder()
       .select("auth.refreshToken")
       .from(UserAuthEntity, "auth")

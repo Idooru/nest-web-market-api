@@ -10,48 +10,48 @@ import { UserAuthEntity } from "../entities/user-auth.entity";
 export class UserSearcher {
   constructor(private readonly userSearchRepository: UserSearchRepository) {}
 
-  async findUserWithId(id: string): Promise<UserEntity> {
-    return await this.userSearchRepository.findUserWithId(id);
+  findUserWithId(id: string): Promise<UserEntity> {
+    return this.userSearchRepository.findUserWithId(id);
   }
 
-  async findUserWithEmail(email: string): Promise<UserEntity> {
-    return await this.userSearchRepository.findUserWithEmail(email);
+  findUserWithEmail(email: string): Promise<UserEntity> {
+    return this.userSearchRepository.findUserWithEmail(email);
   }
 
-  async findUserWithNickname(nickname: string): Promise<UserEntity> {
-    return await this.userSearchRepository.findUserWithNickname(nickname);
+  findUserWithNickname(nickname: string): Promise<UserEntity> {
+    return this.userSearchRepository.findUserWithNickname(nickname);
   }
 
-  async findClientUserWithId(id: string): Promise<UserEntity> {
-    return await this.userSearchRepository.findClientUserWithId(id);
+  findClientUserWithId(id: string): Promise<UserEntity> {
+    return this.userSearchRepository.findClientUserWithId(id);
   }
 
-  async findAdminUserWithId(id: string): Promise<UserEntity> {
-    return await this.userSearchRepository.findAdminUserWithId(id);
+  findAdminUserWithId(id: string): Promise<UserEntity> {
+    return this.userSearchRepository.findAdminUserWithId(id);
   }
 
-  async findAllUsersFromLatest(): Promise<UserEntity[]> {
-    return await this.userSearchRepository.findAllUsersFromLatest();
+  findAllUsersFromLatest(): Promise<UserEntity[]> {
+    return this.userSearchRepository.findAllUsersFromLatest();
   }
 
-  async findAllUsersFromOldest(): Promise<UserEntity[]> {
-    return await this.userSearchRepository.findAllUsersFromOldest();
+  findAllUsersFromOldest(): Promise<UserEntity[]> {
+    return this.userSearchRepository.findAllUsersFromOldest();
   }
 
-  async findClientUserInfo(id: string): Promise<UserEntity> {
-    return await this.userSearchRepository.findClientUserInfo(id);
+  findClientUserInfo(id: string): Promise<UserEntity> {
+    return this.userSearchRepository.findClientUserInfo(id);
   }
 
-  async findClientUserObjectWithId(id: string): Promise<ClientUserEntity> {
-    return await this.userSearchRepository.findClientUserObjectWithId(id);
+  findClientUserObjectWithId(id: string): Promise<ClientUserEntity> {
+    return this.userSearchRepository.findClientUserObjectWithId(id);
   }
 
-  async findAdminUserObjectWithId(id: string): Promise<AdminUserEntity> {
-    return await this.userSearchRepository.findAdminUserObjectWithId(id);
+  findAdminUserObjectWithId(id: string): Promise<AdminUserEntity> {
+    return this.userSearchRepository.findAdminUserObjectWithId(id);
   }
 
-  async findAdminUserProfileInfoWithId(id: string): Promise<UserEntity> {
-    return await this.userSearchRepository.findAdminUserProfileInfoWithId(id);
+  findAdminUserProfileInfoWithId(id: string): Promise<UserEntity> {
+    return this.userSearchRepository.findAdminUserProfileInfoWithId(id);
   }
 
   async findUserProfile(
@@ -72,17 +72,14 @@ export class UserSearcher {
     }
   }
 
-  async findUserForgotten(
+  findUserForgotten(
     realname: string,
     phonenumber: string,
   ): Promise<UserEntity> {
-    return await this.userSearchRepository.findUserForgotten(
-      realname,
-      phonenumber,
-    );
+    return this.userSearchRepository.findUserForgotten(realname, phonenumber);
   }
 
-  async findRefreshTokenWithId(id: string): Promise<UserAuthEntity> {
-    return await this.userSearchRepository.findRefreshTokenWithId(id);
+  findRefreshTokenWithId(id: string): Promise<UserAuthEntity> {
+    return this.userSearchRepository.findRefreshTokenWithId(id);
   }
 }

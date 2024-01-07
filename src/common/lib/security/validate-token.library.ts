@@ -16,7 +16,7 @@ export class ValidateTokenLibrary {
   public async validateAccessToken(
     accessToken: string,
   ): Promise<JwtAccessTokenPayload> {
-    return await this.jwtService
+    return this.jwtService
       .verifyAsync(accessToken, this.securityLibrary.jwtAccessTokenVerifyOption)
       .catch(this.jwtErrorHandlerLibrary.catchVerifyAccessTokenError);
   }
@@ -24,7 +24,7 @@ export class ValidateTokenLibrary {
   public async validateRefreshToken(
     refreshToken: string,
   ): Promise<JwtRefreshTokenPayload> {
-    return await this.jwtService
+    return this.jwtService
       .verifyAsync(
         refreshToken,
         this.securityLibrary.jwtRefreshTokenVerifyOption,

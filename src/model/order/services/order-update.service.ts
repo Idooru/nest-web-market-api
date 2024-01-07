@@ -28,10 +28,8 @@ export class OrderUpdateService {
   }
 
   // Transaction
-  public async createOrder(
-    createOrderDto: CreateOrderDto,
-  ): Promise<OrderEntity> {
-    return await this.orderUpdateRepository.createOrder(createOrderDto);
+  public createOrder(createOrderDto: CreateOrderDto): Promise<OrderEntity> {
+    return this.orderUpdateRepository.createOrder(createOrderDto);
   }
 
   // Transaction

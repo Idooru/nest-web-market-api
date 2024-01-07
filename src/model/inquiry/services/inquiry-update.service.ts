@@ -16,10 +16,10 @@ export class InquiryUpdateService {
   ) {}
 
   // Transaction
-  public async createInquiryRequest(
+  public createInquiryRequest(
     createInquiryRequestDto: CreateInquiryRequestDto,
   ): Promise<InquiryRequestEntity> {
-    return await this.inquiryOperationRepository.createInquiryRequest(
+    return this.inquiryOperationRepository.createInquiryRequest(
       createInquiryRequestDto,
     );
   }
@@ -59,10 +59,10 @@ export class InquiryUpdateService {
   }
 
   // Transaction
-  public async createInquiryResponse(
+  public createInquiryResponse(
     createInquiryResponseDto: CreateInquiryResponseDto,
   ): Promise<InquiryResponseEntity> {
-    return await this.inquiryOperationRepository.createInquiryResponse(
+    return this.inquiryOperationRepository.createInquiryResponse(
       createInquiryResponseDto,
     );
   }

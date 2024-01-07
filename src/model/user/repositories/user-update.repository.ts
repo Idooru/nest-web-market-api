@@ -28,10 +28,8 @@ export class UserUpdateRepository {
   ) {}
 
   // Transaction
-  public async createUserEntity(
-    role: ["client", "admin"],
-  ): Promise<UserEntity> {
-    return await this.transaction.getRepository().user.save({ role });
+  public createUserEntity(role: ["client", "admin"]): Promise<UserEntity> {
+    return this.transaction.getRepository().user.save({ role });
   }
 
   // Transaction

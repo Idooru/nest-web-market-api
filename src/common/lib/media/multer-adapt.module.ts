@@ -38,13 +38,13 @@ export class MulterConfigService implements MulterOptionsFactory {
       );
 
       const modelPromises = stuffForImages.map(async (model) => {
-        return await fsPromises.mkdir(
+        return fsPromises.mkdir(
           path.join(__dirname, `../../../../uploads/images/${model}`),
         );
       });
 
       const inquiryPromises = this.inquiry.map(async (val) => {
-        return await fsPromises.mkdir(
+        return fsPromises.mkdir(
           path.join(__dirname, `../../../../uploads/images/inquiry/${val}`),
         );
       });
@@ -66,13 +66,13 @@ export class MulterConfigService implements MulterOptionsFactory {
       );
 
       const modelPromises = stuffForVideos.map(async (model) => {
-        return await fsPromises.mkdir(
+        return fsPromises.mkdir(
           path.join(__dirname, `../../../../uploads/videos/${model}`),
         );
       });
 
       const inquiryPromises = this.inquiry.map(async (val) => {
-        return await fsPromises.mkdir(
+        return fsPromises.mkdir(
           path.join(__dirname, `../../../../uploads/videos/inquiry/${val}`),
         );
       });

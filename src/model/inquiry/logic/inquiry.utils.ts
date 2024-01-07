@@ -12,21 +12,21 @@ export class InquiryUtils {
     private readonly userSearcher: UserSearcher,
   ) {}
 
-  public async getProductAndClient(
+  public getProductAndClient(
     productId: string,
     userId: string,
   ): Promise<[ProductEntity, ClientUserEntity]> {
-    return await Promise.all([
+    return Promise.all([
       this.productSearcher.findProductWithId(productId),
       this.userSearcher.findClientUserObjectWithId(userId),
     ]);
   }
 
-  public async getUsers(
+  public getUsers(
     inquiryRequesterId: string,
     inquiryResponserId: string,
   ): Promise<[ClientUserEntity, AdminUserEntity]> {
-    return await Promise.all([
+    return Promise.all([
       this.userSearcher.findClientUserObjectWithId(inquiryRequesterId),
       this.userSearcher.findAdminUserObjectWithId(inquiryResponserId),
     ]);

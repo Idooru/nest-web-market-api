@@ -22,11 +22,8 @@ export class UserSecurity {
     private readonly jwtErrorHandlerLibrary: JwtErrorHandlerLibrary,
   ) {}
 
-  async hashPassword(
-    password: string,
-    hasTransaction: boolean,
-  ): Promise<string> {
-    return await bcrypt
+  hashPassword(password: string, hasTransaction: boolean): Promise<string> {
+    return bcrypt
       .hash(password, this.securityLibrary.hashSalt)
       .catch(this.callbackFactory.getCatchHashPasswordFunc(hasTransaction));
   }
@@ -91,7 +88,7 @@ export class UserSecurity {
       userRole: user.role,
     };
 
-    return await this.jwtService
+    return this.jwtService
       .signAsync(
         jwtAccessTokenPayload,
         this.securityLibrary.jwtAccessTokenSignOption,

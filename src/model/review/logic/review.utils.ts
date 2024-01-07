@@ -48,11 +48,11 @@ export class ReviewUtils {
     }
   }
 
-  public async getProductAndClient(
+  public getProductAndClient(
     productId: string,
     userId: string,
   ): Promise<[ProductEntity, ClientUserEntity]> {
-    return await Promise.all([
+    return Promise.all([
       this.productSearcher.findProductWithId(productId),
       this.userSearcher.findClientUserObjectWithId(userId),
     ]);

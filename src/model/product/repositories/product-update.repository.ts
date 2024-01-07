@@ -18,14 +18,14 @@ export class ProductUpdateRepository {
   ) {}
 
   // Transaction
-  public async createProduct(
+  public createProduct(
     createProductDto: CreateProductDto,
   ): Promise<ProductEntity> {
     const { productBodyDto, admin } = createProductDto;
     const { name, price, origin, category, description, quantity } =
       productBodyDto;
 
-    return await this.transaction.getRepository().product.save({
+    return this.transaction.getRepository().product.save({
       name,
       price,
       origin,

@@ -10,11 +10,11 @@ export class ProductValidateRepository {
     private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
-  async isExistId(id: string): Promise<boolean> {
-    return await this.productRepository.exist({ where: { id } });
+  public isExistId(id: string): Promise<boolean> {
+    return this.productRepository.exist({ where: { id } });
   }
 
-  async isNoneExistName(name: string): Promise<boolean> {
-    return await this.productRepository.exist({ where: { name } });
+  public isNoneExistName(name: string): Promise<boolean> {
+    return this.productRepository.exist({ where: { name } });
   }
 }

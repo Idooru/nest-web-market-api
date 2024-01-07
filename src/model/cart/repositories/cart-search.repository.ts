@@ -36,11 +36,11 @@ export class CartSearchRepository {
     return carts;
   }
 
-  public async findProductOnCart(
+  public findProductOnCart(
     clientId: string,
     productId: string,
   ): Promise<CartEntity> {
-    return await this.cartRepository
+    return this.cartRepository
       .createQueryBuilder()
       .select("cart.id")
       .from(CartEntity, "cart")

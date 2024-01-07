@@ -8,9 +8,7 @@ export class InquirySearcher {
     private readonly inquirySearchRepository: InquirySearchRepository,
   ) {}
 
-  public async findInquiryRequestWithId(
-    id: string,
-  ): Promise<InquiryRequestEntity> {
-    return await this.inquirySearchRepository.findInquiryRequestWithId(id);
+  public findInquiryRequestWithId(id: string): Promise<InquiryRequestEntity> {
+    return this.inquirySearchRepository.findInquiryRequestWithId(id);
   }
 }

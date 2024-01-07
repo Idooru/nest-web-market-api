@@ -3,7 +3,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { ProductEntity } from "../entities/product.entity";
 import { Repository } from "typeorm";
 import { ProductSelectProperty } from "src/common/config/repository-select-configs/product.select";
-import { ProductImageEntity } from "src/model/media/entities/product-image.entity";
 import { loggerFactory } from "../../../common/functions/logger.factory";
 
 @Injectable()
@@ -78,7 +77,7 @@ export class ProductSearchRepository {
   }
 
   async findProductWithId(id: string): Promise<ProductEntity> {
-    return await this.productRepository
+    return this.productRepository
       .createQueryBuilder()
       .select(this.productSelect.product)
       .from(ProductEntity, "product")

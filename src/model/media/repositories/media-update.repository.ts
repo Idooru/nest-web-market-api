@@ -30,52 +30,52 @@ export class MediaUpdateRepository {
   ) {}
 
   // General
-  async uploadProductImages(
+  uploadProductImages(
     uploadMediaDto: UploadMediaDto,
   ): Promise<ProductImageEntity> {
-    return await this.productImageRepository.save(uploadMediaDto);
+    return this.productImageRepository.save(uploadMediaDto);
   }
 
   // General
-  async uploadReviewImage(
+  uploadReviewImage(
     uploadMediaDto: UploadMediaDto,
   ): Promise<ReviewImageEntity> {
-    return await this.reviewImageRepository.save(uploadMediaDto);
+    return this.reviewImageRepository.save(uploadMediaDto);
   }
 
   // General
-  async uploadReviewVideo(
+  uploadReviewVideo(
     uploadMediaDto: UploadMediaDto,
   ): Promise<ReviewVideoEntity> {
-    return await this.reviewVideoRepository.save(uploadMediaDto);
+    return this.reviewVideoRepository.save(uploadMediaDto);
   }
 
   // General
-  async uploadInquiryRequestImage(
+  uploadInquiryRequestImage(
     uploadMediaDto: UploadMediaDto,
   ): Promise<InquiryRequestImageEntity> {
-    return await this.inquiryRequestImageRepository.save(uploadMediaDto);
+    return this.inquiryRequestImageRepository.save(uploadMediaDto);
   }
 
   // General
-  async uploadInquiryRequestVideo(
+  uploadInquiryRequestVideo(
     uploadMediaDto: UploadMediaDto,
   ): Promise<InquiryRequestVideoEntity> {
-    return await this.inquiryRequestVideoRepository.save(uploadMediaDto);
+    return this.inquiryRequestVideoRepository.save(uploadMediaDto);
   }
 
   // General
-  async uploadInquiryResponseImages(
+  uploadInquiryResponseImages(
     uploadMediaDto: UploadMediaDto,
   ): Promise<InquiryResponseImageEntity> {
-    return await this.inquiryResponseImageRepository.save(uploadMediaDto);
+    return this.inquiryResponseImageRepository.save(uploadMediaDto);
   }
 
   // General
-  async uploadInquiryResponseVideos(
+  uploadInquiryResponseVideos(
     uploadMediaDto: UploadMediaDto,
   ): Promise<InquiryResponseVideoEntity> {
-    return await this.inquiryResponseVideoRepository.save(uploadMediaDto);
+    return this.inquiryResponseVideoRepository.save(uploadMediaDto);
   }
 
   // General

@@ -8,19 +8,19 @@ export class ProductSearcher {
     private readonly productSearchRepository: ProductSearchRepository,
   ) {}
 
-  async findAllProductsFromLatest(): Promise<ProductEntity[]> {
-    return await this.productSearchRepository.findAllProductsFromLatest();
+  public findAllProductsFromLatest(): Promise<ProductEntity[]> {
+    return this.productSearchRepository.findAllProductsFromLatest();
   }
 
-  async findAllProductsFromOldest(): Promise<ProductEntity[]> {
-    return await this.productSearchRepository.findAllProductsFromOldest();
+  public findAllProductsFromOldest(): Promise<ProductEntity[]> {
+    return this.productSearchRepository.findAllProductsFromOldest();
   }
 
-  async findProductWithId(id: string): Promise<ProductEntity> {
-    return await this.productSearchRepository.findProductWithId(id);
+  public findProductWithId(id: string): Promise<ProductEntity> {
+    return this.productSearchRepository.findProductWithId(id);
   }
 
-  async findProductWithName(name: string): Promise<ProductEntity[]> {
-    return await this.productSearchRepository.findProductWithName(name);
+  public findProductWithName(name: string): Promise<ProductEntity[]> {
+    return this.productSearchRepository.findProductWithName(name);
   }
 }

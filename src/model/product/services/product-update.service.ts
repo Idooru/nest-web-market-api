@@ -18,10 +18,8 @@ export class ProductUpdateService {
   ) {}
 
   // Transaction
-  async createProduct(
-    createProductDto: CreateProductDto,
-  ): Promise<ProductEntity> {
-    return await this.productUpdateRepository.createProduct(createProductDto);
+  createProduct(createProductDto: CreateProductDto): Promise<ProductEntity> {
+    return this.productUpdateRepository.createProduct(createProductDto);
   }
 
   // Transaction

@@ -19,36 +19,36 @@ export class UserValidateRepository {
     private readonly clientUserRepository: Repository<ClientUserEntity>,
   ) {}
 
-  public async isExistId(id: string): Promise<boolean> {
-    return await this.userRepository.exist({ where: { id } });
+  public isExistId(id: string): Promise<boolean> {
+    return this.userRepository.exist({ where: { id } });
   }
 
-  public async isExistEmail(email: string): Promise<boolean> {
-    return await this.userAuthRepository.exist({ where: { email } });
+  public isExistEmail(email: string): Promise<boolean> {
+    return this.userAuthRepository.exist({ where: { email } });
   }
 
-  public async isExistNickname(nickname: string): Promise<boolean> {
-    return await this.userAuthRepository.exist({ where: { nickname } });
+  public isExistNickname(nickname: string): Promise<boolean> {
+    return this.userAuthRepository.exist({ where: { nickname } });
   }
 
-  public async isExistPhoneNumber(phonenumber: string): Promise<boolean> {
-    return await this.userProfileRepository.exist({ where: { phonenumber } });
+  public isExistPhoneNumber(phonenumber: string): Promise<boolean> {
+    return this.userProfileRepository.exist({ where: { phonenumber } });
   }
 
-  public async isExistClientUserId(id: string): Promise<boolean> {
-    return await this.clientUserRepository.exist({ where: { id } });
+  public isExistClientUserId(id: string): Promise<boolean> {
+    return this.clientUserRepository.exist({ where: { id } });
   }
 
-  public async isNoneExistEmail(email: string): Promise<boolean> {
-    return await this.userAuthRepository.exist({ where: { email } });
+  public isNoneExistEmail(email: string): Promise<boolean> {
+    return this.userAuthRepository.exist({ where: { email } });
   }
 
-  public async isNoneExistNickname(nickname: string): Promise<boolean> {
-    return await this.userAuthRepository.exist({ where: { nickname } });
+  public isNoneExistNickname(nickname: string): Promise<boolean> {
+    return this.userAuthRepository.exist({ where: { nickname } });
   }
 
-  public async isNoneExistPhonenumber(phonenumber: string): Promise<boolean> {
-    return await this.userProfileRepository.exist({
+  public isNoneExistPhonenumber(phonenumber: string): Promise<boolean> {
+    return this.userProfileRepository.exist({
       where: { phonenumber },
     });
   }

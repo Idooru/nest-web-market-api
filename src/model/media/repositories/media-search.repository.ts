@@ -31,8 +31,8 @@ export class MediaSearchRepository {
     private readonly mediaSelect: MediaSelectProperty,
   ) {}
 
-  async findProductImageWithId(id: string): Promise<ProductImageEntity> {
-    return await this.productImageRepository
+  findProductImageWithId(id: string): Promise<ProductImageEntity> {
+    return this.productImageRepository
       .createQueryBuilder()
       .select(this.mediaSelect.productImages)
       .from(ProductImageEntity, "productImage")
@@ -40,10 +40,8 @@ export class MediaSearchRepository {
       .getOne();
   }
 
-  async findBeforeProductImagesWithId(
-    id: string,
-  ): Promise<ProductImageEntity[]> {
-    return await this.productImageRepository
+  findBeforeProductImagesWithId(id: string): Promise<ProductImageEntity[]> {
+    return this.productImageRepository
       .createQueryBuilder()
       .select(this.mediaSelect.productImages)
       .from(ProductImageEntity, "productImage")
@@ -51,8 +49,8 @@ export class MediaSearchRepository {
       .getMany();
   }
 
-  async findReviewImageWithId(id: string): Promise<ReviewImageEntity> {
-    return await this.reviewImageRepository
+  findReviewImageWithId(id: string): Promise<ReviewImageEntity> {
+    return this.reviewImageRepository
       .createQueryBuilder()
       .select(this.mediaSelect.reviewImages)
       .from(ReviewImageEntity, "reviewImage")
@@ -60,8 +58,8 @@ export class MediaSearchRepository {
       .getOne();
   }
 
-  async findBeforeReviewImagesWithId(id: string): Promise<ReviewImageEntity[]> {
-    return await this.reviewImageRepository
+  findBeforeReviewImagesWithId(id: string): Promise<ReviewImageEntity[]> {
+    return this.reviewImageRepository
       .createQueryBuilder()
       .select(this.mediaSelect.reviewImages)
       .from(ReviewImageEntity, "reviewImage")
@@ -69,8 +67,8 @@ export class MediaSearchRepository {
       .getMany();
   }
 
-  async findReviewVideoWithId(id: string): Promise<ReviewVideoEntity> {
-    return await this.reviewVideoRepository
+  findReviewVideoWithId(id: string): Promise<ReviewVideoEntity> {
+    return this.reviewVideoRepository
       .createQueryBuilder()
       .select(this.mediaSelect.reviewVideos)
       .from(ReviewVideoEntity, "reviewVideo")
@@ -78,8 +76,8 @@ export class MediaSearchRepository {
       .getOne();
   }
 
-  async findBeforeReviewVideosWithId(id: string): Promise<ReviewVideoEntity[]> {
-    return await this.reviewVideoRepository
+  findBeforeReviewVideosWithId(id: string): Promise<ReviewVideoEntity[]> {
+    return this.reviewVideoRepository
       .createQueryBuilder()
       .select(this.mediaSelect.reviewVideos)
       .from(ReviewVideoEntity, "reviewVideo")
@@ -87,10 +85,10 @@ export class MediaSearchRepository {
       .getMany();
   }
 
-  async findInquiryRequestImageWithId(
+  findInquiryRequestImageWithId(
     id: string,
   ): Promise<InquiryRequestImageEntity> {
-    return await this.inquiryRequestImageRepository
+    return this.inquiryRequestImageRepository
       .createQueryBuilder()
       .select(this.mediaSelect.inquiryRequestImages)
       .from(InquiryRequestImageEntity, "inquiryRequestImage")
@@ -98,10 +96,10 @@ export class MediaSearchRepository {
       .getOne();
   }
 
-  async findInquiryRequestVideoWithId(
+  findInquiryRequestVideoWithId(
     id: string,
   ): Promise<InquiryRequestVideoEntity> {
-    return await this.inquiryRequestVideoRepository
+    return this.inquiryRequestVideoRepository
       .createQueryBuilder()
       .select(this.mediaSelect.inquiryRequestVideos)
       .from(InquiryRequestVideoEntity, "inquiryRequestVideo")
@@ -109,10 +107,10 @@ export class MediaSearchRepository {
       .getOne();
   }
 
-  async findInquiryResponseImageWithId(
+  findInquiryResponseImageWithId(
     id: string,
   ): Promise<InquiryResponseImageEntity> {
-    return await this.inquiryResponseImageRepository
+    return this.inquiryResponseImageRepository
       .createQueryBuilder()
       .select(this.mediaSelect.inquiryResponseImages)
       .from(InquiryResponseImageEntity, "inquiryResponseImage")
@@ -120,10 +118,10 @@ export class MediaSearchRepository {
       .getOne();
   }
 
-  async findInquiryResponseVideoWithId(
+  findInquiryResponseVideoWithId(
     id: string,
   ): Promise<InquiryResponseVideoEntity> {
-    return await this.inquiryResponseVideoRepository
+    return this.inquiryResponseVideoRepository
       .createQueryBuilder()
       .select(this.mediaSelect.inquiryResponseVideos)
       .from(InquiryResponseVideoEntity, "inquiryResponseVideo")

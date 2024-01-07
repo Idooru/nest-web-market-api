@@ -7,8 +7,8 @@ import { loggerFactory } from "../../../common/functions/logger.factory";
 export class CartSearcher {
   constructor(private readonly cartSearchRepository: CartSearchRepository) {}
 
-  public async findCartsWithUserId(id: string): Promise<CartEntity[]> {
-    return await this.cartSearchRepository.findCartsWithUserId(id);
+  public findCartsWithUserId(id: string): Promise<CartEntity[]> {
+    return this.cartSearchRepository.findCartsWithUserId(id);
   }
 
   public async validateProduct(

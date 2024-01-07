@@ -11,16 +11,16 @@ export class ReviewSearcher {
     private readonly productSearcher: ProductSearcher,
   ) {}
 
-  async findAllClientsReviews(id: string): Promise<ReviewEntity[]> {
-    return await this.reviewSearchRepository.findAllClientsReviews(id);
+  findAllClientsReviews(id: string): Promise<ReviewEntity[]> {
+    return this.reviewSearchRepository.findAllClientsReviews(id);
   }
 
-  async findStarRateWithId(id: string): Promise<StarRateEntity> {
-    return await this.reviewSearchRepository.findStarRateWithId(id);
+  findStarRateWithId(id: string): Promise<StarRateEntity> {
+    return this.reviewSearchRepository.findStarRateWithId(id);
   }
 
-  async findReviewWithId(id: string): Promise<ReviewEntity> {
-    return await this.reviewSearchRepository.findReviewWithId(id);
+  findReviewWithId(id: string): Promise<ReviewEntity> {
+    return this.reviewSearchRepository.findReviewWithId(id);
   }
 
   async findReviewsWithProductId(id: string): Promise<ReviewEntity[]> {

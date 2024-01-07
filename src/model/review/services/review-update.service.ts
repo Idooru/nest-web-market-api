@@ -24,10 +24,8 @@ export class ReviewUpdateService {
   ) {}
 
   // Transaction
-  public async createReview(
-    createReviewDto: CreateReviewDto,
-  ): Promise<ReviewEntity> {
-    return await this.reviewOperationRepository.createReview(createReviewDto);
+  public createReview(createReviewDto: CreateReviewDto): Promise<ReviewEntity> {
+    return this.reviewOperationRepository.createReview(createReviewDto);
   }
 
   // Transaction

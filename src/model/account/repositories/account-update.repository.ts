@@ -63,7 +63,7 @@ export class AccountUpdateRepository {
       .where("id = :id", { id: accountId })
       .execute();
 
-    return await this.accountRepository.findOneBy({ id: accountId });
+    return this.accountRepository.findOneBy({ id: accountId });
   }
 
   // General
@@ -85,6 +85,6 @@ export class AccountUpdateRepository {
         }
       });
 
-    return await this.accountRepository.findOneBy({ id: accountId });
+    return this.accountRepository.findOneBy({ id: accountId });
   }
 }

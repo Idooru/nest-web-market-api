@@ -12,109 +12,103 @@ import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.ent
 export class MediaSearcher {
   constructor(private readonly mediaSearchRepository: MediaSearchRepository) {}
 
-  async findProductImagesWithId(
+  findProductImagesWithId(
     productImgCookies: MediaCookieDto[],
   ): Promise<ProductImageEntity[]> {
-    const finding = productImgCookies.map(async (productImgCookie) => {
-      return await this.mediaSearchRepository.findProductImageWithId(
+    const finding = productImgCookies.map((productImgCookie) => {
+      return this.mediaSearchRepository.findProductImageWithId(
         productImgCookie.id,
       );
     });
 
-    return await Promise.all(finding);
+    return Promise.all(finding);
   }
 
-  async findBeforeProductImagesWithId(
-    id: string,
-  ): Promise<ProductImageEntity[]> {
-    return await this.mediaSearchRepository.findBeforeProductImagesWithId(id);
+  findBeforeProductImagesWithId(id: string): Promise<ProductImageEntity[]> {
+    return this.mediaSearchRepository.findBeforeProductImagesWithId(id);
   }
 
-  async findReviewImagesWithId(
+  findReviewImagesWithId(
     reviewImgCookies: MediaCookieDto[],
   ): Promise<ReviewImageEntity[]> {
-    const finding = reviewImgCookies.map(async (reviewImgCookie) => {
-      return await this.mediaSearchRepository.findReviewImageWithId(
+    const finding = reviewImgCookies.map((reviewImgCookie) => {
+      return this.mediaSearchRepository.findReviewImageWithId(
         reviewImgCookie.id,
       );
     });
 
-    return await Promise.all(finding);
+    return Promise.all(finding);
   }
 
-  async findBeforeReviewImagesWithId(id: string): Promise<ReviewImageEntity[]> {
-    return await this.mediaSearchRepository.findBeforeReviewImagesWithId(id);
+  findBeforeReviewImagesWithId(id: string): Promise<ReviewImageEntity[]> {
+    return this.mediaSearchRepository.findBeforeReviewImagesWithId(id);
   }
 
-  async findReviewVideosWithId(
+  findReviewVideosWithId(
     reviewVdoCookies: MediaCookieDto[],
   ): Promise<ReviewVideoEntity[]> {
-    const finding = reviewVdoCookies.map(async (reviewVdoCookie) => {
-      return await this.mediaSearchRepository.findReviewVideoWithId(
+    const finding = reviewVdoCookies.map((reviewVdoCookie) => {
+      return this.mediaSearchRepository.findReviewVideoWithId(
         reviewVdoCookie.id,
       );
     });
 
-    return await Promise.all(finding);
+    return Promise.all(finding);
   }
 
-  async findBeforeReviewVideosWithId(id: string): Promise<ReviewVideoEntity[]> {
-    return await this.mediaSearchRepository.findBeforeReviewVideosWithId(id);
+  findBeforeReviewVideosWithId(id: string): Promise<ReviewVideoEntity[]> {
+    return this.mediaSearchRepository.findBeforeReviewVideosWithId(id);
   }
 
-  async findInquiryRequestImagesWithId(
+  findInquiryRequestImagesWithId(
     inquiryRequestImgCookies: MediaCookieDto[],
   ): Promise<InquiryRequestImageEntity[]> {
-    const finding = inquiryRequestImgCookies.map(
-      async (inquiryRequestImgCookie) => {
-        return await this.mediaSearchRepository.findInquiryRequestImageWithId(
-          inquiryRequestImgCookie.id,
-        );
-      },
-    );
+    const finding = inquiryRequestImgCookies.map((inquiryRequestImgCookie) => {
+      return this.mediaSearchRepository.findInquiryRequestImageWithId(
+        inquiryRequestImgCookie.id,
+      );
+    });
 
-    return await Promise.all(finding);
+    return Promise.all(finding);
   }
 
-  async findInquiryRequestVideosWithId(
+  findInquiryRequestVideosWithId(
     inquiryRequestVdoCookies: MediaCookieDto[],
   ): Promise<InquiryRequestVideoEntity[]> {
-    const finding = inquiryRequestVdoCookies.map(
-      async (inquiryRequestVdoCookie) => {
-        return await this.mediaSearchRepository.findInquiryRequestVideoWithId(
-          inquiryRequestVdoCookie.id,
-        );
-      },
-    );
+    const finding = inquiryRequestVdoCookies.map((inquiryRequestVdoCookie) => {
+      return this.mediaSearchRepository.findInquiryRequestVideoWithId(
+        inquiryRequestVdoCookie.id,
+      );
+    });
 
-    return await Promise.all(finding);
+    return Promise.all(finding);
   }
 
-  async findInquiryResponseImagesWithId(
+  findInquiryResponseImagesWithId(
     inquiryResponseImgCookies: MediaCookieDto[],
   ): Promise<InquiryResponseImageEntity[]> {
     const finding = inquiryResponseImgCookies.map(
-      async (inquiryResponseImgCookie) => {
-        return await this.mediaSearchRepository.findInquiryResponseImageWithId(
+      (inquiryResponseImgCookie) => {
+        return this.mediaSearchRepository.findInquiryResponseImageWithId(
           inquiryResponseImgCookie.id,
         );
       },
     );
 
-    return await Promise.all(finding);
+    return Promise.all(finding);
   }
 
-  async findInquiryResponseVideosWithId(
+  findInquiryResponseVideosWithId(
     inquiryResponseVdoCookies: MediaCookieDto[],
   ): Promise<InquiryResponseImageEntity[]> {
     const finding = inquiryResponseVdoCookies.map(
-      async (inquiryResponseVdoCookie) => {
-        return await this.mediaSearchRepository.findInquiryResponseVideoWithId(
+      (inquiryResponseVdoCookie) => {
+        return this.mediaSearchRepository.findInquiryResponseVideoWithId(
           inquiryResponseVdoCookie.id,
         );
       },
     );
 
-    return await Promise.all(finding);
+    return Promise.all(finding);
   }
 }
