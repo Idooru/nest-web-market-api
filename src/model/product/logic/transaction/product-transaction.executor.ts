@@ -21,32 +21,35 @@ export class ProductTransactionExecutor {
     const search = await this.searcher.searchCreateProduct(dto);
     const queryRunner = await this.transaction.init();
 
+    this.handler.setQueryRunner(queryRunner);
     await this.context
       .createProductContext(search)()
-      .then(() => this.handler.commit(queryRunner))
-      .catch((err) => this.handler.rollback(queryRunner, err))
-      .finally(() => this.handler.release(queryRunner));
+      .then(() => this.handler.commit())
+      .catch((err) => this.handler.rollback(err))
+      .finally(() => this.handler.release());
   }
 
   public async modifyProduct(dto: ModifyProductDto): Promise<void> {
     const search = await this.searcher.searchModifyProduct(dto);
     const queryRunner = await this.transaction.init();
 
+    this.handler.setQueryRunner(queryRunner);
     await this.context
       .modifyProductContext(search)()
-      .then(() => this.handler.commit(queryRunner))
-      .catch((err) => this.handler.rollback(queryRunner, err))
-      .finally(() => this.handler.release(queryRunner));
+      .then(() => this.handler.commit())
+      .catch((err) => this.handler.rollback(err))
+      .finally(() => this.handler.release());
   }
 
   public async modifyProductImage(dto: ModifyProductImageDto): Promise<void> {
     const search = await this.searcher.searchModifyProductImage(dto);
     const queryRunner = await this.transaction.init();
 
+    this.handler.setQueryRunner(queryRunner);
     await this.context
       .modifyProductImageContext(search)()
-      .then(() => this.handler.commit(queryRunner))
-      .catch((err) => this.handler.rollback(queryRunner, err))
-      .finally(() => this.handler.release(queryRunner));
+      .then(() => this.handler.commit())
+      .catch((err) => this.handler.rollback(err))
+      .finally(() => this.handler.release());
   }
 }

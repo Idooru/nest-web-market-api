@@ -21,32 +21,35 @@ export class ReviewTransactionExecutor {
     const search = await this.searcher.searchCreateReview(dto);
     const queryRunner = await this.transaction.init();
 
+    this.handler.setQueryRunner(queryRunner);
     await this.context
       .createReviewContext(search)()
-      .then(() => this.handler.commit(queryRunner))
-      .catch((err) => this.handler.rollback(queryRunner, err))
-      .finally(() => this.handler.release(queryRunner));
+      .then(() => this.handler.commit())
+      .catch((err) => this.handler.rollback(err))
+      .finally(() => this.handler.release());
   }
 
   public async modifyReview(dto: PrepareToModifyReviewDto): Promise<void> {
     const search = await this.searcher.searchModifyReview(dto);
     const queryRunner = await this.transaction.init();
 
+    this.handler.setQueryRunner(queryRunner);
     await this.context
       .modifyReviewContext(search)()
-      .then(() => this.handler.commit(queryRunner))
-      .catch((err) => this.handler.rollback(queryRunner, err))
-      .finally(() => this.handler.release(queryRunner));
+      .then(() => this.handler.commit())
+      .catch((err) => this.handler.rollback(err))
+      .finally(() => this.handler.release());
   }
 
   public async deleteReview(dto: DeleteReviewDto): Promise<void> {
     const search = await this.searcher.searchDeleteReview(dto);
     const queryRunner = await this.transaction.init();
 
+    this.handler.setQueryRunner(queryRunner);
     await this.context
       .deleteReviewContext(search)()
-      .then(() => this.handler.commit(queryRunner))
-      .catch((err) => this.handler.rollback(queryRunner, err))
-      .finally(() => this.handler.release(queryRunner));
+      .then(() => this.handler.commit())
+      .catch((err) => this.handler.rollback(err))
+      .finally(() => this.handler.release());
   }
 }

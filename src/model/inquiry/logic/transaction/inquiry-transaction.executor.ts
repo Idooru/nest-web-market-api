@@ -22,11 +22,12 @@ export class InquiryTransactionExecutor {
     const search = await this.searcher.searchToCreateInquiryRequest(dto);
     const queryRunner = await this.transaction.init();
 
+    this.handler.setQueryRunner(queryRunner);
     await this.context
       .createInquiryRequestContext(search)()
-      .then(() => this.handler.commit(queryRunner))
-      .catch((err) => this.handler.rollback(queryRunner, err))
-      .finally(() => this.handler.release(queryRunner));
+      .then(() => this.handler.commit())
+      .catch((err) => this.handler.rollback(err))
+      .finally(() => this.handler.release());
   }
 
   public async createInquiryResponse(
@@ -35,10 +36,11 @@ export class InquiryTransactionExecutor {
     const search = await this.searcher.searchToCreateInquiryResponse(dto);
     const queryRunner = await this.transaction.init();
 
+    this.handler.setQueryRunner(queryRunner);
     await this.context
       .createInquiryResponseContext(search)()
-      .then(() => this.handler.commit(queryRunner))
-      .catch((err) => this.handler.rollback(queryRunner, err))
-      .finally(() => this.handler.release(queryRunner));
+      .then(() => this.handler.commit())
+      .catch((err) => this.handler.rollback(err))
+      .finally(() => this.handler.release());
   }
 }

@@ -16,21 +16,23 @@ export class UserTransactionExecutor {
 
   public async register(dto: RegisterUserDto): Promise<void> {
     const queryRunner = await this.transaction.init();
+    this.handler.setQueryRunner(queryRunner);
 
     await this.context
       .registerContext(dto)()
-      .then(() => this.handler.commit(queryRunner))
-      .catch((err) => this.handler.rollback(queryRunner, err))
-      .finally(() => this.handler.release(queryRunner));
+      .then(() => this.handler.commit())
+      .catch((err) => this.handler.rollback(err))
+      .finally(() => this.handler.release());
   }
 
   public async modifyUser(dto: PrepareToModifyUserDto): Promise<void> {
     const queryRunner = await this.transaction.init();
+    this.handler.setQueryRunner(queryRunner);
 
     await this.context
       .modifyUserContext(dto)()
-      .then(() => this.handler.commit(queryRunner))
-      .catch((err) => this.handler.rollback(queryRunner, err))
-      .finally(() => this.handler.release(queryRunner));
+      .then(() => this.handler.commit())
+      .catch((err) => this.handler.rollback(err))
+      .finally(() => this.handler.release());
   }
 }

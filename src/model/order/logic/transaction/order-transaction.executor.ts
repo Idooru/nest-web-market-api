@@ -22,10 +22,11 @@ export class OrderTransactionExecutor {
     const search = await this.searcher.searchCreateOrder(createOrderDto);
     const queryRunner = await this.transaction.init();
 
+    this.handler.setQueryRunner(queryRunner);
     await this.context
       .createOrderContext(search)()
-      .then(() => this.handler.commit(queryRunner))
-      .catch((err) => this.handler.rollback(queryRunner, err))
-      .finally(() => this.handler.release(queryRunner));
+      .then(() => this.handler.commit())
+      .catch((err) => this.handler.rollback(err))
+      .finally(() => this.handler.release());
   }
 }
