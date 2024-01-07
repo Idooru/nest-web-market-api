@@ -5,15 +5,18 @@ import { loggerFactory } from "../../functions/logger.factory";
 import { TypeOrmException } from "../../errors/typeorm.exception";
 
 export class TransactionHandler {
-  public async commit(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.commitTransaction();
+  private queryRunner: QueryRunner;
+
+  public setQueryRunner(queryRunner: QueryRunner): void {
+    this.queryRunner = queryRunner;
   }
 
-  public async rollback(
-    queryRunner: QueryRunner,
-    err: LibraryError & TypeORMError,
-  ): Promise<void> {
-    await queryRunner.rollbackTransaction();
+  public async commit(): Promise<void> {
+    await this.queryRunner.commitTransaction();
+  }
+
+  public async rollback(err: LibraryError & TypeORMError): Promise<void> {
+    await this.queryRunner.rollbackTransaction();
     if (err.response.type.includes("library")) {
       throw new LibraryException(err);
     } else {
@@ -22,7 +25,7 @@ export class TransactionHandler {
     }
   }
 
-  public async release(queryRunner: QueryRunner) {
-    await queryRunner.release();
+  public async release(): Promise<void> {
+    await this.queryRunner.release();
   }
 }
