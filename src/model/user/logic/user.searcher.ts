@@ -4,7 +4,6 @@ import { UserEntity } from "../entities/user.entity";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ClientUserEntity } from "../entities/client-user.entity";
 import { AdminUserEntity } from "../entities/admin-user.entity";
-import { UserAuthEntity } from "../entities/user-auth.entity";
 
 @Injectable()
 export class UserSearcher {
@@ -16,18 +15,6 @@ export class UserSearcher {
 
   findUserWithEmail(email: string): Promise<UserEntity> {
     return this.userSearchRepository.findUserWithEmail(email);
-  }
-
-  findUserWithNickname(nickname: string): Promise<UserEntity> {
-    return this.userSearchRepository.findUserWithNickname(nickname);
-  }
-
-  findClientUserWithId(id: string): Promise<UserEntity> {
-    return this.userSearchRepository.findClientUserWithId(id);
-  }
-
-  findAdminUserWithId(id: string): Promise<UserEntity> {
-    return this.userSearchRepository.findAdminUserWithId(id);
   }
 
   findAllUsersFromLatest(): Promise<UserEntity[]> {
@@ -48,10 +35,6 @@ export class UserSearcher {
 
   findAdminUserObjectWithId(id: string): Promise<AdminUserEntity> {
     return this.userSearchRepository.findAdminUserObjectWithId(id);
-  }
-
-  findAdminUserProfileInfoWithId(id: string): Promise<UserEntity> {
-    return this.userSearchRepository.findAdminUserProfileInfoWithId(id);
   }
 
   async findUserProfile(
@@ -77,9 +60,5 @@ export class UserSearcher {
     phonenumber: string,
   ): Promise<UserEntity> {
     return this.userSearchRepository.findUserForgotten(realname, phonenumber);
-  }
-
-  findRefreshTokenWithId(id: string): Promise<UserAuthEntity> {
-    return this.userSearchRepository.findRefreshTokenWithId(id);
   }
 }
