@@ -11,6 +11,7 @@ import { CatchCallbackFactoryLibrary } from "../../../common/lib/util/catch-call
 import { JwtErrorHandlerLibrary } from "../../../common/lib/jwt/jwt-error-handler.library";
 
 import bcrypt from "bcrypt";
+import { FindEmailDto } from "../dtos/find-email.dto";
 
 @Injectable()
 export class UserSecurity {
@@ -28,8 +29,8 @@ export class UserSecurity {
       .catch(this.callbackFactory.getCatchHashPasswordFunc(hasTransaction));
   }
 
-  async login(loginUserDto: LoginUserDto): Promise<JwtPayload> {
-    const { email, password } = loginUserDto;
+  public async login(dto: LoginUserDto): Promise<JwtPayload> {
+    const { email, password } = dto;
 
     const user = await this.userSearcher.findUserWithEmail(email);
     const compared =
@@ -73,7 +74,9 @@ export class UserSecurity {
     return { accessToken, refreshToken };
   }
 
-  async refreshToken(jwtPaylaod: JwtRefreshTokenPayload): Promise<string> {
+  public async refreshToken(
+    jwtPaylaod: JwtRefreshTokenPayload,
+  ): Promise<string> {
     const user = await this.userSearcher.findUserWithEmail(jwtPaylaod.email);
 
     const jwtAccessTokenPayload: JwtAccessTokenPayload = {
@@ -91,11 +94,8 @@ export class UserSecurity {
       .catch(this.jwtErrorHandlerLibrary.catchSignAccessTokenError);
   }
 
-  async findEmail(realname: string, phonenumber: string): Promise<string> {
-    const user = await this.userSearcher.findUserForgotten(
-      realname,
-      phonenumber,
-    );
+  public async findEmail(dto: FindEmailDto): Promise<string> {
+    const user = await this.userSearcher.findUserForgotten(dto);
 
     return user.Auth.email;
   }

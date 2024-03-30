@@ -5,9 +5,8 @@ import { Repository } from "typeorm";
 import { UserSelectProperty } from "src/common/config/repository-select-configs/user.select";
 import { ClientUserEntity } from "../entities/client-user.entity";
 import { AdminUserEntity } from "../entities/admin-user.entity";
-import { UserAuthEntity } from "../entities/user-auth.entity";
-import { UserProfileEntity } from "../entities/user-profile.entity";
 import { loggerFactory } from "../../../common/functions/logger.factory";
+import { FindEmailDto } from "../dtos/find-email.dto";
 
 @Injectable()
 export class UserSearchRepository {
@@ -18,15 +17,11 @@ export class UserSearchRepository {
     private readonly clientUserRepository: Repository<ClientUserEntity>,
     @InjectRepository(AdminUserEntity)
     private readonly adminUserRepository: Repository<AdminUserEntity>,
-    @InjectRepository(UserAuthEntity)
-    private readonly userAuthRepository: Repository<UserAuthEntity>,
-    @InjectRepository(UserProfileEntity)
-    private readonly userProfileRepository: Repository<UserProfileEntity>,
     @Inject("UserSelectProperty")
     private readonly userSelect: UserSelectProperty,
   ) {}
 
-  async findAllUsersFromLatest(): Promise<UserEntity[]> {
+  public async findAllUsersFromLatest(): Promise<UserEntity[]> {
     const users = await this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.clientUserSimple)
@@ -44,7 +39,7 @@ export class UserSearchRepository {
     return users;
   }
 
-  async findAllUsersFromOldest(): Promise<UserEntity[]> {
+  public async findAllUsersFromOldest(): Promise<UserEntity[]> {
     const users = await this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.clientUserSimple)
@@ -62,7 +57,7 @@ export class UserSearchRepository {
     return users;
   }
 
-  findUserWithId(id: string): Promise<UserEntity> {
+  public findUserWithId(id: string): Promise<UserEntity> {
     return this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.userBase)
@@ -73,7 +68,7 @@ export class UserSearchRepository {
       .getOne();
   }
 
-  findClientUserWithId(id: string): Promise<UserEntity> {
+  public findClientUserWithId(id: string): Promise<UserEntity> {
     return this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.clientUser)
@@ -85,7 +80,7 @@ export class UserSearchRepository {
       .getOne();
   }
 
-  findAdminUserWithId(id: string): Promise<UserEntity> {
+  public async findAdminUserWithId(id: string): Promise<UserEntity> {
     return this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.adminUser)
@@ -97,9 +92,9 @@ export class UserSearchRepository {
       .getOne();
   }
 
-  async findClientUserObjectWithId(id: string): Promise<ClientUserEntity> {
-    const user = await this.findClientUserWithId(id);
-
+  public async findClientUserObjectWithId(
+    user: UserEntity,
+  ): Promise<ClientUserEntity> {
     return this.clientUserRepository
       .createQueryBuilder()
       .select(["client", "User", "Auth", "Account"])
@@ -111,9 +106,9 @@ export class UserSearchRepository {
       .getOne();
   }
 
-  async findAdminUserObjectWithId(id: string): Promise<AdminUserEntity> {
-    const user = await this.findAdminUserWithId(id);
-
+  public async findAdminUserObjectWithId(
+    user: UserEntity,
+  ): Promise<AdminUserEntity> {
     return this.adminUserRepository
       .createQueryBuilder()
       .select(["admin", "User", "Account"])
@@ -124,7 +119,7 @@ export class UserSearchRepository {
       .getOne();
   }
 
-  findUserWithEmail(email: string): Promise<UserEntity> {
+  public findUserWithEmail(email: string): Promise<UserEntity> {
     return this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.userBase)
@@ -135,21 +130,8 @@ export class UserSearchRepository {
       .getOne();
   }
 
-  findUserWithNickname(nickname: string): Promise<UserEntity> {
-    return this.userRepository
-      .createQueryBuilder()
-      .select(this.userSelect.userBase)
-      .from(UserEntity, "user")
-      .innerJoin("user.Profile", "Profile")
-      .innerJoin("user.Auth", "Auth")
-      .where("Auth.nickname = :nickname", { nickname })
-      .getOne();
-  }
-
-  findUserForgotten(
-    realname: string,
-    phonenumber: string,
-  ): Promise<UserEntity> {
+  public findUserForgotten(dto: FindEmailDto): Promise<UserEntity> {
+    const { realname, phonenumber } = dto;
     return this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.userBase)
@@ -161,7 +143,9 @@ export class UserSearchRepository {
       .getOne();
   }
 
-  async findClientUserProfileInfoWithId(id: string): Promise<UserEntity> {
+  public async findClientUserProfileInfoWithId(
+    id: string,
+  ): Promise<UserEntity> {
     const clientUser = await this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.clientUserProfile)
@@ -189,12 +173,13 @@ export class UserSearchRepository {
       .where("user.id = :id", { id })
       .getOne();
 
-    clientUser.clientActions.id = undefined;
+    clientUser.Auth.password = undefined;
+
     return clientUser;
   }
 
-  async findAdminUserProfileInfoWithId(id: string): Promise<UserEntity> {
-    const admin = await this.userRepository
+  public async findAdminUserProfileInfoWithId(id: string): Promise<UserEntity> {
+    const adminUser = await this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.adminUserProfile)
       .from(UserEntity, "user")
@@ -220,11 +205,12 @@ export class UserSearchRepository {
       .where("user.id = :id", { id })
       .getOne();
 
-    admin.adminActions.id = undefined;
-    return admin;
+    adminUser.Auth.password = undefined;
+
+    return adminUser;
   }
 
-  findClientUserInfo(id: string): Promise<UserEntity> {
+  public findClientUserInfo(id: string): Promise<UserEntity> {
     return this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.whenAdminClientUser)
@@ -240,15 +226,6 @@ export class UserSearchRepository {
       .leftJoin("InquiryRequest.Image", "InquiryRequestImage")
       .leftJoin("InquiryRequest.Video", "InquiryRequestVideo")
       .where("user.id = :id", { id })
-      .getOne();
-  }
-
-  findRefreshTokenWithId(id: string): Promise<UserAuthEntity> {
-    return this.userAuthRepository
-      .createQueryBuilder()
-      .select("auth.refreshToken")
-      .from(UserAuthEntity, "auth")
-      .where("auth.id = :id", { id })
       .getOne();
   }
 }
