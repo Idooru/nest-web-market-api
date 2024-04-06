@@ -7,6 +7,8 @@ import { UserSearcher } from "../logic/user.searcher";
 import { UserSecurity } from "../logic/user.security";
 import { ResetPasswordDto } from "../dtos/reset-password.dto";
 import { UserEventMapSetter } from "../logic/user-event-map.setter";
+import { Transaction } from "../../../common/decorators/transaction.decorator";
+import { General } from "src/common/decorators/general.decoration";
 
 @Injectable()
 export class UserUpdateService {
@@ -18,7 +20,7 @@ export class UserUpdateService {
     private readonly userEventMapSetter: UserEventMapSetter,
   ) {}
 
-  // Transaction
+  @Transaction
   public async createUserEntity(
     role: ["client", "admin"],
   ): Promise<UserEntity> {
@@ -33,7 +35,7 @@ export class UserUpdateService {
     return user;
   }
 
-  // Transaction
+  @Transaction
   public async createUserBase(
     user: UserEntity,
     registerUserDto: RegisterUserDto,
@@ -70,7 +72,7 @@ export class UserUpdateService {
     this.userEventMapSetter.setRegisterEventParam({ email, nickname });
   }
 
-  // Transaction
+  @Transaction
   public async modifyUser(
     modifyUserDto: ModifyUserDto,
     id: string,
@@ -88,17 +90,17 @@ export class UserUpdateService {
     ]);
   }
 
-  // General
+  @General
   public async modifyUserEmail(email: string, id: string): Promise<void> {
     await this.userUpdateRepository.modifyUserEmail(email, id);
   }
 
-  // General
+  @General
   public async modifyUserNickname(nickname: string, id: string): Promise<void> {
     await this.userUpdateRepository.modifyUserNickname(nickname, id);
   }
 
-  // General
+  @General
   public async modifyUserPhonenumber(
     phonenumber: string,
     id: string,
@@ -106,19 +108,19 @@ export class UserUpdateService {
     await this.userUpdateRepository.modifyUserPhonenumber(phonenumber, id);
   }
 
-  // General
+  @General
   public async modifyUserPassword(password: string, id: string): Promise<void> {
     const hashed = await this.userSecurity.hashPassword(password, false);
 
     await this.userUpdateRepository.modifyUserPassword(hashed, id);
   }
 
-  // General
+  @General
   public async modifyUserAddress(address: string, id: string): Promise<void> {
     await this.userUpdateRepository.modifyUserAddress(address, id);
   }
 
-  // General
+  @General
   public async resetPassword(
     resetPasswordDto: ResetPasswordDto,
   ): Promise<void> {
@@ -130,7 +132,7 @@ export class UserUpdateService {
     await this.userUpdateRepository.modifyUserPassword(hashed, user.id);
   }
 
-  // General
+  @General
   public async deleteUser(id: string): Promise<void> {
     await this.userUpdateRepository.deleteUser(id);
   }

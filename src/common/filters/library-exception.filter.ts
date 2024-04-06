@@ -1,10 +1,12 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from "@nestjs/common";
 import { LibraryException } from "../errors/library.exception";
 import { Response } from "express";
+import { Implemented } from "../decorators/implemented.decoration";
 
 @Catch(LibraryException)
 export class LibraryExceptionFilter implements ExceptionFilter {
-  catch(exception: LibraryException, host: ArgumentsHost) {
+  @Implemented
+  public catch(exception: LibraryException, host: ArgumentsHost) {
     const res = host.switchToHttp().getResponse<Response>();
     const { error } = exception.getResponse() as LibraryException;
 

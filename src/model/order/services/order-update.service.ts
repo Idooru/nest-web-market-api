@@ -6,17 +6,18 @@ import { CreatePaymentsDto } from "../dto/create-payments.dto";
 import { OrderEntity } from "../entities/order.entity";
 import { DepositAdminBalanceDto } from "../dto/deposit-admin-balance.dto";
 import { MoneyTransactionDto } from "../../account/dtos/money-transaction.dto";
+import { Transaction } from "../../../common/decorators/transaction.decorator";
 
 @Injectable()
 export class OrderUpdateService {
   constructor(private readonly orderUpdateRepository: OrderUpdateRepository) {}
 
-  // Transaction
+  @Transaction
   public async deleteAllCarts(id: string) {
     await this.orderUpdateRepository.deleteAllCartsOnTransaction(id);
   }
 
-  // Transaction
+  @Transaction
   public async decreaseProductQuantities(
     productQuantities: { product: ProductEntity; quantity: number }[],
   ): Promise<void> {
@@ -27,12 +28,12 @@ export class OrderUpdateService {
     await Promise.all(decreasing);
   }
 
-  // Transaction
+  @Transaction
   public createOrder(createOrderDto: CreateOrderDto): Promise<OrderEntity> {
     return this.orderUpdateRepository.createOrder(createOrderDto);
   }
 
-  // Transaction
+  @Transaction
   public async createPayments(
     createPaymentsDto: CreatePaymentsDto,
   ): Promise<void> {
@@ -48,14 +49,14 @@ export class OrderUpdateService {
     await Promise.all(creating);
   }
 
-  // Transaction
+  @Transaction
   public async withdrawClientBalance(
     withdrawDto: MoneyTransactionDto,
   ): Promise<void> {
     await this.orderUpdateRepository.withdrawClientBalance(withdrawDto);
   }
 
-  // Transaction
+  @Transaction
   public async depositAdminBalance(
     productQuantities: { product: ProductEntity; quantity: number }[],
   ): Promise<void> {

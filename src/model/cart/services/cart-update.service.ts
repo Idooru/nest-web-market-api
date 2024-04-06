@@ -6,6 +6,7 @@ import { CartSearcher } from "../logic/cart.searcher";
 import { CartBodyDto } from "../dto/cart-body.dto";
 import { ModifyCartDto } from "../dto/modify-cart.dto";
 import { loggerFactory } from "../../../common/functions/logger.factory";
+import { General } from "../../../common/decorators/general.decoration";
 
 @Injectable()
 export class CartUpdateService {
@@ -16,7 +17,7 @@ export class CartUpdateService {
     private readonly productSearcher: ProductSearcher,
   ) {}
 
-  // General
+  @General
   public async createCart(
     productId: string,
     clientUserId: string,
@@ -43,7 +44,7 @@ export class CartUpdateService {
     });
   }
 
-  // General
+  @General
   public async modifyCartWithId(modifyCartDto: ModifyCartDto): Promise<void> {
     const { productId } = modifyCartDto;
     const { quantity, totalPrice } = modifyCartDto.cartBodyDto;
@@ -58,12 +59,12 @@ export class CartUpdateService {
     await this.cartUpdateRepository.modifyCartWithId(modifyCartDto);
   }
 
-  // General
+  @General
   public async deleteAllCartsWithUserId(id: string): Promise<void> {
     await this.cartUpdateRepository.deleteAllCartsWithUserId(id);
   }
 
-  // General
+  @General
   public async deleteCartWithId(id: string): Promise<void> {
     await this.cartUpdateRepository.deleteCartWithId(id);
   }

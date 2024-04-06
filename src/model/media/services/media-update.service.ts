@@ -5,6 +5,7 @@ import { MediaUpdateRepository } from "../repositories/media-update.repository";
 import { ProductMediaCookieKey } from "../../../common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
 import { InquiryMediaCookieKey } from "../../../common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 import { ReviewMediaCookieKey } from "../../../common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
+import { General } from "../../../common/decorators/general.decoration";
 
 @Injectable()
 export class MediaUpdateService {
@@ -19,7 +20,7 @@ export class MediaUpdateService {
     private readonly mediaOperationRepository: MediaUpdateRepository,
   ) {}
 
-  // General
+  @General
   public async uploadProductImages(
     files: Express.Multer.File[],
   ): Promise<MediaCookieDto[]> {
@@ -45,7 +46,7 @@ export class MediaUpdateService {
     );
   }
 
-  // General
+  @General
   public async uploadReviewImages(
     files: Express.Multer.File[],
   ): Promise<MediaCookieDto[]> {
@@ -71,7 +72,7 @@ export class MediaUpdateService {
     );
   }
 
-  // General
+  @General
   public async uploadReviewVideos(
     files: Express.Multer.File[],
   ): Promise<MediaCookieDto[]> {
@@ -97,7 +98,7 @@ export class MediaUpdateService {
     );
   }
 
-  // General
+  @General
   public async uploadInquiryRequestImages(
     files: Express.Multer.File[],
   ): Promise<MediaCookieDto[]> {
@@ -125,7 +126,7 @@ export class MediaUpdateService {
     );
   }
 
-  // General
+  @General
   public async uploadInquiryRequestVideos(
     files: Express.Multer.File[],
   ): Promise<MediaCookieDto[]> {
@@ -153,7 +154,7 @@ export class MediaUpdateService {
     );
   }
 
-  // General
+  @General
   public async uploadInquiryResponseImages(
     files: Express.Multer.File[],
   ): Promise<MediaCookieDto[]> {
@@ -181,7 +182,7 @@ export class MediaUpdateService {
     );
   }
 
-  // General
+  @General
   public async uploadInquiryResponseVideos(
     files: Express.Multer.File[],
   ): Promise<MediaCookieDto[]> {
@@ -209,7 +210,7 @@ export class MediaUpdateService {
     );
   }
 
-  // General
+  @General
   public async deleteProductImagesWithId(
     productImgCookies: MediaCookieDto[],
   ): Promise<string[]> {
@@ -232,7 +233,7 @@ export class MediaUpdateService {
     );
   }
 
-  // General
+  @General
   public async deleteReviewImagesWithId(
     reviewImgCookies: MediaCookieDto[],
   ): Promise<string[]> {
@@ -253,7 +254,7 @@ export class MediaUpdateService {
     );
   }
 
-  // General
+  @General
   public async deleteReviewVideosWithId(
     reviewVdoCookies: MediaCookieDto[],
   ): Promise<string[]> {
@@ -274,7 +275,7 @@ export class MediaUpdateService {
     );
   }
 
-  // General
+  @General
   public async deleteInquiryRequestImagesWithId(
     inquiryRequestImgCookies: MediaCookieDto[],
   ): Promise<string[]> {
@@ -298,7 +299,7 @@ export class MediaUpdateService {
     );
   }
 
-  // General
+  @General
   public async deleteInquiryRequestVideosWithId(
     inquiryRequestVdoCookies: MediaCookieDto[],
   ): Promise<string[]> {
@@ -322,7 +323,7 @@ export class MediaUpdateService {
     );
   }
 
-  // General
+  @General
   public async deleteInquiryResponseImagesWithId(
     inquiryResponseImgCookies: MediaCookieDto[],
   ): Promise<string[]> {
@@ -346,7 +347,7 @@ export class MediaUpdateService {
     );
   }
 
-  // General
+  @General
   public async deleteInquiryResponseVideosWithId(
     inquiryResponseVdoCookies: MediaCookieDto[],
   ): Promise<string[]> {

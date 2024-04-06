@@ -9,6 +9,7 @@ import { ReviewImageEntity } from "../entities/review-image.entity";
 import { ReviewVideoEntity } from "../entities/review-video.entity";
 import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
+import { General } from "../../../common/decorators/general.decoration";
 
 @Injectable()
 export class MediaUpdateRepository {
@@ -29,86 +30,86 @@ export class MediaUpdateRepository {
     private readonly inquiryResponseVideoRepository: Repository<InquiryResponseVideoEntity>,
   ) {}
 
-  // General
+  @General
   public uploadProductImages(
     uploadMediaDto: UploadMediaDto,
   ): Promise<ProductImageEntity> {
     return this.productImageRepository.save(uploadMediaDto);
   }
 
-  // General
+  @General
   public uploadReviewImage(
     uploadMediaDto: UploadMediaDto,
   ): Promise<ReviewImageEntity> {
     return this.reviewImageRepository.save(uploadMediaDto);
   }
 
-  // General
+  @General
   public uploadReviewVideo(
     uploadMediaDto: UploadMediaDto,
   ): Promise<ReviewVideoEntity> {
     return this.reviewVideoRepository.save(uploadMediaDto);
   }
 
-  // General
+  @General
   public uploadInquiryRequestImage(
     uploadMediaDto: UploadMediaDto,
   ): Promise<InquiryRequestImageEntity> {
     return this.inquiryRequestImageRepository.save(uploadMediaDto);
   }
 
-  // General
+  @General
   public uploadInquiryRequestVideo(
     uploadMediaDto: UploadMediaDto,
   ): Promise<InquiryRequestVideoEntity> {
     return this.inquiryRequestVideoRepository.save(uploadMediaDto);
   }
 
-  // General
+  @General
   public uploadInquiryResponseImages(
     uploadMediaDto: UploadMediaDto,
   ): Promise<InquiryResponseImageEntity> {
     return this.inquiryResponseImageRepository.save(uploadMediaDto);
   }
 
-  // General
+  @General
   public uploadInquiryResponseVideos(
     uploadMediaDto: UploadMediaDto,
   ): Promise<InquiryResponseVideoEntity> {
     return this.inquiryResponseVideoRepository.save(uploadMediaDto);
   }
 
-  // General
+  @General
   public async deleteProductImageWithId(id: string): Promise<void> {
     await this.productImageRepository.delete({ id });
   }
 
-  // General
+  @General
   public async deleteReviewImageWithId(id: string): Promise<void> {
     await this.reviewImageRepository.delete({ id });
   }
 
-  // General
+  @General
   public async deleteReviewVideoWithId(id: string): Promise<void> {
     await this.reviewVideoRepository.delete({ id });
   }
 
-  // General
+  @General
   public async deleteInquiryRequestImageWithId(id: string): Promise<void> {
     await this.inquiryRequestImageRepository.delete({ id });
   }
 
-  // General
+  @General
   public async deleteInquiryRequestVideoWithId(id: string): Promise<void> {
     await this.inquiryRequestVideoRepository.delete({ id });
   }
 
-  // General
+  @General
   public async deleteInquiryResponseImageWithId(id: string): Promise<void> {
     await this.inquiryResponseImageRepository.delete({ id });
   }
 
-  // General
+  @General
   public async deleteInquiryResponseVideoWithId(id: string): Promise<void> {
     await this.inquiryResponseVideoRepository.delete({ id });
   }

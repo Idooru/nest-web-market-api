@@ -6,6 +6,7 @@ import { StarRateEntity } from "../../entities/star-rate.entity";
 import { ReviewImageEntity } from "../../../media/entities/review-image.entity";
 import { ReviewVideoEntity } from "../../../media/entities/review-video.entity";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
+import { Implemented } from "../../../../common/decorators/implemented.decoration";
 
 @Injectable()
 export class ReviewTransactionInitializer extends Transactional<ReviewRepositoryPayload> {
@@ -15,6 +16,7 @@ export class ReviewTransactionInitializer extends Transactional<ReviewRepository
     super();
   }
 
+  @Implemented
   public async init(): Promise<QueryRunner> {
     const queryRunner = this.dataSourece.createQueryRunner();
     await queryRunner.connect();
@@ -30,6 +32,7 @@ export class ReviewTransactionInitializer extends Transactional<ReviewRepository
     return queryRunner;
   }
 
+  @Implemented
   public getRepository(): ReviewRepositoryPayload {
     return this.payload;
   }

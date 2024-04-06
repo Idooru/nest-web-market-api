@@ -1,9 +1,11 @@
 import { NestMiddleware, Logger } from "@nestjs/common";
 import { Request, Response, NextFunction } from "express";
 import { loggerFactory } from "../functions/logger.factory";
+import { Implemented } from "../decorators/implemented.decoration";
 
 export class ResponseLoggerMiddleware implements NestMiddleware {
-  use(req: Request, res: Response, next: NextFunction): void {
+  @Implemented
+  public use(req: Request, res: Response, next: NextFunction): void {
     res.on("finish", () => {
       const { ip, originalUrl, method } = req;
       const { statusCode, statusMessage } = res;

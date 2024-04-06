@@ -7,6 +7,7 @@ import { OrderEntity } from "../../entities/order.entity";
 import { PaymentEntitiy } from "../../entities/payment.entitiy";
 import { AccountEntity } from "../../../account/entities/account.entity";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
+import { Implemented } from "../../../../common/decorators/implemented.decoration";
 
 @Injectable()
 export class OrderTransactionInitializer extends Transactional<OrderRepositoryPayload> {
@@ -16,6 +17,7 @@ export class OrderTransactionInitializer extends Transactional<OrderRepositoryPa
     super();
   }
 
+  @Implemented
   public async init(): Promise<QueryRunner> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -32,6 +34,7 @@ export class OrderTransactionInitializer extends Transactional<OrderRepositoryPa
     return queryRunner;
   }
 
+  @Implemented
   public getRepository(): OrderRepositoryPayload {
     return this.payload;
   }

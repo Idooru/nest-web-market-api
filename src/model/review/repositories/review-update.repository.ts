@@ -7,6 +7,7 @@ import { CreateReviewDto } from "../dto/create-review.dto";
 import { ModifyReviewDto } from "../dto/modify-review.dto";
 import { Transactional } from "../../../common/interfaces/initializer/transactional";
 import { ReviewRepositoryPayload } from "../logic/transaction/review-repository.payload";
+import { Transaction } from "../../../common/decorators/transaction.decorator";
 
 @Injectable()
 export class ReviewUpdateRepository {
@@ -14,7 +15,7 @@ export class ReviewUpdateRepository {
     private readonly transaction: Transactional<ReviewRepositoryPayload>,
   ) {}
 
-  // Transaction
+  @Transaction
   public createReview(createReviewDto: CreateReviewDto): Promise<ReviewEntity> {
     const { reviewBodyDto, product, clientUser } = createReviewDto;
 
@@ -25,7 +26,7 @@ export class ReviewUpdateRepository {
     });
   }
 
-  // Transaction
+  @Transaction
   public async insertReviewIdOnReviewImage(
     reviewImage: ReviewImageEntity,
     review: ReviewEntity,
@@ -34,7 +35,7 @@ export class ReviewUpdateRepository {
     await this.transaction.getRepository().reviewImage.save(reviewImage);
   }
 
-  // Transaction
+  @Transaction
   public async insertReviewIdOnReviewVideo(
     reviewVideo: ReviewVideoEntity,
     review: ReviewEntity,
@@ -43,7 +44,7 @@ export class ReviewUpdateRepository {
     await this.transaction.getRepository().reviewVideo.save(reviewVideo);
   }
 
-  // Transaction
+  @Transaction
   public async increaseStarRate(
     scoreChosenByClient: 1 | 2 | 3 | 4 | 5,
     starRate: StarRateEntity,
@@ -77,7 +78,7 @@ export class ReviewUpdateRepository {
     }
   }
 
-  // Transaction
+  @Transaction
   public async modifyReview(modifyReviewDto: ModifyReviewDto): Promise<void> {
     const { review, reviewBodyDto } = modifyReviewDto;
 
@@ -87,22 +88,22 @@ export class ReviewUpdateRepository {
     });
   }
 
-  // Transaction
+  @Transaction
   public async deleteReviewImageWithId(id: string): Promise<void> {
     await this.transaction.getRepository().reviewImage.delete({ id });
   }
 
-  // Transaction
+  @Transaction
   public async deleteReviewVideoWithId(id: string): Promise<void> {
     await this.transaction.getRepository().reviewVideo.delete({ id });
   }
 
-  // Transaction
+  @Transaction
   public async deleteReviewWithId(id: string): Promise<void> {
     await this.transaction.getRepository().review.delete({ id });
   }
 
-  // Transaction
+  @Transaction
   public async decreaseStarRate(
     starRate: StarRateEntity,
     beforeScore: number,
@@ -136,7 +137,7 @@ export class ReviewUpdateRepository {
     }
   }
 
-  // Transaction
+  @Transaction
   public async renewAverage(starRate: StarRateEntity): Promise<void> {
     const { id } = starRate;
     await this.transaction.getRepository().starRate.update(id, starRate);

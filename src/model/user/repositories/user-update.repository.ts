@@ -14,6 +14,8 @@ import { Repository } from "typeorm";
 import { UserProfileEntity } from "../entities/user-profile.entity";
 import { UserAuthEntity } from "../entities/user-auth.entity";
 import { Transactional } from "../../../common/interfaces/initializer/transactional";
+import { Transaction } from "../../../common/decorators/transaction.decorator";
+import { General } from "../../../common/decorators/general.decoration";
 
 @Injectable()
 export class UserUpdateRepository {
@@ -27,22 +29,22 @@ export class UserUpdateRepository {
     private readonly userAuthRepository: Repository<UserAuthEntity>,
   ) {}
 
-  // Transaction
+  @Transaction
   public createUserEntity(role: ["client", "admin"]): Promise<UserEntity> {
     return this.transaction.getRepository().user.save({ role });
   }
 
-  // Transaction
+  @Transaction
   public async createClientUser(user: UserEntity): Promise<void> {
     await this.transaction.getRepository().clientUser.save({ User: user });
   }
 
-  // Transaction
+  @Transaction
   public async createAdminUser(user: UserEntity): Promise<void> {
     await this.transaction.getRepository().adminUser.save({ User: user });
   }
 
-  // Transaction
+  @Transaction
   public async createUserProfile(
     createUserProfileDto: CreateUserProfileDto,
   ): Promise<void> {
@@ -51,7 +53,7 @@ export class UserUpdateRepository {
     });
   }
 
-  // Transaction
+  @Transaction
   public async createUserAuth(
     createUserAuthDto: CreateUserAuthDto,
   ): Promise<void> {
@@ -60,7 +62,7 @@ export class UserUpdateRepository {
       .userAuth.save({ ...createUserAuthDto });
   }
 
-  // Transaction
+  @Transaction
   public async modifyUserProfile(
     modifyUserProfileDto: ModifyUserProfileDto,
     id: string,
@@ -70,7 +72,7 @@ export class UserUpdateRepository {
     });
   }
 
-  // Transaction
+  @Transaction
   public async modifyUserAuth(
     modifyUserAuthDto: ModifyUserAuthDto,
     id: string,
@@ -80,17 +82,17 @@ export class UserUpdateRepository {
     });
   }
 
-  // General
+  @General
   public async modifyUserEmail(email: string, id: string): Promise<void> {
     await this.userAuthRepository.update(id, { email });
   }
 
-  // General
+  @General
   public async modifyUserNickname(nickname: string, id: string): Promise<void> {
     await this.userAuthRepository.update(id, { nickname });
   }
 
-  // General
+  @General
   public async modifyUserPhonenumber(
     phonenumber: string,
     id: string,
@@ -98,17 +100,17 @@ export class UserUpdateRepository {
     await this.userProfileRepository.update(id, { phonenumber });
   }
 
-  // General
+  @General
   public async modifyUserPassword(password: string, id: string): Promise<void> {
     await this.userAuthRepository.update(id, { password });
   }
 
-  // General
+  @General
   public async modifyUserAddress(address: string, id: string): Promise<void> {
     await this.userProfileRepository.update(id, { address });
   }
 
-  // General
+  @General
   public async deleteUser(id: string): Promise<void> {
     await this.userRepository.delete({ id });
   }

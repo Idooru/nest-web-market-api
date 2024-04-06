@@ -8,6 +8,7 @@ import { InsertInquiryResponseImageDto } from "../dto/response/insert-inquiry-re
 import { InsertInquiryResponseVideoDto } from "../dto/response/insert-inquiry-response-video.dto";
 import { CreateInquiryResponseDto } from "../dto/response/create-inquiry-response.dto";
 import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
+import { Transaction } from "../../../common/decorators/transaction.decorator";
 
 @Injectable()
 export class InquiryUpdateService {
@@ -15,7 +16,7 @@ export class InquiryUpdateService {
     private readonly inquiryOperationRepository: InquiryUpdateRepository,
   ) {}
 
-  // Transaction
+  @Transaction
   public createInquiryRequest(
     createInquiryRequestDto: CreateInquiryRequestDto,
   ): Promise<InquiryRequestEntity> {
@@ -24,7 +25,7 @@ export class InquiryUpdateService {
     );
   }
 
-  // Transaction
+  @Transaction
   public async insertInquiryRequestImages(
     insertInquiryRequestImageDto: InsertInquiryRequestImageDto,
   ): Promise<void> {
@@ -41,7 +42,7 @@ export class InquiryUpdateService {
     await Promise.all(inserting);
   }
 
-  // Transaction
+  @Transaction
   public async insertInquiryRequestVideos(
     insertInquiryRequestVideoDto: InsertInquiryRequestVideoDto,
   ): Promise<void> {
@@ -58,7 +59,7 @@ export class InquiryUpdateService {
     await Promise.all(inserting);
   }
 
-  // Transaction
+  @Transaction
   public createInquiryResponse(
     createInquiryResponseDto: CreateInquiryResponseDto,
   ): Promise<InquiryResponseEntity> {
@@ -67,12 +68,12 @@ export class InquiryUpdateService {
     );
   }
 
-  // Transaction
+  @Transaction
   public async modifyInquiryRequestAnswerState(id: string): Promise<void> {
     await this.inquiryOperationRepository.modifyInquiryRequestAnswerState(id);
   }
 
-  // Transaction
+  @Transaction
   public async insertInquiryResponseImages(
     insertInquiryResponseImageDto: InsertInquiryResponseImageDto,
   ): Promise<void> {
@@ -89,7 +90,7 @@ export class InquiryUpdateService {
     await Promise.all(inserting);
   }
 
-  // Transaction
+  @Transaction
   public async insertInquiryResponseVideos(
     insertInquiryResponseVideoDto: InsertInquiryResponseVideoDto,
   ): Promise<void> {

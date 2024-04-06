@@ -9,6 +9,7 @@ import { InquiryResponseVideoEntity } from "../../media/entities/inquiry-respons
 import { CreateInquiryResponseDto } from "../dto/response/create-inquiry-response.dto";
 import { Transactional } from "../../../common/interfaces/initializer/transactional";
 import { InquiryRepositoryPayload } from "../logic/transaction/inquiry-repository.payload";
+import { Transaction } from "../../../common/decorators/transaction.decorator";
 
 @Injectable()
 export class InquiryUpdateRepository {
@@ -16,7 +17,7 @@ export class InquiryUpdateRepository {
     private readonly transaction: Transactional<InquiryRepositoryPayload>,
   ) {}
 
-  // Transaction
+  @Transaction
   public createInquiryRequest(
     createInquiryRequestDto: CreateInquiryRequestDto,
   ): Promise<InquiryRequestEntity> {
@@ -30,7 +31,7 @@ export class InquiryUpdateRepository {
     });
   }
 
-  // Transaction
+  @Transaction
   public async insertInquiryReuqestIdOnInquiryRequestImage(
     inquiryRequestImage: InquiryRequestImageEntity,
     inquiryRequest: InquiryRequestEntity,
@@ -41,7 +42,7 @@ export class InquiryUpdateRepository {
       .inquiryRequestImage.save(inquiryRequestImage);
   }
 
-  // Transaction
+  @Transaction
   public async insertInquiryRequestIdOnInquiryRequestVideo(
     inquiryRequestVideo: InquiryRequestVideoEntity,
     inquiryRequest: InquiryRequestEntity,
@@ -52,7 +53,7 @@ export class InquiryUpdateRepository {
       .inquiryRequestVideo.save(inquiryRequestVideo);
   }
 
-  // Transaction
+  @Transaction
   public createInquiryResponse(
     createInquiryResponseDto: CreateInquiryResponseDto,
   ): Promise<InquiryResponseEntity> {
@@ -66,14 +67,14 @@ export class InquiryUpdateRepository {
     });
   }
 
-  // Transaction
+  @Transaction
   public async modifyInquiryRequestAnswerState(id: string): Promise<void> {
     await this.transaction.getRepository().inquiryRequest.update(id, {
       isAnswerd: true,
     });
   }
 
-  // Transaction
+  @Transaction
   public async insertInquiryResponseIdOnInquiryResponseImage(
     inquiryResponseImage: InquiryResponseImageEntity,
     inquiryResponse: InquiryResponseEntity,
@@ -84,7 +85,7 @@ export class InquiryUpdateRepository {
       .inquiryResponseImage.save(inquiryResponseImage);
   }
 
-  // Transaction
+  @Transaction
   public async insertInquiryResponseIdOnInquiryResponseVideo(
     inquiryResponseVideo: InquiryResponseVideoEntity,
     inquiryResponse: InquiryResponseEntity,

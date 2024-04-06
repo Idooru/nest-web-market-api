@@ -11,6 +11,7 @@ import { DepositAdminBalanceDto } from "../dto/deposit-admin-balance.dto";
 import { Transactional } from "../../../common/interfaces/initializer/transactional";
 import { OrderRepositoryPayload } from "../logic/transaction/order-repository.payload";
 import { MoneyTransactionDto } from "../../account/dtos/money-transaction.dto";
+import { Transaction } from "../../../common/decorators/transaction.decorator";
 
 @Injectable()
 export class OrderUpdateRepository {
@@ -18,7 +19,7 @@ export class OrderUpdateRepository {
     private readonly transaction: Transactional<OrderRepositoryPayload>,
   ) {}
 
-  // Transaction
+  @Transaction
   public async deleteAllCartsOnTransaction(id: string): Promise<void> {
     await this.transaction
       .getRepository()
@@ -29,7 +30,7 @@ export class OrderUpdateRepository {
       .execute();
   }
 
-  // Transaction
+  @Transaction
   public async decreaseProductQuantity(productQuantity: {
     product: ProductEntity;
     quantity: number;
@@ -44,7 +45,7 @@ export class OrderUpdateRepository {
       .execute();
   }
 
-  // Transaction
+  @Transaction
   public createOrder(createOrderDto: CreateOrderDto): Promise<OrderEntity> {
     const { orderBodyDto, clientUser, totalPrice } = createOrderDto;
     const { deliveryOption, deliveryAddress } = orderBodyDto;
@@ -57,7 +58,7 @@ export class OrderUpdateRepository {
     });
   }
 
-  // Transaction
+  @Transaction
   public async createPayment(
     createPaymentDto: CreatePaymentDto,
   ): Promise<void> {
@@ -74,7 +75,7 @@ export class OrderUpdateRepository {
     });
   }
 
-  // Transaction
+  @Transaction
   public async withdrawClientBalance(
     withdrawDto: MoneyTransactionDto,
   ): Promise<AccountEntity> {
@@ -99,7 +100,7 @@ export class OrderUpdateRepository {
     });
   }
 
-  // Transaction
+  @Transaction
   public async depositAdminBalance(
     depositDto: DepositAdminBalanceDto,
   ): Promise<void> {

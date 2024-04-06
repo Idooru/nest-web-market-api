@@ -8,6 +8,7 @@ import { Request } from "express";
 import { loggerFactory } from "../../functions/logger.factory";
 import { UserSecurity } from "../../../model/user/logic/user.security";
 import { ValidateTokenLibrary } from "../../lib/security/validate-token.library";
+import { Implemented } from "../../decorators/implemented.decoration";
 
 @Injectable()
 export class IsRefreshTokenAvailableGuard implements CanActivate {
@@ -15,8 +16,8 @@ export class IsRefreshTokenAvailableGuard implements CanActivate {
     private readonly validateTokenLibrary: ValidateTokenLibrary,
     private readonly userSecurity: UserSecurity,
   ) {}
-
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  @Implemented
+  public async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<Request>();
     const { refresh_token } = req.signedCookies;
 

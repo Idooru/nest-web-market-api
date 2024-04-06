@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, PipeTransform } from "@nestjs/common";
+import { Implemented } from "src/common/decorators/implemented.decoration";
 import { UserValidator } from "../../logic/user.validator";
 
 type UserBody = {
@@ -13,6 +14,7 @@ export class UserOperationValidatePipe<T extends UserBody>
 {
   constructor(private readonly userValidator: UserValidator) {}
 
+  @Implemented
   public async transform(body: T): Promise<T> {
     const { email, nickname, phonenumber } = body;
 

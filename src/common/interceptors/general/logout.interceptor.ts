@@ -8,12 +8,17 @@ import { map, Observable } from "rxjs";
 import { Request, Response } from "express";
 import { LogoutInterface } from "../interface/logout.interface";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
+import { Implemented } from "../../decorators/implemented.decoration";
 
 @Injectable()
 export class LogoutInterceptor implements NestInterceptor {
   constructor(private readonly timeLoggerLibrary: TimeLoggerLibrary) {}
 
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  @Implemented
+  public intercept(
+    context: ExecutionContext,
+    next: CallHandler,
+  ): Observable<any> {
     const req = context.switchToHttp().getRequest<Request>();
     const res = context.switchToHttp().getResponse<Response>();
 

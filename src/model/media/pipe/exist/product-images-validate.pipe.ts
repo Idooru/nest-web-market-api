@@ -1,6 +1,7 @@
 import { Injectable, PipeTransform } from "@nestjs/common";
 import { MediaLoggerLibrary } from "../../../../common/lib/logger/media-logger.library";
 import { MediaValidator } from "../../logic/media.validator";
+import { Implemented } from "../../../../common/decorators/implemented.decoration";
 
 @Injectable()
 export class ProductImagesValidatePipe implements PipeTransform {
@@ -9,6 +10,7 @@ export class ProductImagesValidatePipe implements PipeTransform {
     private readonly mediaLoggerLibrary: MediaLoggerLibrary,
   ) {}
 
+  @Implemented
   public transform(
     productImages: Express.Multer.File[],
   ): Express.Multer.File[] {

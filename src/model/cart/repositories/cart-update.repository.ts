@@ -4,6 +4,7 @@ import { CartEntity } from "../entities/cart.entity";
 import { Repository } from "typeorm";
 import { CreateCartDto } from "../dto/create-cart.dto";
 import { ModifyCartDto } from "../dto/modify-cart.dto";
+import { General } from "../../../common/decorators/general.decoration";
 
 @Injectable()
 export class CartUpdateRepository {
@@ -12,7 +13,7 @@ export class CartUpdateRepository {
     private readonly cartRepository: Repository<CartEntity>,
   ) {}
 
-  // General
+  @General
   public async createCart(createCartDto: CreateCartDto): Promise<void> {
     const { product, clientUser, cartBodyDto } = createCartDto;
     await this.cartRepository.save({
@@ -22,13 +23,13 @@ export class CartUpdateRepository {
     });
   }
 
-  // General
+  @General
   public async modifyCartWithId(modifyCartDto: ModifyCartDto): Promise<void> {
     const { cartId, cartBodyDto } = modifyCartDto;
     await this.cartRepository.update(cartId, cartBodyDto);
   }
 
-  // General
+  @General
   public async deleteAllCartsWithUserId(id: string): Promise<void> {
     await this.cartRepository
       .createQueryBuilder()
@@ -37,7 +38,7 @@ export class CartUpdateRepository {
       .execute();
   }
 
-  // General
+  @General
   public async deleteCartWithId(id: string): Promise<void> {
     await this.cartRepository.delete({ id });
   }

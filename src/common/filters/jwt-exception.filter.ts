@@ -3,10 +3,12 @@ import { JwtException } from "../errors/jwt.exception";
 import { Request, Response } from "express";
 import { JwtError } from "../errors/jwt.error";
 import { loggerFactory } from "../functions/logger.factory";
+import { Implemented } from "../decorators/implemented.decoration";
 
 @Catch(JwtException)
 export class JwtExceptionFilter implements ExceptionFilter {
-  catch(exception: JwtException, host: ArgumentsHost) {
+  @Implemented
+  public catch(exception: JwtException, host: ArgumentsHost) {
     const req = host.switchToHttp().getRequest<Request>();
     const res = host.switchToHttp().getResponse<Response>();
     const { error } = exception.getResponse() as JwtException;

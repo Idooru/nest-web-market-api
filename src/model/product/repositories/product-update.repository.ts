@@ -8,6 +8,8 @@ import { ProductCategory } from "../types/product-category.type";
 import { ProductImageEntity } from "../../media/entities/product-image.entity";
 import { Transactional } from "../../../common/interfaces/initializer/transactional";
 import { ProductRepositoryPayload } from "../logic/transaction/product-repository.payload";
+import { Transaction } from "../../../common/decorators/transaction.decorator";
+import { General } from "../../../common/decorators/general.decoration";
 
 @Injectable()
 export class ProductUpdateRepository {
@@ -17,7 +19,7 @@ export class ProductUpdateRepository {
     private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
-  // Transaction
+  @Transaction
   public createProduct(
     createProductDto: CreateProductDto,
   ): Promise<ProductEntity> {
@@ -36,12 +38,12 @@ export class ProductUpdateRepository {
     });
   }
 
-  // Transaction
+  @Transaction
   public async createStarRate(product: ProductEntity): Promise<void> {
     await this.transaction.getRepository().starRate.save({ id: product.id });
   }
 
-  // Transaction
+  @Transaction
   public async insertProductIdOnProductImage(
     productImage: ProductImageEntity,
     product: ProductEntity,
@@ -50,12 +52,12 @@ export class ProductUpdateRepository {
     await this.transaction.getRepository().product.save(productImage);
   }
 
-  // Transaction
+  @Transaction
   public async deleteProductImageWithId(id: string): Promise<void> {
     await this.transaction.getRepository().productImage.delete({ id });
   }
 
-  // Transaction
+  @Transaction
   public async modifyProduct(
     modifyProductDto: ModifyProductDto,
   ): Promise<void> {
@@ -64,22 +66,22 @@ export class ProductUpdateRepository {
     await this.transaction.getRepository().product.update(id, productBodyDto);
   }
 
-  // General
+  @General
   public async modifyProductName(id: string, name: string): Promise<void> {
     await this.productRepository.update(id, { name });
   }
 
-  // General
+  @General
   public async modifyProductPrice(id: string, price: number): Promise<void> {
     await this.productRepository.update(id, { price });
   }
 
-  // General
+  @General
   public async modifyProductOrigin(id: string, origin: string): Promise<void> {
     await this.productRepository.update(id, { origin });
   }
 
-  // General
+  @General
   public async modifyProductCategory(
     id: string,
     category: ProductCategory,
@@ -87,7 +89,7 @@ export class ProductUpdateRepository {
     await this.productRepository.update(id, { category });
   }
 
-  // General
+  @General
   public async modifyProductDescription(
     id: string,
     description: string,
@@ -95,7 +97,7 @@ export class ProductUpdateRepository {
     await this.productRepository.update(id, { description });
   }
 
-  // General
+  @General
   public async modifyProductQuantity(
     id: string,
     quantity: number,
@@ -103,7 +105,7 @@ export class ProductUpdateRepository {
     await this.productRepository.update(id, { quantity });
   }
 
-  // General
+  @General
   public async removeProduct(id: string): Promise<void> {
     await this.productRepository.delete({ id });
   }

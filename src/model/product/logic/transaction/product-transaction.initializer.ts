@@ -5,6 +5,7 @@ import { ProductEntity } from "../../entities/product.entity";
 import { StarRateEntity } from "../../../review/entities/star-rate.entity";
 import { ProductImageEntity } from "../../../media/entities/product-image.entity";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
+import { Implemented } from "../../../../common/decorators/implemented.decoration";
 
 @Injectable()
 export class ProductTransactionInitializer extends Transactional<ProductRepositoryPayload> {
@@ -14,6 +15,7 @@ export class ProductTransactionInitializer extends Transactional<ProductReposito
     super();
   }
 
+  @Implemented
   public async init(): Promise<QueryRunner> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -28,6 +30,7 @@ export class ProductTransactionInitializer extends Transactional<ProductReposito
     return queryRunner;
   }
 
+  @Implemented
   public getRepository(): ProductRepositoryPayload {
     return this.payload;
   }

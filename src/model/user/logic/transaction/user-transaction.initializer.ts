@@ -7,6 +7,7 @@ import { UserProfileEntity } from "../../entities/user-profile.entity";
 import { UserAuthEntity } from "../../entities/user-auth.entity";
 import { Injectable } from "@nestjs/common";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
+import { Implemented } from "../../../../common/decorators/implemented.decoration";
 
 @Injectable()
 export class UserTransactionInitializer extends Transactional<UserRepositoryPayload> {
@@ -16,6 +17,7 @@ export class UserTransactionInitializer extends Transactional<UserRepositoryPayl
     super();
   }
 
+  @Implemented
   public async init(): Promise<QueryRunner> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -32,6 +34,7 @@ export class UserTransactionInitializer extends Transactional<UserRepositoryPayl
     return queryRunner;
   }
 
+  @Implemented
   public getRepository(): UserRepositoryPayload {
     return this.payload;
   }

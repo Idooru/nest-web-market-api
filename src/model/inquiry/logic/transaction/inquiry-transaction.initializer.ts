@@ -8,6 +8,7 @@ import { InquiryResponseEntity } from "../../entities/inquiry-response.entity";
 import { InquiryResponseImageEntity } from "../../../media/entities/inquiry-response-image.entity";
 import { InquiryResponseVideoEntity } from "../../../media/entities/inquiry-response-video.entity";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
+import { Implemented } from "../../../../common/decorators/implemented.decoration";
 
 @Injectable()
 export class InquiryTransactionInitializer extends Transactional<InquiryRepositoryPayload> {
@@ -17,6 +18,7 @@ export class InquiryTransactionInitializer extends Transactional<InquiryReposito
     super();
   }
 
+  @Implemented
   public async init(): Promise<QueryRunner> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -42,6 +44,7 @@ export class InquiryTransactionInitializer extends Transactional<InquiryReposito
     return queryRunner;
   }
 
+  @Implemented
   public getRepository(): InquiryRepositoryPayload {
     return this.payload;
   }

@@ -5,6 +5,7 @@ import { AccountEntity } from "../entities/account.entity";
 import { QueryFailedError, Repository } from "typeorm";
 import { MoneyTransactionDto } from "../dtos/money-transaction.dto";
 import { loggerFactory } from "../../../common/functions/logger.factory";
+import { General } from "../../../common/decorators/general.decoration";
 
 @Injectable()
 export class AccountUpdateRepository {
@@ -13,7 +14,7 @@ export class AccountUpdateRepository {
     private readonly accountRepository: Repository<AccountEntity>,
   ) {}
 
-  // General
+  @General
   public async createAccount(
     createAccountDto: CreateAccountDto,
   ): Promise<void> {
@@ -26,12 +27,12 @@ export class AccountUpdateRepository {
     });
   }
 
-  // General
+  @General
   public async deleteAccount(accountId: string): Promise<void> {
     await this.accountRepository.delete(accountId);
   }
 
-  // General
+  @General
   public async disableAllAccount(userId: string): Promise<void> {
     await this.accountRepository
       .createQueryBuilder()
@@ -41,7 +42,7 @@ export class AccountUpdateRepository {
       .execute();
   }
 
-  // General
+  @General
   public async setMainAccount(accountId: string): Promise<void> {
     await this.accountRepository
       .createQueryBuilder()
@@ -51,7 +52,7 @@ export class AccountUpdateRepository {
       .execute();
   }
 
-  // General
+  @General
   public async deposit(
     depositBodyDto: MoneyTransactionDto,
   ): Promise<AccountEntity> {
@@ -66,7 +67,7 @@ export class AccountUpdateRepository {
     return this.accountRepository.findOneBy({ id: accountId });
   }
 
-  // General
+  @General
   public async withdraw(
     withdrawBodyDto: MoneyTransactionDto,
   ): Promise<AccountEntity> {

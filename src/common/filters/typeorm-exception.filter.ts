@@ -1,10 +1,12 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from "@nestjs/common";
 import { TypeOrmException } from "../errors/typeorm.exception";
 import { Response } from "express";
+import { Implemented } from "../decorators/implemented.decoration";
 
 @Catch(TypeOrmException)
 export class TypeOrmExceptionFilter implements ExceptionFilter {
-  catch(exception: TypeOrmException, host: ArgumentsHost) {
+  @Implemented
+  public catch(exception: TypeOrmException, host: ArgumentsHost) {
     const res = host.switchToHttp().getResponse<Response>();
     const { error } = exception.getResponse() as TypeOrmException;
 

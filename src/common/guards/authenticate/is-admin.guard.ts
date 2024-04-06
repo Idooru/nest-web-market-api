@@ -6,10 +6,12 @@ import {
 } from "@nestjs/common";
 import { Request } from "express";
 import { loggerFactory } from "../../functions/logger.factory";
+import { Implemented } from "../../decorators/implemented.decoration";
 
 @Injectable()
 export class IsAdminGuard implements CanActivate {
-  canActivate(context: ExecutionContext): boolean {
+  @Implemented
+  public canActivate(context: ExecutionContext): boolean {
     const req = context.switchToHttp().getRequest() as Request;
     const { user } = req;
 

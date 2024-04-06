@@ -9,6 +9,7 @@ import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { SecurityLibrary } from "../../lib/security/security.library";
 import { Request, Response } from "express";
 import { JsonSendCookiesInterface } from "../interface/json-send-cookies.interface";
+import { Implemented } from "../../decorators/implemented.decoration";
 
 @Injectable()
 export class JsonSendCookiesInterceptor<T> implements NestInterceptor {
@@ -17,7 +18,11 @@ export class JsonSendCookiesInterceptor<T> implements NestInterceptor {
     private readonly securityLibrary: SecurityLibrary,
   ) {}
 
-  intercept(context: ArgumentsHost, next: CallHandler<any>): Observable<any> {
+  @Implemented
+  public intercept(
+    context: ArgumentsHost,
+    next: CallHandler<any>,
+  ): Observable<any> {
     const req = context.switchToHttp().getRequest<Request>();
     const res = context.switchToHttp().getResponse<Response>();
     const cookieOption = this.securityLibrary.cookieOption;

@@ -8,12 +8,17 @@ import { map, Observable } from "rxjs";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { JsonClearCookiesInterface } from "../interface/json-clear-cookies.interface";
 import { Request, Response } from "express";
+import { Implemented } from "../../decorators/implemented.decoration";
 
 @Injectable()
 export class JsonClearCookiesInterceptor implements NestInterceptor {
   constructor(private readonly timeLoggerLibrary: TimeLoggerLibrary) {}
 
-  intercept(context: ArgumentsHost, next: CallHandler<any>): Observable<any> {
+  @Implemented
+  public intercept(
+    context: ArgumentsHost,
+    next: CallHandler<any>,
+  ): Observable<any> {
     const req = context.switchToHttp().getRequest<Request>();
     const res = context.switchToHttp().getResponse<Response>();
 

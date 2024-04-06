@@ -11,6 +11,7 @@ import { loggerFactory } from "../../../common/functions/logger.factory";
 import { MoneyTransactionDto } from "../dtos/money-transaction.dto";
 import { DepositResultDto } from "../dtos/deposit-result.dto";
 import { WithdrawResultDto } from "../dtos/withdraw-result.dto";
+import { General } from "../../../common/decorators/general.decoration";
 
 @Injectable()
 export class AccountUpdateService {
@@ -20,7 +21,7 @@ export class AccountUpdateService {
     private readonly accountUpdateRepository: AccountUpdateRepository,
   ) {}
 
-  // General
+  @General
   public async createAccount(
     accountBodyDto: AccountBodyDto,
     userId: string,
@@ -47,12 +48,12 @@ export class AccountUpdateService {
     }
   }
 
-  // General
+  @General
   public async deleteAccount(accountId: string): Promise<void> {
     await this.accountUpdateRepository.deleteAccount(accountId);
   }
 
-  // General
+  @General
   public async setMainAccount(
     accountId: string,
     userId: string,
@@ -61,7 +62,7 @@ export class AccountUpdateService {
     await this.accountUpdateRepository.setMainAccount(accountId);
   }
 
-  // General
+  @General
   public async deposit(
     depositBodyDto: MoneyTransactionDto,
   ): Promise<DepositResultDto> {
@@ -73,7 +74,7 @@ export class AccountUpdateService {
     };
   }
 
-  // General
+  @General
   public async withdraw(
     withdrawBodyDto: MoneyTransactionDto,
   ): Promise<WithdrawResultDto> {

@@ -13,6 +13,7 @@ import { StarRateEntity } from "../entities/star-rate.entity";
 import { ReviewUtils } from "../logic/review.utils";
 import { ReviewSearcher } from "../logic/review.searcher";
 import { MediaUtils } from "../../media/logic/media.utils";
+import { Transaction } from "../../../common/decorators/transaction.decorator";
 
 @Injectable()
 export class ReviewUpdateService {
@@ -23,12 +24,12 @@ export class ReviewUpdateService {
     private readonly mediaUtils: MediaUtils,
   ) {}
 
-  // Transaction
+  @Transaction
   public createReview(createReviewDto: CreateReviewDto): Promise<ReviewEntity> {
     return this.reviewOperationRepository.createReview(createReviewDto);
   }
 
-  // Transaction
+  @Transaction
   public async insertReviewImages(
     insertReviewImageDto: InsertReviewImageDto,
   ): Promise<void> {
@@ -43,7 +44,7 @@ export class ReviewUpdateService {
     await Promise.all(inserting);
   }
 
-  // Transaction
+  @Transaction
   public async insertReviewVideos(
     insertReviewVideoDto: InsertReviewVideoDto,
   ): Promise<void> {
@@ -58,7 +59,7 @@ export class ReviewUpdateService {
     await Promise.all(inserting);
   }
 
-  // Transaction
+  @Transaction
   public async increaseStarRate(starRatingDto: StarRatingDto): Promise<void> {
     const { scoreChosenByClient, starRate } = starRatingDto;
 
@@ -71,12 +72,12 @@ export class ReviewUpdateService {
     await this.reviewOperationRepository.renewAverage(updatedStarRate);
   }
 
-  // Transaction
+  @Transaction
   public async modifyReview(modifyReviewDto: ModifyReviewDto): Promise<void> {
     await this.reviewOperationRepository.modifyReview(modifyReviewDto);
   }
 
-  // Transaction
+  @Transaction
   public async changeReviewImages(
     changeReviewImageDto: ChangeReviewImageDto,
   ): Promise<void> {
@@ -101,7 +102,7 @@ export class ReviewUpdateService {
     }
   }
 
-  // Transaction
+  @Transaction
   public async changeReviewVideos(
     changeReviewVideoDto: ChangeReviewVideoDto,
   ): Promise<void> {
@@ -126,7 +127,7 @@ export class ReviewUpdateService {
     }
   }
 
-  // Transaction
+  @Transaction
   public async modifyStarRate(
     modifyStarRateDto: ModifyStarRateDto,
   ): Promise<void> {
@@ -147,7 +148,7 @@ export class ReviewUpdateService {
     await this.reviewOperationRepository.renewAverage(updatedStarRate);
   }
 
-  // Transaction
+  @Transaction
   public async deleteReviewWithId(id: string): Promise<void> {
     const review = await this.reviewSearcher.findReviewWithId(id);
 
@@ -161,7 +162,7 @@ export class ReviewUpdateService {
     await this.reviewOperationRepository.deleteReviewWithId(id);
   }
 
-  // Transaction
+  @Transaction
   public async decreaseStarRate(
     review: ReviewEntity,
     starRate: StarRateEntity,

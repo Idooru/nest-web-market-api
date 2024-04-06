@@ -7,12 +7,14 @@ import {
 import { Request } from "express";
 import { loggerFactory } from "../../functions/logger.factory";
 import { ValidateTokenLibrary } from "../../lib/security/validate-token.library";
+import { Implemented } from "../../decorators/implemented.decoration";
 
 @Injectable()
 export class IsLoginGuard implements CanActivate {
   constructor(private readonly validateTokenLibrary: ValidateTokenLibrary) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  @Implemented
+  public async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<Request>();
     const { access_token }: { access_token: string } = req.signedCookies;
 

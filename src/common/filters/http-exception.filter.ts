@@ -5,6 +5,7 @@ import {
   HttpException,
 } from "@nestjs/common";
 import { Response } from "express";
+import { Implemented } from "../decorators/implemented.decoration";
 
 type ExceptionPayload = { status: string; reason: { message: string } };
 
@@ -25,7 +26,8 @@ type JsonResponse = {
 export class HttpExceptionFilter implements ExceptionFilter {
   private jsonResponse: JsonResponse;
 
-  catch(exception: HttpException, host: ArgumentsHost) {
+  @Implemented
+  public catch(exception: HttpException, host: ArgumentsHost) {
     const res = host.switchToHttp().getResponse<Response>();
     const exceptionResponse = exception.getResponse() as ExceptionResponse;
 
