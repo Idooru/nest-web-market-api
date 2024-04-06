@@ -23,18 +23,6 @@ export class UserValidateRepository {
     return this.userRepository.exist({ where: { id } });
   }
 
-  public isExistEmail(email: string): Promise<boolean> {
-    return this.userAuthRepository.exist({ where: { email } });
-  }
-
-  public isExistNickname(nickname: string): Promise<boolean> {
-    return this.userAuthRepository.exist({ where: { nickname } });
-  }
-
-  public isExistPhoneNumber(phonenumber: string): Promise<boolean> {
-    return this.userProfileRepository.exist({ where: { phonenumber } });
-  }
-
   public isExistClientUserId(id: string): Promise<boolean> {
     return this.clientUserRepository.exist({ where: { id } });
   }

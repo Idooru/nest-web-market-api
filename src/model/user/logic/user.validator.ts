@@ -14,23 +14,6 @@ export class UserValidator {
     this.validateLibrary.isExistData(result, "user id", id);
   }
 
-  public async isExistEmail(email: string): Promise<void> {
-    const result = await this.userValidateRepository.isExistEmail(email);
-    this.validateLibrary.isExistData(result, "user email", email);
-  }
-
-  public async isExistNickname(nickname: string): Promise<void> {
-    const result = await this.userValidateRepository.isExistNickname(nickname);
-    this.validateLibrary.isExistData(result, "user nickname", nickname);
-  }
-
-  public async isExistPhoneNumber(phonenumber: string): Promise<void> {
-    const result = await this.userValidateRepository.isExistPhoneNumber(
-      phonenumber,
-    );
-    this.validateLibrary.isExistData(result, "user phonenumber", phonenumber);
-  }
-
   public async isExistClientUserId(id: string): Promise<void> {
     const result = await this.userValidateRepository.isExistClientUserId(id);
     this.validateLibrary.isExistData(result, "client id", id);
