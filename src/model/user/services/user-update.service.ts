@@ -19,7 +19,9 @@ export class UserUpdateService {
   ) {}
 
   // Transaction
-  async createUserEntity(role: ["client", "admin"]): Promise<UserEntity> {
+  public async createUserEntity(
+    role: ["client", "admin"],
+  ): Promise<UserEntity> {
     const user = await this.userUpdateRepository.createUserEntity(role);
 
     if (role.toString() === "admin") {
@@ -32,7 +34,7 @@ export class UserUpdateService {
   }
 
   // Transaction
-  async createUserBase(
+  public async createUserBase(
     user: UserEntity,
     registerUserDto: RegisterUserDto,
   ): Promise<void> {
@@ -69,7 +71,10 @@ export class UserUpdateService {
   }
 
   // Transaction
-  async modifyUser(modifyUserDto: ModifyUserDto, id: string): Promise<void> {
+  public async modifyUser(
+    modifyUserDto: ModifyUserDto,
+    id: string,
+  ): Promise<void> {
     const { password, phonenumber, email, nickname, address } = modifyUserDto;
 
     const hashed = await this.userSecurity.hashPassword(password, true);
@@ -84,34 +89,39 @@ export class UserUpdateService {
   }
 
   // General
-  async modifyUserEmail(email: string, id: string): Promise<void> {
+  public async modifyUserEmail(email: string, id: string): Promise<void> {
     await this.userUpdateRepository.modifyUserEmail(email, id);
   }
 
   // General
-  async modifyUserNickname(nickname: string, id: string): Promise<void> {
+  public async modifyUserNickname(nickname: string, id: string): Promise<void> {
     await this.userUpdateRepository.modifyUserNickname(nickname, id);
   }
 
   // General
-  async modifyUserPhonenumber(phonenumber: string, id: string): Promise<void> {
+  public async modifyUserPhonenumber(
+    phonenumber: string,
+    id: string,
+  ): Promise<void> {
     await this.userUpdateRepository.modifyUserPhonenumber(phonenumber, id);
   }
 
   // General
-  async modifyUserPassword(password: string, id: string): Promise<void> {
+  public async modifyUserPassword(password: string, id: string): Promise<void> {
     const hashed = await this.userSecurity.hashPassword(password, false);
 
     await this.userUpdateRepository.modifyUserPassword(hashed, id);
   }
 
   // General
-  async modifyUserAddress(address: string, id: string): Promise<void> {
+  public async modifyUserAddress(address: string, id: string): Promise<void> {
     await this.userUpdateRepository.modifyUserAddress(address, id);
   }
 
   // General
-  async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
+  public async resetPassword(
+    resetPasswordDto: ResetPasswordDto,
+  ): Promise<void> {
     const { email, password } = resetPasswordDto;
     const hashed = await this.userSecurity.hashPassword(password, false);
 
@@ -121,7 +131,7 @@ export class UserUpdateService {
   }
 
   // General
-  async deleteUser(id: string): Promise<void> {
+  public async deleteUser(id: string): Promise<void> {
     await this.userUpdateRepository.deleteUser(id);
   }
 }

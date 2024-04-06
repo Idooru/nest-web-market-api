@@ -1,6 +1,6 @@
 export class MediaCookieDto {
-  id: string;
-  whatCookie: string;
-  url: string;
-  fileName: string;
+  public id: string;
+  public whatCookie: string;
+  public url: string;
+  public fileName: string;
 }

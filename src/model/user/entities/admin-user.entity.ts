@@ -10,17 +10,17 @@ export class AdminUserEntity extends ChildEntity {
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "id" })
-  User: UserEntity;
+  public User: UserEntity;
 
   @OneToMany(() => ProductEntity, (product) => product.creater, {
     cascade: true,
   })
-  createdProduct: ProductEntity;
+  public createdProduct: ProductEntity;
 
   @OneToMany(
     () => InquiryResponseEntity,
     (inquiryResponse) => inquiryResponse.inquiryResponseWritter,
     { cascade: true },
   )
-  writtenInquiryResponse: InquiryResponseEntity[];
+  public writtenInquiryResponse: InquiryResponseEntity[];
 }

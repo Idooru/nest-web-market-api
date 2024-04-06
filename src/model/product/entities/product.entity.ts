@@ -18,59 +18,59 @@ export class ProductEntity extends CommonEntity {
   @IsString()
   @IsNotEmpty()
   @Column({ type: "varchar", length: 20, unique: true, nullable: false })
-  name: string;
+  public name: string;
 
   @IsPositive()
   @IsNotEmpty()
   @Column({ type: "int", unsigned: true, nullable: false })
-  price: number;
+  public price: number;
 
   @IsString()
   @IsNotEmpty()
   @Column({ type: "varchar", length: 20, nullable: false })
-  origin: string;
+  public origin: string;
 
   @IsEnum(productCategory)
   @IsString()
   @IsNotEmpty()
   @Column({ type: "enum", enum: productCategory })
-  category: ProductCategory;
+  public category: ProductCategory;
 
   @IsString()
   @IsNotEmpty()
   @Column({ type: "text", nullable: true })
-  description: string;
+  public description: string;
 
   @IsPositive()
   @Column({ type: "int", unsigned: true, default: 100 })
-  quantity: number;
+  public quantity: number;
 
   @OneToOne(() => StarRateEntity, (starRate) => starRate.Product, {
     cascade: true,
   })
-  StarRate: StarRateEntity;
+  public StarRate: StarRateEntity;
 
   @OneToMany(() => ProductImageEntity, (image) => image.Product, {
     cascade: true,
   })
-  Image: ProductImageEntity[];
+  public Image: ProductImageEntity[];
 
   @ManyToOne(() => AdminUserEntity, (admin) => admin.createdProduct, {
     onDelete: "CASCADE",
   })
-  creater: AdminUserEntity;
+  public creater: AdminUserEntity;
 
   @OneToMany(() => CartEntity, (cart) => cart.Product)
-  Cart: CartEntity[];
+  public Cart: CartEntity[];
 
   @OneToMany(() => PaymentEntitiy, (payment) => payment.Product)
-  Payment: PaymentEntitiy[];
+  public Payment: PaymentEntitiy[];
 
   @OneToMany(() => ReviewEntity, (review) => review.Product, { cascade: true })
-  Review: ReviewEntity[];
+  public Review: ReviewEntity[];
 
   @OneToMany(() => InquiryRequestEntity, (inquiry) => inquiry.Product, {
     cascade: true,
   })
-  InquiryRequest: InquiryRequestEntity[];
+  public InquiryRequest: InquiryRequestEntity[];
 }

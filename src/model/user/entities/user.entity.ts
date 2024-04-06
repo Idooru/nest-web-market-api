@@ -12,30 +12,30 @@ export class UserEntity extends CommonEntity {
   @IsEnum(["client, admin"])
   @IsNotEmpty()
   @Column({ type: "enum", enum: ["client", "admin"] })
-  role: ["client", "admin"];
+  public role: ["client", "admin"];
 
   @OneToOne(() => UserProfileEntity, (profile) => profile.User, {
     cascade: true,
   })
-  Profile: UserProfileEntity;
+  public Profile: UserProfileEntity;
 
   @OneToOne(() => UserAuthEntity, (auth) => auth.User, {
     cascade: true,
   })
-  Auth: UserAuthEntity;
+  public Auth: UserAuthEntity;
 
   @OneToMany(() => AccountEntity, (account) => account.User, {
     cascade: true,
   })
-  Account: AccountEntity[];
+  public Account: AccountEntity[];
 
   @OneToOne(() => ClientUserEntity, (client) => client.User, {
     cascade: true,
   })
-  clientActions: ClientUserEntity;
+  public clientActions: ClientUserEntity;
 
   @OneToOne(() => AdminUserEntity, (admin) => admin.User, {
     cascade: true,
   })
-  adminActions: AdminUserEntity;
+  public adminActions: AdminUserEntity;
 }

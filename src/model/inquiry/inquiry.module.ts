@@ -70,7 +70,7 @@ import { InquiryTransactionContext } from "./logic/transaction/inquiry-transacti
   ],
 })
 export class InquiryModule implements NestModule {
-  configure(consumer: MiddlewareConsumer): void {
+  public configure(consumer: MiddlewareConsumer): void {
     consumer
       .apply(InquiryClientEventMiddleware)
       .forRoutes(InquiryV1ClientController)

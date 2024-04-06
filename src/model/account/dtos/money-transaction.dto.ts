@@ -1,4 +1,4 @@
 export class MoneyTransactionDto {
-  accountId: string;
-  balance: number;
+  public accountId: string;
+  public balance: number;
 }

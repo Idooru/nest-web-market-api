@@ -1,4 +1,4 @@
 export class DepositResultDto {
-  depositBalance: number;
-  afterDepositBalance: number;
+  public depositBalance: number;
+  public afterDepositBalance: number;
 }

@@ -62,11 +62,11 @@ export class UserV1Controller {
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Post("/register")
-  async register(
+  public async register(
     @Body(UserOperationValidatePipe<RegisterUserDto>)
-    registerUserDto: RegisterUserDto,
+    dto: RegisterUserDto,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userTransaction.register(registerUserDto);
+    await this.userTransaction.register(dto);
 
     return {
       statusCode: 201,
@@ -82,7 +82,7 @@ export class UserV1Controller {
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Get("/profile")
-  async whoAmI(
+  public async whoAmI(
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<UserEntity>> {
     const [message, result] = await this.userSearcher.findUserProfile(
@@ -104,10 +104,8 @@ export class UserV1Controller {
   @UseInterceptors(LoginInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Post("/login")
-  async login(@Body() loginUserDto: LoginUserDto): Promise<LoginInterface> {
-    const { accessToken, refreshToken } = await this.userSecurity.login(
-      loginUserDto,
-    );
+  public async login(@Body() dto: LoginUserDto): Promise<LoginInterface> {
+    const { accessToken, refreshToken } = await this.userSecurity.login(dto);
 
     return {
       statusCode: 201,
@@ -125,11 +123,10 @@ export class UserV1Controller {
   @UseInterceptors(RefreshTokenInterceptor)
   @UseGuards(IsRefreshTokenAvailableGuard)
   @Get("/refresh-token")
-  async refreshToken(
+  public async refreshToken(
     @GetJWT() jwtPayload: JwtRefreshTokenPayload,
   ): Promise<RefreshTokenInterface> {
     const accessToken = await this.userSecurity.refreshToken(jwtPayload);
-
     return {
       statusCode: 200,
       message: "토큰을 재발급 받았습니다. 쿠키를 확인하세요.",
@@ -146,7 +143,7 @@ export class UserV1Controller {
   @UseInterceptors(LogoutInterceptor)
   @UseGuards(IsLoginGuard)
   @Delete("/logout")
-  async logout(): Promise<LogoutInterface> {
+  public async logout(): Promise<LogoutInterface> {
     return {
       statusCode: 200,
       message: "로그아웃을 완료하였습니다.",
@@ -162,7 +159,7 @@ export class UserV1Controller {
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Put("/me")
-  async modifyUser(
+  public async modifyUser(
     @Body(UserOperationValidatePipe<ModifyUserDto>)
     modifyUserDto: ModifyUserDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
@@ -186,7 +183,7 @@ export class UserV1Controller {
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/email")
-  async modifyUserEmail(
+  public async modifyUserEmail(
     @Body(UserEmailValidatePipe) { email }: ModifyUserEmailDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
@@ -206,7 +203,7 @@ export class UserV1Controller {
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/nickname")
-  async modifyUserNickname(
+  public async modifyUserNickname(
     @Body(UserNicknameValidatePipe) { nickname }: ModifyUserNicknameDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
@@ -229,7 +226,7 @@ export class UserV1Controller {
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/phonenumber")
-  async modifyUserPhoneNumber(
+  public async modifyUserPhoneNumber(
     @Body(UserPhonenumberValidatePipe)
     { phonenumber }: ModifyUserPhonenumberDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
@@ -252,7 +249,7 @@ export class UserV1Controller {
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/password")
-  async modifyUserPassword(
+  public async modifyUserPassword(
     @Body() { password }: ModifyUserPasswordDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
@@ -274,7 +271,7 @@ export class UserV1Controller {
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/address")
-  async modifyUserAddress(
+  public async modifyUserAddress(
     @Body() { address }: ModifyUserAddressDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
@@ -290,7 +287,7 @@ export class UserV1Controller {
   @UseInterceptors(LogoutInterceptor)
   @UseGuards(IsLoginGuard)
   @Delete("/secession")
-  async secession(
+  public async secession(
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<LogoutInterface> {
     await this.userUpdateService.deleteUser(jwtPayload.userId);
@@ -310,11 +307,12 @@ export class UserV1Controller {
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Get("/find-email")
-  async findEmail(
+  public async findEmail(
     @Query("realname") realname: string,
     @Query("phonenumber", UserPhonenumberValidatePipe) phonenumber: string,
   ): Promise<JsonGeneralInterface<string>> {
-    const result = await this.userSecurity.findEmail(realname, phonenumber);
+    const dto = { realname, phonenumber };
+    const result = await this.userSecurity.findEmail(dto);
 
     return {
       statusCode: 200,
@@ -331,7 +329,7 @@ export class UserV1Controller {
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Patch("/reset-password")
-  async resetPassword(
+  public async resetPassword(
     @Body() resetPasswordDto: ResetPasswordDto,
   ): Promise<JsonGeneralInterface<void>> {
     await this.userUpdateService.resetPassword(resetPasswordDto);

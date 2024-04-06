@@ -1,7 +1,7 @@
 import { CartBodyDto } from "./cart-body.dto";
 
 export class ModifyCartDto {
-  cartId: string;
-  productId: string;
-  cartBodyDto: CartBodyDto;
+  public cartId: string;
+  public productId: string;
+  public cartBodyDto: CartBodyDto;
 }

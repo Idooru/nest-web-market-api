@@ -13,24 +13,24 @@ export class ClientUserEntity extends ChildEntity {
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "id" })
-  User: UserEntity;
+  public User: UserEntity;
 
   @OneToMany(() => CartEntity, (cart) => cart.ClientUser)
-  Cart: CartEntity[];
+  public Cart: CartEntity[];
 
   @OneToMany(() => OrderEntity, (order) => order.ClientUser)
-  Order: OrderEntity[];
+  public Order: OrderEntity[];
 
   @OneToMany(() => PaymentEntitiy, (payment) => payment.ClientUser)
-  Payment: PaymentEntitiy[];
+  public Payment: PaymentEntitiy[];
 
   @OneToMany(() => ReviewEntity, (review) => review.reviewer)
-  writtenReview: ReviewEntity[];
+  public writtenReview: ReviewEntity[];
 
   @OneToMany(
     () => InquiryRequestEntity,
     (inquiryRequest) => inquiryRequest.inquiryRequestWritter,
     { cascade: true },
   )
-  writtenInquiryRequest: InquiryRequestEntity[];
+  public writtenInquiryRequest: InquiryRequestEntity[];
 }

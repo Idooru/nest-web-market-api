@@ -10,18 +10,18 @@ export class CartEntity extends CommonEntity {
   @IsNotEmpty()
   @Max(50)
   @Column({ type: "int", unsigned: true })
-  quantity: number;
+  public quantity: number;
 
   @IsPositive()
   @IsNotEmpty()
   @Column({ type: "int", unsigned: true, nullable: false })
-  totalPrice: number;
+  public totalPrice: number;
 
   @ManyToOne(() => ClientUserEntity, (clientUser) => clientUser.Cart)
   @JoinColumn({ name: "clientId" })
-  ClientUser: ClientUserEntity;
+  public ClientUser: ClientUserEntity;
 
   @ManyToOne(() => ProductEntity, (product) => product.Cart)
   @JoinColumn({ name: "productId" })
-  Product: ProductEntity;
+  public Product: ProductEntity;
 }

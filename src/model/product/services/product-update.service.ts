@@ -18,17 +18,19 @@ export class ProductUpdateService {
   ) {}
 
   // Transaction
-  createProduct(createProductDto: CreateProductDto): Promise<ProductEntity> {
+  public createProduct(
+    createProductDto: CreateProductDto,
+  ): Promise<ProductEntity> {
     return this.productUpdateRepository.createProduct(createProductDto);
   }
 
   // Transaction
-  async createStarRate(product: ProductEntity): Promise<void> {
+  public async createStarRate(product: ProductEntity): Promise<void> {
     await this.productUpdateRepository.createStarRate(product);
   }
 
   // Transaction
-  async insertProductImages(
+  public async insertProductImages(
     insertProductImageDto: InsertProductImageDto,
   ): Promise<void> {
     const { productImages, product } = insertProductImageDto;
@@ -43,12 +45,14 @@ export class ProductUpdateService {
   }
 
   // Transaction
-  async modifyProduct(modifyProductDto: ModifyProductDto): Promise<void> {
+  public async modifyProduct(
+    modifyProductDto: ModifyProductDto,
+  ): Promise<void> {
     await this.productUpdateRepository.modifyProduct(modifyProductDto);
   }
 
   // Transaction
-  async changeProductImages(
+  public async changeProductImages(
     changeProductImageDto: ChangeProductImageDto,
   ): Promise<void> {
     const { beforeProductImages, newProductImages, product } =
@@ -79,22 +83,22 @@ export class ProductUpdateService {
   }
 
   // General
-  async modifyProductName(id: string, name: string): Promise<void> {
+  public async modifyProductName(id: string, name: string): Promise<void> {
     await this.productUpdateRepository.modifyProductName(id, name);
   }
 
   // General
-  async modifyProductPrice(id: string, price: number): Promise<void> {
+  public async modifyProductPrice(id: string, price: number): Promise<void> {
     await this.productUpdateRepository.modifyProductPrice(id, price);
   }
 
   // General
-  async modifyProductOrigin(id: string, origin: string): Promise<void> {
+  public async modifyProductOrigin(id: string, origin: string): Promise<void> {
     await this.productUpdateRepository.modifyProductOrigin(id, origin);
   }
 
   // General
-  async modifyProductCategory(
+  public async modifyProductCategory(
     id: string,
     category: ProductCategory,
   ): Promise<void> {
@@ -102,7 +106,7 @@ export class ProductUpdateService {
   }
 
   // General
-  async modifyProductDescription(
+  public async modifyProductDescription(
     id: string,
     description: string,
   ): Promise<void> {
@@ -113,12 +117,15 @@ export class ProductUpdateService {
   }
 
   // General
-  async modifyProductQuantity(id: string, quantity: number): Promise<void> {
+  public async modifyProductQuantity(
+    id: string,
+    quantity: number,
+  ): Promise<void> {
     await this.productUpdateRepository.modifyProductQuantity(id, quantity);
   }
 
   // General
-  async removeProduct(id: string): Promise<void> {
+  public async removeProduct(id: string): Promise<void> {
     const product = await this.productSearcher.findProductWithId(id);
 
     this.mediaUtils.deleteMediaFiles({

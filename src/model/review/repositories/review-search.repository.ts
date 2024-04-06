@@ -16,7 +16,7 @@ export class ReviewSearchRepository {
     private readonly select: ReviewSelectProperty,
   ) {}
 
-  findAllClientsReviews(id: string): Promise<ReviewEntity[]> {
+  public findAllClientsReviews(id: string): Promise<ReviewEntity[]> {
     return this.reviewRepository
       .createQueryBuilder()
       .select(this.select.reviews)
@@ -29,7 +29,7 @@ export class ReviewSearchRepository {
       .getMany();
   }
 
-  findStarRateWithId(id: string): Promise<StarRateEntity> {
+  public findStarRateWithId(id: string): Promise<StarRateEntity> {
     return this.starRateRepository
       .createQueryBuilder()
       .select(this.select.starRate)
@@ -38,7 +38,7 @@ export class ReviewSearchRepository {
       .getOne();
   }
 
-  findReviewWithId(id: string): Promise<ReviewEntity> {
+  public findReviewWithId(id: string): Promise<ReviewEntity> {
     return this.reviewRepository
       .createQueryBuilder()
       .select(this.select.review)

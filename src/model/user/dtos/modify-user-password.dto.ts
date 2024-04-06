@@ -10,5 +10,5 @@ export class ModifyUserPasswordDto extends PickType(UserAuthEntity, [
     required: true,
     uniqueItems: false,
   })
-  password: string;
+  public password: string;
 }

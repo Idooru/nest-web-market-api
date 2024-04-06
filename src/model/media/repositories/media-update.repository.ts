@@ -30,86 +30,86 @@ export class MediaUpdateRepository {
   ) {}
 
   // General
-  uploadProductImages(
+  public uploadProductImages(
     uploadMediaDto: UploadMediaDto,
   ): Promise<ProductImageEntity> {
     return this.productImageRepository.save(uploadMediaDto);
   }
 
   // General
-  uploadReviewImage(
+  public uploadReviewImage(
     uploadMediaDto: UploadMediaDto,
   ): Promise<ReviewImageEntity> {
     return this.reviewImageRepository.save(uploadMediaDto);
   }
 
   // General
-  uploadReviewVideo(
+  public uploadReviewVideo(
     uploadMediaDto: UploadMediaDto,
   ): Promise<ReviewVideoEntity> {
     return this.reviewVideoRepository.save(uploadMediaDto);
   }
 
   // General
-  uploadInquiryRequestImage(
+  public uploadInquiryRequestImage(
     uploadMediaDto: UploadMediaDto,
   ): Promise<InquiryRequestImageEntity> {
     return this.inquiryRequestImageRepository.save(uploadMediaDto);
   }
 
   // General
-  uploadInquiryRequestVideo(
+  public uploadInquiryRequestVideo(
     uploadMediaDto: UploadMediaDto,
   ): Promise<InquiryRequestVideoEntity> {
     return this.inquiryRequestVideoRepository.save(uploadMediaDto);
   }
 
   // General
-  uploadInquiryResponseImages(
+  public uploadInquiryResponseImages(
     uploadMediaDto: UploadMediaDto,
   ): Promise<InquiryResponseImageEntity> {
     return this.inquiryResponseImageRepository.save(uploadMediaDto);
   }
 
   // General
-  uploadInquiryResponseVideos(
+  public uploadInquiryResponseVideos(
     uploadMediaDto: UploadMediaDto,
   ): Promise<InquiryResponseVideoEntity> {
     return this.inquiryResponseVideoRepository.save(uploadMediaDto);
   }
 
   // General
-  async deleteProductImageWithId(id: string): Promise<void> {
+  public async deleteProductImageWithId(id: string): Promise<void> {
     await this.productImageRepository.delete({ id });
   }
 
   // General
-  async deleteReviewImageWithId(id: string): Promise<void> {
+  public async deleteReviewImageWithId(id: string): Promise<void> {
     await this.reviewImageRepository.delete({ id });
   }
 
   // General
-  async deleteReviewVideoWithId(id: string): Promise<void> {
+  public async deleteReviewVideoWithId(id: string): Promise<void> {
     await this.reviewVideoRepository.delete({ id });
   }
 
   // General
-  async deleteInquiryRequestImageWithId(id: string): Promise<void> {
+  public async deleteInquiryRequestImageWithId(id: string): Promise<void> {
     await this.inquiryRequestImageRepository.delete({ id });
   }
 
   // General
-  async deleteInquiryRequestVideoWithId(id: string): Promise<void> {
+  public async deleteInquiryRequestVideoWithId(id: string): Promise<void> {
     await this.inquiryRequestVideoRepository.delete({ id });
   }
 
   // General
-  async deleteInquiryResponseImageWithId(id: string): Promise<void> {
+  public async deleteInquiryResponseImageWithId(id: string): Promise<void> {
     await this.inquiryResponseImageRepository.delete({ id });
   }
 
   // General
-  async deleteInquiryResponseVideoWithId(id: string): Promise<void> {
+  public async deleteInquiryResponseVideoWithId(id: string): Promise<void> {
     await this.inquiryResponseVideoRepository.delete({ id });
   }
 }

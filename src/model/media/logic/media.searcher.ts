@@ -12,7 +12,7 @@ import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.ent
 export class MediaSearcher {
   constructor(private readonly mediaSearchRepository: MediaSearchRepository) {}
 
-  findProductImagesWithId(
+  public findProductImagesWithId(
     productImgCookies: MediaCookieDto[],
   ): Promise<ProductImageEntity[]> {
     const finding = productImgCookies.map((productImgCookie) => {
@@ -24,7 +24,9 @@ export class MediaSearcher {
     return Promise.all(finding);
   }
 
-  findBeforeProductImagesWithId(id: string): Promise<ProductImageEntity[]> {
+  public findBeforeProductImagesWithId(
+    id: string,
+  ): Promise<ProductImageEntity[]> {
     return this.mediaSearchRepository.findBeforeProductImagesWithId(id);
   }
 
@@ -40,11 +42,13 @@ export class MediaSearcher {
     return Promise.all(finding);
   }
 
-  findBeforeReviewImagesWithId(id: string): Promise<ReviewImageEntity[]> {
+  public findBeforeReviewImagesWithId(
+    id: string,
+  ): Promise<ReviewImageEntity[]> {
     return this.mediaSearchRepository.findBeforeReviewImagesWithId(id);
   }
 
-  findReviewVideosWithId(
+  public findReviewVideosWithId(
     reviewVdoCookies: MediaCookieDto[],
   ): Promise<ReviewVideoEntity[]> {
     const finding = reviewVdoCookies.map((reviewVdoCookie) => {
@@ -56,11 +60,13 @@ export class MediaSearcher {
     return Promise.all(finding);
   }
 
-  findBeforeReviewVideosWithId(id: string): Promise<ReviewVideoEntity[]> {
+  public findBeforeReviewVideosWithId(
+    id: string,
+  ): Promise<ReviewVideoEntity[]> {
     return this.mediaSearchRepository.findBeforeReviewVideosWithId(id);
   }
 
-  findInquiryRequestImagesWithId(
+  public findInquiryRequestImagesWithId(
     inquiryRequestImgCookies: MediaCookieDto[],
   ): Promise<InquiryRequestImageEntity[]> {
     const finding = inquiryRequestImgCookies.map((inquiryRequestImgCookie) => {
@@ -72,7 +78,7 @@ export class MediaSearcher {
     return Promise.all(finding);
   }
 
-  findInquiryRequestVideosWithId(
+  public findInquiryRequestVideosWithId(
     inquiryRequestVdoCookies: MediaCookieDto[],
   ): Promise<InquiryRequestVideoEntity[]> {
     const finding = inquiryRequestVdoCookies.map((inquiryRequestVdoCookie) => {
@@ -84,7 +90,7 @@ export class MediaSearcher {
     return Promise.all(finding);
   }
 
-  findInquiryResponseImagesWithId(
+  public findInquiryResponseImagesWithId(
     inquiryResponseImgCookies: MediaCookieDto[],
   ): Promise<InquiryResponseImageEntity[]> {
     const finding = inquiryResponseImgCookies.map(
@@ -98,7 +104,7 @@ export class MediaSearcher {
     return Promise.all(finding);
   }
 
-  findInquiryResponseVideosWithId(
+  public findInquiryResponseVideosWithId(
     inquiryResponseVdoCookies: MediaCookieDto[],
   ): Promise<InquiryResponseImageEntity[]> {
     const finding = inquiryResponseVdoCookies.map(

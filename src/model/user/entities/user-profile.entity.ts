@@ -17,32 +17,32 @@ export class UserProfileEntity extends ChildEntity {
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "id" })
-  User: UserEntity;
+  public User: UserEntity;
 
   @IsString()
   @IsNotEmpty()
   @Column({ type: "varchar", length: 20, nullable: false })
-  realname: string;
+  public realname: string;
 
   @IsDateString()
   @IsNotEmpty()
   @Column({ type: "date", nullable: false })
-  birth: Date;
+  public birth: Date;
 
   @IsEnum(["male", "female"])
   @IsNotEmpty()
   @Column({ type: "enum", enum: ["male", "female"] })
-  gender: "male" | "female";
+  public gender: "male" | "female";
 
   @IsMobilePhone()
   @IsNotEmpty()
   @Column({ type: "varchar", length: 15, unique: true, nullable: false })
-  phonenumber: string;
+  public phonenumber: string;
 
   @IsString()
   @IsNotEmpty()
   @MinLength(10)
   @MaxLength(50)
   @Column({ type: "varchar", length: 50, nullable: false })
-  address: string;
+  public address: string;
 }

@@ -17,7 +17,7 @@ export class EmailSenderLibrary {
   ) {}
 
   @OnEvent(eventConfigs.sendMailInquiryRequest, { async: true })
-  async sendMailToAdminAboutInquiryRequest(
+  public async sendMailToAdminAboutInquiryRequest(
     sendMailToAdminAboutInquiryRequestDto: SendMailToAdminAboutInquiryRequestDto,
   ): Promise<void> {
     const { product, inquiryRequest, clientUser } =
@@ -43,7 +43,7 @@ export class EmailSenderLibrary {
   }
 
   @OnEvent(eventConfigs.sendMailInquiryResponse, { async: true })
-  async sendMailToClientAboutInquiryResponse(
+  public async sendMailToClientAboutInquiryResponse(
     sendMailToClientAboutInquiryResponseDto: SendMailToClientAboutInquiryResponseDto,
   ): Promise<void> {
     const { inquiryRequester, inquiryRequest, inquiryResponse } =
@@ -71,7 +71,7 @@ export class EmailSenderLibrary {
   }
 
   @OnEvent(eventConfigs.sendMailRegister, { async: true })
-  async sendMailToClientAboutRegister(
+  public async sendMailToClientAboutRegister(
     sendMailToClientAboutRegisterDto: SendMailToClientAboutRegisterDto,
   ): Promise<void> {
     const { email, nickname } = sendMailToClientAboutRegisterDto;

@@ -11,7 +11,7 @@ export class FindEmailDto extends PickType(UserProfileEntity, [
     required: true,
     uniqueItems: false,
   })
-  realname: string;
+  public realname: string;
 
   @ApiProperty({
     description: "사용자 전화번호",
@@ -19,5 +19,5 @@ export class FindEmailDto extends PickType(UserProfileEntity, [
     required: true,
     uniqueItems: true,
   })
-  phonenumber: string;
+  public phonenumber: string;
 }

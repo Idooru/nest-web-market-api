@@ -2,6 +2,6 @@ import { InquiryRequestImageEntity } from "../../../media/entities/inquiry-reque
 import { InquiryRequestEntity } from "../../entities/inquiry-request.entity";
 
 export class InsertInquiryRequestImageDto {
-  inquiryRequestImages: InquiryRequestImageEntity[];
-  inquiryRequest: InquiryRequestEntity;
+  public inquiryRequestImages: InquiryRequestImageEntity[];
+  public inquiryRequest: InquiryRequestEntity;
 }

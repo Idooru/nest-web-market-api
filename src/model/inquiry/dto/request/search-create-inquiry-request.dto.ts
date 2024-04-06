@@ -5,9 +5,9 @@ import { InquiryRequestImageEntity } from "../../../media/entities/inquiry-reque
 import { InquiryRequestVideoEntity } from "../../../media/entities/inquiry-request-video.entity";
 
 export class SearchCreateInquiryRequestDto {
-  inquiryRequestBodyDto: InquiryRequestBodyDto;
-  product: ProductEntity;
-  clientUser: ClientUserEntity;
-  inquiryRequestImages: InquiryRequestImageEntity[];
-  inquiryRequestVideos: InquiryRequestVideoEntity[];
+  public inquiryRequestBodyDto: InquiryRequestBodyDto;
+  public product: ProductEntity;
+  public clientUser: ClientUserEntity;
+  public inquiryRequestImages: InquiryRequestImageEntity[];
+  public inquiryRequestVideos: InquiryRequestVideoEntity[];
 }

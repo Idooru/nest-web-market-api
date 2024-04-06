@@ -14,7 +14,7 @@ export class InquiryRequestBodyDto extends PickType(InquiryRequestEntity, [
     required: true,
     uniqueItems: false,
   })
-  title: string;
+  public title: string;
 
   @ApiProperty({
     description: "문의 요청 본문",
@@ -22,7 +22,7 @@ export class InquiryRequestBodyDto extends PickType(InquiryRequestEntity, [
     required: true,
     uniqueItems: false,
   })
-  content: string;
+  public content: string;
 
   @ApiProperty({
     description: "문의 요청 카테고리",
@@ -30,5 +30,5 @@ export class InquiryRequestBodyDto extends PickType(InquiryRequestEntity, [
     required: true,
     uniqueItems: false,
   })
-  categories: "product status" | "delivery status";
+  public categories: "product status" | "delivery status";
 }

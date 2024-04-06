@@ -8,7 +8,7 @@ import path from "path";
 @Injectable()
 export class MediaFileEraser {
   @OnEvent(eventConfigs.deleteMediaFile, { async: true })
-  async deleteMediaFile(deleteMediaFilesDto: DeleteMediaFilesDto) {
+  public async deleteMediaFile(deleteMediaFilesDto: DeleteMediaFilesDto) {
     deleteMediaFilesDto.imageFiles.fileName.forEach((image) => {
       const prefix = deleteMediaFilesDto.imageFiles.imagePrefix;
       const mediaFilePrefix = prefix.concat("/").concat(image);

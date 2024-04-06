@@ -1,5 +1,5 @@
 export class DeleteReviewDto {
-  reviewId: string;
-  productId: string;
-  userId: string;
+  public reviewId: string;
+  public productId: string;
+  public userId: string;
 }

@@ -10,5 +10,5 @@ export class ModifyUserNicknameDto extends PickType(UserAuthEntity, [
     required: true,
     uniqueItems: true,
   })
-  nickname: string;
+  public nickname: string;
 }

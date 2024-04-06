@@ -18,7 +18,7 @@ export class RegisterUserProfileDto extends PickType(UserProfileEntity, [
     required: true,
     uniqueItems: false,
   })
-  realname: string;
+  public realname: string;
 
   @ApiProperty({
     description: "사용자 생일",
@@ -27,7 +27,7 @@ export class RegisterUserProfileDto extends PickType(UserProfileEntity, [
     required: true,
     uniqueItems: false,
   })
-  birth: Date;
+  public birth: Date;
 
   @ApiProperty({
     description: "사용자 성별",
@@ -35,7 +35,7 @@ export class RegisterUserProfileDto extends PickType(UserProfileEntity, [
     required: true,
     uniqueItems: false,
   })
-  gender: "male" | "female";
+  public gender: "male" | "female";
 
   @ApiProperty({
     description: "사용자 전화번호",
@@ -43,7 +43,7 @@ export class RegisterUserProfileDto extends PickType(UserProfileEntity, [
     required: true,
     uniqueItems: true,
   })
-  phonenumber: string;
+  public phonenumber: string;
 
   @ApiProperty({
     description: "사용자 주소",
@@ -51,7 +51,7 @@ export class RegisterUserProfileDto extends PickType(UserProfileEntity, [
     required: true,
     uniqueItems: false,
   })
-  address: string;
+  public address: string;
 }
 
 export class CreateUserProfileDto extends PickType(UserProfileEntity, [
@@ -73,7 +73,7 @@ export class RegisterUserAuthDto extends PickType(UserAuthEntity, [
     required: true,
     uniqueItems: true,
   })
-  nickname: string;
+  public nickname: string;
 
   @ApiProperty({
     description: "사용자 이메일",
@@ -81,7 +81,7 @@ export class RegisterUserAuthDto extends PickType(UserAuthEntity, [
     required: true,
     uniqueItems: true,
   })
-  email: string;
+  public email: string;
 
   @ApiProperty({
     description: "사용자 비밀번호",
@@ -89,7 +89,7 @@ export class RegisterUserAuthDto extends PickType(UserAuthEntity, [
     required: true,
     uniqueItems: false,
   })
-  password: string;
+  public password: string;
 }
 
 export class CreateUserAuthDto extends PickType(UserAuthEntity, [
@@ -108,7 +108,7 @@ export class RegisterUserRoleDto extends PickType(UserEntity, ["role"]) {
   })
   @IsNotEmpty()
   @Column({ type: "enum", enum: ["client", "admin"], nullable: false })
-  role: ["client", "admin"];
+  public role: ["client", "admin"];
 }
 
 export class RegisterUserDto extends IntersectionType(

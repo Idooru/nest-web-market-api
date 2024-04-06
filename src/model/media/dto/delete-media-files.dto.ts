@@ -1,9 +1,9 @@
 export class DeleteMediaFilesDto {
-  imageFiles: {
+  public imageFiles: {
     fileName: string[];
     imagePrefix: string;
   };
-  videoFiles: {
+  public videoFiles: {
     fileName: string[];
     videoPrefix: string;
   };

@@ -4,16 +4,16 @@ import { AdminUserEntity } from "../../../user/entities/admin-user.entity";
 import { InquiryRequestEntity } from "../../entities/inquiry-request.entity";
 
 export class PrepareToCreateInquiryResponseDto {
-  inquiryResponseBodyDto: InquiryResponseBodyDto;
-  inquiryRequestId: string;
-  inquiryRequesterId: string;
-  inquiryResponserId: string;
-  inquiryResponseImgCookies: MediaCookieDto[];
-  inquiryResponseVdoCookies: MediaCookieDto[];
+  public inquiryResponseBodyDto: InquiryResponseBodyDto;
+  public inquiryRequestId: string;
+  public inquiryRequesterId: string;
+  public inquiryResponserId: string;
+  public inquiryResponseImgCookies: MediaCookieDto[];
+  public inquiryResponseVdoCookies: MediaCookieDto[];
 }
 
 export class CreateInquiryResponseDto {
-  inquiryResponseBodyDto: InquiryResponseBodyDto;
-  admin: AdminUserEntity;
-  inquiryRequest: InquiryRequestEntity;
+  public inquiryResponseBodyDto: InquiryResponseBodyDto;
+  public admin: AdminUserEntity;
+  public inquiryRequest: InquiryRequestEntity;
 }

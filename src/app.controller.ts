@@ -12,7 +12,7 @@ export class AppController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/")
-  mainPage(): JsonGeneralInterface<void> {
+  public mainPage(): JsonGeneralInterface<void> {
     return {
       statusCode: 200,
       message: "메인 페이지 입니다.",

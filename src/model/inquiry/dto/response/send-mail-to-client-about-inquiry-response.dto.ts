@@ -3,7 +3,7 @@ import { InquiryResponseEntity } from "../../entities/inquiry-response.entity";
 import { ClientUserEntity } from "../../../user/entities/client-user.entity";
 
 export class SendMailToClientAboutInquiryResponseDto {
-  inquiryRequester: ClientUserEntity;
-  inquiryRequest: InquiryRequestEntity;
-  inquiryResponse: InquiryResponseEntity;
+  public inquiryRequester: ClientUserEntity;
+  public inquiryRequest: InquiryRequestEntity;
+  public inquiryResponse: InquiryResponseEntity;
 }

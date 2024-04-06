@@ -69,7 +69,7 @@ import { UserTransactionContext } from "./logic/transaction/user-transaction.con
   exports: [UserSearcher, UserValidator, UserUpdateService],
 })
 export class UserModule implements NestModule {
-  configure(consumer: MiddlewareConsumer): void {
+  public configure(consumer: MiddlewareConsumer): void {
     consumer
       .apply(UserRegisterEventMiddleware)
       .forRoutes("/api/v1/user/register");

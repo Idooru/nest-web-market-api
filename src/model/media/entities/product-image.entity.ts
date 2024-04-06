@@ -8,5 +8,5 @@ export class ProductImageEntity extends MediaEntity {
     onDelete: "CASCADE",
   })
   @JoinColumn({ referencedColumnName: "id", name: "productId" })
-  Product: ProductEntity;
+  public Product: ProductEntity;
 }

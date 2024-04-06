@@ -23,7 +23,10 @@ export class UserSecurity {
     private readonly jwtErrorHandlerLibrary: JwtErrorHandlerLibrary,
   ) {}
 
-  hashPassword(password: string, hasTransaction: boolean): Promise<string> {
+  public hashPassword(
+    password: string,
+    hasTransaction: boolean,
+  ): Promise<string> {
     return bcrypt
       .hash(password, this.securityLibrary.hashSalt)
       .catch(this.callbackFactory.getCatchHashPasswordFunc(hasTransaction));

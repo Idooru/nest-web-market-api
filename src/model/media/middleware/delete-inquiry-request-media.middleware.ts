@@ -12,7 +12,7 @@ export class DeleteInquiryRequestMediaMiddleware implements NestMiddleware {
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  use(req: Request, res: Response, next: NextFunction): void {
+  public use(req: Request, res: Response, next: NextFunction): void {
     res.on("finish", () => {
       const deleteMediaFilesDto: DeleteMediaFilesDto = this.mediaEventMap.get(
         "delete-inquiry-request-medias",

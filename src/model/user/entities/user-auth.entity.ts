@@ -9,21 +9,21 @@ export class UserAuthEntity extends ChildEntity {
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "id" })
-  User: UserEntity;
+  public User: UserEntity;
 
   @IsString()
   @IsNotEmpty()
   @Column({ type: "varchar", length: 20, unique: true, nullable: false })
-  nickname: string;
+  public nickname: string;
 
   @IsEmail()
   @IsNotEmpty()
   @Column({ type: "varchar", length: 60, unique: true, nullable: false })
-  email: string;
+  public email: string;
 
   @IsString()
   @IsNotEmpty()
   @Matches(/^[A-Za-z\d!@#$%^&*()]{8,30}$/)
   @Column({ type: "varchar", nullable: false })
-  password: string;
+  public password: string;
 }

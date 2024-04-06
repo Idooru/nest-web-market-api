@@ -11,7 +11,7 @@ export class LoginUserDto extends PickType(UserAuthEntity, [
     required: true,
     uniqueItems: true,
   })
-  email: string;
+  public email: string;
 
   @ApiProperty({
     description: "사용자 비밀번호",
@@ -19,5 +19,5 @@ export class LoginUserDto extends PickType(UserAuthEntity, [
     required: true,
     uniqueItems: false,
   })
-  password: string;
+  public password: string;
 }

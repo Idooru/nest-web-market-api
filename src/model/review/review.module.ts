@@ -29,8 +29,8 @@ import { ReviewValidateRepository } from "./repositories/review-validate.reposit
 import { DeleteReviewMediaMiddleware } from "../media/middleware/delete-review-media.middleware";
 import { ReviewV1AdminController } from "./controllers/v1/review-v1-admin.controller";
 import { Transactional } from "../../common/interfaces/initializer/transactional";
-import { ReviewTransactionContext } from './logic/transaction/review-transaction.context';
-import { ReviewTransactionSearcher } from './logic/transaction/review-transaction.searcher';
+import { ReviewTransactionContext } from "./logic/transaction/review-transaction.context";
+import { ReviewTransactionSearcher } from "./logic/transaction/review-transaction.searcher";
 
 @Module({
   imports: [
@@ -62,7 +62,7 @@ import { ReviewTransactionSearcher } from './logic/transaction/review-transactio
   exports: [],
 })
 export class ReviewModule implements NestModule {
-  configure(consumer: MiddlewareConsumer): void {
+  public configure(consumer: MiddlewareConsumer): void {
     consumer
       .apply(DeleteReviewMediaMiddleware)
       .forRoutes({

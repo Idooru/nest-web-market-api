@@ -4,40 +4,45 @@ import { UserEntity } from "../entities/user.entity";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ClientUserEntity } from "../entities/client-user.entity";
 import { AdminUserEntity } from "../entities/admin-user.entity";
+import { FindEmailDto } from "../dtos/find-email.dto";
 
 @Injectable()
 export class UserSearcher {
   constructor(private readonly userSearchRepository: UserSearchRepository) {}
 
-  findUserWithId(id: string): Promise<UserEntity> {
+  public findUserWithId(id: string): Promise<UserEntity> {
     return this.userSearchRepository.findUserWithId(id);
   }
 
-  findUserWithEmail(email: string): Promise<UserEntity> {
+  public findUserWithEmail(email: string): Promise<UserEntity> {
     return this.userSearchRepository.findUserWithEmail(email);
   }
 
-  findAllUsersFromLatest(): Promise<UserEntity[]> {
+  public findAllUsersFromLatest(): Promise<UserEntity[]> {
     return this.userSearchRepository.findAllUsersFromLatest();
   }
 
-  findAllUsersFromOldest(): Promise<UserEntity[]> {
+  public findAllUsersFromOldest(): Promise<UserEntity[]> {
     return this.userSearchRepository.findAllUsersFromOldest();
   }
 
-  findClientUserInfo(id: string): Promise<UserEntity> {
+  public findClientUserInfo(id: string): Promise<UserEntity> {
     return this.userSearchRepository.findClientUserInfo(id);
   }
 
-  findClientUserObjectWithId(id: string): Promise<ClientUserEntity> {
-    return this.userSearchRepository.findClientUserObjectWithId(id);
+  public async findClientUserObjectWithId(
+    id: string,
+  ): Promise<ClientUserEntity> {
+    const user = await this.userSearchRepository.findClientUserWithId(id);
+    return this.userSearchRepository.findClientUserObjectWithId(user);
   }
 
-  findAdminUserObjectWithId(id: string): Promise<AdminUserEntity> {
-    return this.userSearchRepository.findAdminUserObjectWithId(id);
+  public async findAdminUserObjectWithId(id: string): Promise<AdminUserEntity> {
+    const user = await this.userSearchRepository.findAdminUserWithId(id);
+    return this.userSearchRepository.findAdminUserObjectWithId(user);
   }
 
-  async findUserProfile(
+  public async findUserProfile(
     jwtPayload: JwtAccessTokenPayload,
   ): Promise<[string, UserEntity]> {
     if (jwtPayload.userRole.toString() === "admin") {
@@ -55,10 +60,7 @@ export class UserSearcher {
     }
   }
 
-  findUserForgotten(
-    realname: string,
-    phonenumber: string,
-  ): Promise<UserEntity> {
-    return this.userSearchRepository.findUserForgotten(realname, phonenumber);
+  public findUserForgotten(dto: FindEmailDto): Promise<UserEntity> {
+    return this.userSearchRepository.findUserForgotten(dto);
   }
 }

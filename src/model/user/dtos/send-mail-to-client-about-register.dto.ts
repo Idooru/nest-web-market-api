@@ -1,4 +1,4 @@
 export class SendMailToClientAboutRegisterDto {
-  email: string;
-  nickname: string;
+  public email: string;
+  public nickname: string;
 }

@@ -5,5 +5,5 @@ import { PrimaryColumn } from "typeorm";
 export abstract class ChildEntity extends DateEntity {
   @IsUUID()
   @PrimaryColumn("uuid")
-  id: string;
+  public id: string;
 }

@@ -61,7 +61,7 @@ export class MediaV1ClientController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/review/image")
-  async findUploadedReviewImage(
+  public async findUploadedReviewImage(
     @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
     reviewImgCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<ReviewImageEntity[]>> {
@@ -83,7 +83,7 @@ export class MediaV1ClientController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/review/video")
-  async findUploadedReviewVideo(
+  public async findUploadedReviewVideo(
     @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
     reviewVdoCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<ReviewVideoEntity[]>> {
@@ -105,7 +105,7 @@ export class MediaV1ClientController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/inquiry/request/image")
-  async findUploadedInquiryRequestImage(
+  public async findUploadedInquiryRequestImage(
     @MediaCookiesParser(inquiryMediaCookieKey.request.image_url_cookie)
     inquiryRequestImgCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<InquiryRequestImageEntity[]>> {
@@ -127,7 +127,7 @@ export class MediaV1ClientController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/inquiry/request/video")
-  async findUploadedInquiryRequestVideo(
+  public async findUploadedInquiryRequestVideo(
     @MediaCookiesParser(inquiryMediaCookieKey.request.video_url_cookie)
     inquiryRequestVdoCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<InquiryRequestVideoEntity[]>> {
@@ -156,7 +156,7 @@ export class MediaV1ClientController {
     ),
   )
   @Post("/review/image")
-  async uploadReviewImage(
+  public async uploadReviewImage(
     @UploadedFiles(ReviewImageValidatePipe) files: Express.Multer.File[],
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
     const cookieValues = await this.mediaUpdateService.uploadReviewImages(
@@ -185,7 +185,7 @@ export class MediaV1ClientController {
     ),
   )
   @Post("/review/video")
-  async uploadReviewVideo(
+  public async uploadReviewVideo(
     @UploadedFiles(ReviewVideoValidatePipe) files: Express.Multer.File[],
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
     const cookieValues = await this.mediaUpdateService.uploadReviewVideos(
@@ -214,7 +214,7 @@ export class MediaV1ClientController {
     ),
   )
   @Post("/inquiry/request/image")
-  async uploadInquiryRequestImage(
+  public async uploadInquiryRequestImage(
     @UploadedFiles(InquiryRequestImageValidatePipe)
     files: Express.Multer.File[],
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
@@ -243,7 +243,7 @@ export class MediaV1ClientController {
     ),
   )
   @Post("/inquiry/request/video")
-  async uploadInquiryRequestVideo(
+  public async uploadInquiryRequestVideo(
     @UploadedFiles(InquiryRequestVideoValidatePipe)
     files: Express.Multer.File[],
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
@@ -265,7 +265,7 @@ export class MediaV1ClientController {
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/review/image")
-  async cancelReviewImageUpload(
+  public async cancelReviewImageUpload(
     @MediaCookiesParser(reviewMediaCookieKey.image_url_cookie)
     reviewImgCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
@@ -287,7 +287,7 @@ export class MediaV1ClientController {
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/review/video")
-  async cancelReviewVideoUpload(
+  public async cancelReviewVideoUpload(
     @MediaCookiesParser(reviewMediaCookieKey.video_url_cookie)
     reviewVdoCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
@@ -309,7 +309,7 @@ export class MediaV1ClientController {
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/inquiry/request/image")
-  async cancelInquiryRequestImageUpload(
+  public async cancelInquiryRequestImageUpload(
     @MediaCookiesParser(inquiryMediaCookieKey.request.image_url_cookie)
     inquiryRequestImgCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
@@ -332,7 +332,7 @@ export class MediaV1ClientController {
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/inquiry/request/video")
-  async cancelInquiryRequestVideoUpload(
+  public async cancelInquiryRequestVideoUpload(
     @MediaCookiesParser(inquiryMediaCookieKey.request.video_url_cookie)
     inquiryRequestVdoCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {

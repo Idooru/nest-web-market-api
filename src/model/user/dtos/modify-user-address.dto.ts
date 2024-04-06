@@ -10,5 +10,5 @@ export class ModifyUserAddressDto extends PickType(UserProfileEntity, [
     required: true,
     uniqueItems: false,
   })
-  address: string;
+  public address: string;
 }

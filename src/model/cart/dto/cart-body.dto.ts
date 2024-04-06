@@ -11,7 +11,7 @@ export class CartBodyDto extends PickType(CartEntity, [
     required: true,
     uniqueItems: false,
   })
-  quantity: number;
+  public quantity: number;
 
   @ApiProperty({
     description: "장바구니 총금액",
@@ -19,5 +19,5 @@ export class CartBodyDto extends PickType(CartEntity, [
     required: true,
     uniqueItems: false,
   })
-  totalPrice: number;
+  public totalPrice: number;
 }

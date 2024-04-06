@@ -11,7 +11,7 @@ export class AccountBodyDto extends PickType(AccountEntity, [
     required: true,
     uniqueItems: false,
   })
-  bank: "우리은행" | "농협은행" | "국민은행";
+  public bank: "우리은행" | "농협은행" | "국민은행";
 
   @ApiProperty({
     description: "사용자 계좌 번호",
@@ -19,7 +19,7 @@ export class AccountBodyDto extends PickType(AccountEntity, [
     required: true,
     uniqueItems: true,
   })
-  accountNumber: string;
+  public accountNumber: string;
 
   @ApiProperty({
     description: "사용자 계좌 잔액",
@@ -27,5 +27,5 @@ export class AccountBodyDto extends PickType(AccountEntity, [
     required: true,
     uniqueItems: false,
   })
-  balance: number;
+  public balance: number;
 }

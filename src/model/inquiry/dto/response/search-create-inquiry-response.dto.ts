@@ -6,10 +6,10 @@ import { AdminUserEntity } from "../../../user/entities/admin-user.entity";
 import { InquiryRequestEntity } from "../../entities/inquiry-request.entity";
 
 export class SearchCreateInquiryResponseDto {
-  inquiryResponseBodyDto: InquiryResponseBodyDto;
-  inquiryResponseImages: InquiryResponseImageEntity[];
-  inquiryResponseVideos: InquiryResponseVideoEntity[];
-  inquiryRequester: ClientUserEntity;
-  inquiryResponser: AdminUserEntity;
-  inquiryRequest: InquiryRequestEntity;
+  public inquiryResponseBodyDto: InquiryResponseBodyDto;
+  public inquiryResponseImages: InquiryResponseImageEntity[];
+  public inquiryResponseVideos: InquiryResponseVideoEntity[];
+  public inquiryRequester: ClientUserEntity;
+  public inquiryResponser: AdminUserEntity;
+  public inquiryRequest: InquiryRequestEntity;
 }

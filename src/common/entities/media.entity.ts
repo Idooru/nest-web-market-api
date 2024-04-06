@@ -6,9 +6,9 @@ export abstract class MediaEntity extends CommonEntity {
   @IsUrl()
   @IsString()
   @Column({ type: "varchar", nullable: false, unique: true })
-  url: string;
+  public url: string;
 
   @IsInt()
   @Column({ type: "int", nullable: false, unique: false })
-  size: number;
+  public size: number;
 }

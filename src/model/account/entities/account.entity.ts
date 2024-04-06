@@ -1,12 +1,4 @@
-import {
-  BeforeInsert,
-  BeforeUpdate,
-  Column,
-  Entity,
-  getManager,
-  JoinColumn,
-  ManyToOne,
-} from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import {
   IsBoolean,
   IsEnum,
@@ -25,25 +17,25 @@ export class AccountEntity extends CommonEntity {
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "userId" })
-  User: UserEntity;
+  public User: UserEntity;
 
   @IsEnum(["우리은행", "농협은행", "국민은행"])
   @IsNotEmpty()
   @Column({ type: "enum", enum: ["우리은행", "농협은행", "국민은행"] })
-  bank: "우리은행" | "농협은행" | "국민은행";
+  public bank: "우리은행" | "농협은행" | "국민은행";
 
   @IsString()
   @IsNotEmpty()
   @MinLength(10)
   @MaxLength(30)
   @Column({ type: "varchar", length: 30, nullable: false, unique: true })
-  accountNumber: string;
+  public accountNumber: string;
 
   @IsInt()
   @Column({ type: "int", unsigned: true, default: 0 })
-  balance: number;
+  public balance: number;
 
   @IsBoolean()
   @Column({ type: "boolean", default: false })
-  isMainAccount: boolean;
+  public isMainAccount: boolean;
 }

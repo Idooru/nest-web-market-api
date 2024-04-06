@@ -67,7 +67,7 @@ import { ProductTransactionContext } from "./logic/transaction/product-transacti
   ],
 })
 export class ProductModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
+  public configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(DeleteProductMediaMiddleware)
       .forRoutes({

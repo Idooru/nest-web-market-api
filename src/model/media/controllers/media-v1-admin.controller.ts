@@ -59,7 +59,7 @@ export class MediaV1AdminController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/product/image")
-  async findUploadedProductImage(
+  public async findUploadedProductImage(
     @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
     productImgCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<ProductImageEntity[]>> {
@@ -81,7 +81,7 @@ export class MediaV1AdminController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/inquiry/response/image")
-  async findUploadedInquiryResponseImages(
+  public async findUploadedInquiryResponseImages(
     @MediaCookiesParser(inquiryMediaCookieKey.response.image_url_cookie)
     inquiryResponseImgCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<InquiryResponseImageEntity[]>> {
@@ -103,7 +103,7 @@ export class MediaV1AdminController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/inquiry/response/video")
-  async findUploadedInquiryResponseVideos(
+  public async findUploadedInquiryResponseVideos(
     @MediaCookiesParser(inquiryMediaCookieKey.response.video_url_cookie)
     inquiryResponseVdoCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<InquiryResponseVideoEntity[]>> {
@@ -132,7 +132,7 @@ export class MediaV1AdminController {
     ),
   )
   @Post("/product/image")
-  async uploadProductImage(
+  public async uploadProductImage(
     @UploadedFiles(ProductImagesValidatePipe)
     files: Express.Multer.File[],
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
@@ -162,7 +162,7 @@ export class MediaV1AdminController {
     ),
   )
   @Post("/inquiry/response/image")
-  async uploadInquiryResponseImage(
+  public async uploadInquiryResponseImage(
     @UploadedFiles(InquiryResponseImageValidatePipe)
     files: Express.Multer.File[],
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
@@ -191,7 +191,7 @@ export class MediaV1AdminController {
     ),
   )
   @Post("/inquiry/response/video")
-  async uploadInquiryResponseVideo(
+  public async uploadInquiryResponseVideo(
     @UploadedFiles(InquiryResponseVideoValidatePipe)
     files: Array<Express.Multer.File>,
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
@@ -213,7 +213,7 @@ export class MediaV1AdminController {
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/product/image")
-  async cancelImageUploadForProduct(
+  public async cancelImageUploadForProduct(
     @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
     productImgCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
@@ -235,7 +235,7 @@ export class MediaV1AdminController {
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/inquiry/response/image")
-  async cancelInquiryResponseImageUpload(
+  public async cancelInquiryResponseImageUpload(
     @MediaCookiesParser(inquiryMediaCookieKey.response.image_url_cookie)
     inquiryResponseImgCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
@@ -258,7 +258,7 @@ export class MediaV1AdminController {
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Delete("/inquiry/response/video")
-  async cancelInquiryResponseVideoUpload(
+  public async cancelInquiryResponseVideoUpload(
     @MediaCookiesParser(inquiryMediaCookieKey.response.video_url_cookie)
     inquiryResponseVdoCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {

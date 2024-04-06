@@ -4,15 +4,15 @@ import { InquiryRequestBodyDto } from "./inquiry-request-body.dto";
 import { MediaCookieDto } from "../../../media/dto/media-cookie.dto";
 
 export class PrepareToCreateInquiryRequestDto {
-  inquiryRequestBodyDto: InquiryRequestBodyDto;
-  userId: string;
-  productId: string;
-  inquiryRequestImgCookies: MediaCookieDto[];
-  inquiryRequestVdoCookies: MediaCookieDto[];
+  public inquiryRequestBodyDto: InquiryRequestBodyDto;
+  public userId: string;
+  public productId: string;
+  public inquiryRequestImgCookies: MediaCookieDto[];
+  public inquiryRequestVdoCookies: MediaCookieDto[];
 }
 
 export class CreateInquiryRequestDto {
-  inquiryRequestBodyDto: InquiryRequestBodyDto;
-  clientUser: ClientUserEntity;
-  product: ProductEntity;
+  public inquiryRequestBodyDto: InquiryRequestBodyDto;
+  public clientUser: ClientUserEntity;
+  public product: ProductEntity;
 }

@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import { SendMailToClientAboutRegisterDto } from "../dtos/send-mail-to-client-about-register.dto";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { eventConfigs } from "../../../common/config/event-configs";
+import { override } from "joi";
 
 @Injectable()
 export class UserRegisterEventMiddleware implements NestMiddleware {
@@ -12,7 +13,7 @@ export class UserRegisterEventMiddleware implements NestMiddleware {
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  use(req: Request, res: Response, next: NextFunction): void {
+  public use(req: Request, res: Response, next: NextFunction): void {
     res.on("finish", () => {
       const sendMailToClientAboutRegisterDto: SendMailToClientAboutRegisterDto =
         this.mailEventMap.get("register");

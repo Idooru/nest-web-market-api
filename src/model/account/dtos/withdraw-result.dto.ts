@@ -1,4 +1,4 @@
 export class WithdrawResultDto {
-  withdrawBalance: number;
-  afterWithdrawBalance: number;
+  public withdrawBalance: number;
+  public afterWithdrawBalance: number;
 }

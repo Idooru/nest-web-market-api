@@ -46,6 +46,7 @@ export class ProductV1AdminController {
     private readonly productTransaction: ProductTransactionExecutor,
     private readonly productUpdateService: ProductUpdateService,
   ) {}
+
   @ApiOperation({
     summary: "find product by id",
     description:
@@ -53,7 +54,7 @@ export class ProductV1AdminController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/:id")
-  async findProductWithId(
+  public async findProductWithId(
     @Param("id", ProductIdValidatePipe) id: string,
   ): Promise<JsonGeneralInterface<ProductEntity>> {
     const result = await this.productSearcher.findProductWithId(id);
@@ -72,7 +73,7 @@ export class ProductV1AdminController {
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Post("/")
-  async createProduct(
+  public async createProduct(
     @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
     productImgCookies: MediaCookieDto[],
     @Body(ProductNameValidatePipe) productBodyDto: ProductBodyDto,
@@ -98,7 +99,7 @@ export class ProductV1AdminController {
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Put("/:id")
-  async modifyProduct(
+  public async modifyProduct(
     @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
     productImgCookies: MediaCookieDto[],
     @Param("id", ProductIdValidatePipe) id: string,
@@ -124,7 +125,7 @@ export class ProductV1AdminController {
   })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Patch("/:id/image")
-  async modifyProductImage(
+  public async modifyProductImage(
     @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
     productImgCookies: MediaCookieDto[],
     @Param("id", ProductIdValidatePipe) id: string,
@@ -145,7 +146,7 @@ export class ProductV1AdminController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Patch("/:id/name")
-  async modifyProductName(
+  public async modifyProductName(
     @Param("id", ProductIdValidatePipe) id: string,
     @Body(ProductNameValidatePipe) { name }: ModifyProductNameDto,
   ): Promise<JsonGeneralInterface<null>> {
@@ -163,7 +164,7 @@ export class ProductV1AdminController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Patch("/:id/price")
-  async modifyProductPrice(
+  public async modifyProductPrice(
     @Param("id", ProductIdValidatePipe) id: string,
     @Body() { price }: ModifyProductPriceDto,
   ): Promise<JsonGeneralInterface<null>> {
@@ -181,7 +182,7 @@ export class ProductV1AdminController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Patch("/:id/origin")
-  async modifyProductOrigin(
+  public async modifyProductOrigin(
     @Param("id", ProductIdValidatePipe) id: string,
     @Body() { origin }: ModifyProductOriginDto,
   ): Promise<JsonGeneralInterface<null>> {
@@ -199,7 +200,7 @@ export class ProductV1AdminController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Patch("/:id/category")
-  async modifyProductCategory(
+  public async modifyProductCategory(
     @Param("id", ProductIdValidatePipe) id: string,
     @Body() { category }: ModifyProductCategoryDto,
   ) {
@@ -217,7 +218,7 @@ export class ProductV1AdminController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Patch("/:id/description")
-  async modifyProductDescription(
+  public async modifyProductDescription(
     @Param("id", ProductIdValidatePipe) id: string,
     @Body() { description }: ModifyProductDesctiptionDto,
   ): Promise<JsonGeneralInterface<null>> {
@@ -236,7 +237,7 @@ export class ProductV1AdminController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Patch("/:id/quantity")
-  async modifyProductQuantity(
+  public async modifyProductQuantity(
     @Param("id", ProductIdValidatePipe) id: string,
     @Body() { quantity }: ModifyProductQuantityDto,
   ): Promise<JsonGeneralInterface<null>> {
@@ -254,7 +255,7 @@ export class ProductV1AdminController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Delete("/:id")
-  async removeProduct(
+  public async removeProduct(
     @Param("id", ProductIdValidatePipe) id: string,
   ): Promise<JsonGeneralInterface<null>> {
     await this.productUpdateService.removeProduct(id);

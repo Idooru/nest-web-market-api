@@ -87,7 +87,7 @@ import { DeleteInquiryResponseMediaMiddleware } from "./middleware/delete-inquir
   ],
 })
 export class MediaModule implements NestModule {
-  configure(consumer: MiddlewareConsumer): void {
+  public configure(consumer: MiddlewareConsumer): void {
     consumer
       .apply(DeleteProductMediaMiddleware)
       .forRoutes({

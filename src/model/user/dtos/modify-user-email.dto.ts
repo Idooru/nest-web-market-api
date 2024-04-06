@@ -10,5 +10,5 @@ export class ModifyUserEmailDto extends PickType(UserAuthEntity, [
     required: true,
     uniqueItems: true,
   })
-  email: string;
+  public email: string;
 }

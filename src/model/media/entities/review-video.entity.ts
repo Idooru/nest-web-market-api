@@ -8,5 +8,5 @@ export class ReviewVideoEntity extends MediaEntity {
     onDelete: "CASCADE",
   })
   @JoinColumn({ referencedColumnName: "id", name: "reviewId" })
-  Review: ReviewEntity;
+  public Review: ReviewEntity;
 }

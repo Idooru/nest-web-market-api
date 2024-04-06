@@ -29,7 +29,7 @@ import { AccountModule } from "./model/account/account.module";
   providers: [],
 })
 export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
+  public configure(consumer: MiddlewareConsumer) {
     consumer.apply(ResponseLoggerMiddleware).forRoutes("*");
   }
 }

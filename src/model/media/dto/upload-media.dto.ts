@@ -1,4 +1,4 @@
 export class UploadMediaDto {
-  url: string;
-  size: number;
+  public url: string;
+  public size: number;
 }

@@ -10,5 +10,5 @@ export class InquiryResponseVideoEntity extends MediaEntity {
     { onDelete: "CASCADE" },
   )
   @JoinColumn({ referencedColumnName: "id", name: "inquiryResponseId" })
-  InquiryResponse: InquiryResponseEntity;
+  public InquiryResponse: InquiryResponseEntity;
 }

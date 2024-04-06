@@ -18,26 +18,26 @@ export class InquiryResponseEntity extends PostEntity {
   @IsEnum(["product status", "delivery status", ""])
   @IsNotEmpty()
   @Column({ type: "enum", enum: ["product status", "delivery status"] })
-  categories: "product status" | "delivery status";
+  public categories: "product status" | "delivery status";
 
   @ManyToOne(() => AdminUserEntity, (admin) => admin.writtenInquiryResponse, {
     onDelete: "CASCADE",
   })
-  inquiryResponseWritter: AdminUserEntity;
+  public inquiryResponseWritter: AdminUserEntity;
 
   @OneToMany(
     () => InquiryResponseImageEntity,
     (image) => image.InquiryResponse,
     { cascade: true },
   )
-  Image: InquiryResponseImageEntity[];
+  public Image?: InquiryResponseImageEntity[];
 
   @OneToMany(
     () => InquiryResponseVideoEntity,
     (video) => video.InquiryResponse,
     { cascade: true },
   )
-  Video: InquiryResponseVideoEntity[];
+  public Video?: InquiryResponseVideoEntity[];
 
   @OneToOne(
     () => InquiryRequestEntity,
@@ -45,5 +45,5 @@ export class InquiryResponseEntity extends PostEntity {
     { onDelete: "CASCADE" },
   )
   @JoinColumn({ name: "inquiryRequestId", referencedColumnName: "id" })
-  InquiryRequest: InquiryRequestEntity;
+  public InquiryRequest: InquiryRequestEntity;
 }

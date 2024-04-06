@@ -33,7 +33,9 @@ export class UserV1AdminController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/")
-  async findAllUsersFromLatest(): Promise<JsonGeneralInterface<UserEntity[]>> {
+  public async findAllUsersFromLatest(): Promise<
+    JsonGeneralInterface<UserEntity[]>
+  > {
     const result = await this.userSearcher.findAllUsersFromLatest();
 
     return {
@@ -50,7 +52,9 @@ export class UserV1AdminController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/oldest")
-  async findAllUsersFromOldest(): Promise<JsonGeneralInterface<UserEntity[]>> {
+  public async findAllUsersFromOldest(): Promise<
+    JsonGeneralInterface<UserEntity[]>
+  > {
     const result = await this.userSearcher.findAllUsersFromOldest();
 
     return {
@@ -67,7 +71,7 @@ export class UserV1AdminController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/:id")
-  async findClientUserInfo(
+  public async findClientUserInfo(
     @Param("id", UserIdValidatePipe) id: string,
   ): Promise<JsonGeneralInterface<UserEntity>> {
     const result = await this.userSearcher.findClientUserInfo(id);
@@ -85,7 +89,7 @@ export class UserV1AdminController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Delete("/:id")
-  async kickUser(
+  public async kickUser(
     @Param("id", UserIdValidatePipe) id: string,
   ): Promise<JsonGeneralInterface<void>> {
     await this.userUpdateService.deleteUser(id);

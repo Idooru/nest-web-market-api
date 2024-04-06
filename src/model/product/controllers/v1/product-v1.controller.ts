@@ -17,7 +17,7 @@ export class ProductV1Controller {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/")
-  async findAllProductsFromLatest(): Promise<
+  public async findAllProductsFromLatest(): Promise<
     JsonGeneralInterface<ProductEntity[]>
   > {
     const result = await this.productSearcher.findAllProductsFromLatest();
@@ -36,7 +36,7 @@ export class ProductV1Controller {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/oldest")
-  async findAllProductsFromOldest(): Promise<
+  public async findAllProductsFromOldest(): Promise<
     JsonGeneralInterface<ProductEntity[]>
   > {
     const result = await this.productSearcher.findAllProductsFromOldest();
@@ -55,7 +55,7 @@ export class ProductV1Controller {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/:name")
-  async findProductByName(
+  public async findProductByName(
     @Param("name") name: string,
   ): Promise<JsonGeneralInterface<ProductEntity[]>> {
     const result = await this.productSearcher.findProductWithName(name);

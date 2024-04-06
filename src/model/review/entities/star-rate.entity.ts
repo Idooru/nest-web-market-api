@@ -8,38 +8,38 @@ export class StarRateEntity extends ChildEntity {
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "id" })
-  Product: ProductEntity;
+  public Product: ProductEntity;
 
   @Column({ type: "float", default: 0 })
-  averageScore: number;
+  public averageScore: number;
 
   @Column({ type: "int", default: 0 })
-  onePointSum: number;
+  public onePointSum: number;
 
   @Column({ type: "int", default: 0 })
-  onePointCount: number;
+  public onePointCount: number;
 
   @Column({ type: "int", default: 0 })
-  twoPointSum: number;
+  public twoPointSum: number;
 
   @Column({ type: "int", default: 0 })
-  twoPointCount: number;
+  public twoPointCount: number;
 
   @Column({ type: "int", default: 0 })
-  threePointSum: number;
+  public threePointSum: number;
 
   @Column({ type: "int", default: 0 })
-  threePointCount: number;
+  public threePointCount: number;
 
   @Column({ type: "int", default: 0 })
-  fourPointSum: number;
+  public fourPointSum: number;
 
   @Column({ type: "int", default: 0 })
-  fourPointCount: number;
+  public fourPointCount: number;
 
   @Column({ type: "int", default: 0 })
-  fivePointSum: number;
+  public fivePointSum: number;
 
   @Column({ type: "int", default: 0 })
-  fivePointCount: number;
+  public fivePointCount: number;
 }

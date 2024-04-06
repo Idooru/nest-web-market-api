@@ -31,7 +31,7 @@ export class MediaSearchRepository {
     private readonly mediaSelect: MediaSelectProperty,
   ) {}
 
-  findProductImageWithId(id: string): Promise<ProductImageEntity> {
+  public findProductImageWithId(id: string): Promise<ProductImageEntity> {
     return this.productImageRepository
       .createQueryBuilder()
       .select(this.mediaSelect.productImages)
@@ -40,7 +40,9 @@ export class MediaSearchRepository {
       .getOne();
   }
 
-  findBeforeProductImagesWithId(id: string): Promise<ProductImageEntity[]> {
+  public findBeforeProductImagesWithId(
+    id: string,
+  ): Promise<ProductImageEntity[]> {
     return this.productImageRepository
       .createQueryBuilder()
       .select(this.mediaSelect.productImages)
@@ -49,7 +51,7 @@ export class MediaSearchRepository {
       .getMany();
   }
 
-  findReviewImageWithId(id: string): Promise<ReviewImageEntity> {
+  public findReviewImageWithId(id: string): Promise<ReviewImageEntity> {
     return this.reviewImageRepository
       .createQueryBuilder()
       .select(this.mediaSelect.reviewImages)
@@ -58,7 +60,9 @@ export class MediaSearchRepository {
       .getOne();
   }
 
-  findBeforeReviewImagesWithId(id: string): Promise<ReviewImageEntity[]> {
+  public findBeforeReviewImagesWithId(
+    id: string,
+  ): Promise<ReviewImageEntity[]> {
     return this.reviewImageRepository
       .createQueryBuilder()
       .select(this.mediaSelect.reviewImages)
@@ -67,7 +71,7 @@ export class MediaSearchRepository {
       .getMany();
   }
 
-  findReviewVideoWithId(id: string): Promise<ReviewVideoEntity> {
+  public findReviewVideoWithId(id: string): Promise<ReviewVideoEntity> {
     return this.reviewVideoRepository
       .createQueryBuilder()
       .select(this.mediaSelect.reviewVideos)
@@ -76,7 +80,9 @@ export class MediaSearchRepository {
       .getOne();
   }
 
-  findBeforeReviewVideosWithId(id: string): Promise<ReviewVideoEntity[]> {
+  public findBeforeReviewVideosWithId(
+    id: string,
+  ): Promise<ReviewVideoEntity[]> {
     return this.reviewVideoRepository
       .createQueryBuilder()
       .select(this.mediaSelect.reviewVideos)
@@ -85,7 +91,7 @@ export class MediaSearchRepository {
       .getMany();
   }
 
-  findInquiryRequestImageWithId(
+  public findInquiryRequestImageWithId(
     id: string,
   ): Promise<InquiryRequestImageEntity> {
     return this.inquiryRequestImageRepository
@@ -96,7 +102,7 @@ export class MediaSearchRepository {
       .getOne();
   }
 
-  findInquiryRequestVideoWithId(
+  public findInquiryRequestVideoWithId(
     id: string,
   ): Promise<InquiryRequestVideoEntity> {
     return this.inquiryRequestVideoRepository
@@ -107,7 +113,7 @@ export class MediaSearchRepository {
       .getOne();
   }
 
-  findInquiryResponseImageWithId(
+  public findInquiryResponseImageWithId(
     id: string,
   ): Promise<InquiryResponseImageEntity> {
     return this.inquiryResponseImageRepository
@@ -118,7 +124,7 @@ export class MediaSearchRepository {
       .getOne();
   }
 
-  findInquiryResponseVideoWithId(
+  public findInquiryResponseVideoWithId(
     id: string,
   ): Promise<InquiryResponseVideoEntity> {
     return this.inquiryResponseVideoRepository

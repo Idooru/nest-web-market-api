@@ -2,6 +2,6 @@ import { InquiryResponseVideoEntity } from "../../../media/entities/inquiry-resp
 import { InquiryResponseEntity } from "../../entities/inquiry-response.entity";
 
 export class InsertInquiryResponseVideoDto {
-  inquiryResponseVideos: InquiryResponseVideoEntity[];
-  inquiryResponse: InquiryResponseEntity;
+  public inquiryResponseVideos: InquiryResponseVideoEntity[];
+  public inquiryResponse: InquiryResponseEntity;
 }

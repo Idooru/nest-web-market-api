@@ -28,7 +28,7 @@ export class ReviewV1AdminController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/product/:productId")
-  async findReviewByProductId(
+  public async findReviewByProductId(
     @Param("productId", ProductIdValidatePipe) id: string,
   ): Promise<JsonGeneralInterface<ReviewEntity[]>> {
     const result = await this.reviewSearcher.findReviewsWithProductId(id);

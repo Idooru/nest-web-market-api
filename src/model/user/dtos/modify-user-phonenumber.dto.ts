@@ -10,5 +10,5 @@ export class ModifyUserPhonenumberDto extends PickType(UserProfileEntity, [
     required: true,
     uniqueItems: true,
   })
-  phonenumber: string;
+  public phonenumber: string;
 }

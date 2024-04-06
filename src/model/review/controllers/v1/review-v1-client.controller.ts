@@ -108,7 +108,7 @@ export class ReviewV1ClientController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Delete("/:reviewId/product/:productId")
-  async deleteReview(
+  public async deleteReview(
     @Param("productId", ProductIdValidatePipe) productId: string,
     @Param("reviewId", ReviewIdValidatePipe) reviewId: string,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,

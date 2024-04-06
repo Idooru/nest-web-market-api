@@ -12,36 +12,36 @@ export class InquiryRequestEntity extends PostEntity {
   @IsEnum(["product status", "delivery status", ""])
   @IsNotEmpty()
   @Column({ type: "enum", enum: ["product status", "delivery status"] })
-  categories: "product status" | "delivery status";
+  public categories: "product status" | "delivery status";
 
   @ManyToOne(() => ClientUserEntity, (client) => client.writtenInquiryRequest, {
     onDelete: "CASCADE",
   })
-  inquiryRequestWritter: ClientUserEntity;
+  public inquiryRequestWritter: ClientUserEntity;
 
   @IsBoolean()
   @Column({ type: "boolean", default: false })
-  isAnswerd: boolean;
+  public isAnswerd: boolean;
 
   @ManyToOne(() => ProductEntity, (product) => product.InquiryRequest, {
     onDelete: "CASCADE",
   })
-  Product: ProductEntity;
+  public Product: ProductEntity;
 
   @OneToMany(() => InquiryRequestImageEntity, (image) => image.InquiryRequest, {
     cascade: true,
   })
-  Image: InquiryRequestImageEntity[];
+  public Image: InquiryRequestImageEntity[];
 
   @OneToMany(() => InquiryRequestVideoEntity, (video) => video.InquiryRequest, {
     cascade: true,
   })
-  Video: InquiryRequestVideoEntity[];
+  public Video: InquiryRequestVideoEntity[];
 
   @OneToOne(
     () => InquiryResponseEntity,
     (inquiryResponse) => inquiryResponse.InquiryRequest,
     { cascade: true },
   )
-  InquiryResponse: InquiryResponseEntity;
+  public InquiryResponse: InquiryResponseEntity;
 }

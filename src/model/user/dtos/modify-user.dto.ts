@@ -12,7 +12,7 @@ export class ModifyUserProfileDto extends PickType(UserProfileEntity, [
     required: true,
     uniqueItems: true,
   })
-  phonenumber: string;
+  public phonenumber: string;
 
   @ApiProperty({
     description: "사용자 집주소",
@@ -20,7 +20,7 @@ export class ModifyUserProfileDto extends PickType(UserProfileEntity, [
     required: true,
     uniqueItems: false,
   })
-  address: string;
+  public address: string;
 }
 
 export class ModifyUserAuthDto extends PickType(UserAuthEntity, [
@@ -34,7 +34,7 @@ export class ModifyUserAuthDto extends PickType(UserAuthEntity, [
     required: true,
     uniqueItems: true,
   })
-  nickname: string;
+  public nickname: string;
 
   @ApiProperty({
     description: "사용자 이메일",
@@ -42,7 +42,7 @@ export class ModifyUserAuthDto extends PickType(UserAuthEntity, [
     required: true,
     uniqueItems: true,
   })
-  email: string;
+  public email: string;
 
   @ApiProperty({
     description: "사용자 비밀번호",
@@ -50,7 +50,7 @@ export class ModifyUserAuthDto extends PickType(UserAuthEntity, [
     required: true,
     uniqueItems: false,
   })
-  password: string;
+  public password: string;
 }
 
 export class ModifyUserDto extends IntersectionType(
