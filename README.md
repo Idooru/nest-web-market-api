@@ -166,6 +166,8 @@ Nest is [MIT licensed](LICENSE).
 26. 기존에는 트랜잭션을 구현하기 위해서 queryRunner 인스턴스를 만들고 인스턴스 내부에 있는 리파지토리를 만들어서 각 도메인의 repository vo 라는 클래스 내부에서 리파지토리 필드를 관리하였다. update repository 클래스에서 트랜잭션에서 사용되는 리파지토리가 필요하다면 reposiory vo 클래스를 nestjs에 DI 컨테이너에 넣어서 (module 클래스의 provider 배열에 넣음) update repository에서 의존성 주입을 통해 사용하였다. 이 방법에는 3개의 클래스가 필요하게 된다. TO DO에서 작성한 6번을 수행하는 도중에 반복되는 메서드를 인터페이스로 묶어서 DIP를 구현하려다가 문득 query runner provider 클래스에서 repository vo를 초기화 시키고 그걸 update repository에서 사용할 필요가 있을까? 라고 생각을 하다가 repository vo 클래스를 없애고 query-runner-provider 내부에서 트랜잭션 리파지토리 초기화, 접근을 하는 메서드를 만들고 query-runner-provider에서 중복되는 메서드를 인터페이스로 묶어서 사용한다면 DIP라는 객체지향 개념을 고수하면서 불필요한 클래스(repository vo)도 줄이게되고 update repository에서도 더 깔끔한 인터페이스를 갖게 되었다. 객체지향 개념은 위대하다.  
 
 27. 트랜잭션 작업 코드의 가독성을 향상 시키기 위해서 TransactionExecutor, TransactionSearcher, TransactionContext로 클래스를 세분화 시켰다. 가독성을 지키며, SRP 원칙을 고수하고 TO DO에서 작성한 8번과 시너지를 발휘하게 되었다. 프로미스 함수를 반환하여 then, catch, finally를 붙히기 수월한 형태로 바뀌었다.
+
+28. 로직 별로 필요한 데코레이터를 만들어 봐서 각 메서드에 적용을 시켜보았다. service 혹은 repository 레이어에서 트랜잭션 로직 콜스택 내부에서 호출하는 메서드는 @Transaction 데코레이터를 그 이외의 로직에는 @General을 붙혔다. 그리고 인터페이스에서 구현하는 메서드는 @Implemented 데코레이터를 붙혔다. (해당 데코레이터들은 별 다른 기능은 하지 않는다. 그저 시각적으로 구별하기 위해 붙혔다.)
 ## TO DO
 
 1. 나중에 집가서 환경 정보 파일(.env.dev) 데이터를 내 메일로 보내기 // 완료
