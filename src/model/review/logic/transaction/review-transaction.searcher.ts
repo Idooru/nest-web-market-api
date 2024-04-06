@@ -3,7 +3,6 @@ import { ReviewSearcher } from "../review.searcher";
 import { MediaSearcher } from "../../../media/logic/media.searcher";
 import { ProductSearcher } from "../../../product/logic/product.searcher";
 import { ReviewUtils } from "../review.utils";
-import { MediaUtils } from "../../../media/logic/media.utils";
 import { PrepareToCreateReviewDto } from "../../dto/create-review.dto";
 import { SearchCreateReviewDto } from "../../dto/search-create-review.dto";
 import { PrepareToModifyReviewDto } from "../../dto/modify-review.dto";

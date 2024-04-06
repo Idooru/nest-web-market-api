@@ -4,9 +4,7 @@ import {
   IsNotEmpty,
   IsPositive,
   IsString,
-  Max,
   MaxLength,
-  Min,
   MinLength,
 } from "class-validator";
 import { CommonEntity } from "../../../common/entities/common.entity";
