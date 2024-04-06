@@ -139,6 +139,6 @@ export class ReviewUpdateRepository {
   // Transaction
   public async renewAverage(starRate: StarRateEntity): Promise<void> {
     const { id } = starRate;
-    await this.transaction.getRepository().starRate.update(id, { ...starRate });
+    await this.transaction.getRepository().starRate.update(id, starRate);
   }
 }
