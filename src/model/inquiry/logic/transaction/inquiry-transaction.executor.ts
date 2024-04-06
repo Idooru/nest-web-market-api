@@ -23,7 +23,7 @@ export class InquiryTransactionExecutor {
     const queryRunner = await this.transaction.init();
 
     this.handler.setQueryRunner(queryRunner);
-    await this.context
+    this.context
       .createInquiryRequestContext(search)()
       .then(() => this.handler.commit())
       .catch((err) => this.handler.rollback(err))
@@ -37,7 +37,7 @@ export class InquiryTransactionExecutor {
     const queryRunner = await this.transaction.init();
 
     this.handler.setQueryRunner(queryRunner);
-    await this.context
+    this.context
       .createInquiryResponseContext(search)()
       .then(() => this.handler.commit())
       .catch((err) => this.handler.rollback(err))

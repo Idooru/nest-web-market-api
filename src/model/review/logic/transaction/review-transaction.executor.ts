@@ -22,7 +22,7 @@ export class ReviewTransactionExecutor {
     const queryRunner = await this.transaction.init();
 
     this.handler.setQueryRunner(queryRunner);
-    await this.context
+    this.context
       .createReviewContext(search)()
       .then(() => this.handler.commit())
       .catch((err) => this.handler.rollback(err))
@@ -34,7 +34,7 @@ export class ReviewTransactionExecutor {
     const queryRunner = await this.transaction.init();
 
     this.handler.setQueryRunner(queryRunner);
-    await this.context
+    this.context
       .modifyReviewContext(search)()
       .then(() => this.handler.commit())
       .catch((err) => this.handler.rollback(err))
@@ -46,7 +46,7 @@ export class ReviewTransactionExecutor {
     const queryRunner = await this.transaction.init();
 
     this.handler.setQueryRunner(queryRunner);
-    await this.context
+    this.context
       .deleteReviewContext(search)()
       .then(() => this.handler.commit())
       .catch((err) => this.handler.rollback(err))

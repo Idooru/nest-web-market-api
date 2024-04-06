@@ -18,7 +18,7 @@ export class UserTransactionExecutor {
     const queryRunner = await this.transaction.init();
     this.handler.setQueryRunner(queryRunner);
 
-    await this.context
+    this.context
       .registerContext(dto)()
       .then(() => this.handler.commit())
       .catch((err) => this.handler.rollback(err))
@@ -29,7 +29,7 @@ export class UserTransactionExecutor {
     const queryRunner = await this.transaction.init();
     this.handler.setQueryRunner(queryRunner);
 
-    await this.context
+    this.context
       .modifyUserContext(dto)()
       .then(() => this.handler.commit())
       .catch((err) => this.handler.rollback(err))

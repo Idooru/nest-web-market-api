@@ -18,12 +18,12 @@ export class OrderTransactionExecutor {
   public async createOrder(createOrderDto: {
     clientId: string;
     orderBodyDto: OrderBodyDto;
-  }) {
+  }): Promise<void> {
     const search = await this.searcher.searchCreateOrder(createOrderDto);
     const queryRunner = await this.transaction.init();
 
     this.handler.setQueryRunner(queryRunner);
-    await this.context
+    this.context
       .createOrderContext(search)()
       .then(() => this.handler.commit())
       .catch((err) => this.handler.rollback(err))
