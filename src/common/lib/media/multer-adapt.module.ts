@@ -3,6 +3,8 @@ import { MulterModule, MulterOptionsFactory } from "@nestjs/platform-express";
 import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 import { promises as fsPromises } from "fs";
 import { loggerFactory } from "../../functions/logger.factory";
+import { Implemented } from "../../decorators/implemented.decoration";
+
 import * as path from "path";
 import * as multer from "multer";
 
@@ -11,6 +13,7 @@ export class MulterConfigService implements MulterOptionsFactory {
   private readonly logger = loggerFactory("MulterConfiguration");
   private readonly inquiry = ["request", "response"];
 
+  @Implemented
   public async createMulterOptions(): Promise<MulterOptions> {
     await this.createFolder();
     return {
