@@ -10,11 +10,7 @@ export class ValidateLibrary {
     }
   }
 
-  public isNoneExistData(
-    exist: boolean,
-    criteria: string,
-    payload: string,
-  ): void {
+  public isNoneExistData(exist: boolean, criteria: string, payload: string): void {
     if (exist) {
       const message = `이미 존재하는 ${criteria}(${payload})입니다.`;
       loggerFactory("Already Exist").error(message);

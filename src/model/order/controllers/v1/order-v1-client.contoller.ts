@@ -1,10 +1,4 @@
-import {
-  Body,
-  Controller,
-  Post,
-  UseGuards,
-  UseInterceptors,
-} from "@nestjs/common";
+import { Body, Controller, Post, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { JsonGeneralInterceptor } from "../../../../common/interceptors/general/json-general.interceptor";
 import { JsonGeneralInterface } from "../../../../common/interceptors/interface/json-general-interface";

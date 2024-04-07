@@ -11,9 +11,7 @@ import { Transaction } from "../../../common/decorators/transaction.decorator";
 
 @Injectable()
 export class ReviewUpdateRepository {
-  constructor(
-    private readonly transaction: Transactional<ReviewRepositoryPayload>,
-  ) {}
+  constructor(private readonly transaction: Transactional<ReviewRepositoryPayload>) {}
 
   @Transaction
   public createReview(createReviewDto: CreateReviewDto): Promise<ReviewEntity> {
@@ -27,28 +25,19 @@ export class ReviewUpdateRepository {
   }
 
   @Transaction
-  public async insertReviewIdOnReviewImage(
-    reviewImage: ReviewImageEntity,
-    review: ReviewEntity,
-  ): Promise<void> {
+  public async insertReviewIdOnReviewImage(reviewImage: ReviewImageEntity, review: ReviewEntity): Promise<void> {
     reviewImage.Review = review;
     await this.transaction.getRepository().reviewImage.save(reviewImage);
   }
 
   @Transaction
-  public async insertReviewIdOnReviewVideo(
-    reviewVideo: ReviewVideoEntity,
-    review: ReviewEntity,
-  ): Promise<void> {
+  public async insertReviewIdOnReviewVideo(reviewVideo: ReviewVideoEntity, review: ReviewEntity): Promise<void> {
     reviewVideo.Review = review;
     await this.transaction.getRepository().reviewVideo.save(reviewVideo);
   }
 
   @Transaction
-  public async increaseStarRate(
-    scoreChosenByClient: 1 | 2 | 3 | 4 | 5,
-    starRate: StarRateEntity,
-  ): Promise<void> {
+  public async increaseStarRate(scoreChosenByClient: 1 | 2 | 3 | 4 | 5, starRate: StarRateEntity): Promise<void> {
     switch (scoreChosenByClient) {
       case 1:
         ++starRate.onePointCount;
@@ -104,10 +93,7 @@ export class ReviewUpdateRepository {
   }
 
   @Transaction
-  public async decreaseStarRate(
-    starRate: StarRateEntity,
-    beforeScore: number,
-  ): Promise<void> {
+  public async decreaseStarRate(starRate: StarRateEntity, beforeScore: number): Promise<void> {
     switch (beforeScore) {
       case 1:
         --starRate.onePointCount;

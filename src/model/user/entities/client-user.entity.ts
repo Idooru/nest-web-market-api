@@ -27,10 +27,6 @@ export class ClientUserEntity extends ChildEntity {
   @OneToMany(() => ReviewEntity, (review) => review.reviewer)
   public writtenReview: ReviewEntity[];
 
-  @OneToMany(
-    () => InquiryRequestEntity,
-    (inquiryRequest) => inquiryRequest.inquiryRequestWritter,
-    { cascade: true },
-  )
+  @OneToMany(() => InquiryRequestEntity, (inquiryRequest) => inquiryRequest.inquiryRequestWritter, { cascade: true })
   public writtenInquiryRequest: InquiryRequestEntity[];
 }

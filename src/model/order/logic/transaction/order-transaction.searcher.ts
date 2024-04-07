@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { loggerFactory } from "../../../../common/functions/logger.factory";
 import { OrderBodyDto } from "../../dto/order-body.dto";
 import { UserSearcher } from "../../../user/logic/user.searcher";
@@ -18,10 +14,7 @@ export class OrderTransactionSearcher {
     private readonly accountSearcher: AccountSearcher,
   ) {}
 
-  public async searchCreateOrder(dto: {
-    clientId: string;
-    orderBodyDto: OrderBodyDto;
-  }): Promise<SearchCreateOrderDto> {
+  public async searchCreateOrder(dto: { clientId: string; orderBodyDto: OrderBodyDto }): Promise<SearchCreateOrderDto> {
     const { clientId, orderBodyDto } = dto;
     const [clientUser, carts] = await Promise.all([
       this.userSearcher.findClientUserObjectWithId(clientId),
@@ -34,17 +27,11 @@ export class OrderTransactionSearcher {
       throw new NotFoundException(message);
     }
 
-    const account = await this.accountSearcher.findMainAccountWithUserId(
-      clientId,
-    );
-
-    const totalPrice = carts
-      .map((cart) => cart.totalPrice)
-      .reduce((acc, cur) => acc + cur, 0);
+    const account = await this.accountSearcher.findMainAccountWithUserId(clientId);
+    const totalPrice = carts.map((cart) => cart.totalPrice).reduce((acc, cur) => acc + cur, 0);
 
     if (account.balance < totalPrice) {
-      const message =
-        "해당 사용자의 계좌에 상품의 총 액수만큼 금액이 존재하지 않습니다.";
+      const message = "해당 사용자의 계좌에 상품의 총 액수만큼 금액이 존재하지 않습니다.";
       loggerFactory("underflow balance").error(message);
       throw new ForbiddenException(message);
     }

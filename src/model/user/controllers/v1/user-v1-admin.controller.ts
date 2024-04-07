@@ -1,11 +1,4 @@
-import {
-  Controller,
-  UseGuards,
-  UseInterceptors,
-  Get,
-  Param,
-  Delete,
-} from "@nestjs/common";
+import { Controller, UseGuards, UseInterceptors, Get, Param, Delete } from "@nestjs/common";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
@@ -21,21 +14,15 @@ import { UserIdValidatePipe } from "../../pipe/exist/user-id-validate.pipe";
 @UseGuards(IsLoginGuard)
 @Controller({ path: "/admin/user", version: "1" })
 export class UserV1AdminController {
-  constructor(
-    private readonly userSearcher: UserSearcher,
-    private readonly userUpdateService: UserUpdateService,
-  ) {}
+  constructor(private readonly userSearcher: UserSearcher, private readonly userUpdateService: UserUpdateService) {}
 
   @ApiOperation({
     summary: "find all users from latest",
-    description:
-      "전체 사용자 정보를 최신 순서로 가져옵니다. 사용자 배열의 길이가 0일 경우 에러를 반환합니다.",
+    description: "전체 사용자 정보를 최신 순서로 가져옵니다. 사용자 배열의 길이가 0일 경우 에러를 반환합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/")
-  public async findAllUsersFromLatest(): Promise<
-    JsonGeneralInterface<UserEntity[]>
-  > {
+  public async findAllUsersFromLatest(): Promise<JsonGeneralInterface<UserEntity[]>> {
     const result = await this.userSearcher.findAllUsersFromLatest();
 
     return {
@@ -47,14 +34,11 @@ export class UserV1AdminController {
 
   @ApiOperation({
     summary: "find all users from oldest",
-    description:
-      "전체 사용자 정보를 오래된 순서로 가져옵니다. 사용자 배열의 길이가 0일 경우 에러를 반환합니다.",
+    description: "전체 사용자 정보를 오래된 순서로 가져옵니다. 사용자 배열의 길이가 0일 경우 에러를 반환합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/oldest")
-  public async findAllUsersFromOldest(): Promise<
-    JsonGeneralInterface<UserEntity[]>
-  > {
+  public async findAllUsersFromOldest(): Promise<JsonGeneralInterface<UserEntity[]>> {
     const result = await this.userSearcher.findAllUsersFromOldest();
 
     return {
@@ -89,9 +73,7 @@ export class UserV1AdminController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Delete("/:id")
-  public async kickUser(
-    @Param("id", UserIdValidatePipe) id: string,
-  ): Promise<JsonGeneralInterface<void>> {
+  public async kickUser(@Param("id", UserIdValidatePipe) id: string): Promise<JsonGeneralInterface<void>> {
     await this.userUpdateService.deleteUser(id);
 
     return {

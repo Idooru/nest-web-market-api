@@ -13,21 +13,11 @@ import { UserEntity } from "../user/entities/user.entity";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      UserEntity,
-      ClientUserEntity,
-      AdminUserEntity,
-      UserProfileEntity,
-      UserAuthEntity,
-    ]),
+    TypeOrmModule.forFeature([UserEntity, ClientUserEntity, AdminUserEntity, UserProfileEntity, UserAuthEntity]),
     forwardRef(() => UserModule),
     forwardRef(() => LibraryModule),
-    JwtModule.registerAsync(
-      new SecurityLibrary(new ConfigService()).jwtAccessTokenForJwtModule,
-    ),
-    JwtModule.registerAsync(
-      new SecurityLibrary(new ConfigService()).jwtRefreshTokenForJwtModule,
-    ),
+    JwtModule.registerAsync(new SecurityLibrary(new ConfigService()).jwtAccessTokenForJwtModule),
+    JwtModule.registerAsync(new SecurityLibrary(new ConfigService()).jwtRefreshTokenForJwtModule),
   ],
   exports: [JwtModule],
 })

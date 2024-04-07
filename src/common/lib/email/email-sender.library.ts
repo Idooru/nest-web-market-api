@@ -1,12 +1,12 @@
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { SendMailToAdminAboutInquiryRequestDto } from "src/model/inquiry/dto/request/send-mail-to-admin-about-inquiry-request.dto";
 import { CatchCallbackFactoryLibrary } from "../util/catch-callback-factory.library";
 import { OnEvent } from "@nestjs/event-emitter";
 import { eventConfigs } from "../../config/event-configs";
-import { SendMailToClientAboutInquiryResponseDto } from "../../../model/inquiry/dto/response/send-mail-to-client-about-inquiry-response.dto";
 import { SendMailToClientAboutRegisterDto } from "../../../model/user/dtos/send-mail-to-client-about-register.dto";
+import { SendMailToAdminAboutInquiryRequestDto } from "src/model/inquiry/dto/request/send-mail-to-admin-about-inquiry-request.dto";
+import { SendMailToClientAboutInquiryResponseDto } from "../../../model/inquiry/dto/response/send-mail-to-client-about-inquiry-response.dto";
 
 @Injectable()
 export class EmailSenderLibrary {
@@ -20,8 +20,7 @@ export class EmailSenderLibrary {
   public async sendMailToAdminAboutInquiryRequest(
     sendMailToAdminAboutInquiryRequestDto: SendMailToAdminAboutInquiryRequestDto,
   ): Promise<void> {
-    const { product, inquiryRequest, clientUser } =
-      sendMailToAdminAboutInquiryRequestDto;
+    const { product, inquiryRequest, clientUser } = sendMailToAdminAboutInquiryRequestDto;
     await this.mailerService
       .sendMail({
         to: this.configService.get("MAIL_USER"),
@@ -46,8 +45,7 @@ export class EmailSenderLibrary {
   public async sendMailToClientAboutInquiryResponse(
     sendMailToClientAboutInquiryResponseDto: SendMailToClientAboutInquiryResponseDto,
   ): Promise<void> {
-    const { inquiryRequester, inquiryRequest, inquiryResponse } =
-      sendMailToClientAboutInquiryResponseDto;
+    const { inquiryRequester, inquiryRequest, inquiryResponse } = sendMailToClientAboutInquiryResponseDto;
 
     await this.mailerService
       .sendMail({

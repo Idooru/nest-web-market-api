@@ -36,20 +36,14 @@ export class MulterConfigService implements MulterOptionsFactory {
 
     this.logger.log("Create folders about image into uploads folder");
     try {
-      await fsPromises.mkdir(
-        path.join(__dirname, "../../../../uploads/images"),
-      );
+      await fsPromises.mkdir(path.join(__dirname, "../../../../uploads/images"));
 
       const modelPromises = stuffForImages.map(async (model) => {
-        return fsPromises.mkdir(
-          path.join(__dirname, `../../../../uploads/images/${model}`),
-        );
+        return fsPromises.mkdir(path.join(__dirname, `../../../../uploads/images/${model}`));
       });
 
       const inquiryPromises = this.inquiry.map(async (val) => {
-        return fsPromises.mkdir(
-          path.join(__dirname, `../../../../uploads/images/inquiry/${val}`),
-        );
+        return fsPromises.mkdir(path.join(__dirname, `../../../../uploads/images/inquiry/${val}`));
       });
 
       const promises = [...modelPromises, ...inquiryPromises];
@@ -64,20 +58,14 @@ export class MulterConfigService implements MulterOptionsFactory {
 
     this.logger.log("Create folders about video into uploads folder");
     try {
-      await fsPromises.mkdir(
-        path.join(__dirname, "../../../../uploads/videos"),
-      );
+      await fsPromises.mkdir(path.join(__dirname, "../../../../uploads/videos"));
 
       const modelPromises = stuffForVideos.map(async (model) => {
-        return fsPromises.mkdir(
-          path.join(__dirname, `../../../../uploads/videos/${model}`),
-        );
+        return fsPromises.mkdir(path.join(__dirname, `../../../../uploads/videos/${model}`));
       });
 
       const inquiryPromises = this.inquiry.map(async (val) => {
-        return fsPromises.mkdir(
-          path.join(__dirname, `../../../../uploads/videos/inquiry/${val}`),
-        );
+        return fsPromises.mkdir(path.join(__dirname, `../../../../uploads/videos/inquiry/${val}`));
       });
 
       const promises = [...modelPromises, ...inquiryPromises];
@@ -88,38 +76,23 @@ export class MulterConfigService implements MulterOptionsFactory {
   }
 
   private async createFolder(): Promise<void> {
-    await Promise.all([
-      this.createUploadFolder(),
-      this.createImageFolder(),
-      this.createVideoFolder(),
-    ]);
+    await Promise.all([this.createUploadFolder(), this.createImageFolder(), this.createVideoFolder()]);
   }
 
   private static storage(folder: string): multer.StorageEngine {
     return multer.diskStorage({
       destination(req, file, cb) {
         if (!file.mimetype.match(/\/(jpg|jpeg|png|mp4|MOV|AVI)$/)) {
-          cb(
-            new UnsupportedMediaTypeException(
-              "파일 형식이 올바르지 않아 업로드 할 수 없습니다.",
-            ),
-            null,
-          );
+          cb(new UnsupportedMediaTypeException("파일 형식이 올바르지 않아 업로드 할 수 없습니다."), null);
         }
-        const folderName = path.join(
-          __dirname,
-          `../../../../uploads/${folder}`,
-        );
+        const folderName = path.join(__dirname, `../../../../uploads/${folder}`);
 
         cb(null, folderName);
       },
       filename(req, file, cb) {
         const ext: string = path.extname(file.originalname);
 
-        const fileName = `${path.basename(
-          file.originalname,
-          ext,
-        )}-${Date.now()}${ext}`;
+        const fileName = `${path.basename(file.originalname, ext)}-${Date.now()}${ext}`;
 
         cb(null, fileName);
       },

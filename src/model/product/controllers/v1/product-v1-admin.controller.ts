@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Delete,
-  Param,
-  Patch,
-  Post,
-  UseGuards,
-  UseInterceptors,
-  Put,
-} from "@nestjs/common";
+import { Body, Controller, Get, Delete, Param, Patch, Post, UseGuards, UseInterceptors, Put } from "@nestjs/common";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
@@ -255,9 +244,7 @@ export class ProductV1AdminController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Delete("/:id")
-  public async removeProduct(
-    @Param("id", ProductIdValidatePipe) id: string,
-  ): Promise<JsonGeneralInterface<null>> {
+  public async removeProduct(@Param("id", ProductIdValidatePipe) id: string): Promise<JsonGeneralInterface<null>> {
     await this.productUpdateService.removeProduct(id);
 
     return {

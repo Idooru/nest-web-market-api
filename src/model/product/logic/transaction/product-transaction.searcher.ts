@@ -17,9 +17,7 @@ export class ProductTransactionSearcher {
     private readonly mediaSearcher: MediaSearcher,
   ) {}
 
-  public async searchCreateProduct(
-    dto: CreateProductDto,
-  ): Promise<SearchCreateProductDto> {
+  public async searchCreateProduct(dto: CreateProductDto): Promise<SearchCreateProductDto> {
     const { productBodyDto, userId, productImgCookies } = dto;
 
     const [admin, productImages] = await Promise.all([
@@ -34,9 +32,7 @@ export class ProductTransactionSearcher {
     };
   }
 
-  public async searchModifyProduct(
-    dto: ModifyProductDto,
-  ): Promise<SearchModifyProductDto> {
+  public async searchModifyProduct(dto: ModifyProductDto): Promise<SearchModifyProductDto> {
     const { id, productBodyDto, productImgCookies } = dto;
 
     const [product, beforeProductImages, newProductImages] = await Promise.all([
@@ -48,9 +44,7 @@ export class ProductTransactionSearcher {
     return { product, productBodyDto, beforeProductImages, newProductImages };
   }
 
-  public async searchModifyProductImage(
-    dto: ModifyProductImageDto,
-  ): Promise<SearchModifyProductImageDto> {
+  public async searchModifyProductImage(dto: ModifyProductImageDto): Promise<SearchModifyProductImageDto> {
     const { id, productImgCookies } = dto;
 
     const [product, beforeProductImages, newProductImages] = await Promise.all([

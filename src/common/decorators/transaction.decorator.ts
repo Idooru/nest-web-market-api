@@ -1,5 +1,1 @@
-export const Transaction = (
-  target: any,
-  propertyKey: string,
-  descriptor: PropertyDescriptor,
-) => {};
+export const Transaction = (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {};

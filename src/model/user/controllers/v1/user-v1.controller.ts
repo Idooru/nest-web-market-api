@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Patch,
-  Post,
-  Put,
-  Query,
-  UseGuards,
-  UseInterceptors,
-} from "@nestjs/common";
+import { Body, Controller, Delete, Get, Patch, Post, Put, Query, UseGuards, UseInterceptors } from "@nestjs/common";
 import { JwtAccessTokenPayload } from "../../../auth/jwt/jwt-access-token-payload.interface";
 import { IsLoginGuard } from "../../../../common/guards/authenticate/is-login.guard";
 import { LoginUserDto } from "../../dtos/login-user.dto";
@@ -76,18 +65,13 @@ export class UserV1Controller {
 
   @ApiOperation({
     summary: "get my profile",
-    description:
-      "본인의 프로필 정보를 가져옵니다. 본인 계정의 권한에 해당되는 정보를 가져옵니다.",
+    description: "본인의 프로필 정보를 가져옵니다. 본인 계정의 권한에 해당되는 정보를 가져옵니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Get("/profile")
-  public async whoAmI(
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<JsonGeneralInterface<UserEntity>> {
-    const [message, result] = await this.userSearcher.findUserProfile(
-      jwtPayload,
-    );
+  public async whoAmI(@GetJWT() jwtPayload: JwtAccessTokenPayload): Promise<JsonGeneralInterface<UserEntity>> {
+    const [message, result] = await this.userSearcher.findUserProfile(jwtPayload);
 
     return {
       statusCode: 200,
@@ -123,9 +107,7 @@ export class UserV1Controller {
   @UseInterceptors(RefreshTokenInterceptor)
   @UseGuards(IsRefreshTokenAvailableGuard)
   @Get("/refresh-token")
-  public async refreshToken(
-    @GetJWT() jwtPayload: JwtRefreshTokenPayload,
-  ): Promise<RefreshTokenInterface> {
+  public async refreshToken(@GetJWT() jwtPayload: JwtRefreshTokenPayload): Promise<RefreshTokenInterface> {
     const accessToken = await this.userSecurity.refreshToken(jwtPayload);
     return {
       statusCode: 200,
@@ -137,8 +119,7 @@ export class UserV1Controller {
 
   @ApiOperation({
     summary: "logout",
-    description:
-      "로그아웃을 합니다. access token, refresh token이 담긴 쿠키를 제거합니다.",
+    description: "로그아웃을 합니다. access token, refresh token이 담긴 쿠키를 제거합니다.",
   })
   @UseInterceptors(LogoutInterceptor)
   @UseGuards(IsLoginGuard)
@@ -207,10 +188,7 @@ export class UserV1Controller {
     @Body(UserNicknameValidatePipe) { nickname }: ModifyUserNicknameDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userUpdateService.modifyUserNickname(
-      nickname,
-      jwtPayload.userId,
-    );
+    await this.userUpdateService.modifyUserNickname(nickname, jwtPayload.userId);
 
     return {
       statusCode: 201,
@@ -231,10 +209,7 @@ export class UserV1Controller {
     { phonenumber }: ModifyUserPhonenumberDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userUpdateService.modifyUserPhonenumber(
-      phonenumber,
-      jwtPayload.userId,
-    );
+    await this.userUpdateService.modifyUserPhonenumber(phonenumber, jwtPayload.userId);
 
     return {
       statusCode: 201,
@@ -253,10 +228,7 @@ export class UserV1Controller {
     @Body() { password }: ModifyUserPasswordDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userUpdateService.modifyUserPassword(
-      password,
-      jwtPayload.userId,
-    );
+    await this.userUpdateService.modifyUserPassword(password, jwtPayload.userId);
 
     return {
       statusCode: 201,
@@ -287,9 +259,7 @@ export class UserV1Controller {
   @UseInterceptors(LogoutInterceptor)
   @UseGuards(IsLoginGuard)
   @Delete("/secession")
-  public async secession(
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
-  ): Promise<LogoutInterface> {
+  public async secession(@GetJWT() jwtPayload: JwtAccessTokenPayload): Promise<LogoutInterface> {
     await this.userUpdateService.deleteUser(jwtPayload.userId);
 
     return {
@@ -301,8 +271,7 @@ export class UserV1Controller {
 
   @ApiOperation({
     summary: "find email",
-    description:
-      "이메일을 찾습니다. 본인 인증을 하기 위해서 실명과 전화번호를 사용합니다.",
+    description: "이메일을 찾습니다. 본인 인증을 하기 위해서 실명과 전화번호를 사용합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsNotLoginGuard)
@@ -323,15 +292,12 @@ export class UserV1Controller {
 
   @ApiOperation({
     summary: "reset password",
-    description:
-      "비밀번호를 변경합니다. 본인의 이메일과 변경할 비밀번호를 사용합니다.",
+    description: "비밀번호를 변경합니다. 본인의 이메일과 변경할 비밀번호를 사용합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Patch("/reset-password")
-  public async resetPassword(
-    @Body() resetPasswordDto: ResetPasswordDto,
-  ): Promise<JsonGeneralInterface<void>> {
+  public async resetPassword(@Body() resetPasswordDto: ResetPasswordDto): Promise<JsonGeneralInterface<void>> {
     await this.userUpdateService.resetPassword(resetPasswordDto);
 
     return {

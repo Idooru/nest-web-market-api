@@ -13,22 +13,15 @@ export class ValidateTokenLibrary {
     private readonly jwtErrorHandlerLibrary: JwtErrorHandlerLibrary,
   ) {}
 
-  public async validateAccessToken(
-    accessToken: string,
-  ): Promise<JwtAccessTokenPayload> {
+  public async validateAccessToken(accessToken: string): Promise<JwtAccessTokenPayload> {
     return this.jwtService
       .verifyAsync(accessToken, this.securityLibrary.jwtAccessTokenVerifyOption)
       .catch(this.jwtErrorHandlerLibrary.catchVerifyAccessTokenError);
   }
 
-  public async validateRefreshToken(
-    refreshToken: string,
-  ): Promise<JwtRefreshTokenPayload> {
+  public async validateRefreshToken(refreshToken: string): Promise<JwtRefreshTokenPayload> {
     return this.jwtService
-      .verifyAsync(
-        refreshToken,
-        this.securityLibrary.jwtRefreshTokenVerifyOption,
-      )
+      .verifyAsync(refreshToken, this.securityLibrary.jwtRefreshTokenVerifyOption)
       .catch(this.jwtErrorHandlerLibrary.catchVerifyRefreshTokenError);
   }
 }

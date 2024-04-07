@@ -1,10 +1,4 @@
-import {
-  forwardRef,
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  RequestMethod,
-} from "@nestjs/common";
+import { forwardRef, MiddlewareConsumer, Module, NestModule, RequestMethod } from "@nestjs/common";
 import { MediaModule } from "../media/media.module";
 import { ProductV1Controller } from "./controllers/v1/product-v1.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -59,12 +53,7 @@ import { ProductTransactionContext } from "./logic/transaction/product-transacti
     ProductValidateRepository,
     ProductIdValidatePipe,
   ],
-  exports: [
-    ProductSearcher,
-    ProductSearchRepository,
-    ProductIdValidatePipe,
-    ProductValidator,
-  ],
+  exports: [ProductSearcher, ProductSearchRepository, ProductIdValidatePipe, ProductValidator],
 })
 export class ProductModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {

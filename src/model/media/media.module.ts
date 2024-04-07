@@ -1,11 +1,5 @@
 import { TypeOrmModule } from "@nestjs/typeorm";
-import {
-  forwardRef,
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  RequestMethod,
-} from "@nestjs/common";
+import { forwardRef, MiddlewareConsumer, Module, NestModule, RequestMethod } from "@nestjs/common";
 import { ProductImageEntity } from "./entities/product-image.entity";
 import { ReviewImageEntity } from "./entities/review-image.entity";
 import { ReviewVideoEntity } from "./entities/review-video.entity";

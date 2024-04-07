@@ -34,9 +34,7 @@ export class OrderUpdateService {
   }
 
   @Transaction
-  public async createPayments(
-    createPaymentsDto: CreatePaymentsDto,
-  ): Promise<void> {
+  public async createPayments(createPaymentsDto: CreatePaymentsDto): Promise<void> {
     const { productQuantities, clientUser, order } = createPaymentsDto;
     const creating = productQuantities.map((productQuantity) =>
       this.orderUpdateRepository.createPayment({
@@ -50,45 +48,35 @@ export class OrderUpdateService {
   }
 
   @Transaction
-  public async withdrawClientBalance(
-    withdrawDto: MoneyTransactionDto,
-  ): Promise<void> {
+  public async withdrawClientBalance(withdrawDto: MoneyTransactionDto): Promise<void> {
     await this.orderUpdateRepository.withdrawClientBalance(withdrawDto);
   }
 
   @Transaction
-  public async depositAdminBalance(
-    productQuantities: { product: ProductEntity; quantity: number }[],
-  ): Promise<void> {
+  public async depositAdminBalance(productQuantities: { product: ProductEntity; quantity: number }[]): Promise<void> {
     const adminUserBalances = productQuantities
       .map((productQuantity) => productQuantity.product.creater.User)
       .map((user) => ({ userId: user.id, balance: user.Account[0].balance }));
 
-    const adminUserTotalPrice = productQuantities.map(
-      ({ product, quantity }) => ({
-        userId: product.creater.User.id,
-        totalPrice: product.price * quantity,
-      }),
-    );
+    const adminUserTotalPrice = productQuantities.map(({ product, quantity }) => ({
+      userId: product.creater.User.id,
+      totalPrice: product.price * quantity,
+    }));
 
-    const groups = [...adminUserBalances, ...adminUserTotalPrice].reduce(
-      (result, item) => {
-        const key = item.userId;
+    const groups = [...adminUserBalances, ...adminUserTotalPrice].reduce((result, item) => {
+      const key = item.userId;
 
-        if (!result[key]) {
-          result[key] = {};
-        }
+      if (!result[key]) {
+        result[key] = {};
+      }
 
-        Object.assign(result[key], item);
+      Object.assign(result[key], item);
 
-        return result;
-      },
-      {},
-    );
+      return result;
+    }, {});
 
     const depositing = Object.values(groups).map(
-      async (group: DepositAdminBalanceDto) =>
-        await this.orderUpdateRepository.depositAdminBalance(group),
+      async (group: DepositAdminBalanceDto) => await this.orderUpdateRepository.depositAdminBalance(group),
     );
 
     await Promise.all(depositing);

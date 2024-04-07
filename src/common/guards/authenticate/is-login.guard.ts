@@ -1,9 +1,4 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Request } from "express";
 import { loggerFactory } from "../../functions/logger.factory";
 import { ValidateTokenLibrary } from "../../lib/security/validate-token.library";
@@ -19,15 +14,12 @@ export class IsLoginGuard implements CanActivate {
     const { access_token }: { access_token: string } = req.signedCookies;
 
     if (!access_token) {
-      const message =
-        "access_token이 없으므로 인증이 필요한 작업을 수행할 수 없습니다.";
+      const message = "access_token이 없으므로 인증이 필요한 작업을 수행할 수 없습니다.";
       loggerFactory("NoneAccessToken").error(message);
       throw new UnauthorizedException(message);
     }
 
-    req.user = await this.validateTokenLibrary.validateAccessToken(
-      access_token,
-    );
+    req.user = await this.validateTokenLibrary.validateAccessToken(access_token);
 
     return true;
   }

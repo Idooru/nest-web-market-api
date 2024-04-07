@@ -7,14 +7,7 @@ export class OrderTransactionContext {
   constructor(private readonly orderUpdateService: OrderUpdateService) {}
 
   public createOrderContext(dto: SearchCreateOrderDto): () => Promise<void> {
-    const {
-      clientId,
-      orderBodyDto,
-      clientUser,
-      account,
-      totalPrice,
-      productQuantities,
-    } = dto;
+    const { clientId, orderBodyDto, clientUser, account, totalPrice, productQuantities } = dto;
 
     return async () => {
       await Promise.all([

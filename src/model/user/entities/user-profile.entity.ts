@@ -1,12 +1,4 @@
-import {
-  IsNotEmpty,
-  IsString,
-  IsEnum,
-  IsDateString,
-  IsMobilePhone,
-  MaxLength,
-  MinLength,
-} from "class-validator";
+import { IsNotEmpty, IsString, IsEnum, IsDateString, IsMobilePhone, MaxLength, MinLength } from "class-validator";
 import { Column, Entity, OneToOne, JoinColumn } from "typeorm";
 import { UserEntity } from "./user.entity";
 import { ChildEntity } from "src/common/entities/child.entity";

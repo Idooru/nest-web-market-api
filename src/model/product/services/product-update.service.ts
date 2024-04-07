@@ -20,9 +20,7 @@ export class ProductUpdateService {
   ) {}
 
   @Transaction
-  public createProduct(
-    createProductDto: CreateProductDto,
-  ): Promise<ProductEntity> {
+  public createProduct(createProductDto: CreateProductDto): Promise<ProductEntity> {
     return this.productUpdateRepository.createProduct(createProductDto);
   }
 
@@ -32,39 +30,26 @@ export class ProductUpdateService {
   }
 
   @Transaction
-  public async insertProductImages(
-    insertProductImageDto: InsertProductImageDto,
-  ): Promise<void> {
+  public async insertProductImages(insertProductImageDto: InsertProductImageDto): Promise<void> {
     const { productImages, product } = insertProductImageDto;
     const inserting = productImages.map((productImage) =>
-      this.productUpdateRepository.insertProductIdOnProductImage(
-        productImage,
-        product,
-      ),
+      this.productUpdateRepository.insertProductIdOnProductImage(productImage, product),
     );
 
     await Promise.all(inserting);
   }
 
   @Transaction
-  public async modifyProduct(
-    modifyProductDto: ModifyProductDto,
-  ): Promise<void> {
+  public async modifyProduct(modifyProductDto: ModifyProductDto): Promise<void> {
     await this.productUpdateRepository.modifyProduct(modifyProductDto);
   }
 
   @Transaction
-  public async changeProductImages(
-    changeProductImageDto: ChangeProductImageDto,
-  ): Promise<void> {
-    const { beforeProductImages, newProductImages, product } =
-      changeProductImageDto;
+  public async changeProductImages(changeProductImageDto: ChangeProductImageDto): Promise<void> {
+    const { beforeProductImages, newProductImages, product } = changeProductImageDto;
 
     const inserting = newProductImages.map((productImage) =>
-      this.productUpdateRepository.insertProductIdOnProductImage(
-        productImage,
-        product,
-      ),
+      this.productUpdateRepository.insertProductIdOnProductImage(productImage, product),
     );
 
     await Promise.all(inserting);
@@ -100,29 +85,17 @@ export class ProductUpdateService {
   }
 
   @General
-  public async modifyProductCategory(
-    id: string,
-    category: ProductCategory,
-  ): Promise<void> {
+  public async modifyProductCategory(id: string, category: ProductCategory): Promise<void> {
     await this.productUpdateRepository.modifyProductCategory(id, category);
   }
 
   @General
-  public async modifyProductDescription(
-    id: string,
-    description: string,
-  ): Promise<void> {
-    await this.productUpdateRepository.modifyProductDescription(
-      id,
-      description,
-    );
+  public async modifyProductDescription(id: string, description: string): Promise<void> {
+    await this.productUpdateRepository.modifyProductDescription(id, description);
   }
 
   @General
-  public async modifyProductQuantity(
-    id: string,
-    quantity: number,
-  ): Promise<void> {
+  public async modifyProductQuantity(id: string, quantity: number): Promise<void> {
     await this.productUpdateRepository.modifyProductQuantity(id, quantity);
   }
 

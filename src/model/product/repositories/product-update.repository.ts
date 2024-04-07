@@ -20,12 +20,9 @@ export class ProductUpdateRepository {
   ) {}
 
   @Transaction
-  public createProduct(
-    createProductDto: CreateProductDto,
-  ): Promise<ProductEntity> {
+  public createProduct(createProductDto: CreateProductDto): Promise<ProductEntity> {
     const { productBodyDto, admin } = createProductDto;
-    const { name, price, origin, category, description, quantity } =
-      productBodyDto;
+    const { name, price, origin, category, description, quantity } = productBodyDto;
 
     return this.transaction.getRepository().product.save({
       name,
@@ -44,10 +41,7 @@ export class ProductUpdateRepository {
   }
 
   @Transaction
-  public async insertProductIdOnProductImage(
-    productImage: ProductImageEntity,
-    product: ProductEntity,
-  ): Promise<void> {
+  public async insertProductIdOnProductImage(productImage: ProductImageEntity, product: ProductEntity): Promise<void> {
     productImage.Product = product;
     await this.transaction.getRepository().product.save(productImage);
   }
@@ -58,9 +52,7 @@ export class ProductUpdateRepository {
   }
 
   @Transaction
-  public async modifyProduct(
-    modifyProductDto: ModifyProductDto,
-  ): Promise<void> {
+  public async modifyProduct(modifyProductDto: ModifyProductDto): Promise<void> {
     const { id, productBodyDto } = modifyProductDto;
 
     await this.transaction.getRepository().product.update(id, productBodyDto);
@@ -82,26 +74,17 @@ export class ProductUpdateRepository {
   }
 
   @General
-  public async modifyProductCategory(
-    id: string,
-    category: ProductCategory,
-  ): Promise<void> {
+  public async modifyProductCategory(id: string, category: ProductCategory): Promise<void> {
     await this.productRepository.update(id, { category });
   }
 
   @General
-  public async modifyProductDescription(
-    id: string,
-    description: string,
-  ): Promise<void> {
+  public async modifyProductDescription(id: string, description: string): Promise<void> {
     await this.productRepository.update(id, { description });
   }
 
   @General
-  public async modifyProductQuantity(
-    id: string,
-    quantity: number,
-  ): Promise<void> {
+  public async modifyProductQuantity(id: string, quantity: number): Promise<void> {
     await this.productRepository.update(id, { quantity });
   }
 

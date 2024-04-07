@@ -14,23 +14,15 @@ export class ProductFactoryService {
     };
   }
 
-  public getInsertProductImageFunc(
-    insertProductImageDto: InsertProductImageDto,
-  ): () => Promise<void> {
+  public getInsertProductImageFunc(insertProductImageDto: InsertProductImageDto): () => Promise<void> {
     return async () => {
-      await this.productOperationService.insertProductImages(
-        insertProductImageDto,
-      );
+      await this.productOperationService.insertProductImages(insertProductImageDto);
     };
   }
 
-  public getModifyProductImageFunc(
-    modifyProductImageDto: ChangeProductImageDto,
-  ): () => Promise<void> {
+  public getModifyProductImageFunc(modifyProductImageDto: ChangeProductImageDto): () => Promise<void> {
     return async () => {
-      await this.productOperationService.changeProductImages(
-        modifyProductImageDto,
-      );
+      await this.productOperationService.changeProductImages(modifyProductImageDto);
     };
   }
 }

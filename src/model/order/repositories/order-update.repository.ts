@@ -15,9 +15,7 @@ import { Transaction } from "../../../common/decorators/transaction.decorator";
 
 @Injectable()
 export class OrderUpdateRepository {
-  constructor(
-    private readonly transaction: Transactional<OrderRepositoryPayload>,
-  ) {}
+  constructor(private readonly transaction: Transactional<OrderRepositoryPayload>) {}
 
   @Transaction
   public async deleteAllCartsOnTransaction(id: string): Promise<void> {
@@ -31,10 +29,7 @@ export class OrderUpdateRepository {
   }
 
   @Transaction
-  public async decreaseProductQuantity(productQuantity: {
-    product: ProductEntity;
-    quantity: number;
-  }): Promise<void> {
+  public async decreaseProductQuantity(productQuantity: { product: ProductEntity; quantity: number }): Promise<void> {
     const { product, quantity } = productQuantity;
     await this.transaction
       .getRepository()
@@ -59,9 +54,7 @@ export class OrderUpdateRepository {
   }
 
   @Transaction
-  public async createPayment(
-    createPaymentDto: CreatePaymentDto,
-  ): Promise<void> {
+  public async createPayment(createPaymentDto: CreatePaymentDto): Promise<void> {
     const { clientUser, productQuantity, order } = createPaymentDto;
     const { product, quantity } = productQuantity;
     const totalPrice = product.price * quantity;
@@ -76,9 +69,7 @@ export class OrderUpdateRepository {
   }
 
   @Transaction
-  public async withdrawClientBalance(
-    withdrawDto: MoneyTransactionDto,
-  ): Promise<AccountEntity> {
+  public async withdrawClientBalance(withdrawDto: MoneyTransactionDto): Promise<AccountEntity> {
     const { accountId, balance } = withdrawDto;
     await this.transaction
       .getRepository()
@@ -101,9 +92,7 @@ export class OrderUpdateRepository {
   }
 
   @Transaction
-  public async depositAdminBalance(
-    depositDto: DepositAdminBalanceDto,
-  ): Promise<void> {
+  public async depositAdminBalance(depositDto: DepositAdminBalanceDto): Promise<void> {
     const { userId, balance, totalPrice } = depositDto;
     const depositBalance = balance + totalPrice;
 

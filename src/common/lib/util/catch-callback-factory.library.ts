@@ -30,9 +30,7 @@ export class CatchCallbackFactoryLibrary {
     });
   }
 
-  public getCatchHashPasswordFunc(
-    hasTransaction: boolean,
-  ): (err: Error) => never {
+  public getCatchHashPasswordFunc(hasTransaction: boolean): (err: Error) => never {
     return (err: Error) => {
       const errorCase = "HashPassword";
       const libraryName = "bcrypt";

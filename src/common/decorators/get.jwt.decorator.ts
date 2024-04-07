@@ -5,10 +5,7 @@ import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-paylo
 import { JwtRefreshTokenPayload } from "src/model/auth/jwt/jwt-refresh-token-payload.interface";
 
 export const GetJWT = createParamDecorator(
-  (
-    data,
-    context: ArgumentsHost,
-  ): JwtAccessTokenPayload | JwtRefreshTokenPayload => {
+  (data, context: ArgumentsHost): JwtAccessTokenPayload | JwtRefreshTokenPayload => {
     const req = context.switchToHttp().getRequest<Request>();
 
     return req.user;

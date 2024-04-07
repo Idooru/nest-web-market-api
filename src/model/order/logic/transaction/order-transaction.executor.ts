@@ -15,10 +15,7 @@ export class OrderTransactionExecutor {
     private readonly context: OrderTransactionContext,
   ) {}
 
-  public async createOrder(createOrderDto: {
-    clientId: string;
-    orderBodyDto: OrderBodyDto;
-  }): Promise<void> {
+  public async createOrder(createOrderDto: { clientId: string; orderBodyDto: OrderBodyDto }): Promise<void> {
     const search = await this.searcher.searchCreateOrder(createOrderDto);
     const queryRunner = await this.transaction.init();
 

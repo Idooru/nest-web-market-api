@@ -1,9 +1,4 @@
-import {
-  ExceptionFilter,
-  Catch,
-  ArgumentsHost,
-  HttpException,
-} from "@nestjs/common";
+import { ExceptionFilter, Catch, ArgumentsHost, HttpException } from "@nestjs/common";
 import { Response } from "express";
 import { Implemented } from "../decorators/implemented.decoration";
 
@@ -39,16 +34,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
     };
 
     if (Array.isArray(exceptionResponse.message)) {
-      this.jsonResponse.reason = exceptionResponse.message.map(
-        (err) => err.reason.message,
-      );
+      this.jsonResponse.reason = exceptionResponse.message.map((err) => err.reason.message);
     } else {
       this.jsonResponse.reason = exception.message;
     }
 
-    return res
-      .status(exception.getStatus())
-      .setHeader("X-Powered-By", "")
-      .json(this.jsonResponse);
+    return res.status(exception.getStatus()).setHeader("X-Powered-By", "").json(this.jsonResponse);
   }
 }

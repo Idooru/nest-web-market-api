@@ -1,12 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
-import {
-  IsEnum,
-  IsNotEmpty,
-  IsPositive,
-  IsString,
-  MaxLength,
-  MinLength,
-} from "class-validator";
+import { IsEnum, IsNotEmpty, IsPositive, IsString, MaxLength, MinLength } from "class-validator";
 import { CommonEntity } from "../../../common/entities/common.entity";
 import { ClientUserEntity } from "../../user/entities/client-user.entity";
 import { PaymentEntitiy } from "./payment.entitiy";

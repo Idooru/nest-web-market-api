@@ -9,9 +9,7 @@ type UserBody = {
 };
 
 @Injectable()
-export class UserOperationValidatePipe<T extends UserBody>
-  implements PipeTransform
-{
+export class UserOperationValidatePipe<T extends UserBody> implements PipeTransform {
   constructor(private readonly userValidator: UserValidator) {}
 
   @Implemented

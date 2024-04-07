@@ -4,12 +4,7 @@ import { MediaModule } from "../media/media.module";
 import { AuthModule } from "../auth/auth.module";
 import { UserProfileEntity } from "./entities/user-profile.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import {
-  forwardRef,
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-} from "@nestjs/common";
+import { forwardRef, MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { LibraryModule } from "src/common/lib/library.module";
 import { JwtModule } from "@nestjs/jwt";
 import { UserV1Controller } from "./controllers/v1/user-v1.controller";
@@ -35,13 +30,7 @@ import { UserTransactionContext } from "./logic/transaction/user-transaction.con
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      UserEntity,
-      UserProfileEntity,
-      UserAuthEntity,
-      ClientUserEntity,
-      AdminUserEntity,
-    ]),
+    TypeOrmModule.forFeature([UserEntity, UserProfileEntity, UserAuthEntity, ClientUserEntity, AdminUserEntity]),
     forwardRef(() => AuthModule),
     forwardRef(() => MediaModule),
     forwardRef(() => ReviewModule),
@@ -70,8 +59,6 @@ import { UserTransactionContext } from "./logic/transaction/user-transaction.con
 })
 export class UserModule implements NestModule {
   public configure(consumer: MiddlewareConsumer): void {
-    consumer
-      .apply(UserRegisterEventMiddleware)
-      .forRoutes("/api/v1/user/register");
+    consumer.apply(UserRegisterEventMiddleware).forRoutes("/api/v1/user/register");
   }
 }

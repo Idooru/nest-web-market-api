@@ -15,14 +15,7 @@ export class ReviewTransactionContext {
   ) {}
 
   public createReviewContext(dto: SearchCreateReviewDto): () => Promise<void> {
-    const {
-      product,
-      reviewBodyDto,
-      reviewImages,
-      reviewVideos,
-      starRate,
-      clientUser,
-    } = dto;
+    const { product, reviewBodyDto, reviewImages, reviewVideos, starRate, clientUser } = dto;
 
     return async () => {
       const review = await this.reviewUpdateService.createReview({

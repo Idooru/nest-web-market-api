@@ -21,9 +21,7 @@ export class MediaUpdateService {
   ) {}
 
   @General
-  public async uploadProductImages(
-    files: Express.Multer.File[],
-  ): Promise<MediaCookieDto[]> {
+  public async uploadProductImages(files: Express.Multer.File[]): Promise<MediaCookieDto[]> {
     const path = "product/images";
     const stuffs = this.mediaUtils.createStuffs(files, path);
 
@@ -38,18 +36,11 @@ export class MediaUpdateService {
 
     const ids = productImages.map((productImage) => productImage.id);
 
-    return this.mediaUtils.getMediaCookies(
-      ids,
-      files,
-      path,
-      this.productMedia.image_url_cookie,
-    );
+    return this.mediaUtils.getMediaCookies(ids, files, path, this.productMedia.image_url_cookie);
   }
 
   @General
-  public async uploadReviewImages(
-    files: Express.Multer.File[],
-  ): Promise<MediaCookieDto[]> {
+  public async uploadReviewImages(files: Express.Multer.File[]): Promise<MediaCookieDto[]> {
     const path = "review/images";
     const stuffs = this.mediaUtils.createStuffs(files, path);
 
@@ -64,18 +55,11 @@ export class MediaUpdateService {
 
     const ids = reviewImages.map((reviewImage) => reviewImage.id);
 
-    return this.mediaUtils.getMediaCookies(
-      ids,
-      files,
-      path,
-      this.reviewMedia.image_url_cookie,
-    );
+    return this.mediaUtils.getMediaCookies(ids, files, path, this.reviewMedia.image_url_cookie);
   }
 
   @General
-  public async uploadReviewVideos(
-    files: Express.Multer.File[],
-  ): Promise<MediaCookieDto[]> {
+  public async uploadReviewVideos(files: Express.Multer.File[]): Promise<MediaCookieDto[]> {
     const path = "review/videos";
     const stuffs = this.mediaUtils.createStuffs(files, path);
 
@@ -90,18 +74,11 @@ export class MediaUpdateService {
 
     const ids = reviewVideos.map((reviewVideo) => reviewVideo.id);
 
-    return this.mediaUtils.getMediaCookies(
-      ids,
-      files,
-      path,
-      this.reviewMedia.video_url_cookie,
-    );
+    return this.mediaUtils.getMediaCookies(ids, files, path, this.reviewMedia.video_url_cookie);
   }
 
   @General
-  public async uploadInquiryRequestImages(
-    files: Express.Multer.File[],
-  ): Promise<MediaCookieDto[]> {
+  public async uploadInquiryRequestImages(files: Express.Multer.File[]): Promise<MediaCookieDto[]> {
     const path = "inquiry/request/images";
     const stuffs = this.mediaUtils.createStuffs(files, path);
 
@@ -114,22 +91,13 @@ export class MediaUpdateService {
 
     const inquiryRequestImages = await Promise.all(uploading);
 
-    const ids = inquiryRequestImages.map(
-      (inquiryRequestImage) => inquiryRequestImage.id,
-    );
+    const ids = inquiryRequestImages.map((inquiryRequestImage) => inquiryRequestImage.id);
 
-    return this.mediaUtils.getMediaCookies(
-      ids,
-      files,
-      path,
-      this.inquiryMedia.request.image_url_cookie,
-    );
+    return this.mediaUtils.getMediaCookies(ids, files, path, this.inquiryMedia.request.image_url_cookie);
   }
 
   @General
-  public async uploadInquiryRequestVideos(
-    files: Express.Multer.File[],
-  ): Promise<MediaCookieDto[]> {
+  public async uploadInquiryRequestVideos(files: Express.Multer.File[]): Promise<MediaCookieDto[]> {
     const path = "inquiry/request/videos";
     const stuffs = this.mediaUtils.createStuffs(files, path);
 
@@ -142,22 +110,13 @@ export class MediaUpdateService {
 
     const inquiryRequestVideos = await Promise.all(uploading);
 
-    const ids = inquiryRequestVideos.map(
-      (inquiryRequestVideo) => inquiryRequestVideo.id,
-    );
+    const ids = inquiryRequestVideos.map((inquiryRequestVideo) => inquiryRequestVideo.id);
 
-    return this.mediaUtils.getMediaCookies(
-      ids,
-      files,
-      path,
-      this.inquiryMedia.request.video_url_cookie,
-    );
+    return this.mediaUtils.getMediaCookies(ids, files, path, this.inquiryMedia.request.video_url_cookie);
   }
 
   @General
-  public async uploadInquiryResponseImages(
-    files: Express.Multer.File[],
-  ): Promise<MediaCookieDto[]> {
+  public async uploadInquiryResponseImages(files: Express.Multer.File[]): Promise<MediaCookieDto[]> {
     const path = "inquiry/response/images";
     const stuffs = this.mediaUtils.createStuffs(files, path);
 
@@ -170,22 +129,13 @@ export class MediaUpdateService {
 
     const inquiryResponseImages = await Promise.all(uploading);
 
-    const ids = inquiryResponseImages.map(
-      (inquiryResponseImage) => inquiryResponseImage.id,
-    );
+    const ids = inquiryResponseImages.map((inquiryResponseImage) => inquiryResponseImage.id);
 
-    return this.mediaUtils.getMediaCookies(
-      ids,
-      files,
-      path,
-      this.inquiryMedia.response.image_url_cookie,
-    );
+    return this.mediaUtils.getMediaCookies(ids, files, path, this.inquiryMedia.response.image_url_cookie);
   }
 
   @General
-  public async uploadInquiryResponseVideos(
-    files: Express.Multer.File[],
-  ): Promise<MediaCookieDto[]> {
+  public async uploadInquiryResponseVideos(files: Express.Multer.File[]): Promise<MediaCookieDto[]> {
     const path = "inquiry/response/videos";
     const stuffs = this.mediaUtils.createStuffs(files, path);
 
@@ -198,26 +148,15 @@ export class MediaUpdateService {
 
     const inquiryResponseVideos = await Promise.all(uploading);
 
-    const ids = inquiryResponseVideos.map(
-      (inquiryResponseVideo) => inquiryResponseVideo.id,
-    );
+    const ids = inquiryResponseVideos.map((inquiryResponseVideo) => inquiryResponseVideo.id);
 
-    return this.mediaUtils.getMediaCookies(
-      ids,
-      files,
-      path,
-      this.inquiryMedia.response.video_url_cookie,
-    );
+    return this.mediaUtils.getMediaCookies(ids, files, path, this.inquiryMedia.response.video_url_cookie);
   }
 
   @General
-  public async deleteProductImagesWithId(
-    productImgCookies: MediaCookieDto[],
-  ): Promise<string[]> {
+  public async deleteProductImagesWithId(productImgCookies: MediaCookieDto[]): Promise<string[]> {
     const deleting = productImgCookies.map((productImgCookie) =>
-      this.mediaOperationRepository.deleteProductImageWithId(
-        productImgCookie.id,
-      ),
+      this.mediaOperationRepository.deleteProductImageWithId(productImgCookie.id),
     );
 
     this.mediaUtils.deleteMediaFiles({
@@ -228,15 +167,11 @@ export class MediaUpdateService {
 
     await Promise.all(deleting);
 
-    return productImgCookies.map(
-      (productImgCookie) => productImgCookie.whatCookie,
-    );
+    return productImgCookies.map((productImgCookie) => productImgCookie.whatCookie);
   }
 
   @General
-  public async deleteReviewImagesWithId(
-    reviewImgCookies: MediaCookieDto[],
-  ): Promise<string[]> {
+  public async deleteReviewImagesWithId(reviewImgCookies: MediaCookieDto[]): Promise<string[]> {
     const deleting = reviewImgCookies.map((reviewImgCookie) =>
       this.mediaOperationRepository.deleteReviewImageWithId(reviewImgCookie.id),
     );
@@ -249,15 +184,11 @@ export class MediaUpdateService {
 
     await Promise.all(deleting);
 
-    return reviewImgCookies.map(
-      (reviewImgCookie) => reviewImgCookie.whatCookie,
-    );
+    return reviewImgCookies.map((reviewImgCookie) => reviewImgCookie.whatCookie);
   }
 
   @General
-  public async deleteReviewVideosWithId(
-    reviewVdoCookies: MediaCookieDto[],
-  ): Promise<string[]> {
+  public async deleteReviewVideosWithId(reviewVdoCookies: MediaCookieDto[]): Promise<string[]> {
     const deleting = reviewVdoCookies.map((reviewVdoCookie) =>
       this.mediaOperationRepository.deleteReviewVideoWithId(reviewVdoCookie.id),
     );
@@ -270,19 +201,13 @@ export class MediaUpdateService {
 
     await Promise.all(deleting);
 
-    return reviewVdoCookies.map(
-      (reviewVdoCookie) => reviewVdoCookie.whatCookie,
-    );
+    return reviewVdoCookies.map((reviewVdoCookie) => reviewVdoCookie.whatCookie);
   }
 
   @General
-  public async deleteInquiryRequestImagesWithId(
-    inquiryRequestImgCookies: MediaCookieDto[],
-  ): Promise<string[]> {
+  public async deleteInquiryRequestImagesWithId(inquiryRequestImgCookies: MediaCookieDto[]): Promise<string[]> {
     const deleting = inquiryRequestImgCookies.map((inquiryRequestImgCookie) =>
-      this.mediaOperationRepository.deleteInquiryRequestImageWithId(
-        inquiryRequestImgCookie.id,
-      ),
+      this.mediaOperationRepository.deleteInquiryRequestImageWithId(inquiryRequestImgCookie.id),
     );
 
     this.mediaUtils.deleteMediaFiles({
@@ -294,19 +219,13 @@ export class MediaUpdateService {
 
     await Promise.all(deleting);
 
-    return inquiryRequestImgCookies.map(
-      (inquiryRequestImgCookie) => inquiryRequestImgCookie.whatCookie,
-    );
+    return inquiryRequestImgCookies.map((inquiryRequestImgCookie) => inquiryRequestImgCookie.whatCookie);
   }
 
   @General
-  public async deleteInquiryRequestVideosWithId(
-    inquiryRequestVdoCookies: MediaCookieDto[],
-  ): Promise<string[]> {
+  public async deleteInquiryRequestVideosWithId(inquiryRequestVdoCookies: MediaCookieDto[]): Promise<string[]> {
     const deleting = inquiryRequestVdoCookies.map((inquiryRequestVdoCookie) =>
-      this.mediaOperationRepository.deleteInquiryRequestVideoWithId(
-        inquiryRequestVdoCookie.id,
-      ),
+      this.mediaOperationRepository.deleteInquiryRequestVideoWithId(inquiryRequestVdoCookie.id),
     );
 
     this.mediaUtils.deleteMediaFiles({
@@ -318,19 +237,13 @@ export class MediaUpdateService {
 
     await Promise.all(deleting);
 
-    return inquiryRequestVdoCookies.map(
-      (inquiryRequestVdoCookie) => inquiryRequestVdoCookie.whatCookie,
-    );
+    return inquiryRequestVdoCookies.map((inquiryRequestVdoCookie) => inquiryRequestVdoCookie.whatCookie);
   }
 
   @General
-  public async deleteInquiryResponseImagesWithId(
-    inquiryResponseImgCookies: MediaCookieDto[],
-  ): Promise<string[]> {
+  public async deleteInquiryResponseImagesWithId(inquiryResponseImgCookies: MediaCookieDto[]): Promise<string[]> {
     const deleting = inquiryResponseImgCookies.map((inquiryResponseImgCookie) =>
-      this.mediaOperationRepository.deleteInquiryResponseImageWithId(
-        inquiryResponseImgCookie.id,
-      ),
+      this.mediaOperationRepository.deleteInquiryResponseImageWithId(inquiryResponseImgCookie.id),
     );
 
     this.mediaUtils.deleteMediaFiles({
@@ -342,19 +255,13 @@ export class MediaUpdateService {
 
     await Promise.all(deleting);
 
-    return inquiryResponseImgCookies.map(
-      (inquiryResponseImgCookie) => inquiryResponseImgCookie.whatCookie,
-    );
+    return inquiryResponseImgCookies.map((inquiryResponseImgCookie) => inquiryResponseImgCookie.whatCookie);
   }
 
   @General
-  public async deleteInquiryResponseVideosWithId(
-    inquiryResponseVdoCookies: MediaCookieDto[],
-  ): Promise<string[]> {
+  public async deleteInquiryResponseVideosWithId(inquiryResponseVdoCookies: MediaCookieDto[]): Promise<string[]> {
     const deleting = inquiryResponseVdoCookies.map((inquiryResponseVdoCookie) =>
-      this.mediaOperationRepository.deleteInquiryResponseVideoWithId(
-        inquiryResponseVdoCookie.id,
-      ),
+      this.mediaOperationRepository.deleteInquiryResponseVideoWithId(inquiryResponseVdoCookie.id),
     );
 
     this.mediaUtils.deleteMediaFiles({
@@ -366,8 +273,6 @@ export class MediaUpdateService {
 
     await Promise.all(deleting);
 
-    return inquiryResponseVdoCookies.map(
-      (inquiryResponseVdoCookie) => inquiryResponseVdoCookie.whatCookie,
-    );
+    return inquiryResponseVdoCookies.map((inquiryResponseVdoCookie) => inquiryResponseVdoCookie.whatCookie);
   }
 }

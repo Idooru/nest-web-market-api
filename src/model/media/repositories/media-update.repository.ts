@@ -31,51 +31,37 @@ export class MediaUpdateRepository {
   ) {}
 
   @General
-  public uploadProductImages(
-    uploadMediaDto: UploadMediaDto,
-  ): Promise<ProductImageEntity> {
+  public uploadProductImages(uploadMediaDto: UploadMediaDto): Promise<ProductImageEntity> {
     return this.productImageRepository.save(uploadMediaDto);
   }
 
   @General
-  public uploadReviewImage(
-    uploadMediaDto: UploadMediaDto,
-  ): Promise<ReviewImageEntity> {
+  public uploadReviewImage(uploadMediaDto: UploadMediaDto): Promise<ReviewImageEntity> {
     return this.reviewImageRepository.save(uploadMediaDto);
   }
 
   @General
-  public uploadReviewVideo(
-    uploadMediaDto: UploadMediaDto,
-  ): Promise<ReviewVideoEntity> {
+  public uploadReviewVideo(uploadMediaDto: UploadMediaDto): Promise<ReviewVideoEntity> {
     return this.reviewVideoRepository.save(uploadMediaDto);
   }
 
   @General
-  public uploadInquiryRequestImage(
-    uploadMediaDto: UploadMediaDto,
-  ): Promise<InquiryRequestImageEntity> {
+  public uploadInquiryRequestImage(uploadMediaDto: UploadMediaDto): Promise<InquiryRequestImageEntity> {
     return this.inquiryRequestImageRepository.save(uploadMediaDto);
   }
 
   @General
-  public uploadInquiryRequestVideo(
-    uploadMediaDto: UploadMediaDto,
-  ): Promise<InquiryRequestVideoEntity> {
+  public uploadInquiryRequestVideo(uploadMediaDto: UploadMediaDto): Promise<InquiryRequestVideoEntity> {
     return this.inquiryRequestVideoRepository.save(uploadMediaDto);
   }
 
   @General
-  public uploadInquiryResponseImages(
-    uploadMediaDto: UploadMediaDto,
-  ): Promise<InquiryResponseImageEntity> {
+  public uploadInquiryResponseImages(uploadMediaDto: UploadMediaDto): Promise<InquiryResponseImageEntity> {
     return this.inquiryResponseImageRepository.save(uploadMediaDto);
   }
 
   @General
-  public uploadInquiryResponseVideos(
-    uploadMediaDto: UploadMediaDto,
-  ): Promise<InquiryResponseVideoEntity> {
+  public uploadInquiryResponseVideos(uploadMediaDto: UploadMediaDto): Promise<InquiryResponseVideoEntity> {
     return this.inquiryResponseVideoRepository.save(uploadMediaDto);
   }
 

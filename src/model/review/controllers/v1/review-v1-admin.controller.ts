@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Get,
-  Param,
-  UseGuards,
-  UseInterceptors,
-} from "@nestjs/common";
+import { Controller, Get, Param, UseGuards, UseInterceptors } from "@nestjs/common";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";

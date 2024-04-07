@@ -1,9 +1,4 @@
-import {
-  ArgumentsHost,
-  CallHandler,
-  Injectable,
-  NestInterceptor,
-} from "@nestjs/common";
+import { ArgumentsHost, CallHandler, Injectable, NestInterceptor } from "@nestjs/common";
 import { map, Observable } from "rxjs";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { Request, Response } from "express";
@@ -15,10 +10,7 @@ export class JsonGeneralInterceptor<T> implements NestInterceptor {
   constructor(private readonly timeLoggerLibrary: TimeLoggerLibrary) {}
 
   @Implemented
-  public intercept(
-    context: ArgumentsHost,
-    next: CallHandler<any>,
-  ): Observable<any> {
+  public intercept(context: ArgumentsHost, next: CallHandler<any>): Observable<any> {
     const req = context.switchToHttp().getRequest<Request>();
     const res = context.switchToHttp().getResponse<Response>();
 

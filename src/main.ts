@@ -1,8 +1,4 @@
-import {
-  ValidationError,
-  ValidationPipe,
-  VersioningType,
-} from "@nestjs/common";
+import { ValidationError, ValidationPipe, VersioningType } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { AppModule } from "./app.module";
@@ -36,11 +32,9 @@ class NestCoreConfig {
   public async run() {
     await this.app.listen(this.envData.getValue("port"), "0.0.0.0", () => {
       loggerFactory("NestApplication").log(
-        `Server is running at ${this.envData.getValue(
-          "scheme",
-        )}://${this.envData.getValue("host")}:${this.envData.getValue(
-          "port",
-        )} | NODE_ENV: ${process.env.NODE_ENV}`,
+        `Server is running at ${this.envData.getValue("scheme")}://${this.envData.getValue(
+          "host",
+        )}:${this.envData.getValue("port")} | NODE_ENV: ${process.env.NODE_ENV}`,
       );
     });
   }
@@ -59,9 +53,7 @@ class NestCoreConfig {
     const document = SwaggerModule.createDocument(this.app, config);
 
     SwaggerModule.setup("api", this.app, document);
-    loggerFactory("NestApplication").log(
-      "Success to setting up for swagger module",
-    );
+    loggerFactory("NestApplication").log("Success to setting up for swagger module");
   }
 
   private setGlobals() {
@@ -90,29 +82,15 @@ class NestCoreConfig {
     staticMediaConfigs.forEach((mediaConfig) => {
       if (mediaConfig.others) {
         this.app.useStaticAssets(
-          path.join(
-            __dirname,
-            "..",
-            "uploads",
-            mediaConfig.mediaType,
-            mediaConfig.model,
-            mediaConfig.others,
-          ),
+          path.join(__dirname, "..", "uploads", mediaConfig.mediaType, mediaConfig.model, mediaConfig.others),
           {
             prefix: `/media/${mediaConfig.model}/${mediaConfig.others}/${mediaConfig.mediaType}`,
           },
         );
       } else {
-        this.app.useStaticAssets(
-          path.join(
-            __dirname,
-            "..",
-            "uploads",
-            mediaConfig.mediaType,
-            mediaConfig.model,
-          ),
-          { prefix: `/media/${mediaConfig.model}/${mediaConfig.mediaType}` },
-        );
+        this.app.useStaticAssets(path.join(__dirname, "..", "uploads", mediaConfig.mediaType, mediaConfig.model), {
+          prefix: `/media/${mediaConfig.model}/${mediaConfig.mediaType}`,
+        });
       }
     });
   }

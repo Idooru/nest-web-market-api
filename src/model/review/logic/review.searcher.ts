@@ -26,8 +26,7 @@ export class ReviewSearcher {
   public async findReviewsWithProductId(id: string): Promise<ReviewEntity[]> {
     const product = await this.productSearcher.findProductWithId(id);
 
-    if (!product.Review.length)
-      throw new NotFoundException("해당 상품에 리뷰가 존재하지 않습니다.");
+    if (!product.Review.length) throw new NotFoundException("해당 상품에 리뷰가 존재하지 않습니다.");
 
     return product.Review;
   }

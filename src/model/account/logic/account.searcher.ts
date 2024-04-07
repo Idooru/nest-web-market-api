@@ -4,9 +4,7 @@ import { AccountEntity } from "../entities/account.entity";
 
 @Injectable()
 export class AccountSearcher {
-  constructor(
-    private readonly accountSearchRepository: AccountSearchRepository,
-  ) {}
+  constructor(private readonly accountSearchRepository: AccountSearchRepository) {}
 
   public findAccountsWithUserId(id: string): Promise<AccountEntity[]> {
     return this.accountSearchRepository.findAccountsWithUserId(id);

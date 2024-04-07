@@ -23,10 +23,7 @@ export class UserSecurity {
     private readonly jwtErrorHandlerLibrary: JwtErrorHandlerLibrary,
   ) {}
 
-  public hashPassword(
-    password: string,
-    hasTransaction: boolean,
-  ): Promise<string> {
+  public hashPassword(password: string, hasTransaction: boolean): Promise<string> {
     return bcrypt
       .hash(password, this.securityLibrary.hashSalt)
       .catch(this.callbackFactory.getCatchHashPasswordFunc(hasTransaction));
@@ -38,9 +35,7 @@ export class UserSecurity {
     const user = await this.userSearcher.findUserWithEmail(email);
     const compared =
       user &&
-      (await bcrypt
-        .compare(password, user.Auth.password)
-        .catch(this.callbackFactory.getCatchComparePasswordFunc()));
+      (await bcrypt.compare(password, user.Auth.password).catch(this.callbackFactory.getCatchComparePasswordFunc()));
 
     if (!compared) {
       const message = "아이디 혹은 비밀번호가 일치하지 않습니다.";
@@ -61,25 +56,17 @@ export class UserSecurity {
     };
 
     const accessToken = await this.jwtService
-      .signAsync(
-        jwtAccessTokenPayload,
-        this.securityLibrary.jwtAccessTokenSignOption,
-      )
+      .signAsync(jwtAccessTokenPayload, this.securityLibrary.jwtAccessTokenSignOption)
       .catch(this.jwtErrorHandlerLibrary.catchSignAccessTokenError);
 
     const refreshToken = await this.jwtService
-      .signAsync(
-        jwtRefreshTokenPayload,
-        this.securityLibrary.jwtRefreshTokenSignOption,
-      )
+      .signAsync(jwtRefreshTokenPayload, this.securityLibrary.jwtRefreshTokenSignOption)
       .catch(this.jwtErrorHandlerLibrary.catchSignRefreshTokenError);
 
     return { accessToken, refreshToken };
   }
 
-  public async refreshToken(
-    jwtPaylaod: JwtRefreshTokenPayload,
-  ): Promise<string> {
+  public async refreshToken(jwtPaylaod: JwtRefreshTokenPayload): Promise<string> {
     const user = await this.userSearcher.findUserWithEmail(jwtPaylaod.email);
 
     const jwtAccessTokenPayload: JwtAccessTokenPayload = {
@@ -90,10 +77,7 @@ export class UserSecurity {
     };
 
     return this.jwtService
-      .signAsync(
-        jwtAccessTokenPayload,
-        this.securityLibrary.jwtAccessTokenSignOption,
-      )
+      .signAsync(jwtAccessTokenPayload, this.securityLibrary.jwtAccessTokenSignOption)
       .catch(this.jwtErrorHandlerLibrary.catchSignAccessTokenError);
   }
 

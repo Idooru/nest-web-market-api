@@ -21,9 +21,7 @@ export class UserUpdateService {
   ) {}
 
   @Transaction
-  public async createUserEntity(
-    role: ["client", "admin"],
-  ): Promise<UserEntity> {
+  public async createUserEntity(role: ["client", "admin"]): Promise<UserEntity> {
     const user = await this.userUpdateRepository.createUserEntity(role);
 
     if (role.toString() === "admin") {
@@ -36,21 +34,9 @@ export class UserUpdateService {
   }
 
   @Transaction
-  public async createUserBase(
-    user: UserEntity,
-    registerUserDto: RegisterUserDto,
-  ): Promise<void> {
+  public async createUserBase(user: UserEntity, registerUserDto: RegisterUserDto): Promise<void> {
     const { id } = user;
-    const {
-      realname,
-      nickname,
-      birth,
-      gender,
-      email,
-      phonenumber,
-      password,
-      address,
-    } = registerUserDto;
+    const { realname, nickname, birth, gender, email, phonenumber, password, address } = registerUserDto;
 
     const hashed = await this.userSecurity.hashPassword(password, true);
 
@@ -73,20 +59,14 @@ export class UserUpdateService {
   }
 
   @Transaction
-  public async modifyUser(
-    modifyUserDto: ModifyUserDto,
-    id: string,
-  ): Promise<void> {
+  public async modifyUser(modifyUserDto: ModifyUserDto, id: string): Promise<void> {
     const { password, phonenumber, email, nickname, address } = modifyUserDto;
 
     const hashed = await this.userSecurity.hashPassword(password, true);
 
     await Promise.all([
       this.userUpdateRepository.modifyUserProfile({ phonenumber, address }, id),
-      this.userUpdateRepository.modifyUserAuth(
-        { email, nickname, password: hashed },
-        id,
-      ),
+      this.userUpdateRepository.modifyUserAuth({ email, nickname, password: hashed }, id),
     ]);
   }
 
@@ -101,10 +81,7 @@ export class UserUpdateService {
   }
 
   @General
-  public async modifyUserPhonenumber(
-    phonenumber: string,
-    id: string,
-  ): Promise<void> {
+  public async modifyUserPhonenumber(phonenumber: string, id: string): Promise<void> {
     await this.userUpdateRepository.modifyUserPhonenumber(phonenumber, id);
   }
 
@@ -121,9 +98,7 @@ export class UserUpdateService {
   }
 
   @General
-  public async resetPassword(
-    resetPasswordDto: ResetPasswordDto,
-  ): Promise<void> {
+  public async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
     const { email, password } = resetPasswordDto;
     const hashed = await this.userSecurity.hashPassword(password, false);
 

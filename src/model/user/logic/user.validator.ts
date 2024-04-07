@@ -25,20 +25,12 @@ export class UserValidator {
   }
 
   public async isNoneExistNickname(nickname: string): Promise<void> {
-    const result = await this.userValidateRepository.isNoneExistNickname(
-      nickname,
-    );
+    const result = await this.userValidateRepository.isNoneExistNickname(nickname);
     this.validateLibrary.isNoneExistData(result, "user nickname", nickname);
   }
 
   public async isNoneExistPhonenumber(phonenumber: string): Promise<void> {
-    const result = await this.userValidateRepository.isNoneExistPhonenumber(
-      phonenumber,
-    );
-    this.validateLibrary.isNoneExistData(
-      result,
-      "user phonenumber",
-      phonenumber,
-    );
+    const result = await this.userValidateRepository.isNoneExistPhonenumber(phonenumber);
+    this.validateLibrary.isNoneExistData(result, "user phonenumber", phonenumber);
   }
 }

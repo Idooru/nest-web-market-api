@@ -6,10 +6,7 @@ import { StarRateEntity } from "../../review/entities/star-rate.entity";
 import { ProductImageEntity } from "src/model/media/entities/product-image.entity";
 import { InquiryRequestEntity } from "../../inquiry/entities/inquiry-request.entity";
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
-import {
-  ProductCategory,
-  productCategory,
-} from "../types/product-category.type";
+import { ProductCategory, productCategory } from "../types/product-category.type";
 import { CartEntity } from "../../cart/entities/cart.entity";
 import { PaymentEntitiy } from "../../order/entities/payment.entitiy";
 

@@ -1,14 +1,5 @@
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import {
-  Body,
-  Controller,
-  Delete,
-  Param,
-  Patch,
-  Post,
-  UseGuards,
-  UseInterceptors,
-} from "@nestjs/common";
+import { Body, Controller, Delete, Param, Patch, Post, UseGuards, UseInterceptors } from "@nestjs/common";
 import { JsonGeneralInterceptor } from "../../../../common/interceptors/general/json-general.interceptor";
 import { IsLoginGuard } from "../../../../common/guards/authenticate/is-login.guard";
 import { JwtAccessTokenPayload } from "../../../auth/jwt/jwt-access-token-payload.interface";
@@ -38,10 +29,7 @@ export class AccountV1Controller {
     @Body(AccountValidatePipe) accountBodyDto: AccountBodyDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.accountUpdateService.createAccount(
-      accountBodyDto,
-      jwtPayload.userId,
-    );
+    await this.accountUpdateService.createAccount(accountBodyDto, jwtPayload.userId);
 
     return {
       statusCode: 201,
@@ -55,9 +43,7 @@ export class AccountV1Controller {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Delete("/:accountId")
-  public async deleteAccount(
-    @Param("accountId") accountId: string,
-  ): Promise<JsonGeneralInterface<void>> {
+  public async deleteAccount(@Param("accountId") accountId: string): Promise<JsonGeneralInterface<void>> {
     await this.accountUpdateService.deleteAccount(accountId);
 
     return {
@@ -73,9 +59,7 @@ export class AccountV1Controller {
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsClientGuard)
   @Patch("/deposit")
-  public async deposit(
-    @Body() depositBodyDto: MoneyTransactionDto,
-  ): Promise<JsonGeneralInterface<DepositResultDto>> {
+  public async deposit(@Body() depositBodyDto: MoneyTransactionDto): Promise<JsonGeneralInterface<DepositResultDto>> {
     const result = await this.accountUpdateService.deposit(depositBodyDto);
 
     return {
@@ -113,10 +97,7 @@ export class AccountV1Controller {
     @Param("accountId") accountId: string,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.accountUpdateService.setMainAccount(
-      accountId,
-      jwtPayload.userId,
-    );
+    await this.accountUpdateService.setMainAccount(accountId, jwtPayload.userId);
 
     return {
       statusCode: 200,

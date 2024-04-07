@@ -11,10 +11,7 @@ export class AccountSearchRepository {
   ) {}
 
   public findAccountsWithUserId(id: string): Promise<AccountEntity[]> {
-    return this.accountRepository
-      .createQueryBuilder("account")
-      .where("account.userId = :id", { id })
-      .getMany();
+    return this.accountRepository.createQueryBuilder("account").where("account.userId = :id", { id }).getMany();
   }
 
   public findMainAccountWithUserId(id: string): Promise<AccountEntity> {

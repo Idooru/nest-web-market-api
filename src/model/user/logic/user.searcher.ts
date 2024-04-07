@@ -30,9 +30,7 @@ export class UserSearcher {
     return this.userSearchRepository.findClientUserInfo(id);
   }
 
-  public async findClientUserObjectWithId(
-    id: string,
-  ): Promise<ClientUserEntity> {
+  public async findClientUserObjectWithId(id: string): Promise<ClientUserEntity> {
     const user = await this.userSearchRepository.findClientUserWithId(id);
     return this.userSearchRepository.findClientUserObjectWithId(user);
   }
@@ -42,20 +40,12 @@ export class UserSearcher {
     return this.userSearchRepository.findAdminUserObjectWithId(user);
   }
 
-  public async findUserProfile(
-    jwtPayload: JwtAccessTokenPayload,
-  ): Promise<[string, UserEntity]> {
+  public async findUserProfile(jwtPayload: JwtAccessTokenPayload): Promise<[string, UserEntity]> {
     if (jwtPayload.userRole.toString() === "admin") {
-      const adminUser =
-        await this.userSearchRepository.findAdminUserProfileInfoWithId(
-          jwtPayload.userId,
-        );
+      const adminUser = await this.userSearchRepository.findAdminUserProfileInfoWithId(jwtPayload.userId);
       return ["관리자 사용자의 정보를 가져옵니다.", adminUser];
     } else {
-      const clientUser =
-        await this.userSearchRepository.findClientUserProfileInfoWithId(
-          jwtPayload.userId,
-        );
+      const clientUser = await this.userSearchRepository.findClientUserProfileInfoWithId(jwtPayload.userId);
       return ["고객 사용자의 정보를 가져옵니다.", clientUser];
     }
   }

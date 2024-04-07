@@ -2,10 +2,7 @@ import { ApiProperty, IntersectionType, PickType } from "@nestjs/swagger";
 import { UserAuthEntity } from "../entities/user-auth.entity";
 import { UserProfileEntity } from "../entities/user-profile.entity";
 
-export class ModifyUserProfileDto extends PickType(UserProfileEntity, [
-  "phonenumber",
-  "address",
-] as const) {
+export class ModifyUserProfileDto extends PickType(UserProfileEntity, ["phonenumber", "address"] as const) {
   @ApiProperty({
     description: "사용자 전화번호",
     example: "010-1234-5678",
@@ -23,11 +20,7 @@ export class ModifyUserProfileDto extends PickType(UserProfileEntity, [
   public address: string;
 }
 
-export class ModifyUserAuthDto extends PickType(UserAuthEntity, [
-  "email",
-  "nickname",
-  "password",
-] as const) {
+export class ModifyUserAuthDto extends PickType(UserAuthEntity, ["email", "nickname", "password"] as const) {
   @ApiProperty({
     description: "사용자 닉네임",
     example: "Idooru",
@@ -53,7 +46,4 @@ export class ModifyUserAuthDto extends PickType(UserAuthEntity, [
   public password: string;
 }
 
-export class ModifyUserDto extends IntersectionType(
-  ModifyUserProfileDto,
-  ModifyUserAuthDto,
-) {}
+export class ModifyUserDto extends IntersectionType(ModifyUserProfileDto, ModifyUserAuthDto) {}

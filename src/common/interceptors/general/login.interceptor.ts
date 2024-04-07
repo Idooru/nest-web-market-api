@@ -1,9 +1,4 @@
-import {
-  CallHandler,
-  ExecutionContext,
-  Injectable,
-  NestInterceptor,
-} from "@nestjs/common";
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common";
 import { map, Observable } from "rxjs";
 import { Request, Response } from "express";
 import { LoginInterface } from "../interface/login.interface";
@@ -19,10 +14,7 @@ export class LoginInterceptor implements NestInterceptor {
   ) {}
 
   @Implemented
-  public intercept(
-    context: ExecutionContext,
-    next: CallHandler,
-  ): Observable<any> {
+  public intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const req = context.switchToHttp().getRequest<Request>();
     const res = context.switchToHttp().getResponse<Response>();
     const cookieOption = this.securityLibrary.cookieOption;

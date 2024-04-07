@@ -7,17 +7,13 @@ export class TimeLoggerLibrary {
   private now = 0;
 
   public receiveRequest(req: Request) {
-    this.startLogger.log(
-      `Receive request from ${req.method} ${req.originalUrl}`,
-    );
+    this.startLogger.log(`Receive request from ${req.method} ${req.originalUrl}`);
     this.now = Date.now();
   }
 
   public sendResponse(req: Request) {
     this.endLogger.log(
-      `Send response from ${req.method} ${req.originalUrl} :: time taken : ${
-        Date.now() - this.now
-      }ms`,
+      `Send response from ${req.method} ${req.originalUrl} :: time taken : ${Date.now() - this.now}ms`,
     );
   }
 }

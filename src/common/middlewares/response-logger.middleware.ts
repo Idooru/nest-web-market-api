@@ -13,14 +13,10 @@ export class ResponseLoggerMiddleware implements NestMiddleware {
 
       if (400 <= statusCode || statusCode >= 599) {
         logger = loggerFactory("Fail");
-        logger.error(
-          `${method} ${originalUrl} ${ip} - ${statusCode} ${statusMessage}`,
-        );
+        logger.error(`${method} ${originalUrl} ${ip} - ${statusCode} ${statusMessage}`);
       } else {
         logger = loggerFactory("Success");
-        logger.log(
-          `${method} ${originalUrl} ${ip} - ${statusCode} ${statusMessage}`,
-        );
+        logger.log(`${method} ${originalUrl} ${ip} - ${statusCode} ${statusMessage}`);
       }
     });
 

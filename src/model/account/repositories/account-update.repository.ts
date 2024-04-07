@@ -15,9 +15,7 @@ export class AccountUpdateRepository {
   ) {}
 
   @General
-  public async createAccount(
-    createAccountDto: CreateAccountDto,
-  ): Promise<void> {
+  public async createAccount(createAccountDto: CreateAccountDto): Promise<void> {
     const { user, isFirst } = createAccountDto;
 
     await this.accountRepository.save({
@@ -53,9 +51,7 @@ export class AccountUpdateRepository {
   }
 
   @General
-  public async deposit(
-    depositBodyDto: MoneyTransactionDto,
-  ): Promise<AccountEntity> {
+  public async deposit(depositBodyDto: MoneyTransactionDto): Promise<AccountEntity> {
     const { accountId, balance } = depositBodyDto;
     await this.accountRepository
       .createQueryBuilder()
@@ -68,9 +64,7 @@ export class AccountUpdateRepository {
   }
 
   @General
-  public async withdraw(
-    withdrawBodyDto: MoneyTransactionDto,
-  ): Promise<AccountEntity> {
+  public async withdraw(withdrawBodyDto: MoneyTransactionDto): Promise<AccountEntity> {
     const { accountId, balance } = withdrawBodyDto;
     await this.accountRepository
       .createQueryBuilder()

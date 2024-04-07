@@ -30,30 +30,20 @@ export class ReviewUpdateService {
   }
 
   @Transaction
-  public async insertReviewImages(
-    insertReviewImageDto: InsertReviewImageDto,
-  ): Promise<void> {
+  public async insertReviewImages(insertReviewImageDto: InsertReviewImageDto): Promise<void> {
     const { reviewImages, review } = insertReviewImageDto;
     const inserting = reviewImages.map((reviewImage) =>
-      this.reviewOperationRepository.insertReviewIdOnReviewImage(
-        reviewImage,
-        review,
-      ),
+      this.reviewOperationRepository.insertReviewIdOnReviewImage(reviewImage, review),
     );
 
     await Promise.all(inserting);
   }
 
   @Transaction
-  public async insertReviewVideos(
-    insertReviewVideoDto: InsertReviewVideoDto,
-  ): Promise<void> {
+  public async insertReviewVideos(insertReviewVideoDto: InsertReviewVideoDto): Promise<void> {
     const { reviewVideos, review } = insertReviewVideoDto;
     const inserting = reviewVideos.map((reviewVideo) =>
-      this.reviewOperationRepository.insertReviewIdOnReviewVideo(
-        reviewVideo,
-        review,
-      ),
+      this.reviewOperationRepository.insertReviewIdOnReviewVideo(reviewVideo, review),
     );
 
     await Promise.all(inserting);
@@ -63,10 +53,7 @@ export class ReviewUpdateService {
   public async increaseStarRate(starRatingDto: StarRatingDto): Promise<void> {
     const { scoreChosenByClient, starRate } = starRatingDto;
 
-    await this.reviewOperationRepository.increaseStarRate(
-      scoreChosenByClient,
-      starRate,
-    );
+    await this.reviewOperationRepository.increaseStarRate(scoreChosenByClient, starRate);
 
     const updatedStarRate = await this.reviewUtils.calculateStarRate(starRate);
     await this.reviewOperationRepository.renewAverage(updatedStarRate);
@@ -78,17 +65,11 @@ export class ReviewUpdateService {
   }
 
   @Transaction
-  public async changeReviewImages(
-    changeReviewImageDto: ChangeReviewImageDto,
-  ): Promise<void> {
-    const { beforeReviewImages, newReviewImages, review } =
-      changeReviewImageDto;
+  public async changeReviewImages(changeReviewImageDto: ChangeReviewImageDto): Promise<void> {
+    const { beforeReviewImages, newReviewImages, review } = changeReviewImageDto;
 
     const inserting = newReviewImages.map((reviewImage) =>
-      this.reviewOperationRepository.insertReviewIdOnReviewImage(
-        reviewImage,
-        review,
-      ),
+      this.reviewOperationRepository.insertReviewIdOnReviewImage(reviewImage, review),
     );
 
     await Promise.all(inserting);
@@ -103,17 +84,11 @@ export class ReviewUpdateService {
   }
 
   @Transaction
-  public async changeReviewVideos(
-    changeReviewVideoDto: ChangeReviewVideoDto,
-  ): Promise<void> {
-    const { beforeReviewVideos, newReviewVideos, review } =
-      changeReviewVideoDto;
+  public async changeReviewVideos(changeReviewVideoDto: ChangeReviewVideoDto): Promise<void> {
+    const { beforeReviewVideos, newReviewVideos, review } = changeReviewVideoDto;
 
     const inserting = newReviewVideos.map((reviewVideo) =>
-      this.reviewOperationRepository.insertReviewIdOnReviewVideo(
-        reviewVideo,
-        review,
-      ),
+      this.reviewOperationRepository.insertReviewIdOnReviewVideo(reviewVideo, review),
     );
 
     await Promise.all(inserting);
@@ -128,9 +103,7 @@ export class ReviewUpdateService {
   }
 
   @Transaction
-  public async modifyStarRate(
-    modifyStarRateDto: ModifyStarRateDto,
-  ): Promise<void> {
+  public async modifyStarRate(modifyStarRateDto: ModifyStarRateDto): Promise<void> {
     const { scoreChosenByClient, starRate, review } = modifyStarRateDto;
     const beforeScore = review.scoreChosenByClient;
 
@@ -138,10 +111,7 @@ export class ReviewUpdateService {
 
     await Promise.all([
       this.reviewOperationRepository.decreaseStarRate(starRate, beforeScore),
-      this.reviewOperationRepository.increaseStarRate(
-        scoreChosenByClient,
-        starRate,
-      ),
+      this.reviewOperationRepository.increaseStarRate(scoreChosenByClient, starRate),
     ]);
 
     const updatedStarRate = await this.reviewUtils.calculateStarRate(starRate);
@@ -163,16 +133,10 @@ export class ReviewUpdateService {
   }
 
   @Transaction
-  public async decreaseStarRate(
-    review: ReviewEntity,
-    starRate: StarRateEntity,
-  ): Promise<void> {
+  public async decreaseStarRate(review: ReviewEntity, starRate: StarRateEntity): Promise<void> {
     const beforeScore = review.scoreChosenByClient;
 
-    await this.reviewOperationRepository.decreaseStarRate(
-      starRate,
-      beforeScore,
-    );
+    await this.reviewOperationRepository.decreaseStarRate(starRate, beforeScore);
 
     const updatedStarRate = await this.reviewUtils.calculateStarRate(starRate);
     await this.reviewOperationRepository.renewAverage(updatedStarRate);

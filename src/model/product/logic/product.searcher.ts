@@ -4,9 +4,7 @@ import { ProductEntity } from "../entities/product.entity";
 
 @Injectable()
 export class ProductSearcher {
-  constructor(
-    private readonly productSearchRepository: ProductSearchRepository,
-  ) {}
+  constructor(private readonly productSearchRepository: ProductSearchRepository) {}
 
   public findAllProductsFromLatest(): Promise<ProductEntity[]> {
     return this.productSearchRepository.findAllProductsFromLatest();

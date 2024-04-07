@@ -1,14 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { UserRepositoryPayload } from "../logic/transaction/user-repository.payload";
 import { UserEntity } from "../entities/user.entity";
-import {
-  CreateUserAuthDto,
-  CreateUserProfileDto,
-} from "../dtos/register-user.dto";
-import {
-  ModifyUserAuthDto,
-  ModifyUserProfileDto,
-} from "../dtos/modify-user.dto";
+import { CreateUserAuthDto, CreateUserProfileDto } from "../dtos/register-user.dto";
+import { ModifyUserAuthDto, ModifyUserProfileDto } from "../dtos/modify-user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { UserProfileEntity } from "../entities/user-profile.entity";
@@ -45,38 +39,26 @@ export class UserUpdateRepository {
   }
 
   @Transaction
-  public async createUserProfile(
-    createUserProfileDto: CreateUserProfileDto,
-  ): Promise<void> {
+  public async createUserProfile(createUserProfileDto: CreateUserProfileDto): Promise<void> {
     await this.transaction.getRepository().userProfile.save({
       ...createUserProfileDto,
     });
   }
 
   @Transaction
-  public async createUserAuth(
-    createUserAuthDto: CreateUserAuthDto,
-  ): Promise<void> {
-    await this.transaction
-      .getRepository()
-      .userAuth.save({ ...createUserAuthDto });
+  public async createUserAuth(createUserAuthDto: CreateUserAuthDto): Promise<void> {
+    await this.transaction.getRepository().userAuth.save({ ...createUserAuthDto });
   }
 
   @Transaction
-  public async modifyUserProfile(
-    modifyUserProfileDto: ModifyUserProfileDto,
-    id: string,
-  ): Promise<void> {
+  public async modifyUserProfile(modifyUserProfileDto: ModifyUserProfileDto, id: string): Promise<void> {
     await this.transaction.getRepository().userProfile.update(id, {
       ...modifyUserProfileDto,
     });
   }
 
   @Transaction
-  public async modifyUserAuth(
-    modifyUserAuthDto: ModifyUserAuthDto,
-    id: string,
-  ): Promise<void> {
+  public async modifyUserAuth(modifyUserAuthDto: ModifyUserAuthDto, id: string): Promise<void> {
     await this.transaction.getRepository().userAuth.update(id, {
       ...modifyUserAuthDto,
     });
@@ -93,10 +75,7 @@ export class UserUpdateRepository {
   }
 
   @General
-  public async modifyUserPhonenumber(
-    phonenumber: string,
-    id: string,
-  ): Promise<void> {
+  public async modifyUserPhonenumber(phonenumber: string, id: string): Promise<void> {
     await this.userProfileRepository.update(id, { phonenumber });
   }
 

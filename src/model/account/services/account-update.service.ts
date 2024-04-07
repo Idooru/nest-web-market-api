@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-} from "@nestjs/common";
+import { BadRequestException, ForbiddenException, Injectable } from "@nestjs/common";
 import { AccountUpdateRepository } from "../repositories/account-update.repository";
 import { UserSearcher } from "../../user/logic/user.searcher";
 import { AccountBodyDto } from "../dtos/account-body.dto";
@@ -22,10 +18,7 @@ export class AccountUpdateService {
   ) {}
 
   @General
-  public async createAccount(
-    accountBodyDto: AccountBodyDto,
-    userId: string,
-  ): Promise<void> {
+  public async createAccount(accountBodyDto: AccountBodyDto, userId: string): Promise<void> {
     const user = await this.userSearcher.findUserWithId(userId);
     const accounts = await this.accountSearcher.findAccountsWithUserId(userId);
 
@@ -54,18 +47,13 @@ export class AccountUpdateService {
   }
 
   @General
-  public async setMainAccount(
-    accountId: string,
-    userId: string,
-  ): Promise<void> {
+  public async setMainAccount(accountId: string, userId: string): Promise<void> {
     await this.accountUpdateRepository.disableAllAccount(userId);
     await this.accountUpdateRepository.setMainAccount(accountId);
   }
 
   @General
-  public async deposit(
-    depositBodyDto: MoneyTransactionDto,
-  ): Promise<DepositResultDto> {
+  public async deposit(depositBodyDto: MoneyTransactionDto): Promise<DepositResultDto> {
     const result = await this.accountUpdateRepository.deposit(depositBodyDto);
 
     return {
@@ -75,9 +63,7 @@ export class AccountUpdateService {
   }
 
   @General
-  public async withdraw(
-    withdrawBodyDto: MoneyTransactionDto,
-  ): Promise<WithdrawResultDto> {
+  public async withdraw(withdrawBodyDto: MoneyTransactionDto): Promise<WithdrawResultDto> {
     const result = await this.accountUpdateRepository.withdraw(withdrawBodyDto);
 
     return {

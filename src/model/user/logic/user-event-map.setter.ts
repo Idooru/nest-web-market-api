@@ -8,9 +8,7 @@ export class UserEventMapSetter {
     private readonly mailEventMap: Map<string, any>,
   ) {}
 
-  public setRegisterEventParam(
-    sendMailToClientAboutRegisterDto: SendMailToClientAboutRegisterDto,
-  ): void {
-    this.mailEventMap.set("register", sendMailToClientAboutRegisterDto);
+  public setRegisterEventParam(dto: SendMailToClientAboutRegisterDto): void {
+    this.mailEventMap.set("register", dto);
   }
 }

@@ -1,10 +1,7 @@
 import { ApiProperty, PickType } from "@nestjs/swagger";
 import { AccountEntity } from "../entities/account.entity";
 
-export class AccountBodyDto extends PickType(AccountEntity, [
-  "bank",
-  "accountNumber",
-] as const) {
+export class AccountBodyDto extends PickType(AccountEntity, ["bank", "accountNumber"] as const) {
   @ApiProperty({
     description: "사용자 계좌 은행 이름",
     example: "국민은행",

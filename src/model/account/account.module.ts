@@ -12,11 +12,7 @@ import { AccountValidateRepository } from "./repositories/account-validate.repos
 import { AccountValidator } from "./logic/account.validator";
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([AccountEntity]),
-    UserModule,
-    LibraryModule,
-  ],
+  imports: [TypeOrmModule.forFeature([AccountEntity]), UserModule, LibraryModule],
   controllers: [AccountV1Controller],
   providers: [
     AccountSearcher,

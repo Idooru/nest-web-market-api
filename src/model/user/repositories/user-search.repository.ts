@@ -92,9 +92,7 @@ export class UserSearchRepository {
       .getOne();
   }
 
-  public async findClientUserObjectWithId(
-    user: UserEntity,
-  ): Promise<ClientUserEntity> {
+  public async findClientUserObjectWithId(user: UserEntity): Promise<ClientUserEntity> {
     return this.clientUserRepository
       .createQueryBuilder()
       .select(["client", "User", "Auth", "Account"])
@@ -106,9 +104,7 @@ export class UserSearchRepository {
       .getOne();
   }
 
-  public async findAdminUserObjectWithId(
-    user: UserEntity,
-  ): Promise<AdminUserEntity> {
+  public async findAdminUserObjectWithId(user: UserEntity): Promise<AdminUserEntity> {
     return this.adminUserRepository
       .createQueryBuilder()
       .select(["admin", "User", "Account"])
@@ -143,9 +139,7 @@ export class UserSearchRepository {
       .getOne();
   }
 
-  public async findClientUserProfileInfoWithId(
-    id: string,
-  ): Promise<UserEntity> {
+  public async findClientUserProfileInfoWithId(id: string): Promise<UserEntity> {
     const clientUser = await this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.clientUserProfile)

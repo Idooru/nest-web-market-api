@@ -26,25 +26,13 @@ export class JwtExceptionFilter implements ExceptionFilter {
   }
 
   public generateResponseMessage(error: JwtError, res: Response): string {
-    if (
-      error.message === "invalid signature" &&
-      error.whatToken === "access_token"
-    ) {
+    if (error.message === "invalid signature" && error.whatToken === "access_token") {
       return "변조된 access_token입니다.";
-    } else if (
-      error.message === "invalid_signature" &&
-      error.whatToken === "refresh_token"
-    ) {
+    } else if (error.message === "invalid_signature" && error.whatToken === "refresh_token") {
       return "변조된 refresh_token입니다.";
-    } else if (
-      error.message === "jwt expired" &&
-      error.whatToken === "access_token"
-    ) {
+    } else if (error.message === "jwt expired" && error.whatToken === "access_token") {
       return "access_token의 만료기간이 다되었습니다. 토큰을 재발급 받아주세요.";
-    } else if (
-      error.message === "jwt expired" &&
-      error.whatToken === "refresh_token"
-    ) {
+    } else if (error.message === "jwt expired" && error.whatToken === "refresh_token") {
       res.clearCookie("access_token");
       res.clearCookie("refresh_token");
       return "refresh_token의 만료기간이 다되었습니다. 로그아웃 됩니다.";

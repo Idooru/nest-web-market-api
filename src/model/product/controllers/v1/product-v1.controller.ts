@@ -12,14 +12,11 @@ export class ProductV1Controller {
 
   @ApiOperation({
     summary: "find all products from latest",
-    description:
-      "전체 상품 정보를 최신 순서로 가져옵니다. 상품 배열의 길이가 0일 경우 에러를 반환합니다.",
+    description: "전체 상품 정보를 최신 순서로 가져옵니다. 상품 배열의 길이가 0일 경우 에러를 반환합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/")
-  public async findAllProductsFromLatest(): Promise<
-    JsonGeneralInterface<ProductEntity[]>
-  > {
+  public async findAllProductsFromLatest(): Promise<JsonGeneralInterface<ProductEntity[]>> {
     const result = await this.productSearcher.findAllProductsFromLatest();
 
     return {
@@ -31,14 +28,11 @@ export class ProductV1Controller {
 
   @ApiOperation({
     summary: "find all products from oldest",
-    description:
-      "전체 상품 정보를 오래된 순서로 가져옵니다. 상품 배열의 길이가 0일 경우 에러를 반환합니다.",
+    description: "전체 상품 정보를 오래된 순서로 가져옵니다. 상품 배열의 길이가 0일 경우 에러를 반환합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/oldest")
-  public async findAllProductsFromOldest(): Promise<
-    JsonGeneralInterface<ProductEntity[]>
-  > {
+  public async findAllProductsFromOldest(): Promise<JsonGeneralInterface<ProductEntity[]>> {
     const result = await this.productSearcher.findAllProductsFromOldest();
 
     return {
@@ -55,9 +49,7 @@ export class ProductV1Controller {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/:name")
-  public async findProductByName(
-    @Param("name") name: string,
-  ): Promise<JsonGeneralInterface<ProductEntity[]>> {
+  public async findProductByName(@Param("name") name: string): Promise<JsonGeneralInterface<ProductEntity[]>> {
     const result = await this.productSearcher.findProductWithName(name);
 
     return {

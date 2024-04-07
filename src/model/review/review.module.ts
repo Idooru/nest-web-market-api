@@ -1,12 +1,6 @@
 import { ProductModule } from "../product/product.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import {
-  forwardRef,
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  RequestMethod,
-} from "@nestjs/common";
+import { forwardRef, MiddlewareConsumer, Module, NestModule, RequestMethod } from "@nestjs/common";
 import { ReviewEntity } from "./entities/review.entity";
 import { UserModule } from "../user/user.module";
 import { StarRateEntity } from "./entities/star-rate.entity";
