@@ -7,7 +7,7 @@ import { OrderEntity } from "./entities/order.entity";
 import { OrderV1ClientContoller } from "./controllers/v1/order-v1-client.contoller";
 import { OrderTransactionInitializer } from "./logic/transaction/order-transaction.initializer";
 import { OrderTransactionExecutor } from "./logic/transaction/order-transaction.executor";
-import { OrderUpdateService } from "./services/order-update.service";
+import { OrderService } from "./services/order.service";
 import { OrderUpdateRepository } from "./repositories/order-update.repository";
 import { PaymentEntitiy } from "./entities/payment.entitiy";
 import { AccountModule } from "../account/account.module";
@@ -30,7 +30,7 @@ import { OrderTransactionContext } from "./logic/transaction/order-transaction.c
     OrderTransactionExecutor,
     OrderTransactionSearcher,
     OrderTransactionContext,
-    OrderUpdateService,
+    OrderService,
     OrderUpdateRepository,
   ],
 })

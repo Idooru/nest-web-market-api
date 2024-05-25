@@ -1,38 +1,38 @@
 import { Injectable } from "@nestjs/common";
 import { SearchCreateOrderDto } from "../../dto/search-create-order.dto";
-import { OrderUpdateService } from "../../services/order-update.service";
+import { OrderService } from "../../services/order.service";
 
 @Injectable()
 export class OrderTransactionContext {
-  constructor(private readonly orderUpdateService: OrderUpdateService) {}
+  constructor(private readonly orderService: OrderService) {}
 
   public createOrderContext(dto: SearchCreateOrderDto): () => Promise<void> {
     const { clientId, orderBodyDto, clientUser, account, totalPrice, productQuantities } = dto;
 
     return async () => {
       await Promise.all([
-        this.orderUpdateService.deleteAllCarts(clientId),
-        this.orderUpdateService.decreaseProductQuantities(productQuantities),
+        this.orderService.deleteAllCarts(clientId),
+        this.orderService.decreaseProductQuantities(productQuantities),
       ]);
 
-      const order = await this.orderUpdateService.createOrder({
+      const order = await this.orderService.createOrder({
         orderBodyDto,
         totalPrice,
         clientUser,
       });
 
-      await this.orderUpdateService.createPayments({
+      await this.orderService.createPayments({
         productQuantities,
         clientUser,
         order,
       });
 
-      await this.orderUpdateService.withdrawClientBalance({
+      await this.orderService.withdrawClientBalance({
         accountId: account.id,
         balance: totalPrice,
       });
 
-      await this.orderUpdateService.depositAdminBalance(productQuantities);
+      await this.orderService.depositAdminBalance(productQuantities);
     };
   }
 }

@@ -6,7 +6,7 @@ import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-gen
 import { UserEntity } from "../../entities/user.entity";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { UserSearcher } from "../../logic/user.searcher";
-import { UserUpdateService } from "../../services/user-update.service";
+import { UserService } from "../../services/user.service";
 import { UserIdValidatePipe } from "../../pipe/exist/user-id-validate.pipe";
 
 @ApiTags("v1 관리자 User API")
@@ -14,7 +14,7 @@ import { UserIdValidatePipe } from "../../pipe/exist/user-id-validate.pipe";
 @UseGuards(IsLoginGuard)
 @Controller({ path: "/admin/user", version: "1" })
 export class UserV1AdminController {
-  constructor(private readonly userSearcher: UserSearcher, private readonly userUpdateService: UserUpdateService) {}
+  constructor(private readonly userSearcher: UserSearcher, private readonly userService: UserService) {}
 
   @ApiOperation({
     summary: "find all users from latest",
@@ -74,7 +74,7 @@ export class UserV1AdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Delete("/:id")
   public async kickUser(@Param("id", UserIdValidatePipe) id: string): Promise<JsonGeneralInterface<void>> {
-    await this.userUpdateService.deleteUser(id);
+    await this.userService.deleteUser(id);
 
     return {
       statusCode: 200,

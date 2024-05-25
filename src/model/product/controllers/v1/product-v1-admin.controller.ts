@@ -21,7 +21,7 @@ import { JsonClearCookiesInterface } from "src/common/interceptors/interface/jso
 import { ProductTransactionExecutor } from "../../logic/transaction/product-transaction.executor";
 import { ProductSearcher } from "../../logic/product.searcher";
 import { ProductBodyDto } from "../../dto/product-body.dto";
-import { ProductUpdateService } from "../../services/product-update.service";
+import { ProductService } from "../../services/product.service";
 import { ProductNameValidatePipe } from "../../pipe/none-exist/product-name-validate.pipe";
 import { ProductIdValidatePipe } from "../../pipe/exist/product-id-validate.pipe";
 
@@ -33,7 +33,7 @@ export class ProductV1AdminController {
   constructor(
     private readonly productSearcher: ProductSearcher,
     private readonly productTransaction: ProductTransactionExecutor,
-    private readonly productUpdateService: ProductUpdateService,
+    private readonly productService: ProductService,
   ) {}
 
   @ApiOperation({
@@ -139,7 +139,7 @@ export class ProductV1AdminController {
     @Param("id", ProductIdValidatePipe) id: string,
     @Body(ProductNameValidatePipe) { name }: ModifyProductNameDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productUpdateService.modifyProductName(id, name);
+    await this.productService.modifyProductName(id, name);
     return {
       statusCode: 201,
       message: `id(${id})에 해당하는 상품의 이름을 수정하였습니다.`,
@@ -157,7 +157,7 @@ export class ProductV1AdminController {
     @Param("id", ProductIdValidatePipe) id: string,
     @Body() { price }: ModifyProductPriceDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productUpdateService.modifyProductPrice(id, price);
+    await this.productService.modifyProductPrice(id, price);
 
     return {
       statusCode: 201,
@@ -175,7 +175,7 @@ export class ProductV1AdminController {
     @Param("id", ProductIdValidatePipe) id: string,
     @Body() { origin }: ModifyProductOriginDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productUpdateService.modifyProductOrigin(id, origin);
+    await this.productService.modifyProductOrigin(id, origin);
 
     return {
       statusCode: 201,
@@ -193,7 +193,7 @@ export class ProductV1AdminController {
     @Param("id", ProductIdValidatePipe) id: string,
     @Body() { category }: ModifyProductCategoryDto,
   ) {
-    await this.productUpdateService.modifyProductCategory(id, category);
+    await this.productService.modifyProductCategory(id, category);
 
     return {
       statusCode: 201,
@@ -211,7 +211,7 @@ export class ProductV1AdminController {
     @Param("id", ProductIdValidatePipe) id: string,
     @Body() { description }: ModifyProductDesctiptionDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productUpdateService.modifyProductDescription(id, description);
+    await this.productService.modifyProductDescription(id, description);
 
     return {
       statusCode: 201,
@@ -230,7 +230,7 @@ export class ProductV1AdminController {
     @Param("id", ProductIdValidatePipe) id: string,
     @Body() { quantity }: ModifyProductQuantityDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productUpdateService.modifyProductQuantity(id, quantity);
+    await this.productService.modifyProductQuantity(id, quantity);
 
     return {
       statusCode: 201,
@@ -245,7 +245,7 @@ export class ProductV1AdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Delete("/:id")
   public async removeProduct(@Param("id", ProductIdValidatePipe) id: string): Promise<JsonGeneralInterface<null>> {
-    await this.productUpdateService.removeProduct(id);
+    await this.productService.removeProduct(id);
 
     return {
       statusCode: 201,

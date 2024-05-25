@@ -40,9 +40,7 @@ export class MediaSearchRepository {
       .getOne();
   }
 
-  public findBeforeProductImagesWithId(
-    id: string,
-  ): Promise<ProductImageEntity[]> {
+  public findBeforeProductImagesWithId(id: string): Promise<ProductImageEntity[]> {
     return this.productImageRepository
       .createQueryBuilder()
       .select(this.mediaSelect.productImages)
@@ -60,9 +58,7 @@ export class MediaSearchRepository {
       .getOne();
   }
 
-  public findBeforeReviewImagesWithId(
-    id: string,
-  ): Promise<ReviewImageEntity[]> {
+  public findBeforeReviewImagesWithId(id: string): Promise<ReviewImageEntity[]> {
     return this.reviewImageRepository
       .createQueryBuilder()
       .select(this.mediaSelect.reviewImages)
@@ -80,9 +76,7 @@ export class MediaSearchRepository {
       .getOne();
   }
 
-  public findBeforeReviewVideosWithId(
-    id: string,
-  ): Promise<ReviewVideoEntity[]> {
+  public findBeforeReviewVideosWithId(id: string): Promise<ReviewVideoEntity[]> {
     return this.reviewVideoRepository
       .createQueryBuilder()
       .select(this.mediaSelect.reviewVideos)
@@ -91,9 +85,7 @@ export class MediaSearchRepository {
       .getMany();
   }
 
-  public findInquiryRequestImageWithId(
-    id: string,
-  ): Promise<InquiryRequestImageEntity> {
+  public findInquiryRequestImageWithId(id: string): Promise<InquiryRequestImageEntity> {
     return this.inquiryRequestImageRepository
       .createQueryBuilder()
       .select(this.mediaSelect.inquiryRequestImages)
@@ -102,9 +94,7 @@ export class MediaSearchRepository {
       .getOne();
   }
 
-  public findInquiryRequestVideoWithId(
-    id: string,
-  ): Promise<InquiryRequestVideoEntity> {
+  public findInquiryRequestVideoWithId(id: string): Promise<InquiryRequestVideoEntity> {
     return this.inquiryRequestVideoRepository
       .createQueryBuilder()
       .select(this.mediaSelect.inquiryRequestVideos)
@@ -113,9 +103,7 @@ export class MediaSearchRepository {
       .getOne();
   }
 
-  public findInquiryResponseImageWithId(
-    id: string,
-  ): Promise<InquiryResponseImageEntity> {
+  public findInquiryResponseImageWithId(id: string): Promise<InquiryResponseImageEntity> {
     return this.inquiryResponseImageRepository
       .createQueryBuilder()
       .select(this.mediaSelect.inquiryResponseImages)
@@ -124,9 +112,7 @@ export class MediaSearchRepository {
       .getOne();
   }
 
-  public findInquiryResponseVideoWithId(
-    id: string,
-  ): Promise<InquiryResponseVideoEntity> {
+  public findInquiryResponseVideoWithId(id: string): Promise<InquiryResponseVideoEntity> {
     return this.inquiryResponseVideoRepository
       .createQueryBuilder()
       .select(this.mediaSelect.inquiryResponseVideos)

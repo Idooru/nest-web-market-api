@@ -13,11 +13,9 @@ export class MediaUtils {
   ) {}
 
   public setUrl(mediaFileName: string, path: string): string {
-    return `${this.configService.get(
-      "APPLICATION_SCHEME",
-    )}://${this.configService.get("APPLICATION_HOST")}:${this.configService.get(
-      "APPLICATION_PORT",
-    )}/media/${path}/${mediaFileName}`.toLowerCase();
+    return `${this.configService.get("APPLICATION_SCHEME")}://${this.configService.get(
+      "APPLICATION_HOST",
+    )}:${this.configService.get("APPLICATION_PORT")}/media/${path}/${mediaFileName}`.toLowerCase();
   }
 
   public createMediaCookieValues(
@@ -41,22 +39,15 @@ export class MediaUtils {
     url: string;
     size: number;
   }[] {
-    return files.map(
-      (file: Express.Multer.File): { size: number; url: string } => {
-        const url = this.setUrl(file.filename, path);
-        const size = file.size;
+    return files.map((file: Express.Multer.File): { size: number; url: string } => {
+      const url = this.setUrl(file.filename, path);
+      const size = file.size;
 
-        return { url, size };
-      },
-    );
+      return { url, size };
+    });
   }
 
-  public getMediaCookies(
-    ids: string[],
-    files: Express.Multer.File[],
-    path: string,
-    whatCookie: string,
-  ) {
+  public getMediaCookies(ids: string[], files: Express.Multer.File[], path: string, whatCookie: string) {
     const urls = files.map((file) => this.setUrl(file.filename, path));
 
     return this.createMediaCookieValues(ids, files, urls, whatCookie);
@@ -65,8 +56,7 @@ export class MediaUtils {
   public deleteMediaFiles<I extends { url: string }, V extends { url: string }>(
     setDeleteMediaFilesDto: SetDeleteMediaFilesDto<I, V>,
   ): void {
-    const { images, videos, mediaEntity, option, callWhere } =
-      setDeleteMediaFilesDto;
+    const { images, videos, mediaEntity, option, callWhere } = setDeleteMediaFilesDto;
 
     let imagePattern: RegExp;
     let videoPattern: RegExp;
@@ -95,12 +85,8 @@ export class MediaUtils {
       imageFileNames = images ? images.map((image) => image.url) : [];
       videoFileNames = videos ? videos.map((video) => video.url) : [];
     } else {
-      imageFileNames = images
-        ? images.map((image) => image.url.match(imagePattern)[1])
-        : [];
-      videoFileNames = videos
-        ? videos.map((video) => video.url.match(videoPattern)[1])
-        : [];
+      imageFileNames = images ? images.map((image) => image.url.match(imagePattern)[1]) : [];
+      videoFileNames = videos ? videos.map((video) => video.url.match(videoPattern)[1]) : [];
     }
 
     const mediaFiles: DeleteMediaFilesDto = {

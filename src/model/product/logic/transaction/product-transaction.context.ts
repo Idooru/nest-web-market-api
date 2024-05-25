@@ -1,34 +1,34 @@
 import { Injectable } from "@nestjs/common";
 import { SearchCreateProductDto } from "../../dto/search-create-product.dto";
-import { ProductUpdateService } from "../../services/product-update.service";
-import { ProductFactoryService } from "../../services/product-factory.service";
+import { ProductService } from "../../services/product.service";
 import { SearchModifyProductDto } from "../../dto/search-modify-product.dto";
 import { SearchModifyProductImageDto } from "../../dto/search-modify-product-image.dto";
 
 @Injectable()
 export class ProductTransactionContext {
-  constructor(
-    private readonly productUpdateService: ProductUpdateService,
-    private readonly productFactoryService: ProductFactoryService,
-  ) {}
+  constructor(private readonly productService: ProductService) {}
 
   public createProductContext(dto: SearchCreateProductDto): () => Promise<void> {
     const { productBodyDto, productImages, admin } = dto;
 
     return async () => {
-      const product = await this.productUpdateService.createProduct({
+      const product = await this.productService.createProduct({
         productBodyDto,
         admin,
       });
 
-      const createStarRate = this.productFactoryService.getCreateStarRateFunc(product);
+      const starRateWork = async () => {
+        await this.productService.createStarRate(product);
+      };
 
-      const insertProductImage = this.productFactoryService.getInsertProductImageFunc({
-        productImages,
-        product,
-      });
+      const imageWork = async () => {
+        await this.productService.insertProductImages({
+          productImages,
+          product,
+        });
+      };
 
-      await Promise.all([createStarRate(), insertProductImage()]);
+      await Promise.all([starRateWork(), imageWork()]);
     };
   }
 
@@ -36,18 +36,20 @@ export class ProductTransactionContext {
     const { product, productBodyDto, beforeProductImages, newProductImages } = dto;
 
     return async () => {
-      await this.productUpdateService.modifyProduct({
+      await this.productService.modifyProduct({
         productBodyDto,
         product,
       });
 
-      const modifyProductImage = this.productFactoryService.getModifyProductImageFunc({
-        beforeProductImages,
-        newProductImages,
-        product,
-      });
+      const imageWork = async () => {
+        await this.productService.changeProductImages({
+          beforeProductImages,
+          newProductImages,
+          product,
+        });
+      };
 
-      await modifyProductImage();
+      await imageWork();
     };
   }
 
@@ -55,13 +57,15 @@ export class ProductTransactionContext {
     const { product, beforeProductImages, newProductImages } = dto;
 
     return async () => {
-      const modifyProductImage = this.productFactoryService.getModifyProductImageFunc({
-        beforeProductImages,
-        newProductImages,
-        product,
-      });
+      const imageWork = async () => {
+        await this.productService.changeProductImages({
+          beforeProductImages,
+          newProductImages,
+          product,
+        });
+      };
 
-      await modifyProductImage();
+      await imageWork();
     };
   }
 }

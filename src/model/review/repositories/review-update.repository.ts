@@ -14,8 +14,8 @@ export class ReviewUpdateRepository {
   constructor(private readonly transaction: Transactional<ReviewRepositoryPayload>) {}
 
   @Transaction
-  public createReview(createReviewDto: CreateReviewDto): Promise<ReviewEntity> {
-    const { reviewBodyDto, product, clientUser } = createReviewDto;
+  public createReview(dto: CreateReviewDto): Promise<ReviewEntity> {
+    const { reviewBodyDto, product, clientUser } = dto;
 
     return this.transaction.getRepository().review.save({
       ...reviewBodyDto,
@@ -68,8 +68,8 @@ export class ReviewUpdateRepository {
   }
 
   @Transaction
-  public async modifyReview(modifyReviewDto: ModifyReviewDto): Promise<void> {
-    const { review, reviewBodyDto } = modifyReviewDto;
+  public async modifyReview(dto: ModifyReviewDto): Promise<void> {
+    const { review, reviewBodyDto } = dto;
 
     await this.transaction.getRepository().review.update(review.id, {
       ...reviewBodyDto,

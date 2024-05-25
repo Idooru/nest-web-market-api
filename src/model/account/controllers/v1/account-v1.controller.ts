@@ -5,7 +5,7 @@ import { IsLoginGuard } from "../../../../common/guards/authenticate/is-login.gu
 import { JwtAccessTokenPayload } from "../../../auth/jwt/jwt-access-token-payload.interface";
 import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
 import { JsonGeneralInterface } from "../../../../common/interceptors/interface/json-general-interface";
-import { AccountUpdateService } from "../../services/account-update.service";
+import { AccountService } from "../../services/account.service";
 import { AccountBodyDto } from "../../dtos/account-body.dto";
 import { AccountValidatePipe } from "../../pipe/none-exist/account-validate.pipe";
 import { MoneyTransactionDto } from "../../dtos/money-transaction.dto";
@@ -17,7 +17,7 @@ import { IsClientGuard } from "../../../../common/guards/authenticate/is-client.
 @UseGuards(IsLoginGuard)
 @Controller({ path: "/account", version: "1" })
 export class AccountV1Controller {
-  constructor(private readonly accountUpdateService: AccountUpdateService) {}
+  constructor(private readonly accountUpdateService: AccountService) {}
 
   @ApiOperation({
     summary: "create account",

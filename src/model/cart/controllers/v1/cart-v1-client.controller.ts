@@ -1,14 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  UseGuards,
-  UseInterceptors,
-} from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { IsClientGuard } from "../../../../common/guards/authenticate/is-client.guard";
 import { CartBodyDto } from "../../dto/cart-body.dto";
@@ -16,7 +6,7 @@ import { ProductIdValidatePipe } from "../../../product/pipe/exist/product-id-va
 import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "../../../auth/jwt/jwt-access-token-payload.interface";
 import { IsLoginGuard } from "../../../../common/guards/authenticate/is-login.guard";
-import { CartUpdateService } from "../../services/cart-update.service";
+import { CartService } from "../../services/cart.service";
 import { JsonGeneralInterceptor } from "../../../../common/interceptors/general/json-general.interceptor";
 import { JsonGeneralInterface } from "../../../../common/interceptors/interface/json-general-interface";
 import { CartSearcher } from "../../logic/cart.searcher";
@@ -28,10 +18,7 @@ import { CartIdValidatePipe } from "../../pipe/cart-id-validate.pipe";
 @UseGuards(IsLoginGuard)
 @Controller({ path: "/client/cart", version: "1" })
 export class CartV1ClientController {
-  constructor(
-    private readonly cartSearcher: CartSearcher,
-    private readonly cartUpdateService: CartUpdateService,
-  ) {}
+  constructor(private readonly cartSearcher: CartSearcher, private readonly cartService: CartService) {}
 
   @ApiOperation({
     summary: "find carts with id",
@@ -42,9 +29,7 @@ export class CartV1ClientController {
   public async findCartsWithUserId(
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<CartEntity[]>> {
-    const result = await this.cartSearcher.findCartsWithUserId(
-      jwtPayload.userId,
-    );
+    const result = await this.cartSearcher.findCartsWithUserId(jwtPayload.userId);
 
     return {
       statusCode: 200,
@@ -64,7 +49,7 @@ export class CartV1ClientController {
     @GetJWT() jwtPaylaod: JwtAccessTokenPayload,
     @Body() cartBodyDto: CartBodyDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.cartUpdateService.createCart(id, jwtPaylaod.userId, cartBodyDto);
+    await this.cartService.createCart(id, jwtPaylaod.userId, cartBodyDto);
 
     return {
       statusCode: 201,
@@ -83,7 +68,7 @@ export class CartV1ClientController {
     @Param("productId", ProductIdValidatePipe) productId: string,
     @Body() cartBodyDto: CartBodyDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.cartUpdateService.modifyCartWithId({
+    await this.cartService.modifyCartWithId({
       cartId,
       productId,
       cartBodyDto,
@@ -104,7 +89,7 @@ export class CartV1ClientController {
   public async deleteAllCartWithUserId(
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.cartUpdateService.deleteAllCartsWithUserId(jwtPayload.userId);
+    await this.cartService.deleteAllCartsWithUserId(jwtPayload.userId);
 
     return {
       statusCode: 200,
@@ -118,10 +103,8 @@ export class CartV1ClientController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Delete("/:cartId")
-  public async deleteCartWithId(
-    @Param("cartId", CartIdValidatePipe) id: string,
-  ): Promise<JsonGeneralInterface<null>> {
-    await this.cartUpdateService.deleteCartWithId(id);
+  public async deleteCartWithId(@Param("cartId", CartIdValidatePipe) id: string): Promise<JsonGeneralInterface<null>> {
+    await this.cartService.deleteCartWithId(id);
 
     return {
       statusCode: 200,

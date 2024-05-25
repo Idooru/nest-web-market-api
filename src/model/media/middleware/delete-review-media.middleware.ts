@@ -16,9 +16,7 @@ export class DeleteReviewMediaMiddleware implements NestMiddleware {
   @Implemented
   public use(req: Request, res: Response, next: NextFunction): void {
     res.on("finish", () => {
-      const deleteMediaFilesDto: DeleteMediaFilesDto = this.mediaEventMap.get(
-        "delete-review-medias",
-      );
+      const deleteMediaFilesDto: DeleteMediaFilesDto = this.mediaEventMap.get("delete-review-medias");
       this.mediaEventMap.clear();
 
       if (!deleteMediaFilesDto) return;

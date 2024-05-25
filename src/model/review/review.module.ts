@@ -9,9 +9,8 @@ import { MediaModule } from "../media/media.module";
 import { ReviewV1ClientController } from "./controllers/v1/review-v1-client.controller";
 import { reviewSelectProperty } from "src/common/config/repository-select-configs/review.select";
 import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
-import { ReviewFactoryService } from "./services/review-factory.service";
 import { ReviewUpdateRepository } from "./repositories/review-update.repository";
-import { ReviewUpdateService } from "./services/review-update.service";
+import { ReviewService } from "./services/review.service";
 import { ReviewTransactionInitializer } from "./logic/transaction/review-transaction.initializer";
 import { ReviewTransactionExecutor } from "./logic/transaction/review-transaction.executor";
 import { ReviewSearcher } from "./logic/review.searcher";
@@ -41,8 +40,7 @@ import { ReviewTransactionSearcher } from "./logic/transaction/review-transactio
     { provide: Transactional, useClass: ReviewTransactionInitializer },
     ReviewSearcher,
     ReviewTransactionExecutor,
-    ReviewFactoryService,
-    ReviewUpdateService,
+    ReviewService,
     ReviewUpdateRepository,
     ReviewTransactionInitializer,
     ReviewSearchRepository,

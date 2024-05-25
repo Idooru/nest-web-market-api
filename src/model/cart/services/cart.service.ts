@@ -9,7 +9,7 @@ import { loggerFactory } from "../../../common/functions/logger.factory";
 import { General } from "../../../common/decorators/general.decoration";
 
 @Injectable()
-export class CartUpdateService {
+export class CartService {
   constructor(
     private readonly cartUpdateRepository: CartUpdateRepository,
     private readonly cartSearcher: CartSearcher,
@@ -18,12 +18,8 @@ export class CartUpdateService {
   ) {}
 
   @General
-  public async createCart(
-    productId: string,
-    clientUserId: string,
-    cartBodyDto: CartBodyDto,
-  ): Promise<void> {
-    const { quantity, totalPrice } = cartBodyDto;
+  public async createCart(productId: string, clientUserId: string, dto: CartBodyDto): Promise<void> {
+    const { quantity, totalPrice } = dto;
     await this.cartSearcher.validateProduct(clientUserId, productId);
 
     const [clientUser, product] = await Promise.all([
@@ -40,14 +36,14 @@ export class CartUpdateService {
     await this.cartUpdateRepository.createCart({
       product,
       clientUser,
-      cartBodyDto,
+      cartBodyDto: dto,
     });
   }
 
   @General
-  public async modifyCartWithId(modifyCartDto: ModifyCartDto): Promise<void> {
-    const { productId } = modifyCartDto;
-    const { quantity, totalPrice } = modifyCartDto.cartBodyDto;
+  public async modifyCartWithId(dto: ModifyCartDto): Promise<void> {
+    const { productId } = dto;
+    const { quantity, totalPrice } = dto.cartBodyDto;
     const product = await this.productSearcher.findProductWithId(productId);
 
     if (product.price * quantity !== totalPrice) {
@@ -56,7 +52,7 @@ export class CartUpdateService {
       throw new BadRequestException(message);
     }
 
-    await this.cartUpdateRepository.modifyCartWithId(modifyCartDto);
+    await this.cartUpdateRepository.modifyCartWithId(dto);
   }
 
   @General

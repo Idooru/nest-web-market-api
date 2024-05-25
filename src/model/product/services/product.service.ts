@@ -12,7 +12,7 @@ import { Transaction } from "../../../common/decorators/transaction.decorator";
 import { General } from "../../../common/decorators/general.decoration";
 
 @Injectable()
-export class ProductUpdateService {
+export class ProductService {
   constructor(
     private readonly productUpdateRepository: ProductUpdateRepository,
     private readonly productSearcher: ProductSearcher,
@@ -20,8 +20,8 @@ export class ProductUpdateService {
   ) {}
 
   @Transaction
-  public createProduct(createProductDto: CreateProductDto): Promise<ProductEntity> {
-    return this.productUpdateRepository.createProduct(createProductDto);
+  public createProduct(dto: CreateProductDto): Promise<ProductEntity> {
+    return this.productUpdateRepository.createProduct(dto);
   }
 
   @Transaction
@@ -30,8 +30,8 @@ export class ProductUpdateService {
   }
 
   @Transaction
-  public async insertProductImages(insertProductImageDto: InsertProductImageDto): Promise<void> {
-    const { productImages, product } = insertProductImageDto;
+  public async insertProductImages(dto: InsertProductImageDto): Promise<void> {
+    const { productImages, product } = dto;
     const inserting = productImages.map((productImage) =>
       this.productUpdateRepository.insertProductIdOnProductImage(productImage, product),
     );
@@ -40,13 +40,13 @@ export class ProductUpdateService {
   }
 
   @Transaction
-  public async modifyProduct(modifyProductDto: ModifyProductDto): Promise<void> {
-    await this.productUpdateRepository.modifyProduct(modifyProductDto);
+  public async modifyProduct(dto: ModifyProductDto): Promise<void> {
+    await this.productUpdateRepository.modifyProduct(dto);
   }
 
   @Transaction
-  public async changeProductImages(changeProductImageDto: ChangeProductImageDto): Promise<void> {
-    const { beforeProductImages, newProductImages, product } = changeProductImageDto;
+  public async changeProductImages(dto: ChangeProductImageDto): Promise<void> {
+    const { beforeProductImages, newProductImages, product } = dto;
 
     const inserting = newProductImages.map((productImage) =>
       this.productUpdateRepository.insertProductIdOnProductImage(productImage, product),

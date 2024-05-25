@@ -11,7 +11,7 @@ import { Transaction } from "../../../common/decorators/transaction.decorator";
 import { General } from "src/common/decorators/general.decoration";
 
 @Injectable()
-export class UserUpdateService {
+export class UserService {
   constructor(
     private readonly userUpdateRepository: UserUpdateRepository,
     private readonly userSearcher: UserSearcher,
@@ -59,8 +59,8 @@ export class UserUpdateService {
   }
 
   @Transaction
-  public async modifyUser(modifyUserDto: ModifyUserDto, id: string): Promise<void> {
-    const { password, phonenumber, email, nickname, address } = modifyUserDto;
+  public async modifyUser(dto: ModifyUserDto, id: string): Promise<void> {
+    const { password, phonenumber, email, nickname, address } = dto;
 
     const hashed = await this.userSecurity.hashPassword(password, true);
 
@@ -98,8 +98,8 @@ export class UserUpdateService {
   }
 
   @General
-  public async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
-    const { email, password } = resetPasswordDto;
+  public async resetPassword(dto: ResetPasswordDto): Promise<void> {
+    const { email, password } = dto;
     const hashed = await this.userSecurity.hashPassword(password, false);
 
     const user = await this.userSearcher.findUserWithEmail(email);

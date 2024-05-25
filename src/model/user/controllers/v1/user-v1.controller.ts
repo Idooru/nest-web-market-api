@@ -22,7 +22,7 @@ import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { UserTransactionExecutor } from "../../logic/transaction/user-transaction.executor";
 import { UserSecurity } from "../../logic/user.security";
 import { UserSearcher } from "../../logic/user.searcher";
-import { UserUpdateService } from "../../services/user-update.service";
+import { UserService } from "../../services/user.service";
 import { UserOperationValidatePipe } from "../../pipe/none-exist/user-operation-validate.pipe";
 import { UserEmailValidatePipe } from "../../pipe/none-exist/user-email-validate.pipe";
 import { UserPhonenumberValidatePipe } from "../../pipe/none-exist/user-phonenumber-validate.pipe";
@@ -40,7 +40,7 @@ export class UserV1Controller {
     private readonly userTransaction: UserTransactionExecutor,
     private readonly userSearcher: UserSearcher,
     private readonly userSecurity: UserSecurity,
-    private readonly userUpdateService: UserUpdateService,
+    private readonly userService: UserService,
   ) {}
 
   @ApiOperation({
@@ -168,7 +168,7 @@ export class UserV1Controller {
     @Body(UserEmailValidatePipe) { email }: ModifyUserEmailDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userUpdateService.modifyUserEmail(email, jwtPayload.userId);
+    await this.userService.modifyUserEmail(email, jwtPayload.userId);
 
     return {
       statusCode: 201,
@@ -188,7 +188,7 @@ export class UserV1Controller {
     @Body(UserNicknameValidatePipe) { nickname }: ModifyUserNicknameDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userUpdateService.modifyUserNickname(nickname, jwtPayload.userId);
+    await this.userService.modifyUserNickname(nickname, jwtPayload.userId);
 
     return {
       statusCode: 201,
@@ -209,7 +209,7 @@ export class UserV1Controller {
     { phonenumber }: ModifyUserPhonenumberDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userUpdateService.modifyUserPhonenumber(phonenumber, jwtPayload.userId);
+    await this.userService.modifyUserPhonenumber(phonenumber, jwtPayload.userId);
 
     return {
       statusCode: 201,
@@ -228,7 +228,7 @@ export class UserV1Controller {
     @Body() { password }: ModifyUserPasswordDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userUpdateService.modifyUserPassword(password, jwtPayload.userId);
+    await this.userService.modifyUserPassword(password, jwtPayload.userId);
 
     return {
       statusCode: 201,
@@ -247,7 +247,7 @@ export class UserV1Controller {
     @Body() { address }: ModifyUserAddressDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.userUpdateService.modifyUserAddress(address, jwtPayload.userId);
+    await this.userService.modifyUserAddress(address, jwtPayload.userId);
 
     return {
       statusCode: 201,
@@ -260,7 +260,7 @@ export class UserV1Controller {
   @UseGuards(IsLoginGuard)
   @Delete("/secession")
   public async secession(@GetJWT() jwtPayload: JwtAccessTokenPayload): Promise<LogoutInterface> {
-    await this.userUpdateService.deleteUser(jwtPayload.userId);
+    await this.userService.deleteUser(jwtPayload.userId);
 
     return {
       statusCode: 203,
@@ -298,7 +298,7 @@ export class UserV1Controller {
   @UseGuards(IsNotLoginGuard)
   @Patch("/reset-password")
   public async resetPassword(@Body() resetPasswordDto: ResetPasswordDto): Promise<JsonGeneralInterface<void>> {
-    await this.userUpdateService.resetPassword(resetPasswordDto);
+    await this.userService.resetPassword(resetPasswordDto);
 
     return {
       statusCode: 200,

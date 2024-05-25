@@ -18,7 +18,7 @@ import { UserSearcher } from "./logic/user.searcher";
 import { UserSecurity } from "./logic/user.security";
 import { UserUpdateRepository } from "./repositories/user-update.repository";
 import { UserSearchRepository } from "./repositories/user-search.repository";
-import { UserUpdateService } from "./services/user-update.service";
+import { UserService } from "./services/user.service";
 import { UserTransactionInitializer } from "./logic/transaction/user-transaction.initializer";
 import { UserValidateRepository } from "./repositories/user-validate.repository";
 import { UserValidator } from "./logic/user.validator";
@@ -50,12 +50,12 @@ import { UserTransactionContext } from "./logic/transaction/user-transaction.con
     UserTransactionContext,
     UserEventMapSetter,
     UserRegisterEventMiddleware,
-    UserUpdateService,
+    UserService,
     UserSearchRepository,
     UserUpdateRepository,
     UserValidateRepository,
   ],
-  exports: [UserSearcher, UserValidator, UserUpdateService],
+  exports: [UserSearcher, UserValidator, UserService],
 })
 export class UserModule implements NestModule {
   public configure(consumer: MiddlewareConsumer): void {

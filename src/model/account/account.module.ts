@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AccountEntity } from "./entities/account.entity";
 import { AccountV1Controller } from "./controllers/v1/account-v1.controller";
-import { AccountUpdateService } from "./services/account-update.service";
+import { AccountService } from "./services/account.service";
 import { AccountUpdateRepository } from "./repositories/account-update.repository";
 import { LibraryModule } from "../../common/lib/library.module";
 import { UserModule } from "../user/user.module";
@@ -17,7 +17,7 @@ import { AccountValidator } from "./logic/account.validator";
   providers: [
     AccountSearcher,
     AccountValidator,
-    AccountUpdateService,
+    AccountService,
     AccountUpdateRepository,
     AccountSearchRepository,
     AccountValidateRepository,

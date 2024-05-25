@@ -8,25 +8,17 @@ import path from "path";
 @Injectable()
 export class MediaFileEraser {
   @OnEvent(eventConfigs.deleteMediaFile, { async: true })
-  public async deleteMediaFile(deleteMediaFilesDto: DeleteMediaFilesDto) {
+  public async deleteMediaFile(deleteMediaFilesDto: DeleteMediaFilesDto): Promise<void> {
     deleteMediaFilesDto.imageFiles.fileName.forEach((image) => {
       const prefix = deleteMediaFilesDto.imageFiles.imagePrefix;
       const mediaFilePrefix = prefix.concat("/").concat(image);
-      const mediaFileUrl = path.join(
-        __dirname,
-        "../../../../uploads",
-        mediaFilePrefix,
-      );
+      const mediaFileUrl = path.join(__dirname, "../../../../uploads", mediaFilePrefix);
       fs.unlink(mediaFileUrl);
     });
     deleteMediaFilesDto.videoFiles.fileName.forEach((video) => {
       const prefix = deleteMediaFilesDto.videoFiles.videoPrefix;
       const mediaFilePrefix = prefix.concat("/").concat(video);
-      const mediaFileUrl = path.join(
-        __dirname,
-        "../../../../uploads",
-        mediaFilePrefix,
-      );
+      const mediaFileUrl = path.join(__dirname, "../../../../uploads", mediaFilePrefix);
       fs.unlink(mediaFileUrl);
     });
   }

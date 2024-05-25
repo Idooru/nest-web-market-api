@@ -11,61 +11,39 @@ import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
 
 @Injectable()
-export class InquiryUpdateService {
-  constructor(
-    private readonly inquiryOperationRepository: InquiryUpdateRepository,
-  ) {}
+export class InquiryService {
+  constructor(private readonly inquiryOperationRepository: InquiryUpdateRepository) {}
 
   @Transaction
-  public createInquiryRequest(
-    createInquiryRequestDto: CreateInquiryRequestDto,
-  ): Promise<InquiryRequestEntity> {
-    return this.inquiryOperationRepository.createInquiryRequest(
-      createInquiryRequestDto,
-    );
+  public createInquiryRequest(dto: CreateInquiryRequestDto): Promise<InquiryRequestEntity> {
+    return this.inquiryOperationRepository.createInquiryRequest(dto);
   }
 
   @Transaction
-  public async insertInquiryRequestImages(
-    insertInquiryRequestImageDto: InsertInquiryRequestImageDto,
-  ): Promise<void> {
-    const { inquiryRequestImages, inquiryRequest } =
-      insertInquiryRequestImageDto;
+  public async insertInquiryRequestImages(dto: InsertInquiryRequestImageDto): Promise<void> {
+    const { inquiryRequestImages, inquiryRequest } = dto;
 
     const inserting = inquiryRequestImages.map((inquiryRequestImage) =>
-      this.inquiryOperationRepository.insertInquiryReuqestIdOnInquiryRequestImage(
-        inquiryRequestImage,
-        inquiryRequest,
-      ),
+      this.inquiryOperationRepository.insertInquiryReuqestIdOnInquiryRequestImage(inquiryRequestImage, inquiryRequest),
     );
 
     await Promise.all(inserting);
   }
 
   @Transaction
-  public async insertInquiryRequestVideos(
-    insertInquiryRequestVideoDto: InsertInquiryRequestVideoDto,
-  ): Promise<void> {
-    const { inquiryRequestVideos, inquiryRequest } =
-      insertInquiryRequestVideoDto;
+  public async insertInquiryRequestVideos(dto: InsertInquiryRequestVideoDto): Promise<void> {
+    const { inquiryRequestVideos, inquiryRequest } = dto;
 
     const inserting = inquiryRequestVideos.map((inquiryRequestVideo) =>
-      this.inquiryOperationRepository.insertInquiryRequestIdOnInquiryRequestVideo(
-        inquiryRequestVideo,
-        inquiryRequest,
-      ),
+      this.inquiryOperationRepository.insertInquiryRequestIdOnInquiryRequestVideo(inquiryRequestVideo, inquiryRequest),
     );
 
     await Promise.all(inserting);
   }
 
   @Transaction
-  public createInquiryResponse(
-    createInquiryResponseDto: CreateInquiryResponseDto,
-  ): Promise<InquiryResponseEntity> {
-    return this.inquiryOperationRepository.createInquiryResponse(
-      createInquiryResponseDto,
-    );
+  public createInquiryResponse(dto: CreateInquiryResponseDto): Promise<InquiryResponseEntity> {
+    return this.inquiryOperationRepository.createInquiryResponse(dto);
   }
 
   @Transaction
@@ -74,11 +52,8 @@ export class InquiryUpdateService {
   }
 
   @Transaction
-  public async insertInquiryResponseImages(
-    insertInquiryResponseImageDto: InsertInquiryResponseImageDto,
-  ): Promise<void> {
-    const { inquiryResponseImages, inquiryResponse } =
-      insertInquiryResponseImageDto;
+  public async insertInquiryResponseImages(dto: InsertInquiryResponseImageDto): Promise<void> {
+    const { inquiryResponseImages, inquiryResponse } = dto;
 
     const inserting = inquiryResponseImages.map((inquiryResponseImage) =>
       this.inquiryOperationRepository.insertInquiryResponseIdOnInquiryResponseImage(
@@ -91,11 +66,8 @@ export class InquiryUpdateService {
   }
 
   @Transaction
-  public async insertInquiryResponseVideos(
-    insertInquiryResponseVideoDto: InsertInquiryResponseVideoDto,
-  ): Promise<void> {
-    const { inquiryResponseVideos, inquiryResponse } =
-      insertInquiryResponseVideoDto;
+  public async insertInquiryResponseVideos(dto: InsertInquiryResponseVideoDto): Promise<void> {
+    const { inquiryResponseVideos, inquiryResponse } = dto;
 
     const inserting = inquiryResponseVideos.map((inquiryResponseVideo) =>
       this.inquiryOperationRepository.insertInquiryResponseIdOnInquiryResponseVideo(

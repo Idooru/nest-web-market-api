@@ -8,11 +8,11 @@ export class AccountValidatePipe implements PipeTransform {
   constructor(private readonly accountValidator: AccountValidator) {}
 
   @Implemented
-  public async transform(body: AccountBodyDto): Promise<AccountBodyDto> {
-    const { accountNumber } = body;
+  public async transform(dto: AccountBodyDto): Promise<AccountBodyDto> {
+    const { accountNumber } = dto;
 
     await this.accountValidator.isNoneExistAccountNumber(accountNumber);
 
-    return body;
+    return dto;
   }
 }

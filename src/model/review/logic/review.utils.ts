@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-} from "@nestjs/common";
+import { BadRequestException, ForbiddenException, Injectable } from "@nestjs/common";
 import { ProductEntity } from "../../product/entities/product.entity";
 import { ClientUserEntity } from "../../user/entities/client-user.entity";
 import { ProductSearcher } from "../../product/logic/product.searcher";
@@ -20,16 +16,9 @@ export class ReviewUtils {
     private readonly reviewSearcher: ReviewSearcher,
   ) {}
 
-  private async distinguishOwnReview(
-    reviewId: string,
-    userId: string,
-  ): Promise<ReviewEntity> {
-    const clientUser = await this.userSearcher.findClientUserObjectWithId(
-      userId,
-    );
-    const reviews = await this.reviewSearcher.findAllClientsReviews(
-      clientUser.id,
-    );
+  private async distinguishOwnReview(reviewId: string, userId: string): Promise<ReviewEntity> {
+    const clientUser = await this.userSearcher.findClientUserObjectWithId(userId);
+    const reviews = await this.reviewSearcher.findAllClientsReviews(clientUser.id);
     const review = reviews.find((review) => review.id === reviewId);
 
     if (!review) {
@@ -48,23 +37,15 @@ export class ReviewUtils {
     }
   }
 
-  public getProductAndClient(
-    productId: string,
-    userId: string,
-  ): Promise<[ProductEntity, ClientUserEntity]> {
+  public getProductAndClient(productId: string, userId: string): Promise<[ProductEntity, ClientUserEntity]> {
     return Promise.all([
       this.productSearcher.findProductWithId(productId),
       this.userSearcher.findClientUserObjectWithId(userId),
     ]);
   }
 
-  public checkBeforeCreate(
-    product: ProductEntity,
-    clientUser: ClientUserEntity,
-  ) {
-    const alreadyWriten = product.Review.find(
-      (review) => review.reviewer.id === clientUser.id,
-    );
+  public checkBeforeCreate(product: ProductEntity, clientUser: ClientUserEntity) {
+    const alreadyWriten = product.Review.find((review) => review.reviewer.id === clientUser.id);
 
     if (alreadyWriten) {
       const message = `해당 사용자(${clientUser.id})는 해당 상품(${product.id})에 대한 리뷰를 이미 남겼습니다.`;
@@ -73,19 +54,14 @@ export class ReviewUtils {
     }
   }
 
-  public async checkBeforeModify(
-    reviewId: string,
-    userId: string,
-  ): Promise<ReviewEntity> {
+  public async checkBeforeModify(reviewId: string, userId: string): Promise<ReviewEntity> {
     const review = await this.distinguishOwnReview(reviewId, userId);
     this.checkModifyCount(review);
 
     return review;
   }
 
-  public async calculateStarRate(
-    starRate: StarRateEntity,
-  ): Promise<StarRateEntity> {
+  public async calculateStarRate(starRate: StarRateEntity): Promise<StarRateEntity> {
     const starRateProperty = Object.entries(starRate);
 
     const sum: number = starRateProperty

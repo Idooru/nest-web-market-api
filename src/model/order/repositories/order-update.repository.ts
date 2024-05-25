@@ -12,6 +12,7 @@ import { Transactional } from "../../../common/interfaces/initializer/transactio
 import { OrderRepositoryPayload } from "../logic/transaction/order-repository.payload";
 import { MoneyTransactionDto } from "../../account/dtos/money-transaction.dto";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
+import { DecreaseProductQuantityDto } from "../dto/decrease-product-quantity.dto";
 
 @Injectable()
 export class OrderUpdateRepository {
@@ -29,8 +30,8 @@ export class OrderUpdateRepository {
   }
 
   @Transaction
-  public async decreaseProductQuantity(productQuantity: { product: ProductEntity; quantity: number }): Promise<void> {
-    const { product, quantity } = productQuantity;
+  public async decreaseProductQuantity(dto: DecreaseProductQuantityDto): Promise<void> {
+    const { product, quantity } = dto;
     await this.transaction
       .getRepository()
       .product.createQueryBuilder()
@@ -41,8 +42,8 @@ export class OrderUpdateRepository {
   }
 
   @Transaction
-  public createOrder(createOrderDto: CreateOrderDto): Promise<OrderEntity> {
-    const { orderBodyDto, clientUser, totalPrice } = createOrderDto;
+  public createOrder(dto: CreateOrderDto): Promise<OrderEntity> {
+    const { orderBodyDto, clientUser, totalPrice } = dto;
     const { deliveryOption, deliveryAddress } = orderBodyDto;
 
     return this.transaction.getRepository().order.save({
@@ -54,8 +55,8 @@ export class OrderUpdateRepository {
   }
 
   @Transaction
-  public async createPayment(createPaymentDto: CreatePaymentDto): Promise<void> {
-    const { clientUser, productQuantity, order } = createPaymentDto;
+  public async createPayment(dto: CreatePaymentDto): Promise<void> {
+    const { clientUser, productQuantity, order } = dto;
     const { product, quantity } = productQuantity;
     const totalPrice = product.price * quantity;
 
@@ -69,8 +70,8 @@ export class OrderUpdateRepository {
   }
 
   @Transaction
-  public async withdrawClientBalance(withdrawDto: MoneyTransactionDto): Promise<AccountEntity> {
-    const { accountId, balance } = withdrawDto;
+  public async withdrawClientBalance(dto: MoneyTransactionDto): Promise<AccountEntity> {
+    const { accountId, balance } = dto;
     await this.transaction
       .getRepository()
       .account.createQueryBuilder()
@@ -92,8 +93,8 @@ export class OrderUpdateRepository {
   }
 
   @Transaction
-  public async depositAdminBalance(depositDto: DepositAdminBalanceDto): Promise<void> {
-    const { userId, balance, totalPrice } = depositDto;
+  public async depositAdminBalance(dto: DepositAdminBalanceDto): Promise<void> {
+    const { userId, balance, totalPrice } = dto;
     const depositBalance = balance + totalPrice;
 
     await this.transaction

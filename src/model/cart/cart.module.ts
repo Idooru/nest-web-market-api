@@ -1,6 +1,6 @@
 import { forwardRef, Module } from "@nestjs/common";
 import { CartV1ClientController } from "./controllers/v1/cart-v1-client.controller";
-import { CartUpdateService } from "./services/cart-update.service";
+import { CartService } from "./services/cart.service";
 import { CartSearchRepository } from "./repositories/cart-search.repository";
 import { CartUpdateRepository } from "./repositories/cart-update.repository";
 import { CartSearcher } from "./logic/cart.searcher";
@@ -25,13 +25,13 @@ import { OrderModule } from "../order/order.module";
   controllers: [CartV1ClientController],
   providers: [
     { provide: "CartsSelectProperty", useValue: cartSelectProperty },
-    CartUpdateService,
+    CartService,
     CartSearchRepository,
     CartUpdateRepository,
     CartValidateRepository,
     CartSearcher,
     CartValidator,
   ],
-  exports: [CartSearcher, CartUpdateService],
+  exports: [CartSearcher, CartService],
 })
 export class CartModule {}

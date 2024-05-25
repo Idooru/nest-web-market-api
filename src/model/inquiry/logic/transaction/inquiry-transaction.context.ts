@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { InquiryUpdateService } from "../../services/inquiry-update.service";
-import { InquiryFactoryService } from "../../services/inquiry-factory.service";
+import { InquiryService } from "../../services/inquiry.service";
 import { InquiryEventMapSetter } from "../inquiry-event-map.setter";
 import { SearchCreateInquiryRequestDto } from "../../dto/request/search-create-inquiry-request.dto";
 import { SearchCreateInquiryResponseDto } from "../../dto/response/search-create-inquiry-response.dto";
@@ -8,41 +7,33 @@ import { SearchCreateInquiryResponseDto } from "../../dto/response/search-create
 @Injectable()
 export class InquiryTransactionContext {
   constructor(
-    private readonly inquiryUpdateService: InquiryUpdateService,
-    private readonly inquiryFactoryService: InquiryFactoryService,
+    private readonly inquieryService: InquiryService,
     private readonly inquiryEventMapSetter: InquiryEventMapSetter,
   ) {}
 
-  public createInquiryRequestContext(
-    dto: SearchCreateInquiryRequestDto,
-  ): () => Promise<void> {
-    const {
-      inquiryRequestImages,
-      inquiryRequestVideos,
-      inquiryRequestBodyDto,
-      product,
-      clientUser,
-    } = dto;
+  public createInquiryRequestContext(dto: SearchCreateInquiryRequestDto): () => Promise<void> {
+    const { inquiryRequestImages, inquiryRequestVideos, inquiryRequestBodyDto, product, clientUser } = dto;
 
     return async () => {
-      const inquiryRequest =
-        await this.inquiryUpdateService.createInquiryRequest({
-          inquiryRequestBodyDto,
-          product,
-          clientUser,
-        });
+      const inquiryRequest = await this.inquieryService.createInquiryRequest({
+        inquiryRequestBodyDto,
+        product,
+        clientUser,
+      });
 
-      const imageWork =
-        this.inquiryFactoryService.getInsertInquiryRequestImagesFunc({
+      const imageWork = async () => {
+        await this.inquieryService.insertInquiryRequestImages({
           inquiryRequestImages,
           inquiryRequest,
         });
+      };
 
-      const videoWork =
-        this.inquiryFactoryService.getInsertInquiryRequestVideosFunc({
+      const videoWork = async () => {
+        await this.inquieryService.insertInquiryRequestVideos({
           inquiryRequestVideos,
           inquiryRequest,
         });
+      };
 
       this.inquiryEventMapSetter.setClientEventParam({
         product,
@@ -54,9 +45,7 @@ export class InquiryTransactionContext {
     };
   }
 
-  public createInquiryResponseContext(
-    dto: SearchCreateInquiryResponseDto,
-  ): () => Promise<void> {
+  public createInquiryResponseContext(dto: SearchCreateInquiryResponseDto): () => Promise<void> {
     const {
       inquiryRequest,
       inquiryResponseBodyDto,
@@ -67,28 +56,27 @@ export class InquiryTransactionContext {
     } = dto;
 
     return async () => {
-      const inquiryResponse =
-        await this.inquiryUpdateService.createInquiryResponse({
-          inquiryResponseBodyDto,
-          admin: inquiryResponser,
-          inquiryRequest,
-        });
+      const inquiryResponse = await this.inquieryService.createInquiryResponse({
+        inquiryResponseBodyDto,
+        admin: inquiryResponser,
+        inquiryRequest,
+      });
 
-      await this.inquiryUpdateService.modifyInquiryRequestAnswerState(
-        inquiryRequest.id,
-      );
+      await this.inquieryService.modifyInquiryRequestAnswerState(inquiryRequest.id);
 
-      const imageWork =
-        this.inquiryFactoryService.getInsertInquiryResponseImagesFunc({
+      const imageWork = async () => {
+        await this.inquieryService.insertInquiryResponseImages({
           inquiryResponseImages,
           inquiryResponse,
         });
+      };
 
-      const videoWork =
-        this.inquiryFactoryService.getInsertInquiryResponseVideosFunc({
+      const videoWork = async () => {
+        await this.inquieryService.insertInquiryResponseVideos({
           inquiryResponseVideos,
           inquiryResponse,
         });
+      };
 
       this.inquiryEventMapSetter.setAdminEventParam({
         inquiryRequester,

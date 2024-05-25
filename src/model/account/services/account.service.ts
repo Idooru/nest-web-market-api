@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable } from "@nestjs/common";
 import { AccountUpdateRepository } from "../repositories/account-update.repository";
 import { UserSearcher } from "../../user/logic/user.searcher";
 import { AccountBodyDto } from "../dtos/account-body.dto";
@@ -10,7 +10,7 @@ import { WithdrawResultDto } from "../dtos/withdraw-result.dto";
 import { General } from "../../../common/decorators/general.decoration";
 
 @Injectable()
-export class AccountUpdateService {
+export class AccountService {
   constructor(
     private readonly userSearcher: UserSearcher,
     private readonly accountSearcher: AccountSearcher,
@@ -18,7 +18,7 @@ export class AccountUpdateService {
   ) {}
 
   @General
-  public async createAccount(accountBodyDto: AccountBodyDto, userId: string): Promise<void> {
+  public async createAccount(dto: AccountBodyDto, userId: string): Promise<void> {
     const user = await this.userSearcher.findUserWithId(userId);
     const accounts = await this.accountSearcher.findAccountsWithUserId(userId);
 
@@ -28,13 +28,13 @@ export class AccountUpdateService {
       throw new ForbiddenException(message);
     } else if (accounts.length) {
       await this.accountUpdateRepository.createAccount({
-        accountBodyDto,
+        accountBodyDto: dto,
         user,
         isFirst: false,
       });
     } else {
       await this.accountUpdateRepository.createAccount({
-        accountBodyDto,
+        accountBodyDto: dto,
         user,
         isFirst: true,
       });
@@ -53,21 +53,21 @@ export class AccountUpdateService {
   }
 
   @General
-  public async deposit(depositBodyDto: MoneyTransactionDto): Promise<DepositResultDto> {
-    const result = await this.accountUpdateRepository.deposit(depositBodyDto);
+  public async deposit(dto: MoneyTransactionDto): Promise<DepositResultDto> {
+    const result = await this.accountUpdateRepository.deposit(dto);
 
     return {
-      depositBalance: depositBodyDto.balance,
+      depositBalance: dto.balance,
       afterDepositBalance: result.balance,
     };
   }
 
   @General
-  public async withdraw(withdrawBodyDto: MoneyTransactionDto): Promise<WithdrawResultDto> {
-    const result = await this.accountUpdateRepository.withdraw(withdrawBodyDto);
+  public async withdraw(dto: MoneyTransactionDto): Promise<WithdrawResultDto> {
+    const result = await this.accountUpdateRepository.withdraw(dto);
 
     return {
-      withdrawBalance: withdrawBodyDto.balance,
+      withdrawBalance: dto.balance,
       afterWithdrawBalance: result.balance,
     };
   }

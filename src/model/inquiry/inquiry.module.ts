@@ -1,9 +1,4 @@
-import {
-  Module,
-  forwardRef,
-  NestModule,
-  MiddlewareConsumer,
-} from "@nestjs/common";
+import { Module, forwardRef, NestModule, MiddlewareConsumer } from "@nestjs/common";
 import { InquiryV1ClientController } from "./controllers/inquiry-v1-client.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { InquiryRequestEntity } from "src/model/inquiry/entities/inquiry-request.entity";
@@ -17,13 +12,12 @@ import { InquiryResponseEntity } from "./entities/inquiry-response.entity";
 import { inquirySelectProperty } from "src/common/config/repository-select-configs/inquiry.select";
 import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 import { InquirySearcher } from "./logic/inquiry.searcher";
-import { InquiryUpdateService } from "./services/inquiry-update.service";
+import { InquiryService } from "./services/inquiry.service";
 import { InquirySearchRepository } from "./repositories/inquiry-search.repository";
 import { InquiryTransactionExecutor } from "./logic/transaction/inquiry-transaction.executor";
 import { InquiryUpdateRepository } from "./repositories/inquiry-update.repository";
 import { InquiryTransactionInitializer } from "./logic/transaction/inquiry-transaction.initializer";
 import { InquiryUtils } from "./logic/inquiry.utils";
-import { InquiryFactoryService } from "./services/inquiry-factory.service";
 import { InquiryRequestIdValidatePipe } from "./pipe/exist/inquiry-request-id-validate.pipe";
 import { InquiryValidator } from "./logic/inquiry.validator";
 import { InquiryValidateRepository } from "./repositories/inquiry-validate.repository";
@@ -60,9 +54,8 @@ import { InquiryTransactionContext } from "./logic/transaction/inquiry-transacti
     InquiryTransactionExecutor,
     InquiryTransactionSearcher,
     InquiryTransactionContext,
-    InquiryUpdateService,
+    InquiryService,
     InquiryUpdateRepository,
-    InquiryFactoryService,
     InquiryUtils,
     InquiryRequestIdValidatePipe,
     InquiryValidator,

@@ -23,7 +23,7 @@ import { productSelectProperty } from "../../common/config/repository-select-con
 import { MediaValidator } from "./logic/media.validator";
 import { MediaUtils } from "./logic/media.utils";
 import { MediaUpdateRepository } from "./repositories/media-update.repository";
-import { MediaUpdateService } from "./services/media-update.service";
+import { MediaService } from "./services/media.service";
 import { deleteMediaEventMap } from "../../common/config/event-configs";
 import { MediaEventMapSetter } from "./logic/media-event-map.setter";
 import { DeleteProductMediaMiddleware } from "./middleware/delete-product-media.middleware";
@@ -65,7 +65,7 @@ import { DeleteInquiryResponseMediaMiddleware } from "./middleware/delete-inquir
     DeleteInquiryRequestMediaMiddleware,
     DeleteInquiryResponseMediaMiddleware,
     MediaFileEraser,
-    MediaUpdateService,
+    MediaService,
     MediaUpdateRepository,
     MediaSearchRepository,
   ],

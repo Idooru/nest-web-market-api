@@ -9,7 +9,7 @@ import { MoneyTransactionDto } from "../../account/dtos/money-transaction.dto";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
 
 @Injectable()
-export class OrderUpdateService {
+export class OrderService {
   constructor(private readonly orderUpdateRepository: OrderUpdateRepository) {}
 
   @Transaction

@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { ReviewUpdateService } from "../../services/review-update.service";
-import { ReviewFactoryService } from "../../services/review-factory.service";
+import { ReviewService } from "../../services/review.service";
 import { SearchCreateReviewDto } from "../../dto/search-create-review.dto";
 import { SearchModifyReviewDto } from "../../dto/search-modify-review.dto";
 import { MediaUtils } from "../../../media/logic/media.utils";
@@ -8,36 +7,38 @@ import { SearchDeleteReviewDto } from "../../../product/dto/search-delete-review
 
 @Injectable()
 export class ReviewTransactionContext {
-  constructor(
-    private readonly reviewUpdateService: ReviewUpdateService,
-    private readonly reviewFactoryService: ReviewFactoryService,
-    private readonly mediaUtils: MediaUtils,
-  ) {}
+  constructor(private readonly reviewService: ReviewService, private readonly mediaUtils: MediaUtils) {}
 
   public createReviewContext(dto: SearchCreateReviewDto): () => Promise<void> {
     const { product, reviewBodyDto, reviewImages, reviewVideos, starRate, clientUser } = dto;
 
     return async () => {
-      const review = await this.reviewUpdateService.createReview({
+      const review = await this.reviewService.createReview({
         reviewBodyDto,
         product,
         clientUser,
       });
 
-      const imageWork = this.reviewFactoryService.getInsertReviewImagesFunc({
-        reviewImages,
-        review,
-      });
+      const imageWork = async () => {
+        await this.reviewService.insertReviewImages({
+          reviewImages,
+          review,
+        });
+      };
 
-      const videoWork = this.reviewFactoryService.getInsertReviewVideosFunc({
-        reviewVideos,
-        review,
-      });
+      const videoWork = async () => {
+        await this.reviewService.insertReviewVideos({
+          reviewVideos,
+          review,
+        });
+      };
 
-      const starRateWork = this.reviewFactoryService.getIncreaseStarRateFunc({
-        scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
-        starRate,
-      });
+      const starRateWork = async () => {
+        await this.reviewService.increaseStarRate({
+          scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
+          starRate,
+        });
+      };
 
       await Promise.all([imageWork(), videoWork(), starRateWork()]);
     };
@@ -55,31 +56,37 @@ export class ReviewTransactionContext {
     } = dto;
 
     return async () => {
-      await this.reviewUpdateService.modifyReview({ reviewBodyDto, review });
+      await this.reviewService.modifyReview({ reviewBodyDto, review });
 
-      const imageWork = this.reviewFactoryService.getChangeReviewImagesFunc({
-        beforeReviewImages,
-        newReviewImages,
-        review,
-      });
+      const imageWork = async () => {
+        await this.reviewService.changeReviewImages({
+          beforeReviewImages,
+          newReviewImages,
+          review,
+        });
+      };
 
-      const videoWork = this.reviewFactoryService.getChangeReviewVideosFunc({
-        beforeReviewVideos,
-        newReviewVideos,
-        review,
-      });
+      const videoWork = async () => {
+        await this.reviewService.changeReviewVideos({
+          beforeReviewVideos,
+          newReviewVideos,
+          review,
+        });
+      };
+
+      const starRateWork = async () => {
+        await this.reviewService.modifyStarRate({
+          review,
+          starRate,
+          scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
+        });
+      };
 
       this.mediaUtils.deleteMediaFiles({
         images: beforeReviewImages,
         videos: beforeReviewVideos,
         mediaEntity: "review",
         callWhere: "remove media entity",
-      });
-
-      const starRateWork = this.reviewFactoryService.getModifyStarRateFunc({
-        review,
-        starRate,
-        scoreChosenByClient: reviewBodyDto.scoreChosenByClient,
       });
 
       await Promise.all([imageWork(), videoWork(), starRateWork()]);
@@ -91,8 +98,8 @@ export class ReviewTransactionContext {
 
     return async () => {
       await Promise.all([
-        this.reviewUpdateService.deleteReviewWithId(review.id),
-        this.reviewUpdateService.decreaseStarRate(review, starRate),
+        this.reviewService.deleteReviewWithId(review.id),
+        this.reviewService.decreaseStarRate(review, starRate),
       ]);
     };
   }

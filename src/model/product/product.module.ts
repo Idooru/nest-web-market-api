@@ -10,11 +10,10 @@ import { LibraryModule } from "src/common/lib/library.module";
 import { ProductV1AdminController } from "./controllers/v1/product-v1-admin.controller";
 import { productSelectProperty } from "src/common/config/repository-select-configs/product.select";
 import { productMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
-import { ProductFactoryService } from "./services/product-factory.service";
 import { ProductSearcher } from "./logic/product.searcher";
 import { ProductSearchRepository } from "./repositories/product-search.repository";
 import { ProductTransactionExecutor } from "./logic/transaction/product-transaction.executor";
-import { ProductUpdateService } from "./services/product-update.service";
+import { ProductService } from "./services/product.service";
 import { ProductUpdateRepository } from "./repositories/product-update.repository";
 import { ProductEntity } from "./entities/product.entity";
 import { ProductTransactionInitializer } from "./logic/transaction/product-transaction.initializer";
@@ -46,8 +45,7 @@ import { ProductTransactionContext } from "./logic/transaction/product-transacti
     ProductTransactionExecutor,
     ProductTransactionSearcher,
     ProductTransactionContext,
-    ProductUpdateService,
-    ProductFactoryService,
+    ProductService,
     ProductUpdateRepository,
     ProductSearchRepository,
     ProductValidateRepository,

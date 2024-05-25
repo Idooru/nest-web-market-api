@@ -13,16 +13,11 @@ import { Transaction } from "../../../common/decorators/transaction.decorator";
 
 @Injectable()
 export class InquiryUpdateRepository {
-  constructor(
-    private readonly transaction: Transactional<InquiryRepositoryPayload>,
-  ) {}
+  constructor(private readonly transaction: Transactional<InquiryRepositoryPayload>) {}
 
   @Transaction
-  public createInquiryRequest(
-    createInquiryRequestDto: CreateInquiryRequestDto,
-  ): Promise<InquiryRequestEntity> {
-    const { inquiryRequestBodyDto, product, clientUser } =
-      createInquiryRequestDto;
+  public createInquiryRequest(createInquiryRequestDto: CreateInquiryRequestDto): Promise<InquiryRequestEntity> {
+    const { inquiryRequestBodyDto, product, clientUser } = createInquiryRequestDto;
 
     return this.transaction.getRepository().inquiryRequest.save({
       ...inquiryRequestBodyDto,
@@ -37,9 +32,7 @@ export class InquiryUpdateRepository {
     inquiryRequest: InquiryRequestEntity,
   ): Promise<void> {
     inquiryRequestImage.InquiryRequest = inquiryRequest;
-    await this.transaction
-      .getRepository()
-      .inquiryRequestImage.save(inquiryRequestImage);
+    await this.transaction.getRepository().inquiryRequestImage.save(inquiryRequestImage);
   }
 
   @Transaction
@@ -48,17 +41,12 @@ export class InquiryUpdateRepository {
     inquiryRequest: InquiryRequestEntity,
   ): Promise<void> {
     inquiryRequestVideo.InquiryRequest = inquiryRequest;
-    await this.transaction
-      .getRepository()
-      .inquiryRequestVideo.save(inquiryRequestVideo);
+    await this.transaction.getRepository().inquiryRequestVideo.save(inquiryRequestVideo);
   }
 
   @Transaction
-  public createInquiryResponse(
-    createInquiryResponseDto: CreateInquiryResponseDto,
-  ): Promise<InquiryResponseEntity> {
-    const { inquiryResponseBodyDto, inquiryRequest, admin } =
-      createInquiryResponseDto;
+  public createInquiryResponse(createInquiryResponseDto: CreateInquiryResponseDto): Promise<InquiryResponseEntity> {
+    const { inquiryResponseBodyDto, inquiryRequest, admin } = createInquiryResponseDto;
 
     return this.transaction.getRepository().inquiryResponse.save({
       ...inquiryResponseBodyDto,
@@ -80,9 +68,7 @@ export class InquiryUpdateRepository {
     inquiryResponse: InquiryResponseEntity,
   ): Promise<void> {
     inquiryResponseImage.InquiryResponse = inquiryResponse;
-    await this.transaction
-      .getRepository()
-      .inquiryResponseImage.save(inquiryResponseImage);
+    await this.transaction.getRepository().inquiryResponseImage.save(inquiryResponseImage);
   }
 
   @Transaction
@@ -91,8 +77,6 @@ export class InquiryUpdateRepository {
     inquiryResponse: InquiryResponseEntity,
   ): Promise<void> {
     inquiryResponseVideo.InquiryResponse = inquiryResponse;
-    await this.transaction
-      .getRepository()
-      .inquiryResponseVideo.save(inquiryResponseVideo);
+    await this.transaction.getRepository().inquiryResponseVideo.save(inquiryResponseVideo);
   }
 }
