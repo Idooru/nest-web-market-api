@@ -54,7 +54,7 @@ export class ProductV1Controller {
 
     return {
       statusCode: 200,
-      message: `${name}에 해당하는 상품 정보를 가져옵니다.`,
+      message: `이름에 ${name}이 해당하는 상품 정보를 가져옵니다.`,
       result,
     };
   }
