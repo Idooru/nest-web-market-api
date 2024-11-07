@@ -7,7 +7,6 @@ import { UserModule } from "../user/user.module";
 import { ProductModule } from "../product/product.module";
 import { LibraryModule } from "src/common/lib/library.module";
 import { InquiryV1AdminController } from "./controllers/inquiry-v1-admin.controller";
-import { DotenvAdaptModule } from "src/common/lib/env/dotenv-adapt.module";
 import { InquiryResponseEntity } from "./entities/inquiry-response.entity";
 import { inquirySelectProperty } from "src/common/config/repository-select-configs/inquiry.select";
 import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
@@ -37,7 +36,6 @@ import { InquiryTransactionContext } from "./logic/transaction/inquiry-transacti
     forwardRef(() => UserModule),
     forwardRef(() => ProductModule),
     forwardRef(() => LibraryModule),
-    DotenvAdaptModule,
   ],
   controllers: [InquiryV1ClientController, InquiryV1AdminController],
   providers: [
