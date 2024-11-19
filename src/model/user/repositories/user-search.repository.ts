@@ -127,27 +127,26 @@ export class UserSearchRepository {
   }
 
   public findUserForgotten(dto: FindEmailDto): Promise<UserEntity> {
-    const { realname, phonenumber } = dto;
     return this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.userBase)
       .from(UserEntity, "user")
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
-      .where("Profile.realname = :realname", { realname })
-      .andWhere("Profile.phonenumber = :phonenumber", { phonenumber })
+      .where("Profile.realname = :realname", { realname: dto.realname })
+      .andWhere("Profile.phonenumber = :phonenumber", { phonenumber: dto.phonenumber })
       .getOne();
   }
 
   public async findClientUserProfileInfoWithId(id: string): Promise<UserEntity> {
-    const clientUser = await this.userRepository
+    return await this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.clientUserProfile)
       .from(UserEntity, "user")
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
-      .leftJoin("user.Account", "Account")
       .innerJoin("user.clientActions", "Client")
+      .leftJoin("user.Account", "Account")
       .leftJoin("Client.Cart", "Cart")
       .leftJoin("Cart.Product", "CartProduct")
       .leftJoin("CartProduct.Image", "CartProductImage")
@@ -166,22 +165,18 @@ export class UserSearchRepository {
       .leftJoin("InquiryResponse.Video", "InquiryResponseVideo")
       .where("user.id = :id", { id })
       .getOne();
-
-    clientUser.Auth.password = undefined;
-
-    return clientUser;
   }
 
   public async findAdminUserProfileInfoWithId(id: string): Promise<UserEntity> {
-    const adminUser = await this.userRepository
+    return await this.userRepository
       .createQueryBuilder()
       .select(this.userSelect.adminUserProfile)
       .from(UserEntity, "user")
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
+      .innerJoin("user.adminActions", "AdminActions")
       .leftJoin("user.Account", "Account")
-      .innerJoin("user.adminActions", "Admin")
-      .leftJoin("Admin.createdProduct", "Product")
+      .leftJoin("AdminActions.createdProduct", "Product")
       .leftJoin("Product.Image", "ProductImage")
       .leftJoin("Product.StarRate", "StarRate")
       .leftJoin("Product.Review", "Review")
@@ -190,7 +185,7 @@ export class UserSearchRepository {
       .leftJoin("InquiryRequest.Video", "InquiryRequestVideo")
       .leftJoin("Review.Image", "ReviewImage")
       .leftJoin("Review.Video", "ReviewVideo")
-      .leftJoin("Admin.writtenInquiryResponse", "InquiryResponse")
+      .leftJoin("AdminActions.writtenInquiryResponse", "InquiryResponse")
       .leftJoin("InquiryResponse.Image", "InquiryResponseImage")
       .leftJoin("InquiryResponse.Video", "InquiryResponseVideo")
       .leftJoin("InquiryResponse.InquiryRequest", "ReceivedInquiryRequest")
@@ -198,10 +193,6 @@ export class UserSearchRepository {
       .leftJoin("ReceivedInquiryRequest.Video", "ReceivedInquiryRequestVideo")
       .where("user.id = :id", { id })
       .getOne();
-
-    adminUser.Auth.password = undefined;
-
-    return adminUser;
   }
 
   public findClientUserInfo(id: string): Promise<UserEntity> {
@@ -211,7 +202,8 @@ export class UserSearchRepository {
       .from(UserEntity, "user")
       .innerJoin("user.Auth", "Auth")
       .innerJoin("user.clientActions", "Client")
-      .leftJoin("Client.purchasedProduct", "Product")
+      .leftJoin("Client.Payment", "Payment")
+      .leftJoin("Payment.Product", "Product")
       .leftJoin("Product.Image", "ProductImage")
       .leftJoin("Client.writtenReview", "Review")
       .leftJoin("Review.Image", "ReviewImage")
