@@ -10,7 +10,7 @@ export class CartValidator {
   ) {}
 
   public async isExistId(id: string): Promise<void> {
-    const result = await this.cartValidateRepository.isExistId(id);
+    const result = await this.cartValidateRepository.validateId(id);
     this.validateLibrary.isExistData(result, "cart id", id);
   }
 }

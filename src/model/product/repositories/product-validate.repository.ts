@@ -10,11 +10,11 @@ export class ProductValidateRepository {
     private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
-  public isExistId(id: string): Promise<boolean> {
+  public validateId(id: string): Promise<boolean> {
     return this.productRepository.exist({ where: { id } });
   }
 
-  public isNoneExistName(name: string): Promise<boolean> {
+  public validateName(name: string): Promise<boolean> {
     return this.productRepository.exist({ where: { name } });
   }
 }

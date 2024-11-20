@@ -10,7 +10,7 @@ export class AccountValidator {
   ) {}
 
   public async isNoneExistAccountNumber(accountNumber: string): Promise<void> {
-    const result = await this.accountValidateRepository.isNoneExistAccountNumber(accountNumber);
+    const result = await this.accountValidateRepository.validateAccountNumber(accountNumber);
     this.validateLibrary.isNoneExistData(result, "account number", accountNumber);
   }
 }

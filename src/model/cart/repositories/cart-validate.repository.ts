@@ -10,7 +10,7 @@ export class CartValidateRepository {
     private readonly cartRepository: Repository<CartEntity>,
   ) {}
 
-  public isExistId(id: string): Promise<boolean> {
+  public validateId(id: string): Promise<boolean> {
     return this.cartRepository.exist({ where: { id } });
   }
 }

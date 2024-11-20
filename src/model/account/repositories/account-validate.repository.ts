@@ -10,7 +10,7 @@ export class AccountValidateRepository {
     private readonly accountRepository: Repository<AccountEntity>,
   ) {}
 
-  public isNoneExistAccountNumber(accountNumber: string): Promise<boolean> {
+  public validateAccountNumber(accountNumber: string): Promise<boolean> {
     return this.accountRepository.exist({ where: { accountNumber } });
   }
 }

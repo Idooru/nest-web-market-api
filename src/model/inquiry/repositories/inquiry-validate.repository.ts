@@ -10,7 +10,7 @@ export class InquiryValidateRepository {
     private readonly inquiryRequestRepository: Repository<InquiryRequestEntity>,
   ) {}
 
-  public isExistRequestId(id: string): Promise<boolean> {
+  public validateRequestId(id: string): Promise<boolean> {
     return this.inquiryRequestRepository.exist({ where: { id } });
   }
 }

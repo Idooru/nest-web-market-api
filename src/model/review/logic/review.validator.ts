@@ -10,7 +10,7 @@ export class ReviewValidator {
   ) {}
 
   public async isExistId(id: string): Promise<void> {
-    const result = await this.reviewValidateRepository.isExistId(id);
+    const result = await this.reviewValidateRepository.validateId(id);
     this.validateLibrary.isExistData(result, "review id", id);
   }
 }

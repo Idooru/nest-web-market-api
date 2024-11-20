@@ -19,23 +19,23 @@ export class UserValidateRepository {
     private readonly clientUserRepository: Repository<ClientUserEntity>,
   ) {}
 
-  public isExistId(id: string): Promise<boolean> {
+  public validateId(id: string): Promise<boolean> {
     return this.userRepository.exist({ where: { id } });
   }
 
-  public isExistClientUserId(id: string): Promise<boolean> {
+  public validateClientUserId(id: string): Promise<boolean> {
     return this.clientUserRepository.exist({ where: { id } });
   }
 
-  public isNoneExistEmail(email: string): Promise<boolean> {
+  public validateEmail(email: string): Promise<boolean> {
     return this.userAuthRepository.exist({ where: { email } });
   }
 
-  public isNoneExistNickname(nickname: string): Promise<boolean> {
+  public validateNickname(nickname: string): Promise<boolean> {
     return this.userAuthRepository.exist({ where: { nickname } });
   }
 
-  public isNoneExistPhonenumber(phonenumber: string): Promise<boolean> {
+  public validatePhonenumber(phonenumber: string): Promise<boolean> {
     return this.userProfileRepository.exist({
       where: { phonenumber },
     });
