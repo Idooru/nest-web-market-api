@@ -2,7 +2,7 @@ import { BadRequestException, NotFoundException } from "@nestjs/common";
 import { loggerFactory } from "src/common/functions/logger.factory";
 
 export class ValidateLibrary {
-  public isExistData<T>(data: T, criteria: string, payload: string): void {
+  public isExistData(data: boolean, criteria: string, payload: string): void {
     if (!data) {
       const message = `존재하지 않은 ${criteria}(${payload})입니다.`;
       loggerFactory("None Exist").error(message);
