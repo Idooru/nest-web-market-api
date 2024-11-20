@@ -278,7 +278,7 @@ export class UserV1Controller {
   @Get("/find-email")
   public async findEmail(
     @Query("realname") realname: string,
-    @Query("phonenumber", UserPhonenumberValidatePipe) phonenumber: string,
+    @Query("phonenumber", UserPhonenumberValidatePipe) { phonenumber }: ModifyUserPhonenumberDto,
   ): Promise<JsonGeneralInterface<string>> {
     const dto = { realname, phonenumber };
     const result = await this.userSecurity.findEmail(dto);
