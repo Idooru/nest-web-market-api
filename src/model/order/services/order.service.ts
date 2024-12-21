@@ -55,11 +55,11 @@ export class OrderService {
   @Transaction
   public async depositAdminBalance(productQuantities: { product: ProductEntity; quantity: number }[]): Promise<void> {
     const adminUserBalances = productQuantities
-      .map((productQuantity) => productQuantity.product.creater.User)
+      .map((productQuantity) => productQuantity.product.creator.User)
       .map((user) => ({ userId: user.id, balance: user.Account[0].balance }));
 
     const adminUserTotalPrice = productQuantities.map(({ product, quantity }) => ({
-      userId: product.creater.User.id,
+      userId: product.creator.User.id,
       totalPrice: product.price * quantity,
     }));
 
