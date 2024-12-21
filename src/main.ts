@@ -66,6 +66,8 @@ class NestCoreConfig {
     );
     this.app.useGlobalPipes(
       new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
         exceptionFactory: (validationErrors: ValidationError[]) => {
           throw new ValidationException(validationErrors);
         },
