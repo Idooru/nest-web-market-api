@@ -40,28 +40,22 @@ export class UserUpdateRepository {
 
   @Transaction
   public async createUserProfile(dto: CreateUserProfileDto): Promise<void> {
-    await this.transaction.getRepository().userProfile.save({
-      ...dto,
-    });
+    await this.transaction.getRepository().userProfile.save(dto);
   }
 
   @Transaction
   public async createUserAuth(dto: CreateUserAuthDto): Promise<void> {
-    await this.transaction.getRepository().userAuth.save({ ...dto });
+    await this.transaction.getRepository().userAuth.save(dto);
   }
 
   @Transaction
   public async modifyUserProfile(dto: ModifyUserProfileDto, id: string): Promise<void> {
-    await this.transaction.getRepository().userProfile.update(id, {
-      ...dto,
-    });
+    await this.transaction.getRepository().userProfile.update(id, dto);
   }
 
   @Transaction
   public async modifyUserAuth(dto: ModifyUserAuthDto, id: string): Promise<void> {
-    await this.transaction.getRepository().userAuth.update(id, {
-      ...dto,
-    });
+    await this.transaction.getRepository().userAuth.update(id, dto);
   }
 
   @General

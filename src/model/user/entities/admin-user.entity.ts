@@ -12,15 +12,13 @@ export class AdminUserEntity extends ChildEntity {
   @JoinColumn({ name: "id" })
   public User: UserEntity;
 
-  @OneToMany(() => ProductEntity, (product) => product.creater, {
+  @OneToMany(() => ProductEntity, (product) => product.creator, {
     cascade: true,
   })
   public createdProduct: ProductEntity;
 
-  @OneToMany(
-    () => InquiryResponseEntity,
-    (inquiryResponse) => inquiryResponse.inquiryResponseWritter,
-    { cascade: true },
-  )
+  @OneToMany(() => InquiryResponseEntity, (inquiryResponse) => inquiryResponse.inquiryResponseWritter, {
+    cascade: true,
+  })
   public writtenInquiryResponse: InquiryResponseEntity[];
 }
