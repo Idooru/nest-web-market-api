@@ -46,7 +46,7 @@ export class UserSecurity {
     const jwtAccessTokenPayload: JwtAccessTokenPayload = {
       userId: user.id,
       email: user.Auth.email,
-      nickname: user.Auth.nickname,
+      nickName: user.Auth.nickName,
       userRole: user.role,
     };
 
@@ -72,7 +72,7 @@ export class UserSecurity {
     const jwtAccessTokenPayload: JwtAccessTokenPayload = {
       userId: user.id,
       email: user.Auth.email,
-      nickname: user.Auth.nickname,
+      nickName: user.Auth.nickName,
       userRole: user.role,
     };
 

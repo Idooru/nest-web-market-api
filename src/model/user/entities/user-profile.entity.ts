@@ -14,7 +14,7 @@ export class UserProfileEntity extends ChildEntity {
   @IsString()
   @IsNotEmpty()
   @Column({ type: "varchar", length: 20, nullable: false })
-  public realname: string;
+  public realName: string;
 
   @IsDateString()
   @IsNotEmpty()
@@ -29,7 +29,7 @@ export class UserProfileEntity extends ChildEntity {
   @IsMobilePhone()
   @IsNotEmpty()
   @Column({ type: "varchar", length: 15, unique: true, nullable: false })
-  public phonenumber: string;
+  public phoneNumber: string;
 
   @IsString()
   @IsNotEmpty()

@@ -4,8 +4,8 @@ import { UserValidator } from "../../logic/user.validator";
 
 type UserBody = {
   email: string;
-  nickname: string;
-  phonenumber: string;
+  nickName: string;
+  phoneNumber: string;
 };
 
 @Injectable()
@@ -14,12 +14,12 @@ export class UserOperationValidatePipe<T extends UserBody> implements PipeTransf
 
   @Implemented
   public async transform(body: T): Promise<T> {
-    const { email, nickname, phonenumber } = body;
+    const { email, nickName, phoneNumber } = body;
 
     const validResult = await Promise.allSettled([
       this.userValidator.isNoneExistEmail(email),
-      this.userValidator.isNoneExistNickname(nickname),
-      this.userValidator.isNoneExistPhonenumber(phonenumber),
+      this.userValidator.isNoneExistNickname(nickName),
+      this.userValidator.isNoneExistPhonenumber(phoneNumber),
     ]);
 
     const errors = validResult.filter((item) => item.status === "rejected");

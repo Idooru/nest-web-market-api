@@ -31,13 +31,13 @@ export class UserValidateRepository {
     return this.userAuthRepository.exist({ where: { email } });
   }
 
-  public validateNickname(nickname: string): Promise<boolean> {
-    return this.userAuthRepository.exist({ where: { nickname } });
+  public validateNickname(nickName: string): Promise<boolean> {
+    return this.userAuthRepository.exist({ where: { nickName } });
   }
 
-  public validatePhonenumber(phonenumber: string): Promise<boolean> {
+  public validatePhonenumber(phoneNumber: string): Promise<boolean> {
     return this.userProfileRepository.exist({
-      where: { phonenumber },
+      where: { phoneNumber },
     });
   }
 }

@@ -133,8 +133,8 @@ export class UserSearchRepository {
       .from(UserEntity, "user")
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
-      .where("Profile.realname = :realname", { realname: dto.realname })
-      .andWhere("Profile.phonenumber = :phonenumber", { phonenumber: dto.phonenumber })
+      .where("Profile.realName = :realName", { realName: dto.realName })
+      .andWhere("Profile.phoneNumber = :phoneNumber", { phoneNumber: dto.phoneNumber })
       .getOne();
   }
 

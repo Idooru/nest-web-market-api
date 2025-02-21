@@ -64,13 +64,13 @@ export class UserUpdateRepository {
   }
 
   @General
-  public async modifyUserNickname(nickname: string, id: string): Promise<void> {
-    await this.userAuthRepository.update(id, { nickname });
+  public async modifyUserNickname(nickName: string, id: string): Promise<void> {
+    await this.userAuthRepository.update(id, { nickName });
   }
 
   @General
-  public async modifyUserPhonenumber(phonenumber: string, id: string): Promise<void> {
-    await this.userProfileRepository.update(id, { phonenumber });
+  public async modifyUserPhonenumber(phoneNumber: string, id: string): Promise<void> {
+    await this.userProfileRepository.update(id, { phoneNumber });
   }
 
   @General

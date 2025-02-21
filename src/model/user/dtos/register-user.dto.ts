@@ -6,10 +6,10 @@ import { UserProfileEntity } from "../entities/user-profile.entity";
 import { UserEntity } from "../entities/user.entity";
 
 export class RegisterUserProfileDto extends PickType(UserProfileEntity, [
-  "realname",
+  "realName",
   "birth",
   "gender",
-  "phonenumber",
+  "phoneNumber",
   "address",
 ] as const) {
   @ApiProperty({
@@ -18,7 +18,7 @@ export class RegisterUserProfileDto extends PickType(UserProfileEntity, [
     required: true,
     uniqueItems: false,
   })
-  public realname: string;
+  public realName: string;
 
   @ApiProperty({
     description: "사용자 생일",
@@ -43,7 +43,7 @@ export class RegisterUserProfileDto extends PickType(UserProfileEntity, [
     required: true,
     uniqueItems: true,
   })
-  public phonenumber: string;
+  public phoneNumber: string;
 
   @ApiProperty({
     description: "사용자 주소",
@@ -56,20 +56,21 @@ export class RegisterUserProfileDto extends PickType(UserProfileEntity, [
 
 export class CreateUserProfileDto extends PickType(UserProfileEntity, [
   "id",
-  "realname",
+  "realName",
   "birth",
   "gender",
-  "phonenumber",
-]) {}
+  "phoneNumber",
+  "address",
+] as const) {}
 
-export class RegisterUserAuthDto extends PickType(UserAuthEntity, ["email", "nickname", "password"] as const) {
+export class RegisterUserAuthDto extends PickType(UserAuthEntity, ["email", "nickName", "password"] as const) {
   @ApiProperty({
     description: "사용자 닉네임",
     example: "Idooru",
     required: true,
     uniqueItems: true,
   })
-  public nickname: string;
+  public nickName: string;
 
   @ApiProperty({
     description: "사용자 이메일",
@@ -88,7 +89,7 @@ export class RegisterUserAuthDto extends PickType(UserAuthEntity, ["email", "nic
   public password: string;
 }
 
-export class CreateUserAuthDto extends PickType(UserAuthEntity, ["id", "email", "nickname", "password"]) {}
+export class CreateUserAuthDto extends PickType(UserAuthEntity, ["id", "email", "nickName", "password"]) {}
 
 export class RegisterUserRoleDto extends PickType(UserEntity, ["role"]) {
   @ApiProperty({

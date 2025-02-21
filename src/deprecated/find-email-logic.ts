@@ -1,9 +1,9 @@
 // async findEmail(findEmailDto: FindEmailDto): Promise<string> {
-//     const { realname, phonenumber } = findEmailDto;
+//     const { realName, phoneNumber } = findEmailDto;
 
 //     const [realNameFound, phoneNumberFound] = await Promise.all([
-//       this.userGeneralRepository.findUserWithRealName(realname),
-//       this.userGeneralRepository.findUserWithPhoneNumber(phonenumber),
+//       this.userGeneralRepository.findUserWithRealName(realName),
+//       this.userGeneralRepository.findUserWithPhoneNumber(phoneNumber),
 //     ]);
 
 //     this.methodName = this.findEmail.name;

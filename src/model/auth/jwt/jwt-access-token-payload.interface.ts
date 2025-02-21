@@ -1,6 +1,6 @@
 export interface JwtAccessTokenPayload {
   userId: string;
   email?: string;
-  nickname: string;
+  nickName: string;
   userRole: ["client", "admin"];
 }

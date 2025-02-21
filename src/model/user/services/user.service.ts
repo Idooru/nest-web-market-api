@@ -2,13 +2,14 @@ import { UserUpdateRepository } from "../repositories/user-update.repository";
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { UserEntity } from "../entities/user.entity";
 import { RegisterUserDto } from "../dtos/register-user.dto";
-import { ModifyUserDto } from "../dtos/modify-user.dto";
+import { ModifyUserAuthDto, ModifyUserDto, ModifyUserProfileDto } from "../dtos/modify-user.dto";
 import { UserSearcher } from "../logic/user.searcher";
 import { UserSecurity } from "../logic/user.security";
 import { ResetPasswordDto } from "../dtos/reset-password.dto";
 import { UserEventMapSetter } from "../logic/user-event-map.setter";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
 import { General } from "src/common/decorators/general.decoration";
+import { SendMailToClientAboutRegisterDto } from "../dtos/send-mail-to-client-about-register.dto";
 
 @Injectable()
 export class UserService {
@@ -34,39 +35,49 @@ export class UserService {
   }
 
   @Transaction
-  public async createUserBase(user: UserEntity, registerUserDto: RegisterUserDto): Promise<void> {
-    const { id } = user;
-    const { realname, nickname, birth, gender, email, phonenumber, password, address } = registerUserDto;
-
+  public async createUserBase({ id }: UserEntity, registerUserDto: RegisterUserDto): Promise<void> {
+    const { realName, nickName, birth, gender, email, phoneNumber, password, address } = registerUserDto;
     const hashed = await this.userSecurity.hashPassword(password, true);
 
     const userProfileColumn = {
       id,
-      realname,
+      realName,
       birth,
       gender,
-      phonenumber,
+      phoneNumber,
       address,
     };
-    const userAuthColumn = { id, nickname, email, password: hashed };
+
+    const userAuthColumn = { id, nickName, email, password: hashed };
+    const sendMailToClientAboutRegisterDto = { email, nickName };
 
     await Promise.all([
       this.userUpdateRepository.createUserProfile(userProfileColumn),
       this.userUpdateRepository.createUserAuth(userAuthColumn),
     ]);
 
-    this.userEventMapSetter.setRegisterEventParam({ email, nickname });
+    this.userEventMapSetter.setRegisterEventParam(sendMailToClientAboutRegisterDto);
   }
 
   @Transaction
   public async modifyUser(dto: ModifyUserDto, id: string): Promise<void> {
-    const { password, phonenumber, email, nickname, address } = dto;
-
+    const { password, phoneNumber, email, nickName, address } = dto;
     const hashed = await this.userSecurity.hashPassword(password, true);
 
+    const modifyUserProfileDto: ModifyUserProfileDto = {
+      phoneNumber,
+      address,
+    };
+
+    const modifyUserAuthDto: ModifyUserAuthDto = {
+      email,
+      nickName,
+      password: hashed,
+    };
+
     await Promise.all([
-      this.userUpdateRepository.modifyUserProfile({ phonenumber, address }, id),
-      this.userUpdateRepository.modifyUserAuth({ email, nickname, password: hashed }, id),
+      this.userUpdateRepository.modifyUserProfile(modifyUserProfileDto, id),
+      this.userUpdateRepository.modifyUserAuth(modifyUserAuthDto, id),
     ]);
   }
 
@@ -76,13 +87,13 @@ export class UserService {
   }
 
   @General
-  public async modifyUserNickname(nickname: string, id: string): Promise<void> {
-    await this.userUpdateRepository.modifyUserNickname(nickname, id);
+  public async modifyUserNickname(nickName: string, id: string): Promise<void> {
+    await this.userUpdateRepository.modifyUserNickname(nickName, id);
   }
 
   @General
-  public async modifyUserPhonenumber(phonenumber: string, id: string): Promise<void> {
-    await this.userUpdateRepository.modifyUserPhonenumber(phonenumber, id);
+  public async modifyUserPhonenumber(phoneNumber: string, id: string): Promise<void> {
+    await this.userUpdateRepository.modifyUserPhonenumber(phoneNumber, id);
   }
 
   @General

@@ -39,12 +39,12 @@
 
 // async createUserBase(registerUserDto: RegisterUserDto): Promise<UserEntity> {
 //     const {
-//       realname,
-//       nickname,
+//       realName,
+//       nickName,
 //       birth,
 //       gender,
 //       email,
-//       phonenumber,
+//       phoneNumber,
 //       type,
 //       password,
 //     } = registerUserDto;
@@ -59,8 +59,8 @@
 //         .setSourceNames(this.className, this.methodName)
 //         .handle();
 //     }
-//     const userProfileColumn = { realname, birth, gender, phonenumber };
-//     const userAuthColumn = { nickname, email, password: hashed };
+//     const userProfileColumn = { realName, birth, gender, phoneNumber };
+//     const userAuthColumn = { nickName, email, password: hashed };
 //     const [userProfileDummy, userAuthDummy] = await Promise.all([
 //       this.userGeneralRepository.createUserProfile(userProfileColumn),
 //       this.userGeneralRepository.createUserAuth(userAuthColumn),

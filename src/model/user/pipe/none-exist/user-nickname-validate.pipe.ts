@@ -3,7 +3,7 @@ import { UserValidator } from "../../logic/user.validator";
 import { Implemented } from "../../../../common/decorators/implemented.decoration";
 
 type NickName = {
-  nickname: string;
+  nickName: string;
 };
 
 @Injectable()
@@ -11,9 +11,9 @@ export class UserNicknameValidatePipe implements PipeTransform {
   constructor(private readonly userValidator: UserValidator) {}
 
   @Implemented
-  public async transform({ nickname }: NickName): Promise<NickName> {
-    await this.userValidator.isNoneExistNickname(nickname);
+  public async transform({ nickName }: NickName): Promise<NickName> {
+    await this.userValidator.isNoneExistNickname(nickName);
 
-    return { nickname };
+    return { nickName };
   }
 }

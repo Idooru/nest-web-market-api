@@ -14,7 +14,7 @@ export class UserAuthEntity extends ChildEntity {
   @IsString()
   @IsNotEmpty()
   @Column({ type: "varchar", length: 20, unique: true, nullable: false })
-  public nickname: string;
+  public nickName: string;
 
   @IsEmail()
   @IsNotEmpty()
