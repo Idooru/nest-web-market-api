@@ -17,7 +17,7 @@ export class InquiryRequestEntity extends PostEntity {
   @ManyToOne(() => ClientUserEntity, (client) => client.writtenInquiryRequest, {
     onDelete: "CASCADE",
   })
-  public inquiryRequestWritter: ClientUserEntity;
+  public InquiryRequestWriter: ClientUserEntity;
 
   @IsBoolean()
   @Column({ type: "boolean", default: false })
@@ -38,10 +38,6 @@ export class InquiryRequestEntity extends PostEntity {
   })
   public Video: InquiryRequestVideoEntity[];
 
-  @OneToOne(
-    () => InquiryResponseEntity,
-    (inquiryResponse) => inquiryResponse.InquiryRequest,
-    { cascade: true },
-  )
+  @OneToOne(() => InquiryResponseEntity, (inquiryResponse) => inquiryResponse.InquiryRequest, { cascade: true })
   public InquiryResponse: InquiryResponseEntity;
 }

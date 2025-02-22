@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, OneToMany, OneToOne } from "typeorm";
-import { IsEnum, IsNotEmpty, IsPositive, IsString } from "class-validator";
+import { IsEnum, IsNotEmpty, IsOptional, IsPositive, IsString } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
 import { StarRateEntity } from "../../review/entities/star-rate.entity";
@@ -38,6 +38,7 @@ export class ProductEntity extends CommonEntity {
   @Column({ type: "text", nullable: true })
   public description: string;
 
+  @IsOptional()
   @IsPositive()
   @Column({ type: "int", unsigned: true, default: 100 })
   public quantity: number;
@@ -55,7 +56,7 @@ export class ProductEntity extends CommonEntity {
   @ManyToOne(() => AdminUserEntity, (admin) => admin.createdProduct, {
     onDelete: "CASCADE",
   })
-  public creater: AdminUserEntity;
+  public creator: AdminUserEntity;
 
   @OneToMany(() => CartEntity, (cart) => cart.Product)
   public Cart: CartEntity[];

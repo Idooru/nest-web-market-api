@@ -22,7 +22,7 @@ export class InquiryUpdateRepository {
     return this.transaction.getRepository().inquiryRequest.save({
       ...inquiryRequestBodyDto,
       Product: product,
-      inquiryRequestWritter: clientUser,
+      InquiryRequestWriter: clientUser,
     });
   }
 
