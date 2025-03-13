@@ -72,7 +72,7 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 Nest is [MIT licensed](LICENSE).
 
-## 작성시 유의 사항
+## 프로젝트 진행 회고
 
 1.  이유는 알 수 없지만 커스텀 데코레이터를 사용해서 user type이 admin인  
     계정만 수행 할 수 있게끔 데코레이터를 설정 한 후에 상품 업데이트나 삭제를 할 시 "TypeORMError: Empty criteria(s) are not allowed for the update method." 에러가 난다.
@@ -169,6 +169,12 @@ Nest is [MIT licensed](LICENSE).
 
 28. 로직 별로 필요한 데코레이터를 만들어 봐서 각 메서드에 적용을 시켜보았다. service 혹은 repository 레이어에서 트랜잭션 로직 콜스택 내부에서 호출하는 메서드는 @Transaction 데코레이터를 그 이외의 로직에는 @General을 붙혔다. 그리고 인터페이스에서 구현하는 메서드는 @Implemented 데코레이터를 붙혔다. (해당 데코레이터들은 별 다른 기능은 하지 않는다. 그저 시각적으로 구별하기 위해 붙혔다.)
 
+29. 27번에서 언급한 then, catch, finally는 모종의 문제로 catch 메서드로 에러 핸들링이 되지 않아 다시 try catch finally 문으로 원복시켰다.
+30. 회원가입, 문의 요청과 응답, db내부에 있는 미디어 파일 url 삭제시 실제 디스크(uploads 폴더)에 있는 파일을 제거 하는 작업등은 생각 보다 latency가 오래 걸리는 작업들이다. 이는 동기적으로 진행을 하게 된다면 응답을 기다리는 사용자에게 꾀나 큰 UX 감소를 지향한다. 이를 해결하기 위해서 해당 작업등을 해당 API에 
+    Interceptor를 추가하여 res.on("finish")이벤트를 등록한 후 해당 이벤트가 trigger 되었을 때 해당 작업등을 실행하게 두면 사용자는 응답을 받기 위해 오랜 시간을 기다릴 필요 없이 쾌적한 사용이 가능해진다.  
+    기존에 middleware를 통한 유사한 구조가 있었지만 모종의 이유로 인해 해당 middleware를 등록한 route에 접근이 되었음에도 middleware를 호출할 수 없는 문제가 발생하여 이를 Interceptor로 교체하였다.
+31. TO DO 항목에도 명시해 놓았지만 TO DO 16번 까지 진행 이후 해당 프로젝트의 API를 플러터로 앱 개발 이후 연동 작업을 거칠 것이다. 문제는 지금 백엔드 API에서 일부는 쿠키를 사용하고 있다는 점인데 앱 환경에서는 쿠키 연동이 되지 않으므로 인증 작업, 토큰 재발급, 미디어 파일 업로드 작업등을 쿠키에서 http header를 
+    사용하는 방식으로 전환이 필요하다.
 ## TO DO
 
 1. 나중에 집가서 환경 정보 파일(.env.dev) 데이터를 내 메일로 보내기 // 완료
@@ -187,6 +193,6 @@ Nest is [MIT licensed](LICENSE).
 14. SWAGGER API DOCUMENTATION 설정
 15. JOI 사용해서 DotenvModule 설정
 16. 회원가입시 이메일 인증 로직 추가
-17. 13 ~ 16까지 모두 수행하면 플러터로 앱 개발 후 API 연동 진행
+17. 13 ~ 16까지 모두 수행하면 플러터로 앱 개발 후 API 연동 진행 (쿠기를 사용하는 로직을 header를 사용하도록 변경 필요)
 18. 쿼리 성능 최적화
 19. 18까지 완료 후 9 ~ 11 진행
