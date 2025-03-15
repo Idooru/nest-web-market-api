@@ -2,6 +2,8 @@ import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { IsBoolean, IsEnum, IsInt, IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
 import { UserEntity } from "../../user/entities/user.entity";
 import { CommonEntity } from "../../../common/entities/common.entity";
+import { BankCategory, bankCategory } from "../types/bank.category.type";
+import { warnEnumMessage } from "../../../common/functions/none-enum";
 
 @Entity({ name: "accounts", synchronize: true })
 export class AccountEntity extends CommonEntity {
@@ -11,10 +13,10 @@ export class AccountEntity extends CommonEntity {
   @JoinColumn({ name: "userId" })
   public User: UserEntity;
 
-  @IsEnum(["우리은행", "농협은행", "국민은행"])
+  @IsEnum(bankCategory, { message: warnEnumMessage(bankCategory) })
   @IsNotEmpty()
-  @Column({ type: "enum", enum: ["우리은행", "농협은행", "국민은행"] })
-  public bank: "우리은행" | "농협은행" | "국민은행";
+  @Column({ type: "enum", enum: bankCategory })
+  public bank: BankCategory;
 
   @IsString()
   @IsNotEmpty()

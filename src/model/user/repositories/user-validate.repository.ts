@@ -31,7 +31,11 @@ export class UserValidateRepository {
     return this.userAuthRepository.exist({ where: { email } });
   }
 
-  public validateNickname(nickName: string): Promise<boolean> {
+  public validateRealName(realName: string): Promise<boolean> {
+    return this.userProfileRepository.exist({ where: { realName } });
+  }
+
+  public validateNickName(nickName: string): Promise<boolean> {
     return this.userAuthRepository.exist({ where: { nickName } });
   }
 

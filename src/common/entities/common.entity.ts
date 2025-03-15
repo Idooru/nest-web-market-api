@@ -1,9 +1,10 @@
-import { IsUUID } from "class-validator";
+import { IsNotEmpty, IsUUID } from "class-validator";
 import { PrimaryGeneratedColumn } from "typeorm";
 import { DateEntity } from "./date.entity";
 
-export abstract class CommonEntity extends DateEntity {
+export class CommonEntity extends DateEntity {
   @IsUUID()
+  @IsNotEmpty()
   @PrimaryGeneratedColumn("uuid")
   public id: string;
 }

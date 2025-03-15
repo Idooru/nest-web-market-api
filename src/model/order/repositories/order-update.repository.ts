@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import { ProductEntity } from "../../product/entities/product.entity";
 import { CartEntity } from "../../cart/entities/cart.entity";
-import { CreateOrderDto } from "../dto/create-order.dto";
+import { CreateOrderRowDto } from "../dto/create-order.dto";
 import { CreatePaymentDto } from "../dto/create-payment.dto";
 import { OrderEntity } from "../entities/order.entity";
 import { AccountEntity } from "../../account/entities/account.entity";
@@ -12,7 +12,7 @@ import { Transactional } from "../../../common/interfaces/initializer/transactio
 import { OrderRepositoryPayload } from "../logic/transaction/order-repository.payload";
 import { MoneyTransactionDto } from "../../account/dtos/money-transaction.dto";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
-import { DecreaseProductQuantityDto } from "../dto/decrease-product-quantity.dto";
+import { DecreaseProductStockDto } from "../dto/decrease-product-stock.dto";
 
 @Injectable()
 export class OrderUpdateRepository {
@@ -30,21 +30,21 @@ export class OrderUpdateRepository {
   }
 
   @Transaction
-  public async decreaseProductQuantity(dto: DecreaseProductQuantityDto): Promise<void> {
+  public async decreaseProductStock(dto: DecreaseProductStockDto): Promise<void> {
     const { product, quantity } = dto;
     await this.transaction
       .getRepository()
       .product.createQueryBuilder()
       .update(ProductEntity)
-      .set({ quantity: () => `quantity - ${quantity}` })
+      .set({ stock: () => `stock - ${quantity}` })
       .where("id = :id", { id: product.id })
       .execute();
   }
 
   @Transaction
-  public createOrder(dto: CreateOrderDto): Promise<OrderEntity> {
-    const { orderBodyDto, clientUser, totalPrice } = dto;
-    const { deliveryOption, deliveryAddress } = orderBodyDto;
+  public createOrderRow(dto: CreateOrderRowDto): Promise<OrderEntity> {
+    const { body, clientUser, totalPrice } = dto;
+    const { deliveryOption, deliveryAddress } = body;
 
     return this.transaction.getRepository().order.save({
       deliveryOption,
@@ -87,9 +87,7 @@ export class OrderUpdateRepository {
         }
       });
 
-    return this.transaction.getRepository().account.findOneBy({
-      id: accountId,
-    });
+    return this.transaction.getRepository().account.findOneBy({ id: accountId });
   }
 
   @Transaction

@@ -1,9 +1,9 @@
 import { ReviewEntity } from "../entities/review.entity";
-import { ReviewBodyDto } from "./review-body.dto";
+import { ReviewBody } from "./review-body.dto";
 import { MediaCookieDto } from "../../media/dto/media-cookie.dto";
 
-export class PrepareToModifyReviewDto {
-  reviewBodyDto: ReviewBodyDto;
+export class ModifyReviewDto {
+  body: ReviewBody;
   userId: string;
   productId: string;
   reviewId: string;
@@ -11,7 +11,7 @@ export class PrepareToModifyReviewDto {
   reviewVdoCookies: MediaCookieDto[];
 }
 
-export class ModifyReviewDto {
-  reviewBodyDto: ReviewBodyDto;
+export class ModifyReviewRowDto {
   review: ReviewEntity;
+  body: ReviewBody;
 }

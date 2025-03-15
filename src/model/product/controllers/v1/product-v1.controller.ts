@@ -4,11 +4,13 @@ import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-gen
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { ProductSearcher } from "../../logic/product.searcher";
+import { AccessProductNameDto } from "../../dto/access_product_name.dto";
+import { ProductIdValidatePipe } from "../../pipe/exist/product-id-validate.pipe";
 
 @ApiTags("v1 공용 Product API")
 @Controller({ path: "/product", version: "1" })
 export class ProductV1Controller {
-  constructor(private readonly productSearcher: ProductSearcher) {}
+  constructor(private readonly searcher: ProductSearcher) {}
 
   @ApiOperation({
     summary: "find all products from latest",
@@ -17,7 +19,7 @@ export class ProductV1Controller {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/")
   public async findAllProductsFromLatest(): Promise<JsonGeneralInterface<ProductEntity[]>> {
-    const result = await this.productSearcher.findAllProductsFromLatest();
+    const result = await this.searcher.findAllProductsFromLatest();
 
     return {
       statusCode: 200,
@@ -33,7 +35,7 @@ export class ProductV1Controller {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/oldest")
   public async findAllProductsFromOldest(): Promise<JsonGeneralInterface<ProductEntity[]>> {
-    const result = await this.productSearcher.findAllProductsFromOldest();
+    const result = await this.searcher.findAllProductsFromOldest();
 
     return {
       statusCode: 200,
@@ -48,13 +50,34 @@ export class ProductV1Controller {
       "상품의 이름에 해당하는 상품 정보를 가져옵니다. 상품의 이름과 일치하는 row가 데이터베이스에 존재하지 않을 경우 에러를 반환합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @Get("/:name")
-  public async findProductByName(@Param("name") name: string): Promise<JsonGeneralInterface<ProductEntity[]>> {
-    const result = await this.productSearcher.findProductWithName(name);
+  @Get("/name/:name")
+  public async findProductByName(
+    @Param() { name }: AccessProductNameDto,
+  ): Promise<JsonGeneralInterface<ProductEntity[]>> {
+    const result = await this.searcher.findProductWithName(name);
 
     return {
       statusCode: 200,
-      message: `이름에 ${name}이 해당하는 상품 정보를 가져옵니다.`,
+      message: `이름이 ${name}에 해당하는 상품 정보를 가져옵니다.`,
+      result,
+    };
+  }
+
+  @ApiOperation({
+    summary: "find product by productId",
+    description:
+      "상품의 아이디에 해당하는 상품 정보를 가져옵니다. 상품의 아이디와 일치하는 row가 데이터베이스에 존재하지 않을 경우 에러를 반환합니다.",
+  })
+  @UseInterceptors(JsonGeneralInterceptor)
+  @Get("/product-id/:productId")
+  public async findProductWithId(
+    @Param("productId", ProductIdValidatePipe) productId: string,
+  ): Promise<JsonGeneralInterface<ProductEntity>> {
+    const result = await this.searcher.findProductWithId(productId);
+
+    return {
+      statusCode: 200,
+      message: `${productId}에 해당하는 상품 정보를 가져옵니다.`,
       result,
     };
   }

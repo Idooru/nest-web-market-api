@@ -1,59 +1,38 @@
-import { Body, Controller, Get, Delete, Param, Patch, Post, UseGuards, UseInterceptors, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Param, Patch, Post, UseGuards, UseInterceptors, Put } from "@nestjs/common";
 import { GetJWT } from "src/common/decorators/get.jwt.decorator";
 import { IsAdminGuard } from "src/common/guards/authenticate/is-admin.guard";
 import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { ProductEntity } from "../../entities/product.entity";
 import { MediaCookieDto } from "src/model/media/dto/media-cookie.dto";
 import { productMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
 import { ModifyProductNameDto } from "../../dto/modify-product-name.dto";
 import { ModifyProductPriceDto } from "../../dto/modify-product-price.dto";
 import { ModifyProductOriginDto } from "../../dto/modify-product-origin.dto";
 import { ModifyProductDesctiptionDto } from "../../dto/modify-product-description.dto";
-import { ModifyProductQuantityDto } from "../../dto/modify-product-quantity.dto";
+import { ModifyProductStockDto } from "../../dto/modify-product-stock.dto";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { ModifyProductCategoryDto } from "../../dto/modify-product-category.dto";
 import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { JsonClearCookiesInterface } from "src/common/interceptors/interface/json-clear-cookies.interface";
 import { ProductTransactionExecutor } from "../../logic/transaction/product-transaction.executor";
-import { ProductSearcher } from "../../logic/product.searcher";
-import { ProductBodyDto } from "../../dto/product-body.dto";
 import { ProductService } from "../../services/product.service";
-import { ProductNameValidatePipe } from "../../pipe/none-exist/product-name-validate.pipe";
+import { ModifyProductDto } from "../../dto/modify-product.dto";
+import { CreateProductDto } from "../../dto/create-product.dto";
+import { ModifyProductImageDto } from "../../dto/modify-product-image.dto";
+import { ProductBody } from "../../dto/product-body.dto";
 import { ProductIdValidatePipe } from "../../pipe/exist/product-id-validate.pipe";
+import { OperateProductValidationPipe } from "../../pipe/none-exist/operate-product-validation.pipe";
+import { DeleteProductMediaInterceptor } from "../../../media/interceptor/delete-product-media.interceptor";
 
 @ApiTags("v1 관리자 Product API")
 @UseGuards(IsAdminGuard)
 @UseGuards(IsLoginGuard)
 @Controller({ path: "/admin/product", version: "1" })
 export class ProductV1AdminController {
-  constructor(
-    private readonly productSearcher: ProductSearcher,
-    private readonly productTransaction: ProductTransactionExecutor,
-    private readonly productService: ProductService,
-  ) {}
-
-  @ApiOperation({
-    summary: "find product by id",
-    description:
-      "상품의 아이디에 해당하는 상품 정보를 가져옵니다. 상품의 아이디와 일치하는 row가 데이터베이스에 존재하지 않을 경우 에러를 반환합니다.",
-  })
-  @UseInterceptors(JsonGeneralInterceptor)
-  @Get("/:id")
-  public async findProductWithId(
-    @Param("id", ProductIdValidatePipe) id: string,
-  ): Promise<JsonGeneralInterface<ProductEntity>> {
-    const result = await this.productSearcher.findProductWithId(id);
-
-    return {
-      statusCode: 200,
-      message: `${id}에 해당하는 상품 정보를 가져옵니다.`,
-      result,
-    };
-  }
+  constructor(private readonly transaction: ProductTransactionExecutor, private readonly service: ProductService) {}
 
   @ApiOperation({
     summary: "create product",
@@ -63,16 +42,18 @@ export class ProductV1AdminController {
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Post("/")
   public async createProduct(
-    @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
+    @MediaCookiesParser(productMediaCookieKey.imageUrlCookie)
     productImgCookies: MediaCookieDto[],
-    @Body(ProductNameValidatePipe) productBodyDto: ProductBodyDto,
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
+    @Body(OperateProductValidationPipe) body: ProductBody,
+    @GetJWT() { userId }: JwtAccessTokenPayload,
   ): Promise<JsonClearCookiesInterface> {
-    await this.productTransaction.createProduct({
-      productBodyDto,
-      userId: jwtPayload.userId,
+    const dto: CreateProductDto = {
+      body,
+      userId,
       productImgCookies,
-    });
+    };
+
+    await this.transaction.createProduct(dto);
 
     return {
       statusCode: 201,
@@ -86,23 +67,25 @@ export class ProductV1AdminController {
     description:
       "상품의 아이디에 해당하는 상품의 전체 column, 상품에 사용되는 이미지를 수정합니다. 수정하려는 상품의 가격, 수량을 양의 정수 이외의 숫자로 지정하거나 수정하려는 상품의 이름이 이미 데이터베이스에 존재 한다면 에러를 반환합니다. 이 api를 실행하기 전에 무조건 상품 이미지를 업로드해야 합니다.",
   })
-  @UseInterceptors(JsonClearCookiesInterceptor)
-  @Put("/:id")
+  @UseInterceptors(JsonClearCookiesInterceptor, DeleteProductMediaInterceptor)
+  @Put("/:productId")
   public async modifyProduct(
-    @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
+    @MediaCookiesParser(productMediaCookieKey.imageUrlCookie)
     productImgCookies: MediaCookieDto[],
-    @Param("id", ProductIdValidatePipe) id: string,
-    @Body(ProductNameValidatePipe) productBodyDto: ProductBodyDto,
+    @Param("productId", ProductIdValidatePipe) productId: string,
+    @Body(OperateProductValidationPipe) body: ProductBody,
   ): Promise<JsonClearCookiesInterface> {
-    await this.productTransaction.modifyProduct({
-      id,
-      productBodyDto,
+    const dto: ModifyProductDto = {
+      productId,
+      body,
       productImgCookies,
-    });
+    };
+
+    await this.transaction.modifyProduct(dto);
 
     return {
       statusCode: 201,
-      message: `id(${id})에 해당하는 상품을 수정하였습니다.`,
+      message: `productId(${productId})에 해당하는 상품을 수정하였습니다.`,
       cookieKey: [...productImgCookies.map((cookie) => cookie.whatCookie)],
     };
   }
@@ -112,18 +95,19 @@ export class ProductV1AdminController {
     description:
       "상품의 아이디에 해당하는 상품에 사용되는 이미지를 수정합니다. 이 api를 실행하기 전에 무조건 상품 이미지를 생성해야 합니다.",
   })
-  @UseInterceptors(JsonClearCookiesInterceptor)
-  @Patch("/:id/image")
+  @UseInterceptors(JsonClearCookiesInterceptor, DeleteProductMediaInterceptor)
+  @Patch("/:productId/image")
   public async modifyProductImage(
-    @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
+    @MediaCookiesParser(productMediaCookieKey.imageUrlCookie)
     productImgCookies: MediaCookieDto[],
-    @Param("id", ProductIdValidatePipe) id: string,
+    @Param("productId", ProductIdValidatePipe) productId: string,
   ): Promise<JsonClearCookiesInterface> {
-    await this.productTransaction.modifyProductImage({ id, productImgCookies });
+    const dto: ModifyProductImageDto = { productId, productImgCookies };
+    await this.transaction.modifyProductImage(dto);
 
     return {
       statusCode: 201,
-      message: `id(${id})에 해당하는 상품의 사진을 수정하였습니다.`,
+      message: `productId(${productId})에 해당하는 상품의 사진을 수정하였습니다.`,
       cookieKey: [...productImgCookies.map((cookie) => cookie.whatCookie)],
     };
   }
@@ -134,15 +118,15 @@ export class ProductV1AdminController {
       "상품의 아이디에 해당하는 상품의 이름 column을 수정합니다. 수정하려는 상품의 이름이 이미 데이터베이스에 존재 한다면 에러를 반환합니다. ",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @Patch("/:id/name")
+  @Patch("/:productId/name")
   public async modifyProductName(
-    @Param("id", ProductIdValidatePipe) id: string,
-    @Body(ProductNameValidatePipe) { name }: ModifyProductNameDto,
+    @Param("productId", ProductIdValidatePipe) productId: string,
+    @Body(OperateProductValidationPipe) { name }: ModifyProductNameDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productService.modifyProductName(id, name);
+    await this.service.modifyProductName(productId, name);
     return {
       statusCode: 201,
-      message: `id(${id})에 해당하는 상품의 이름을 수정하였습니다.`,
+      message: `productId(${productId})에 해당하는 상품의 이름을 수정하였습니다.`,
     };
   }
 
@@ -152,16 +136,16 @@ export class ProductV1AdminController {
       "상품의 아이디에 해당하는 상품의 가격 column을 수정합니다. 수정하려는 상품의 가격을 양의 정수 이외의 숫자로 지정하면 에러를 반환합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @Patch("/:id/price")
+  @Patch("/:productId/price")
   public async modifyProductPrice(
-    @Param("id", ProductIdValidatePipe) id: string,
+    @Param("productId", ProductIdValidatePipe) productId: string,
     @Body() { price }: ModifyProductPriceDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productService.modifyProductPrice(id, price);
+    await this.service.modifyProductPrice(productId, price);
 
     return {
       statusCode: 201,
-      message: `id(${id})에 해당하는 상품의 가격을 수정하였습니다.`,
+      message: `productId(${productId})에 해당하는 상품의 가격을 수정하였습니다.`,
     };
   }
 
@@ -170,16 +154,16 @@ export class ProductV1AdminController {
     description: "상품의 아이디에 해당하는 상품의 원산지 column을 수정합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @Patch("/:id/origin")
+  @Patch("/:productId/origin")
   public async modifyProductOrigin(
-    @Param("id", ProductIdValidatePipe) id: string,
+    @Param("productId", ProductIdValidatePipe) productId: string,
     @Body() { origin }: ModifyProductOriginDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productService.modifyProductOrigin(id, origin);
+    await this.service.modifyProductOrigin(productId, origin);
 
     return {
       statusCode: 201,
-      message: `id(${id})에 해당하는 상품의 원산지를 수정하였습니다.`,
+      message: `productId(${productId})에 해당하는 상품의 원산지를 수정하였습니다.`,
     };
   }
 
@@ -188,16 +172,16 @@ export class ProductV1AdminController {
     description: "상품 아이디에 해당하는 상품의 카테고리 column을 수정합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @Patch("/:id/category")
+  @Patch("/:productId/category")
   public async modifyProductCategory(
-    @Param("id", ProductIdValidatePipe) id: string,
+    @Param("productId", ProductIdValidatePipe) productId: string,
     @Body() { category }: ModifyProductCategoryDto,
   ) {
-    await this.productService.modifyProductCategory(id, category);
+    await this.service.modifyProductCategory(productId, category);
 
     return {
       statusCode: 201,
-      message: `id(${id})에 해당하는 상품의 카테고리를 수정하였습니다.`,
+      message: `productId(${productId})에 해당하는 상품의 카테고리를 수정하였습니다.`,
     };
   }
 
@@ -206,35 +190,35 @@ export class ProductV1AdminController {
     description: "상품의 아이디에 해당하는 상품의 설명 column을 수정합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @Patch("/:id/description")
+  @Patch("/:productId/description")
   public async modifyProductDescription(
-    @Param("id", ProductIdValidatePipe) id: string,
+    @Param("productId", ProductIdValidatePipe) productId: string,
     @Body() { description }: ModifyProductDesctiptionDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productService.modifyProductDescription(id, description);
+    await this.service.modifyProductDescription(productId, description);
 
     return {
       statusCode: 201,
-      message: `id(${id})에 해당하는 상품의 설명을 수정하였습니다.`,
+      message: `productId(${productId})에 해당하는 상품의 설명을 수정하였습니다.`,
     };
   }
 
   @ApiOperation({
-    summary: "modify product quantity",
+    summary: "modify product stock",
     description:
       "상품의 아이디에 해당하는 상품의 수량 column을 수정합니다. 수정하려는 상품의 수량을 양의 정수 이외의 숫자로 지정하면 에러를 반환합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @Patch("/:id/quantity")
-  public async modifyProductQuantity(
-    @Param("id", ProductIdValidatePipe) id: string,
-    @Body() { quantity }: ModifyProductQuantityDto,
+  @Patch("/:productId/stock")
+  public async modifyProductStock(
+    @Param("productId", ProductIdValidatePipe) productId: string,
+    @Body() { stock }: ModifyProductStockDto,
   ): Promise<JsonGeneralInterface<null>> {
-    await this.productService.modifyProductQuantity(id, quantity);
+    await this.service.modifyProductStock(productId, stock);
 
     return {
       statusCode: 201,
-      message: `id(${id})에 해당하는 상품의 수량을 수정하였습니다.`,
+      message: `productId(${productId})에 해당하는 상품의 수량을 수정하였습니다.`,
     };
   }
 
@@ -242,14 +226,16 @@ export class ProductV1AdminController {
     summary: "remove product",
     description: "상품의 아이디에 해당하는 상품을 제거합니다.",
   })
-  @UseInterceptors(JsonGeneralInterceptor)
-  @Delete("/:id")
-  public async removeProduct(@Param("id", ProductIdValidatePipe) id: string): Promise<JsonGeneralInterface<null>> {
-    await this.productService.removeProduct(id);
+  @UseInterceptors(JsonGeneralInterceptor, DeleteProductMediaInterceptor)
+  @Delete("/:productId")
+  public async removeProduct(
+    @Param("productId", ProductIdValidatePipe) productId: string,
+  ): Promise<JsonGeneralInterface<null>> {
+    await this.service.removeProduct(productId);
 
     return {
       statusCode: 201,
-      message: `id(${id})에 해당하는 상품을 제거하였습니다.`,
+      message: `productId(${productId})에 해당하는 상품을 제거하였습니다.`,
     };
   }
 }

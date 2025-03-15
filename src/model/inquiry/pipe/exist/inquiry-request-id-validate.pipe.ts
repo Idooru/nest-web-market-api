@@ -4,11 +4,11 @@ import { InquiryValidator } from "../../logic/inquiry.validator";
 
 @Injectable()
 export class InquiryRequestIdValidatePipe implements PipeTransform {
-  constructor(private readonly inquiryValidator: InquiryValidator) {}
+  constructor(private readonly validator: InquiryValidator) {}
 
   @Implemented
   public async transform(id: string): Promise<string> {
-    await this.inquiryValidator.isExistRequestId(id);
+    await this.validator.isExistRequestId(id);
 
     return id;
   }

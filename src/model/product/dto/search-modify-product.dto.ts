@@ -1,10 +1,6 @@
-import { ProductEntity } from "../entities/product.entity";
-import { ProductBodyDto } from "./product-body.dto";
-import { ProductImageEntity } from "../../media/entities/product-image.entity";
+import { ProductBody } from "./product-body.dto";
+import { SearchModifyProductImageDto } from "./search-modify-product-image.dto";
 
-export class SearchModifyProductDto {
-  product: ProductEntity;
-  productBodyDto: ProductBodyDto;
-  beforeProductImages: ProductImageEntity[];
-  newProductImages: ProductImageEntity[];
+export class SearchModifyProductDto extends SearchModifyProductImageDto {
+  body: ProductBody;
 }

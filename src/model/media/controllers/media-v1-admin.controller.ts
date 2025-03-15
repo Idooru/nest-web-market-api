@@ -28,6 +28,8 @@ import { MediaService } from "../services/media.service";
 import { InquiryResponseImageValidatePipe } from "../pipe/exist/inquiry-response-image-validate.pipe";
 import { MediaSearcher } from "../logic/media.searcher";
 import { InquiryResponseVideoValidatePipe } from "../pipe/exist/inquiry-response-video-validate.pipe";
+import { DeleteProductMediaInterceptor } from "../interceptor/delete-product-media.interceptor";
+import { DeleteInquiryResponseMediaInterceptor } from "../interceptor/delete-inquiry-response-media.interceptor";
 
 @ApiTags("v1 관리자 Media API")
 @UseGuards(IsAdminGuard)
@@ -35,11 +37,11 @@ import { InquiryResponseVideoValidatePipe } from "../pipe/exist/inquiry-response
 @Controller({ path: "/admin/media", version: "1" })
 export class MediaV1AdminController {
   constructor(
-    private readonly mediaSearcher: MediaSearcher,
-    private readonly mediaService: MediaService,
-    @Inject("ProductMediaCookieKey")
+    private readonly searcher: MediaSearcher,
+    private readonly service: MediaService,
+    @Inject("product-media-cookie-key")
     private readonly productMedia: ProductMediaCookieKey,
-    @Inject("InquiryMediaCookieKey")
+    @Inject("inquiry-media-cookie-key")
     private readonly inquiryMedia: InquiryMediaCookieKey,
   ) {}
 
@@ -50,10 +52,10 @@ export class MediaV1AdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/product/image")
   public async findUploadedProductImage(
-    @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
+    @MediaCookiesParser(productMediaCookieKey.imageUrlCookie)
     productImgCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<ProductImageEntity[]>> {
-    const result = await this.mediaSearcher.findProductImagesWithId(productImgCookies);
+    const result = await this.searcher.findProductImageWithId(productImgCookies);
 
     return {
       statusCode: 200,
@@ -70,10 +72,10 @@ export class MediaV1AdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/inquiry/response/image")
   public async findUploadedInquiryResponseImages(
-    @MediaCookiesParser(inquiryMediaCookieKey.response.image_url_cookie)
+    @MediaCookiesParser(inquiryMediaCookieKey.response.imageUrlCookie)
     inquiryResponseImgCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<InquiryResponseImageEntity[]>> {
-    const result = await this.mediaSearcher.findInquiryResponseImagesWithId(inquiryResponseImgCookies);
+    const result = await this.searcher.findInquiryResponseImagesWithId(inquiryResponseImgCookies);
 
     return {
       statusCode: 200,
@@ -90,10 +92,10 @@ export class MediaV1AdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/inquiry/response/video")
   public async findUploadedInquiryResponseVideos(
-    @MediaCookiesParser(inquiryMediaCookieKey.response.video_url_cookie)
+    @MediaCookiesParser(inquiryMediaCookieKey.response.videoUrlCookie)
     inquiryResponseVdoCookies: MediaCookieDto[],
   ): Promise<JsonGeneralInterface<InquiryResponseVideoEntity[]>> {
-    const result = await this.mediaSearcher.findInquiryResponseVideosWithId(inquiryResponseVdoCookies);
+    const result = await this.searcher.findInquiryResponseVideosWithId(inquiryResponseVdoCookies);
 
     return {
       statusCode: 200,
@@ -120,12 +122,12 @@ export class MediaV1AdminController {
     @UploadedFiles(ProductImagesValidatePipe)
     files: Express.Multer.File[],
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
-    const cookieValues = await this.mediaService.uploadProductImages(files);
+    const cookieValues = await this.service.uploadProductImages(files);
 
     return {
       statusCode: 201,
       message: "상품 사진을 업로드 하였습니다.",
-      cookieKey: this.productMedia.image_url_cookie,
+      cookieKey: this.productMedia.imageUrlCookie,
       cookieValues,
     };
   }
@@ -148,12 +150,12 @@ export class MediaV1AdminController {
     @UploadedFiles(InquiryResponseImageValidatePipe)
     files: Express.Multer.File[],
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
-    const cookieValues = await this.mediaService.uploadInquiryResponseImages(files);
+    const cookieValues = await this.service.uploadInquiryResponseImages(files);
 
     return {
       statusCode: 201,
       message: "문의 응답 사진을 업로드 하였습니다.",
-      cookieKey: this.inquiryMedia.response.image_url_cookie,
+      cookieKey: this.inquiryMedia.response.imageUrlCookie,
       cookieValues,
     };
   }
@@ -176,12 +178,12 @@ export class MediaV1AdminController {
     @UploadedFiles(InquiryResponseVideoValidatePipe)
     files: Array<Express.Multer.File>,
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
-    const cookieValues = await this.mediaService.uploadInquiryResponseVideos(files);
+    const cookieValues = await this.service.uploadInquiryResponseVideos(files);
 
     return {
       statusCode: 201,
       message: "문의 응답 동영상을 업로드 하였습니다.",
-      cookieKey: this.inquiryMedia.response.video_url_cookie,
+      cookieKey: this.inquiryMedia.response.videoUrlCookie,
       cookieValues,
     };
   }
@@ -190,13 +192,13 @@ export class MediaV1AdminController {
     summary: "cancel product image upload",
     description: "상품 이미지 업로드를 취소합니다. 클라이언트에 저장되어 있던 상품 이미지 쿠키를 제거합니다.",
   })
-  @UseInterceptors(JsonClearCookiesInterceptor)
+  @UseInterceptors(JsonClearCookiesInterceptor, DeleteProductMediaInterceptor)
   @Delete("/product/image")
-  public async cancelImageUploadForProduct(
-    @MediaCookiesParser(productMediaCookieKey.image_url_cookie)
+  public async cancelProductImageUpload(
+    @MediaCookiesParser(productMediaCookieKey.imageUrlCookie)
     productImgCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
-    const cookieKey = await this.mediaService.deleteProductImagesWithId(productImgCookies);
+    const cookieKey = await this.service.deleteProductImagesWithId(productImgCookies);
 
     return {
       statusCode: 200,
@@ -209,13 +211,13 @@ export class MediaV1AdminController {
     summary: "cancel inquiry response image upload",
     description: "문의 응답 이미지 업로드를 취소합니다. 클라이언트에 저장되어 있던 문의 응답 이미지 쿠키를 제거합니다.",
   })
-  @UseInterceptors(JsonClearCookiesInterceptor)
+  @UseInterceptors(JsonClearCookiesInterceptor, DeleteInquiryResponseMediaInterceptor)
   @Delete("/inquiry/response/image")
   public async cancelInquiryResponseImageUpload(
-    @MediaCookiesParser(inquiryMediaCookieKey.response.image_url_cookie)
+    @MediaCookiesParser(inquiryMediaCookieKey.response.imageUrlCookie)
     inquiryResponseImgCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
-    const cookieKey = await this.mediaService.deleteInquiryResponseImagesWithId(inquiryResponseImgCookies);
+    const cookieKey = await this.service.deleteInquiryResponseImagesWithId(inquiryResponseImgCookies);
 
     return {
       statusCode: 200,
@@ -228,13 +230,13 @@ export class MediaV1AdminController {
     summary: "cancel inquiry response video upload",
     description: "문의 응답 비디오 업로드를 취소합니다. 클라이언트에 저장되어 있던 문의 응답 비디오 쿠키를 제거합니다.",
   })
-  @UseInterceptors(JsonClearCookiesInterceptor)
+  @UseInterceptors(JsonClearCookiesInterceptor, DeleteInquiryResponseMediaInterceptor)
   @Delete("/inquiry/response/video")
   public async cancelInquiryResponseVideoUpload(
-    @MediaCookiesParser(inquiryMediaCookieKey.response.video_url_cookie)
+    @MediaCookiesParser(inquiryMediaCookieKey.response.videoUrlCookie)
     inquiryResponseVdoCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
-    const cookieKey = await this.mediaService.deleteInquiryResponseVideosWithId(inquiryResponseVdoCookies);
+    const cookieKey = await this.service.deleteInquiryResponseVideosWithId(inquiryResponseVdoCookies);
 
     return {
       statusCode: 200,

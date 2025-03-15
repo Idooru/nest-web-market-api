@@ -1,18 +1,18 @@
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
-import { InquiryRequestBodyDto } from "./inquiry-request-body.dto";
+import { InquiryRequestBody } from "./inquiry-request-body";
 import { MediaCookieDto } from "../../../media/dto/media-cookie.dto";
 
-export class PrepareToCreateInquiryRequestDto {
-  public inquiryRequestBodyDto: InquiryRequestBodyDto;
+export class CreateInquiryRequestDto {
+  public body: InquiryRequestBody;
   public userId: string;
   public productId: string;
-  public inquiryRequestImgCookies: MediaCookieDto[];
-  public inquiryRequestVdoCookies: MediaCookieDto[];
+  public imageCookies: MediaCookieDto[];
+  public videoCookies: MediaCookieDto[];
 }
 
-export class CreateInquiryRequestDto {
-  public inquiryRequestBodyDto: InquiryRequestBodyDto;
+export class CreateInquiryRequestRowDto {
+  public body: InquiryRequestBody;
   public clientUser: ClientUserEntity;
   public product: ProductEntity;
 }

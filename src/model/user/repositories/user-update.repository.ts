@@ -10,6 +10,7 @@ import { UserAuthEntity } from "../entities/user-auth.entity";
 import { Transactional } from "../../../common/interfaces/initializer/transactional";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
 import { General } from "../../../common/decorators/general.decoration";
+import { UserRole } from "../types/user-role.type";
 
 @Injectable()
 export class UserUpdateRepository {
@@ -24,7 +25,7 @@ export class UserUpdateRepository {
   ) {}
 
   @Transaction
-  public createUserEntity(role: ["client", "admin"]): Promise<UserEntity> {
+  public createUserEntity(role: UserRole): Promise<UserEntity> {
     return this.transaction.getRepository().user.save({ role });
   }
 
@@ -69,7 +70,7 @@ export class UserUpdateRepository {
   }
 
   @General
-  public async modifyUserPhonenumber(phoneNumber: string, id: string): Promise<void> {
+  public async modifyUserPhoneNumber(phoneNumber: string, id: string): Promise<void> {
     await this.userProfileRepository.update(id, { phoneNumber });
   }
 
@@ -86,5 +87,15 @@ export class UserUpdateRepository {
   @General
   public async deleteUser(id: string): Promise<void> {
     await this.userRepository.delete({ id });
+  }
+
+  @General
+  public async setRefreshToken(id: string, refreshToken: string): Promise<void> {
+    await this.userAuthRepository.update(id, { refreshToken });
+  }
+
+  @General
+  public async removeRefreshToken(id: string): Promise<void> {
+    await this.userAuthRepository.update(id, { refreshToken: null });
   }
 }

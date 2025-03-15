@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { OrderBodyDto } from "../../dto/order-body.dto";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 import { OrderRepositoryPayload } from "./order-repository.payload";
 import { TransactionHandler } from "../../../../common/lib/handler/transaction.handler";
 import { OrderTransactionSearcher } from "./order-transaction.searcher";
 import { OrderTransactionContext } from "./order-transaction.context";
+import { CreateOrderDto } from "../../dto/create-order.dto";
 
 @Injectable()
 export class OrderTransactionExecutor {
@@ -15,15 +15,19 @@ export class OrderTransactionExecutor {
     private readonly context: OrderTransactionContext,
   ) {}
 
-  public async createOrder(createOrderDto: { clientId: string; orderBodyDto: OrderBodyDto }): Promise<void> {
-    const search = await this.searcher.searchCreateOrder(createOrderDto);
+  public async createOrder(dto: CreateOrderDto): Promise<void> {
+    const search = await this.searcher.searchCreateOrder(dto);
     const queryRunner = await this.transaction.init();
 
     this.handler.setQueryRunner(queryRunner);
-    this.context
-      .createOrderContext(search)()
-      .then(() => this.handler.commit())
-      .catch((err) => this.handler.rollback(err))
-      .finally(() => this.handler.release());
+
+    try {
+      await this.context.createOrderContext(search);
+      await this.handler.commit();
+    } catch (err) {
+      await this.handler.rollback(err);
+    } finally {
+      await this.handler.release();
+    }
   }
 }

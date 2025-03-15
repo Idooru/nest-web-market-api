@@ -4,6 +4,7 @@ import { MediaCookieDto } from "../dto/media-cookie.dto";
 import { MediaEventMapSetter } from "./media-event-map.setter";
 import { SetDeleteMediaFilesDto } from "../dto/set-delete-media-files.dto";
 import { DeleteMediaFilesDto } from "../dto/delete-media-files.dto";
+import { UploadMediaDto } from "../dto/upload-media.dto";
 
 @Injectable()
 export class MediaUtils {
@@ -32,14 +33,8 @@ export class MediaUtils {
     }));
   }
 
-  public createStuffs(
-    files: Express.Multer.File[],
-    path: string,
-  ): {
-    url: string;
-    size: number;
-  }[] {
-    return files.map((file: Express.Multer.File): { size: number; url: string } => {
+  public createStuffs(files: Express.Multer.File[], path: string): UploadMediaDto[] {
+    return files.map((file: Express.Multer.File) => {
       const url = this.setUrl(file.filename, path);
       const size = file.size;
 
@@ -54,9 +49,9 @@ export class MediaUtils {
   }
 
   public deleteMediaFiles<I extends { url: string }, V extends { url: string }>(
-    setDeleteMediaFilesDto: SetDeleteMediaFilesDto<I, V>,
+    dto: SetDeleteMediaFilesDto<I, V>,
   ): void {
-    const { images, videos, mediaEntity, option, callWhere } = setDeleteMediaFilesDto;
+    const { images, videos, mediaEntity, option, callWhere } = dto;
 
     let imagePattern: RegExp;
     let videoPattern: RegExp;

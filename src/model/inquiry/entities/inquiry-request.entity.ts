@@ -6,22 +6,24 @@ import { InquiryRequestVideoEntity } from "src/model/media/entities/inquiry-requ
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { PostEntity } from "src/common/entities/post.entity";
 import { InquiryResponseEntity } from "./inquiry-response.entity";
+import { InquiryOption, inquiryOption } from "../types/inquiry-option.type";
+import { warnEnumMessage } from "../../../common/functions/none-enum";
 
 @Entity({ name: "inquiry_requests", synchronize: true })
 export class InquiryRequestEntity extends PostEntity {
-  @IsEnum(["product status", "delivery status", ""])
+  @IsEnum(inquiryOption, { message: warnEnumMessage(inquiryOption) })
   @IsNotEmpty()
-  @Column({ type: "enum", enum: ["product status", "delivery status"] })
-  public categories: "product status" | "delivery status";
+  @Column({ type: "enum", enum: inquiryOption })
+  public inquiryOption: InquiryOption;
 
   @ManyToOne(() => ClientUserEntity, (client) => client.writtenInquiryRequest, {
     onDelete: "CASCADE",
   })
-  public InquiryRequestWriter: ClientUserEntity;
+  public InquiryRequester: ClientUserEntity;
 
   @IsBoolean()
   @Column({ type: "boolean", default: false })
-  public isAnswerd: boolean;
+  public isAnswered: boolean;
 
   @ManyToOne(() => ProductEntity, (product) => product.InquiryRequest, {
     onDelete: "CASCADE",

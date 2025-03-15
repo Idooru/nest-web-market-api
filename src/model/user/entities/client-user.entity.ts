@@ -5,7 +5,8 @@ import { UserEntity } from "./user.entity";
 import { ChildEntity } from "src/common/entities/child.entity";
 import { CartEntity } from "../../cart/entities/cart.entity";
 import { OrderEntity } from "../../order/entities/order.entity";
-import { PaymentEntitiy } from "../../order/entities/payment.entitiy";
+import { PaymentEntity } from "../../order/entities/payment.entity";
+import { ReviewImageEntity } from "src/model/media/entities/review-image.entity";
 
 @Entity({ name: "client_users", synchronize: true })
 export class ClientUserEntity extends ChildEntity {
@@ -21,12 +22,19 @@ export class ClientUserEntity extends ChildEntity {
   @OneToMany(() => OrderEntity, (order) => order.ClientUser)
   public Order: OrderEntity[];
 
-  @OneToMany(() => PaymentEntitiy, (payment) => payment.ClientUser)
-  public Payment: PaymentEntitiy[];
+  @OneToMany(() => PaymentEntity, (payment) => payment.ClientUser)
+  public Payment: PaymentEntity[];
 
-  @OneToMany(() => ReviewEntity, (review) => review.reviewer)
+  @OneToMany(() => ReviewEntity, (review) => review.reviewer, {
+    cascade: true,
+  })
   public writtenReview: ReviewEntity[];
 
-  @OneToMany(() => InquiryRequestEntity, (inquiryRequest) => inquiryRequest.inquiryRequestWritter, { cascade: true })
+  @OneToMany(() => ReviewImageEntity, (reviewImage) => reviewImage.uploader, {
+    cascade: true,
+  })
+  public uploadedReviewImage: ReviewImageEntity[];
+
+  @OneToMany(() => InquiryRequestEntity, (inquiryRequest) => inquiryRequest.InquiryRequester, { cascade: true })
   public writtenInquiryRequest: InquiryRequestEntity[];
 }

@@ -9,7 +9,7 @@ import { ProductModule } from "../product/product.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { CartEntity } from "./entities/cart.entity";
 import { UserModule } from "../user/user.module";
-import { cartSelectProperty } from "../../common/config/repository-select-configs/cart.select";
+import { cartSelect } from "../../common/config/repository-select-configs/cart.select";
 import { CartValidator } from "./logic/cart.validator";
 import { CartValidateRepository } from "./repositories/cart-validate.repository";
 import { OrderModule } from "../order/order.module";
@@ -24,7 +24,7 @@ import { OrderModule } from "../order/order.module";
   ],
   controllers: [CartV1ClientController],
   providers: [
-    { provide: "CartsSelectProperty", useValue: cartSelectProperty },
+    { provide: "cart-select", useValue: cartSelect },
     CartService,
     CartSearchRepository,
     CartUpdateRepository,

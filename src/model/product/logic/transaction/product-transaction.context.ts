@@ -3,69 +3,57 @@ import { SearchCreateProductDto } from "../../dto/search-create-product.dto";
 import { ProductService } from "../../services/product.service";
 import { SearchModifyProductDto } from "../../dto/search-modify-product.dto";
 import { SearchModifyProductImageDto } from "../../dto/search-modify-product-image.dto";
+import { ModifyProductDto } from "../../dto/modify-product.dto";
+import { ChangeProductImageDto } from "../../dto/change-product-image.dto";
+import { InsertProductImagesDto } from "../../dto/insert-product-image.dto";
+import { CreateProductDto } from "../../dto/create-product.dto";
 
 @Injectable()
 export class ProductTransactionContext {
   constructor(private readonly productService: ProductService) {}
 
-  public createProductContext(dto: SearchCreateProductDto): () => Promise<void> {
-    const { productBodyDto, productImages, admin } = dto;
-
-    return async () => {
-      const product = await this.productService.createProduct({
-        productBodyDto,
-        admin,
-      });
-
-      const starRateWork = async () => {
-        await this.productService.createStarRate(product);
-      };
-
-      const imageWork = async () => {
-        await this.productService.insertProductImages({
-          productImages,
-          product,
-        });
-      };
-
-      await Promise.all([starRateWork(), imageWork()]);
+  public async createProductContext({ body, productImages, admin }: SearchCreateProductDto): Promise<void> {
+    const createProductDto: CreateProductDto = {
+      body,
+      admin,
     };
+
+    const product = await this.productService.createProduct(createProductDto);
+
+    const insertProductImagesDto: InsertProductImagesDto = {
+      productId: product.id,
+      productImages,
+    };
+
+    await Promise.all([
+      this.productService.createStarRate(product),
+      this.productService.insertProductImages(insertProductImagesDto),
+    ]);
   }
 
-  public modifyProductContext(dto: SearchModifyProductDto): () => Promise<void> {
-    const { product, productBodyDto, beforeProductImages, newProductImages } = dto;
+  public async modifyProductContext(dto: SearchModifyProductDto): Promise<void> {
+    const { productId, body, beforeProductImages, newProductImages } = dto;
 
-    return async () => {
-      await this.productService.modifyProduct({
-        productBodyDto,
-        product,
-      });
-
-      const imageWork = async () => {
-        await this.productService.changeProductImages({
-          beforeProductImages,
-          newProductImages,
-          product,
-        });
-      };
-
-      await imageWork();
+    const modifyProductDto: ModifyProductDto = {
+      productId,
+      body,
     };
+
+    const changeProductImageDto: ChangeProductImageDto = {
+      productId,
+      beforeProductImages,
+      newProductImages,
+    };
+
+    const promises = [this.productService.modifyProduct(modifyProductDto)];
+    if (dto.beforeProductImages && dto.newProductImages) {
+      promises.push(this.productService.changeProductImages(changeProductImageDto));
+    }
+
+    await Promise.all(promises);
   }
 
-  public modifyProductImageContext(dto: SearchModifyProductImageDto): () => Promise<void> {
-    const { product, beforeProductImages, newProductImages } = dto;
-
-    return async () => {
-      const imageWork = async () => {
-        await this.productService.changeProductImages({
-          beforeProductImages,
-          newProductImages,
-          product,
-        });
-      };
-
-      await imageWork();
-    };
+  public async modifyProductImageContext(dto: SearchModifyProductImageDto): Promise<void> {
+    await this.productService.changeProductImages(dto);
   }
 }

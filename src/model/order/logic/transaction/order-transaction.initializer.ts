@@ -4,7 +4,7 @@ import { CartEntity } from "../../../cart/entities/cart.entity";
 import { ProductEntity } from "../../../product/entities/product.entity";
 import { OrderRepositoryPayload } from "./order-repository.payload";
 import { OrderEntity } from "../../entities/order.entity";
-import { PaymentEntitiy } from "../../entities/payment.entitiy";
+import { PaymentEntity } from "../../entities/payment.entity";
 import { AccountEntity } from "../../../account/entities/account.entity";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 import { Implemented } from "../../../../common/decorators/implemented.decoration";
@@ -27,7 +27,7 @@ export class OrderTransactionInitializer extends Transactional<OrderRepositoryPa
       order: queryRunner.manager.getRepository(OrderEntity),
       cart: queryRunner.manager.getRepository(CartEntity),
       product: queryRunner.manager.getRepository(ProductEntity),
-      payment: queryRunner.manager.getRepository(PaymentEntitiy),
+      payment: queryRunner.manager.getRepository(PaymentEntity),
       account: queryRunner.manager.getRepository(AccountEntity),
     };
 

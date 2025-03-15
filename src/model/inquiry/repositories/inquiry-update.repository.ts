@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { CreateInquiryRequestDto } from "../dto/request/create-inquiry-request.dto";
+import { CreateInquiryRequestRowDto } from "../dto/request/create-inquiry-request.dto";
 import { InquiryRequestEntity } from "../entities/inquiry-request.entity";
 import { InquiryRequestImageEntity } from "../../media/entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "../../media/entities/inquiry-request-video.entity";
 import { InquiryResponseImageEntity } from "../../media/entities/inquiry-response-image.entity";
 import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
 import { InquiryResponseVideoEntity } from "../../media/entities/inquiry-response-video.entity";
-import { CreateInquiryResponseDto } from "../dto/response/create-inquiry-response.dto";
+import { CreateInquiryResponseRowDto } from "../dto/response/create-inquiry-response.dto";
 import { Transactional } from "../../../common/interfaces/initializer/transactional";
 import { InquiryRepositoryPayload } from "../logic/transaction/inquiry-repository.payload";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
@@ -16,18 +16,18 @@ export class InquiryUpdateRepository {
   constructor(private readonly transaction: Transactional<InquiryRepositoryPayload>) {}
 
   @Transaction
-  public createInquiryRequest(createInquiryRequestDto: CreateInquiryRequestDto): Promise<InquiryRequestEntity> {
-    const { inquiryRequestBodyDto, product, clientUser } = createInquiryRequestDto;
+  public createInquiryRequestRow(dto: CreateInquiryRequestRowDto): Promise<InquiryRequestEntity> {
+    const { body, product, clientUser } = dto;
 
     return this.transaction.getRepository().inquiryRequest.save({
-      ...inquiryRequestBodyDto,
+      ...body,
       Product: product,
-      InquiryRequestWriter: clientUser,
+      InquiryRequester: clientUser,
     });
   }
 
   @Transaction
-  public async insertInquiryReuqestIdOnInquiryRequestImage(
+  public async insertInquiryRequestIdOnInquiryRequestImage(
     inquiryRequestImage: InquiryRequestImageEntity,
     inquiryRequest: InquiryRequestEntity,
   ): Promise<void> {
@@ -45,20 +45,20 @@ export class InquiryUpdateRepository {
   }
 
   @Transaction
-  public createInquiryResponse(createInquiryResponseDto: CreateInquiryResponseDto): Promise<InquiryResponseEntity> {
-    const { inquiryResponseBodyDto, inquiryRequest, admin } = createInquiryResponseDto;
+  public createInquiryResponseRow(dto: CreateInquiryResponseRowDto): Promise<InquiryResponseEntity> {
+    const { body, inquiryRequest, adminUser } = dto;
 
     return this.transaction.getRepository().inquiryResponse.save({
-      ...inquiryResponseBodyDto,
+      ...body,
       InquiryRequest: inquiryRequest,
-      inquiryResponseWritter: admin,
+      inquiryRespondent: adminUser,
     });
   }
 
   @Transaction
   public async modifyInquiryRequestAnswerState(id: string): Promise<void> {
     await this.transaction.getRepository().inquiryRequest.update(id, {
-      isAnswerd: true,
+      isAnswered: true,
     });
   }
 

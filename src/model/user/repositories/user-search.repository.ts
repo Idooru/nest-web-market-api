@@ -1,8 +1,8 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "../entities/user.entity";
-import { Repository } from "typeorm";
-import { UserSelectProperty } from "src/common/config/repository-select-configs/user.select";
+import { Repository, TypeORMError } from "typeorm";
+import { UserSelect } from "src/common/config/repository-select-configs/user.select";
 import { ClientUserEntity } from "../entities/client-user.entity";
 import { AdminUserEntity } from "../entities/admin-user.entity";
 import { loggerFactory } from "../../../common/functions/logger.factory";
@@ -11,24 +11,24 @@ import { FindEmailDto } from "../dtos/find-email.dto";
 @Injectable()
 export class UserSearchRepository {
   constructor(
+    @Inject("user-select")
+    private readonly select: UserSelect,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(ClientUserEntity)
     private readonly clientUserRepository: Repository<ClientUserEntity>,
     @InjectRepository(AdminUserEntity)
     private readonly adminUserRepository: Repository<AdminUserEntity>,
-    @Inject("UserSelectProperty")
-    private readonly userSelect: UserSelectProperty,
   ) {}
 
   public async findAllUsersFromLatest(): Promise<UserEntity[]> {
     const users = await this.userRepository
       .createQueryBuilder()
-      .select(this.userSelect.clientUserSimple)
+      .select(this.select.clientUserSimple)
       .from(UserEntity, "user")
       .innerJoin("user.Auth", "Auth")
       .orderBy("user.createdAt", "DESC")
-      .getMany();
+      .getRawMany();
 
     if (!users.length) {
       const message = "사용자가 없습니다.";
@@ -42,11 +42,11 @@ export class UserSearchRepository {
   public async findAllUsersFromOldest(): Promise<UserEntity[]> {
     const users = await this.userRepository
       .createQueryBuilder()
-      .select(this.userSelect.clientUserSimple)
+      .select(this.select.clientUserSimple)
       .from(UserEntity, "user")
       .innerJoin("user.Auth", "Auth")
       .orderBy("user.createdAt", "ASC")
-      .getMany();
+      .getRawMany();
 
     if (!users.length) {
       const message = "사용자가 없습니다.";
@@ -60,7 +60,7 @@ export class UserSearchRepository {
   public findUserWithId(id: string): Promise<UserEntity> {
     return this.userRepository
       .createQueryBuilder()
-      .select(this.userSelect.userBase)
+      .select(this.select.userBase)
       .from(UserEntity, "user")
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
@@ -71,7 +71,7 @@ export class UserSearchRepository {
   public findClientUserWithId(id: string): Promise<UserEntity> {
     return this.userRepository
       .createQueryBuilder()
-      .select(this.userSelect.clientUser)
+      .select(this.select.clientUser)
       .from(UserEntity, "user")
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
@@ -83,7 +83,7 @@ export class UserSearchRepository {
   public async findAdminUserWithId(id: string): Promise<UserEntity> {
     return this.userRepository
       .createQueryBuilder()
-      .select(this.userSelect.adminUser)
+      .select(this.select.adminUser)
       .from(UserEntity, "user")
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
@@ -118,7 +118,7 @@ export class UserSearchRepository {
   public findUserWithEmail(email: string): Promise<UserEntity> {
     return this.userRepository
       .createQueryBuilder()
-      .select(this.userSelect.userBase)
+      .select(this.select.userBase)
       .from(UserEntity, "user")
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
@@ -129,7 +129,7 @@ export class UserSearchRepository {
   public findUserForgotten(dto: FindEmailDto): Promise<UserEntity> {
     return this.userRepository
       .createQueryBuilder()
-      .select(this.userSelect.userBase)
+      .select(this.select.userBase)
       .from(UserEntity, "user")
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
@@ -138,67 +138,21 @@ export class UserSearchRepository {
       .getOne();
   }
 
-  public async findClientUserProfileInfoWithId(id: string): Promise<UserEntity> {
-    return await this.userRepository
+  public findUserProfile(id: string): Promise<UserEntity> {
+    return this.userRepository
       .createQueryBuilder()
-      .select(this.userSelect.clientUserProfile)
+      .select(this.select.profile)
       .from(UserEntity, "user")
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
-      .innerJoin("user.clientActions", "Client")
-      .leftJoin("user.Account", "Account")
-      .leftJoin("Client.Cart", "Cart")
-      .leftJoin("Cart.Product", "CartProduct")
-      .leftJoin("CartProduct.Image", "CartProductImage")
-      .leftJoin("Client.Order", "Order")
-      .leftJoin("Order.Payment", "Payment")
-      .leftJoin("Payment.Product", "PaymentProduct")
-      .leftJoin("PaymentProduct.Image", "PaymentProductImage")
-      .leftJoin("Client.writtenReview", "Review")
-      .leftJoin("Review.Image", "ReviewImage")
-      .leftJoin("Review.Video", "ReviewVideo")
-      .leftJoin("Client.writtenInquiryRequest", "InquiryRequest")
-      .leftJoin("InquiryRequest.Image", "InquiryRequestImage")
-      .leftJoin("InquiryRequest.Video", "InquiryRequestVideo")
-      .leftJoin("InquiryRequest.InquiryResponse", "InquiryResponse")
-      .leftJoin("InquiryResponse.Image", "InquiryResponseImage")
-      .leftJoin("InquiryResponse.Video", "InquiryResponseVideo")
       .where("user.id = :id", { id })
-      .getOne();
-  }
-
-  public async findAdminUserProfileInfoWithId(id: string): Promise<UserEntity> {
-    return await this.userRepository
-      .createQueryBuilder()
-      .select(this.userSelect.adminUserProfile)
-      .from(UserEntity, "user")
-      .innerJoin("user.Profile", "Profile")
-      .innerJoin("user.Auth", "Auth")
-      .innerJoin("user.adminActions", "AdminActions")
-      .leftJoin("user.Account", "Account")
-      .leftJoin("AdminActions.createdProduct", "Product")
-      .leftJoin("Product.Image", "ProductImage")
-      .leftJoin("Product.StarRate", "StarRate")
-      .leftJoin("Product.Review", "Review")
-      .leftJoin("Product.InquiryRequest", "InquiryRequest")
-      .leftJoin("InquiryRequest.Image", "InquiryRequestImage")
-      .leftJoin("InquiryRequest.Video", "InquiryRequestVideo")
-      .leftJoin("Review.Image", "ReviewImage")
-      .leftJoin("Review.Video", "ReviewVideo")
-      .leftJoin("AdminActions.writtenInquiryResponse", "InquiryResponse")
-      .leftJoin("InquiryResponse.Image", "InquiryResponseImage")
-      .leftJoin("InquiryResponse.Video", "InquiryResponseVideo")
-      .leftJoin("InquiryResponse.InquiryRequest", "ReceivedInquiryRequest")
-      .leftJoin("ReceivedInquiryRequest.Image", "ReceivedInquiryRequestImage")
-      .leftJoin("ReceivedInquiryRequest.Video", "ReceivedInquiryRequestVideo")
-      .where("user.id = :id", { id })
-      .getOne();
+      .getRawOne();
   }
 
   public findClientUserInfo(id: string): Promise<UserEntity> {
     return this.userRepository
       .createQueryBuilder()
-      .select(this.userSelect.whenAdminClientUser)
+      .select(this.select.whenAdminClientUser)
       .from(UserEntity, "user")
       .innerJoin("user.Auth", "Auth")
       .innerJoin("user.clientActions", "Client")
@@ -213,5 +167,17 @@ export class UserSearchRepository {
       .leftJoin("InquiryRequest.Video", "InquiryRequestVideo")
       .where("user.id = :id", { id })
       .getOne();
+  }
+
+  public async findRefreshToken(id: string): Promise<string> {
+    const user = await this.userRepository
+      .createQueryBuilder()
+      .select(["user", "Auth"])
+      .from(UserEntity, "user")
+      .innerJoin("user.Auth", "Auth")
+      .where("user.id = :id", { id })
+      .getOne();
+
+    return user.Auth.refreshToken;
   }
 }

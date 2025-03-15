@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { PrepareToCreateInquiryRequestDto } from "../../dto/request/create-inquiry-request.dto";
-import { PrepareToCreateInquiryResponseDto } from "../../dto/response/create-inquiry-response.dto";
+import { CreateInquiryRequestDto } from "../../dto/request/create-inquiry-request.dto";
+import { CreateInquiryResponseDto } from "../../dto/response/create-inquiry-response.dto";
 import { InquiryRepositoryPayload } from "./inquiry-repository.payload";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 import { TransactionHandler } from "../../../../common/lib/handler/transaction.handler";
@@ -16,31 +16,35 @@ export class InquiryTransactionExecutor {
     private readonly context: InquiryTransactionContext,
   ) {}
 
-  public async createInquiryRequest(
-    dto: PrepareToCreateInquiryRequestDto,
-  ): Promise<void> {
-    const search = await this.searcher.searchToCreateInquiryRequest(dto);
+  public async createInquiryRequest(dto: CreateInquiryRequestDto): Promise<void> {
+    const search = await this.searcher.searchCreateInquiryRequest(dto);
     const queryRunner = await this.transaction.init();
 
     this.handler.setQueryRunner(queryRunner);
-    this.context
-      .createInquiryRequestContext(search)()
-      .then(() => this.handler.commit())
-      .catch((err) => this.handler.rollback(err))
-      .finally(() => this.handler.release());
+
+    try {
+      await this.context.createInquiryRequestContext(search);
+      await this.handler.commit();
+    } catch (err) {
+      await this.handler.rollback(err);
+    } finally {
+      await this.handler.release();
+    }
   }
 
-  public async createInquiryResponse(
-    dto: PrepareToCreateInquiryResponseDto,
-  ): Promise<void> {
+  public async createInquiryResponse(dto: CreateInquiryResponseDto): Promise<void> {
     const search = await this.searcher.searchToCreateInquiryResponse(dto);
     const queryRunner = await this.transaction.init();
 
     this.handler.setQueryRunner(queryRunner);
-    this.context
-      .createInquiryResponseContext(search)()
-      .then(() => this.handler.commit())
-      .catch((err) => this.handler.rollback(err))
-      .finally(() => this.handler.release());
+
+    try {
+      await this.context.createInquiryResponseContext(search);
+      await this.handler.commit();
+    } catch (err) {
+      await this.handler.rollback(err);
+    } finally {
+      await this.handler.release();
+    }
   }
 }

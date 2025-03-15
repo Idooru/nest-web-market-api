@@ -26,19 +26,11 @@ export class InquiryTransactionInitializer extends Transactional<InquiryReposito
 
     this.payload = {
       inquiryRequest: queryRunner.manager.getRepository(InquiryRequestEntity),
-      inquiryRequestImage: queryRunner.manager.getRepository(
-        InquiryRequestImageEntity,
-      ),
-      inquiryRequestVideo: queryRunner.manager.getRepository(
-        InquiryRequestVideoEntity,
-      ),
+      inquiryRequestImage: queryRunner.manager.getRepository(InquiryRequestImageEntity),
+      inquiryRequestVideo: queryRunner.manager.getRepository(InquiryRequestVideoEntity),
       inquiryResponse: queryRunner.manager.getRepository(InquiryResponseEntity),
-      inquiryResponseImage: queryRunner.manager.getRepository(
-        InquiryResponseImageEntity,
-      ),
-      inquiryResponseVideo: queryRunner.manager.getRepository(
-        InquiryResponseVideoEntity,
-      ),
+      inquiryResponseImage: queryRunner.manager.getRepository(InquiryResponseImageEntity),
+      inquiryResponseVideo: queryRunner.manager.getRepository(InquiryResponseVideoEntity),
     };
 
     return queryRunner;

@@ -82,16 +82,18 @@ export class MulterConfigService implements MulterOptionsFactory {
   private static storage(folder: string): multer.StorageEngine {
     return multer.diskStorage({
       destination(req, file, cb) {
-        if (!file.mimetype.match(/\/(jpg|jpeg|png|mp4|MOV|AVI)$/)) {
-          cb(new UnsupportedMediaTypeException("파일 형식이 올바르지 않아 업로드 할 수 없습니다."), null);
+        if (folder.includes("images") && !file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+          return cb(new UnsupportedMediaTypeException("해당 파일은 이미지 파일 형식이 아닙니다."), null);
+        } else if (folder.includes("videos") && !file.mimetype.match(/\/(mp4|MOV|AVI)$/)) {
+          return cb(new UnsupportedMediaTypeException("해당 파일은 비디오 파일 형식이 아닙니다."), null);
         }
+
         const folderName = path.join(__dirname, `../../../../uploads/${folder}`);
 
         cb(null, folderName);
       },
       filename(req, file, cb) {
         const ext: string = path.extname(file.originalname);
-
         const fileName = `${path.basename(file.originalname, ext)}-${Date.now()}${ext}`;
 
         cb(null, fileName);

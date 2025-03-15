@@ -2,36 +2,39 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { IsEnum, IsNotEmpty, IsPositive, IsString, MaxLength, MinLength } from "class-validator";
 import { CommonEntity } from "../../../common/entities/common.entity";
 import { ClientUserEntity } from "../../user/entities/client-user.entity";
-import { PaymentEntitiy } from "./payment.entitiy";
+import { PaymentEntity } from "./payment.entity";
+import { DeliveryOption, deliveryOption } from "../types/delivery-option.type";
+import { warnEnumMessage } from "../../../common/functions/none-enum";
+import { TransactionStatus, transactionStatus } from "../types/transaction-status.type";
 
 @Entity({ name: "orders", synchronize: true })
 export class OrderEntity extends CommonEntity {
-  @IsEnum(["default", "speed", "safe"])
+  @IsEnum(deliveryOption, { message: warnEnumMessage(deliveryOption) })
   @IsNotEmpty()
-  @Column({ type: "enum", enum: ["default", "speed", "safe"] })
-  deliveryOption: "default" | "speed" | "safe";
+  @Column({ type: "enum", enum: deliveryOption })
+  public deliveryOption: DeliveryOption;
 
   @IsString()
   @IsNotEmpty()
   @MinLength(10)
   @MaxLength(50)
   @Column({ type: "varchar", length: 50, nullable: false })
-  deliveryAddress: string;
+  public deliveryAddress: string;
 
   @IsPositive()
   @IsNotEmpty()
   @Column({ type: "int", unsigned: true, nullable: false })
-  totalPrice: number;
+  public totalPrice: number;
 
-  @IsEnum(["success", "fail", "hold"])
+  @IsEnum(transactionStatus, { message: warnEnumMessage(transactionStatus) })
   @IsNotEmpty()
-  @Column({ type: "enum", enum: ["success", "fail", "hold"] })
-  transactionStatus: "success" | "fail" | "hold";
+  @Column({ type: "enum", enum: transactionStatus })
+  public transactionStatus: TransactionStatus;
 
-  @OneToMany(() => PaymentEntitiy, (payment) => payment.Order)
-  Payment: PaymentEntitiy[];
+  @OneToMany(() => PaymentEntity, (payment) => payment.Order)
+  public Payment: PaymentEntity[];
 
   @ManyToOne(() => ClientUserEntity, (clientUser) => clientUser.Order)
   @JoinColumn({ name: "clientId" })
-  ClientUser: ClientUserEntity;
+  public ClientUser: ClientUserEntity;
 }

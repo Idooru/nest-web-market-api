@@ -3,20 +3,20 @@ import { ReviewEntity } from "../entities/review.entity";
 import { Inject, Injectable } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { StarRateEntity } from "../entities/star-rate.entity";
-import { ReviewSelectProperty } from "../../../common/config/repository-select-configs/review.select";
+import { ReviewSelect } from "../../../common/config/repository-select-configs/review.select";
 
 @Injectable()
 export class ReviewSearchRepository {
   constructor(
+    @Inject("review-select")
+    private readonly select: ReviewSelect,
     @InjectRepository(ReviewEntity)
     private readonly reviewRepository: Repository<ReviewEntity>,
     @InjectRepository(StarRateEntity)
     private readonly starRateRepository: Repository<StarRateEntity>,
-    @Inject("ReviewSelectProperty")
-    private readonly select: ReviewSelectProperty,
   ) {}
 
-  public findAllClientsReviews(id: string): Promise<ReviewEntity[]> {
+  public findAllReviews(id: string): Promise<ReviewEntity[]> {
     return this.reviewRepository
       .createQueryBuilder()
       .select(this.select.reviews)

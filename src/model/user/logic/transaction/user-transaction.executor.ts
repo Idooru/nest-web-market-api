@@ -18,21 +18,27 @@ export class UserTransactionExecutor {
     const queryRunner = await this.transaction.init();
     this.handler.setQueryRunner(queryRunner);
 
-    this.context
-      .registerContext(dto)()
-      .then(() => this.handler.commit())
-      .catch((err) => this.handler.rollback(err))
-      .finally(() => this.handler.release());
+    try {
+      await this.context.registerContext(dto);
+      await this.handler.commit();
+    } catch (err) {
+      await this.handler.rollback(err);
+    } finally {
+      await this.handler.release();
+    }
   }
 
   public async modifyUser(dto: PrepareToModifyUserDto): Promise<void> {
     const queryRunner = await this.transaction.init();
     this.handler.setQueryRunner(queryRunner);
 
-    this.context
-      .modifyUserContext(dto)()
-      .then(() => this.handler.commit())
-      .catch((err) => this.handler.rollback(err))
-      .finally(() => this.handler.release());
+    try {
+      await this.context.modifyUserContext(dto);
+      await this.handler.commit();
+    } catch (err) {
+      await this.handler.rollback(err);
+    } finally {
+      await this.handler.release();
+    }
   }
 }

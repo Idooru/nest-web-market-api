@@ -1,17 +1,15 @@
 import { ApiProperty, PickType } from "@nestjs/swagger";
 import { OrderEntity } from "../entities/order.entity";
+import { DeliveryOption } from "../types/delivery-option.type";
 
-export class OrderBodyDto extends PickType(OrderEntity, [
-  "deliveryOption",
-  "deliveryAddress",
-] as const) {
+export class OrderBody extends PickType(OrderEntity, ["deliveryOption", "deliveryAddress"] as const) {
   @ApiProperty({
     description: "주문 배송 옵션",
     example: "default",
     required: true,
     uniqueItems: false,
   })
-  deliveryOption: "default" | "speed" | "safe";
+  deliveryOption: DeliveryOption;
 
   @ApiProperty({
     description: "주문 배송지",

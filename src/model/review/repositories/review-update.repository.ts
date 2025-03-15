@@ -1,78 +1,94 @@
 import { Injectable } from "@nestjs/common";
 import { ReviewEntity } from "../entities/review.entity";
-import { ReviewImageEntity } from "../../media/entities/review-image.entity";
-import { ReviewVideoEntity } from "../../media/entities/review-video.entity";
 import { StarRateEntity } from "../entities/star-rate.entity";
-import { CreateReviewDto } from "../dto/create-review.dto";
-import { ModifyReviewDto } from "../dto/modify-review.dto";
+import { CreateReviewRowDto } from "../dto/create-review.dto";
+import { ModifyReviewDto, ModifyReviewRowDto } from "../dto/modify-review.dto";
 import { Transactional } from "../../../common/interfaces/initializer/transactional";
 import { ReviewRepositoryPayload } from "../logic/transaction/review-repository.payload";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
-
+import { InsertReviewImageDto } from "../dto/insert-review-image.dto";
+import { InsertReviewVideoDto } from "../dto/insert-review-video.dto";
+import { v4 as uuidv4 } from "uuid";
+import { StarRateScore } from "../types/star-rate-score.type";
 @Injectable()
 export class ReviewUpdateRepository {
   constructor(private readonly transaction: Transactional<ReviewRepositoryPayload>) {}
 
   @Transaction
-  public createReview(dto: CreateReviewDto): Promise<ReviewEntity> {
-    const { reviewBodyDto, product, clientUser } = dto;
+  public async createReview(dto: CreateReviewRowDto): Promise<ReviewEntity> {
+    const { body, reviewerId, productId } = dto;
+    const reviewId = uuidv4();
+    await this.transaction.getRepository().review.query(
+      `INSERT INTO
+       reviews (id, title, content, reviewerId, productId)
+       VALUES(?, ?, ?, ?, ?)`,
+      [reviewId, body.title, body.content, reviewerId, productId],
+    );
 
-    return this.transaction.getRepository().review.save({
-      ...reviewBodyDto,
-      Product: product,
-      reviewer: clientUser,
-    });
+    const insertedReview = await this.transaction
+      .getRepository()
+      .review.query(`SELECT * FROM reviews WHERE id = ?`, [reviewId]);
+
+    return insertedReview[0]; // 삽입된 엔티티 반환
   }
 
   @Transaction
-  public async insertReviewIdOnReviewImage(reviewImage: ReviewImageEntity, review: ReviewEntity): Promise<void> {
-    reviewImage.Review = review;
-    await this.transaction.getRepository().reviewImage.save(reviewImage);
+  public async insertReviewIdOnReviewImage({ reviewImageId, reviewId }: InsertReviewImageDto): Promise<void> {
+    await this.transaction.getRepository().reviewImage.query(
+      `UPDATE reviews_images 
+       SET reviewId = ?
+       WHERE id = ?`,
+      [reviewId, reviewImageId],
+    );
   }
 
   @Transaction
-  public async insertReviewIdOnReviewVideo(reviewVideo: ReviewVideoEntity, review: ReviewEntity): Promise<void> {
-    reviewVideo.Review = review;
-    await this.transaction.getRepository().reviewVideo.save(reviewVideo);
+  public async insertReviewIdOnReviewVideo({ reviewVideoId, reviewId }: InsertReviewVideoDto): Promise<void> {
+    await this.transaction.getRepository().reviewVideo.query(
+      `UPDATE reviews_videos 
+       SET reviewId = ?
+       WHERE id = ?`,
+      [reviewId, reviewVideoId],
+    );
   }
 
   @Transaction
-  public async increaseStarRate(scoreChosenByClient: 1 | 2 | 3 | 4 | 5, starRate: StarRateEntity): Promise<void> {
-    switch (scoreChosenByClient) {
+  public async increaseStarRate(starRateScore: StarRateScore, starRate: StarRateEntity): Promise<void> {
+    switch (starRateScore) {
       case 1:
         ++starRate.onePointCount;
-        starRate.onePointSum += scoreChosenByClient;
+        starRate.onePointSum += starRateScore;
         await this.transaction.getRepository().starRate.save(starRate);
         break;
       case 2:
         ++starRate.twoPointCount;
-        starRate.twoPointSum += scoreChosenByClient;
+        starRate.twoPointSum += starRateScore;
         await this.transaction.getRepository().starRate.save(starRate);
         break;
       case 3:
         ++starRate.threePointCount;
-        starRate.threePointSum += scoreChosenByClient;
+        starRate.threePointSum += starRateScore;
         await this.transaction.getRepository().starRate.save(starRate);
         break;
       case 4:
         ++starRate.fourPointCount;
-        starRate.fourPointSum += scoreChosenByClient;
+        starRate.fourPointSum += starRateScore;
         await this.transaction.getRepository().starRate.save(starRate);
         break;
       case 5:
         ++starRate.fivePointCount;
-        starRate.fivePointSum += scoreChosenByClient;
+        starRate.fivePointSum += starRateScore;
         await this.transaction.getRepository().starRate.save(starRate);
         break;
     }
   }
 
   @Transaction
-  public async modifyReview(dto: ModifyReviewDto): Promise<void> {
-    const { review, reviewBodyDto } = dto;
+  public async modifyReview(dto: ModifyReviewRowDto): Promise<void> {
+    const { review, body } = dto;
 
     await this.transaction.getRepository().review.update(review.id, {
-      ...reviewBodyDto,
+      ...body,
       countForModify: --review.countForModify,
     });
   }

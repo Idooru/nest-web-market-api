@@ -22,11 +22,11 @@ class NestCoreConfig {
   private readonly envData: EnvData = this.envDataFactory();
 
   constructor(private readonly app: NestExpressApplication) {
-    this.setSwagger();
     this.setGlobals();
     this.setMiddlewares();
     this.setStaticAssets();
     this.setApiVersioning();
+    this.setSwagger();
   }
 
   public async run() {
@@ -66,6 +66,7 @@ class NestCoreConfig {
     );
     this.app.useGlobalPipes(
       new ValidationPipe({
+        transform: true,
         whitelist: true,
         forbidNonWhitelisted: true,
         exceptionFactory: (validationErrors: ValidationError[]) => {

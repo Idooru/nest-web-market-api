@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, OneToMany, OneToOne } from "typeorm";
-import { IsEnum, IsNotEmpty, IsOptional, IsPositive, IsString } from "class-validator";
+import { IsEmpty, IsEnum, IsNotEmpty, IsOptional, IsPositive, IsString } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
 import { StarRateEntity } from "../../review/entities/star-rate.entity";
@@ -8,7 +8,8 @@ import { InquiryRequestEntity } from "../../inquiry/entities/inquiry-request.ent
 import { AdminUserEntity } from "src/model/user/entities/admin-user.entity";
 import { ProductCategory, productCategory } from "../types/product-category.type";
 import { CartEntity } from "../../cart/entities/cart.entity";
-import { PaymentEntitiy } from "../../order/entities/payment.entitiy";
+import { PaymentEntity } from "../../order/entities/payment.entity";
+import { warnEnumMessage } from "../../../common/functions/none-enum";
 
 @Entity({ name: "products", synchronize: true })
 export class ProductEntity extends CommonEntity {
@@ -27,7 +28,7 @@ export class ProductEntity extends CommonEntity {
   @Column({ type: "varchar", length: 20, nullable: false })
   public origin: string;
 
-  @IsEnum(productCategory)
+  @IsEnum(productCategory, { message: warnEnumMessage(productCategory) })
   @IsString()
   @IsNotEmpty()
   @Column({ type: "enum", enum: productCategory })
@@ -41,7 +42,7 @@ export class ProductEntity extends CommonEntity {
   @IsOptional()
   @IsPositive()
   @Column({ type: "int", unsigned: true, default: 100 })
-  public quantity: number;
+  public stock: number;
 
   @OneToOne(() => StarRateEntity, (starRate) => starRate.Product, {
     cascade: true,
@@ -61,8 +62,8 @@ export class ProductEntity extends CommonEntity {
   @OneToMany(() => CartEntity, (cart) => cart.Product)
   public Cart: CartEntity[];
 
-  @OneToMany(() => PaymentEntitiy, (payment) => payment.Product)
-  public Payment: PaymentEntitiy[];
+  @OneToMany(() => PaymentEntity, (payment) => payment.Product, { nullable: true })
+  public Payment: PaymentEntity[];
 
   @OneToMany(() => ReviewEntity, (review) => review.Product, { cascade: true })
   public Review: ReviewEntity[];

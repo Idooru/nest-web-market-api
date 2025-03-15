@@ -11,8 +11,8 @@ export class ReviewSearcher {
     private readonly productSearcher: ProductSearcher,
   ) {}
 
-  public findAllClientsReviews(id: string): Promise<ReviewEntity[]> {
-    return this.reviewSearchRepository.findAllClientsReviews(id);
+  public findAllReviews(id: string): Promise<ReviewEntity[]> {
+    return this.reviewSearchRepository.findAllReviews(id);
   }
 
   public findStarRateWithId(id: string): Promise<StarRateEntity> {

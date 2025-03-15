@@ -1,7 +1,8 @@
 import { ApiProperty, PickType } from "@nestjs/swagger";
 import { AccountEntity } from "../entities/account.entity";
+import { IsBoolean, IsNotEmpty } from "class-validator";
 
-export class AccountBodyDto extends PickType(AccountEntity, ["bank", "accountNumber"] as const) {
+export class AccountBody extends PickType(AccountEntity, ["bank", "accountNumber", "balance"] as const) {
   @ApiProperty({
     description: "사용자 계좌 은행 이름",
     example: "국민은행",
@@ -25,4 +26,8 @@ export class AccountBodyDto extends PickType(AccountEntity, ["bank", "accountNum
     uniqueItems: false,
   })
   public balance: number;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  public isMainAccount: boolean;
 }

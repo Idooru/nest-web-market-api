@@ -5,19 +5,15 @@ import { SendMailToClientAboutInquiryResponseDto } from "../dto/response/send-ma
 @Injectable()
 export class InquiryEventMapSetter {
   constructor(
-    @Inject("MailEventMap")
+    @Inject("mail-event-map")
     private readonly mailEventMap: Map<string, any>,
   ) {}
 
-  public setClientEventParam(
-    sendMailToAdminAboutInquiryRequestDto: SendMailToAdminAboutInquiryRequestDto,
-  ): void {
-    this.mailEventMap.set("client", sendMailToAdminAboutInquiryRequestDto);
+  public setClientEventParam(dto: SendMailToAdminAboutInquiryRequestDto): void {
+    this.mailEventMap.set("inquiry-request", dto);
   }
 
-  public setAdminEventParam(
-    sendMailToClientAboutInquiryResponseDto: SendMailToClientAboutInquiryResponseDto,
-  ): void {
-    this.mailEventMap.set("admin", sendMailToClientAboutInquiryResponseDto);
+  public setAdminEventParam(dto: SendMailToClientAboutInquiryResponseDto): void {
+    this.mailEventMap.set("inquiry-response", dto);
   }
 }

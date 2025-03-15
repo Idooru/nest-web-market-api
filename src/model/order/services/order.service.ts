@@ -1,16 +1,21 @@
 import { Injectable } from "@nestjs/common";
-import { ProductEntity } from "../../product/entities/product.entity";
-import { CreateOrderDto } from "../dto/create-order.dto";
+import { CreateOrderRowDto } from "../dto/create-order.dto";
 import { OrderUpdateRepository } from "../repositories/order-update.repository";
 import { CreatePaymentsDto } from "../dto/create-payments.dto";
 import { OrderEntity } from "../entities/order.entity";
-import { DepositAdminBalanceDto } from "../dto/deposit-admin-balance.dto";
 import { MoneyTransactionDto } from "../../account/dtos/money-transaction.dto";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
+import { ProductQuantity } from "../types/product-quantity.type";
+import { CreatePaymentDto } from "../dto/create-payment.dto";
+import { AccountSearcher } from "../../account/logic/account.searcher";
+import { DepositAdminBalanceDto } from "../dto/deposit-admin-balance.dto";
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly orderUpdateRepository: OrderUpdateRepository) {}
+  constructor(
+    private readonly accountSearcher: AccountSearcher,
+    private readonly orderUpdateRepository: OrderUpdateRepository,
+  ) {}
 
   @Transaction
   public async deleteAllCarts(id: string) {
@@ -18,65 +23,79 @@ export class OrderService {
   }
 
   @Transaction
-  public async decreaseProductQuantities(
-    productQuantities: { product: ProductEntity; quantity: number }[],
-  ): Promise<void> {
-    const decreasing = productQuantities.map((productQuantitiy) =>
-      this.orderUpdateRepository.decreaseProductQuantity(productQuantitiy),
+  public async decreaseProductStocks(productQuantities: Array<ProductQuantity>): Promise<void> {
+    const decreasing = productQuantities.map((productQuantity: ProductQuantity) =>
+      this.orderUpdateRepository.decreaseProductStock(productQuantity),
     );
 
     await Promise.all(decreasing);
   }
 
   @Transaction
-  public createOrder(createOrderDto: CreateOrderDto): Promise<OrderEntity> {
-    return this.orderUpdateRepository.createOrder(createOrderDto);
+  public createOrder(dto: CreateOrderRowDto): Promise<OrderEntity> {
+    return this.orderUpdateRepository.createOrderRow(dto);
   }
 
   @Transaction
-  public async createPayments(createPaymentsDto: CreatePaymentsDto): Promise<void> {
-    const { productQuantities, clientUser, order } = createPaymentsDto;
-    const creating = productQuantities.map((productQuantity) =>
-      this.orderUpdateRepository.createPayment({
+  public async createPayments(dto: CreatePaymentsDto): Promise<void> {
+    const { productQuantities, clientUser, order } = dto;
+    const creating = productQuantities.map((productQuantity) => {
+      const createPaymentDto: CreatePaymentDto = {
         productQuantity,
         clientUser,
         order,
-      }),
-    );
+      };
+      this.orderUpdateRepository.createPayment(createPaymentDto);
+    });
 
     await Promise.all(creating);
   }
 
   @Transaction
-  public async withdrawClientBalance(withdrawDto: MoneyTransactionDto): Promise<void> {
-    await this.orderUpdateRepository.withdrawClientBalance(withdrawDto);
+  public async withdrawClientBalance(dto: MoneyTransactionDto): Promise<void> {
+    await this.orderUpdateRepository.withdrawClientBalance(dto);
   }
 
   @Transaction
-  public async depositAdminBalance(productQuantities: { product: ProductEntity; quantity: number }[]): Promise<void> {
-    const adminUserBalances = productQuantities
-      .map((productQuantity) => productQuantity.product.creator.User)
-      .map((user) => ({ userId: user.id, balance: user.Account[0].balance }));
+  public async depositAdminBalance(productQuantities: Array<ProductQuantity>): Promise<void> {
+    const finding = productQuantities.map(async (productQuantity) => {
+      const userId = productQuantity.product.creator.id;
+      const mainAccount = await this.accountSearcher.findMainAccount(userId);
+      const balance = mainAccount.balance;
+      return { userId, balance };
+    });
 
-    const adminUserTotalPrice = productQuantities.map(({ product, quantity }) => ({
-      userId: product.creator.User.id,
+    const balances = await Promise.all(finding);
+    const totalPrices = productQuantities.map(({ product, quantity }) => ({
+      userId: product.creator.id,
       totalPrice: product.price * quantity,
     }));
 
-    const groups = [...adminUserBalances, ...adminUserTotalPrice].reduce((result, item) => {
-      const key = item.userId;
+    const map = new Map<string, { userId: string; balance: number; totalPrice: number }>();
+    balances.forEach(({ userId, balance }) => map.set(userId, { userId, balance, totalPrice: 0 }));
 
-      if (!result[key]) {
-        result[key] = {};
-      }
+    totalPrices.forEach(({ userId, totalPrice }) =>
+      map.has(userId)
+        ? (map.get(userId).totalPrice += totalPrice)
+        : map.set(userId, { userId, balance: 0, totalPrice }),
+    );
 
-      Object.assign(result[key], item);
+    const groups = Array.from(map.values());
 
-      return result;
-    }, {});
+    // const groups = [...balances, ...totalPrices].reduce((result, item) => {
+    //   const key = item.userId;
+    //
+    //   if (!result[key]) {
+    //     result[key] = {};
+    //   }
+    //
+    //   Object.assign(result[key], item);
+    //
+    //   return result;
+    // }, {});
 
-    const depositing = Object.values(groups).map(
-      async (group: DepositAdminBalanceDto) => await this.orderUpdateRepository.depositAdminBalance(group),
+    const depositing = Object.values(groups).map((group: DepositAdminBalanceDto) =>
+      this.orderUpdateRepository.depositAdminBalance(group),
     );
 
     await Promise.all(depositing);

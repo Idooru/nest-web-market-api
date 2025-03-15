@@ -1,24 +1,24 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { CartSearchRepository } from "../repositories/cart-search.repository";
-import { CartEntity } from "../entities/cart.entity";
 import { loggerFactory } from "../../../common/functions/logger.factory";
+import { CartsResponseDto } from "../dto/carts-response.dto";
 
 @Injectable()
 export class CartSearcher {
   constructor(private readonly cartSearchRepository: CartSearchRepository) {}
 
-  public findCartsWithUserId(id: string): Promise<CartEntity[]> {
-    return this.cartSearchRepository.findCartsWithUserId(id);
+  public async findAllCarts(id: string): Promise<CartsResponseDto> {
+    const carts = await this.cartSearchRepository.findAllCarts(id);
+    const totalPrice = carts.map((cart) => cart.totalPrice).reduce((acc, cur) => acc + cur, 0);
+
+    return {
+      carts,
+      totalPrice,
+    };
   }
 
-  public async validateProduct(
-    clientId: string,
-    productId: string,
-  ): Promise<void> {
-    const result = await this.cartSearchRepository.findProductOnCart(
-      clientId,
-      productId,
-    );
+  public async validateProduct(clientId: string, productId: string): Promise<void> {
+    const result = await this.cartSearchRepository.findProductOnCart(clientId, productId);
 
     if (result) {
       const message =

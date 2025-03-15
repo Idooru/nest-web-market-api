@@ -54,15 +54,15 @@ export class UserV1AdminController {
       "사용자의 아이디에 해당하는 사용자의 정보를 가져옵니다. 사용자의 아이디와 일치하는 row가 데이터베이스에 존재하지 않을 경우 에러를 반환합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @Get("/:id")
+  @Get("/:userId")
   public async findClientUserInfo(
-    @Param("id", UserIdValidatePipe) id: string,
+    @Param("userId", UserIdValidatePipe) userId: string,
   ): Promise<JsonGeneralInterface<UserEntity>> {
-    const result = await this.userSearcher.findClientUserInfo(id);
+    const result = await this.userSearcher.findClientUserInfo(userId);
 
     return {
       statusCode: 200,
-      message: `${id}에 해당하는 사용자 정보를 가져옵니다.`,
+      message: `${userId}에 해당하는 사용자 정보를 가져옵니다.`,
       result,
     };
   }
@@ -72,13 +72,13 @@ export class UserV1AdminController {
     description: "사용자의 아이디에 해당하는 사용자를 추방합니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @Delete("/:id")
-  public async kickUser(@Param("id", UserIdValidatePipe) id: string): Promise<JsonGeneralInterface<void>> {
-    await this.userService.deleteUser(id);
+  @Delete("/:userId")
+  public async kickUser(@Param("userId", UserIdValidatePipe) userId: string): Promise<JsonGeneralInterface<void>> {
+    await this.userService.deleteUser(userId);
 
     return {
       statusCode: 200,
-      message: `${id}에 해당하는 사용자를 추방합니다.`,
+      message: `${userId}에 해당하는 사용자를 추방합니다.`,
     };
   }
 }

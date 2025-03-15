@@ -2,14 +2,14 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ProductEntity } from "../entities/product.entity";
 import { Repository } from "typeorm";
-import { CreateProductDto } from "../dto/create-product-dto";
+import { CreateProductDto } from "../dto/create-product.dto";
 import { ModifyProductDto } from "../dto/modify-product.dto";
 import { ProductCategory } from "../types/product-category.type";
-import { ProductImageEntity } from "../../media/entities/product-image.entity";
 import { Transactional } from "../../../common/interfaces/initializer/transactional";
 import { ProductRepositoryPayload } from "../logic/transaction/product-repository.payload";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
 import { General } from "../../../common/decorators/general.decoration";
+import { InsertProductImageDto } from "../dto/insert-product-image.dto";
 
 @Injectable()
 export class ProductUpdateRepository {
@@ -20,18 +20,10 @@ export class ProductUpdateRepository {
   ) {}
 
   @Transaction
-  public createProduct(dto: CreateProductDto): Promise<ProductEntity> {
-    const { productBodyDto, admin } = dto;
-    const { name, price, origin, category, description, quantity } = productBodyDto;
-
-    return this.transaction.getRepository().product.save({
-      name,
-      price,
-      origin,
-      category,
-      description,
-      quantity,
-      creater: admin,
+  public async createProduct({ body, admin }: CreateProductDto): Promise<ProductEntity> {
+    return await this.transaction.getRepository().product.save({
+      ...body,
+      creator: admin,
     });
   }
 
@@ -41,26 +33,28 @@ export class ProductUpdateRepository {
   }
 
   @Transaction
-  public async insertProductIdOnProductImage(productImage: ProductImageEntity, product: ProductEntity): Promise<void> {
-    productImage.Product = product;
-    await this.transaction.getRepository().product.save(productImage);
+  public async insertProductIdOnProductImage({ productImageId, productId }: InsertProductImageDto): Promise<void> {
+    await this.transaction.getRepository().productImage.query(
+      `UPDATE products_images 
+       SET productId = ?
+       WHERE id = ?`,
+      [productId, productImageId],
+    );
   }
 
   @Transaction
-  public async deleteProductImageWithId(id: string): Promise<void> {
-    await this.transaction.getRepository().productImage.delete({ id });
+  public async deleteProductImageWithId(productId: string): Promise<void> {
+    await this.transaction.getRepository().productImage.delete({ id: productId });
   }
 
   @Transaction
-  public async modifyProduct(dto: ModifyProductDto): Promise<void> {
-    const { id, productBodyDto } = dto;
-
-    await this.transaction.getRepository().product.update(id, productBodyDto);
+  public async modifyProduct({ productId, body }: ModifyProductDto): Promise<void> {
+    await this.transaction.getRepository().product.update(productId, body);
   }
 
   @General
-  public async modifyProductName(id: string, name: string): Promise<void> {
-    await this.productRepository.update(id, { name });
+  public async modifyProductName(productId: string, name: string): Promise<void> {
+    await this.productRepository.update(productId, { name });
   }
 
   @General
@@ -84,8 +78,8 @@ export class ProductUpdateRepository {
   }
 
   @General
-  public async modifyProductQuantity(id: string, quantity: number): Promise<void> {
-    await this.productRepository.update(id, { quantity });
+  public async modifyProductStock(id: string, stock: number): Promise<void> {
+    await this.productRepository.update(id, { stock });
   }
 
   @General

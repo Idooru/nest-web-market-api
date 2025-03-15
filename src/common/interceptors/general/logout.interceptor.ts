@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 import { LogoutInterface } from "../interface/logout.interface";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { Implemented } from "../../decorators/implemented.decoration";
+import { JsonGeneralInterface } from "../interface/json-general-interface";
 
 @Injectable()
 export class LogoutInterceptor implements NestInterceptor {
@@ -17,11 +18,12 @@ export class LogoutInterceptor implements NestInterceptor {
     this.timeLoggerLibrary.receiveRequest(req);
 
     return next.handle().pipe(
-      map((data: LogoutInterface) => {
-        const { cookieKey, statusCode, message } = data;
+      map((data: JsonGeneralInterface<null>) => {
+        const { statusCode, message } = data;
 
         this.timeLoggerLibrary.sendResponse(req);
-        cookieKey.forEach((token: string) => res.clearCookie(token));
+        res.clearCookie("access-token");
+        // cookieKey.forEach((token: string) => res.clearCookie(token));
 
         res.status(statusCode).setHeader("X-Powered-By", "");
 

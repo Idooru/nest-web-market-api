@@ -1,62 +1,27 @@
-export interface UserSelectProperty {
+export interface UserSelect {
   userBase: string[];
   clientUser: string[];
   clientUserSimple: string[];
-  clientUserProfile: string[];
   adminUser: string[];
-  adminUserProfile: string[];
+  profile: string[];
   whenAdminClientUser: string[];
 }
 
-export const userSelectProperty: UserSelectProperty = {
+export const userSelect: UserSelect = {
   userBase: ["user", "Profile", "Auth"],
   clientUser: ["user", "Profile", "Auth", "Client"],
-  clientUserSimple: ["user", "Auth.nickName", "Auth.email"],
-  clientUserProfile: [
-    "user",
-    "Profile.realName",
-    "Profile.birth",
-    "Profile.gender",
-    "Profile.phoneNumber",
-    "Profile.address",
-    "Auth.nickName",
-    "Auth.email",
-    "Account",
-    "Client",
-    "Cart",
-    "CartProduct",
-    "CartProductImage",
-    "Order",
-    "Payment",
-    "PaymentProduct",
-    "PaymentProductImage",
-    "Review",
-    "ReviewImage",
-    "ReviewVideo",
-    "InquiryRequest",
-    "InquiryResponse",
-  ],
+  clientUserSimple: ["user.id AS userId", "user.role AS role", "Auth.nickName as nickName", "Auth.email as email"],
   adminUser: ["user", "Profile", "Auth", "Admin"],
-  adminUserProfile: [
-    "user",
-    "Profile.realName",
-    "Profile.birth",
-    "Profile.gender",
-    "Profile.phoneNumber",
-    "Profile.address",
-    "Auth.nickName",
-    "Auth.email",
-    "Account",
-    "AdminActions",
-    "Product",
-    "ProductImage",
-    "StarRate.averageScore",
-    "Review",
-    "ReviewImage",
-    "ReviewVideo",
-    "InquiryRequest",
-    "InquiryResponse",
-    "ReceivedInquiryRequest",
+  profile: [
+    "user.id AS id",
+    "user.role AS role",
+    "Profile.realName as realName",
+    "Profile.birth as birth",
+    "Profile.gender as gender",
+    "Profile.phoneNumber as phoneNumber",
+    "Profile.address as address",
+    "Auth.nickName as nickName",
+    "Auth.email as email",
   ],
   whenAdminClientUser: [
     "user",

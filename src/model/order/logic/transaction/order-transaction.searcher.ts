@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { loggerFactory } from "../../../../common/functions/logger.factory";
-import { OrderBodyDto } from "../../dto/order-body.dto";
+import { OrderBody } from "../../dto/order-body.dto";
 import { UserSearcher } from "../../../user/logic/user.searcher";
 import { CartSearcher } from "../../../cart/logic/cart.searcher";
 import { AccountSearcher } from "../../../account/logic/account.searcher";
@@ -14,11 +14,11 @@ export class OrderTransactionSearcher {
     private readonly accountSearcher: AccountSearcher,
   ) {}
 
-  public async searchCreateOrder(dto: { clientId: string; orderBodyDto: OrderBodyDto }): Promise<SearchCreateOrderDto> {
-    const { clientId, orderBodyDto } = dto;
-    const [clientUser, carts] = await Promise.all([
+  public async searchCreateOrder(dto: { clientId: string; body: OrderBody }): Promise<SearchCreateOrderDto> {
+    const { clientId, body } = dto;
+    const [clientUser, { carts }] = await Promise.all([
       this.userSearcher.findClientUserObjectWithId(clientId),
-      this.cartSearcher.findCartsWithUserId(clientId),
+      this.cartSearcher.findAllCarts(clientId),
     ]);
 
     if (!clientUser.User.Account.length) {
@@ -27,7 +27,13 @@ export class OrderTransactionSearcher {
       throw new NotFoundException(message);
     }
 
-    const account = await this.accountSearcher.findMainAccountWithUserId(clientId);
+    if (!carts.length) {
+      const message = "장바구니에 상품이 존재하지 않습니다.";
+      loggerFactory("None Product").error(message);
+      throw new NotFoundException(message);
+    }
+
+    const account = await this.accountSearcher.findMainAccount(clientId);
     const totalPrice = carts.map((cart) => cart.totalPrice).reduce((acc, cur) => acc + cur, 0);
 
     if (account.balance < totalPrice) {
@@ -43,7 +49,7 @@ export class OrderTransactionSearcher {
 
     return {
       clientId,
-      orderBodyDto,
+      body,
       totalPrice,
       clientUser,
       productQuantities,

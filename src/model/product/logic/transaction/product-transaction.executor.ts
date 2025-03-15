@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CreateProductDto } from "../../dto/create-product-dto";
+import { CreateProductDto } from "../../dto/create-product.dto";
 import { ModifyProductDto } from "../../dto/modify-product.dto";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 import { ProductRepositoryPayload } from "./product-repository.payload";
@@ -22,34 +22,44 @@ export class ProductTransactionExecutor {
     const queryRunner = await this.transaction.init();
 
     this.handler.setQueryRunner(queryRunner);
-    this.context
-      .createProductContext(search)()
-      .then(() => this.handler.commit())
-      .catch((err) => this.handler.rollback(err))
-      .finally(() => this.handler.release());
+
+    try {
+      await this.context.createProductContext(search);
+      await this.handler.commit();
+    } catch (err) {
+      await this.handler.rollback(err);
+    } finally {
+      await this.handler.release();
+    }
   }
 
   public async modifyProduct(dto: ModifyProductDto): Promise<void> {
     const search = await this.searcher.searchModifyProduct(dto);
     const queryRunner = await this.transaction.init();
-
     this.handler.setQueryRunner(queryRunner);
-    this.context
-      .modifyProductContext(search)()
-      .then(() => this.handler.commit())
-      .catch((err) => this.handler.rollback(err))
-      .finally(() => this.handler.release());
+
+    try {
+      await this.context.modifyProductContext(search);
+      await this.handler.commit();
+    } catch (err) {
+      await this.handler.rollback(err);
+    } finally {
+      await this.handler.release();
+    }
   }
 
   public async modifyProductImage(dto: ModifyProductImageDto): Promise<void> {
     const search = await this.searcher.searchModifyProductImage(dto);
     const queryRunner = await this.transaction.init();
-
     this.handler.setQueryRunner(queryRunner);
-    this.context
-      .modifyProductImageContext(search)()
-      .then(() => this.handler.commit())
-      .catch((err) => this.handler.rollback(err))
-      .finally(() => this.handler.release());
+
+    try {
+      await this.context.modifyProductImageContext(search);
+      await this.handler.commit();
+    } catch (err) {
+      await this.handler.rollback(err);
+    } finally {
+      await this.handler.release();
+    }
   }
 }

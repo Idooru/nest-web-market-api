@@ -1,10 +1,11 @@
 import { ApiProperty, PickType } from "@nestjs/swagger";
 import { InquiryResponseEntity } from "../../entities/inquiry-response.entity";
+import { InquiryOption } from "../../types/inquiry-option.type";
 
-export class InquiryResponseBodyDto extends PickType(InquiryResponseEntity, [
+export class InquiryResponseBody extends PickType(InquiryResponseEntity, [
   "title",
   "content",
-  "categories",
+  "inquiryOption",
   "Image",
   "Video",
 ] as const) {
@@ -30,5 +31,5 @@ export class InquiryResponseBodyDto extends PickType(InquiryResponseEntity, [
     required: true,
     uniqueItems: false,
   })
-  public categories: "product status" | "delivery status";
+  public inquiryOption: InquiryOption;
 }

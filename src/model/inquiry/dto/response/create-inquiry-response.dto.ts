@@ -1,19 +1,19 @@
-import { InquiryResponseBodyDto } from "./inquiry-response-body.dto";
+import { InquiryResponseBody } from "./inquiry-response-body.dto";
 import { MediaCookieDto } from "../../../media/dto/media-cookie.dto";
 import { AdminUserEntity } from "../../../user/entities/admin-user.entity";
 import { InquiryRequestEntity } from "../../entities/inquiry-request.entity";
 
-export class PrepareToCreateInquiryResponseDto {
-  public inquiryResponseBodyDto: InquiryResponseBodyDto;
+export class CreateInquiryResponseDto {
+  public body: InquiryResponseBody;
   public inquiryRequestId: string;
   public inquiryRequesterId: string;
-  public inquiryResponserId: string;
-  public inquiryResponseImgCookies: MediaCookieDto[];
-  public inquiryResponseVdoCookies: MediaCookieDto[];
+  public inquiryRespondentId: string;
+  public imageCookies: MediaCookieDto[];
+  public videoCookies: MediaCookieDto[];
 }
 
-export class CreateInquiryResponseDto {
-  public inquiryResponseBodyDto: InquiryResponseBodyDto;
-  public admin: AdminUserEntity;
+export class CreateInquiryResponseRowDto {
+  public body: InquiryResponseBody;
+  public adminUser: AdminUserEntity;
   public inquiryRequest: InquiryRequestEntity;
 }

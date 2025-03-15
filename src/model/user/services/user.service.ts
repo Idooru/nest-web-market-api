@@ -9,7 +9,7 @@ import { ResetPasswordDto } from "../dtos/reset-password.dto";
 import { UserEventMapSetter } from "../logic/user-event-map.setter";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
 import { General } from "src/common/decorators/general.decoration";
-import { SendMailToClientAboutRegisterDto } from "../dtos/send-mail-to-client-about-register.dto";
+import { UserRole } from "../types/user-role.type";
 
 @Injectable()
 export class UserService {
@@ -22,7 +22,7 @@ export class UserService {
   ) {}
 
   @Transaction
-  public async createUserEntity(role: ["client", "admin"]): Promise<UserEntity> {
+  public async createUserEntity(role: UserRole): Promise<UserEntity> {
     const user = await this.userUpdateRepository.createUserEntity(role);
 
     if (role.toString() === "admin") {
@@ -92,8 +92,8 @@ export class UserService {
   }
 
   @General
-  public async modifyUserPhonenumber(phoneNumber: string, id: string): Promise<void> {
-    await this.userUpdateRepository.modifyUserPhonenumber(phoneNumber, id);
+  public async modifyUserPhoneNumber(phoneNumber: string, id: string): Promise<void> {
+    await this.userUpdateRepository.modifyUserPhoneNumber(phoneNumber, id);
   }
 
   @General

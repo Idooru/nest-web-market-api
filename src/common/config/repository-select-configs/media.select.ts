@@ -1,4 +1,4 @@
-export interface MediaSelectProperty {
+export interface MediaSelect {
   productImages: string[];
   reviewImages: string[];
   reviewVideos: string[];
@@ -8,20 +8,10 @@ export interface MediaSelectProperty {
   inquiryResponseVideos: string[];
 }
 
-export const mediaSelectProperty: MediaSelectProperty = {
+export const mediaSelect: MediaSelect = {
   productImages: ["productImage.id", "productImage.url", "productImage.size"],
-  reviewImages: [
-    "reviewImage.id",
-    "reviewImage.url",
-    "reviewImage.Review",
-    "reviewImage.size",
-  ],
-  reviewVideos: [
-    "reviewVideo.id",
-    "reviewVideo.url",
-    "reviewVideo.Review",
-    "reviewVideo.size",
-  ],
+  reviewImages: ["reviewImage.id", "reviewImage.url", "reviewImage.Review", "reviewImage.size"],
+  reviewVideos: ["reviewVideo.id", "reviewVideo.url", "reviewVideo.Review", "reviewVideo.size"],
   inquiryRequestImages: [
     "inquiryRequestImage.id",
     "inquiryRequestImage.url",

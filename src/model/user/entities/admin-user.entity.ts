@@ -17,7 +17,7 @@ export class AdminUserEntity extends ChildEntity {
   })
   public createdProduct: ProductEntity;
 
-  @OneToMany(() => InquiryResponseEntity, (inquiryResponse) => inquiryResponse.inquiryResponseWritter, {
+  @OneToMany(() => InquiryResponseEntity, (inquiryResponse) => inquiryResponse.inquiryRespondent, {
     cascade: true,
   })
   public writtenInquiryResponse: InquiryResponseEntity[];

@@ -7,17 +7,12 @@ import { PrepareToModifyUserDto } from "../../dtos/prepare-to-modify-user.dto";
 export class UserTransactionContext {
   constructor(private readonly userService: UserService) {}
 
-  public registerContext(dto: RegisterUserDto): () => Promise<void> {
-    return async () => {
-      const user = await this.userService.createUserEntity(dto.role);
-
-      await this.userService.createUserBase(user, dto);
-    };
+  public async registerContext(dto: RegisterUserDto): Promise<void> {
+    const user = await this.userService.createUserEntity(dto.role);
+    await this.userService.createUserBase(user, dto);
   }
 
-  public modifyUserContext(dto: PrepareToModifyUserDto): () => Promise<void> {
-    const { id, modifyUserDto } = dto;
-
-    return async () => this.userService.modifyUser(modifyUserDto, id);
+  public async modifyUserContext({ id, modifyUserDto }: PrepareToModifyUserDto): Promise<void> {
+    await this.userService.modifyUser(modifyUserDto, id);
   }
 }

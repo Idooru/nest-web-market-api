@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CartEntity } from "../entities/cart.entity";
 import { Repository } from "typeorm";
-import { CreateCartDto } from "../dto/create-cart.dto";
+import { CreateCartRowDto } from "../dto/create-cart.dto";
 import { ModifyCartDto } from "../dto/modify-cart.dto";
 import { General } from "../../../common/decorators/general.decoration";
 
@@ -14,32 +14,28 @@ export class CartUpdateRepository {
   ) {}
 
   @General
-  public async createCart(createCartDto: CreateCartDto): Promise<void> {
-    const { product, clientUser, cartBodyDto } = createCartDto;
+  public async createCartRow(dto: CreateCartRowDto): Promise<void> {
+    const { product, clientUser, body } = dto;
     await this.cartRepository.save({
       Product: product,
       ClientUser: clientUser,
-      ...cartBodyDto,
+      ...body,
     });
   }
 
   @General
-  public async modifyCartWithId(modifyCartDto: ModifyCartDto): Promise<void> {
-    const { cartId, cartBodyDto } = modifyCartDto;
-    await this.cartRepository.update(cartId, cartBodyDto);
+  public async modifyCart(modifyCartDto: ModifyCartDto): Promise<void> {
+    const { cartId, body } = modifyCartDto;
+    await this.cartRepository.update(cartId, body);
   }
 
   @General
-  public async deleteAllCartsWithUserId(id: string): Promise<void> {
-    await this.cartRepository
-      .createQueryBuilder()
-      .delete()
-      .where("clientId = :id", { id })
-      .execute();
+  public async deleteAllCarts(id: string): Promise<void> {
+    await this.cartRepository.createQueryBuilder().delete().where("clientId = :id", { id }).execute();
   }
 
   @General
-  public async deleteCartWithId(id: string): Promise<void> {
+  public async deleteCart(id: string): Promise<void> {
     await this.cartRepository.delete({ id });
   }
 }

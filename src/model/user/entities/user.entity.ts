@@ -6,13 +6,14 @@ import { UserAuthEntity } from "./user-auth.entity";
 import { UserProfileEntity } from "./user-profile.entity";
 import { CommonEntity } from "../../../common/entities/common.entity";
 import { AccountEntity } from "../../account/entities/account.entity";
+import { UserRole, userRole } from "../types/user-role.type";
 
 @Entity({ name: "users", synchronize: true })
 export class UserEntity extends CommonEntity {
-  @IsEnum(["client, admin"])
+  @IsEnum(userRole)
   @IsNotEmpty()
-  @Column({ type: "enum", enum: ["client", "admin"] })
-  public role: ["client", "admin"];
+  @Column({ type: "enum", enum: userRole })
+  public role: UserRole;
 
   @OneToOne(() => UserProfileEntity, (profile) => profile.User, {
     cascade: true,

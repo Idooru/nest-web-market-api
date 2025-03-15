@@ -7,9 +7,9 @@ export class UserIdValidatePipe implements PipeTransform {
   constructor(private readonly userValidator: UserValidator) {}
 
   @Implemented
-  public async transform(id: string): Promise<string> {
-    await this.userValidator.isExistId(id);
+  public async transform(userId: string): Promise<string> {
+    await this.userValidator.isExistId(userId);
 
-    return id;
+    return userId;
   }
 }

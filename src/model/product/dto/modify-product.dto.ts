@@ -1,10 +1,8 @@
 import { MediaCookieDto } from "../../media/dto/media-cookie.dto";
-import { ProductBodyDto } from "./product-body.dto";
-import { ProductEntity } from "../entities/product.entity";
+import { ProductBody } from "./product-body.dto";
 
 export class ModifyProductDto {
-  productBodyDto: ProductBodyDto;
-  id?: string;
-  product?: ProductEntity;
+  productId?: string;
+  body: ProductBody;
   productImgCookies?: MediaCookieDto[];
 }

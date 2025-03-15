@@ -1,7 +1,11 @@
-import { ReviewEntity } from "../entities/review.entity";
 import { ReviewVideoEntity } from "../../media/entities/review-video.entity";
 
-export class InsertReviewVideoDto {
+export class InsertReviewVideosDto {
+  reviewId: string;
   reviewVideos: ReviewVideoEntity[];
-  review: ReviewEntity;
+}
+
+export class InsertReviewVideoDto {
+  reviewId: string;
+  reviewVideoId: string;
 }

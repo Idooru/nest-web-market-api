@@ -1,7 +1,11 @@
-import { ProductEntity } from "../entities/product.entity";
 import { ProductImageEntity } from "../../media/entities/product-image.entity";
 
-export class InsertProductImageDto {
+export class InsertProductImagesDto {
+  productId: string;
   productImages: ProductImageEntity[];
-  product: ProductEntity;
+}
+
+export class InsertProductImageDto {
+  productId: string;
+  productImageId: string;
 }

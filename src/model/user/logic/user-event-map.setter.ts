@@ -4,7 +4,7 @@ import { SendMailToClientAboutRegisterDto } from "../dtos/send-mail-to-client-ab
 @Injectable()
 export class UserEventMapSetter {
   constructor(
-    @Inject("MailEventMap")
+    @Inject("mail-event-map")
     private readonly mailEventMap: Map<string, any>,
   ) {}
 

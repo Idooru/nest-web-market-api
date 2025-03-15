@@ -1,8 +1,3 @@
-import { HttpStatus } from "@nestjs/common";
+import { LoginInterface } from "./login.interface";
 
-export class RefreshTokenInterface {
-  statusCode: HttpStatus;
-  message: string;
-  cookieKey: "access_token";
-  cookieValue: string;
-}
+export class RefreshTokenInterface extends LoginInterface {}

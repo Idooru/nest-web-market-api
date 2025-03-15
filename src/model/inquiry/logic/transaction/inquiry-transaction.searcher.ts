@@ -2,9 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { InquirySearcher } from "../inquiry.searcher";
 import { MediaSearcher } from "../../../media/logic/media.searcher";
 import { InquiryUtils } from "../inquiry.utils";
-import { PrepareToCreateInquiryRequestDto } from "../../dto/request/create-inquiry-request.dto";
+import { CreateInquiryRequestDto } from "../../dto/request/create-inquiry-request.dto";
 import { SearchCreateInquiryRequestDto } from "../../dto/request/search-create-inquiry-request.dto";
-import { PrepareToCreateInquiryResponseDto } from "../../dto/response/create-inquiry-response.dto";
+import { CreateInquiryResponseDto } from "../../dto/response/create-inquiry-response.dto";
 import { SearchCreateInquiryResponseDto } from "../../dto/response/search-create-inquiry-response.dto";
 
 @Injectable()
@@ -15,33 +15,18 @@ export class InquiryTransactionSearcher {
     private readonly inquiryUtils: InquiryUtils,
   ) {}
 
-  public async searchToCreateInquiryRequest(
-    dto: PrepareToCreateInquiryRequestDto,
-  ): Promise<SearchCreateInquiryRequestDto> {
-    const {
-      inquiryRequestBodyDto,
-      userId,
-      productId,
-      inquiryRequestImgCookies,
-      inquiryRequestVdoCookies,
-    } = dto;
+  public async searchCreateInquiryRequest(dto: CreateInquiryRequestDto): Promise<SearchCreateInquiryRequestDto> {
+    const { body, userId, productId, imageCookies, videoCookies } = dto;
 
-    const [product, clientUser] = await this.inquiryUtils.getProductAndClient(
-      productId,
-      userId,
-    );
+    const [product, clientUser] = await this.inquiryUtils.getProductAndClient(productId, userId);
 
     const [inquiryRequestImages, inquiryRequestVideos] = await Promise.all([
-      this.mediaSearcher.findInquiryRequestImagesWithId(
-        inquiryRequestImgCookies,
-      ),
-      this.mediaSearcher.findInquiryRequestVideosWithId(
-        inquiryRequestVdoCookies,
-      ),
+      this.mediaSearcher.findInquiryRequestImagesWithId(imageCookies),
+      this.mediaSearcher.findInquiryRequestVideosWithId(videoCookies),
     ]);
 
     return {
-      inquiryRequestBodyDto,
+      body,
       product,
       clientUser,
       inquiryRequestImages,
@@ -49,40 +34,27 @@ export class InquiryTransactionSearcher {
     };
   }
 
-  public async searchToCreateInquiryResponse(
-    dto: PrepareToCreateInquiryResponseDto,
-  ): Promise<SearchCreateInquiryResponseDto> {
-    const {
-      inquiryResponseBodyDto,
-      inquiryRequesterId,
-      inquiryRequestId,
-      inquiryResponserId,
-      inquiryResponseImgCookies,
-      inquiryResponseVdoCookies,
-    } = dto;
+  public async searchToCreateInquiryResponse(dto: CreateInquiryResponseDto): Promise<SearchCreateInquiryResponseDto> {
+    const { body, inquiryRequesterId, inquiryRequestId, inquiryRespondentId, imageCookies, videoCookies } = dto;
 
     const [inquiryResponseImages, inquiryResponseVideos] = await Promise.all([
-      this.mediaSearcher.findInquiryResponseImagesWithId(
-        inquiryResponseImgCookies,
-      ),
-      this.mediaSearcher.findInquiryResponseVideosWithId(
-        inquiryResponseVdoCookies,
-      ),
+      this.mediaSearcher.findInquiryResponseImagesWithId(imageCookies),
+      this.mediaSearcher.findInquiryResponseVideosWithId(videoCookies),
     ]);
 
-    const [inquiryRequester, inquiryResponser] =
-      await this.inquiryUtils.getUsers(inquiryRequesterId, inquiryResponserId);
-
-    const inquiryRequest = await this.inquirySearcher.findInquiryRequestWithId(
-      inquiryRequestId,
+    const [inquiryRequester, inquiryRespondent] = await this.inquiryUtils.getUsers(
+      inquiryRequesterId,
+      inquiryRespondentId,
     );
 
+    const inquiryRequest = await this.inquirySearcher.findInquiryRequest(inquiryRequestId);
+
     return {
-      inquiryResponseBodyDto,
+      body,
       inquiryResponseImages,
       inquiryResponseVideos,
       inquiryRequester,
-      inquiryResponser,
+      inquiryRespondent,
       inquiryRequest,
     };
   }

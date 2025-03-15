@@ -1,5 +1,4 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { JwtPayload } from "src/model/auth/jwt/jwt-payload.interface";
 import { LoginUserDto } from "../dtos/login-user.dto";
 import { UserSearcher } from "./user.searcher";
 import { loggerFactory } from "src/common/functions/logger.factory";
@@ -12,6 +11,7 @@ import { JwtErrorHandlerLibrary } from "../../../common/lib/jwt/jwt-error-handle
 
 import bcrypt from "bcrypt";
 import { FindEmailDto } from "../dtos/find-email.dto";
+import { UserUpdateRepository } from "../repositories/user-update.repository";
 
 @Injectable()
 export class UserSecurity {
@@ -21,6 +21,7 @@ export class UserSecurity {
     private readonly securityLibrary: SecurityLibrary,
     private readonly callbackFactory: CatchCallbackFactoryLibrary,
     private readonly jwtErrorHandlerLibrary: JwtErrorHandlerLibrary,
+    private readonly userUpdateRepository: UserUpdateRepository,
   ) {}
 
   public hashPassword(password: string, hasTransaction: boolean): Promise<string> {
@@ -29,7 +30,7 @@ export class UserSecurity {
       .catch(this.callbackFactory.getCatchHashPasswordFunc(hasTransaction));
   }
 
-  public async login(dto: LoginUserDto): Promise<JwtPayload> {
+  public async login(dto: LoginUserDto): Promise<string> {
     const { email, password } = dto;
 
     const user = await this.userSearcher.findUserWithEmail(email);
@@ -63,11 +64,13 @@ export class UserSecurity {
       .signAsync(jwtRefreshTokenPayload, this.securityLibrary.jwtRefreshTokenSignOption)
       .catch(this.jwtErrorHandlerLibrary.catchSignRefreshTokenError);
 
-    return { accessToken, refreshToken };
+    await this.userUpdateRepository.setRefreshToken(user.id, refreshToken);
+
+    return accessToken;
   }
 
-  public async refreshToken(jwtPaylaod: JwtRefreshTokenPayload): Promise<string> {
-    const user = await this.userSearcher.findUserWithEmail(jwtPaylaod.email);
+  public async refreshToken(email: string): Promise<string> {
+    const user = await this.userSearcher.findUserWithEmail(email);
 
     const jwtAccessTokenPayload: JwtAccessTokenPayload = {
       userId: user.id,
@@ -79,6 +82,10 @@ export class UserSecurity {
     return this.jwtService
       .signAsync(jwtAccessTokenPayload, this.securityLibrary.jwtAccessTokenSignOption)
       .catch(this.jwtErrorHandlerLibrary.catchSignAccessTokenError);
+  }
+
+  public async logout(id: string): Promise<void> {
+    await this.userUpdateRepository.removeRefreshToken(id);
   }
 
   public async findEmail(dto: FindEmailDto): Promise<string> {

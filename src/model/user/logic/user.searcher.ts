@@ -40,14 +40,8 @@ export class UserSearcher {
     return this.userSearchRepository.findAdminUserObjectWithId(user);
   }
 
-  public async findUserProfile(jwtPayload: JwtAccessTokenPayload): Promise<[string, UserEntity]> {
-    if (jwtPayload.userRole.toString() === "admin") {
-      const adminUser = await this.userSearchRepository.findAdminUserProfileInfoWithId(jwtPayload.userId);
-      return ["관리자 사용자의 정보를 가져옵니다.", adminUser];
-    } else {
-      const clientUser = await this.userSearchRepository.findClientUserProfileInfoWithId(jwtPayload.userId);
-      return ["고객 사용자의 정보를 가져옵니다.", clientUser];
-    }
+  public findUserProfile(jwtPayload: JwtAccessTokenPayload): Promise<UserEntity> {
+    return this.userSearchRepository.findUserProfile(jwtPayload.userId);
   }
 
   public findUserForgotten(dto: FindEmailDto): Promise<UserEntity> {

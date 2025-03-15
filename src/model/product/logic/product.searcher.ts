@@ -7,11 +7,11 @@ export class ProductSearcher {
   constructor(private readonly productSearchRepository: ProductSearchRepository) {}
 
   public findAllProductsFromLatest(): Promise<ProductEntity[]> {
-    return this.productSearchRepository.findAllProductsFromLatest();
+    return this.productSearchRepository.findAllProducts("product.createdAt", "DESC");
   }
 
   public findAllProductsFromOldest(): Promise<ProductEntity[]> {
-    return this.productSearchRepository.findAllProductsFromOldest();
+    return this.productSearchRepository.findAllProducts("product.createdAt", "ASC");
   }
 
   public findProductWithId(id: string): Promise<ProductEntity> {

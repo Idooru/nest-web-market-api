@@ -1,19 +1,34 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from "@nestjs/common";
 import { JwtException } from "../errors/jwt.exception";
-import { Request, Response } from "express";
+import { Response } from "express";
 import { JwtError } from "../errors/jwt.error";
 import { loggerFactory } from "../functions/logger.factory";
 import { Implemented } from "../decorators/implemented.decoration";
+import {
+  ExpiredAccessToken,
+  ExpiredRefreshToken,
+  InvalidAccessTokenSignature,
+  InvalidJwtCreationOption,
+  InvalidRefreshTokenSignature,
+  JwtExceptionMessageGenerator,
+} from "../lib/jwt/jwt-exception-followup";
 
 @Catch(JwtException)
 export class JwtExceptionFilter implements ExceptionFilter {
+  jwtExceptionMap: Record<string, new () => JwtExceptionMessageGenerator> = {
+    "invalid_signature:access_token": InvalidAccessTokenSignature,
+    "invalid_signature:refresh_token": InvalidRefreshTokenSignature,
+    "jwt expired:access_token": ExpiredAccessToken,
+    "jwt expired:refresh_token": ExpiredRefreshToken,
+  };
+
   @Implemented
   public catch(exception: JwtException, host: ArgumentsHost) {
-    const req = host.switchToHttp().getRequest<Request>();
     const res = host.switchToHttp().getResponse<Response>();
     const { error } = exception.getResponse() as JwtException;
 
-    const message = this.generateResponseMessage(error, res);
+    const generator = this.jwtExceptionMessageGeneratorFactory(error);
+    const message = this.generateResponseMessage(generator);
     loggerFactory(error.name).error(message);
 
     return res.status(exception.getStatus()).json({
@@ -25,19 +40,13 @@ export class JwtExceptionFilter implements ExceptionFilter {
     });
   }
 
-  public generateResponseMessage(error: JwtError, res: Response): string {
-    if (error.message === "invalid signature" && error.whatToken === "access_token") {
-      return "변조된 access_token입니다.";
-    } else if (error.message === "invalid_signature" && error.whatToken === "refresh_token") {
-      return "변조된 refresh_token입니다.";
-    } else if (error.message === "jwt expired" && error.whatToken === "access_token") {
-      return "access_token의 만료기간이 다되었습니다. 토큰을 재발급 받아주세요.";
-    } else if (error.message === "jwt expired" && error.whatToken === "refresh_token") {
-      res.clearCookie("access_token");
-      res.clearCookie("refresh_token");
-      return "refresh_token의 만료기간이 다되었습니다. 로그아웃 됩니다.";
-    } else {
-      return "잘못된 jwt 생성 옵션입니다.";
-    }
+  public jwtExceptionMessageGeneratorFactory(error: JwtError) {
+    const key = `${error.message}:${error.whatToken}`;
+    const ExceptionClass = this.jwtExceptionMap[key] || InvalidJwtCreationOption;
+    return new ExceptionClass();
+  }
+
+  public generateResponseMessage(generator: JwtExceptionMessageGenerator): string {
+    return generator.generate();
   }
 }

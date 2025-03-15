@@ -23,12 +23,10 @@ export class LoginInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       map((data: LoginInterface) => {
-        const { statusCode, message, cookieKey, cookieValue } = data;
+        const { statusCode, message, accessToken } = data;
         this.timeLoggerLibrary.sendResponse(req);
 
-        for (let i = 0; i < 2; i++) {
-          res.cookie(cookieKey[i], cookieValue[i], cookieOption);
-        }
+        res.cookie("access-token", accessToken, cookieOption);
 
         res.status(data.statusCode).setHeader("X-Powered-By", "");
         return { success: true, ...{ statusCode, message } };

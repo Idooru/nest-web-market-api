@@ -1,9 +1,9 @@
 import { ApiProperty, IntersectionType, PickType } from "@nestjs/swagger";
-import { IsNotEmpty } from "class-validator";
-import { Column } from "typeorm";
 import { UserAuthEntity } from "../entities/user-auth.entity";
 import { UserProfileEntity } from "../entities/user-profile.entity";
 import { UserEntity } from "../entities/user.entity";
+import { UserRole } from "../types/user-role.type";
+import { UserGender } from "../types/user-gender.type";
 
 export class RegisterUserProfileDto extends PickType(UserProfileEntity, [
   "realName",
@@ -35,7 +35,7 @@ export class RegisterUserProfileDto extends PickType(UserProfileEntity, [
     required: true,
     uniqueItems: false,
   })
-  public gender: "male" | "female";
+  public gender: UserGender;
 
   @ApiProperty({
     description: "사용자 전화번호",
@@ -98,9 +98,7 @@ export class RegisterUserRoleDto extends PickType(UserEntity, ["role"]) {
     required: true,
     uniqueItems: false,
   })
-  @IsNotEmpty()
-  @Column({ type: "enum", enum: ["client", "admin"], nullable: false })
-  public role: ["client", "admin"];
+  public role: UserRole;
 }
 
 export class RegisterUserDto extends IntersectionType(

@@ -3,11 +3,11 @@ import { CartUpdateRepository } from "../repositories/cart-update.repository";
 import { UserSearcher } from "../../user/logic/user.searcher";
 import { ProductSearcher } from "../../product/logic/product.searcher";
 import { CartSearcher } from "../logic/cart.searcher";
-import { CartBodyDto } from "../dto/cart-body.dto";
 import { ModifyCartDto } from "../dto/modify-cart.dto";
 import { loggerFactory } from "../../../common/functions/logger.factory";
 import { General } from "../../../common/decorators/general.decoration";
-import { ProductEntity } from "src/model/product/entities/product.entity";
+import { CreateCartDto, CreateCartRowDto } from "../dto/create-cart.dto";
+import { ValidateProductAmountDto } from "../dto/validate-product-amount.dto";
 
 @Injectable()
 export class CartService {
@@ -18,18 +18,26 @@ export class CartService {
     private readonly productSearcher: ProductSearcher,
   ) {}
 
-  private validateProductAmount(product: ProductEntity, dto: CartBodyDto): void {
-    const { quantity, totalPrice } = dto;
+  private validateProductAmount(dto: ValidateProductAmountDto): void {
+    const { product, body } = dto;
+    const { quantity, totalPrice } = body;
 
     if (product.price * quantity !== totalPrice) {
       const message = `상품의 총 가격이 가격과 수량의 곱과 같지 않습니다.`;
       loggerFactory("Not Same").error(message);
       throw new BadRequestException(message);
     }
+
+    // if (product.quantities <= 0 || product.quantities - quantities < 0) {
+    //   const message = "해당 상품의 수량이 부족합니다.";
+    //   loggerFactory("Empty Stock").error(message);
+    //   throw new ForbiddenException(message);
+    // }
   }
 
   @General
-  public async createCart(productId: string, clientUserId: string, dto: CartBodyDto): Promise<void> {
+  public async createCart(dto: CreateCartDto): Promise<void> {
+    const { productId, clientUserId, body } = dto;
     await this.cartSearcher.validateProduct(clientUserId, productId);
 
     const [clientUser, product] = await Promise.all([
@@ -37,32 +45,31 @@ export class CartService {
       this.productSearcher.findProductWithId(productId),
     ]);
 
-    this.validateProductAmount(product, dto);
+    const validateDto: ValidateProductAmountDto = { product, body };
+    this.validateProductAmount(validateDto);
 
-    await this.cartUpdateRepository.createCart({
-      product,
-      clientUser,
-      cartBodyDto: dto,
-    });
+    const createDto: CreateCartRowDto = { body, clientUser, product };
+    await this.cartUpdateRepository.createCartRow(createDto);
   }
 
   @General
-  public async modifyCartWithId(dto: ModifyCartDto): Promise<void> {
-    const { productId } = dto;
+  public async modifyCart(dto: ModifyCartDto): Promise<void> {
+    const { productId, body } = dto;
     const product = await this.productSearcher.findProductWithId(productId);
 
-    this.validateProductAmount(product, dto.cartBodyDto);
+    const validateDto: ValidateProductAmountDto = { product, body };
+    this.validateProductAmount(validateDto);
 
-    await this.cartUpdateRepository.modifyCartWithId(dto);
+    await this.cartUpdateRepository.modifyCart(dto);
   }
 
   @General
-  public async deleteAllCartsWithUserId(id: string): Promise<void> {
-    await this.cartUpdateRepository.deleteAllCartsWithUserId(id);
+  public async deleteAllCarts(id: string): Promise<void> {
+    await this.cartUpdateRepository.deleteAllCarts(id);
   }
 
   @General
-  public async deleteCartWithId(id: string): Promise<void> {
-    await this.cartUpdateRepository.deleteCartWithId(id);
+  public async deleteCart(id: string): Promise<void> {
+    await this.cartUpdateRepository.deleteCart(id);
   }
 }

@@ -1,27 +1,18 @@
-export interface ProductSelectProperty {
-  productsId: string[];
+export interface ProductSelect {
   products: string[];
   product: string[];
   productImages: string[];
 }
 
-export const productSelectProperty: ProductSelectProperty = {
-  productsId: ["product.id", "product.name", "product.category"],
+export const productSelect: ProductSelect = {
   products: [
-    "product.id",
-    "product.name",
-    "product.price",
-    "product.category",
-    "Image.url",
-    "StarRate.averageScore",
-    "Review",
-    "Reviewer",
-    "ReviewUser",
-    "ReviewAuth.nickName",
-    "InquiryRequest",
-    "InquiryRequestWriter",
-    "InquiryUser",
-    "InquiryAuth.nickName",
+    "product.id AS productId",
+    "product.name AS productName",
+    "product.price AS productPrice",
+    "product.category as productCategory",
+    "ANY_VALUE(Image.url) AS imageUrl",
+    "ANY_VALUE(StarRate.averageScore) AS averageScore",
+    "COUNT(DISTINCT Review.id) AS reviewCount",
   ],
   product: [
     "product.id",
@@ -30,7 +21,7 @@ export const productSelectProperty: ProductSelectProperty = {
     "product.origin",
     "product.category",
     "product.description",
-    "product.quantity",
+    "product.stock",
     "Image.url",
     "StarRate.id",
     "StarRate.averageScore",
@@ -41,7 +32,7 @@ export const productSelectProperty: ProductSelectProperty = {
     "ReviewImage.url",
     "ReviewVideo.url",
     "InquiryRequest",
-    "InquiryRequestWriter",
+    "InquiryRequester",
     "InquiryUser",
     "InquiryAuth.nickName",
     "InquiryRequestImage.url",

@@ -5,20 +5,23 @@ import { ReviewImageEntity } from "src/model/media/entities/review-image.entity"
 import { ReviewVideoEntity } from "src/model/media/entities/review-video.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { PostEntity } from "src/common/entities/post.entity";
+import { StarRateScore, starRateScore } from "../types/star-rate-score.type";
 
 @Entity({ name: "reviews", synchronize: true })
 export class ReviewEntity extends PostEntity {
-  @IsEnum([1, 2, 3, 4, 5])
+  @IsEnum(starRateScore)
   @IsNotEmpty()
-  @Column({ type: "enum", enum: [1, 2, 3, 4, 5] })
-  public scoreChosenByClient: 1 | 2 | 3 | 4 | 5;
+  @Column({ type: "enum", enum: starRateScore })
+  public starRateScore: StarRateScore;
 
   @IsEnum([0, 1, 2])
   @IsNumber()
   @Column({ type: "enum", enum: [0, 1, 2], default: 2 })
   public countForModify: number;
 
-  @ManyToOne(() => ClientUserEntity, (clientUser) => clientUser.writtenReview)
+  @ManyToOne(() => ClientUserEntity, (clientUser) => clientUser.writtenReview, {
+    onDelete: "CASCADE",
+  })
   public reviewer: ClientUserEntity;
 
   @ManyToOne(() => ProductEntity, (product) => product.Review, {

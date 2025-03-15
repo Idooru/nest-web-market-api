@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { ProductUpdateRepository } from "../repositories/product-update.repository";
 import { ProductEntity } from "../entities/product.entity";
-import { CreateProductDto } from "../dto/create-product-dto";
+import { CreateProductDto } from "../dto/create-product.dto";
 import { ModifyProductDto } from "../dto/modify-product.dto";
-import { InsertProductImageDto } from "../dto/insert-product-image.dto";
+import { InsertProductImagesDto } from "../dto/insert-product-image.dto";
 import { ChangeProductImageDto } from "../dto/change-product-image.dto";
 import { ProductCategory } from "../types/product-category.type";
 import { ProductSearcher } from "../logic/product.searcher";
@@ -30,11 +30,11 @@ export class ProductService {
   }
 
   @Transaction
-  public async insertProductImages(dto: InsertProductImageDto): Promise<void> {
-    const { productImages, product } = dto;
-    const inserting = productImages.map((productImage) =>
-      this.productUpdateRepository.insertProductIdOnProductImage(productImage, product),
-    );
+  public async insertProductImages({ productId, productImages }: InsertProductImagesDto): Promise<void> {
+    const inserting = productImages.map((productImage) => {
+      const insertProductImageDto = { productId, productImageId: productImage.id };
+      return this.productUpdateRepository.insertProductIdOnProductImage(insertProductImageDto);
+    });
 
     await Promise.all(inserting);
   }
@@ -46,27 +46,24 @@ export class ProductService {
 
   @Transaction
   public async changeProductImages(dto: ChangeProductImageDto): Promise<void> {
-    const { beforeProductImages, newProductImages, product } = dto;
+    const { productId, beforeProductImages, newProductImages } = dto;
 
-    const inserting = newProductImages.map((productImage) =>
-      this.productUpdateRepository.insertProductIdOnProductImage(productImage, product),
+    const inserting = newProductImages.map((productImage) => {
+      const insertProductImageDto = { productId, productImageId: productImage.id };
+      return this.productUpdateRepository.insertProductIdOnProductImage(insertProductImageDto);
+    });
+
+    const deleting = beforeProductImages.map((productImage) =>
+      this.productUpdateRepository.deleteProductImageWithId(productImage.id),
     );
 
-    await Promise.all(inserting);
+    this.mediaUtils.deleteMediaFiles({
+      images: beforeProductImages,
+      mediaEntity: "product",
+      callWhere: "remove media entity",
+    });
 
-    if (beforeProductImages.length >= 1) {
-      const deleting = beforeProductImages.map((productImage) =>
-        this.productUpdateRepository.deleteProductImageWithId(productImage.id),
-      );
-
-      this.mediaUtils.deleteMediaFiles({
-        images: beforeProductImages,
-        mediaEntity: "product",
-        callWhere: "remove media entity",
-      });
-
-      await Promise.all(deleting);
-    }
+    await Promise.all([inserting, deleting]);
   }
 
   @General
@@ -95,8 +92,8 @@ export class ProductService {
   }
 
   @General
-  public async modifyProductQuantity(id: string, quantity: number): Promise<void> {
-    await this.productUpdateRepository.modifyProductQuantity(id, quantity);
+  public async modifyProductStock(id: string, stock: number): Promise<void> {
+    await this.productUpdateRepository.modifyProductStock(id, stock);
   }
 
   @General

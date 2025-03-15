@@ -1,10 +1,11 @@
 import { ApiProperty, PickType } from "@nestjs/swagger";
 import { ReviewEntity } from "../entities/review.entity";
+import { StarRateScore } from "../types/star-rate-score.type";
 
-export class ReviewBodyDto extends PickType(ReviewEntity, [
+export class ReviewBody extends PickType(ReviewEntity, [
   "title",
   "content",
-  "scoreChosenByClient",
+  "starRateScore",
   "Image",
   "Video",
 ] as const) {
@@ -31,5 +32,5 @@ export class ReviewBodyDto extends PickType(ReviewEntity, [
     required: true,
     uniqueItems: false,
   })
-  scoreChosenByClient: 1 | 2 | 3 | 4 | 5;
+  starRateScore: StarRateScore;
 }

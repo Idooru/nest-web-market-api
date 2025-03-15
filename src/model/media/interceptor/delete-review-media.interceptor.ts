@@ -1,0 +1,30 @@
+import { CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor } from "@nestjs/common";
+import { Response } from "express";
+import { EventEmitter2 } from "@nestjs/event-emitter";
+import { Observable, tap } from "rxjs";
+import { Implemented } from "../../../common/decorators/implemented.decoration";
+import { DeleteMediaFilesDto } from "../dto/delete-media-files.dto";
+import { eventConfigs } from "../../../common/config/event-configs";
+
+@Injectable()
+export class DeleteReviewMediaInterceptor implements NestInterceptor {
+  constructor(
+    @Inject("delete-media-event-map")
+    private readonly deleteMediaEventMap: Map<string, any>,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
+
+  @Implemented
+  public intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
+    const res = context.switchToHttp().getResponse<Response>();
+
+    const deleteReviewMedia = () => {
+      const dto: DeleteMediaFilesDto = this.deleteMediaEventMap.get("delete-review-medias");
+      this.deleteMediaEventMap.clear();
+      if (!dto) return;
+      this.eventEmitter.emit(eventConfigs.deleteMediaFile, dto);
+    };
+
+    return next.handle().pipe(tap(() => res.on("finish", deleteReviewMedia)));
+  }
+}

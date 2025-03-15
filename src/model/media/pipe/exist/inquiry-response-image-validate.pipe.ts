@@ -11,9 +11,7 @@ export class InquiryResponseImageValidatePipe implements PipeTransform {
   ) {}
 
   @Implemented
-  public transform(
-    inquiryResponseImage: Express.Multer.File[],
-  ): Express.Multer.File[] {
+  public transform(inquiryResponseImage: Express.Multer.File[]): Express.Multer.File[] {
     const mediaInfo = "문의 응답 이미지";
 
     this.mediaValidator.validate(mediaInfo, inquiryResponseImage);

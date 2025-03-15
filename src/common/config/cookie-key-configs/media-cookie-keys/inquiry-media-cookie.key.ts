@@ -1,21 +1,21 @@
 export interface InquiryMediaCookieKey {
   request: {
-    image_url_cookie: string;
-    video_url_cookie: string;
+    imageUrlCookie: string;
+    videoUrlCookie: string;
   };
   response: {
-    image_url_cookie: string;
-    video_url_cookie: string;
+    imageUrlCookie: string;
+    videoUrlCookie: string;
   };
 }
 
 export const inquiryMediaCookieKey: InquiryMediaCookieKey = {
   request: {
-    image_url_cookie: "inquiry_request_image_url_cookie",
-    video_url_cookie: "inquiry_request_video_url_cookie",
+    imageUrlCookie: "inquiry_request_image_url_cookie",
+    videoUrlCookie: "inquiry_request_video_url_cookie",
   },
   response: {
-    image_url_cookie: "inquiry_response_image_url_cookie",
-    video_url_cookie: "inquiry_response_video_url_cookie",
+    imageUrlCookie: "inquiry_response_image_url_cookie",
+    videoUrlCookie: "inquiry_response_video_url_cookie",
   },
 };

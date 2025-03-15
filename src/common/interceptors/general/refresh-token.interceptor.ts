@@ -1,10 +1,10 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common";
-import { map, Observable } from "rxjs";
-import { Request, Response } from "express";
 import { TimeLoggerLibrary } from "../../lib/logger/time-logger.library";
 import { SecurityLibrary } from "../../lib/security/security.library";
-import { RefreshTokenInterface } from "../interface/refresh-token.interface";
 import { Implemented } from "../../decorators/implemented.decoration";
+import { map, Observable } from "rxjs";
+import { Request, Response } from "express";
+import { RefreshTokenInterface } from "../interface/refresh-token.interface";
 
 @Injectable()
 export class RefreshTokenInterceptor implements NestInterceptor {
@@ -23,10 +23,10 @@ export class RefreshTokenInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       map((data: RefreshTokenInterface) => {
-        const { statusCode, message, cookieKey, cookieValue } = data;
+        const { statusCode, message, accessToken } = data;
         this.timeLoggerLibrary.sendResponse(req);
 
-        res.cookie(cookieKey, cookieValue, cookieOption);
+        res.cookie("access-token", accessToken, cookieOption);
 
         res.status(data.statusCode).setHeader("X-Powered-By", "");
         return { success: true, ...{ statusCode, message } };

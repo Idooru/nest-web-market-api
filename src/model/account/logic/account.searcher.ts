@@ -6,11 +6,15 @@ import { AccountEntity } from "../entities/account.entity";
 export class AccountSearcher {
   constructor(private readonly accountSearchRepository: AccountSearchRepository) {}
 
-  public findAccountsWithUserId(id: string): Promise<AccountEntity[]> {
-    return this.accountSearchRepository.findAccountsWithUserId(id);
+  public findAccounts(id: string): Promise<AccountEntity[]> {
+    return this.accountSearchRepository.findAccounts(id);
   }
 
-  public findMainAccountWithUserId(id: string): Promise<AccountEntity> {
-    return this.accountSearchRepository.findMainAccountWithUserId(id);
+  public findMainAccount(id: string): Promise<AccountEntity> {
+    return this.accountSearchRepository.findMainAccount(id);
+  }
+
+  public findAccount(id: string): Promise<AccountEntity> {
+    return this.accountSearchRepository.findAccount(id);
   }
 }

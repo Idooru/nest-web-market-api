@@ -7,15 +7,9 @@ import { AdminUserEntity } from "../../user/entities/admin-user.entity";
 
 @Injectable()
 export class InquiryUtils {
-  constructor(
-    private readonly productSearcher: ProductSearcher,
-    private readonly userSearcher: UserSearcher,
-  ) {}
+  constructor(private readonly productSearcher: ProductSearcher, private readonly userSearcher: UserSearcher) {}
 
-  public getProductAndClient(
-    productId: string,
-    userId: string,
-  ): Promise<[ProductEntity, ClientUserEntity]> {
+  public getProductAndClient(productId: string, userId: string): Promise<[ProductEntity, ClientUserEntity]> {
     return Promise.all([
       this.productSearcher.findProductWithId(productId),
       this.userSearcher.findClientUserObjectWithId(userId),
@@ -24,11 +18,11 @@ export class InquiryUtils {
 
   public getUsers(
     inquiryRequesterId: string,
-    inquiryResponserId: string,
+    inquiryResponsorId: string,
   ): Promise<[ClientUserEntity, AdminUserEntity]> {
     return Promise.all([
       this.userSearcher.findClientUserObjectWithId(inquiryRequesterId),
-      this.userSearcher.findAdminUserObjectWithId(inquiryResponserId),
+      this.userSearcher.findAdminUserObjectWithId(inquiryResponsorId),
     ]);
   }
 }

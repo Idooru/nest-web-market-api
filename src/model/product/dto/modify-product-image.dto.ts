@@ -1,6 +1,6 @@
 import { MediaCookieDto } from "../../media/dto/media-cookie.dto";
 
 export class ModifyProductImageDto {
-  id: string;
+  productId: string;
   productImgCookies: MediaCookieDto[];
 }

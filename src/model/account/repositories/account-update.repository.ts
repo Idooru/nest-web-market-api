@@ -6,48 +6,52 @@ import { QueryFailedError, Repository } from "typeorm";
 import { MoneyTransactionDto } from "../dtos/money-transaction.dto";
 import { loggerFactory } from "../../../common/functions/logger.factory";
 import { General } from "../../../common/decorators/general.decoration";
+import { AccountRepositoryPayload } from "../logic/transaction/account-repository.payload";
+import { Transactional } from "src/common/interfaces/initializer/transactional";
+import { Transaction } from "src/common/decorators/transaction.decorator";
 
 @Injectable()
 export class AccountUpdateRepository {
   constructor(
+    private readonly transaction: Transactional<AccountRepositoryPayload>,
     @InjectRepository(AccountEntity)
     private readonly accountRepository: Repository<AccountEntity>,
   ) {}
 
-  @General
-  public async createAccount(dto: CreateAccountDto): Promise<void> {
-    const { user, isFirst } = dto;
-
-    await this.accountRepository.save({
-      ...dto.accountBodyDto,
-      isMainAccount: isFirst,
-      User: user,
-    });
-  }
-
-  @General
-  public async deleteAccount(accountId: string): Promise<void> {
-    await this.accountRepository.delete(accountId);
-  }
-
-  @General
+  @Transaction
   public async disableAllAccount(userId: string): Promise<void> {
-    await this.accountRepository
-      .createQueryBuilder()
+    await this.transaction
+      .getRepository()
+      .account.createQueryBuilder()
       .update(AccountEntity)
       .set({ isMainAccount: false })
       .where("userId = :userId", { userId })
       .execute();
   }
 
-  @General
-  public async setMainAccount(accountId: string): Promise<void> {
-    await this.accountRepository
-      .createQueryBuilder()
+  @Transaction
+  public async setMainAccount({ accountId }: { accountId: string }): Promise<void> {
+    await this.transaction
+      .getRepository()
+      .account.createQueryBuilder()
       .update(AccountEntity)
       .set({ isMainAccount: true })
       .where("id = :accountId", { accountId })
       .execute();
+  }
+
+  @Transaction
+  public async createAccount(dto: CreateAccountDto): Promise<AccountEntity> {
+    const { user, body } = dto;
+    return await this.transaction.getRepository().account.save({
+      ...body,
+      User: user,
+    });
+  }
+
+  @Transaction
+  public async deleteAccount(accountId: string): Promise<void> {
+    await this.transaction.getRepository().account.delete(accountId);
   }
 
   @General

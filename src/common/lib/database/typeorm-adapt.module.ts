@@ -20,7 +20,7 @@ import { InquiryResponseImageEntity } from "src/model/media/entities/inquiry-res
 import { InquiryResponseVideoEntity } from "src/model/media/entities/inquiry-response-video.entity";
 import { CartEntity } from "../../../model/cart/entities/cart.entity";
 import { OrderEntity } from "../../../model/order/entities/order.entity";
-import { PaymentEntitiy } from "../../../model/order/entities/payment.entitiy";
+import { PaymentEntity } from "../../../model/order/entities/payment.entity";
 import { AccountEntity } from "../../../model/account/entities/account.entity";
 
 const isNodeEnvDev = (): boolean => process.env.NODE_ENV === "dev";
@@ -56,7 +56,7 @@ const isNodeEnvProd = (): boolean => process.env.NODE_ENV === "prod";
           InquiryResponseVideoEntity,
           CartEntity,
           OrderEntity,
-          PaymentEntitiy,
+          PaymentEntity,
           AccountEntity,
         ],
         synchronize: isNodeEnvDev(),

@@ -1,13 +1,13 @@
-import { OrderBodyDto } from "./order-body.dto";
+import { OrderBody } from "./order-body.dto";
 import { ClientUserEntity } from "../../user/entities/client-user.entity";
-import { ProductEntity } from "../../product/entities/product.entity";
 import { AccountEntity } from "../../account/entities/account.entity";
+import { ProductQuantity } from "../types/product-quantity.type";
 
 export class SearchCreateOrderDto {
   clientId: string;
-  orderBodyDto: OrderBodyDto;
+  body: OrderBody;
   totalPrice: number;
   clientUser: ClientUserEntity;
-  productQuantities: { product: ProductEntity; quantity: number }[];
+  productQuantities: Array<ProductQuantity>;
   account: AccountEntity;
 }

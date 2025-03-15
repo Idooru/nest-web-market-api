@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { ReviewEntity } from "../entities/review.entity";
 import { ReviewUpdateRepository } from "../repositories/review-update.repository";
-import { InsertReviewImageDto } from "../dto/insert-review-image.dto";
-import { InsertReviewVideoDto } from "../dto/insert-review-video.dto";
+import { InsertReviewImagesDto } from "../dto/insert-review-image.dto";
+import { InsertReviewVideosDto } from "../dto/insert-review-video.dto";
 import { StarRatingDto } from "../dto/star-rating.dto";
-import { CreateReviewDto } from "../dto/create-review.dto";
-import { ModifyReviewDto } from "../dto/modify-review.dto";
+import { CreateReviewRowDto } from "../dto/create-review.dto";
+import { ModifyReviewDto, ModifyReviewRowDto } from "../dto/modify-review.dto";
 import { ChangeReviewImageDto } from "../dto/change-review-image.dto";
 import { ChangeReviewVideoDto } from "../dto/change-review-video.dto";
 import { ModifyStarRateDto } from "../dto/modify-star-rate.dto";
@@ -25,52 +25,51 @@ export class ReviewService {
   ) {}
 
   @Transaction
-  public createReview(dto: CreateReviewDto): Promise<ReviewEntity> {
+  public createReview(dto: CreateReviewRowDto): Promise<ReviewEntity> {
     return this.reviewOperationRepository.createReview(dto);
   }
 
   @Transaction
-  public async insertReviewImages(dto: InsertReviewImageDto): Promise<void> {
-    const { reviewImages, review } = dto;
-    const inserting = reviewImages.map((reviewImage) =>
-      this.reviewOperationRepository.insertReviewIdOnReviewImage(reviewImage, review),
-    );
+  public async insertReviewImages({ reviewImages, reviewId }: InsertReviewImagesDto): Promise<void> {
+    const inserting = reviewImages.map((reviewImage) => {
+      const insertReviewImageDto = { reviewId, reviewImageId: reviewImage.id };
+      return this.reviewOperationRepository.insertReviewIdOnReviewImage(insertReviewImageDto);
+    });
 
     await Promise.all(inserting);
   }
 
   @Transaction
-  public async insertReviewVideos(dto: InsertReviewVideoDto): Promise<void> {
-    const { reviewVideos, review } = dto;
-    const inserting = reviewVideos.map((reviewVideo) =>
-      this.reviewOperationRepository.insertReviewIdOnReviewVideo(reviewVideo, review),
-    );
+  public async insertReviewVideos({ reviewVideos, reviewId }: InsertReviewVideosDto): Promise<void> {
+    const inserting = reviewVideos.map((reviewVideo) => {
+      const insertReviewVideoDto = { reviewId, reviewVideoId: reviewVideo.id };
+      return this.reviewOperationRepository.insertReviewIdOnReviewVideo(insertReviewVideoDto);
+    });
 
     await Promise.all(inserting);
   }
 
   @Transaction
-  public async increaseStarRate(dto: StarRatingDto): Promise<void> {
-    const { scoreChosenByClient, starRate } = dto;
-
-    await this.reviewOperationRepository.increaseStarRate(scoreChosenByClient, starRate);
+  public async increaseStarRate({ starRateScore, starRate }: StarRatingDto): Promise<void> {
+    await this.reviewOperationRepository.increaseStarRate(starRateScore, starRate);
 
     const updatedStarRate = await this.reviewUtils.calculateStarRate(starRate);
     await this.reviewOperationRepository.renewAverage(updatedStarRate);
   }
 
   @Transaction
-  public async modifyReview(dto: ModifyReviewDto): Promise<void> {
+  public async modifyReview(dto: ModifyReviewRowDto): Promise<void> {
     await this.reviewOperationRepository.modifyReview(dto);
   }
 
   @Transaction
   public async changeReviewImages(dto: ChangeReviewImageDto): Promise<void> {
-    const { beforeReviewImages, newReviewImages, review } = dto;
+    const { beforeReviewImages, newReviewImages, reviewId } = dto;
 
-    const inserting = newReviewImages.map((reviewImage) =>
-      this.reviewOperationRepository.insertReviewIdOnReviewImage(reviewImage, review),
-    );
+    const inserting = newReviewImages.map((reviewImage) => {
+      const insertReviewImageDto = { reviewId, reviewImageId: reviewImage.id };
+      return this.reviewOperationRepository.insertReviewIdOnReviewImage(insertReviewImageDto);
+    });
 
     await Promise.all(inserting);
 
@@ -85,11 +84,12 @@ export class ReviewService {
 
   @Transaction
   public async changeReviewVideos(dto: ChangeReviewVideoDto): Promise<void> {
-    const { beforeReviewVideos, newReviewVideos, review } = dto;
+    const { beforeReviewVideos, newReviewVideos, reviewId } = dto;
 
-    const inserting = newReviewVideos.map((reviewVideo) =>
-      this.reviewOperationRepository.insertReviewIdOnReviewVideo(reviewVideo, review),
-    );
+    const inserting = newReviewVideos.map((reviewVideo) => {
+      const insertReviewImageDto = { reviewId, reviewVideoId: reviewVideo.id };
+      return this.reviewOperationRepository.insertReviewIdOnReviewVideo(insertReviewImageDto);
+    });
 
     await Promise.all(inserting);
 
@@ -103,15 +103,14 @@ export class ReviewService {
   }
 
   @Transaction
-  public async modifyStarRate(dto: ModifyStarRateDto): Promise<void> {
-    const { scoreChosenByClient, starRate, review } = dto;
-    const beforeScore = review.scoreChosenByClient;
+  public async modifyStarRate({ starRateScore, starRate, review }: ModifyStarRateDto): Promise<void> {
+    const beforeScore = review.starRateScore;
 
-    if (beforeScore === scoreChosenByClient) return;
+    if (beforeScore === starRateScore) return;
 
     await Promise.all([
       this.reviewOperationRepository.decreaseStarRate(starRate, beforeScore),
-      this.reviewOperationRepository.increaseStarRate(scoreChosenByClient, starRate),
+      this.reviewOperationRepository.increaseStarRate(starRateScore, starRate),
     ]);
 
     const updatedStarRate = await this.reviewUtils.calculateStarRate(starRate);
@@ -134,7 +133,7 @@ export class ReviewService {
 
   @Transaction
   public async decreaseStarRate(review: ReviewEntity, starRate: StarRateEntity): Promise<void> {
-    const beforeScore = review.scoreChosenByClient;
+    const beforeScore = review.starRateScore;
 
     await this.reviewOperationRepository.decreaseStarRate(starRate, beforeScore);
 

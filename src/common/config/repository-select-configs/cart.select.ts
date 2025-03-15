@@ -1,17 +1,20 @@
-export interface CartSelectProperty {
+export interface CartSelect {
   carts: string[];
 }
 
-export const cartSelectProperty: CartSelectProperty = {
+export const cartSelect: CartSelect = {
   carts: [
     "cart.id",
     "cart.Product",
     "cart.quantity",
     "cart.totalPrice",
-    "Product",
-    "Admin",
-    "User",
-    "Account.balance",
+    "Product.id",
+    "Product.name",
+    "Product.price",
+    "Product.origin",
+    "Product.category",
+    "Product.description",
+    "AdminUser",
     "Image.url",
   ],
 };

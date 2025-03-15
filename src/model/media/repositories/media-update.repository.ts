@@ -31,7 +31,7 @@ export class MediaUpdateRepository {
   ) {}
 
   @General
-  public uploadProductImages(dto: UploadMediaDto): Promise<ProductImageEntity> {
+  public async uploadProductImages(dto: UploadMediaDto): Promise<ProductImageEntity> {
     return this.productImageRepository.save(dto);
   }
 

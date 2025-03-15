@@ -3,9 +3,9 @@ import { ReviewSearcher } from "../review.searcher";
 import { MediaSearcher } from "../../../media/logic/media.searcher";
 import { ProductSearcher } from "../../../product/logic/product.searcher";
 import { ReviewUtils } from "../review.utils";
-import { PrepareToCreateReviewDto } from "../../dto/create-review.dto";
+import { CreateReviewDto } from "../../dto/create-review.dto";
 import { SearchCreateReviewDto } from "../../dto/search-create-review.dto";
-import { PrepareToModifyReviewDto } from "../../dto/modify-review.dto";
+import { ModifyReviewDto } from "../../dto/modify-review.dto";
 import { SearchModifyReviewDto } from "../../dto/search-modify-review.dto";
 import { DeleteReviewDto } from "../../dto/delete-review.dto";
 import { SearchDeleteReviewDto } from "../../../product/dto/search-delete-review.dto";
@@ -19,12 +19,11 @@ export class ReviewTransactionSearcher {
     private readonly reviewUtils: ReviewUtils,
   ) {}
 
-  public async searchCreateReview(dto: PrepareToCreateReviewDto): Promise<SearchCreateReviewDto> {
-    const { reviewBodyDto, userId, productId, reviewImgCookies, reviewVdoCookies } = dto;
+  public async searchCreateReview(dto: CreateReviewDto): Promise<SearchCreateReviewDto> {
+    const { body, reviewerId, productId, reviewImgCookies, reviewVdoCookies } = dto;
+    const product = await this.productSearcher.findProductWithId(productId);
 
-    const [product, clientUser] = await this.reviewUtils.getProductAndClient(productId, userId);
-
-    this.reviewUtils.checkBeforeCreate(product, clientUser);
+    this.reviewUtils.checkBeforeCreate(product, reviewerId);
 
     const [reviewImages, reviewVideos, starRate] = await Promise.all([
       this.mediaSearcher.findReviewImagesWithId(reviewImgCookies),
@@ -33,18 +32,17 @@ export class ReviewTransactionSearcher {
     ]);
 
     return {
-      reviewBodyDto,
-      product,
-      clientUser,
+      body,
+      productId,
+      reviewerId,
       reviewImages,
       reviewVideos,
       starRate,
     };
   }
 
-  public async searchModifyReview(dto: PrepareToModifyReviewDto): Promise<SearchModifyReviewDto> {
-    const { reviewBodyDto, userId, productId, reviewId, reviewImgCookies, reviewVdoCookies } = dto;
-
+  public async searchModifyReview(dto: ModifyReviewDto): Promise<SearchModifyReviewDto> {
+    const { body, userId, productId, reviewId, reviewImgCookies, reviewVdoCookies } = dto;
     const review = await this.reviewUtils.checkBeforeModify(reviewId, userId);
     const product = await this.productSearcher.findProductWithId(productId);
 
@@ -57,7 +55,7 @@ export class ReviewTransactionSearcher {
     ]);
 
     return {
-      reviewBodyDto,
+      body,
       review,
       beforeReviewImages,
       newReviewImages,
@@ -68,11 +66,10 @@ export class ReviewTransactionSearcher {
   }
 
   public async searchDeleteReview(dto: DeleteReviewDto): Promise<SearchDeleteReviewDto> {
-    const { reviewId, userId, productId } = dto;
+    const { reviewId, userId } = dto;
 
     const review = await this.reviewUtils.checkBeforeModify(reviewId, userId);
-    const [product] = await this.reviewUtils.getProductAndClient(productId, userId);
-
+    const product = await this.productSearcher.findProductWithId(review.Product.id);
     const starRate = await this.reviewSearcher.findStarRateWithId(product.StarRate.id);
 
     return { review, starRate };

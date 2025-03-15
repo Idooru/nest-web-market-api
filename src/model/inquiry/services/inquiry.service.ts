@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { CreateInquiryRequestDto } from "../dto/request/create-inquiry-request.dto";
+import { CreateInquiryRequestRowDto } from "../dto/request/create-inquiry-request.dto";
 import { InquiryUpdateRepository } from "../repositories/inquiry-update.repository";
 import { InquiryRequestEntity } from "../entities/inquiry-request.entity";
 import { InsertInquiryRequestImageDto } from "../dto/request/insert-inquiry-request-image.dto";
 import { InsertInquiryRequestVideoDto } from "../dto/request/insert-inquiry-request-video.dto";
 import { InsertInquiryResponseImageDto } from "../dto/response/insert-inquiry-response-image.dto";
 import { InsertInquiryResponseVideoDto } from "../dto/response/insert-inquiry-response-video.dto";
-import { CreateInquiryResponseDto } from "../dto/response/create-inquiry-response.dto";
+import { CreateInquiryResponseRowDto } from "../dto/response/create-inquiry-response.dto";
 import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
 
@@ -15,8 +15,8 @@ export class InquiryService {
   constructor(private readonly inquiryOperationRepository: InquiryUpdateRepository) {}
 
   @Transaction
-  public createInquiryRequest(dto: CreateInquiryRequestDto): Promise<InquiryRequestEntity> {
-    return this.inquiryOperationRepository.createInquiryRequest(dto);
+  public createInquiryRequest(dto: CreateInquiryRequestRowDto): Promise<InquiryRequestEntity> {
+    return this.inquiryOperationRepository.createInquiryRequestRow(dto);
   }
 
   @Transaction
@@ -24,7 +24,7 @@ export class InquiryService {
     const { inquiryRequestImages, inquiryRequest } = dto;
 
     const inserting = inquiryRequestImages.map((inquiryRequestImage) =>
-      this.inquiryOperationRepository.insertInquiryReuqestIdOnInquiryRequestImage(inquiryRequestImage, inquiryRequest),
+      this.inquiryOperationRepository.insertInquiryRequestIdOnInquiryRequestImage(inquiryRequestImage, inquiryRequest),
     );
 
     await Promise.all(inserting);
@@ -42,8 +42,8 @@ export class InquiryService {
   }
 
   @Transaction
-  public createInquiryResponse(dto: CreateInquiryResponseDto): Promise<InquiryResponseEntity> {
-    return this.inquiryOperationRepository.createInquiryResponse(dto);
+  public createInquiryResponse(dto: CreateInquiryResponseRowDto): Promise<InquiryResponseEntity> {
+    return this.inquiryOperationRepository.createInquiryResponseRow(dto);
   }
 
   @Transaction
