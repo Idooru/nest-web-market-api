@@ -13,7 +13,7 @@ type JsonResponse = {
   success: boolean;
   error: string;
   statusCode: number;
-  timestamp: Date;
+  timeStamp: Date;
   reason?: string | string[];
 };
 
@@ -30,7 +30,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       success: false,
       error: exception.name,
       statusCode: exception.getStatus(),
-      timestamp: new Date(),
+      timeStamp: new Date(),
     };
 
     if (Array.isArray(exceptionResponse.message)) {
