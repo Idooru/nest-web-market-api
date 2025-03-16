@@ -1,50 +1,63 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { UserSearchRepository } from "../repositories/user-search.repository";
 import { UserEntity } from "../entities/user.entity";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
 import { ClientUserEntity } from "../entities/client-user.entity";
 import { AdminUserEntity } from "../entities/admin-user.entity";
 import { FindEmailDto } from "../dtos/find-email.dto";
+import { loggerFactory } from "../../../common/functions/logger.factory";
 
 @Injectable()
 export class UserSearcher {
-  constructor(private readonly userSearchRepository: UserSearchRepository) {}
+  constructor(private readonly repository: UserSearchRepository) {}
 
   public findUserWithId(id: string): Promise<UserEntity> {
-    return this.userSearchRepository.findUserWithId(id);
+    return this.repository.findUserWithId(id);
   }
 
   public findUserWithEmail(email: string): Promise<UserEntity> {
-    return this.userSearchRepository.findUserWithEmail(email);
+    return this.repository.findUserWithEmail(email);
   }
 
   public findAllUsersFromLatest(): Promise<UserEntity[]> {
-    return this.userSearchRepository.findAllUsersFromLatest();
+    return this.repository.findAllUsersFromLatest();
   }
 
   public findAllUsersFromOldest(): Promise<UserEntity[]> {
-    return this.userSearchRepository.findAllUsersFromOldest();
+    return this.repository.findAllUsersFromOldest();
   }
 
   public findClientUserInfo(id: string): Promise<UserEntity> {
-    return this.userSearchRepository.findClientUserInfo(id);
+    return this.repository.findClientUserInfo(id);
   }
 
   public async findClientUserObjectWithId(id: string): Promise<ClientUserEntity> {
-    const user = await this.userSearchRepository.findClientUserWithId(id);
-    return this.userSearchRepository.findClientUserObjectWithId(user);
+    const user = await this.repository.findClientUserWithId(id);
+    return this.repository.findClientUserObjectWithId(user);
   }
 
   public async findAdminUserObjectWithId(id: string): Promise<AdminUserEntity> {
-    const user = await this.userSearchRepository.findAdminUserWithId(id);
-    return this.userSearchRepository.findAdminUserObjectWithId(user);
+    const user = await this.repository.findAdminUserWithId(id);
+    return this.repository.findAdminUserObjectWithId(user);
   }
 
   public findUserProfile(jwtPayload: JwtAccessTokenPayload): Promise<UserEntity> {
-    return this.userSearchRepository.findUserProfile(jwtPayload.userId);
+    return this.repository.findUserProfile(jwtPayload.userId);
   }
 
-  public findUserForgotten(dto: FindEmailDto): Promise<UserEntity> {
-    return this.userSearchRepository.findUserForgotten(dto);
+  public async findForgottenEmail(dto: FindEmailDto): Promise<UserEntity> {
+    const { realName, phoneNumber } = dto;
+    const [found1, found2] = await Promise.all([
+      this.repository.findUserWithRealName(realName),
+      this.repository.findUserWithPhoneNumber(phoneNumber),
+    ]);
+
+    if (found1.id !== found2.id) {
+      const message = "입력한 실명과 전화번호가 일치하지 않는 사용자입니다.";
+      loggerFactory("None Correct User").error(message);
+      throw new BadRequestException(message);
+    }
+
+    return found1;
   }
 }

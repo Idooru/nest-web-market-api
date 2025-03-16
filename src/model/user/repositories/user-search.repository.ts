@@ -126,15 +126,25 @@ export class UserSearchRepository {
       .getOne();
   }
 
-  public findUserForgotten(dto: FindEmailDto): Promise<UserEntity> {
+  public findUserWithRealName(realName: string): Promise<UserEntity> {
     return this.userRepository
       .createQueryBuilder()
       .select(this.select.userBase)
       .from(UserEntity, "user")
       .innerJoin("user.Profile", "Profile")
       .innerJoin("user.Auth", "Auth")
-      .where("Profile.realName = :realName", { realName: dto.realName })
-      .andWhere("Profile.phoneNumber = :phoneNumber", { phoneNumber: dto.phoneNumber })
+      .where("Profile.realName = :realName", { realName })
+      .getOne();
+  }
+
+  public findUserWithPhoneNumber(phoneNumber: string): Promise<UserEntity> {
+    return this.userRepository
+      .createQueryBuilder()
+      .select(this.select.userBase)
+      .from(UserEntity, "user")
+      .innerJoin("user.Profile", "Profile")
+      .innerJoin("user.Auth", "Auth")
+      .where("Profile.phoneNumber = :phoneNumber", { phoneNumber })
       .getOne();
   }
 

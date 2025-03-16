@@ -88,8 +88,8 @@ export class UserSecurity {
     await this.userUpdateRepository.removeRefreshToken(id);
   }
 
-  public async findEmail(dto: FindEmailDto): Promise<string> {
-    const user = await this.userSearcher.findUserForgotten(dto);
+  public async findForgottenEmail(dto: FindEmailDto): Promise<string> {
+    const user = await this.userSearcher.findForgottenEmail(dto);
 
     return user.Auth.email;
   }
