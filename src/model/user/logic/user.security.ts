@@ -69,8 +69,8 @@ export class UserSecurity {
     return accessToken;
   }
 
-  public async refreshToken(email: string): Promise<string> {
-    const user = await this.userSearcher.findUserWithEmail(email);
+  public async refreshToken(id: string): Promise<string> {
+    const user = await this.userSearcher.findUserWithId(id);
 
     const jwtAccessTokenPayload: JwtAccessTokenPayload = {
       userId: user.id,
