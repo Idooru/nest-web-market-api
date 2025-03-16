@@ -18,7 +18,7 @@ export class IsRefreshTokenAvailableGuard implements CanActivate {
     const accessToken = req.signedCookies["access-token"];
 
     if (!accessToken) {
-      const message = "refresh-token이 없으므로 access-token을 재발급 받기 위한 작업을 할 수 없습니다.";
+      const message = "access-token이 없으므로 access-token을 재발급 받기 위한 작업을 할 수 없습니다.";
       loggerFactory("NoneRefreshToken").error(message);
       throw new UnauthorizedException(message);
     }

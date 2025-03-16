@@ -14,7 +14,7 @@ export class ValidationExceptionFilter implements ExceptionFilter {
       success: false,
       error: exception.name,
       statusCode: exception.getStatus(),
-      timestamp: new Date().toString(),
+      timeStamp: new Date().toString(),
       reason: result.errors,
       info: "전송될 데이터의 유효성을 잘 확인해주세요.",
     });

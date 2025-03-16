@@ -47,7 +47,7 @@ export class RegisterUserProfileDto extends PickType(UserProfileEntity, [
 
   @ApiProperty({
     description: "사용자 주소",
-    example: "경기도 하남시 신장동 569번지",
+    example: "경기도 하남시 미사동 스카이폴리스",
     required: true,
     uniqueItems: false,
   })
@@ -66,7 +66,7 @@ export class CreateUserProfileDto extends PickType(UserProfileEntity, [
 export class RegisterUserAuthDto extends PickType(UserAuthEntity, ["email", "nickName", "password"] as const) {
   @ApiProperty({
     description: "사용자 닉네임",
-    example: "Idooru",
+    example: "gdhong",
     required: true,
     uniqueItems: true,
   })
