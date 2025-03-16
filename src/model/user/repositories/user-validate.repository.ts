@@ -39,9 +39,7 @@ export class UserValidateRepository {
     return this.userAuthRepository.exist({ where: { nickName } });
   }
 
-  public validatePhonenumber(phoneNumber: string): Promise<boolean> {
-    return this.userProfileRepository.exist({
-      where: { phoneNumber },
-    });
+  public validatePhoneNumber(phoneNumber: string): Promise<boolean> {
+    return this.userProfileRepository.exist({ where: { phoneNumber } });
   }
 }
