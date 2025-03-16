@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from "@nestjs/common";
 import { Request } from "express";
 import { loggerFactory } from "../../functions/logger.factory";
 import { Implemented } from "../../decorators/implemented.decoration";
@@ -13,7 +13,7 @@ export class IsClientGuard implements CanActivate {
     if (user.userRole !== "client") {
       const message = "client 계정만 수행 할 수 있는 작업입니다.";
       loggerFactory("OnlyClient").error(message);
-      throw new UnauthorizedException(message);
+      throw new ForbiddenException(message);
     }
 
     return true;
