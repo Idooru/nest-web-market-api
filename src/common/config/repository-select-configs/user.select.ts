@@ -10,7 +10,13 @@ export interface UserSelect {
 export const userSelect: UserSelect = {
   userBase: ["user", "Profile", "Auth"],
   clientUser: ["user", "Profile", "Auth", "Client"],
-  users: ["user.id AS userId", "user.role AS role", "Auth.nickName as nickName", "Auth.email as email"],
+  users: [
+    "user.id AS userId",
+    "user.role AS role",
+    "Auth.nickName as nickName",
+    "Auth.email as email",
+    "user.createdAt as createdAt",
+  ],
   adminUser: ["user", "Profile", "Auth", "Admin"],
   profile: [
     "user.id AS id",
