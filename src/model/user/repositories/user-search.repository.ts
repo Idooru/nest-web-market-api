@@ -27,6 +27,7 @@ export class UserSearchRepository {
       .from(UserEntity, "user")
       .innerJoin("user.Auth", "Auth")
       .orderBy(column, order)
+      .groupBy("user.id")
       .getRawMany();
 
     if (!users.length) {
