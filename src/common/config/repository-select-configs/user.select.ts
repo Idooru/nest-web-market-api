@@ -1,7 +1,7 @@
 export interface UserSelect {
   userBase: string[];
   clientUser: string[];
-  clientUserSimple: string[];
+  users: string[];
   adminUser: string[];
   profile: string[];
   whenAdminClientUser: string[];
@@ -10,7 +10,7 @@ export interface UserSelect {
 export const userSelect: UserSelect = {
   userBase: ["user", "Profile", "Auth"],
   clientUser: ["user", "Profile", "Auth", "Client"],
-  clientUserSimple: ["user.id AS userId", "user.role AS role", "Auth.nickName as nickName", "Auth.email as email"],
+  users: ["user.id AS userId", "user.role AS role", "Auth.nickName as nickName", "Auth.email as email"],
   adminUser: ["user", "Profile", "Auth", "Admin"],
   profile: [
     "user.id AS id",

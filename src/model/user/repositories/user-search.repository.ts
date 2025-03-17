@@ -1,12 +1,11 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "../entities/user.entity";
-import { Repository, TypeORMError } from "typeorm";
+import { Repository } from "typeorm";
 import { UserSelect } from "src/common/config/repository-select-configs/user.select";
 import { ClientUserEntity } from "../entities/client-user.entity";
 import { AdminUserEntity } from "../entities/admin-user.entity";
 import { loggerFactory } from "../../../common/functions/logger.factory";
-import { FindEmailDto } from "../dtos/find-email.dto";
 
 @Injectable()
 export class UserSearchRepository {
@@ -21,31 +20,13 @@ export class UserSearchRepository {
     private readonly adminUserRepository: Repository<AdminUserEntity>,
   ) {}
 
-  public async findAllUsersFromLatest(): Promise<UserEntity[]> {
+  public async findAllUsers(column: string, order: "ASC" | "DESC"): Promise<UserEntity[]> {
     const users = await this.userRepository
       .createQueryBuilder()
-      .select(this.select.clientUserSimple)
+      .select(this.select.users)
       .from(UserEntity, "user")
       .innerJoin("user.Auth", "Auth")
-      .orderBy("user.createdAt", "DESC")
-      .getRawMany();
-
-    if (!users.length) {
-      const message = "사용자가 없습니다.";
-      loggerFactory("None Exist").error(message);
-      throw new NotFoundException(message);
-    }
-
-    return users;
-  }
-
-  public async findAllUsersFromOldest(): Promise<UserEntity[]> {
-    const users = await this.userRepository
-      .createQueryBuilder()
-      .select(this.select.clientUserSimple)
-      .from(UserEntity, "user")
-      .innerJoin("user.Auth", "Auth")
-      .orderBy("user.createdAt", "ASC")
+      .orderBy(column, order)
       .getRawMany();
 
     if (!users.length) {

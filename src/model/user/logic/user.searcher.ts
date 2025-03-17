@@ -20,11 +20,11 @@ export class UserSearcher {
   }
 
   public findAllUsersFromLatest(): Promise<UserEntity[]> {
-    return this.repository.findAllUsersFromLatest();
+    return this.repository.findAllUsers("user.createdAt", "DESC");
   }
 
   public findAllUsersFromOldest(): Promise<UserEntity[]> {
-    return this.repository.findAllUsersFromOldest();
+    return this.repository.findAllUsers("user.createdAt", "ASC");
   }
 
   public findClientUserInfo(id: string): Promise<UserEntity> {
