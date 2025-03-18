@@ -60,7 +60,7 @@ export class ProductSearchRepository {
       .getOne();
   }
 
-  public async findProductWithName(name: string): Promise<ProductEntity[]> {
+  public async findProductsWithName(name: string): Promise<ProductEntity[]> {
     const products = await this.setManyProduct()
       .where("product.name like :name", { name: `%${name}%` })
       .getRawMany();

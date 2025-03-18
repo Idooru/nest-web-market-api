@@ -18,7 +18,7 @@ export class ProductSearcher {
     return this.productSearchRepository.findProductWithId(id);
   }
 
-  public findProductWithName(name: string): Promise<ProductEntity[]> {
-    return this.productSearchRepository.findProductWithName(name);
+  public findProductsWithName(name: string): Promise<ProductEntity[]> {
+    return this.productSearchRepository.findProductsWithName(name);
   }
 }

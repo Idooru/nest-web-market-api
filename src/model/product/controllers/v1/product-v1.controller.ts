@@ -51,10 +51,10 @@ export class ProductV1Controller {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/name/:name")
-  public async findProductByName(
+  public async findProductsWithName(
     @Param() { name }: AccessProductNameDto,
   ): Promise<JsonGeneralInterface<ProductEntity[]>> {
-    const result = await this.searcher.findProductWithName(name);
+    const result = await this.searcher.findProductsWithName(name);
 
     return {
       statusCode: 200,
