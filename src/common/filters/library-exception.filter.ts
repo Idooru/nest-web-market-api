@@ -14,7 +14,7 @@ export class LibraryExceptionFilter implements ExceptionFilter {
       success: false,
       error: error.response.errorCase,
       statusCode: exception.getStatus(),
-      timestamp: new Date().toString(),
+      timeStamp: new Date().toString(),
       libraryName: error.response.libraryName,
       message: error.response.message,
       info: "해당 라이브러리의 구성 설정, 인자값 등을 확인하세요.",

@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable, PipeTransform } from "@nestjs/common";
 import { UserValidator } from "../../logic/user.validator";
 import { Implemented } from "src/common/decorators/implemented.decoration";
-import { loggerFactory } from "../../../../common/functions/logger.factory";
 
 type Dto = {
   realName: string;
