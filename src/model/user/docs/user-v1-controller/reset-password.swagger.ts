@@ -1,7 +1,7 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { ResetPasswordDto } from "../../dtos/reset-password.dto";
-import { ServerErrorSwagger } from "../../../../common/docs/internal-server-error.swager";
+import { ServerErrorSwagger } from "../../../../common/docs/internal-server-error.swagger";
 
 export const ResetPasswordSwagger = () => {
   return applyDecorators(

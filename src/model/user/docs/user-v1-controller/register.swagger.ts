@@ -1,7 +1,7 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { RegisterUserDto } from "../../dtos/register-user.dto";
-import { ServerErrorSwagger } from "../../../../common/docs/internal-server-error.swager";
+import { ServerErrorSwagger } from "../../../../common/docs/internal-server-error.swagger";
 import { typeOrmErrorSwagger } from "../../../../common/docs/typeorm-error.swagger";
 
 export const RegisterSwagger = () => {
