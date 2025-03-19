@@ -18,12 +18,13 @@ import { ModifyUserEmailDto } from "../../dtos/modify-user-email.dto";
 import { ModifyUserNicknameDto } from "../../dtos/modify-user-nickName.dto";
 import { ModifyUserPhonenumberDto } from "../../dtos/modify-user-phoneNumber.dto";
 import { ModifyUserPasswordDto } from "../../dtos/modify-user-password.dto";
-import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { UserTransactionExecutor } from "../../logic/transaction/user-transaction.executor";
 import { UserSearcher } from "../../logic/user.searcher";
 import { UserService } from "../../services/user.service";
 import { OperateUserValidationPipe } from "../../pipe/none-exist/operate-user-validation.pipe";
-import { UserEmailValidatePipe } from "../../pipe/none-exist/user-email-validate.pipe";
+import { UserEmailValidatePipe as UserEmailExistValidatePipe } from "../../pipe/exist/user-email-validate.pipe";
+import { UserEmailValidatePipe as UserEmailNoneExistValidatePipe } from "../../pipe/none-exist/user-email-validate.pipe";
 import { UserBodyPhoneNumberValidatePipe } from "../../pipe/none-exist/user-phoneNumber-validate.pipe";
 import { UserNicknameValidatePipe } from "../../pipe/none-exist/user-nickName-validate.pipe";
 import { LoginInterceptor } from "../../../../common/interceptors/general/login.interceptor";
@@ -36,6 +37,20 @@ import { FindEmailValidationPipe } from "../../pipe/exist/find-email-validation.
 import { UserSecurity } from "../../logic/user.security";
 import { UserRegisterEventInterceptor } from "../../interceptor/user-register-event.interceptor";
 import { LogoutGuard } from "../../../../common/guards/authenticate/logout.guard";
+import { RegisterSwagger } from "../../docs/user-v1-controller/register.swagger";
+import { ProfileSwagger } from "../../docs/user-v1-controller/profile.swagger";
+import { LoginSwagger } from "../../docs/user-v1-controller/login.swagger";
+import { FindForgottenEmailSwagger } from "../../docs/user-v1-controller/find-forgotten-email.swagger";
+import { RefreshTokenSwagger } from "../../docs/user-v1-controller/refresh-token.swagger";
+import { LogoutSwagger } from "../../docs/user-v1-controller/logout.swagger";
+import { ModifyUserSwagger } from "../../docs/user-v1-controller/modify-user.swagger";
+import { ModifyUserEmailSwagger } from "../../docs/user-v1-controller/modify-user-email.swagger";
+import { ModifyUserNickNameSwagger } from "../../docs/user-v1-controller/modify-user-nick-name.swagger";
+import { ModifyUserPhoneNumberSwagger } from "../../docs/user-v1-controller/modify-user-phone-number.swagger";
+import { ModifyUserPasswordSwagger } from "../../docs/user-v1-controller/modify-user-password.swagger";
+import { ModifyUserAddressSwagger } from "../../docs/user-v1-controller/modify-user-address.swagger";
+import { SecessionSwagger } from "../../docs/user-v1-controller/secession.swagger";
+import { ResetPasswordSwagger } from "../../docs/user-v1-controller/reset-password.swagger";
 
 @ApiTags("v1 공용 User API")
 @Controller({ path: "/user", version: "1" })
@@ -47,12 +62,7 @@ export class UserV1Controller {
     private readonly service: UserService,
   ) {}
 
-  @ApiOperation({
-    summary: "register",
-    description: "회원 가입을 합니다.",
-  })
-  @ApiResponse({ status: 201, description: "회원가입 성공" })
-  @ApiResponse({ status: 400, description: "입력값 부재, 중복으로 인한 실패" })
+  @RegisterSwagger()
   @UseInterceptors(JsonGeneralInterceptor, UserRegisterEventInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Post("/register")
@@ -67,12 +77,7 @@ export class UserV1Controller {
     };
   }
 
-  @ApiOperation({
-    summary: "get my profile",
-    description: "본인의 프로필 정보를 가져옵니다. 본인 계정의 권한에 해당되는 정보를 가져옵니다.",
-  })
-  @ApiResponse({ status: 200, description: "프로필 가져오기 성공" })
-  @ApiResponse({ status: 401, description: "access 토큰 부재로 인한 실패" })
+  @ProfileSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Get("/profile")
@@ -86,12 +91,7 @@ export class UserV1Controller {
     };
   }
 
-  @ApiOperation({
-    summary: "login",
-    description: "로그인을 합니다. access token과 refresh token이 담겨진 쿠키를 얻습니다.",
-  })
-  @ApiResponse({ status: 201, description: "로그인 성공" })
-  @ApiResponse({ status: 400, description: "아이디 비밀번호 불일치로 인한 실패" })
+  @LoginSwagger()
   @UseInterceptors(LoginInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Post("/login")
@@ -105,18 +105,12 @@ export class UserV1Controller {
     };
   }
 
-  @ApiOperation({
-    summary: "refresh token",
-    description:
-      "access token을 재발급 받습니다. access token의 유효기간이 끝났다고 클라이언트에서 판단하면 이 api를 호출 할 수 있도록 합니다. 만약 refresh token의 유효기간이 끝났을 때 이 api를 호출 하면 access token, refresh token이 담긴 쿠키를 제거하여 로그아웃 됩니다.",
-  })
-  @ApiResponse({ status: 200, description: "토큰 재발급 성공" })
-  @ApiResponse({ status: 401, description: "refresh 토큰 부재로 인한 실패" })
+  @RefreshTokenSwagger()
   @UseInterceptors(RefreshTokenInterceptor)
   @UseGuards(IsRefreshTokenAvailableGuard)
   @Patch("/refresh-token")
-  public async refreshToken(@GetJWT() { email }: JwtRefreshTokenPayload): Promise<RefreshTokenInterface> {
-    const accessToken = await this.userSecurity.refreshToken(email);
+  public async refreshToken(@GetJWT() { userId }: JwtRefreshTokenPayload): Promise<RefreshTokenInterface> {
+    const accessToken = await this.userSecurity.refreshToken(userId);
 
     return {
       statusCode: 200,
@@ -125,12 +119,7 @@ export class UserV1Controller {
     };
   }
 
-  @ApiOperation({
-    summary: "logout",
-    description: "로그아웃을 합니다. access token, refresh token이 담긴 쿠키를 제거합니다.",
-  })
-  @ApiResponse({ status: 200, description: "로그아웃 성공" })
-  @ApiResponse({ status: 401, description: "access 토큰 부재로 인한 실패" })
+  @LogoutSwagger()
   @UseInterceptors(LogoutInterceptor)
   @UseGuards(LogoutGuard)
   @Delete("/logout")
@@ -143,14 +132,7 @@ export class UserV1Controller {
     };
   }
 
-  @ApiOperation({
-    summary: "modify user",
-    description:
-      "로그인을 했을 때 본인의 사용자 전체 column을 수정합니다. 만일 모든 필드가 변경되었을 시 이 API를 호출할 수 있도록 합니다.",
-  })
-  @ApiResponse({ status: 201, description: "사용자 정보 수정 성공" })
-  @ApiResponse({ status: 400, description: "입력값 부재, 중복 으로 인한 실패" })
-  @ApiResponse({ status: 401, description: "access 토큰 부재로 인한 실패" })
+  @ModifyUserSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Put("/me")
@@ -172,18 +154,12 @@ export class UserV1Controller {
     };
   }
 
-  @ApiOperation({
-    summary: "modify user email",
-    description: "로그인을 했을 때 본인의 사용자 이메일 column을 수정합니다. ",
-  })
-  @ApiResponse({ status: 201, description: "사용자 이메일 수정 성공" })
-  @ApiResponse({ status: 400, description: "입력값 부재, 중복 으로 인한 실패" })
-  @ApiResponse({ status: 401, description: "access 토큰 부재로 인한 실패" })
+  @ModifyUserEmailSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/email")
   public async modifyUserEmail(
-    @Body(UserEmailValidatePipe) { email }: ModifyUserEmailDto,
+    @Body(UserEmailNoneExistValidatePipe) { email }: ModifyUserEmailDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
     await this.service.modifyUserEmail(email, jwtPayload.userId);
@@ -194,11 +170,7 @@ export class UserV1Controller {
     };
   }
 
-  @ApiOperation({
-    summary: "modify user nickName",
-    description:
-      "로그인을 했을 때 본인의 사용자 닉네임 column을 수정합니다. 수정하려는 사용자의 닉네임이 이미 데이터베이스에 존재한다면 에러를 반환합니다.",
-  })
+  @ModifyUserNickNameSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/nickName")
@@ -214,11 +186,7 @@ export class UserV1Controller {
     };
   }
 
-  @ApiOperation({
-    summary: "modify user phone number",
-    description:
-      "로그인을 했을 때 본인의 사용자 전화번호 column을 수정합니다. 수정하려는 사용자의 전화번호가 이미 데이터베이스에 존재한다면 에러를 반환합니다.",
-  })
+  @ModifyUserPhoneNumberSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/phone-number")
@@ -235,10 +203,7 @@ export class UserV1Controller {
     };
   }
 
-  @ApiOperation({
-    summary: "modify user password",
-    description: "로그인을 했을 때 본인의 사용자 비밀번호 column을 수정합니다.",
-  })
+  @ModifyUserPasswordSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/password")
@@ -254,10 +219,7 @@ export class UserV1Controller {
     };
   }
 
-  @ApiOperation({
-    summary: "modify user address",
-    description: "로그인을 했을 때 본인의 사용자 집주소 column을 수정합니다.",
-  })
+  @ModifyUserAddressSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/address")
@@ -273,7 +235,7 @@ export class UserV1Controller {
     };
   }
 
-  @ApiOperation({ summary: "secession", description: "회원 탈퇴를 합니다." })
+  @SecessionSwagger()
   @UseInterceptors(LogoutInterceptor)
   @UseGuards(IsLoginGuard)
   @Delete("/secession")
@@ -281,23 +243,20 @@ export class UserV1Controller {
     await this.service.deleteUser(jwtPayload.userId);
 
     return {
-      statusCode: 203,
+      statusCode: 200,
       message: "사용자 정보를 삭제하였습니다.",
       cookieKey: ["access_token", "refresh_token"],
     };
   }
 
-  @ApiOperation({
-    summary: "find email",
-    description: "이메일을 찾습니다. 본인 인증을 하기 위해서 실명과 전화번호를 사용합니다.",
-  })
+  @FindForgottenEmailSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsNotLoginGuard)
-  @Get("/find-email")
-  public async findEmail(
+  @Get("/forgotten-email")
+  public async findForgottenEmail(
     @Query(FindEmailValidationPipe<FindEmailDto>) query: FindEmailDto,
   ): Promise<JsonGeneralInterface<string>> {
-    const result = await this.userSecurity.findEmail(query);
+    const result = await this.userSecurity.findForgottenEmail(query);
 
     return {
       statusCode: 200,
@@ -306,15 +265,14 @@ export class UserV1Controller {
     };
   }
 
-  @ApiOperation({
-    summary: "reset password",
-    description: "비밀번호를 변경합니다. 본인의 이메일과 변경할 비밀번호를 사용합니다.",
-  })
+  @ResetPasswordSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Patch("/reset-password")
-  public async resetPassword(@Body() resetPasswordDto: ResetPasswordDto): Promise<JsonGeneralInterface<void>> {
-    await this.service.resetPassword(resetPasswordDto);
+  public async resetPassword(
+    @Body(UserEmailExistValidatePipe<ResetPasswordDto>) body: ResetPasswordDto,
+  ): Promise<JsonGeneralInterface<void>> {
+    await this.service.resetPassword(body);
 
     return {
       statusCode: 200,
