@@ -20,7 +20,7 @@ export class CartSearchRepository {
       .from(CartEntity, "cart")
       .innerJoin("cart.Product", "Product")
       .innerJoin("Product.creator", "AdminUser")
-      .innerJoin("Product.Image", "Image")
+      .leftJoin("Product.Image", "Image")
       .where("cart.clientId = :clientId", { clientId })
       .getMany();
   }

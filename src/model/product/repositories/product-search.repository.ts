@@ -4,6 +4,7 @@ import { ProductEntity } from "../entities/product.entity";
 import { Repository, SelectQueryBuilder } from "typeorm";
 import { ProductSelect } from "src/common/config/repository-select-configs/product.select";
 import { loggerFactory } from "../../../common/functions/logger.factory";
+import { ProductBasicRawDto } from "../dto/response/product-basic-raw.dto";
 
 @Injectable()
 export class ProductSearchRepository {
@@ -19,13 +20,13 @@ export class ProductSearchRepository {
       .createQueryBuilder()
       .select(this.select.products)
       .from(ProductEntity, "product")
-      .innerJoin("product.Image", "Image")
+      .leftJoin("product.Image", "Image")
       .innerJoin("product.StarRate", "StarRate")
       .leftJoin("product.Review", "Review")
       .groupBy("product.id");
   }
 
-  public async findAllProducts(column: string, order: "ASC" | "DESC"): Promise<ProductEntity[]> {
+  public async findAllProducts(column: string, order: "ASC" | "DESC"): Promise<ProductBasicRawDto[]> {
     const products = await this.setManyProduct().orderBy(column, order).getRawMany();
 
     if (!products.length) {
@@ -42,7 +43,7 @@ export class ProductSearchRepository {
       .createQueryBuilder()
       .select(this.select.product)
       .from(ProductEntity, "product")
-      .innerJoin("product.Image", "Image")
+      .leftJoin("product.Image", "Image")
       .innerJoin("product.StarRate", "StarRate")
       .leftJoin("product.Review", "Review")
       .leftJoin("Review.reviewer", "Reviewer")
@@ -60,7 +61,7 @@ export class ProductSearchRepository {
       .getOne();
   }
 
-  public async findProductsWithName(name: string): Promise<ProductEntity[]> {
+  public async findProductsWithName(name: string): Promise<ProductBasicRawDto[]> {
     const products = await this.setManyProduct()
       .where("product.name like :name", { name: `%${name}%` })
       .getRawMany();
