@@ -23,7 +23,9 @@ export class UserAuthEntity extends ChildEntity {
 
   @IsString()
   @IsNotEmpty()
-  @Matches(/^[A-Za-z\d!@#$%^&*()]{8,30}$/, { message: "비밀번호 유효성이 어긋납니다." })
+  @Matches(/^[A-Za-z\d!@#$%^&*()]{8,30}$/, {
+    message: "비밀번호 유효성이 어긋납니다. 8자 ~ 30자 사이, 영문 특수 문자 조합을 준수해주세요.",
+  })
   @Column({ type: "varchar", nullable: false })
   public password: string;
 
