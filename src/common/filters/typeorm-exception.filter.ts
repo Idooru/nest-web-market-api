@@ -14,7 +14,7 @@ export class TypeOrmExceptionFilter implements ExceptionFilter {
       success: false,
       error: error.name,
       statusCode: exception.getStatus(),
-      timestamp: new Date().toString(),
+      timeStamp: new Date().toString(),
       message: error.message,
       info: "Typeorm Config, Entity, 요청 쿼리, SQL 서버의 상태를 확인하세요.",
     });
