@@ -1,8 +1,8 @@
 import { applyDecorators } from "@nestjs/common";
-import { ApiBody, ApiInternalServerErrorResponse, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { ModifyUserAddressDto } from "../../dtos/modify-user-address.dto";
 import { JwtAuthFailSwagger, JwtAuthHeaderSwagger } from "../../../auth/docs/jwt-auth.swagger";
-import { ServerErrorSwagger } from "../../../../common/docs/internal-server-error.swager";
+import { ServerErrorSwagger } from "../../../../common/docs/internal-server-error.swagger";
 
 export const ModifyUserAddressSwagger = () => {
   return applyDecorators(

@@ -2,7 +2,7 @@ import { applyDecorators } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { LoginUserDto } from "../../dtos/login-user.dto";
 import { typeOrmErrorSwagger } from "../../../../common/docs/typeorm-error.swagger";
-import { ServerErrorSwagger } from "../../../../common/docs/internal-server-error.swager";
+import { ServerErrorSwagger } from "../../../../common/docs/internal-server-error.swagger";
 
 export const LoginSwagger = () => {
   return applyDecorators(

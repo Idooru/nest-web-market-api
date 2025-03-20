@@ -2,7 +2,7 @@ import { applyDecorators } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { ModifyUserNicknameDto } from "../../dtos/modify-user-nickname.dto";
 import { JwtAuthFailSwagger, JwtAuthHeaderSwagger } from "../../../auth/docs/jwt-auth.swagger";
-import { ServerErrorSwagger } from "../../../../common/docs/internal-server-error.swager";
+import { ServerErrorSwagger } from "../../../../common/docs/internal-server-error.swagger";
 
 export const ModifyUserNickNameSwagger = () => {
   return applyDecorators(
