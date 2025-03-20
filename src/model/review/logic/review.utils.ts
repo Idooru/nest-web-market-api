@@ -16,9 +16,9 @@ export class ReviewUtils {
   ) {}
 
   public checkBeforeCreate(product: ProductEntity, userId: string) {
-    const alreadyWriten = product.Review.find((review) => review.reviewer.id === userId);
+    const alreadyWritten = product.Review.find((review) => review.reviewer.id === userId);
 
-    if (alreadyWriten) {
+    if (alreadyWritten) {
       const message = `해당 사용자(${userId})는 해당 상품(${product.id})에 대한 리뷰를 이미 남겼습니다.`;
       loggerFactory("Already Writen").warn(message);
       throw new BadRequestException(message);
