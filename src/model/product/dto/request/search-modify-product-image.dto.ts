@@ -1,4 +1,4 @@
-import { ProductImageEntity } from "../../media/entities/product-image.entity";
+import { ProductImageEntity } from "../../../media/entities/product-image.entity";
 
 export class SearchModifyProductImageDto {
   public productId: string;

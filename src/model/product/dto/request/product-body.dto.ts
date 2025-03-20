@@ -1,6 +1,6 @@
-import { ProductEntity } from "../entities/product.entity";
+import { ProductEntity } from "../../entities/product.entity";
 import { ApiProperty, PickType } from "@nestjs/swagger";
-import { ProductCategory } from "../types/product-category.type";
+import { ProductCategory } from "../../types/product-category.type";
 
 export class ProductBody extends PickType(ProductEntity, [
   "name",
