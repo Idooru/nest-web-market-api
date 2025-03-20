@@ -197,10 +197,12 @@ Nest is [MIT licensed](LICENSE).
 10. 상품을 카테고리 별로 가져오는 api 추가하기 // 보류
 11. 상품, 사용자 프로필을 가져올 때 redis적용해보기 // 보류
 12. 9 ~ 11까지 모두 수행하면 aws 배포 해보기 // 보류
-13. API 정상화 (버그 수정) // 진행중
-14. SWAGGER API DOCUMENTATION 설정
-15. JOI 사용해서 DotenvModule 설정
-16. 회원가입시 이메일 인증 로직 추가
-17. 13 ~ 16까지 모두 수행하면 플러터로 앱 개발 후 API 연동 진행 (쿠기를 사용하는 로직을 header를 사용하도록 변경 필요)
-18. 쿼리 성능 최적화
-19. 18까지 완료 후 9 ~ 11 진행
+13. API 정상화 (버그 수정) // 완료
+14. user, product 등 많이 사용되는 entity Join을 Generic하게 변경 // 진행중
+15. repository에서 entity와 raw를 분리 // 진행중
+16. SWAGGER API DOCUMENTATION 설정
+17. JOI 사용해서 DotenvModule 설정
+18. 회원가입시 이메일 인증 로직 추가
+19. 14 ~ 18까지 모두 수행하면 플러터로 앱 개발 후 API 연동 진행 (쿠기를 사용하는 로직을 header를 사용하도록 변경 필요)
+20. 쿼리 성능 최적화
+21. 20까지 완료 후 9 ~ 11 진행
