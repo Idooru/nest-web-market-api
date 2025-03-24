@@ -1,4 +1,4 @@
-import { ReviewVideoEntity } from "../../media/entities/review-video.entity";
+import { ReviewVideoEntity } from "../../../media/entities/review-video.entity";
 
 export class InsertReviewVideosDto {
   reviewId: string;
