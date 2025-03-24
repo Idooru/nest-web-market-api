@@ -1,6 +1,6 @@
 import { ApiProperty, IntersectionType, PickType } from "@nestjs/swagger";
-import { UserAuthEntity } from "../entities/user-auth.entity";
-import { UserProfileEntity } from "../entities/user-profile.entity";
+import { UserProfileEntity } from "../../entities/user-profile.entity";
+import { UserAuthEntity } from "../../entities/user-auth.entity";
 
 export class ModifyUserProfileDto extends PickType(UserProfileEntity, ["phoneNumber", "address"] as const) {
   @ApiProperty({
@@ -46,4 +46,9 @@ export class ModifyUserAuthDto extends PickType(UserAuthEntity, ["email", "nickN
   public password: string;
 }
 
-export class ModifyUserDto extends IntersectionType(ModifyUserProfileDto, ModifyUserAuthDto) {}
+export class ModifyUserBody extends IntersectionType(ModifyUserProfileDto, ModifyUserAuthDto) {}
+
+export class ModifyUserDto {
+  public id: string;
+  public body: ModifyUserBody;
+}
