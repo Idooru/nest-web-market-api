@@ -1,9 +1,8 @@
 import { ApiProperty, IntersectionType, PickType } from "@nestjs/swagger";
-import { UserAuthEntity } from "../entities/user-auth.entity";
-import { UserProfileEntity } from "../entities/user-profile.entity";
-import { UserEntity } from "../entities/user.entity";
-import { UserRole } from "../types/user-role.type";
-import { UserGender } from "../types/user-gender.type";
+import { UserProfileEntity } from "../../entities/user-profile.entity";
+import { UserGender } from "../../types/user-gender.type";
+import { UserAuthEntity } from "../../entities/user-auth.entity";
+import { UserEntity } from "../../entities/user.entity";
 
 export class RegisterUserProfileDto extends PickType(UserProfileEntity, [
   "realName",
@@ -91,15 +90,7 @@ export class RegisterUserAuthDto extends PickType(UserAuthEntity, ["email", "nic
 
 export class CreateUserAuthDto extends PickType(UserAuthEntity, ["id", "email", "nickName", "password"]) {}
 
-export class RegisterUserRoleDto extends PickType(UserEntity, ["role"]) {
-  @ApiProperty({
-    description: "사용자 권한",
-    example: "admin",
-    required: true,
-    uniqueItems: false,
-  })
-  public role: UserRole;
-}
+export class RegisterUserRoleDto extends PickType(UserEntity, ["role"]) {}
 
 export class RegisterUserDto extends IntersectionType(
   RegisterUserProfileDto,
