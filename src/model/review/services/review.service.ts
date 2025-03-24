@@ -1,19 +1,22 @@
 import { Injectable } from "@nestjs/common";
 import { ReviewEntity } from "../entities/review.entity";
 import { ReviewUpdateRepository } from "../repositories/review-update.repository";
-import { InsertReviewImagesDto } from "../dto/insert-review-image.dto";
-import { InsertReviewVideosDto } from "../dto/insert-review-video.dto";
-import { StarRatingDto } from "../dto/star-rating.dto";
-import { CreateReviewRowDto } from "../dto/create-review.dto";
-import { ModifyReviewDto, ModifyReviewRowDto } from "../dto/modify-review.dto";
-import { ChangeReviewImageDto } from "../dto/change-review-image.dto";
-import { ChangeReviewVideoDto } from "../dto/change-review-video.dto";
-import { ModifyStarRateDto } from "../dto/modify-star-rate.dto";
+
 import { StarRateEntity } from "../entities/star-rate.entity";
 import { ReviewUtils } from "../logic/review.utils";
 import { ReviewSearcher } from "../logic/review.searcher";
 import { MediaUtils } from "../../media/logic/media.utils";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
+import { ReviewImageEntity } from "../../media/entities/review-image.entity";
+import { ReviewVideoEntity } from "../../media/entities/review-video.entity";
+import { InsertReviewImagesDto } from "../dto/request/insert-review-image.dto";
+import { CreateReviewRowDto } from "../dto/request/create-review.dto";
+import { InsertReviewVideosDto } from "../dto/request/insert-review-video.dto";
+import { StarRatingDto } from "../dto/request/star-rating.dto";
+import { ModifyReviewRowDto } from "../dto/request/modify-review.dto";
+import { ChangeReviewImageDto } from "../dto/request/change-review-image.dto";
+import { ChangeReviewVideoDto } from "../dto/request/change-review-video.dto";
+import { ModifyStarRateDto } from "../dto/request/modify-star-rate.dto";
 
 @Injectable()
 export class ReviewService {
@@ -119,11 +122,11 @@ export class ReviewService {
 
   @Transaction
   public async deleteReviewWithId(id: string): Promise<void> {
-    const review = await this.reviewSearcher.findReviewWithId(id);
+    const review = await this.reviewSearcher.findEntity(id, [ReviewImageEntity, ReviewVideoEntity]);
 
     this.mediaUtils.deleteMediaFiles({
-      images: review.Image,
-      videos: review.Video,
+      images: review.ReviewImage,
+      videos: review.ReviewVideo,
       mediaEntity: "review",
       callWhere: "remove media entity",
     });

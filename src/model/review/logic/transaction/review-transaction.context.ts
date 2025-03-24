@@ -1,16 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { ReviewService } from "../../services/review.service";
-import { SearchCreateReviewDto } from "../../dto/search-create-review.dto";
-import { SearchModifyReviewDto } from "../../dto/search-modify-review.dto";
+import { SearchCreateReviewDto } from "../../dto/request/search-create-review.dto";
 import { MediaUtils } from "../../../media/logic/media.utils";
-import { SearchDeleteReviewDto } from "../../../product/dto/search-delete-review.dto";
-import { CreateReviewRowDto } from "../../dto/create-review.dto";
-import { InsertReviewImagesDto } from "../../dto/insert-review-image.dto";
-import { InsertReviewVideosDto } from "../../dto/insert-review-video.dto";
-import { ModifyReviewRowDto } from "../../dto/modify-review.dto";
-import { ChangeReviewImageDto } from "../../dto/change-review-image.dto";
-import { ChangeReviewVideoDto } from "../../dto/change-review-video.dto";
-import { ModifyStarRateDto } from "../../dto/modify-star-rate.dto";
+import { CreateReviewRowDto } from "../../dto/request/create-review.dto";
+import { InsertReviewImagesDto } from "../../dto/request/insert-review-image.dto";
+import { InsertReviewVideosDto } from "../../dto/request/insert-review-video.dto";
+import { SearchModifyReviewDto } from "../../dto/request/search-modify-review.dto";
+import { ModifyReviewRowDto } from "../../dto/request/modify-review.dto";
+import { ChangeReviewImageDto } from "../../dto/request/change-review-image.dto";
+import { ChangeReviewVideoDto } from "../../dto/request/change-review-video.dto";
+import { ModifyStarRateDto } from "../../dto/request/modify-star-rate.dto";
+import { SearchDeleteReviewDto } from "../../dto/request/search-delete-review.dto";
 
 @Injectable()
 export class ReviewTransactionContext {

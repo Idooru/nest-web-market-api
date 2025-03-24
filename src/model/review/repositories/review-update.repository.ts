@@ -1,15 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { ReviewEntity } from "../entities/review.entity";
 import { StarRateEntity } from "../entities/star-rate.entity";
-import { CreateReviewRowDto } from "../dto/create-review.dto";
-import { ModifyReviewDto, ModifyReviewRowDto } from "../dto/modify-review.dto";
 import { Transactional } from "../../../common/interfaces/initializer/transactional";
 import { ReviewRepositoryPayload } from "../logic/transaction/review-repository.payload";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
-import { InsertReviewImageDto } from "../dto/insert-review-image.dto";
-import { InsertReviewVideoDto } from "../dto/insert-review-video.dto";
-import { v4 as uuidv4 } from "uuid";
 import { StarRateScore } from "../types/star-rate-score.type";
+import { CreateReviewRowDto } from "../dto/request/create-review.dto";
+import { InsertReviewImageDto } from "../dto/request/insert-review-image.dto";
+import { InsertReviewVideoDto } from "../dto/request/insert-review-video.dto";
+import { ModifyReviewRowDto } from "../dto/request/modify-review.dto";
+import { v4 as uuidv4 } from "uuid";
+
 @Injectable()
 export class ReviewUpdateRepository {
   constructor(private readonly transaction: Transactional<ReviewRepositoryPayload>) {}
@@ -18,9 +19,10 @@ export class ReviewUpdateRepository {
   public async createReview(dto: CreateReviewRowDto): Promise<ReviewEntity> {
     const { body, reviewerId, productId } = dto;
     const reviewId = uuidv4();
+
     await this.transaction.getRepository().review.query(
       `INSERT INTO
-       reviews (id, title, content, reviewerId, productId)
+       reviews (id, title, content, clientUserId, productId)
        VALUES(?, ?, ?, ?, ?)`,
       [reviewId, body.title, body.content, reviewerId, productId],
     );

@@ -3,12 +3,14 @@ import { ReviewSearcher } from "../review.searcher";
 import { MediaSearcher } from "../../../media/logic/media.searcher";
 import { ProductSearcher } from "../../../product/logic/product.searcher";
 import { ReviewUtils } from "../review.utils";
-import { CreateReviewDto } from "../../dto/create-review.dto";
-import { SearchCreateReviewDto } from "../../dto/search-create-review.dto";
-import { ModifyReviewDto } from "../../dto/modify-review.dto";
-import { SearchModifyReviewDto } from "../../dto/search-modify-review.dto";
-import { DeleteReviewDto } from "../../dto/delete-review.dto";
-import { SearchDeleteReviewDto } from "../../../product/dto/search-delete-review.dto";
+import { ReviewEntity } from "../../entities/review.entity";
+import { StarRateEntity } from "../../entities/star-rate.entity";
+import { CreateReviewDto } from "../../dto/request/create-review.dto";
+import { SearchCreateReviewDto } from "../../dto/request/search-create-review.dto";
+import { ModifyReviewDto } from "../../dto/request/modify-review.dto";
+import { SearchModifyReviewDto } from "../../dto/request/search-modify-review.dto";
+import { DeleteReviewDto } from "../../dto/request/delete-review.dto";
+import { SearchDeleteReviewDto } from "../../dto/request/search-delete-review.dto";
 
 @Injectable()
 export class ReviewTransactionSearcher {
@@ -21,9 +23,9 @@ export class ReviewTransactionSearcher {
 
   public async searchCreateReview(dto: CreateReviewDto): Promise<SearchCreateReviewDto> {
     const { body, reviewerId, productId, reviewImgCookies, reviewVdoCookies } = dto;
-    const product = await this.productSearcher.findProductWithId(productId);
+    const product = await this.productSearcher.findEntity(productId, [ReviewEntity, StarRateEntity]);
 
-    this.reviewUtils.checkBeforeCreate(product, reviewerId);
+    await this.reviewUtils.checkBeforeCreate(product, reviewerId);
 
     const [reviewImages, reviewVideos, starRate] = await Promise.all([
       this.mediaSearcher.findReviewImagesWithId(reviewImgCookies),
@@ -44,7 +46,7 @@ export class ReviewTransactionSearcher {
   public async searchModifyReview(dto: ModifyReviewDto): Promise<SearchModifyReviewDto> {
     const { body, userId, productId, reviewId, reviewImgCookies, reviewVdoCookies } = dto;
     const review = await this.reviewUtils.checkBeforeModify(reviewId, userId);
-    const product = await this.productSearcher.findProductWithId(productId);
+    const product = await this.productSearcher.findEntity(productId, [StarRateEntity]);
 
     const [beforeReviewImages, newReviewImages, beforeReviewVideos, newReviewVideos, starRate] = await Promise.all([
       this.mediaSearcher.findBeforeReviewImagesWithId(review.id),
@@ -69,7 +71,7 @@ export class ReviewTransactionSearcher {
     const { reviewId, userId } = dto;
 
     const review = await this.reviewUtils.checkBeforeModify(reviewId, userId);
-    const product = await this.productSearcher.findProductWithId(review.Product.id);
+    const product = await this.productSearcher.findEntity(review.Product.id, [StarRateEntity]);
     const starRate = await this.reviewSearcher.findStarRateWithId(product.StarRate.id);
 
     return { review, starRate };

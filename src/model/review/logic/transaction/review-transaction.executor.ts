@@ -1,13 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { CreateReviewDto } from "../../dto/create-review.dto";
-import { ModifyReviewDto } from "../../dto/modify-review.dto";
-import { DeleteReviewDto } from "../../dto/delete-review.dto";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 import { ReviewRepositoryPayload } from "./review-repository.payload";
 import { TransactionHandler } from "../../../../common/lib/handler/transaction.handler";
 import { ReviewTransactionSearcher } from "./review-transaction.searcher";
 import { ReviewTransactionContext } from "./review-transaction.context";
-import { SearchModifyReviewDto } from "../../dto/search-modify-review.dto";
+import { CreateReviewDto } from "../../dto/request/create-review.dto";
+import { ModifyReviewDto } from "../../dto/request/modify-review.dto";
+import { DeleteReviewDto } from "../../dto/request/delete-review.dto";
 
 @Injectable()
 export class ReviewTransactionExecutor {

@@ -9,38 +9,57 @@ import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-gen
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
-import { ReviewBody } from "../../dto/review-body.dto";
 import { MediaCookieDto } from "src/model/media/dto/media-cookie.dto";
 import { reviewMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { ReviewTransactionExecutor } from "../../logic/transaction/review-transaction.executor";
 import { ProductIdValidatePipe } from "../../../product/pipe/exist/product-id-validate.pipe";
 import { ReviewIdValidatePipe } from "../../pipe/exist/review-id-validate.pipe";
-import { CreateReviewDto } from "../../dto/create-review.dto";
-import { ModifyReviewDto } from "../../dto/modify-review.dto";
-import { DeleteReviewDto } from "../../dto/delete-review.dto";
-import { ReviewEntity } from "../../entities/review.entity";
 import { ReviewSearcher } from "../../logic/review.searcher";
 import { DeleteReviewMediaInterceptor } from "../../../media/interceptor/delete-review-media.interceptor";
+import { ReviewBasicRawDto } from "../../dto/response/review-basic-raw.dto";
+import { ReviewDetailRawDto } from "../../dto/response/review-detail-raw.dto";
+import { ReviewBody } from "../../dto/request/review-body.dto";
+import { CreateReviewDto } from "../../dto/request/create-review.dto";
+import { ModifyReviewDto } from "../../dto/request/modify-review.dto";
+import { DeleteReviewDto } from "../../dto/request/delete-review.dto";
 
 @ApiTags("v1 고객 Review API")
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)
 @Controller({ path: "client/review", version: "1" })
 export class ReviewV1ClientController {
-  constructor(private readonly transaction: ReviewTransactionExecutor, private readonly searcher: ReviewSearcher) {}
+  constructor(
+    private readonly transaction: ReviewTransactionExecutor,
+    private readonly reviewSearcher: ReviewSearcher,
+  ) {}
 
   @ApiOperation({})
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/")
-  public async findAllReviews(
+  public async findAllReviewsFromLatest(
     @GetJWT() { userId }: JwtAccessTokenPayload,
-  ): Promise<JsonGeneralInterface<ReviewEntity[]>> {
-    const result = await this.searcher.findAllReviews(userId);
+  ): Promise<JsonGeneralInterface<ReviewBasicRawDto[]>> {
+    const result = await this.reviewSearcher.findAllRawsFromLatest(userId);
 
     return {
       statusCode: 200,
-      message: "본인에 대한 리뷰 정보 전부를 가져옵니다.",
+      message: "본인에 대한 전체 리뷰 정보 전부를 최신 순으로 가져옵니다.",
+      result,
+    };
+  }
+
+  @ApiOperation({})
+  @UseInterceptors(JsonGeneralInterceptor)
+  @Get("/oldest")
+  public async findAllReviewsFromOldest(
+    @GetJWT() { userId }: JwtAccessTokenPayload,
+  ): Promise<JsonGeneralInterface<ReviewBasicRawDto[]>> {
+    const result = await this.reviewSearcher.findAllRawsFromOldest(userId);
+
+    return {
+      statusCode: 200,
+      message: "본인에 대한 전체 리뷰 정보를 오래된 순으로 가져옵니다.",
       result,
     };
   }
@@ -48,10 +67,10 @@ export class ReviewV1ClientController {
   @ApiOperation({})
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/:reviewId")
-  public async findReview(
+  public async findDetailReview(
     @Param("reviewId", ReviewIdValidatePipe) reviewId: string,
-  ): Promise<JsonGeneralInterface<ReviewEntity>> {
-    const result = await this.searcher.findReviewWithId(reviewId);
+  ): Promise<JsonGeneralInterface<ReviewDetailRawDto>> {
+    const result = await this.reviewSearcher.findRaw(reviewId);
 
     return {
       statusCode: 200,
