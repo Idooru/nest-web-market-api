@@ -1,5 +1,5 @@
 import { ReviewBody } from "./review-body.dto";
-import { MediaCookieDto } from "../../media/dto/media-cookie.dto";
+import { MediaCookieDto } from "../../../media/dto/media-cookie.dto";
 
 export class CreateReviewDto {
   public body: ReviewBody;
