@@ -1,13 +1,13 @@
 import { ApiProperty, PickType } from "@nestjs/swagger";
-import { ReviewEntity } from "../entities/review.entity";
-import { StarRateScore } from "../types/star-rate-score.type";
+import { ReviewEntity } from "../../entities/review.entity";
+import { StarRateScore } from "../../types/star-rate-score.type";
 
 export class ReviewBody extends PickType(ReviewEntity, [
   "title",
   "content",
   "starRateScore",
-  "Image",
-  "Video",
+  "ReviewImage",
+  "ReviewVideo",
 ] as const) {
   @ApiProperty({
     description: "리뷰 제목",
