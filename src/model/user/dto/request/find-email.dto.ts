@@ -1,5 +1,5 @@
 import { ApiProperty, PickType } from "@nestjs/swagger";
-import { UserProfileEntity } from "../entities/user-profile.entity";
+import { UserProfileEntity } from "../../entities/user-profile.entity";
 
 export class FindEmailDto extends PickType(UserProfileEntity, ["realName", "phoneNumber"] as const) {
   @ApiProperty({
