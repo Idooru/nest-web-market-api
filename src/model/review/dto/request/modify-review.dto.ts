@@ -1,6 +1,6 @@
-import { ReviewEntity } from "../entities/review.entity";
 import { ReviewBody } from "./review-body.dto";
-import { MediaCookieDto } from "../../media/dto/media-cookie.dto";
+import { MediaCookieDto } from "../../../media/dto/media-cookie.dto";
+import { ReviewEntity } from "../../entities/review.entity";
 
 export class ModifyReviewDto {
   body: ReviewBody;
