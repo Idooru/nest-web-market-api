@@ -1,7 +1,7 @@
 import { ProductEntity } from "src/model/product/entities/product.entity";
 import { ClientUserEntity } from "src/model/user/entities/client-user.entity";
 import { InquiryRequestBody } from "./inquiry-request-body";
-import { MediaCookieDto } from "../../../media/dto/media-cookie.dto";
+import { MediaCookieDto } from "../../../../media/dto/media-cookie.dto";
 
 export class CreateInquiryRequestDto {
   public body: InquiryRequestBody;
