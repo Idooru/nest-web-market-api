@@ -1,13 +1,13 @@
 import { ApiProperty, PickType } from "@nestjs/swagger";
-import { InquiryRequestEntity } from "../../entities/inquiry-request.entity";
-import { InquiryOption } from "../../types/inquiry-option.type";
+import { InquiryRequestEntity } from "../../../entities/inquiry-request.entity";
+import { InquiryOption } from "../../../types/inquiry-option.type";
 
 export class InquiryRequestBody extends PickType(InquiryRequestEntity, [
   "title",
   "content",
   "inquiryOption",
-  "Image",
-  "Video",
+  "InquiryRequestImage",
+  "InquiryRequestVideo",
 ] as const) {
   @ApiProperty({
     description: "문의 요청 제목",
