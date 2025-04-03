@@ -1,5 +1,5 @@
 import { ApiProperty, PickType } from "@nestjs/swagger";
-import { CartEntity } from "../entities/cart.entity";
+import { CartEntity } from "../../entities/cart.entity";
 
 export class CartBody extends PickType(CartEntity, ["quantity", "totalPrice"] as const) {
   @ApiProperty({
