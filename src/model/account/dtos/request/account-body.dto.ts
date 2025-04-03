@@ -1,6 +1,6 @@
 import { ApiProperty, PickType } from "@nestjs/swagger";
-import { AccountEntity } from "../entities/account.entity";
 import { IsBoolean, IsNotEmpty } from "class-validator";
+import { AccountEntity } from "../../entities/account.entity";
 
 export class AccountBody extends PickType(AccountEntity, ["bank", "accountNumber", "balance"] as const) {
   @ApiProperty({
