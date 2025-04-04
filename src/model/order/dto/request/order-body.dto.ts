@@ -1,6 +1,6 @@
 import { ApiProperty, PickType } from "@nestjs/swagger";
-import { OrderEntity } from "../entities/order.entity";
-import { DeliveryOption } from "../types/delivery-option.type";
+import { OrderEntity } from "../../entities/order.entity";
+import { DeliveryOption } from "../../types/delivery-option.type";
 
 export class OrderBody extends PickType(OrderEntity, ["deliveryOption", "deliveryAddress"] as const) {
   @ApiProperty({
