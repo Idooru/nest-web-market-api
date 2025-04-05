@@ -5,7 +5,7 @@ import { ChildEntity } from "src/common/entities/child.entity";
 
 @Entity({ name: "users_auth", synchronize: true })
 export class UserAuthEntity extends ChildEntity {
-  @OneToOne(() => UserEntity, (user) => user.Auth, {
+  @OneToOne(() => UserEntity, (user) => user.UserAuth, {
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "id" })

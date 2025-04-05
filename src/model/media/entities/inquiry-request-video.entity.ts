@@ -4,11 +4,9 @@ import { MediaEntity } from "../../../common/entities/media.entity";
 
 @Entity({ name: "inquiry_request_videos", synchronize: true })
 export class InquiryRequestVideoEntity extends MediaEntity {
-  @ManyToOne(
-    () => InquiryRequestEntity,
-    (inquiryRequest) => inquiryRequest.Image,
-    { onDelete: "CASCADE" },
-  )
+  @ManyToOne(() => InquiryRequestEntity, (inquiryRequest) => inquiryRequest.InquiryRequestVideo, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ referencedColumnName: "id", name: "inquiryRequestId" })
   public InquiryRequest: InquiryRequestEntity;
 }

@@ -15,28 +15,18 @@ export class UserEntity extends CommonEntity {
   @Column({ type: "enum", enum: userRole })
   public role: UserRole;
 
-  @OneToOne(() => UserProfileEntity, (profile) => profile.User, {
-    cascade: true,
-  })
-  public Profile: UserProfileEntity;
+  @OneToOne(() => UserProfileEntity, (profile) => profile.User, { cascade: true })
+  public UserProfile: UserProfileEntity;
 
-  @OneToOne(() => UserAuthEntity, (auth) => auth.User, {
-    cascade: true,
-  })
-  public Auth: UserAuthEntity;
+  @OneToOne(() => UserAuthEntity, (auth) => auth.User, { cascade: true })
+  public UserAuth: UserAuthEntity;
 
-  @OneToMany(() => AccountEntity, (account) => account.User, {
-    cascade: true,
-  })
+  @OneToMany(() => AccountEntity, (account) => account.User, { cascade: true })
   public Account: AccountEntity[];
 
-  @OneToOne(() => ClientUserEntity, (client) => client.User, {
-    cascade: true,
-  })
-  public clientActions: ClientUserEntity;
+  @OneToOne(() => ClientUserEntity, (client) => client.User, { cascade: true })
+  public ClientUser: ClientUserEntity;
 
-  @OneToOne(() => AdminUserEntity, (admin) => admin.User, {
-    cascade: true,
-  })
-  public adminActions: AdminUserEntity;
+  @OneToOne(() => AdminUserEntity, (admin) => admin.User, { cascade: true })
+  public AdminUser: AdminUserEntity;
 }

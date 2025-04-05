@@ -34,7 +34,7 @@ export class OrderEntity extends CommonEntity {
   @OneToMany(() => PaymentEntity, (payment) => payment.Order)
   public Payment: PaymentEntity[];
 
-  @ManyToOne(() => ClientUserEntity, (clientUser) => clientUser.Order)
+  @ManyToOne(() => ClientUserEntity, (clientUser) => clientUser.Order, { onDelete: "CASCADE" })
   @JoinColumn({ name: "clientId" })
   public ClientUser: ClientUserEntity;
 }

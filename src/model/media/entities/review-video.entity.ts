@@ -4,7 +4,7 @@ import { MediaEntity } from "../../../common/entities/media.entity";
 
 @Entity({ name: "reviews_videos", synchronize: true })
 export class ReviewVideoEntity extends MediaEntity {
-  @ManyToOne(() => ReviewEntity, (review) => review.Video, {
+  @ManyToOne(() => ReviewEntity, (review) => review.ReviewVideo, {
     onDelete: "CASCADE",
   })
   @JoinColumn({ referencedColumnName: "id", name: "reviewId" })

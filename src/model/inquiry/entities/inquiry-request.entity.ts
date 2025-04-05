@@ -16,29 +16,21 @@ export class InquiryRequestEntity extends PostEntity {
   @Column({ type: "enum", enum: inquiryOption })
   public inquiryOption: InquiryOption;
 
-  @ManyToOne(() => ClientUserEntity, (client) => client.writtenInquiryRequest, {
-    onDelete: "CASCADE",
-  })
-  public InquiryRequester: ClientUserEntity;
+  @ManyToOne(() => ClientUserEntity, (client) => client.InquiryRequest, { onDelete: "CASCADE" })
+  public ClientUser: ClientUserEntity;
 
   @IsBoolean()
   @Column({ type: "boolean", default: false })
   public isAnswered: boolean;
 
-  @ManyToOne(() => ProductEntity, (product) => product.InquiryRequest, {
-    onDelete: "CASCADE",
-  })
+  @ManyToOne(() => ProductEntity, (product) => product.InquiryRequest, { onDelete: "SET NULL" })
   public Product: ProductEntity;
 
-  @OneToMany(() => InquiryRequestImageEntity, (image) => image.InquiryRequest, {
-    cascade: true,
-  })
-  public Image: InquiryRequestImageEntity[];
+  @OneToMany(() => InquiryRequestImageEntity, (image) => image.InquiryRequest, { cascade: true })
+  public InquiryRequestImage: InquiryRequestImageEntity[];
 
-  @OneToMany(() => InquiryRequestVideoEntity, (video) => video.InquiryRequest, {
-    cascade: true,
-  })
-  public Video: InquiryRequestVideoEntity[];
+  @OneToMany(() => InquiryRequestVideoEntity, (video) => video.InquiryRequest, { cascade: true })
+  public InquiryRequestVideo: InquiryRequestVideoEntity[];
 
   @OneToOne(() => InquiryResponseEntity, (inquiryResponse) => inquiryResponse.InquiryRequest, { cascade: true })
   public InquiryResponse: InquiryResponseEntity;

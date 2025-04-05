@@ -4,9 +4,7 @@ import { MediaEntity } from "../../../common/entities/media.entity";
 
 @Entity({ name: "products_images", synchronize: true })
 export class ProductImageEntity extends MediaEntity {
-  @ManyToOne(() => ProductEntity, (product) => product.Image, {
-    onDelete: "CASCADE",
-  })
+  @ManyToOne(() => ProductEntity, (product) => product.ProductImage, { onDelete: "CASCADE" })
   @JoinColumn({ referencedColumnName: "id", name: "productId" })
   public Product: ProductEntity;
 }

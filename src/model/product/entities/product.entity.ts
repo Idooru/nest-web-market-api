@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, OneToMany, OneToOne } from "typeorm";
-import { IsEmpty, IsEnum, IsNotEmpty, IsOptional, IsPositive, IsString } from "class-validator";
+import { IsEnum, IsNotEmpty, IsOptional, IsPositive, IsString } from "class-validator";
 import { CommonEntity } from "src/common/entities/common.entity";
 import { ReviewEntity } from "src/model/review/entities/review.entity";
 import { StarRateEntity } from "../../review/entities/star-rate.entity";
@@ -44,32 +44,24 @@ export class ProductEntity extends CommonEntity {
   @Column({ type: "int", unsigned: true, default: 100 })
   public stock: number;
 
-  @OneToOne(() => StarRateEntity, (starRate) => starRate.Product, {
-    cascade: true,
-  })
+  @OneToOne(() => StarRateEntity, (starRate) => starRate.Product, { cascade: true })
   public StarRate: StarRateEntity;
 
-  @OneToMany(() => ProductImageEntity, (image) => image.Product, {
-    cascade: true,
-  })
-  public Image: ProductImageEntity[];
+  @OneToMany(() => ProductImageEntity, (image) => image.Product, { cascade: true })
+  public ProductImage: ProductImageEntity[];
 
-  @ManyToOne(() => AdminUserEntity, (admin) => admin.createdProduct, {
-    onDelete: "CASCADE",
-  })
-  public creator: AdminUserEntity;
+  @ManyToOne(() => AdminUserEntity, (admin) => admin.Product, { onDelete: "CASCADE" })
+  public AdminUser: AdminUserEntity;
 
   @OneToMany(() => CartEntity, (cart) => cart.Product)
   public Cart: CartEntity[];
 
-  @OneToMany(() => PaymentEntity, (payment) => payment.Product, { nullable: true })
+  @OneToMany(() => PaymentEntity, (payment) => payment.Product, { cascade: true })
   public Payment: PaymentEntity[];
 
   @OneToMany(() => ReviewEntity, (review) => review.Product, { cascade: true })
   public Review: ReviewEntity[];
 
-  @OneToMany(() => InquiryRequestEntity, (inquiry) => inquiry.Product, {
-    cascade: true,
-  })
+  @OneToMany(() => InquiryRequestEntity, (inquiry) => inquiry.Product, { cascade: true })
   public InquiryRequest: InquiryRequestEntity[];
 }

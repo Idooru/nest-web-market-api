@@ -19,23 +19,23 @@ export class ReviewEntity extends PostEntity {
   @Column({ type: "enum", enum: [0, 1, 2], default: 2 })
   public countForModify: number;
 
-  @ManyToOne(() => ClientUserEntity, (clientUser) => clientUser.writtenReview, {
-    onDelete: "CASCADE",
+  @ManyToOne(() => ClientUserEntity, (clientUser) => clientUser.Review, {
+    onDelete: "SET NULL",
   })
-  public reviewer: ClientUserEntity;
+  public ClientUser: ClientUserEntity;
 
   @ManyToOne(() => ProductEntity, (product) => product.Review, {
-    onDelete: "CASCADE",
+    onDelete: "SET NULL",
   })
   public Product: ProductEntity;
 
   @OneToMany(() => ReviewImageEntity, (image) => image.Review, {
     cascade: true,
   })
-  public Image?: ReviewImageEntity[];
+  public ReviewImage?: ReviewImageEntity[];
 
   @OneToMany(() => ReviewVideoEntity, (video) => video.Review, {
     cascade: true,
   })
-  public Video?: ReviewVideoEntity[];
+  public ReviewVideo?: ReviewVideoEntity[];
 }
