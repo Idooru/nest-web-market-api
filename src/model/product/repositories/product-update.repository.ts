@@ -2,14 +2,14 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ProductEntity } from "../entities/product.entity";
 import { Repository } from "typeorm";
-import { CreateProductDto } from "../dto/create-product.dto";
-import { ModifyProductDto } from "../dto/modify-product.dto";
+import { CreateProductDto } from "../dto/request/create-product.dto";
+import { ModifyProductDto } from "../dto/request/modify-product.dto";
 import { ProductCategory } from "../types/product-category.type";
 import { Transactional } from "../../../common/interfaces/initializer/transactional";
 import { ProductRepositoryPayload } from "../logic/transaction/product-repository.payload";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
 import { General } from "../../../common/decorators/general.decoration";
-import { InsertProductImageDto } from "../dto/insert-product-image.dto";
+import { InsertProductImageDto } from "../dto/request/insert-product-image.dto";
 
 @Injectable()
 export class ProductUpdateRepository {
@@ -23,7 +23,7 @@ export class ProductUpdateRepository {
   public async createProduct({ body, admin }: CreateProductDto): Promise<ProductEntity> {
     return await this.transaction.getRepository().product.save({
       ...body,
-      creator: admin,
+      AdminUser: admin,
     });
   }
 

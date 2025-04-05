@@ -4,7 +4,7 @@ import { Transactional } from "src/common/interfaces/initializer/transactional";
 import { TransactionHandler } from "src/common/lib/handler/transaction.handler";
 import { AccountTransactionContext } from "./account-transaction.context";
 import { AccountTransactionSearcher } from "./account-transaction.searcher";
-import { AccountBody } from "../../dtos/account-body.dto";
+import { AccountBody } from "../../dtos/request/account-body.dto";
 
 @Injectable()
 export class AccountTransactionExecutor {
@@ -18,7 +18,6 @@ export class AccountTransactionExecutor {
   public async createAccount(body: AccountBody, userId: string): Promise<void> {
     const search = await this.searcher.searchCreateAccount(userId, body);
     const queryRunner = await this.transaction.init();
-
     this.handler.setQueryRunner(queryRunner);
 
     try {
@@ -34,7 +33,6 @@ export class AccountTransactionExecutor {
   public async deleteAccount(accountId: string, userId: string): Promise<void> {
     const search = await this.searcher.searchDeleteAccount(accountId, userId);
     const queryRunner = await this.transaction.init();
-
     this.handler.setQueryRunner(queryRunner);
 
     try {
@@ -49,7 +47,6 @@ export class AccountTransactionExecutor {
 
   public async setMainAccount(accountId: string, userId: string): Promise<void> {
     const queryRunner = await this.transaction.init();
-
     this.handler.setQueryRunner(queryRunner);
 
     try {

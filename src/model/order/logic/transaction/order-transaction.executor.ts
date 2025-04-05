@@ -4,7 +4,7 @@ import { OrderRepositoryPayload } from "./order-repository.payload";
 import { TransactionHandler } from "../../../../common/lib/handler/transaction.handler";
 import { OrderTransactionSearcher } from "./order-transaction.searcher";
 import { OrderTransactionContext } from "./order-transaction.context";
-import { CreateOrderDto } from "../../dto/create-order.dto";
+import { CreateOrderDto } from "../../dto/request/create-order.dto";
 
 @Injectable()
 export class OrderTransactionExecutor {
@@ -18,7 +18,6 @@ export class OrderTransactionExecutor {
   public async createOrder(dto: CreateOrderDto): Promise<void> {
     const search = await this.searcher.searchCreateOrder(dto);
     const queryRunner = await this.transaction.init();
-
     this.handler.setQueryRunner(queryRunner);
 
     try {

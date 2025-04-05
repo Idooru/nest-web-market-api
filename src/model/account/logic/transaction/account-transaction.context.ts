@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { AccountUpdateRepository } from "../../repositories/account-update.repository";
-import { DeleteAccountDto } from "../../dtos/delete-account.dto";
-import { CreateAccountDto } from "../../dtos/create-account.dto";
+import { CreateAccountDto } from "../../dtos/request/create-account.dto";
+import { DeleteAccountDto } from "../../dtos/request/delete-account.dto";
 
 @Injectable()
 export class AccountTransactionContext {

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { UserService } from "../../services/user.service";
-import { RegisterUserDto } from "../../dtos/register-user.dto";
-import { PrepareToModifyUserDto } from "../../dtos/prepare-to-modify-user.dto";
+import { RegisterUserDto } from "../../dto/request/register-user.dto";
+import { ModifyUserDto } from "../../dto/request/modify-user.dto";
 
 @Injectable()
 export class UserTransactionContext {
@@ -12,7 +12,7 @@ export class UserTransactionContext {
     await this.userService.createUserBase(user, dto);
   }
 
-  public async modifyUserContext({ id, modifyUserDto }: PrepareToModifyUserDto): Promise<void> {
-    await this.userService.modifyUser(modifyUserDto, id);
+  public async modifyUserContext(dto: ModifyUserDto): Promise<void> {
+    await this.userService.modifyUser(dto);
   }
 }

@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { CreateInquiryRequestDto } from "../../dto/request/create-inquiry-request.dto";
-import { CreateInquiryResponseDto } from "../../dto/response/create-inquiry-response.dto";
 import { InquiryRepositoryPayload } from "./inquiry-repository.payload";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 import { TransactionHandler } from "../../../../common/lib/handler/transaction.handler";
 import { InquiryTransactionSearcher } from "./inquiry-transaction.searcher";
 import { InquiryTransactionContext } from "./inquiry-transaction.context";
+import { CreateInquiryRequestDto } from "../../dto/inquiry-request/request/create-inquiry-request.dto";
+import { CreateInquiryResponseDto } from "../../dto/inquiry-response/request/create-inquiry-response.dto";
 
 @Injectable()
 export class InquiryTransactionExecutor {
@@ -19,7 +19,6 @@ export class InquiryTransactionExecutor {
   public async createInquiryRequest(dto: CreateInquiryRequestDto): Promise<void> {
     const search = await this.searcher.searchCreateInquiryRequest(dto);
     const queryRunner = await this.transaction.init();
-
     this.handler.setQueryRunner(queryRunner);
 
     try {
@@ -33,9 +32,8 @@ export class InquiryTransactionExecutor {
   }
 
   public async createInquiryResponse(dto: CreateInquiryResponseDto): Promise<void> {
-    const search = await this.searcher.searchToCreateInquiryResponse(dto);
+    const search = await this.searcher.searchCreateInquiryResponse(dto);
     const queryRunner = await this.transaction.init();
-
     this.handler.setQueryRunner(queryRunner);
 
     try {

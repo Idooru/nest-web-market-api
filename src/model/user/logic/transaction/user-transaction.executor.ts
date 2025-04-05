@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { RegisterUserDto } from "../../dtos/register-user.dto";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 import { UserRepositoryPayload } from "./user-repository.payload";
 import { TransactionHandler } from "../../../../common/lib/handler/transaction.handler";
 import { UserTransactionContext } from "./user-transaction.context";
-import { PrepareToModifyUserDto } from "../../dtos/prepare-to-modify-user.dto";
+import { RegisterUserDto } from "../../dto/request/register-user.dto";
+import { ModifyUserDto } from "../../dto/request/modify-user.dto";
 
 @Injectable()
 export class UserTransactionExecutor {
@@ -28,7 +28,7 @@ export class UserTransactionExecutor {
     }
   }
 
-  public async modifyUser(dto: PrepareToModifyUserDto): Promise<void> {
+  public async modifyUser(dto: ModifyUserDto): Promise<void> {
     const queryRunner = await this.transaction.init();
     this.handler.setQueryRunner(queryRunner);
 

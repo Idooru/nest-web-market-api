@@ -4,9 +4,9 @@ import { ConfigService } from "@nestjs/config";
 import { CatchCallbackFactoryLibrary } from "../util/catch-callback-factory.library";
 import { OnEvent } from "@nestjs/event-emitter";
 import { eventConfigs } from "../../config/event-configs";
-import { SendMailToClientAboutRegisterDto } from "../../../model/user/dtos/send-mail-to-client-about-register.dto";
-import { SendMailToAdminAboutInquiryRequestDto } from "src/model/inquiry/dto/request/send-mail-to-admin-about-inquiry-request.dto";
-import { SendMailToClientAboutInquiryResponseDto } from "../../../model/inquiry/dto/response/send-mail-to-client-about-inquiry-response.dto";
+import { SendMailToClientAboutRegisterDto } from "../../../model/user/dto/response/send-mail-to-client-about-register.dto";
+import { SendMailToAdminAboutInquiryRequestDto } from "../../../model/inquiry/dto/inquiry-request/response/send-mail-to-admin-about-inquiry-request.dto";
+import { SendMailToClientAboutInquiryResponseDto } from "../../../model/inquiry/dto/inquiry-response/response/send-mail-to-client-about-inquiry-response.dto";
 
 @Injectable()
 export class EmailSenderLibrary {
@@ -73,7 +73,7 @@ export class EmailSenderLibrary {
     <div style="font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px;">
       <div style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); padding: 20px; max-width: 600px; margin: auto;">
         <h2 style="text-align: center; color: #333; font-size: 24px; margin-bottom: 20px;">
-          ${inquiryRequester.User.Auth.nickName}님께서 작성하신 문의로부터 서비스 관리자가 문의 응답을 달아주었습니다.
+          ${inquiryRequester.User.UserAuth.nickName}님께서 작성하신 문의로부터 서비스 관리자가 문의 응답을 달아주었습니다.
         </h2>
         <hr />
         <ul style="list-style: none; padding: 0; margin: 0;">
@@ -107,7 +107,7 @@ export class EmailSenderLibrary {
         </ul>
         <hr />
         <p style="font-size: 14px; color: #888; text-align: center;">
-          자세한 내용은 서비스에 접속하여서 ${inquiryRequester.User.Auth.nickName}님의 프로필을 확인해보시기 바랍니다.
+          자세한 내용은 서비스에 접속하여서 ${inquiryRequester.User.UserAuth.nickName}님의 프로필을 확인해보시기 바랍니다.
         </p>
       </div>
     </div>
@@ -115,9 +115,9 @@ export class EmailSenderLibrary {
 
     await this.mailerService
       .sendMail({
-        to: inquiryRequester.User.Auth.email,
+        to: inquiryRequester.User.UserAuth.email,
         from: this.configService.get("MAIL_USER"),
-        subject: `${inquiryRequester.User.Auth.nickName}님, 서비스 관리자로부터 문의 응답이 도착하였습니다.`,
+        subject: `${inquiryRequester.User.UserAuth.nickName}님, 서비스 관리자로부터 문의 응답이 도착하였습니다.`,
         html,
       })
       .catch(this.callbackFactory.getCatchSendMailFunc());

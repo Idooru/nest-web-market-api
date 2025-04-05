@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { MediaCookieDto } from "../dto/media-cookie.dto";
 import { MediaEventMapSetter } from "./media-event-map.setter";
-import { SetDeleteMediaFilesDto } from "../dto/set-delete-media-files.dto";
-import { DeleteMediaFilesDto } from "../dto/delete-media-files.dto";
-import { UploadMediaDto } from "../dto/upload-media.dto";
+import { MediaCookieDto } from "../dto/request/media-cookie.dto";
+import { UploadMediaDto } from "../dto/request/upload-media.dto";
+import { SetDeleteMediaFilesDto } from "../dto/response/set-delete-media-files.dto";
+import { DeleteMediaFilesDto } from "../dto/request/delete-media-files.dto";
 
 @Injectable()
 export class MediaUtils {

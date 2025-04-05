@@ -3,8 +3,8 @@ import { Response } from "express";
 import { Observable, tap } from "rxjs";
 import { Implemented } from "../../../common/decorators/implemented.decoration";
 import { EventEmitter2 } from "@nestjs/event-emitter";
-import { SendMailToClientAboutInquiryResponseDto } from "../dto/response/send-mail-to-client-about-inquiry-response.dto";
 import { eventConfigs } from "../../../common/config/event-configs";
+import { SendMailToClientAboutInquiryResponseDto } from "../dto/inquiry-response/response/send-mail-to-client-about-inquiry-response.dto";
 
 @Injectable()
 export class InquiryAdminEventInterceptor implements NestInterceptor {

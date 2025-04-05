@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { DeleteMediaFilesDto } from "../dto/delete-media-files.dto";
+import { DeleteMediaFilesDto } from "../dto/request/delete-media-files.dto";
 
 @Injectable()
 export class MediaEventMapSetter {

@@ -1,9 +1,9 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { ModifyUserDto } from "../../dtos/modify-user.dto";
 import { JwtAuthFailSwagger, JwtAuthHeaderSwagger } from "../../../auth/docs/jwt-auth.swagger";
 import { ServerErrorSwagger } from "../../../../common/docs/internal-server-error.swagger";
 import { typeOrmErrorSwagger } from "../../../../common/docs/typeorm-error.swagger";
+import { ModifyUserBody } from "../../dto/request/modify-user.dto";
 
 export const ModifyUserSwagger = () => {
   return applyDecorators(
@@ -13,7 +13,7 @@ export const ModifyUserSwagger = () => {
         "본인의 사용자 전체 column을 수정합니다. 만일 모든 필드가 변경되었을 시 이 API를 호출할 수 있도록 합니다.",
     }),
     JwtAuthHeaderSwagger(),
-    ApiBody({ type: ModifyUserDto, required: true }),
+    ApiBody({ type: ModifyUserBody, required: true }),
     ApiResponse({
       status: 201,
       description: "사용자 정보 수정 성공",

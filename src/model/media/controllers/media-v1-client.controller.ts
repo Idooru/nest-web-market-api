@@ -8,7 +8,7 @@ import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/jso
 import { JsonClearCookiesInterface } from "src/common/interceptors/interface/json-clear-cookies.interface";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { IsClientGuard } from "src/common/guards/authenticate/is-client.guard";
-import { MediaCookieDto } from "../dto/media-cookie.dto";
+
 import {
   ReviewMediaCookieKey,
   reviewMediaCookieKey,
@@ -19,12 +19,7 @@ import {
 } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
-import { ReviewImageEntity } from "../entities/review-image.entity";
-import { ReviewVideoEntity } from "../entities/review-video.entity";
-import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.entity";
-import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { MediaSearcher } from "../logic/media.searcher";
 import { MediaService } from "../services/media.service";
 import { ReviewImageValidatePipe } from "../pipe/exist/review-image-validate.pipe";
 import { ReviewVideoValidatePipe } from "../pipe/exist/review-video-validate.pipe";
@@ -32,6 +27,12 @@ import { InquiryRequestImageValidatePipe } from "../pipe/exist/inquiry-request-i
 import { InquiryRequestVideoValidatePipe } from "../pipe/exist/inquiry-request-video-validate.pipe";
 import { DeleteReviewMediaInterceptor } from "../interceptor/delete-review-media.interceptor";
 import { DeleteInquiryRequestMediaInterceptor } from "../interceptor/delete-inquiry-request-media.interceptor";
+import { MediaCookieDto } from "../dto/request/media-cookie.dto";
+import { ReviewImageSearcher } from "../logic/review-image.searcher";
+import { ReviewVideoSearcher } from "../logic/review-video.searcher";
+import { InquiryRequestImageSearcher } from "../logic/inquiry-request-image.searcher";
+import { InquiryRequestVideoSearcher } from "../logic/inquiry-request-video.searcher";
+import { MediaBasicRawDto } from "../dto/response/media-basic-raw.dto";
 
 @ApiTags("v1 고객 Media API")
 @UseGuards(IsClientGuard)
@@ -39,12 +40,15 @@ import { DeleteInquiryRequestMediaInterceptor } from "../interceptor/delete-inqu
 @Controller({ path: "/client/media", version: "1" })
 export class MediaV1ClientController {
   constructor(
-    private readonly mediaSearcher: MediaSearcher,
-    private readonly mediaService: MediaService,
     @Inject("review-media-cookie-key")
     private readonly reviewMedia: ReviewMediaCookieKey,
     @Inject("inquiry-media-cookie-key")
     private readonly inquiryMedia: InquiryMediaCookieKey,
+    private readonly reviewImageSearcher: ReviewImageSearcher,
+    private readonly reviewVideoSearcher: ReviewVideoSearcher,
+    private readonly inquiryRequestImageSearcher: InquiryRequestImageSearcher,
+    private readonly inquiryRequestVideoSearcher: InquiryRequestVideoSearcher,
+    private readonly mediaService: MediaService,
   ) {}
 
   @ApiOperation({
@@ -56,8 +60,8 @@ export class MediaV1ClientController {
   public async findUploadedReviewImage(
     @MediaCookiesParser(reviewMediaCookieKey.imageUrlCookie)
     reviewImgCookies: MediaCookieDto[],
-  ): Promise<JsonGeneralInterface<ReviewImageEntity[]>> {
-    const result = await this.mediaSearcher.findReviewImagesWithId(reviewImgCookies);
+  ): Promise<JsonGeneralInterface<MediaBasicRawDto[]>> {
+    const result = await this.reviewImageSearcher.findAllRaws(reviewImgCookies);
 
     return {
       statusCode: 200,
@@ -75,8 +79,8 @@ export class MediaV1ClientController {
   public async findUploadedReviewVideo(
     @MediaCookiesParser(reviewMediaCookieKey.videoUrlCookie)
     reviewVdoCookies: MediaCookieDto[],
-  ): Promise<JsonGeneralInterface<ReviewVideoEntity[]>> {
-    const result = await this.mediaSearcher.findReviewVideosWithId(reviewVdoCookies);
+  ): Promise<JsonGeneralInterface<MediaBasicRawDto[]>> {
+    const result = await this.reviewVideoSearcher.findAllRaws(reviewVdoCookies);
 
     return {
       statusCode: 200,
@@ -95,8 +99,8 @@ export class MediaV1ClientController {
   public async findUploadedInquiryRequestImage(
     @MediaCookiesParser(inquiryMediaCookieKey.request.imageUrlCookie)
     imageCookies: MediaCookieDto[],
-  ): Promise<JsonGeneralInterface<InquiryRequestImageEntity[]>> {
-    const result = await this.mediaSearcher.findInquiryRequestImagesWithId(imageCookies);
+  ): Promise<JsonGeneralInterface<MediaBasicRawDto[]>> {
+    const result = await this.inquiryRequestImageSearcher.findAllRaws(imageCookies);
 
     return {
       statusCode: 200,
@@ -115,8 +119,8 @@ export class MediaV1ClientController {
   public async findUploadedInquiryRequestVideo(
     @MediaCookiesParser(inquiryMediaCookieKey.request.videoUrlCookie)
     videoCookies: MediaCookieDto[],
-  ): Promise<JsonGeneralInterface<InquiryRequestVideoEntity[]>> {
-    const result = await this.mediaSearcher.findInquiryRequestVideosWithId(videoCookies);
+  ): Promise<JsonGeneralInterface<MediaBasicRawDto[]>> {
+    const result = await this.inquiryRequestVideoSearcher.findAllRaws(videoCookies);
 
     return {
       statusCode: 200,

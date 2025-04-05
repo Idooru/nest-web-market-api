@@ -4,7 +4,7 @@ import { Observable, tap } from "rxjs";
 import { Implemented } from "../../../common/decorators/implemented.decoration";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { eventConfigs } from "../../../common/config/event-configs";
-import { SendMailToAdminAboutInquiryRequestDto } from "../dto/request/send-mail-to-admin-about-inquiry-request.dto";
+import { SendMailToAdminAboutInquiryRequestDto } from "../dto/inquiry-request/response/send-mail-to-admin-about-inquiry-request.dto";
 
 @Injectable()
 export class InquiryClientEventInterceptor implements NestInterceptor {

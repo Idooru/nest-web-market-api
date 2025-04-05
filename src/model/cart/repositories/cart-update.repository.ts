@@ -2,9 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CartEntity } from "../entities/cart.entity";
 import { Repository } from "typeorm";
-import { CreateCartRowDto } from "../dto/create-cart.dto";
-import { ModifyCartDto } from "../dto/modify-cart.dto";
 import { General } from "../../../common/decorators/general.decoration";
+import { CreateCartRowDto } from "../dto/request/create-cart.dto";
+import { ModifyCartDto } from "../dto/request/modify-cart.dto";
 
 @Injectable()
 export class CartUpdateRepository {

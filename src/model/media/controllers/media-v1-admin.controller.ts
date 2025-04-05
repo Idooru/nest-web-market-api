@@ -8,7 +8,6 @@ import { JsonSendCookiesInterceptor } from "src/common/interceptors/general/json
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
 import { JsonClearCookiesInterface } from "src/common/interceptors/interface/json-clear-cookies.interface";
-import { MediaCookieDto } from "../dto/media-cookie.dto";
 import {
   InquiryMediaCookieKey,
   inquiryMediaCookieKey,
@@ -19,17 +18,18 @@ import {
 } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
-import { ProductImageEntity } from "../entities/product-image.entity";
-import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { InquiryResponseVideoEntity } from "../entities/inquiry-response-video.entity";
 import { ProductImagesValidatePipe } from "../pipe/exist/product-images-validate.pipe";
-import { MediaService } from "../services/media.service";
 import { InquiryResponseImageValidatePipe } from "../pipe/exist/inquiry-response-image-validate.pipe";
-import { MediaSearcher } from "../logic/media.searcher";
 import { InquiryResponseVideoValidatePipe } from "../pipe/exist/inquiry-response-video-validate.pipe";
 import { DeleteProductMediaInterceptor } from "../interceptor/delete-product-media.interceptor";
 import { DeleteInquiryResponseMediaInterceptor } from "../interceptor/delete-inquiry-response-media.interceptor";
+import { ProductImageSearcher } from "../logic/product-image.searcher";
+import { MediaBasicRawDto } from "../dto/response/media-basic-raw.dto";
+import { MediaCookieDto } from "../dto/request/media-cookie.dto";
+import { InquiryResponseImageSearcher } from "../logic/inquiry-response-image.searcher";
+import { InquiryResponseVideoSearcher } from "../logic/inquiry-response-video.searcher";
+import { MediaService } from "../services/media.service";
 
 @ApiTags("v1 관리자 Media API")
 @UseGuards(IsAdminGuard)
@@ -37,12 +37,14 @@ import { DeleteInquiryResponseMediaInterceptor } from "../interceptor/delete-inq
 @Controller({ path: "/admin/media", version: "1" })
 export class MediaV1AdminController {
   constructor(
-    private readonly searcher: MediaSearcher,
-    private readonly service: MediaService,
     @Inject("product-media-cookie-key")
     private readonly productMedia: ProductMediaCookieKey,
     @Inject("inquiry-media-cookie-key")
     private readonly inquiryMedia: InquiryMediaCookieKey,
+    private readonly productImageSearcher: ProductImageSearcher,
+    private readonly inquiryResponseImageSearcher: InquiryResponseImageSearcher,
+    private readonly inquiryResponseVideoSearcher: InquiryResponseVideoSearcher,
+    private readonly mediaService: MediaService,
   ) {}
 
   @ApiOperation({
@@ -51,11 +53,10 @@ export class MediaV1AdminController {
   })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/product/image")
-  public async findUploadedProductImage(
-    @MediaCookiesParser(productMediaCookieKey.imageUrlCookie)
-    productImgCookies: MediaCookieDto[],
-  ): Promise<JsonGeneralInterface<ProductImageEntity[]>> {
-    const result = await this.searcher.findProductImageWithId(productImgCookies);
+  public async findAllUploadedProductImages(
+    @MediaCookiesParser(productMediaCookieKey.imageUrlCookie) productImgCookies: MediaCookieDto[],
+  ): Promise<JsonGeneralInterface<MediaBasicRawDto[]>> {
+    const result = await this.productImageSearcher.findAllRaws(productImgCookies);
 
     return {
       statusCode: 200,
@@ -72,10 +73,9 @@ export class MediaV1AdminController {
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/inquiry/response/image")
   public async findUploadedInquiryResponseImages(
-    @MediaCookiesParser(inquiryMediaCookieKey.response.imageUrlCookie)
-    inquiryResponseImgCookies: MediaCookieDto[],
-  ): Promise<JsonGeneralInterface<InquiryResponseImageEntity[]>> {
-    const result = await this.searcher.findInquiryResponseImagesWithId(inquiryResponseImgCookies);
+    @MediaCookiesParser(inquiryMediaCookieKey.response.imageUrlCookie) inquiryResponseImgCookies: MediaCookieDto[],
+  ): Promise<JsonGeneralInterface<MediaBasicRawDto[]>> {
+    const result = await this.inquiryResponseImageSearcher.findAllRaws(inquiryResponseImgCookies);
 
     return {
       statusCode: 200,
@@ -94,8 +94,8 @@ export class MediaV1AdminController {
   public async findUploadedInquiryResponseVideos(
     @MediaCookiesParser(inquiryMediaCookieKey.response.videoUrlCookie)
     inquiryResponseVdoCookies: MediaCookieDto[],
-  ): Promise<JsonGeneralInterface<InquiryResponseVideoEntity[]>> {
-    const result = await this.searcher.findInquiryResponseVideosWithId(inquiryResponseVdoCookies);
+  ): Promise<JsonGeneralInterface<MediaBasicRawDto[]>> {
+    const result = await this.inquiryResponseVideoSearcher.findAllRaws(inquiryResponseVdoCookies);
 
     return {
       statusCode: 200,
@@ -122,7 +122,7 @@ export class MediaV1AdminController {
     @UploadedFiles(ProductImagesValidatePipe)
     files: Express.Multer.File[],
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
-    const cookieValues = await this.service.uploadProductImages(files);
+    const cookieValues = await this.mediaService.uploadProductImages(files);
 
     return {
       statusCode: 201,
@@ -150,7 +150,7 @@ export class MediaV1AdminController {
     @UploadedFiles(InquiryResponseImageValidatePipe)
     files: Express.Multer.File[],
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
-    const cookieValues = await this.service.uploadInquiryResponseImages(files);
+    const cookieValues = await this.mediaService.uploadInquiryResponseImages(files);
 
     return {
       statusCode: 201,
@@ -178,7 +178,7 @@ export class MediaV1AdminController {
     @UploadedFiles(InquiryResponseVideoValidatePipe)
     files: Array<Express.Multer.File>,
   ): Promise<JsonSendCookiesInterface<MediaCookieDto>> {
-    const cookieValues = await this.service.uploadInquiryResponseVideos(files);
+    const cookieValues = await this.mediaService.uploadInquiryResponseVideos(files);
 
     return {
       statusCode: 201,
@@ -198,7 +198,7 @@ export class MediaV1AdminController {
     @MediaCookiesParser(productMediaCookieKey.imageUrlCookie)
     productImgCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
-    const cookieKey = await this.service.deleteProductImagesWithId(productImgCookies);
+    const cookieKey = await this.mediaService.deleteProductImagesWithId(productImgCookies);
 
     return {
       statusCode: 200,
@@ -217,7 +217,7 @@ export class MediaV1AdminController {
     @MediaCookiesParser(inquiryMediaCookieKey.response.imageUrlCookie)
     inquiryResponseImgCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
-    const cookieKey = await this.service.deleteInquiryResponseImagesWithId(inquiryResponseImgCookies);
+    const cookieKey = await this.mediaService.deleteInquiryResponseImagesWithId(inquiryResponseImgCookies);
 
     return {
       statusCode: 200,
@@ -236,7 +236,7 @@ export class MediaV1AdminController {
     @MediaCookiesParser(inquiryMediaCookieKey.response.videoUrlCookie)
     inquiryResponseVdoCookies: MediaCookieDto[],
   ): Promise<JsonClearCookiesInterface> {
-    const cookieKey = await this.service.deleteInquiryResponseVideosWithId(inquiryResponseVdoCookies);
+    const cookieKey = await this.mediaService.deleteInquiryResponseVideosWithId(inquiryResponseVdoCookies);
 
     return {
       statusCode: 200,

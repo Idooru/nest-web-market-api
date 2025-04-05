@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { eventConfigs } from "../../../common/config/event-configs";
 import { OnEvent } from "@nestjs/event-emitter";
-import { DeleteMediaFilesDto } from "../dto/delete-media-files.dto";
 import { promises as fs } from "fs";
 import path from "path";
+import { DeleteMediaFilesDto } from "../dto/request/delete-media-files.dto";
 
 @Injectable()
 export class MediaFileEraser {

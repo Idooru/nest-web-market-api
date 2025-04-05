@@ -3,8 +3,8 @@ import { Response } from "express";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { Observable, tap } from "rxjs";
 import { Implemented } from "../../../common/decorators/implemented.decoration";
-import { DeleteMediaFilesDto } from "../dto/delete-media-files.dto";
 import { eventConfigs } from "../../../common/config/event-configs";
+import { DeleteMediaFilesDto } from "../dto/request/delete-media-files.dto";
 
 @Injectable()
 export class DeleteReviewMediaInterceptor implements NestInterceptor {

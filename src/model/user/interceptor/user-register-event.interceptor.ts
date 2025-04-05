@@ -1,10 +1,10 @@
 import { CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor, NestMiddleware } from "@nestjs/common";
 import { Response } from "express";
-import { SendMailToClientAboutRegisterDto } from "../dtos/send-mail-to-client-about-register.dto";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { eventConfigs } from "../../../common/config/event-configs";
 import { Implemented } from "../../../common/decorators/implemented.decoration";
 import { Observable, tap } from "rxjs";
+import { SendMailToClientAboutRegisterDto } from "../dto/response/send-mail-to-client-about-register.dto";
 
 @Injectable()
 export class UserRegisterEventInterceptor implements NestInterceptor {

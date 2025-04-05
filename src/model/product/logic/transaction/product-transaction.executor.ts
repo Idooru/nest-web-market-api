@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { CreateProductDto } from "../../dto/create-product.dto";
-import { ModifyProductDto } from "../../dto/modify-product.dto";
+import { CreateProductDto } from "../../dto/request/create-product.dto";
+import { ModifyProductDto } from "../../dto/request/modify-product.dto";
 import { Transactional } from "../../../../common/interfaces/initializer/transactional";
 import { ProductRepositoryPayload } from "./product-repository.payload";
 import { TransactionHandler } from "../../../../common/lib/handler/transaction.handler";
 import { ProductTransactionSearcher } from "./product-transaction.searcher";
 import { ProductTransactionContext } from "./product-transaction.context";
-import { ModifyProductImageDto } from "../../dto/modify-product-image.dto";
+import { ModifyProductImageDto } from "../../dto/request/modify-product-image.dto";
 
 @Injectable()
 export class ProductTransactionExecutor {
@@ -20,7 +20,6 @@ export class ProductTransactionExecutor {
   public async createProduct(dto: CreateProductDto): Promise<void> {
     const search = await this.searcher.searchCreateProduct(dto);
     const queryRunner = await this.transaction.init();
-
     this.handler.setQueryRunner(queryRunner);
 
     try {

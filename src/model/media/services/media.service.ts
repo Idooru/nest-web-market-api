@@ -1,11 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { MediaUtils } from "../logic/media.utils";
-import { MediaCookieDto } from "../dto/media-cookie.dto";
 import { MediaUpdateRepository } from "../repositories/media-update.repository";
 import { ProductMediaCookieKey } from "../../../common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
 import { InquiryMediaCookieKey } from "../../../common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
 import { ReviewMediaCookieKey } from "../../../common/config/cookie-key-configs/media-cookie-keys/review-media-cookie.key";
 import { General } from "../../../common/decorators/general.decoration";
+import { MediaCookieDto } from "../dto/request/media-cookie.dto";
 
 @Injectable()
 export class MediaService {

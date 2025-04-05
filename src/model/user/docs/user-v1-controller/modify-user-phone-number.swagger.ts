@@ -1,8 +1,8 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { ModifyUserPhonenumberDto } from "../../dtos/modify-user-phonenumber.dto";
 import { JwtAuthFailSwagger, JwtAuthHeaderSwagger } from "../../../auth/docs/jwt-auth.swagger";
 import { ServerErrorSwagger } from "../../../../common/docs/internal-server-error.swagger";
+import { ModifyUserPhoneNumberDto } from "../../dto/request/modify-user-phonenumber.dto";
 
 export const ModifyUserPhoneNumberSwagger = () => {
   return applyDecorators(
@@ -11,7 +11,7 @@ export const ModifyUserPhoneNumberSwagger = () => {
       description: "본인의 사용자 전화번호 column을 수정합니다.",
     }),
     JwtAuthHeaderSwagger(),
-    ApiBody({ type: ModifyUserPhonenumberDto, required: true }),
+    ApiBody({ type: ModifyUserPhoneNumberDto, required: true }),
     ApiResponse({
       status: 201,
       description: "사용자 전화번호 수정 성공",

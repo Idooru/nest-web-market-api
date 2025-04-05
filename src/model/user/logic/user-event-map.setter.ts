@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { SendMailToClientAboutRegisterDto } from "../dtos/send-mail-to-client-about-register.dto";
+import { SendMailToClientAboutRegisterDto } from "../dto/response/send-mail-to-client-about-register.dto";
 
 @Injectable()
 export class UserEventMapSetter {

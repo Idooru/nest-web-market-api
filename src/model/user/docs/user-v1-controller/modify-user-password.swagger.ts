@@ -1,8 +1,8 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { ModifyUserPasswordDto } from "../../dtos/modify-user-password.dto";
 import { JwtAuthFailSwagger, JwtAuthHeaderSwagger } from "../../../auth/docs/jwt-auth.swagger";
 import { ServerErrorSwagger } from "../../../../common/docs/internal-server-error.swagger";
+import { ModifyUserPasswordDto } from "../../dto/request/modify-user-password.dto";
 
 export const ModifyUserPasswordSwagger = () => {
   return applyDecorators(

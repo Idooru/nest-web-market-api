@@ -1,15 +1,15 @@
 import { Injectable } from "@nestjs/common";
-import { CreateInquiryRequestRowDto } from "../dto/request/create-inquiry-request.dto";
 import { InquiryRequestEntity } from "../entities/inquiry-request.entity";
 import { InquiryRequestImageEntity } from "../../media/entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "../../media/entities/inquiry-request-video.entity";
 import { InquiryResponseImageEntity } from "../../media/entities/inquiry-response-image.entity";
 import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
 import { InquiryResponseVideoEntity } from "../../media/entities/inquiry-response-video.entity";
-import { CreateInquiryResponseRowDto } from "../dto/response/create-inquiry-response.dto";
 import { Transactional } from "../../../common/interfaces/initializer/transactional";
 import { InquiryRepositoryPayload } from "../logic/transaction/inquiry-repository.payload";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
+import { CreateInquiryRequestRowDto } from "../dto/inquiry-request/request/create-inquiry-request.dto";
+import { CreateInquiryResponseRowDto } from "../dto/inquiry-response/request/create-inquiry-response.dto";
 
 @Injectable()
 export class InquiryUpdateRepository {
@@ -22,7 +22,7 @@ export class InquiryUpdateRepository {
     return this.transaction.getRepository().inquiryRequest.save({
       ...body,
       Product: product,
-      InquiryRequester: clientUser,
+      ClientUser: clientUser,
     });
   }
 
@@ -51,7 +51,7 @@ export class InquiryUpdateRepository {
     return this.transaction.getRepository().inquiryResponse.save({
       ...body,
       InquiryRequest: inquiryRequest,
-      inquiryRespondent: adminUser,
+      AdminUser: adminUser,
     });
   }
 

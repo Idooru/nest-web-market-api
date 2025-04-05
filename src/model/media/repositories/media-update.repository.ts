@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { UploadMediaDto } from "../dto/upload-media.dto";
 import { ProductImageEntity } from "../entities/product-image.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -10,6 +9,7 @@ import { ReviewVideoEntity } from "../entities/review-video.entity";
 import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.entity";
 import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
 import { General } from "../../../common/decorators/general.decoration";
+import { UploadMediaDto } from "../dto/request/upload-media.dto";
 
 @Injectable()
 export class MediaUpdateRepository {

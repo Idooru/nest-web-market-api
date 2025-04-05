@@ -1,5 +1,5 @@
-import { MediaCookieDto } from "../../../media/dto/media-cookie.dto";
 import { ProductBody } from "./product-body.dto";
+import { MediaCookieDto } from "../../../media/dto/request/media-cookie.dto";
 
 export class ModifyProductDto {
   productId?: string;

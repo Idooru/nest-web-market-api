@@ -1,18 +1,20 @@
 import { Injectable } from "@nestjs/common";
-import { SearchCreateProductDto } from "../../dto/search-create-product.dto";
+import { SearchCreateProductDto } from "../../dto/request/search-create-product.dto";
 import { ProductService } from "../../services/product.service";
-import { SearchModifyProductDto } from "../../dto/search-modify-product.dto";
-import { SearchModifyProductImageDto } from "../../dto/search-modify-product-image.dto";
-import { ModifyProductDto } from "../../dto/modify-product.dto";
-import { ChangeProductImageDto } from "../../dto/change-product-image.dto";
-import { InsertProductImagesDto } from "../../dto/insert-product-image.dto";
-import { CreateProductDto } from "../../dto/create-product.dto";
+import { SearchModifyProductDto } from "../../dto/request/search-modify-product.dto";
+import { SearchModifyProductImageDto } from "../../dto/request/search-modify-product-image.dto";
+import { ModifyProductDto } from "../../dto/request/modify-product.dto";
+import { ChangeProductImageDto } from "../../dto/request/change-product-image.dto";
+import { InsertProductImagesDto } from "../../dto/request/insert-product-image.dto";
+import { CreateProductDto } from "../../dto/request/create-product.dto";
 
 @Injectable()
 export class ProductTransactionContext {
   constructor(private readonly productService: ProductService) {}
 
-  public async createProductContext({ body, productImages, admin }: SearchCreateProductDto): Promise<void> {
+  public async createProductContext(dto: SearchCreateProductDto): Promise<void> {
+    const { body, productImages, admin } = dto;
+
     const createProductDto: CreateProductDto = {
       body,
       admin,

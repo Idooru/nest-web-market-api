@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
-import { CreateInquiryRequestRowDto } from "../dto/request/create-inquiry-request.dto";
 import { InquiryUpdateRepository } from "../repositories/inquiry-update.repository";
 import { InquiryRequestEntity } from "../entities/inquiry-request.entity";
-import { InsertInquiryRequestImageDto } from "../dto/request/insert-inquiry-request-image.dto";
-import { InsertInquiryRequestVideoDto } from "../dto/request/insert-inquiry-request-video.dto";
-import { InsertInquiryResponseImageDto } from "../dto/response/insert-inquiry-response-image.dto";
-import { InsertInquiryResponseVideoDto } from "../dto/response/insert-inquiry-response-video.dto";
-import { CreateInquiryResponseRowDto } from "../dto/response/create-inquiry-response.dto";
 import { InquiryResponseEntity } from "../entities/inquiry-response.entity";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
+import { CreateInquiryRequestRowDto } from "../dto/inquiry-request/request/create-inquiry-request.dto";
+import { InsertInquiryRequestImageDto } from "../dto/inquiry-request/request/insert-inquiry-request-image.dto";
+import { InsertInquiryRequestVideoDto } from "../dto/inquiry-request/request/insert-inquiry-request-video.dto";
+import { CreateInquiryResponseRowDto } from "../dto/inquiry-response/request/create-inquiry-response.dto";
+import { InsertInquiryResponseImageDto } from "../dto/inquiry-response/request/insert-inquiry-response-image.dto";
+import { InsertInquiryResponseVideoDto } from "../dto/inquiry-response/request/insert-inquiry-response-video.dto";
 
 @Injectable()
 export class InquiryService {
