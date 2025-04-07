@@ -10,13 +10,10 @@ import { InquiryV1AdminController } from "./controllers/inquiry-v1-admin.control
 import { InquiryResponseEntity } from "./entities/inquiry-response.entity";
 import { inquirySelect } from "src/common/config/repository-select-configs/inquiry.select";
 import { inquiryMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/inquiry-media-cookie.key";
-import { InquirySearcher } from "./logic/inquiry.searcher";
 import { InquiryService } from "./services/inquiry.service";
-import { InquirySearchRepository } from "./repositories/inquiry-search.repository";
 import { InquiryTransactionExecutor } from "./logic/transaction/inquiry-transaction.executor";
 import { InquiryUpdateRepository } from "./repositories/inquiry-update.repository";
 import { InquiryTransactionInitializer } from "./logic/transaction/inquiry-transaction.initializer";
-import { InquiryUtils } from "./logic/inquiry.utils";
 import { InquiryRequestIdValidatePipe } from "./pipe/exist/inquiry-request-id-validate.pipe";
 import { InquiryValidator } from "./logic/inquiry.validator";
 import { InquiryValidateRepository } from "./repositories/inquiry-validate.repository";
@@ -25,6 +22,10 @@ import { InquiryEventMapSetter } from "./logic/inquiry-event-map.setter";
 import { Transactional } from "../../common/interfaces/initializer/transactional";
 import { InquiryTransactionSearcher } from "./logic/transaction/inquiry-transaction.searcher";
 import { InquiryTransactionContext } from "./logic/transaction/inquiry-transaction.context";
+import { InquiryRequestSearcher } from "./logic/inquiry-request.searcher";
+import { InquiryRequestSearchRepository } from "./repositories/inquiry-request-search.repository";
+import { InquiryResponseSearcher } from "./logic/inquiry-response.searcher";
+import { InquiryResponseSearchRepository } from "./repositories/inquiry-response-search.repository";
 
 @Module({
   imports: [
@@ -40,8 +41,10 @@ import { InquiryTransactionContext } from "./logic/transaction/inquiry-transacti
     { provide: "inquiry-select", useValue: inquirySelect },
     { provide: "mail-event-map", useValue: mailEventMap },
     { provide: Transactional, useClass: InquiryTransactionInitializer },
-    InquirySearcher,
-    InquirySearchRepository,
+    InquiryRequestSearcher,
+    InquiryRequestSearchRepository,
+    InquiryResponseSearcher,
+    InquiryResponseSearchRepository,
     InquiryEventMapSetter,
     InquiryTransactionInitializer,
     InquiryTransactionExecutor,
@@ -49,7 +52,6 @@ import { InquiryTransactionContext } from "./logic/transaction/inquiry-transacti
     InquiryTransactionContext,
     InquiryService,
     InquiryUpdateRepository,
-    InquiryUtils,
     InquiryRequestIdValidatePipe,
     InquiryValidator,
     InquiryValidateRepository,
