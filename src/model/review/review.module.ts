@@ -24,6 +24,8 @@ import { Transactional } from "../../common/interfaces/initializer/transactional
 import { ReviewTransactionContext } from "./logic/transaction/review-transaction.context";
 import { ReviewTransactionSearcher } from "./logic/transaction/review-transaction.searcher";
 
+const reviewIdFilter = { provide: "review-id-filter", useValue: "review.id = :id" };
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([ReviewEntity, StarRateEntity]),
@@ -37,6 +39,7 @@ import { ReviewTransactionSearcher } from "./logic/transaction/review-transactio
     { provide: "review-media-cookie-key", useValue: reviewMediaCookieKey },
     { provide: "review-select", useValue: reviewSelect },
     { provide: Transactional, useClass: ReviewTransactionInitializer },
+    reviewIdFilter,
     ReviewSearcher,
     ReviewTransactionExecutor,
     ReviewService,
@@ -50,6 +53,6 @@ import { ReviewTransactionSearcher } from "./logic/transaction/review-transactio
     ReviewTransactionContext,
     ReviewTransactionSearcher,
   ],
-  exports: [],
+  exports: [reviewIdFilter],
 })
 export class ReviewModule {}

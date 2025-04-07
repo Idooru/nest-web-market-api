@@ -24,6 +24,8 @@ import { Transactional } from "../../common/interfaces/initializer/transactional
 import { ProductTransactionSearcher } from "./logic/transaction/product-transaction.searcher";
 import { ProductTransactionContext } from "./logic/transaction/product-transaction.context";
 
+const productIdFilter = { provide: "product-id-filter", useValue: "product.id = :id" };
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([ProductEntity, ProductImageEntity]),
@@ -38,6 +40,7 @@ import { ProductTransactionContext } from "./logic/transaction/product-transacti
     { provide: "product-media-cookie-key", useValue: productMediaCookieKey },
     { provide: "product-select", useValue: productSelect },
     { provide: Transactional, useClass: ProductTransactionInitializer },
+    productIdFilter,
     ProductSearcher,
     ProductValidator,
     ProductTransactionInitializer,
@@ -50,6 +53,6 @@ import { ProductTransactionContext } from "./logic/transaction/product-transacti
     ProductValidateRepository,
     ProductIdValidatePipe,
   ],
-  exports: [ProductSearcher, ProductSearchRepository, ProductIdValidatePipe, ProductValidator],
+  exports: [productIdFilter, ProductSearcher, ProductSearchRepository, ProductIdValidatePipe, ProductValidator],
 })
 export class ProductModule {}

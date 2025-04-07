@@ -27,6 +27,8 @@ import { mailEventMap } from "../../common/config/event-configs";
 import { Transactional } from "../../common/interfaces/initializer/transactional";
 import { UserTransactionContext } from "./logic/transaction/user-transaction.context";
 
+const userIdFilter = { provide: "user-id-filter", useValue: "user.id = :id" };
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity, UserProfileEntity, UserAuthEntity, ClientUserEntity, AdminUserEntity]),
@@ -41,6 +43,7 @@ import { UserTransactionContext } from "./logic/transaction/user-transaction.con
     { provide: "user-select", useValue: userSelect },
     { provide: "mail-event-map", useValue: mailEventMap },
     { provide: Transactional, useClass: UserTransactionInitializer },
+    userIdFilter,
     UserSearcher,
     UserValidator,
     UserSecurity,
@@ -53,6 +56,6 @@ import { UserTransactionContext } from "./logic/transaction/user-transaction.con
     UserUpdateRepository,
     UserValidateRepository,
   ],
-  exports: [UserSearcher, UserValidator, UserService],
+  exports: [userIdFilter, UserSearcher, UserValidator, UserService],
 })
 export class UserModule {}
