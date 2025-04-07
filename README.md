@@ -194,12 +194,12 @@ Nest is [MIT licensed](LICENSE).
 7. query-runner.provider -> query-runner.initializer로 이름 바꾸기 // 완료
 8. .transaction 로직 파일에 있는 try catch finally문을 프로미스에서 처리하게 바꿔보기 // 완료
 9. 상품 검색을할 때 전체 상품을 다 가져오는것이 아닌 몇개씩 끊어서 페이징 처리 해보기 // 보류
-10. 상품을 카테고리 별로 가져오는 api 추가하기 // 보류
+10. 상품을 카테고리 별로 가져오는 api 추가하기 // 완료
 11. 상품, 사용자 프로필을 가져올 때 redis적용해보기 // 보류
 12. 9 ~ 11까지 모두 수행하면 aws 배포 해보기 // 보류
 13. API 정상화 (버그 수정) // 완료
-14. user, product 등 많이 사용되는 entity Join을 Generic하게 변경 // 진행중
-15. repository에서 entity와 raw를 분리 // 진행중
+14. user, product 등 많이 사용되는 entity Join을 Generic하게 변경 // 완료
+15. repository에서 entity와 raw를 분리 // 완료
 16. SWAGGER API DOCUMENTATION 설정
 17. JOI 사용해서 DotenvModule 설정
 18. 회원가입시 이메일 인증 로직 추가
