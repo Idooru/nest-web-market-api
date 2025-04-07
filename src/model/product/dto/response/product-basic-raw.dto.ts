@@ -1,10 +1,10 @@
 export class ProductBasicRawDto {
-  productId: string;
-  productName: string;
-  productPrice: number;
-  productCategory: string;
-  productCreatedAt: string;
-  productImageUrls: string[];
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  createdAt: string;
+  imageUrls: string[];
   averageScore: number;
   reviewCount: number;
 }

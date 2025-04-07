@@ -1,46 +1,50 @@
 export class ClientUserRawDto {
-  userId: string;
-  userRole: string;
+  user: User;
+  payments: Payment[];
+  reviews: Review[];
+  inquiryRequests: InquiryRequest[];
+}
+
+class User {
+  id: string;
+  role: string;
   realName: string;
   phoneNumber: string;
   email: string;
-  payments: PaymentOnClientUserRaw[];
-  reviews: ReviewOnClientUserRaw[];
-  inquiryRequests: InquiryRequestOnClientUserRaw[];
 }
 
-export class PaymentOnClientUserRaw {
-  paymentId: string;
+class Payment {
+  id: string;
   quantity: number;
   totalPrice: number;
   product: ProductOnPayment;
 }
 
-export class ProductOnPayment {
-  productId: string;
-  productName: string;
+class ProductOnPayment {
+  id: string;
+  name: string;
   price: number;
   origin: string;
   category: string;
-  productImageUrls: string[];
+  imageUrls: string[];
 }
 
-export class ReviewOnClientUserRaw {
-  reviewId: string;
-  reviewTitle: string;
-  reviewContent: string;
+class Review {
+  id: string;
+  title: string;
+  content: string;
   starRateScore: number;
   countForModify: number;
-  reviewImageUrls: string[];
-  reviewVideoUrls: string[];
+  imageUrls: string[];
+  videoUrls: string[];
 }
 
-export class InquiryRequestOnClientUserRaw {
-  inquiryRequestId: string;
-  inquiryRequestTitle: string;
-  inquiryRequestContent: string;
+class InquiryRequest {
+  id: string;
+  title: string;
+  content: string;
   inquiryOption: string;
   isAnswered: boolean;
-  inquiryRequestImageUrls: string[];
-  inquiryRequestVideoUrls: string[];
+  imageUrls: string[];
+  videoUrls: string[];
 }

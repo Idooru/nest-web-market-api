@@ -1,22 +1,26 @@
 export class ProductDetailRawDto {
-  productId: string;
-  productName: string;
-  productPrice: number;
-  productOrigin: string;
-  productCategory: string;
-  productDescription: string;
-  productStock: number;
-  productImageUrls: string[];
-  averageScore: number;
-  reviews: ReviewOnProductDetailRaw[];
+  product: Product;
+  reviews: Review[];
 }
 
-class ReviewOnProductDetailRaw {
-  reviewId: string;
-  reviewTitle: string;
-  reviewContent: string;
-  reviewStarRateScore: number;
-  reviewImageUrls: string[];
-  reviewVideoUrls: string[];
-  reviewerNickName: string;
+class Product {
+  id: string;
+  name: string;
+  price: number;
+  origin: string;
+  category: string;
+  description: string;
+  stock: number;
+  imageUrls: string[];
+  averageScore: number;
+}
+
+class Review {
+  id: string;
+  title: string;
+  content: string;
+  starRateScore: number;
+  imageUrls: string[];
+  videoUrls: string[];
+  nickName: string;
 }

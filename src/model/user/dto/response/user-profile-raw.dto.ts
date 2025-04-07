@@ -1,6 +1,6 @@
 export class UserProfileRawDto {
-  userId: string;
-  userRole: string;
+  id: string;
+  role: string;
   realName: string;
   birth: string;
   gender: string;

@@ -1,6 +1,6 @@
 export class UserBasicRawDto {
-  userId: string;
-  userRole: string;
+  id: string;
+  role: string;
   nickName: string;
   email: string;
   createdAt: string;
