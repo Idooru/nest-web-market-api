@@ -1,7 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { IsClientGuard } from "../../../../common/guards/authenticate/is-client.guard";
-import { CartBody } from "../../dto/cart-body.dto";
 import { ProductIdValidatePipe } from "../../../product/pipe/exist/product-id-validate.pipe";
 import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "../../../auth/jwt/jwt-access-token-payload.interface";
@@ -11,9 +10,11 @@ import { JsonGeneralInterceptor } from "../../../../common/interceptors/general/
 import { JsonGeneralInterface } from "../../../../common/interceptors/interface/json-general-interface";
 import { CartSearcher } from "../../logic/cart.searcher";
 import { CartIdValidatePipe } from "../../pipe/cart-id-validate.pipe";
-import { CartsResponseDto } from "../../dto/carts-response.dto";
-import { CreateCartDto } from "../../dto/create-cart.dto";
-import { ModifyCartDto } from "../../dto/modify-cart.dto";
+import { CartsResponseDto } from "../../dto/response/carts-response.dto";
+import { CartBody } from "../../dto/request/cart-body.dto";
+import { CreateCartDto } from "../../dto/request/create-cart.dto";
+import { ModifyCartDto } from "../../dto/request/modify-cart.dto";
+import { FindAllCartsDto } from "../../dto/request/find-all-carts.dto";
 
 @ApiTags("v1 고객 Cart API")
 @UseGuards(IsClientGuard)
@@ -27,16 +28,22 @@ export class CartV1ClientController {
     description: "사용자의 장바구니를 모두 가져옵니다.",
   })
   @UseInterceptors(JsonGeneralInterceptor)
-  @Get("/")
+  @Get("/all")
   public async findAllCarts(
-    @GetJWT() jwtPayload: JwtAccessTokenPayload,
+    @Query() query: FindAllCartsDto,
+    @GetJWT() { userId }: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<CartsResponseDto>> {
-    const result = await this.searcher.findAllCarts(jwtPayload.userId);
+    query.userId = userId;
+    const cartRaws = await this.searcher.findAllRaws(query);
+    const totalPrice = cartRaws.map((raw) => raw.cart.totalPrice).reduce((acc, cur) => acc + cur, 0);
 
     return {
       statusCode: 200,
-      message: `사용자아이디(${jwtPayload.userId})에 해당하는 장바구니 정보를 가져옵니다.`,
-      result,
+      message: `사용자아이디(${userId})에 해당하는 장바구니 정보를 가져옵니다.`,
+      result: {
+        cartRaws,
+        totalPrice,
+      },
     };
   }
 

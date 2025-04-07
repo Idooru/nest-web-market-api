@@ -1,9 +1,6 @@
 import { Body, Controller, Delete, Get, Patch, Post, Put, Query, UseGuards, UseInterceptors } from "@nestjs/common";
 import { JwtAccessTokenPayload } from "../../../auth/jwt/jwt-access-token-payload.interface";
 import { IsLoginGuard } from "../../../../common/guards/authenticate/is-login.guard";
-import { LoginUserDto } from "../../dtos/login-user.dto";
-import { ModifyUserDto } from "../../dtos/modify-user.dto";
-import { ResetPasswordDto } from "../../dtos/reset-password.dto";
 import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
 import { IsNotLoginGuard } from "../../../../common/guards/authenticate/is-not-login.guard";
 import { IsRefreshTokenAvailableGuard } from "src/common/guards/authenticate/is-refresh-token-available.guard";
@@ -12,12 +9,6 @@ import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-gen
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { LoginInterface } from "src/common/interceptors/interface/login.interface";
 import { LogoutInterface } from "src/common/interceptors/interface/logout.interface";
-import { RegisterUserDto } from "../../dtos/register-user.dto";
-import { UserEntity } from "../../entities/user.entity";
-import { ModifyUserEmailDto } from "../../dtos/modify-user-email.dto";
-import { ModifyUserNicknameDto } from "../../dtos/modify-user-nickName.dto";
-import { ModifyUserPhonenumberDto } from "../../dtos/modify-user-phoneNumber.dto";
-import { ModifyUserPasswordDto } from "../../dtos/modify-user-password.dto";
 import { ApiTags } from "@nestjs/swagger";
 import { UserTransactionExecutor } from "../../logic/transaction/user-transaction.executor";
 import { UserSearcher } from "../../logic/user.searcher";
@@ -31,8 +22,6 @@ import { LoginInterceptor } from "../../../../common/interceptors/general/login.
 import { RefreshTokenInterceptor } from "../../../../common/interceptors/general/refresh-token.interceptor";
 import { LogoutInterceptor } from "../../../../common/interceptors/general/logout.interceptor";
 import { RefreshTokenInterface } from "../../../../common/interceptors/interface/refresh-token.interface";
-import { ModifyUserAddressDto } from "../../dtos/modify-user-address.dto";
-import { FindEmailDto } from "../../dtos/find-email.dto";
 import { FindEmailValidationPipe } from "../../pipe/exist/find-email-validation.pipe";
 import { UserSecurity } from "../../logic/user.security";
 import { UserRegisterEventInterceptor } from "../../interceptor/user-register-event.interceptor";
@@ -51,6 +40,17 @@ import { ModifyUserPasswordSwagger } from "../../docs/user-v1-controller/modify-
 import { ModifyUserAddressSwagger } from "../../docs/user-v1-controller/modify-user-address.swagger";
 import { SecessionSwagger } from "../../docs/user-v1-controller/secession.swagger";
 import { ResetPasswordSwagger } from "../../docs/user-v1-controller/reset-password.swagger";
+import { RegisterUserDto } from "../../dto/request/register-user.dto";
+import { LoginUserDto } from "../../dto/request/login-user.dto";
+import { ModifyUserBody } from "../../dto/request/modify-user.dto";
+import { ModifyUserEmailDto } from "../../dto/request/modify-user-email.dto";
+import { ModifyUserNicknameDto } from "../../dto/request/modify-user-nickname.dto";
+import { ModifyUserPhoneNumberDto } from "../../dto/request/modify-user-phonenumber.dto";
+import { ModifyUserPasswordDto } from "../../dto/request/modify-user-password.dto";
+import { ModifyUserAddressDto } from "../../dto/request/modify-user-address.dto";
+import { FindEmailDto } from "../../dto/request/find-email.dto";
+import { ResetPasswordDto } from "../../dto/request/reset-password.dto";
+import { UserProfileRawDto } from "../../dto/response/user-profile-raw.dto";
 
 @ApiTags("v1 공용 User API")
 @Controller({ path: "/user", version: "1" })
@@ -81,8 +81,10 @@ export class UserV1Controller {
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Get("/profile")
-  public async findProfile(@GetJWT() jwtPayload: JwtAccessTokenPayload): Promise<JsonGeneralInterface<UserEntity>> {
-    const result = await this.searcher.findUserProfile(jwtPayload);
+  public async findProfile(
+    @GetJWT() { userId }: JwtAccessTokenPayload,
+  ): Promise<JsonGeneralInterface<UserProfileRawDto>> {
+    const result = await this.searcher.findUserProfileRaw(userId);
 
     return {
       statusCode: 200,
@@ -137,12 +139,12 @@ export class UserV1Controller {
   @UseGuards(IsLoginGuard)
   @Put("/me")
   public async modifyUser(
-    @Body(OperateUserValidationPipe<ModifyUserDto>)
-    modifyUserDto: ModifyUserDto,
+    @Body(OperateUserValidationPipe<ModifyUserBody>)
+    body: ModifyUserBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
     const dto = {
-      modifyUserDto,
+      body,
       id: userId,
     };
 
@@ -192,7 +194,7 @@ export class UserV1Controller {
   @Patch("/me/phone-number")
   public async modifyUserPhoneNumber(
     @Body(UserBodyPhoneNumberValidatePipe)
-    { phoneNumber }: ModifyUserPhonenumberDto,
+    { phoneNumber }: ModifyUserPhoneNumberDto,
     @GetJWT() jwtPayload: JwtAccessTokenPayload,
   ): Promise<JsonGeneralInterface<void>> {
     await this.service.modifyUserPhoneNumber(phoneNumber, jwtPayload.userId);

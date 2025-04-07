@@ -5,27 +5,28 @@ import { IsLoginGuard } from "src/common/guards/authenticate/is-login.guard";
 import { JsonGeneralInterface } from "src/common/interceptors/interface/json-general-interface";
 import { JsonGeneralInterceptor } from "src/common/interceptors/general/json-general.interceptor";
 import { JwtAccessTokenPayload } from "src/model/auth/jwt/jwt-access-token-payload.interface";
-import { MediaCookieDto } from "src/model/media/dto/media-cookie.dto";
 import { productMediaCookieKey } from "src/common/config/cookie-key-configs/media-cookie-keys/product-media-cookie.key";
-import { ModifyProductNameDto } from "../../dto/modify-product-name.dto";
-import { ModifyProductPriceDto } from "../../dto/modify-product-price.dto";
-import { ModifyProductOriginDto } from "../../dto/modify-product-origin.dto";
-import { ModifyProductDesctiptionDto } from "../../dto/modify-product-description.dto";
-import { ModifyProductStockDto } from "../../dto/modify-product-stock.dto";
+import { ModifyProductNameDto } from "../../dto/request/modify-product-name.dto";
+import { ModifyProductPriceDto } from "../../dto/request/modify-product-price.dto";
+import { ModifyProductOriginDto } from "../../dto/request/modify-product-origin.dto";
+import { ModifyProductDesctiptionDto } from "../../dto/request/modify-product-description.dto";
+import { ModifyProductStockDto } from "../../dto/request/modify-product-stock.dto";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { ModifyProductCategoryDto } from "../../dto/modify-product-category.dto";
+import { ModifyProductCategoryDto } from "../../dto/request/modify-product-category.dto";
 import { JsonClearCookiesInterceptor } from "src/common/interceptors/general/json-clear-cookies.interceptor";
 import { MediaCookiesParser } from "src/common/decorators/media-cookies-parser.decorator";
 import { JsonClearCookiesInterface } from "src/common/interceptors/interface/json-clear-cookies.interface";
 import { ProductTransactionExecutor } from "../../logic/transaction/product-transaction.executor";
 import { ProductService } from "../../services/product.service";
-import { ModifyProductDto } from "../../dto/modify-product.dto";
-import { CreateProductDto } from "../../dto/create-product.dto";
-import { ModifyProductImageDto } from "../../dto/modify-product-image.dto";
-import { ProductBody } from "../../dto/product-body.dto";
+import { ModifyProductDto } from "../../dto/request/modify-product.dto";
+import { CreateProductDto } from "../../dto/request/create-product.dto";
+import { ModifyProductImageDto } from "../../dto/request/modify-product-image.dto";
+import { ProductBody } from "../../dto/request/product-body.dto";
 import { ProductIdValidatePipe } from "../../pipe/exist/product-id-validate.pipe";
 import { OperateProductValidationPipe } from "../../pipe/none-exist/operate-product-validation.pipe";
 import { DeleteProductMediaInterceptor } from "../../../media/interceptor/delete-product-media.interceptor";
+import { CreateProductSwagger } from "../../docs/product-v1-admin-controller/create-product.swagger";
+import { MediaCookieDto } from "../../../media/dto/request/media-cookie.dto";
 
 @ApiTags("v1 관리자 Product API")
 @UseGuards(IsAdminGuard)
@@ -34,11 +35,7 @@ import { DeleteProductMediaInterceptor } from "../../../media/interceptor/delete
 export class ProductV1AdminController {
   constructor(private readonly transaction: ProductTransactionExecutor, private readonly service: ProductService) {}
 
-  @ApiOperation({
-    summary: "create product",
-    description:
-      "상품을 생성합니다. 생성하려는 상품의 이름이 이미 데이터베이스에 존재하거나 가격, 수량을 양의 정수 이외의 숫자로 지정하면 에러를 반환합니다. 이 api를 실행하기 전에 무조건 상품 이미지를 하나 업로드해야 합니다.",
-  })
+  @CreateProductSwagger()
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Post("/")
   public async createProduct(

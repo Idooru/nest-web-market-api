@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { JsonGeneralInterceptor } from "../../../../common/interceptors/general/json-general.interceptor";
 import { JsonGeneralInterface } from "../../../../common/interceptors/interface/json-general-interface";
@@ -6,24 +6,29 @@ import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
 import { JwtAccessTokenPayload } from "../../../auth/jwt/jwt-access-token-payload.interface";
 import { IsClientGuard } from "../../../../common/guards/authenticate/is-client.guard";
 import { IsLoginGuard } from "../../../../common/guards/authenticate/is-login.guard";
-import { OrderBody } from "../../dto/order-body.dto";
 import { OrderTransactionExecutor } from "../../logic/transaction/order-transaction.executor";
-import { CreateOrderDto } from "../../dto/create-order.dto";
 import { OrderSearcher } from "../../logic/order.searcher";
-import { OrderEntity } from "../../entities/order.entity";
+import { OrderBody } from "../../dto/request/order-body.dto";
+import { CreateOrderDto } from "../../dto/request/create-order.dto";
+import { FindAllOrdersDto } from "../../dto/request/find-all-orders.dto";
+import { OrderBasicRawDto } from "../../dto/response/order-basic-raw.dto";
 
 @ApiTags("v1 고객 Order API")
 @UseGuards(IsClientGuard)
 @UseGuards(IsLoginGuard)
 @Controller({ path: "/client/order", version: "1" })
 export class OrderV1ClientController {
-  constructor(private readonly transaction: OrderTransactionExecutor, private readonly searcher: OrderSearcher) {}
+  constructor(private readonly transaction: OrderTransactionExecutor, private readonly orderSearcher: OrderSearcher) {}
 
   @ApiOperation({})
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/")
-  public async findOrders(@GetJWT() { userId }: JwtAccessTokenPayload): Promise<JsonGeneralInterface<OrderEntity[]>> {
-    const result = await this.searcher.findOrders(userId);
+  public async findOrders(
+    @Query() query: FindAllOrdersDto,
+    @GetJWT() { userId }: JwtAccessTokenPayload,
+  ): Promise<JsonGeneralInterface<OrderBasicRawDto[]>> {
+    query.userId = userId;
+    const result = await this.orderSearcher.findAllRaws(query);
 
     return {
       statusCode: 200,
