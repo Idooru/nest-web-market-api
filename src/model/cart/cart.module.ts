@@ -13,14 +13,16 @@ import { cartSelect } from "../../common/config/repository-select-configs/cart.s
 import { CartValidator } from "./logic/cart.validator";
 import { CartValidateRepository } from "./repositories/cart-validate.repository";
 import { OrderModule } from "../order/order.module";
+import { MediaModule } from "../media/media.module";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([CartEntity]),
-    LibraryModule,
     forwardRef(() => OrderModule),
+    LibraryModule,
     UserModule,
     ProductModule,
+    MediaModule,
   ],
   controllers: [CartV1ClientController],
   providers: [
