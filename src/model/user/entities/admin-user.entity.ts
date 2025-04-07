@@ -6,19 +6,19 @@ import { ChildEntity } from "src/common/entities/child.entity";
 
 @Entity({ name: "admin_users", synchronize: true })
 export class AdminUserEntity extends ChildEntity {
-  @OneToOne(() => UserEntity, (user) => user.adminActions, {
+  @OneToOne(() => UserEntity, (user) => user.AdminUser, {
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "id" })
   public User: UserEntity;
 
-  @OneToMany(() => ProductEntity, (product) => product.creator, {
+  @OneToMany(() => ProductEntity, (product) => product.AdminUser, {
     cascade: true,
   })
-  public createdProduct: ProductEntity;
+  public Product: ProductEntity;
 
-  @OneToMany(() => InquiryResponseEntity, (inquiryResponse) => inquiryResponse.inquiryRespondent, {
+  @OneToMany(() => InquiryResponseEntity, (inquiryResponse) => inquiryResponse.AdminUser, {
     cascade: true,
   })
-  public writtenInquiryResponse: InquiryResponseEntity[];
+  public InquiryResponse: InquiryResponseEntity[];
 }
