@@ -10,4 +10,5 @@ export class SearchCreateOrderDto {
   clientUser: ClientUserEntity;
   productQuantities: Array<ProductQuantity>;
   account: AccountEntity;
+  hasSurtax: boolean;
 }

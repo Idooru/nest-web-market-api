@@ -1,26 +1,42 @@
 import { Injectable } from "@nestjs/common";
-import { SearchCreateOrderDto } from "../../dto/search-create-order.dto";
 import { OrderService } from "../../services/order.service";
-import { CreateOrderRowDto } from "../../dto/create-order.dto";
-import { CreatePaymentsDto } from "../../dto/create-payments.dto";
-import { MoneyTransactionDto } from "../../../account/dtos/money-transaction.dto";
+import { SearchCreateOrderDto } from "../../dto/request/search-create-order.dto";
+import { CreateOrderRowDto } from "../../dto/request/create-order.dto";
+import { CreatePaymentsDto } from "../../dto/request/create-payments.dto";
+import { WithdrawClientBalanceDto } from "../../dto/request/withdraw-client-balance.dto";
+import { DepositAdminBalanceDto } from "../../dto/request/deposit-admin-balance.dto";
 
 @Injectable()
 export class OrderTransactionContext {
   constructor(private readonly orderService: OrderService) {}
 
   public async createOrderContext(dto: SearchCreateOrderDto): Promise<void> {
-    const { clientId, body, clientUser, account, totalPrice, productQuantities } = dto;
+    const { clientId, body, clientUser, account, totalPrice, productQuantities, hasSurtax } = dto;
 
     await Promise.all([
       this.orderService.deleteAllCarts(clientId),
       this.orderService.decreaseProductStocks(productQuantities),
     ]);
 
+    const withdrawClientBalanceDto: WithdrawClientBalanceDto = {
+      accountId: account.id,
+      balance: totalPrice,
+      hasSurtax,
+    };
+
+    const depositAdminBalanceDto: DepositAdminBalanceDto = {
+      productQuantities,
+      hasSurtax,
+    };
+
+    await this.orderService.withdrawClientBalance(withdrawClientBalanceDto);
+    await this.orderService.depositAdminBalance(depositAdminBalanceDto);
+
     const createOrderRowDto: CreateOrderRowDto = {
       body,
       totalPrice,
       clientUser,
+      hasSurtax,
     };
 
     const order = await this.orderService.createOrder(createOrderRowDto);
@@ -32,13 +48,5 @@ export class OrderTransactionContext {
     };
 
     await this.orderService.createPayments(createPaymentsDto);
-
-    const moneyTransactionDto: MoneyTransactionDto = {
-      accountId: account.id,
-      balance: totalPrice,
-    };
-
-    await this.orderService.withdrawClientBalance(moneyTransactionDto);
-    await this.orderService.depositAdminBalance(productQuantities);
   }
 }

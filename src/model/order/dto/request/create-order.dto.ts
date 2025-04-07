@@ -10,4 +10,5 @@ export class CreateOrderRowDto {
   public body: OrderBody;
   public totalPrice: number;
   public clientUser: ClientUserEntity;
+  public hasSurtax: boolean;
 }

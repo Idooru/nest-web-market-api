@@ -17,19 +17,24 @@ import { OrderTransactionContext } from "./logic/transaction/order-transaction.c
 import { OrderSearcher } from "./logic/order.searcher";
 import { OrderSearchRepository } from "./repositories/order-search.repository";
 import { orderSelect } from "../../common/config/repository-select-configs/order.select";
+import { ProductModule } from "../product/product.module";
+
+const surtaxPrice = { provide: "surtax-price", useValue: 5000 };
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([OrderEntity, PaymentEntity]),
-    LibraryModule,
     forwardRef(() => CartModule),
+    LibraryModule,
     UserModule,
     AccountModule,
+    ProductModule,
   ],
   controllers: [OrderV1ClientController],
   providers: [
     { provide: "order-select", useValue: orderSelect },
     { provide: Transactional, useClass: OrderTransactionInitializer },
+    surtaxPrice,
     OrderTransactionInitializer,
     OrderTransactionExecutor,
     OrderTransactionSearcher,

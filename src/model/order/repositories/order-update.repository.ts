@@ -1,22 +1,26 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import { ForbiddenException, Inject, Injectable } from "@nestjs/common";
 import { ProductEntity } from "../../product/entities/product.entity";
 import { CartEntity } from "../../cart/entities/cart.entity";
-import { CreateOrderRowDto } from "../dto/create-order.dto";
-import { CreatePaymentDto } from "../dto/create-payment.dto";
 import { OrderEntity } from "../entities/order.entity";
 import { AccountEntity } from "../../account/entities/account.entity";
 import { QueryFailedError } from "typeorm";
 import { loggerFactory } from "../../../common/functions/logger.factory";
-import { DepositAdminBalanceDto } from "../dto/deposit-admin-balance.dto";
 import { Transactional } from "../../../common/interfaces/initializer/transactional";
 import { OrderRepositoryPayload } from "../logic/transaction/order-repository.payload";
-import { MoneyTransactionDto } from "../../account/dtos/money-transaction.dto";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
-import { DecreaseProductStockDto } from "../dto/decrease-product-stock.dto";
+import { DecreaseProductStockDto } from "../dto/request/decrease-product-stock.dto";
+import { CreateOrderRowDto } from "../dto/request/create-order.dto";
+import { CreatePaymentDto } from "../dto/request/create-payment.dto";
+import { DepositAdminBalanceRowDto } from "../dto/request/deposit-admin-balance.dto";
+import { WithdrawClientBalanceDto } from "../dto/request/withdraw-client-balance.dto";
 
 @Injectable()
 export class OrderUpdateRepository {
-  constructor(private readonly transaction: Transactional<OrderRepositoryPayload>) {}
+  constructor(
+    @Inject("surtax-price")
+    private readonly surtaxPrice: number,
+    private readonly transaction: Transactional<OrderRepositoryPayload>,
+  ) {}
 
   @Transaction
   public async deleteAllCartsOnTransaction(id: string): Promise<void> {
@@ -43,13 +47,15 @@ export class OrderUpdateRepository {
 
   @Transaction
   public createOrderRow(dto: CreateOrderRowDto): Promise<OrderEntity> {
-    const { body, clientUser, totalPrice } = dto;
+    const { body, clientUser, hasSurtax } = dto;
     const { deliveryOption, deliveryAddress } = body;
+
+    if (hasSurtax) dto.totalPrice += this.surtaxPrice;
 
     return this.transaction.getRepository().order.save({
       deliveryOption,
       deliveryAddress,
-      totalPrice,
+      totalPrice: dto.totalPrice,
       ClientUser: clientUser,
     });
   }
@@ -70,14 +76,16 @@ export class OrderUpdateRepository {
   }
 
   @Transaction
-  public async withdrawClientBalance(dto: MoneyTransactionDto): Promise<AccountEntity> {
-    const { accountId, balance } = dto;
+  public async withdrawClientBalance(dto: WithdrawClientBalanceDto): Promise<AccountEntity> {
+    const { hasSurtax } = dto;
+    if (hasSurtax) dto.balance += this.surtaxPrice;
+
     await this.transaction
       .getRepository()
       .account.createQueryBuilder()
       .update(AccountEntity)
-      .set({ balance: () => `balance - ${balance}` })
-      .where("id = :id", { id: accountId })
+      .set({ balance: () => `balance - ${dto.balance}` })
+      .where("id = :id", { id: dto.accountId })
       .execute()
       .catch((err: QueryFailedError) => {
         if (err.message.includes("BIGINT UNSIGNED value is out of range in")) {
@@ -87,13 +95,13 @@ export class OrderUpdateRepository {
         }
       });
 
-    return this.transaction.getRepository().account.findOneBy({ id: accountId });
+    return this.transaction.getRepository().account.findOneBy({ id: dto.accountId });
   }
 
   @Transaction
-  public async depositAdminBalance(dto: DepositAdminBalanceDto): Promise<void> {
-    const { userId, balance, totalPrice } = dto;
-    const depositBalance = balance + totalPrice;
+  public async depositAdminBalance(dto: DepositAdminBalanceRowDto): Promise<void> {
+    const { userId, balance, totalPrice, hasSurtax } = dto;
+    const depositBalance = hasSurtax ? balance + totalPrice + this.surtaxPrice : balance + totalPrice;
 
     await this.transaction
       .getRepository()
@@ -101,6 +109,7 @@ export class OrderUpdateRepository {
       .update(AccountEntity)
       .set({ balance: depositBalance })
       .where("userId = :userId", { userId })
+      .andWhere("isMainAccount = :isMainAccount", { isMainAccount: 1 })
       .execute();
   }
 }

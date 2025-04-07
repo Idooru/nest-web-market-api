@@ -1,6 +1,5 @@
-import { ClientUserEntity } from "../../../user/entities/client-user.entity";
+import { MoneyTransactionDto } from "../../../account/dtos/request/money-transaction.dto";
 
-export class WithdrawClientBalanceDto {
-  clientUser: ClientUserEntity;
-  totalPrice: number;
+export class WithdrawClientBalanceDto extends MoneyTransactionDto {
+  public hasSurtax: boolean;
 }
