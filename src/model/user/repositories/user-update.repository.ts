@@ -1,8 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { UserRepositoryPayload } from "../logic/transaction/user-repository.payload";
 import { UserEntity } from "../entities/user.entity";
-import { CreateUserAuthDto, CreateUserProfileDto } from "../dtos/register-user.dto";
-import { ModifyUserAuthDto, ModifyUserProfileDto } from "../dtos/modify-user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { UserProfileEntity } from "../entities/user-profile.entity";
@@ -11,6 +9,8 @@ import { Transactional } from "../../../common/interfaces/initializer/transactio
 import { Transaction } from "../../../common/decorators/transaction.decorator";
 import { General } from "../../../common/decorators/general.decoration";
 import { UserRole } from "../types/user-role.type";
+import { CreateUserAuthDto, CreateUserProfileDto } from "../dto/request/register-user.dto";
+import { ModifyUserAuthDto, ModifyUserProfileDto } from "../dto/request/modify-user.dto";
 
 @Injectable()
 export class UserUpdateRepository {
