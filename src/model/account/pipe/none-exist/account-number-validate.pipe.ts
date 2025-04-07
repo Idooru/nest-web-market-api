@@ -1,5 +1,5 @@
 import { Injectable, PipeTransform } from "@nestjs/common";
-import { AccountBody } from "../../dtos/account-body.dto";
+import { AccountBody } from "../../dtos/request/account-body.dto";
 import { AccountValidator } from "../../logic/account.validator";
 import { Implemented } from "../../../../common/decorators/implemented.decoration";
 
