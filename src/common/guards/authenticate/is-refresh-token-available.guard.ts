@@ -1,16 +1,37 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Request } from "express";
 import { loggerFactory } from "../../functions/logger.factory";
 import { ValidateTokenLibrary } from "../../lib/security/validate-token.library";
 import { Implemented } from "../../decorators/implemented.decoration";
-import { UserSearchRepository } from "../../../model/user/repositories/user-search.repository";
+import { UserAuthEntity } from "../../../model/user/entities/user-auth.entity";
+import { UserEntity } from "../../../model/user/entities/user.entity";
+import { UserSearcher } from "../../../model/user/logic/user.searcher";
+
+class EntityFinder {
+  constructor(private readonly userIdFilter: string, private readonly userSearcher: UserSearcher) {}
+
+  public findUser(userId: string): Promise<UserEntity> {
+    return this.userSearcher.findEntity({
+      property: this.userIdFilter,
+      alias: { id: userId },
+      getOne: true,
+      entities: [UserAuthEntity],
+    }) as Promise<UserEntity>;
+  }
+}
 
 @Injectable()
 export class IsRefreshTokenAvailableGuard implements CanActivate {
+  private readonly entityFinder: EntityFinder;
+
   constructor(
+    @Inject("user-id-filter")
+    private readonly userIdFilter: string,
+    private readonly userSearcher: UserSearcher,
     private readonly validateTokenLibrary: ValidateTokenLibrary,
-    private readonly repository: UserSearchRepository,
-  ) {}
+  ) {
+    this.entityFinder = new EntityFinder(this.userIdFilter, this.userSearcher);
+  }
 
   @Implemented
   public async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -24,7 +45,9 @@ export class IsRefreshTokenAvailableGuard implements CanActivate {
     }
 
     const payload = await this.validateTokenLibrary.decodeAccessToken(accessToken);
-    const refreshToken = await this.repository.findRefreshToken(payload.userId);
+    const user = await this.entityFinder.findUser(payload.userId);
+
+    const refreshToken = user.UserAuth.refreshToken;
 
     await this.validateTokenLibrary.validateRefreshToken(refreshToken);
 

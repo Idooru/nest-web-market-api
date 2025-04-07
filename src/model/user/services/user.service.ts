@@ -1,25 +1,42 @@
 import { UserUpdateRepository } from "../repositories/user-update.repository";
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { UserEntity } from "../entities/user.entity";
-import { RegisterUserDto } from "../dtos/register-user.dto";
-import { ModifyUserAuthDto, ModifyUserDto, ModifyUserProfileDto } from "../dtos/modify-user.dto";
 import { UserSearcher } from "../logic/user.searcher";
 import { UserSecurity } from "../logic/user.security";
-import { ResetPasswordDto } from "../dtos/reset-password.dto";
 import { UserEventMapSetter } from "../logic/user-event-map.setter";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
 import { General } from "src/common/decorators/general.decoration";
 import { UserRole } from "../types/user-role.type";
+import { RegisterUserDto } from "../dto/request/register-user.dto";
+import { ModifyUserAuthDto, ModifyUserDto, ModifyUserProfileDto } from "../dto/request/modify-user.dto";
+import { ResetPasswordDto } from "../dto/request/reset-password.dto";
+import { UserAuthEntity } from "../entities/user-auth.entity";
+
+class EntityFinder {
+  constructor(private readonly userSearcher: UserSearcher) {}
+
+  public findUser(email: string): Promise<UserEntity> {
+    return this.userSearcher.findEntity({
+      property: "UserAuth.email = :email",
+      alias: { email },
+      getOne: true,
+      entities: [UserAuthEntity],
+    }) as Promise<UserEntity>;
+  }
+}
 
 @Injectable()
 export class UserService {
+  private readonly entityFinder: EntityFinder;
+
   constructor(
+    protected readonly userSearcher: UserSearcher,
     private readonly userUpdateRepository: UserUpdateRepository,
-    private readonly userSearcher: UserSearcher,
-    @Inject(forwardRef(() => UserSecurity))
     private readonly userSecurity: UserSecurity,
     private readonly userEventMapSetter: UserEventMapSetter,
-  ) {}
+  ) {
+    this.entityFinder = new EntityFinder(this.userSearcher);
+  }
 
   @Transaction
   public async createUserEntity(role: UserRole): Promise<UserEntity> {
@@ -35,8 +52,8 @@ export class UserService {
   }
 
   @Transaction
-  public async createUserBase({ id }: UserEntity, registerUserDto: RegisterUserDto): Promise<void> {
-    const { realName, nickName, birth, gender, email, phoneNumber, password, address } = registerUserDto;
+  public async createUserBase({ id }: UserEntity, dto: RegisterUserDto): Promise<void> {
+    const { realName, nickName, birth, gender, email, phoneNumber, password, address } = dto;
     const hashed = await this.userSecurity.hashPassword(password, true);
 
     const userProfileColumn = {
@@ -60,20 +77,13 @@ export class UserService {
   }
 
   @Transaction
-  public async modifyUser(dto: ModifyUserDto, id: string): Promise<void> {
-    const { password, phoneNumber, email, nickName, address } = dto;
+  public async modifyUser(dto: ModifyUserDto): Promise<void> {
+    const { id, body } = dto;
+    const { password, phoneNumber, email, nickName, address } = body;
     const hashed = await this.userSecurity.hashPassword(password, true);
 
-    const modifyUserProfileDto: ModifyUserProfileDto = {
-      phoneNumber,
-      address,
-    };
-
-    const modifyUserAuthDto: ModifyUserAuthDto = {
-      email,
-      nickName,
-      password: hashed,
-    };
+    const modifyUserProfileDto: ModifyUserProfileDto = { phoneNumber, address };
+    const modifyUserAuthDto: ModifyUserAuthDto = { email, nickName, password: hashed };
 
     await Promise.all([
       this.userUpdateRepository.modifyUserProfile(modifyUserProfileDto, id),
@@ -111,9 +121,10 @@ export class UserService {
   @General
   public async resetPassword(dto: ResetPasswordDto): Promise<void> {
     const { email, password } = dto;
-    const hashed = await this.userSecurity.hashPassword(password, false);
-
-    const user = await this.userSearcher.findUserWithEmail(email);
+    const [hashed, user] = await Promise.all([
+      this.userSecurity.hashPassword(password, false),
+      this.entityFinder.findUser(email),
+    ]);
 
     await this.userUpdateRepository.modifyUserPassword(hashed, user.id);
   }

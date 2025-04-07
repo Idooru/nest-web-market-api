@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { ReviewEntity } from "../entities/review.entity";
 import { ReviewUpdateRepository } from "../repositories/review-update.repository";
 
@@ -18,25 +18,44 @@ import { ChangeReviewImageDto } from "../dto/request/change-review-image.dto";
 import { ChangeReviewVideoDto } from "../dto/request/change-review-video.dto";
 import { ModifyStarRateDto } from "../dto/request/modify-star-rate.dto";
 
+class EntityFinder {
+  constructor(private readonly reviewIdFilter: string, private readonly reviewSearcher: ReviewSearcher) {}
+
+  public findReview(reviewId: string): Promise<ReviewEntity> {
+    return this.reviewSearcher.findEntity({
+      property: this.reviewIdFilter,
+      alias: { id: reviewId },
+      getOne: true,
+      entities: [ReviewImageEntity, ReviewVideoEntity],
+    }) as Promise<ReviewEntity>;
+  }
+}
+
 @Injectable()
 export class ReviewService {
+  private readonly entityFinder: EntityFinder;
+
   constructor(
+    @Inject("review-id-filter")
+    private readonly reviewIdFilter: string,
     private readonly reviewUtils: ReviewUtils,
-    private readonly reviewOperationRepository: ReviewUpdateRepository,
+    private readonly reviewUpdateRepository: ReviewUpdateRepository,
     private readonly reviewSearcher: ReviewSearcher,
     private readonly mediaUtils: MediaUtils,
-  ) {}
+  ) {
+    this.entityFinder = new EntityFinder(this.reviewIdFilter, this.reviewSearcher);
+  }
 
   @Transaction
   public createReview(dto: CreateReviewRowDto): Promise<ReviewEntity> {
-    return this.reviewOperationRepository.createReview(dto);
+    return this.reviewUpdateRepository.createReview(dto);
   }
 
   @Transaction
   public async insertReviewImages({ reviewImages, reviewId }: InsertReviewImagesDto): Promise<void> {
     const inserting = reviewImages.map((reviewImage) => {
       const insertReviewImageDto = { reviewId, reviewImageId: reviewImage.id };
-      return this.reviewOperationRepository.insertReviewIdOnReviewImage(insertReviewImageDto);
+      return this.reviewUpdateRepository.insertReviewIdOnReviewImage(insertReviewImageDto);
     });
 
     await Promise.all(inserting);
@@ -46,7 +65,7 @@ export class ReviewService {
   public async insertReviewVideos({ reviewVideos, reviewId }: InsertReviewVideosDto): Promise<void> {
     const inserting = reviewVideos.map((reviewVideo) => {
       const insertReviewVideoDto = { reviewId, reviewVideoId: reviewVideo.id };
-      return this.reviewOperationRepository.insertReviewIdOnReviewVideo(insertReviewVideoDto);
+      return this.reviewUpdateRepository.insertReviewIdOnReviewVideo(insertReviewVideoDto);
     });
 
     await Promise.all(inserting);
@@ -54,15 +73,15 @@ export class ReviewService {
 
   @Transaction
   public async increaseStarRate({ starRateScore, starRate }: StarRatingDto): Promise<void> {
-    await this.reviewOperationRepository.increaseStarRate(starRateScore, starRate);
+    await this.reviewUpdateRepository.increaseStarRate(starRateScore, starRate);
 
     const updatedStarRate = await this.reviewUtils.calculateStarRate(starRate);
-    await this.reviewOperationRepository.renewAverage(updatedStarRate);
+    await this.reviewUpdateRepository.renewAverage(updatedStarRate);
   }
 
   @Transaction
   public async modifyReview(dto: ModifyReviewRowDto): Promise<void> {
-    await this.reviewOperationRepository.modifyReview(dto);
+    await this.reviewUpdateRepository.modifyReview(dto);
   }
 
   @Transaction
@@ -71,14 +90,14 @@ export class ReviewService {
 
     const inserting = newReviewImages.map((reviewImage) => {
       const insertReviewImageDto = { reviewId, reviewImageId: reviewImage.id };
-      return this.reviewOperationRepository.insertReviewIdOnReviewImage(insertReviewImageDto);
+      return this.reviewUpdateRepository.insertReviewIdOnReviewImage(insertReviewImageDto);
     });
 
     await Promise.all(inserting);
 
     if (beforeReviewImages.length >= 1) {
       const deleting = beforeReviewImages.map((reviewImage) =>
-        this.reviewOperationRepository.deleteReviewImageWithId(reviewImage.id),
+        this.reviewUpdateRepository.deleteReviewImageWithId(reviewImage.id),
       );
 
       await Promise.all(deleting);
@@ -91,14 +110,14 @@ export class ReviewService {
 
     const inserting = newReviewVideos.map((reviewVideo) => {
       const insertReviewImageDto = { reviewId, reviewVideoId: reviewVideo.id };
-      return this.reviewOperationRepository.insertReviewIdOnReviewVideo(insertReviewImageDto);
+      return this.reviewUpdateRepository.insertReviewIdOnReviewVideo(insertReviewImageDto);
     });
 
     await Promise.all(inserting);
 
     if (beforeReviewVideos.length >= 1) {
       const deleting = beforeReviewVideos.map((reviewVideo) =>
-        this.reviewOperationRepository.deleteReviewVideoWithId(reviewVideo.id),
+        this.reviewUpdateRepository.deleteReviewVideoWithId(reviewVideo.id),
       );
 
       await Promise.all(deleting);
@@ -112,17 +131,17 @@ export class ReviewService {
     if (beforeScore === starRateScore) return;
 
     await Promise.all([
-      this.reviewOperationRepository.decreaseStarRate(starRate, beforeScore),
-      this.reviewOperationRepository.increaseStarRate(starRateScore, starRate),
+      this.reviewUpdateRepository.decreaseStarRate(starRate, beforeScore),
+      this.reviewUpdateRepository.increaseStarRate(starRateScore, starRate),
     ]);
 
     const updatedStarRate = await this.reviewUtils.calculateStarRate(starRate);
-    await this.reviewOperationRepository.renewAverage(updatedStarRate);
+    await this.reviewUpdateRepository.renewAverage(updatedStarRate);
   }
 
   @Transaction
   public async deleteReviewWithId(id: string): Promise<void> {
-    const review = await this.reviewSearcher.findEntity(id, [ReviewImageEntity, ReviewVideoEntity]);
+    const review = await this.entityFinder.findReview(id);
 
     this.mediaUtils.deleteMediaFiles({
       images: review.ReviewImage,
@@ -131,16 +150,16 @@ export class ReviewService {
       callWhere: "remove media entity",
     });
 
-    await this.reviewOperationRepository.deleteReviewWithId(id);
+    await this.reviewUpdateRepository.deleteReviewWithId(id);
   }
 
   @Transaction
   public async decreaseStarRate(review: ReviewEntity, starRate: StarRateEntity): Promise<void> {
     const beforeScore = review.starRateScore;
 
-    await this.reviewOperationRepository.decreaseStarRate(starRate, beforeScore);
+    await this.reviewUpdateRepository.decreaseStarRate(starRate, beforeScore);
 
     const updatedStarRate = await this.reviewUtils.calculateStarRate(starRate);
-    await this.reviewOperationRepository.renewAverage(updatedStarRate);
+    await this.reviewUpdateRepository.renewAverage(updatedStarRate);
   }
 }

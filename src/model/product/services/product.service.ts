@@ -1,23 +1,43 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { ProductUpdateRepository } from "../repositories/product-update.repository";
 import { ProductEntity } from "../entities/product.entity";
-import { CreateProductDto } from "../dto/create-product.dto";
-import { ModifyProductDto } from "../dto/modify-product.dto";
-import { InsertProductImagesDto } from "../dto/insert-product-image.dto";
-import { ChangeProductImageDto } from "../dto/change-product-image.dto";
+import { CreateProductDto } from "../dto/request/create-product.dto";
+import { ModifyProductDto } from "../dto/request/modify-product.dto";
+import { InsertProductImagesDto } from "../dto/request/insert-product-image.dto";
+import { ChangeProductImageDto } from "../dto/request/change-product-image.dto";
 import { ProductCategory } from "../types/product-category.type";
 import { ProductSearcher } from "../logic/product.searcher";
 import { MediaUtils } from "../../media/logic/media.utils";
 import { Transaction } from "../../../common/decorators/transaction.decorator";
 import { General } from "../../../common/decorators/general.decoration";
+import { ProductImageEntity } from "../../media/entities/product-image.entity";
+
+class EntityFinder {
+  constructor(private readonly productIdFilter: string, private readonly productSearcher: ProductSearcher) {}
+
+  public findProduct(productId: string): Promise<ProductEntity> {
+    return this.productSearcher.findEntity({
+      property: this.productIdFilter,
+      alias: { id: productId },
+      getOne: true,
+      entities: [ProductImageEntity],
+    }) as Promise<ProductEntity>;
+  }
+}
 
 @Injectable()
 export class ProductService {
+  private readonly entityFinder: EntityFinder;
+
   constructor(
-    private readonly productUpdateRepository: ProductUpdateRepository,
+    @Inject("product-id-filter")
+    private readonly productIdFilter: string,
     private readonly productSearcher: ProductSearcher,
+    private readonly productUpdateRepository: ProductUpdateRepository,
     private readonly mediaUtils: MediaUtils,
-  ) {}
+  ) {
+    this.entityFinder = new EntityFinder(this.productIdFilter, this.productSearcher);
+  }
 
   @Transaction
   public createProduct(dto: CreateProductDto): Promise<ProductEntity> {
@@ -98,10 +118,10 @@ export class ProductService {
 
   @General
   public async removeProduct(id: string): Promise<void> {
-    const product = await this.productSearcher.findProductWithId(id);
+    const product = await this.entityFinder.findProduct(id);
 
     this.mediaUtils.deleteMediaFiles({
-      images: product.Image,
+      images: product.ProductImage,
       mediaEntity: "product",
       callWhere: "remove media entity",
     });
