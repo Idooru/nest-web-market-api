@@ -1,175 +1,165 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "../entities/user.entity";
-import { Repository } from "typeorm";
+import { Repository, SelectQueryBuilder } from "typeorm";
 import { UserSelect } from "src/common/config/repository-select-configs/user.select";
-import { ClientUserEntity } from "../entities/client-user.entity";
-import { AdminUserEntity } from "../entities/admin-user.entity";
-import { loggerFactory } from "../../../common/functions/logger.factory";
+import { UserProfileRawDto } from "../dto/response/user-profile-raw.dto";
+import { MediaUtils } from "../../media/logic/media.utils";
+import { ClientUserRawDto } from "../dto/response/client-user-raw.dto";
+import { UserBasicRawDto } from "../dto/response/user-basic-raw.dto";
+import {
+  FindOptionalEntityArgs,
+  FindPureEntityArgs,
+  SearchRepository,
+} from "../../../common/interfaces/search/search.repository";
+import { Implemented } from "../../../common/decorators/implemented.decoration";
+import { FindAllUsersDto } from "../dto/request/find-all-users.dto";
 
 @Injectable()
-export class UserSearchRepository {
+export class UserSearchRepository extends SearchRepository<UserEntity, FindAllUsersDto, UserBasicRawDto> {
   constructor(
     @Inject("user-select")
     private readonly select: UserSelect,
+    @Inject("user-id-filter")
+    private readonly userIdFilter: string,
     @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
-    @InjectRepository(ClientUserEntity)
-    private readonly clientUserRepository: Repository<ClientUserEntity>,
-    @InjectRepository(AdminUserEntity)
-    private readonly adminUserRepository: Repository<AdminUserEntity>,
-  ) {}
+    private readonly repository: Repository<UserEntity>,
+    private readonly utils: MediaUtils,
+  ) {
+    super();
+  }
 
-  public async findAllUsers(column: string, order: "ASC" | "DESC"): Promise<UserEntity[]> {
-    const users = await this.userRepository
-      .createQueryBuilder()
-      .select(this.select.users)
-      .from(UserEntity, "user")
-      .innerJoin("user.Auth", "Auth")
-      .orderBy(column, order)
-      .groupBy("user.id")
-      .getRawMany();
+  private selectUser(selects?: string[]): SelectQueryBuilder<UserEntity> {
+    const queryBuilder = this.repository.createQueryBuilder();
+    if (selects && selects.length) {
+      return queryBuilder.select(selects).from(UserEntity, "user");
+    }
+    return queryBuilder.select("user").from(UserEntity, "user");
+  }
 
-    if (!users.length) {
-      const message = "사용자가 없습니다.";
-      loggerFactory("None Exist").error(message);
-      throw new NotFoundException(message);
+  @Implemented
+  public findPureEntity(args: FindPureEntityArgs): Promise<UserEntity | UserEntity[]> {
+    const { property, alias, getOne } = args;
+    const query = this.selectUser().where(property, alias);
+    return super.getEntity(getOne, query);
+  }
+
+  @Implemented
+  public findOptionalEntity(args: FindOptionalEntityArgs): Promise<UserEntity | UserEntity[]> {
+    const { property, alias, entities, getOne } = args;
+    const query = this.selectUser().where(property, alias);
+    super.joinEntity(entities, query, "user");
+    return super.getEntity(getOne, query);
+  }
+
+  @Implemented
+  public async findAllRaws(dto: FindAllUsersDto): Promise<UserBasicRawDto[]> {
+    const { align, column } = dto;
+    const userColumns = ["createdAt", "role"];
+    const userAuthColumns = ["email", "nickName"];
+
+    const query = this.selectUser(this.select.users).innerJoin("user.UserAuth", "Auth").groupBy("user.id");
+
+    if (userColumns.includes(column)) {
+      query.orderBy(`user.${column}`, align);
     }
 
-    return users;
+    if (userAuthColumns.includes(column)) {
+      query.orderBy(`Auth.${column}`, align);
+    }
+
+    const userRows = await query.getRawMany();
+
+    return userRows.map((user) => ({
+      id: user.userId,
+      role: user.role,
+      email: user.email,
+      nickName: user.nickName,
+      createdAt: user.createdAt,
+    }));
   }
 
-  public findUserWithId(id: string): Promise<UserEntity> {
-    return this.userRepository
-      .createQueryBuilder()
-      .select(this.select.userBase)
-      .from(UserEntity, "user")
-      .innerJoin("user.Profile", "Profile")
-      .innerJoin("user.Auth", "Auth")
-      .where("user.id = :id", { id })
-      .getOne();
-  }
-
-  public findClientUserWithId(id: string): Promise<UserEntity> {
-    return this.userRepository
-      .createQueryBuilder()
-      .select(this.select.clientUser)
-      .from(UserEntity, "user")
-      .innerJoin("user.Profile", "Profile")
-      .innerJoin("user.Auth", "Auth")
-      .innerJoin("user.clientActions", "Client")
-      .where("user.id = :id", { id })
-      .getOne();
-  }
-
-  public async findAdminUserWithId(id: string): Promise<UserEntity> {
-    return this.userRepository
-      .createQueryBuilder()
-      .select(this.select.adminUser)
-      .from(UserEntity, "user")
-      .innerJoin("user.Profile", "Profile")
-      .innerJoin("user.Auth", "Auth")
-      .innerJoin("user.adminActions", "Admin")
-      .where("user.id = :id", { id })
-      .getOne();
-  }
-
-  public async findClientUserObjectWithId(user: UserEntity): Promise<ClientUserEntity> {
-    return this.clientUserRepository
-      .createQueryBuilder()
-      .select(["client", "User", "Auth", "Account"])
-      .from(ClientUserEntity, "client")
-      .innerJoin("client.User", "User")
-      .innerJoin("User.Auth", "Auth")
-      .leftJoin("User.Account", "Account")
-      .where("client.id = :id", { id: user.clientActions.id })
-      .getOne();
-  }
-
-  public async findAdminUserObjectWithId(user: UserEntity): Promise<AdminUserEntity> {
-    return this.adminUserRepository
-      .createQueryBuilder()
-      .select(["admin", "User", "Account"])
-      .from(AdminUserEntity, "admin")
-      .innerJoin("admin.User", "User")
-      .leftJoin("User.Account", "Account")
-      .where("admin.id = :id", { id: user.adminActions.id })
-      .getOne();
-  }
-
-  public findUserWithEmail(email: string): Promise<UserEntity> {
-    return this.userRepository
-      .createQueryBuilder()
-      .select(this.select.userBase)
-      .from(UserEntity, "user")
-      .innerJoin("user.Profile", "Profile")
-      .innerJoin("user.Auth", "Auth")
-      .where("Auth.email = :email", { email })
-      .getOne();
-  }
-
-  public findUserWithRealName(realName: string): Promise<UserEntity> {
-    return this.userRepository
-      .createQueryBuilder()
-      .select(this.select.userBase)
-      .from(UserEntity, "user")
-      .innerJoin("user.Profile", "Profile")
-      .innerJoin("user.Auth", "Auth")
-      .where("Profile.realName = :realName", { realName })
-      .getOne();
-  }
-
-  public findUserWithPhoneNumber(phoneNumber: string): Promise<UserEntity> {
-    return this.userRepository
-      .createQueryBuilder()
-      .select(this.select.userBase)
-      .from(UserEntity, "user")
-      .innerJoin("user.Profile", "Profile")
-      .innerJoin("user.Auth", "Auth")
-      .where("Profile.phoneNumber = :phoneNumber", { phoneNumber })
-      .getOne();
-  }
-
-  public findUserProfile(id: string): Promise<UserEntity> {
-    return this.userRepository
-      .createQueryBuilder()
-      .select(this.select.profile)
-      .from(UserEntity, "user")
-      .innerJoin("user.Profile", "Profile")
-      .innerJoin("user.Auth", "Auth")
-      .where("user.id = :id", { id })
+  public async findUserProfileRaw(id: string): Promise<UserProfileRawDto> {
+    const user = await this.selectUser(this.select.profile)
+      .innerJoin("user.UserProfile", "Profile")
+      .innerJoin("user.UserAuth", "Auth")
+      .where(this.userIdFilter, { id })
       .getRawOne();
+
+    return {
+      id: user.id,
+      role: user.role,
+      realName: user.realName,
+      birth: user.birth,
+      gender: user.gender,
+      phoneNumber: user.phoneNumber,
+      address: user.address,
+      nickName: user.nickName,
+      email: user.email,
+    };
   }
 
-  public findClientUserInfo(id: string): Promise<UserEntity> {
-    return this.userRepository
-      .createQueryBuilder()
-      .select(this.select.whenAdminClientUser)
-      .from(UserEntity, "user")
-      .innerJoin("user.Auth", "Auth")
-      .innerJoin("user.clientActions", "Client")
+  public async findClientUserRaw(id: string): Promise<ClientUserRawDto> {
+    const user = await this.selectUser(this.select.whenAdminClientUser)
+      .innerJoin("user.UserProfile", "Profile")
+      .innerJoin("user.UserAuth", "Auth")
+      .innerJoin("user.ClientUser", "Client")
       .leftJoin("Client.Payment", "Payment")
       .leftJoin("Payment.Product", "Product")
-      .leftJoin("Product.Image", "ProductImage")
-      .leftJoin("Client.writtenReview", "Review")
-      .leftJoin("Review.Image", "ReviewImage")
-      .leftJoin("Review.Video", "ReviewVideo")
-      .leftJoin("Client.writtenInquiryRequest", "InquiryRequest")
-      .leftJoin("InquiryRequest.Image", "InquiryRequestImage")
-      .leftJoin("InquiryRequest.Video", "InquiryRequestVideo")
-      .where("user.id = :id", { id })
-      .getOne();
-  }
-
-  public async findRefreshToken(id: string): Promise<string> {
-    const user = await this.userRepository
-      .createQueryBuilder()
-      .select(["user", "Auth"])
-      .from(UserEntity, "user")
-      .innerJoin("user.Auth", "Auth")
-      .where("user.id = :id", { id })
+      .leftJoin("Product.ProductImage", "ProductImage")
+      .leftJoin("Client.Review", "Review")
+      .leftJoin("Review.ReviewImage", "ReviewImage")
+      .leftJoin("Review.ReviewVideo", "ReviewVideo")
+      .leftJoin("Client.InquiryRequest", "InquiryRequest")
+      .leftJoin("InquiryRequest.InquiryRequestImage", "InquiryRequestImage")
+      .leftJoin("InquiryRequest.InquiryRequestVideo", "InquiryRequestVideo")
+      .where(this.userIdFilter, { id })
       .getOne();
 
-    return user.Auth.refreshToken;
+    return {
+      user: {
+        id: user.id,
+        role: user.role,
+        realName: user.UserProfile.realName,
+        phoneNumber: user.UserProfile.phoneNumber,
+        email: user.UserAuth.email,
+      },
+      payments: user.ClientUser.Payment.map((payment) => ({
+        id: payment.id,
+        quantity: payment.quantity,
+        totalPrice: payment.totalPrice,
+        product: payment.Product
+          ? {
+              id: payment.Product.id,
+              name: payment.Product.name,
+              price: payment.Product.price,
+              origin: payment.Product.origin,
+              category: payment.Product.category,
+              imageUrls: (() =>
+                payment.Product.ProductImage.length
+                  ? payment.Product.ProductImage.map((image) => image.url)
+                  : [this.utils.setUrl("default_product_image.jpg", "product/images")])(),
+            }
+          : null,
+      })),
+      reviews: user.ClientUser.Review.map((review) => ({
+        id: review.id,
+        title: review.title,
+        content: review.content,
+        starRateScore: review.starRateScore,
+        countForModify: review.countForModify,
+        imageUrls: review.ReviewImage.map((image) => image.url),
+        videoUrls: review.ReviewVideo.map((video) => video.url),
+      })),
+      inquiryRequests: user.ClientUser.InquiryRequest.map((inquiryRequest) => ({
+        id: inquiryRequest.id,
+        title: inquiryRequest.title,
+        content: inquiryRequest.content,
+        inquiryOption: inquiryRequest.inquiryOption,
+        isAnswered: inquiryRequest.isAnswered,
+        imageUrls: inquiryRequest.InquiryRequestImage.map((image) => image.url),
+        videoUrls: inquiryRequest.InquiryRequestVideo.map((video) => video.url),
+      })),
+    };
   }
 }
