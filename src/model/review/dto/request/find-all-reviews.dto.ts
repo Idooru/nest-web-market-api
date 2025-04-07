@@ -1,18 +1,18 @@
 import { IsEnum, IsOptional } from "class-validator";
 import { warnEnumMessage } from "../../../../common/functions/none-enum";
-import { order, Order } from "../../../../common/types/order-by.type";
+import { align, Align } from "../../../../common/types/align-by.type";
 
-type ReviewOrderColumn = "createdAt" | "starRateScore";
-const reviewOrderColumn = ["createdAt", "starRateScore"];
+type ReviewAlignColumn = "createdAt" | "starRateScore";
+const reviewAlignColumn = ["createdAt", "starRateScore"];
 
 export class FindAllReviewsDto {
   @IsOptional()
-  @IsEnum(order, { message: warnEnumMessage(order) })
-  public order: Order = "DESC";
+  @IsEnum(align, { message: warnEnumMessage(align) })
+  public align: Align = "DESC";
 
   @IsOptional()
-  @IsEnum(reviewOrderColumn, { message: warnEnumMessage(reviewOrderColumn) })
-  public column: ReviewOrderColumn = "createdAt";
+  @IsEnum(reviewAlignColumn, { message: warnEnumMessage(reviewAlignColumn) })
+  public column: ReviewAlignColumn = "createdAt";
 
   public userId: string;
 }

@@ -1,16 +1,16 @@
-import { order, Order } from "../../../../common/types/order-by.type";
+import { align, Align } from "../../../../common/types/align-by.type";
 import { IsEnum, IsNotEmpty, IsOptional } from "class-validator";
 import { warnEnumMessage } from "../../../../common/functions/none-enum";
 
-type UserOrderColumn = "createdAt" | "role" | "nickName" | "email";
-const userOrderColumn = ["createdAt", "role", "nickName", "email"];
+type UserAlignColumn = "createdAt" | "role" | "nickName" | "email";
+const userAlignColumn = ["createdAt", "role", "nickName", "email"];
 
 export class FindAllUsersDto {
-  @IsEnum(order, { message: warnEnumMessage(order) })
+  @IsEnum(align, { message: warnEnumMessage(align) })
   @IsNotEmpty()
-  public order: Order = "DESC";
+  public align: Align = "DESC";
 
   @IsOptional()
-  @IsEnum(userOrderColumn, { message: warnEnumMessage(userOrderColumn) })
-  public column: UserOrderColumn = "createdAt";
+  @IsEnum(userAlignColumn, { message: warnEnumMessage(userAlignColumn) })
+  public column: UserAlignColumn = "createdAt";
 }

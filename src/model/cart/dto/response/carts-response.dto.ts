@@ -1,6 +1,6 @@
-import { CartEntity } from "../../entities/cart.entity";
+import { CartsBasicRawDto } from "./carts-basic-raw.dto";
 
 export class CartsResponseDto {
-  public carts: CartEntity[];
+  public cartRaws: CartsBasicRawDto[];
   public totalPrice: number;
 }

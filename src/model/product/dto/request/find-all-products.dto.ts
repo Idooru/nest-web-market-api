@@ -1,19 +1,25 @@
-import { IsEnum, IsOptional } from "class-validator";
+import { IsEnum, IsOptional, IsString } from "class-validator";
 import { warnEnumMessage } from "../../../../common/functions/none-enum";
-import { order, Order } from "../../../../common/types/order-by.type";
+import { align, Align } from "../../../../common/types/align-by.type";
+import { ProductCategory, productCategory } from "../../types/product-category.type";
 
-type ProductOrderColumn = "createdAt" | "name" | "price" | "review" | "score";
-const productOrderColumn = ["createdAt", "name", "price", "review", "score"];
+type ProductAlignColumn = "createdAt" | "name" | "price" | "review" | "score";
+const productAlignColumn = ["createdAt", "name", "price", "review", "score"];
 
 export class FindAllProductsDto {
   @IsOptional()
-  @IsEnum(order, { message: warnEnumMessage(order) })
-  public order: Order = "DESC";
+  @IsEnum(align, { message: warnEnumMessage(align) })
+  public align: Align = "DESC";
 
   @IsOptional()
-  @IsEnum(productOrderColumn, { message: warnEnumMessage(productOrderColumn) })
-  public column: ProductOrderColumn = "createdAt";
+  @IsEnum(productAlignColumn, { message: warnEnumMessage(productAlignColumn) })
+  public column: ProductAlignColumn = "createdAt";
 
   @IsOptional()
+  @IsEnum(productCategory, { message: warnEnumMessage(productCategory) })
+  public category: ProductCategory;
+
+  @IsOptional()
+  @IsString()
   public name: string;
 }

@@ -1,22 +1,22 @@
 import { IsEnum, IsOptional } from "class-validator";
-import { order, Order } from "../../../../../common/types/order-by.type";
+import { align, Align } from "../../../../../common/types/align-by.type";
 import { warnEnumMessage } from "../../../../../common/functions/none-enum";
 import { inquiryOption, InquiryOption } from "../../../types/inquiry-option.type";
 
-type InquiryRequestOrderColumn = "createdAt";
-const inquiryRequestOrderColumn = ["createdAt"];
+type InquiryRequestAlignColumn = "createdAt";
+const inquiryRequestAlignColumn = ["createdAt"];
 
 type IsAnsweredWhether = "done" | "yet";
 const isAnsweredWhether = ["done", "yet"];
 
 export class FindAllInquiryRequestsDto {
   @IsOptional()
-  @IsEnum(order, { message: warnEnumMessage(order) })
-  public order: Order = "DESC";
+  @IsEnum(align, { message: warnEnumMessage(align) })
+  public align: Align = "DESC";
 
   @IsOptional()
-  @IsEnum(inquiryRequestOrderColumn, { message: warnEnumMessage(inquiryRequestOrderColumn) })
-  public column: InquiryRequestOrderColumn = "createdAt";
+  @IsEnum(inquiryRequestAlignColumn, { message: warnEnumMessage(inquiryRequestAlignColumn) })
+  public column: InquiryRequestAlignColumn = "createdAt";
 
   @IsOptional()
   @IsEnum(inquiryOption, { message: warnEnumMessage(inquiryOption) })
