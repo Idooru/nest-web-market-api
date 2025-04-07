@@ -1,7 +1,6 @@
 export interface ProductSelect {
   products: string[];
   product: string[];
-  productImages: string[];
 }
 
 export const productSelect: ProductSelect = {
@@ -10,8 +9,9 @@ export const productSelect: ProductSelect = {
     "product.name AS productName",
     "product.price AS productPrice",
     "product.category as productCategory",
-    "ANY_VALUE(Image.url) AS imageUrl",
-    "ANY_VALUE(StarRate.averageScore) AS averageScore",
+    "product.createdAt as productCreatedAt",
+    "GROUP_CONCAT(DISTINCT Image.url SEPARATOR ',') AS imageUrls", // 여러 이미지 처리
+    "StarRate.averageScore AS averageScore",
     "COUNT(DISTINCT Review.id) AS reviewCount",
   ],
   product: [
@@ -22,21 +22,16 @@ export const productSelect: ProductSelect = {
     "product.category",
     "product.description",
     "product.stock",
-    "Image.url",
-    "StarRate.id",
+    "ProductImage.url",
     "StarRate.averageScore",
-    "Review",
-    "Reviewer",
-    "ReviewUser",
-    "ReviewAuth.nickName",
+    "Review.id",
+    "Review.title",
+    "Review.content",
+    "Review.starRateScore",
     "ReviewImage.url",
     "ReviewVideo.url",
-    "InquiryRequest",
-    "InquiryRequester",
-    "InquiryUser",
-    "InquiryAuth.nickName",
-    "InquiryRequestImage.url",
-    "InquiryRequestVideo.url",
+    "Reviewer.id",
+    "User.id",
+    "Auth.nickName",
   ],
-  productImages: ["productImage.id", "productImage.url", "productImage.uploader"],
 };

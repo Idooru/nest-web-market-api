@@ -1,15 +1,10 @@
 export interface UserSelect {
-  userBase: string[];
-  clientUser: string[];
   users: string[];
-  adminUser: string[];
   profile: string[];
   whenAdminClientUser: string[];
 }
 
 export const userSelect: UserSelect = {
-  userBase: ["user", "Profile", "Auth"],
-  clientUser: ["user", "Profile", "Auth", "Client"],
   users: [
     "user.id AS userId",
     "user.role AS role",
@@ -17,7 +12,6 @@ export const userSelect: UserSelect = {
     "Auth.email as email",
     "user.createdAt as createdAt",
   ],
-  adminUser: ["user", "Profile", "Auth", "Admin"],
   profile: [
     "user.id AS id",
     "user.role AS role",
@@ -31,7 +25,8 @@ export const userSelect: UserSelect = {
   ],
   whenAdminClientUser: [
     "user",
-    "Auth.nickName",
+    "Profile.realName",
+    "Profile.phoneNumber",
     "Auth.email",
     "Client",
     "Payment",

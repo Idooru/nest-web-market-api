@@ -3,5 +3,5 @@ export interface OrderSelect {
 }
 
 export const orderSelect: OrderSelect = {
-  order: ["order", "Payment", "PaymentProduct", "PaymentProductImage"],
+  order: ["order", "Payment", "Product.id", "Product.name", "Product.price", "Product.category", "ProductImage.url"],
 };
