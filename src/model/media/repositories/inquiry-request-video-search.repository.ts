@@ -3,24 +3,29 @@ import {
   FindPureEntityArgs,
   SearchRepository,
 } from "../../../common/interfaces/search/search.repository";
-import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { MediaSelect } from "../../../common/config/repository-select-configs/media.select";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, SelectQueryBuilder } from "typeorm";
 import { Implemented } from "../../../common/decorators/implemented.decoration";
-import { loggerFactory } from "../../../common/functions/logger.factory";
 import { MediaCookieDto } from "../dto/request/media-cookie.dto";
 import { MediaBasicRawDto } from "../dto/response/media-basic-raw.dto";
 import { InquiryRequestVideoEntity } from "../entities/inquiry-request-video.entity";
 
 @Injectable()
-export class InquiryRequestVideoSearchRepository implements SearchRepository<InquiryRequestVideoEntity> {
+export class InquiryRequestVideoSearchRepository extends SearchRepository<
+  InquiryRequestVideoEntity,
+  MediaCookieDto,
+  MediaBasicRawDto
+> {
   constructor(
     @Inject("media-select")
     private readonly select: MediaSelect,
     @InjectRepository(InquiryRequestVideoEntity)
     private readonly repository: Repository<InquiryRequestVideoEntity>,
-  ) {}
+  ) {
+    super();
+  }
 
   private selectInquiryRequestVideo(selects?: string[]): SelectQueryBuilder<InquiryRequestVideoEntity> {
     const queryBuilder = this.repository.createQueryBuilder();
@@ -34,32 +39,20 @@ export class InquiryRequestVideoSearchRepository implements SearchRepository<Inq
   public findPureEntity(args: FindPureEntityArgs): Promise<InquiryRequestVideoEntity[] | InquiryRequestVideoEntity> {
     const { property, alias, getOne } = args;
     const query = this.selectInquiryRequestVideo().where(property, alias);
-    return getOne ? query.getOne() : query.getMany();
+    return super.getEntity(getOne, query);
   }
 
   @Implemented
   public findOptionalEntity(
     args: FindOptionalEntityArgs,
   ): Promise<InquiryRequestVideoEntity[] | InquiryRequestVideoEntity> {
-    const { property, alias, joinEntities, getOne } = args;
-    let query = this.selectInquiryRequestVideo().where(property, alias);
-
-    joinEntities.forEach((entity) => {
-      const entityName = entity.name.replace("Entity", "");
-      if (entityName) {
-        try {
-          query = query.leftJoinAndSelect(`inquiryRequestVideo.${entityName}`, entityName);
-        } catch (err) {
-          const message = `해당 ${entityName}Entity는 InquiryRequestVideoEntity와 연관관계가 없습니다.`;
-          loggerFactory("None Relation With InquiryRequestVideoEntity").error(message);
-          throw new InternalServerErrorException(message);
-        }
-      }
-    });
-
-    return getOne ? query.getOne() : query.getMany();
+    const { property, alias, entities, getOne } = args;
+    const query = this.selectInquiryRequestVideo().where(property, alias);
+    super.joinEntity(entities, query, "inquiryRequestVideo");
+    return super.getEntity(getOne, query);
   }
 
+  @Implemented
   public async findAllRaws(dto: MediaCookieDto[]): Promise<MediaBasicRawDto[]> {
     const raws = await Promise.all(
       dto.map((mediaCookie) =>

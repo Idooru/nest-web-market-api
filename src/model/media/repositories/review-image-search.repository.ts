@@ -3,24 +3,25 @@ import {
   FindPureEntityArgs,
   SearchRepository,
 } from "../../../common/interfaces/search/search.repository";
-import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { MediaSelect } from "../../../common/config/repository-select-configs/media.select";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, SelectQueryBuilder } from "typeorm";
 import { Implemented } from "../../../common/decorators/implemented.decoration";
-import { loggerFactory } from "../../../common/functions/logger.factory";
 import { MediaCookieDto } from "../dto/request/media-cookie.dto";
 import { MediaBasicRawDto } from "../dto/response/media-basic-raw.dto";
 import { ReviewImageEntity } from "../entities/review-image.entity";
 
 @Injectable()
-export class ReviewImageSearchRepository implements SearchRepository<ReviewImageEntity> {
+export class ReviewImageSearchRepository extends SearchRepository<ReviewImageEntity, MediaCookieDto, MediaBasicRawDto> {
   constructor(
     @Inject("media-select")
     private readonly select: MediaSelect,
     @InjectRepository(ReviewImageEntity)
     private readonly repository: Repository<ReviewImageEntity>,
-  ) {}
+  ) {
+    super();
+  }
 
   private selectReviewImage(selects?: string[]): SelectQueryBuilder<ReviewImageEntity> {
     const queryBuilder = this.repository.createQueryBuilder();
@@ -34,30 +35,18 @@ export class ReviewImageSearchRepository implements SearchRepository<ReviewImage
   public findPureEntity(args: FindPureEntityArgs): Promise<ReviewImageEntity[] | ReviewImageEntity> {
     const { property, alias, getOne } = args;
     const query = this.selectReviewImage().where(property, alias);
-    return getOne ? query.getOne() : query.getMany();
+    return super.getEntity(getOne, query);
   }
 
   @Implemented
   public findOptionalEntity(args: FindOptionalEntityArgs): Promise<ReviewImageEntity[] | ReviewImageEntity> {
-    const { property, alias, joinEntities, getOne } = args;
-    let query = this.selectReviewImage().where(property, alias);
-
-    joinEntities.forEach((entity) => {
-      const entityName = entity.name.replace("Entity", "");
-      if (entityName) {
-        try {
-          query = query.leftJoinAndSelect(`reviewImage.${entityName}`, entityName);
-        } catch (err) {
-          const message = `해당 ${entityName}Entity는 ReviewImageEntity와 연관관계가 없습니다.`;
-          loggerFactory("None Relation With ReviewImageEntity").error(message);
-          throw new InternalServerErrorException(message);
-        }
-      }
-    });
-
-    return getOne ? query.getOne() : query.getMany();
+    const { property, alias, entities, getOne } = args;
+    const query = this.selectReviewImage().where(property, alias);
+    super.joinEntity(entities, query, "reviewImage");
+    return super.getEntity(getOne, query);
   }
 
+  @Implemented
   public async findAllRaws(dto: MediaCookieDto[]): Promise<MediaBasicRawDto[]> {
     const raws = await Promise.all(
       dto.map((mediaCookie) =>

@@ -4,23 +4,28 @@ import {
   SearchRepository,
 } from "../../../common/interfaces/search/search.repository";
 import { InquiryResponseImageEntity } from "../entities/inquiry-response-image.entity";
-import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { MediaSelect } from "../../../common/config/repository-select-configs/media.select";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, SelectQueryBuilder } from "typeorm";
 import { Implemented } from "../../../common/decorators/implemented.decoration";
-import { loggerFactory } from "../../../common/functions/logger.factory";
 import { MediaCookieDto } from "../dto/request/media-cookie.dto";
 import { MediaBasicRawDto } from "../dto/response/media-basic-raw.dto";
 
 @Injectable()
-export class InquiryResponseImageSearchRepository implements SearchRepository<InquiryResponseImageEntity> {
+export class InquiryResponseImageSearchRepository extends SearchRepository<
+  InquiryResponseImageEntity,
+  MediaCookieDto,
+  MediaBasicRawDto
+> {
   constructor(
     @Inject("media-select")
     private readonly select: MediaSelect,
     @InjectRepository(InquiryResponseImageEntity)
     private readonly repository: Repository<InquiryResponseImageEntity>,
-  ) {}
+  ) {
+    super();
+  }
 
   private selectInquiryResponseImage(selects?: string[]): SelectQueryBuilder<InquiryResponseImageEntity> {
     const queryBuilder = this.repository.createQueryBuilder();
@@ -34,32 +39,20 @@ export class InquiryResponseImageSearchRepository implements SearchRepository<In
   public findPureEntity(args: FindPureEntityArgs): Promise<InquiryResponseImageEntity[] | InquiryResponseImageEntity> {
     const { property, alias, getOne } = args;
     const query = this.selectInquiryResponseImage().where(property, alias);
-    return getOne ? query.getOne() : query.getMany();
+    return super.getEntity(getOne, query);
   }
 
   @Implemented
   public findOptionalEntity(
     args: FindOptionalEntityArgs,
   ): Promise<InquiryResponseImageEntity[] | InquiryResponseImageEntity> {
-    const { property, alias, joinEntities, getOne } = args;
-    let query = this.selectInquiryResponseImage().where(property, alias);
-
-    joinEntities.forEach((entity) => {
-      const entityName = entity.name.replace("Entity", "");
-      if (entityName) {
-        try {
-          query = query.leftJoinAndSelect(`inquiryResponseImage.${entityName}`, entityName);
-        } catch (err) {
-          const message = `해당 ${entityName}Entity는 InquiryResponseImageEntity와 연관관계가 없습니다.`;
-          loggerFactory("None Relation With InquiryResponseImageEntity").error(message);
-          throw new InternalServerErrorException(message);
-        }
-      }
-    });
-
-    return getOne ? query.getOne() : query.getMany();
+    const { property, alias, entities, getOne } = args;
+    const query = this.selectInquiryResponseImage().where(property, alias);
+    super.joinEntity(entities, query, "inquiryResponseImage");
+    return super.getEntity(getOne, query);
   }
 
+  @Implemented
   public async findAllRaws(dto: MediaCookieDto[]): Promise<MediaBasicRawDto[]> {
     const raws = await Promise.all(
       dto.map((mediaCookie) =>

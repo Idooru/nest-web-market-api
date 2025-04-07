@@ -14,13 +14,19 @@ import { MediaCookieDto } from "../dto/request/media-cookie.dto";
 import { MediaBasicRawDto } from "../dto/response/media-basic-raw.dto";
 
 @Injectable()
-export class InquiryRequestImageSearchRepository implements SearchRepository<InquiryRequestImageEntity> {
+export class InquiryRequestImageSearchRepository extends SearchRepository<
+  InquiryRequestImageEntity,
+  MediaCookieDto,
+  MediaBasicRawDto
+> {
   constructor(
     @Inject("media-select")
     private readonly select: MediaSelect,
     @InjectRepository(InquiryRequestImageEntity)
     private readonly repository: Repository<InquiryRequestImageEntity>,
-  ) {}
+  ) {
+    super();
+  }
 
   private selectInquiryRequestImage(selects?: string[]): SelectQueryBuilder<InquiryRequestImageEntity> {
     const queryBuilder = this.repository.createQueryBuilder();
@@ -41,10 +47,10 @@ export class InquiryRequestImageSearchRepository implements SearchRepository<Inq
   public findOptionalEntity(
     args: FindOptionalEntityArgs,
   ): Promise<InquiryRequestImageEntity[] | InquiryRequestImageEntity> {
-    const { property, alias, joinEntities, getOne } = args;
+    const { property, alias, entities, getOne } = args;
     let query = this.selectInquiryRequestImage().where(property, alias);
 
-    joinEntities.forEach((entity) => {
+    entities.forEach((entity) => {
       const entityName = entity.name.replace("Entity", "");
       if (entityName) {
         try {
@@ -60,6 +66,7 @@ export class InquiryRequestImageSearchRepository implements SearchRepository<Inq
     return getOne ? query.getOne() : query.getMany();
   }
 
+  @Implemented
   public async findAllRaws(dto: MediaCookieDto[]): Promise<MediaBasicRawDto[]> {
     const raws = await Promise.all(
       dto.map((mediaCookie) =>

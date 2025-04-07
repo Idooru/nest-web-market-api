@@ -4,65 +4,59 @@ import {
   SearchRepository,
 } from "../../../common/interfaces/search/search.repository";
 import { InquiryRequestEntity } from "../entities/inquiry-request.entity";
-import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { Implemented } from "../../../common/decorators/implemented.decoration";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, SelectQueryBuilder } from "typeorm";
 import { InquirySelect } from "../../../common/config/repository-select-configs/inquiry.select";
-import { loggerFactory } from "../../../common/functions/logger.factory";
 import { InquiryRequestBasicRawDto } from "../dto/inquiry-request/response/inquiry-request-basic-raw.dto";
 import { InquiryRequestDetailRawDto } from "../dto/inquiry-request/response/inquiry-request-detail-raw.dto";
 import { InquiryRequestFromAdminProductRawDto } from "../dto/inquiry-request/response/inquiry-request-from-admin-product-raw.dto";
 import { FindAllInquiryRequestsDto } from "../dto/inquiry-request/request/find-all-inquiry-requests.dto";
 
 @Injectable()
-export class InquiryRequestSearchRepository implements SearchRepository<InquiryRequestEntity> {
+export class InquiryRequestSearchRepository extends SearchRepository<
+  InquiryRequestEntity,
+  FindAllInquiryRequestsDto,
+  InquiryRequestBasicRawDto
+> {
   constructor(
     @Inject("inquiry-select")
     private readonly select: InquirySelect,
     @InjectRepository(InquiryRequestEntity) private readonly repository: Repository<InquiryRequestEntity>,
-  ) {}
+  ) {
+    super();
+  }
 
   private selectInquiryRequest(selects?: string[]): SelectQueryBuilder<InquiryRequestEntity> {
+    const queryBuilder = this.repository.createQueryBuilder();
     if (selects && selects.length) {
-      return this.repository.createQueryBuilder().select(selects).from(InquiryRequestEntity, "inquiryRequest");
+      return queryBuilder.select(selects).from(InquiryRequestEntity, "inquiryRequest");
     }
-    return this.repository.createQueryBuilder().select("inquiryRequest").from(InquiryRequestEntity, "inquiryRequest");
+    return queryBuilder.select("inquiryRequest").from(InquiryRequestEntity, "inquiryRequest");
   }
 
   @Implemented
   public findPureEntity(args: FindPureEntityArgs): Promise<InquiryRequestEntity | InquiryRequestEntity[]> {
     const { property, alias, getOne } = args;
     const query = this.selectInquiryRequest().where(property, alias);
-    return getOne ? query.getOne() : query.getMany();
+    return super.getEntity(getOne, query);
   }
 
   @Implemented
   public findOptionalEntity(args: FindOptionalEntityArgs): Promise<InquiryRequestEntity | InquiryRequestEntity[]> {
-    const { property, alias, joinEntities, getOne } = args;
-    let query = this.selectInquiryRequest().where(property, alias);
-
-    joinEntities.forEach((entity) => {
-      const entityName = entity.name.replace("Entity", "");
-      if (entityName) {
-        try {
-          query = query.leftJoinAndSelect(`inquiryRequest.${entityName}`, entityName);
-        } catch (err) {
-          const message = `해당 ${entityName}Entity는 InquiryRequestEntity와 연관관계가 없습니다.`;
-          loggerFactory("None Relation With InquiryRequestEntity").error(message);
-          throw new InternalServerErrorException(message);
-        }
-      }
-    });
-
-    return getOne ? query.getOne() : query.getMany();
+    const { property, alias, entities, getOne } = args;
+    const query = this.selectInquiryRequest().where(property, alias);
+    super.joinEntity(entities, query, "inquiryRequest");
+    return super.getEntity(getOne, query);
   }
 
+  @Implemented
   public async findAllRaws(dto: FindAllInquiryRequestsDto): Promise<InquiryRequestBasicRawDto[]> {
-    const { order, column, option, isAnswered, userId } = dto;
+    const { align, column, option, isAnswered, userId } = dto;
     const query = this.selectInquiryRequest(this.select.inquiryRequests)
       .innerJoin("inquiryRequest.Product", "Product")
-      .orderBy(`inquiryRequest.${column}`, order)
+      .orderBy(`inquiryRequest.${column}`, align)
       .where("inquiryRequest.ClientUser.id = :id", { id: userId })
       .groupBy("inquiryRequest.id");
 
