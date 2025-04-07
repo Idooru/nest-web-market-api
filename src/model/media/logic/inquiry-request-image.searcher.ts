@@ -7,18 +7,21 @@ import { InquiryRequestImageEntity } from "../entities/inquiry-request-image.ent
 import { InquiryRequestImageSearchRepository } from "../repositories/inquiry-request-image-search.repository";
 
 @Injectable()
-export class InquiryRequestImageSearcher implements Searcher<InquiryRequestImageEntity> {
+export class InquiryRequestImageSearcher
+  implements Searcher<InquiryRequestImageEntity, MediaCookieDto, MediaBasicRawDto>
+{
   constructor(private readonly inquiryRequestImageSearchRepository: InquiryRequestImageSearchRepository) {}
 
   @Implemented
   public findEntity(args: FindEntityArgs): Promise<InquiryRequestImageEntity | InquiryRequestImageEntity[]> {
-    const { property, alias, getOne, joinEntities } = args;
-    if (joinEntities && joinEntities.length) {
-      return this.inquiryRequestImageSearchRepository.findOptionalEntity({ property, alias, joinEntities, getOne });
+    const { property, alias, getOne, entities } = args;
+    if (entities && entities.length) {
+      return this.inquiryRequestImageSearchRepository.findOptionalEntity({ property, alias, entities, getOne });
     }
     return this.inquiryRequestImageSearchRepository.findPureEntity({ property, alias, getOne });
   }
 
+  @Implemented
   public async findAllRaws(dto: MediaCookieDto[]): Promise<MediaBasicRawDto[]> {
     return this.inquiryRequestImageSearchRepository.findAllRaws(dto);
   }

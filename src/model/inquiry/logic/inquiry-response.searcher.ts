@@ -8,18 +8,21 @@ import { InquiryResponseDetailRawDto } from "../dto/inquiry-response/response/in
 import { FindAllInquiryResponsesDto } from "../dto/inquiry-response/request/find-all-inquiry-responses.dto";
 
 @Injectable()
-export class InquiryResponseSearcher implements Searcher<InquiryResponseEntity> {
+export class InquiryResponseSearcher
+  implements Searcher<InquiryResponseEntity, FindAllInquiryResponsesDto, InquiryResponseBasicRawDto>
+{
   constructor(private readonly inquiryResponseSearchRepository: InquiryResponseSearchRepository) {}
 
   @Implemented
   public findEntity(args: FindEntityArgs): Promise<InquiryResponseEntity | InquiryResponseEntity[]> {
-    const { property, alias, getOne, joinEntities } = args;
-    if (joinEntities && joinEntities.length) {
-      return this.inquiryResponseSearchRepository.findOptionalEntity({ property, alias, joinEntities, getOne });
+    const { property, alias, getOne, entities } = args;
+    if (entities && entities.length) {
+      return this.inquiryResponseSearchRepository.findOptionalEntity({ property, alias, entities, getOne });
     }
     return this.inquiryResponseSearchRepository.findPureEntity({ property, alias, getOne });
   }
 
+  @Implemented
   public findAllRaws(dto: FindAllInquiryResponsesDto): Promise<InquiryResponseBasicRawDto[]> {
     return this.inquiryResponseSearchRepository.findAllRaws(dto);
   }

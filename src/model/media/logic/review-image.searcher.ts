@@ -7,18 +7,19 @@ import { ReviewImageEntity } from "../entities/review-image.entity";
 import { ReviewImageSearchRepository } from "../repositories/review-image-search.repository";
 
 @Injectable()
-export class ReviewImageSearcher implements Searcher<ReviewImageEntity> {
+export class ReviewImageSearcher implements Searcher<ReviewImageEntity, MediaCookieDto, MediaBasicRawDto> {
   constructor(private readonly inquiryResponseImageSearchRepository: ReviewImageSearchRepository) {}
 
   @Implemented
   public findEntity(args: FindEntityArgs): Promise<ReviewImageEntity | ReviewImageEntity[]> {
-    const { property, alias, getOne, joinEntities } = args;
-    if (joinEntities && joinEntities.length) {
-      return this.inquiryResponseImageSearchRepository.findOptionalEntity({ property, alias, joinEntities, getOne });
+    const { property, alias, getOne, entities } = args;
+    if (entities && entities.length) {
+      return this.inquiryResponseImageSearchRepository.findOptionalEntity({ property, alias, entities, getOne });
     }
     return this.inquiryResponseImageSearchRepository.findPureEntity({ property, alias, getOne });
   }
 
+  @Implemented
   public async findAllRaws(dto: MediaCookieDto[]): Promise<MediaBasicRawDto[]> {
     return this.inquiryResponseImageSearchRepository.findAllRaws(dto);
   }

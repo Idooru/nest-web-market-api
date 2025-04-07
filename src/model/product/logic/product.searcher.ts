@@ -1,40 +1,31 @@
 import { Injectable } from "@nestjs/common";
-import { ProductSearchRepository } from "../repositories/product-search.repository";
 import { ProductEntity } from "../entities/product.entity";
 import { ProductBasicRawDto } from "../dto/response/product-basic-raw.dto";
 import { ProductDetailRawDto } from "../dto/response/product-detail-raw.dto";
-import { MediaUtils } from "../../media/logic/media.utils";
+import { ProductSearchRepository } from "../repositories/product-search.repository";
+import { FindEntityArgs, Searcher } from "../../../common/interfaces/search/searcher";
+import { Implemented } from "../../../common/decorators/implemented.decoration";
+import { FindAllProductsDto } from "../dto/request/find-all-products.dto";
 
 @Injectable()
-export class ProductSearcher {
-  constructor(private readonly repository: ProductSearchRepository, private readonly mediaUtils: MediaUtils) {}
+export class ProductSearcher implements Searcher<ProductEntity, FindAllProductsDto, ProductBasicRawDto> {
+  constructor(private readonly productSearchRepository: ProductSearchRepository) {}
 
-  private setBasicProductsRaw(products: ProductBasicRawDto[]) {
-    products.forEach((product) => {
-      product.reviewCount = parseInt(String(product.reviewCount));
-      product.imageUrl ??= this.mediaUtils.setUrl("default_product_image.jpg", "product/images");
-    });
+  @Implemented
+  public findEntity(args: FindEntityArgs): Promise<ProductEntity | ProductEntity[]> {
+    const { property, alias, getOne, entities } = args;
+    if (entities && entities.length) {
+      return this.productSearchRepository.findOptionalEntity({ property, alias, entities, getOne });
+    }
+    return this.productSearchRepository.findPureEntity({ property, alias, getOne });
   }
 
-  public async findAllProductsFromLatest(): Promise<ProductBasicRawDto[]> {
-    const products = await this.repository.findAllProducts("product.createdAt", "DESC");
-    this.setBasicProductsRaw(products);
-    return products;
+  @Implemented
+  public findAllRaws(dto: FindAllProductsDto): Promise<ProductBasicRawDto[]> {
+    return this.productSearchRepository.findAllRaws(dto);
   }
 
-  public async findAllProductsFromOldest(): Promise<ProductBasicRawDto[]> {
-    const products = await this.repository.findAllProducts("product.createdAt", "ASC");
-    this.setBasicProductsRaw(products);
-    return products;
-  }
-
-  public async findProductsWithName(name: string): Promise<ProductBasicRawDto[]> {
-    const products = await this.repository.findProductsWithName(name);
-    this.setBasicProductsRaw(products);
-    return products;
-  }
-
-  public findProductWithId(id: string): Promise<ProductEntity> {
-    return this.repository.findProductWithId(id);
+  public findDetailRaw(id: string): Promise<ProductDetailRawDto> {
+    return this.productSearchRepository.findDetailRaw(id);
   }
 }

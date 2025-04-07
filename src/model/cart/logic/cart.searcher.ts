@@ -1,30 +1,26 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { CartSearchRepository } from "../repositories/cart-search.repository";
-import { loggerFactory } from "../../../common/functions/logger.factory";
-import { CartsResponseDto } from "../dto/carts-response.dto";
+import { FindEntityArgs, Searcher } from "../../../common/interfaces/search/searcher";
+import { CartEntity } from "../entities/cart.entity";
+import { Implemented } from "../../../common/decorators/implemented.decoration";
+import { FindAllCartsDto } from "../dto/request/find-all-carts.dto";
+import { CartsBasicRawDto } from "../dto/response/carts-basic-raw.dto";
 
 @Injectable()
-export class CartSearcher {
+export class CartSearcher implements Searcher<CartEntity, FindAllCartsDto, CartsBasicRawDto> {
   constructor(private readonly cartSearchRepository: CartSearchRepository) {}
 
-  public async findAllCarts(id: string): Promise<CartsResponseDto> {
-    const carts = await this.cartSearchRepository.findAllCarts(id);
-    const totalPrice = carts.map((cart) => cart.totalPrice).reduce((acc, cur) => acc + cur, 0);
-
-    return {
-      carts,
-      totalPrice,
-    };
+  @Implemented
+  public findEntity(args: FindEntityArgs): Promise<CartEntity | CartEntity[]> {
+    const { property, alias, getOne, entities } = args;
+    if (entities && entities.length) {
+      return this.cartSearchRepository.findOptionalEntity({ property, alias, entities, getOne });
+    }
+    return this.cartSearchRepository.findPureEntity({ property, alias, getOne });
   }
 
-  public async validateProduct(clientId: string, productId: string): Promise<void> {
-    const result = await this.cartSearchRepository.findProductOnCart(clientId, productId);
-
-    if (result) {
-      const message =
-        "한 사용자가 같은 상품을 중복해서 장바구니에 올릴 수 없습니다. 상품이 필요하시다면 수량을 늘려주세요.";
-      loggerFactory("Alread Exist").error(message);
-      throw new BadRequestException(message);
-    }
+  @Implemented
+  public async findAllRaws(dto: FindAllCartsDto): Promise<CartsBasicRawDto[]> {
+    return this.cartSearchRepository.findAllRaws(dto);
   }
 }

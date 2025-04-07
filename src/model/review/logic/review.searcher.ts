@@ -1,33 +1,36 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ReviewSearchRepository } from "../repositories/review-search.repository";
-import { StarRateEntity } from "../entities/star-rate.entity";
 import { ReviewEntity } from "../entities/review.entity";
-import { ProductSearcher } from "../../product/logic/product.searcher";
+import { ReviewBasicRawDto } from "../dto/response/review-basic-raw.dto";
+import { ReviewDetailRawDto } from "../dto/response/review-detail-raw.dto";
+import { FindEntityArgs, Searcher } from "../../../common/interfaces/search/searcher";
+import { Implemented } from "../../../common/decorators/implemented.decoration";
+import { ReviewFromProductRawDto } from "../dto/response/review-from-product-raw.dto";
+import { FindAllReviewsDto } from "../dto/request/find-all-reviews.dto";
 
 @Injectable()
-export class ReviewSearcher {
-  constructor(
-    private readonly reviewSearchRepository: ReviewSearchRepository,
-    private readonly productSearcher: ProductSearcher,
-  ) {}
+export class ReviewSearcher implements Searcher<ReviewEntity, FindAllReviewsDto, ReviewBasicRawDto> {
+  constructor(private readonly reviewSearchRepository: ReviewSearchRepository) {}
 
-  public findAllReviews(id: string): Promise<ReviewEntity[]> {
-    return this.reviewSearchRepository.findAllReviews(id);
+  @Implemented
+  public async findEntity(args: FindEntityArgs): Promise<ReviewEntity | ReviewEntity[]> {
+    const { property, alias, getOne, entities } = args;
+    if (entities && entities.length) {
+      return this.reviewSearchRepository.findOptionalEntity({ property, alias, entities, getOne });
+    }
+    return this.reviewSearchRepository.findPureEntity({ property, alias, getOne });
   }
 
-  public findStarRateWithId(id: string): Promise<StarRateEntity> {
-    return this.reviewSearchRepository.findStarRateWithId(id);
+  @Implemented
+  public findAllRaws(dto: FindAllReviewsDto): Promise<ReviewBasicRawDto[]> {
+    return this.reviewSearchRepository.findAllRaws(dto);
   }
 
-  public findReviewWithId(id: string): Promise<ReviewEntity> {
-    return this.reviewSearchRepository.findReviewWithId(id);
+  public async findAllRawsWithProductId(id: string): Promise<ReviewFromProductRawDto[]> {
+    return this.reviewSearchRepository.findAllRawsWithProductId(id);
   }
 
-  public async findReviewsWithProductId(id: string): Promise<ReviewEntity[]> {
-    const product = await this.productSearcher.findProductWithId(id);
-
-    if (!product.Review.length) throw new NotFoundException("해당 상품에 리뷰가 존재하지 않습니다.");
-
-    return product.Review;
+  public findDetailRaw(id: string): Promise<ReviewDetailRawDto> {
+    return this.reviewSearchRepository.findDetailRaw(id);
   }
 }

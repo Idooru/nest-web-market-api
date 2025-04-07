@@ -7,18 +7,19 @@ import { MediaBasicRawDto } from "../dto/response/media-basic-raw.dto";
 import { MediaCookieDto } from "../dto/request/media-cookie.dto";
 
 @Injectable()
-export class ProductImageSearcher implements Searcher<ProductImageEntity> {
+export class ProductImageSearcher implements Searcher<ProductImageEntity, MediaCookieDto, MediaBasicRawDto> {
   constructor(private readonly productImageSearchRepository: ProductImageSearchRepository) {}
 
   @Implemented
   public findEntity(args: FindEntityArgs): Promise<ProductImageEntity | ProductImageEntity[]> {
-    const { property, alias, getOne, joinEntities } = args;
-    if (joinEntities && joinEntities.length) {
-      return this.productImageSearchRepository.findOptionalEntity({ property, alias, joinEntities, getOne });
+    const { property, alias, getOne, entities } = args;
+    if (entities && entities.length) {
+      return this.productImageSearchRepository.findOptionalEntity({ property, alias, entities, getOne });
     }
     return this.productImageSearchRepository.findPureEntity({ property, alias, getOne });
   }
 
+  @Implemented
   public async findAllRaws(dto: MediaCookieDto[]): Promise<MediaBasicRawDto[]> {
     return this.productImageSearchRepository.findAllRaws(dto);
   }

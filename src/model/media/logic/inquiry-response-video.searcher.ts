@@ -7,18 +7,21 @@ import { InquiryResponseVideoEntity } from "../entities/inquiry-response-video.e
 import { InquiryResponseVideoSearchRepository } from "../repositories/inquiry-response-video-search.repository";
 
 @Injectable()
-export class InquiryResponseVideoSearcher implements Searcher<InquiryResponseVideoEntity> {
+export class InquiryResponseVideoSearcher
+  implements Searcher<InquiryResponseVideoEntity, MediaCookieDto, MediaBasicRawDto>
+{
   constructor(private readonly inquiryResponseVideoSearchRepository: InquiryResponseVideoSearchRepository) {}
 
   @Implemented
   public findEntity(args: FindEntityArgs): Promise<InquiryResponseVideoEntity | InquiryResponseVideoEntity[]> {
-    const { property, alias, getOne, joinEntities } = args;
-    if (joinEntities && joinEntities.length) {
-      return this.inquiryResponseVideoSearchRepository.findOptionalEntity({ property, alias, joinEntities, getOne });
+    const { property, alias, getOne, entities } = args;
+    if (entities && entities.length) {
+      return this.inquiryResponseVideoSearchRepository.findOptionalEntity({ property, alias, entities, getOne });
     }
     return this.inquiryResponseVideoSearchRepository.findPureEntity({ property, alias, getOne });
   }
 
+  @Implemented
   public async findAllRaws(dto: MediaCookieDto[]): Promise<MediaBasicRawDto[]> {
     return this.inquiryResponseVideoSearchRepository.findAllRaws(dto);
   }
