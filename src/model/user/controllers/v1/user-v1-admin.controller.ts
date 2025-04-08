@@ -7,12 +7,13 @@ import { ApiTags } from "@nestjs/swagger";
 import { UserSearcher } from "../../logic/user.searcher";
 import { UserService } from "../../services/user.service";
 import { UserIdValidatePipe } from "../../pipe/exist/user-id-validate.pipe";
-import { FindClientUserInfoSwagger } from "../../docs/user-v1-admin-controller/find-client-user-info.swagger";
+import { FindDetailClientUserSwagger } from "../../docs/user-v1-admin-controller/find-detail-client-user.swagger";
 import { KickUserSwagger } from "../../docs/user-v1-admin-controller/kick-user.swagger";
 import { ClientUserRawDto } from "../../dto/response/client-user-raw.dto";
 import { ClientUserIdValidatePipe } from "../../pipe/exist/client-user-id-validate.pipe";
 import { UserBasicRawDto } from "../../dto/response/user-basic-raw.dto";
 import { FindAllUsersDto } from "../../dto/request/find-all-users.dto";
+import { FindAllUsersSwagger } from "../../docs/user-v1-admin-controller/find-all-users.swagger";
 
 @ApiTags("v1 관리자 User API")
 @UseGuards(IsAdminGuard)
@@ -21,6 +22,7 @@ import { FindAllUsersDto } from "../../dto/request/find-all-users.dto";
 export class UserV1AdminController {
   constructor(private readonly userSearcher: UserSearcher, private readonly userService: UserService) {}
 
+  @FindAllUsersSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/all")
   public async findAllUsers(@Query() query: FindAllUsersDto): Promise<JsonGeneralInterface<UserBasicRawDto[]>> {
@@ -33,7 +35,7 @@ export class UserV1AdminController {
     };
   }
 
-  @FindClientUserInfoSwagger()
+  @FindDetailClientUserSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/:userId")
   public async findDetailClientUser(
