@@ -9,7 +9,7 @@ export const FindAllUsersSwagger = () => {
   return applyDecorators(
     ApiOperation({
       summary: "find all users from latest",
-      description: "전체 사용자 정보를 최신 순서로 가져옵니다.",
+      description: "전체 사용자 정보를 가져옵니다.",
     }),
     AlignSwagger(),
     ApiQuery({
