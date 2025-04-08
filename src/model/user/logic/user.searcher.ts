@@ -21,6 +21,7 @@ export class UserSearcher implements Searcher<UserEntity, FindAllUsersDto, UserB
     return this.userSearchRepository.findPureEntity({ property, alias, getOne });
   }
 
+  @Implemented
   public findAllRaws(dto: FindAllUsersDto): Promise<UserBasicRawDto[]> {
     return this.userSearchRepository.findAllRaws(dto);
   }
