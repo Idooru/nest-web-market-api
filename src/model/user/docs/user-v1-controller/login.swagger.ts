@@ -2,7 +2,7 @@ import { applyDecorators } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { typeOrmErrorSwagger } from "../../../../common/docs/typeorm-error.swagger";
 import { ServerErrorSwagger } from "../../../../common/docs/internal-server-error.swagger";
-import { LoginUserDto } from "../../dto/request/login-user.dto";
+import { BasicAuthDto } from "../../dto/request/basic-auth.dto";
 
 export const LoginSwagger = () => {
   return applyDecorators(
@@ -10,7 +10,7 @@ export const LoginSwagger = () => {
       summary: "login",
       description: "로그인을 합니다. 성공시 access token을 request header에 담고 refresh token을 DB에 저장합니다.",
     }),
-    ApiBody({ type: LoginUserDto, required: true }),
+    ApiBody({ type: BasicAuthDto, required: true }),
     ApiResponse({
       status: 201,
       description: "로그인 성공",
