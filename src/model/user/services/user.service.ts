@@ -9,8 +9,8 @@ import { General } from "src/common/decorators/general.decoration";
 import { UserRole } from "../types/user-role.type";
 import { RegisterUserDto } from "../dto/request/register-user.dto";
 import { ModifyUserAuthDto, ModifyUserDto, ModifyUserProfileDto } from "../dto/request/modify-user.dto";
-import { ResetPasswordDto } from "../dto/request/reset-password.dto";
 import { UserAuthEntity } from "../entities/user-auth.entity";
+import { BasicAuthDto } from "../dto/request/basic-auth.dto";
 
 class EntityFinder {
   constructor(private readonly userSearcher: UserSearcher) {}
@@ -119,7 +119,7 @@ export class UserService {
   }
 
   @General
-  public async resetPassword(dto: ResetPasswordDto): Promise<void> {
+  public async resetPassword(dto: BasicAuthDto): Promise<void> {
     const { email, password } = dto;
     const [hashed, user] = await Promise.all([
       this.userSecurity.hashPassword(password, false),

@@ -20,7 +20,7 @@ export class ModifyUserProfileDto extends PickType(UserProfileEntity, ["phoneNum
   public address: string;
 }
 
-export class ModifyUserAuthDto extends PickType(UserAuthEntity, ["email", "nickName", "password"] as const) {
+export class ModifyUserAuthDto extends PickType(UserAuthEntity, ["nickName"] as const) {
   @ApiProperty({
     description: "사용자 닉네임",
     example: "Idooru",

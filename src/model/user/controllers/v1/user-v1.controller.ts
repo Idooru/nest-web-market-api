@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, Patch, Post, Put, Query, UseGuards, UseInterceptors } from "@nestjs/common";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+  UseInterceptors,
+} from "@nestjs/common";
 import { JwtAccessTokenPayload } from "../../../auth/jwt/jwt-access-token-payload.interface";
 import { IsLoginGuard } from "../../../../common/guards/authenticate/is-login.guard";
 import { GetJWT } from "../../../../common/decorators/get.jwt.decorator";
@@ -13,8 +25,6 @@ import { ApiTags } from "@nestjs/swagger";
 import { UserTransactionExecutor } from "../../logic/transaction/user-transaction.executor";
 import { UserSearcher } from "../../logic/user.searcher";
 import { UserService } from "../../services/user.service";
-import { OperateUserValidationPipe } from "../../pipe/none-exist/operate-user-validation.pipe";
-import { UserEmailValidatePipe as UserEmailExistValidatePipe } from "../../pipe/exist/user-email-validate.pipe";
 import { UserEmailValidatePipe as UserEmailNoneExistValidatePipe } from "../../pipe/none-exist/user-email-validate.pipe";
 import { UserBodyPhoneNumberValidatePipe } from "../../pipe/none-exist/user-phoneNumber-validate.pipe";
 import { UserNicknameValidatePipe } from "../../pipe/none-exist/user-nickName-validate.pipe";
@@ -41,7 +51,7 @@ import { ModifyUserAddressSwagger } from "../../docs/user-v1-controller/modify-u
 import { SecessionSwagger } from "../../docs/user-v1-controller/secession.swagger";
 import { ResetPasswordSwagger } from "../../docs/user-v1-controller/reset-password.swagger";
 import { RegisterUserDto } from "../../dto/request/register-user.dto";
-import { LoginUserDto } from "../../dto/request/login-user.dto";
+import { BasicAuthDto } from "../../dto/request/basic-auth.dto";
 import { ModifyUserBody } from "../../dto/request/modify-user.dto";
 import { ModifyUserEmailDto } from "../../dto/request/modify-user-email.dto";
 import { ModifyUserNicknameDto } from "../../dto/request/modify-user-nickname.dto";
@@ -49,8 +59,15 @@ import { ModifyUserPhoneNumberDto } from "../../dto/request/modify-user-phonenum
 import { ModifyUserPasswordDto } from "../../dto/request/modify-user-password.dto";
 import { ModifyUserAddressDto } from "../../dto/request/modify-user-address.dto";
 import { FindEmailDto } from "../../dto/request/find-email.dto";
-import { ResetPasswordDto } from "../../dto/request/reset-password.dto";
 import { UserProfileRawDto } from "../../dto/response/user-profile-raw.dto";
+import { GetBasicAuth } from "../../../../common/decorators/get-basic-auth.decorator";
+import { UserValidator } from "../../logic/user.validator";
+
+type UserValidateBody = {
+  email: string;
+  nickName: string;
+  phoneNumber: string;
+};
 
 @ApiTags("v1 공용 User API")
 @Controller({ path: "/user", version: "1" })
@@ -60,16 +77,37 @@ export class UserV1Controller {
     private readonly searcher: UserSearcher,
     private readonly userSecurity: UserSecurity,
     private readonly service: UserService,
+    private readonly userValidator: UserValidator,
   ) {}
+
+  private async validateUserBody<T extends UserValidateBody>(dto: T): Promise<void> {
+    const { email, nickName, phoneNumber } = dto;
+
+    const validResult = await Promise.allSettled([
+      this.userValidator.isNoneExistEmail(email),
+      this.userValidator.isNoneExistNickname(nickName),
+      this.userValidator.isNoneExistPhoneNumber(phoneNumber),
+    ]);
+
+    const errors = validResult.filter((item) => item.status === "rejected");
+
+    if (errors.length) {
+      throw new BadRequestException(errors);
+    }
+  }
 
   @RegisterSwagger()
   @UseInterceptors(JsonGeneralInterceptor, UserRegisterEventInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Post("/register")
   public async register(
-    @Body(OperateUserValidationPipe<RegisterUserDto>) dto: RegisterUserDto,
+    @Body() registerUserDto: RegisterUserDto,
+    @GetBasicAuth() basicAuthDto: BasicAuthDto,
   ): Promise<JsonGeneralInterface<void>> {
-    await this.transaction.register(dto);
+    registerUserDto = { ...registerUserDto, ...basicAuthDto };
+
+    await this.validateUserBody(registerUserDto);
+    await this.transaction.register(registerUserDto);
 
     return {
       statusCode: 201,
@@ -97,7 +135,7 @@ export class UserV1Controller {
   @UseInterceptors(LoginInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Post("/login")
-  public async login(@Body() dto: LoginUserDto): Promise<LoginInterface> {
+  public async login(@GetBasicAuth() dto: BasicAuthDto): Promise<LoginInterface> {
     const accessToken = await this.userSecurity.login(dto);
 
     return {
@@ -139,16 +177,22 @@ export class UserV1Controller {
   @UseGuards(IsLoginGuard)
   @Put("/me")
   public async modifyUser(
-    @Body(OperateUserValidationPipe<ModifyUserBody>)
-    body: ModifyUserBody,
+    @Body() modifyUserBody: ModifyUserBody,
     @GetJWT() { userId }: JwtAccessTokenPayload,
+    @GetBasicAuth() basicAuthDto: BasicAuthDto,
   ): Promise<JsonGeneralInterface<void>> {
-    const dto = {
-      body,
-      id: userId,
+    const body = {
+      ...modifyUserBody,
+      ...basicAuthDto,
     };
 
-    await this.transaction.modifyUser(dto);
+    const modifyUserDto = {
+      id: userId,
+      body,
+    };
+
+    await this.validateUserBody(body);
+    await this.transaction.modifyUser(modifyUserDto);
 
     return {
       statusCode: 201,
@@ -271,10 +315,8 @@ export class UserV1Controller {
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Patch("/reset-password")
-  public async resetPassword(
-    @Body(UserEmailExistValidatePipe<ResetPasswordDto>) body: ResetPasswordDto,
-  ): Promise<JsonGeneralInterface<void>> {
-    await this.service.resetPassword(body);
+  public async resetPassword(@GetBasicAuth() dto: BasicAuthDto): Promise<JsonGeneralInterface<void>> {
+    await this.service.resetPassword(dto);
 
     return {
       statusCode: 200,

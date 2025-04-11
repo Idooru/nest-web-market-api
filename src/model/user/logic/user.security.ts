@@ -8,13 +8,13 @@ import { SecurityLibrary } from "src/common/lib/security/security.library";
 import { CatchCallbackFactoryLibrary } from "../../../common/lib/util/catch-callback-factory.library";
 import { JwtErrorHandlerLibrary } from "../../../common/lib/jwt/jwt-error-handler.library";
 import { UserUpdateRepository } from "../repositories/user-update.repository";
-import { LoginUserDto } from "../dto/request/login-user.dto";
 import { FindEmailDto } from "../dto/request/find-email.dto";
 import { UserAuthEntity } from "../entities/user-auth.entity";
 import { UserProfileEntity } from "../entities/user-profile.entity";
 import { UserEntity } from "../entities/user.entity";
 import { BaseEntity } from "typeorm";
 import bcrypt from "bcrypt";
+import { BasicAuthDto } from "../dto/request/basic-auth.dto";
 
 class EntityFinder {
   constructor(private readonly userSearcher: UserSearcher) {}
@@ -52,7 +52,7 @@ export class UserSecurity {
       .catch(this.callbackFactory.getCatchHashPasswordFunc(hasTransaction));
   }
 
-  public async login(dto: LoginUserDto): Promise<string> {
+  public async login(dto: BasicAuthDto): Promise<string> {
     const { email, password } = dto;
 
     const user = await this.entityFinder.findUser("UserAuth.email = :email", { email }, [UserAuthEntity]);

@@ -62,7 +62,7 @@ export class CreateUserProfileDto extends PickType(UserProfileEntity, [
   "address",
 ] as const) {}
 
-export class RegisterUserAuthDto extends PickType(UserAuthEntity, ["email", "nickName", "password"] as const) {
+export class RegisterUserAuthDto extends PickType(UserAuthEntity, ["nickName"] as const) {
   @ApiProperty({
     description: "사용자 닉네임",
     example: "gdhong",
