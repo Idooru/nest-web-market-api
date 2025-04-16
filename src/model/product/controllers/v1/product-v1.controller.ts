@@ -4,16 +4,18 @@ import { JsonGeneralInterface } from "src/common/interceptors/interface/json-gen
 import { ApiTags } from "@nestjs/swagger";
 import { ProductSearcher } from "../../logic/product.searcher";
 import { ProductIdValidatePipe } from "../../pipe/exist/product-id-validate.pipe";
-import { FindProductWithIdSwagger } from "../../docs/product-v1-controller/find-product-with-id.swagger";
+import { FindDetailProductSwagger } from "../../docs/product-v1-controller/find-detail-product.swagger";
 import { ProductBasicRawDto } from "../../dto/response/product-basic-raw.dto";
 import { ProductDetailRawDto } from "../../dto/response/product-detail-raw.dto";
 import { FindAllProductsDto } from "../../dto/request/find-all-products.dto";
+import { FindAllProductsSwagger } from "../../docs/product-v1-controller/find-all-products.swagger";
 
 @ApiTags("v1 공용 Product API")
 @Controller({ path: "/product", version: "1" })
 export class ProductV1Controller {
   constructor(private readonly productSearcher: ProductSearcher) {}
 
+  @FindAllProductsSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/all")
   public async findAllProducts(
@@ -28,7 +30,7 @@ export class ProductV1Controller {
     };
   }
 
-  @FindProductWithIdSwagger()
+  @FindDetailProductSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/:productId")
   public async findDetailProduct(

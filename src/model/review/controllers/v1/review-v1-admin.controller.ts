@@ -15,11 +15,11 @@ import { ReviewFromProductRawDto } from "../../dto/response/review-from-product-
 export class ReviewV1AdminController {
   constructor(private readonly reviewSearcher: ReviewSearcher) {}
 
-  @ApiOperation({
-    summary: "find review from product id",
-    description:
-      "상품의 아이디에 해당하는 상품의 리뷰를 가져옵니다. 상품의 아이디와 일치하는 row가 데이터베이스에 존재하지 않을 경우 에러를 반환합니다.",
-  })
+  // @ApiOperation({
+  //   summary: "find review from product id",
+  //   description:
+  //     "상품의 아이디에 해당하는 상품의 리뷰를 가져옵니다. 상품의 아이디와 일치하는 row가 데이터베이스에 존재하지 않을 경우 에러를 반환합니다.",
+  // })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/product/:productId")
   public async findReviewByProductId(

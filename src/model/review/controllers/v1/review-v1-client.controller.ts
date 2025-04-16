@@ -51,7 +51,7 @@ export class ReviewV1ClientController {
     };
   }
 
-  @ApiOperation({})
+  // @ApiOperation({})
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/:reviewId")
   public async findDetailReview(
@@ -65,10 +65,11 @@ export class ReviewV1ClientController {
       result,
     };
   }
-  @ApiOperation({
-    summary: "create review",
-    description: "리뷰를 생성합니다. 리뷰에는 이미지 혹은 비디오가 포함될 수 있습니다.",
-  })
+
+  // @ApiOperation({
+  //   summary: "create review",
+  //   description: "리뷰를 생성합니다. 리뷰에는 이미지 혹은 비디오가 포함될 수 있습니다.",
+  // })
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Post("/product/:productId")
   public async createReview(
@@ -100,10 +101,10 @@ export class ReviewV1ClientController {
     };
   }
 
-  @ApiOperation({
-    summary: "modify review",
-    description: "리뷰를 수정합니다. 리뷰에는 이미지 혹은 비디오가 포함될 수 있습니다.",
-  })
+  // @ApiOperation({
+  //   summary: "modify review",
+  //   description: "리뷰를 수정합니다. 리뷰에는 이미지 혹은 비디오가 포함될 수 있습니다.",
+  // })
   @UseInterceptors(JsonClearCookiesInterceptor, DeleteReviewMediaInterceptor)
   @Put("/:reviewId/product/:productId")
   public async modifyReview(
@@ -137,10 +138,10 @@ export class ReviewV1ClientController {
     };
   }
 
-  @ApiOperation({
-    summary: "delete review",
-    description: "리뷰 아이디에 해당하는 모든 형태의 리뷰를 제거합니다.",
-  })
+  // @ApiOperation({
+  //   summary: "delete review",
+  //   description: "리뷰 아이디에 해당하는 모든 형태의 리뷰를 제거합니다.",
+  // })
   @UseInterceptors(JsonGeneralInterceptor, DeleteReviewMediaInterceptor)
   @Delete("/:reviewId")
   public async deleteReview(

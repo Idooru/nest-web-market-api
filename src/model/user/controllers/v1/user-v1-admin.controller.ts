@@ -22,7 +22,7 @@ import { FindAllUsersSwagger } from "../../docs/user-v1-admin-controller/find-al
 export class UserV1AdminController {
   constructor(private readonly userSearcher: UserSearcher, private readonly userService: UserService) {}
 
-  @FindAllUsersSwagger()
+  // @FindAllUsersSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/all")
   public async findAllUsers(@Query() query: FindAllUsersDto): Promise<JsonGeneralInterface<UserBasicRawDto[]>> {
@@ -35,7 +35,7 @@ export class UserV1AdminController {
     };
   }
 
-  @FindDetailClientUserSwagger()
+  // @FindDetailClientUserSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/:userId")
   public async findDetailClientUser(
@@ -50,7 +50,7 @@ export class UserV1AdminController {
     };
   }
 
-  @KickUserSwagger()
+  // @KickUserSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @Delete("/:userId")
   public async kickUser(@Param("userId", UserIdValidatePipe) userId: string): Promise<JsonGeneralInterface<void>> {

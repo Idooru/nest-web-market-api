@@ -36,7 +36,7 @@ export class InquiryV1AdminController {
     private readonly inquiryResponseSearcher: InquiryResponseSearcher,
   ) {}
 
-  @ApiOperation({})
+  // @ApiOperation({})
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/inquiry-response/all")
   public async findAllInquiryResponses(
@@ -53,7 +53,7 @@ export class InquiryV1AdminController {
     };
   }
 
-  @ApiOperation({})
+  // @ApiOperation({})
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/inquiry-response/:inquiryResponseId")
   public async findInquiryResponse(
@@ -68,7 +68,7 @@ export class InquiryV1AdminController {
     };
   }
 
-  @ApiOperation({})
+  // @ApiOperation({})
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/inquiry-request/product")
   public async findInquiryRequestFromProduct(
@@ -83,10 +83,10 @@ export class InquiryV1AdminController {
     };
   }
 
-  @ApiOperation({
-    summary: "create inquiry response",
-    description: "문의 응답을 생성합니다. 문의 응답에는 이미지 혹은 비디오가 포함될 수 있습니다.",
-  })
+  // @ApiOperation({
+  //   summary: "create inquiry response",
+  //   description: "문의 응답을 생성합니다. 문의 응답에는 이미지 혹은 비디오가 포함될 수 있습니다.",
+  // })
   @UseInterceptors(JsonClearCookiesInterceptor, InquiryAdminEventInterceptor)
   @Post("/inquiry-request/:inquiryRequestId/client-user/:inquiryRequesterId")
   public async createInquiryResponse(

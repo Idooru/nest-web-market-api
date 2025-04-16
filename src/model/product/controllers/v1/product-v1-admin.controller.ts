@@ -35,7 +35,7 @@ import { MediaCookieDto } from "../../../media/dto/request/media-cookie.dto";
 export class ProductV1AdminController {
   constructor(private readonly transaction: ProductTransactionExecutor, private readonly service: ProductService) {}
 
-  @CreateProductSwagger()
+  // @CreateProductSwagger()
   @UseInterceptors(JsonClearCookiesInterceptor)
   @Post("/")
   public async createProduct(
@@ -59,11 +59,11 @@ export class ProductV1AdminController {
     };
   }
 
-  @ApiOperation({
-    summary: "modify product",
-    description:
-      "상품의 아이디에 해당하는 상품의 전체 column, 상품에 사용되는 이미지를 수정합니다. 수정하려는 상품의 가격, 수량을 양의 정수 이외의 숫자로 지정하거나 수정하려는 상품의 이름이 이미 데이터베이스에 존재 한다면 에러를 반환합니다. 이 api를 실행하기 전에 무조건 상품 이미지를 업로드해야 합니다.",
-  })
+  // @ApiOperation({
+  //   summary: "modify product",
+  //   description:
+  //     "상품의 아이디에 해당하는 상품의 전체 column, 상품에 사용되는 이미지를 수정합니다. 수정하려는 상품의 가격, 수량을 양의 정수 이외의 숫자로 지정하거나 수정하려는 상품의 이름이 이미 데이터베이스에 존재 한다면 에러를 반환합니다. 이 api를 실행하기 전에 무조건 상품 이미지를 업로드해야 합니다.",
+  // })
   @UseInterceptors(JsonClearCookiesInterceptor, DeleteProductMediaInterceptor)
   @Put("/:productId")
   public async modifyProduct(
@@ -87,11 +87,11 @@ export class ProductV1AdminController {
     };
   }
 
-  @ApiOperation({
-    summary: "modify product image",
-    description:
-      "상품의 아이디에 해당하는 상품에 사용되는 이미지를 수정합니다. 이 api를 실행하기 전에 무조건 상품 이미지를 생성해야 합니다.",
-  })
+  // @ApiOperation({
+  //   summary: "modify product image",
+  //   description:
+  //     "상품의 아이디에 해당하는 상품에 사용되는 이미지를 수정합니다. 이 api를 실행하기 전에 무조건 상품 이미지를 생성해야 합니다.",
+  // })
   @UseInterceptors(JsonClearCookiesInterceptor, DeleteProductMediaInterceptor)
   @Patch("/:productId/image")
   public async modifyProductImage(
@@ -109,11 +109,11 @@ export class ProductV1AdminController {
     };
   }
 
-  @ApiOperation({
-    summary: "modify product name",
-    description:
-      "상품의 아이디에 해당하는 상품의 이름 column을 수정합니다. 수정하려는 상품의 이름이 이미 데이터베이스에 존재 한다면 에러를 반환합니다. ",
-  })
+  // @ApiOperation({
+  //   summary: "modify product name",
+  //   description:
+  //     "상품의 아이디에 해당하는 상품의 이름 column을 수정합니다. 수정하려는 상품의 이름이 이미 데이터베이스에 존재 한다면 에러를 반환합니다. ",
+  // })
   @UseInterceptors(JsonGeneralInterceptor)
   @Patch("/:productId/name")
   public async modifyProductName(
@@ -127,11 +127,11 @@ export class ProductV1AdminController {
     };
   }
 
-  @ApiOperation({
-    summary: "modify product price",
-    description:
-      "상품의 아이디에 해당하는 상품의 가격 column을 수정합니다. 수정하려는 상품의 가격을 양의 정수 이외의 숫자로 지정하면 에러를 반환합니다.",
-  })
+  // @ApiOperation({
+  //   summary: "modify product price",
+  //   description:
+  //     "상품의 아이디에 해당하는 상품의 가격 column을 수정합니다. 수정하려는 상품의 가격을 양의 정수 이외의 숫자로 지정하면 에러를 반환합니다.",
+  // })
   @UseInterceptors(JsonGeneralInterceptor)
   @Patch("/:productId/price")
   public async modifyProductPrice(
@@ -146,10 +146,10 @@ export class ProductV1AdminController {
     };
   }
 
-  @ApiOperation({
-    summary: "modify product origin",
-    description: "상품의 아이디에 해당하는 상품의 원산지 column을 수정합니다.",
-  })
+  // @ApiOperation({
+  //   summary: "modify product origin",
+  //   description: "상품의 아이디에 해당하는 상품의 원산지 column을 수정합니다.",
+  // })
   @UseInterceptors(JsonGeneralInterceptor)
   @Patch("/:productId/origin")
   public async modifyProductOrigin(
@@ -164,10 +164,10 @@ export class ProductV1AdminController {
     };
   }
 
-  @ApiOperation({
-    summary: "modify product category",
-    description: "상품 아이디에 해당하는 상품의 카테고리 column을 수정합니다.",
-  })
+  // @ApiOperation({
+  //   summary: "modify product category",
+  //   description: "상품 아이디에 해당하는 상품의 카테고리 column을 수정합니다.",
+  // })
   @UseInterceptors(JsonGeneralInterceptor)
   @Patch("/:productId/category")
   public async modifyProductCategory(
@@ -182,10 +182,10 @@ export class ProductV1AdminController {
     };
   }
 
-  @ApiOperation({
-    summary: "modify product description",
-    description: "상품의 아이디에 해당하는 상품의 설명 column을 수정합니다.",
-  })
+  // @ApiOperation({
+  //   summary: "modify product description",
+  //   description: "상품의 아이디에 해당하는 상품의 설명 column을 수정합니다.",
+  // })
   @UseInterceptors(JsonGeneralInterceptor)
   @Patch("/:productId/description")
   public async modifyProductDescription(
@@ -200,11 +200,11 @@ export class ProductV1AdminController {
     };
   }
 
-  @ApiOperation({
-    summary: "modify product stock",
-    description:
-      "상품의 아이디에 해당하는 상품의 수량 column을 수정합니다. 수정하려는 상품의 수량을 양의 정수 이외의 숫자로 지정하면 에러를 반환합니다.",
-  })
+  // @ApiOperation({
+  //   summary: "modify product stock",
+  //   description:
+  //     "상품의 아이디에 해당하는 상품의 수량 column을 수정합니다. 수정하려는 상품의 수량을 양의 정수 이외의 숫자로 지정하면 에러를 반환합니다.",
+  // })
   @UseInterceptors(JsonGeneralInterceptor)
   @Patch("/:productId/stock")
   public async modifyProductStock(
@@ -219,10 +219,10 @@ export class ProductV1AdminController {
     };
   }
 
-  @ApiOperation({
-    summary: "remove product",
-    description: "상품의 아이디에 해당하는 상품을 제거합니다.",
-  })
+  // @ApiOperation({
+  //   summary: "remove product",
+  //   description: "상품의 아이디에 해당하는 상품을 제거합니다.",
+  // })
   @UseInterceptors(JsonGeneralInterceptor, DeleteProductMediaInterceptor)
   @Delete("/:productId")
   public async removeProduct(

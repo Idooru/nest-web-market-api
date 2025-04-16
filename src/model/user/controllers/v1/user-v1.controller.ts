@@ -96,7 +96,7 @@ export class UserV1Controller {
     }
   }
 
-  @RegisterSwagger()
+  // @RegisterSwagger()
   @UseInterceptors(JsonGeneralInterceptor, UserRegisterEventInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Post("/register")
@@ -115,7 +115,7 @@ export class UserV1Controller {
     };
   }
 
-  @ProfileSwagger()
+  // @ProfileSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Get("/profile")
@@ -131,7 +131,7 @@ export class UserV1Controller {
     };
   }
 
-  @LoginSwagger()
+  // @LoginSwagger()
   @UseInterceptors(LoginInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Post("/login")
@@ -159,7 +159,7 @@ export class UserV1Controller {
     };
   }
 
-  @LogoutSwagger()
+  // @LogoutSwagger()
   @UseInterceptors(LogoutInterceptor)
   @UseGuards(LogoutGuard)
   @Delete("/logout")
@@ -172,7 +172,7 @@ export class UserV1Controller {
     };
   }
 
-  @ModifyUserSwagger()
+  // @ModifyUserSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Put("/me")
@@ -200,7 +200,7 @@ export class UserV1Controller {
     };
   }
 
-  @ModifyUserEmailSwagger()
+  // @ModifyUserEmailSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/email")
@@ -216,7 +216,7 @@ export class UserV1Controller {
     };
   }
 
-  @ModifyUserNickNameSwagger()
+  // @ModifyUserNickNameSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/nickName")
@@ -232,7 +232,7 @@ export class UserV1Controller {
     };
   }
 
-  @ModifyUserPhoneNumberSwagger()
+  // @ModifyUserPhoneNumberSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/phone-number")
@@ -249,7 +249,7 @@ export class UserV1Controller {
     };
   }
 
-  @ModifyUserPasswordSwagger()
+  // @ModifyUserPasswordSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/password")
@@ -265,7 +265,7 @@ export class UserV1Controller {
     };
   }
 
-  @ModifyUserAddressSwagger()
+  // @ModifyUserAddressSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsLoginGuard)
   @Patch("/me/address")
@@ -281,7 +281,7 @@ export class UserV1Controller {
     };
   }
 
-  @SecessionSwagger()
+  // @SecessionSwagger()
   @UseInterceptors(LogoutInterceptor)
   @UseGuards(IsLoginGuard)
   @Delete("/secession")
@@ -295,7 +295,7 @@ export class UserV1Controller {
     };
   }
 
-  @FindForgottenEmailSwagger()
+  // @FindForgottenEmailSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Get("/forgotten-email")
@@ -311,7 +311,7 @@ export class UserV1Controller {
     };
   }
 
-  @ResetPasswordSwagger()
+  // @ResetPasswordSwagger()
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsNotLoginGuard)
   @Patch("/reset-password")

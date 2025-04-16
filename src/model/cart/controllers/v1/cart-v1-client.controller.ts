@@ -23,10 +23,10 @@ import { FindAllCartsDto } from "../../dto/request/find-all-carts.dto";
 export class CartV1ClientController {
   constructor(private readonly searcher: CartSearcher, private readonly service: CartService) {}
 
-  @ApiOperation({
-    summary: "find carts with id",
-    description: "사용자의 장바구니를 모두 가져옵니다.",
-  })
+  // @ApiOperation({
+  //   summary: "find carts with id",
+  //   description: "사용자의 장바구니를 모두 가져옵니다.",
+  // })
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/all")
   public async findAllCarts(
@@ -47,10 +47,10 @@ export class CartV1ClientController {
     };
   }
 
-  @ApiOperation({
-    summary: "create cart",
-    description: "장바구니를 생성합니다.",
-  })
+  // @ApiOperation({
+  //   summary: "create cart",
+  //   description: "장바구니를 생성합니다.",
+  // })
   @UseInterceptors(JsonGeneralInterceptor)
   @Post("/product/:productId")
   public async createCart(
@@ -67,10 +67,10 @@ export class CartV1ClientController {
     };
   }
 
-  @ApiOperation({
-    summary: "modify cart with id",
-    description: "아이디에 해당하는 장바구니를 수정합니다.",
-  })
+  // @ApiOperation({
+  //   summary: "modify cart with id",
+  //   description: "아이디에 해당하는 장바구니를 수정합니다.",
+  // })
   @UseInterceptors(JsonGeneralInterceptor)
   @Put("/:cartId/product/:productId")
   public async modifyCart(
@@ -87,10 +87,10 @@ export class CartV1ClientController {
     };
   }
 
-  @ApiOperation({
-    summary: "delete all cart with user id",
-    description: "사용자의 장바구니를 모두 비웁니다.",
-  })
+  // @ApiOperation({
+  //   summary: "delete all cart with user id",
+  //   description: "사용자의 장바구니를 모두 비웁니다.",
+  // })
   @UseInterceptors(JsonGeneralInterceptor)
   @Delete("/")
   public async deleteAllCart(@GetJWT() jwtPayload: JwtAccessTokenPayload): Promise<JsonGeneralInterface<null>> {
@@ -102,10 +102,10 @@ export class CartV1ClientController {
     };
   }
 
-  @ApiOperation({
-    summary: "delete cart with id",
-    description: "아이디에 해당하는 장바구니를 제거합니다.",
-  })
+  // @ApiOperation({
+  //   summary: "delete cart with id",
+  //   description: "아이디에 해당하는 장바구니를 제거합니다.",
+  // })
   @UseInterceptors(JsonGeneralInterceptor)
   @Delete("/:cartId")
   public async deleteCart(@Param("cartId", CartIdValidatePipe) id: string): Promise<JsonGeneralInterface<null>> {

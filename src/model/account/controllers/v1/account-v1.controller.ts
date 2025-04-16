@@ -44,10 +44,10 @@ export class AccountV1Controller {
     };
   }
 
-  @ApiOperation({
-    summary: "create account",
-    description: "계좌를 생성합니다.",
-  })
+  // @ApiOperation({
+  //   summary: "create account",
+  //   description: "계좌를 생성합니다.",
+  // })
   @UseInterceptors(JsonGeneralInterceptor)
   @Post("/")
   public async createAccount(
@@ -62,10 +62,10 @@ export class AccountV1Controller {
     };
   }
 
-  @ApiOperation({
-    summary: "delete account",
-    description: "계좌를 제거합니다.",
-  })
+  // @ApiOperation({
+  //   summary: "delete account",
+  //   description: "계좌를 제거합니다.",
+  // })
   @UseInterceptors(JsonGeneralInterceptor)
   @Delete("/:accountId")
   public async deleteAccount(
@@ -80,10 +80,10 @@ export class AccountV1Controller {
     };
   }
 
-  @ApiOperation({
-    summary: "withdraw",
-    description: "계좌에 일정 금액을 출금합니다.",
-  })
+  // @ApiOperation({
+  //   summary: "withdraw",
+  //   description: "계좌에 일정 금액을 출금합니다.",
+  // })
   @UseInterceptors(JsonGeneralInterceptor)
   @Patch("/:accountId/withdraw")
   public async withdraw(
@@ -100,10 +100,10 @@ export class AccountV1Controller {
     };
   }
 
-  @ApiOperation({
-    summary: "deposit",
-    description: "계좌에 일정 금액을 입금합니다.",
-  })
+  // @ApiOperation({
+  //   summary: "deposit",
+  //   description: "계좌에 일정 금액을 입금합니다.",
+  // })
   @UseInterceptors(JsonGeneralInterceptor)
   @UseGuards(IsClientGuard)
   @Patch("/:accountId/deposit")
@@ -121,10 +121,10 @@ export class AccountV1Controller {
     };
   }
 
-  @ApiOperation({
-    summary: "set main account",
-    description: "주로 사용할 계좌를 설정합니다.",
-  })
+  // @ApiOperation({
+  //   summary: "set main account",
+  //   description: "주로 사용할 계좌를 설정합니다.",
+  // })
   @UseInterceptors(JsonGeneralInterceptor)
   @Patch("/:accountId/main-account")
   public async setMainAccount(

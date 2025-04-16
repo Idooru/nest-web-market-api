@@ -20,7 +20,7 @@ import { OrderBasicRawDto } from "../../dto/response/order-basic-raw.dto";
 export class OrderV1ClientController {
   constructor(private readonly transaction: OrderTransactionExecutor, private readonly orderSearcher: OrderSearcher) {}
 
-  @ApiOperation({})
+  // @ApiOperation({})
   @UseInterceptors(JsonGeneralInterceptor)
   @Get("/")
   public async findOrders(
@@ -37,7 +37,7 @@ export class OrderV1ClientController {
     };
   }
 
-  @ApiOperation({})
+  // @ApiOperation({})
   @UseInterceptors(JsonGeneralInterceptor)
   @Post("/")
   public async createOrder(
