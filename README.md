@@ -218,9 +218,9 @@ Nest is [MIT licensed](LICENSE).
 13. API 정상화 (버그 수정) // 완료
 14. user, product 등 많이 사용되는 entity Join을 Generic하게 변경 // 완료
 15. repository에서 entity와 raw를 분리 // 완료
-16. SWAGGER API DOCUMENTATION 설정 // 진행중
-17. JOI 사용해서 DotenvModule 설정
-18. 회원가입시 이메일 인증 로직 추가
-19. 14 ~ 18까지 모두 수행하면 플러터로 앱 개발 후 API 연동 진행 (쿠기를 사용하는 로직을 header를 사용하도록 변경 필요)
+16. SWAGGER API DOCUMENTATION 설정 // 보류 
+17. JOI 사용해서 DotenvModule 설정 // 보류
+18. 회원가입시 이메일 인증 로직 추가 // 보류
+19. 14 ~ 18까지 모두 수행하면 플러터로 앱 개발 후 API 연동 진행 (쿠기를 사용하는 로직을 header를 사용하도록 변경 필요) // 진행 예정
 20. 쿼리 성능 최적화
 21. 20까지 완료 후 9 ~ 11 진행
